@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 enum CalendarAction {
-    case action1
+    case action1(title: String)
     case action2
 }
 
@@ -43,13 +43,13 @@ func calendarReducer(state: inout CalendarState,
                      action: CalendarAction,
                      environment: Calendar) -> AnyPublisher<CalendarAction, Never> {
     switch action {
-    case .action1:
-        state = CalendarState()
+    case .action1(let title):
+        state = CalendarState(title: title)
     case .action2:
         return environment.service
             .publisher
             .replaceError(with: ())
-            .map { CalendarAction.action1 }
+            .map { CalendarAction.action1(title: "hi") }
             .eraseToAnyPublisher()
     }
     return Empty().eraseToAnyPublisher()

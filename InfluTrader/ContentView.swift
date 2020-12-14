@@ -13,10 +13,16 @@ struct ContentView: View {
     var body: some View {
         TabView {
             NavigationView {
-                SummaryContainerView()
+                CalendarContainerView(title: store.state.calendar.title, onCommit: { result in
+                    if result == "hey" {
+                        store.send(.calendar(action: .action1(title: "hey")))
+                    } else {
+                        store.send(.calendar(action: .action2))
+                    }
+                })
                     .navigationBarTitle("today")
-                    .environmentObject(store.derived(deriveState: \.calendar,
-                                                     deriveAction: AppAction.calendar))
+//                    .environmentObject(store.derived(deriveState: \.calendar,
+//                                                     deriveAction: AppAction.calendar))
             }.tabItem {
                 Image(systemName: "heart.fill")
                     .imageScale(.large)
@@ -37,11 +43,30 @@ struct ContentView: View {
     }
 }
 
-struct SummaryContainerView: View {
-    @EnvironmentObject var store: Store<CalendarState, CalendarAction, Void>
+struct CalendarContainerView: View {
+    let title: String
+
+    let onCommit: (String) -> Void
 
     var body: some View {
-        Text("summary")
+        VStack(spacing: 10) {
+            Text(title)
+            Button("hey") {
+                onCommit("hey")
+            }
+                .foregroundColor(.white)
+                .frame(width: 100, height: 50)
+                .background(Color.blue)
+                .clipShape(Capsule())
+
+            Button("hi") {
+                onCommit("hi")
+            }
+                .foregroundColor(.white)
+                .frame(width: 100, height: 50)
+                .background(Color.blue)
+                .clipShape(Capsule())
+        }
     }
 }
 

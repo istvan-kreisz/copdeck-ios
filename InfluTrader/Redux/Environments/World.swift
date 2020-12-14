@@ -11,7 +11,9 @@ import Combine
 class GithubService {}
 
 class TrendsService {
-    var publisher = CurrentValueSubject<Void, Error>(())
+    var publisher: AnyPublisher<Void, Never> {
+        return Just(()).eraseToAnyPublisher()
+    }
 }
 
 class CalendarService {

@@ -7,14 +7,16 @@
 
 import Foundation
 
-struct CalendarState: Equatable {}
+struct CalendarState: Equatable {
+    let title: String
+}
 
 struct TrendsState: Equatable {}
 
 struct SettingState: Equatable {}
 
 struct AppState: Equatable {
-    var calendar = CalendarState()
+    var calendar = CalendarState(title: "start")
     var trends = TrendsState()
     var settings = SettingState()
 }
