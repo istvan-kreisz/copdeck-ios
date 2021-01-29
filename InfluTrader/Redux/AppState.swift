@@ -7,16 +7,23 @@
 
 import Foundation
 
-struct CalendarState: Equatable {
-    let title: String
+
+struct ErrorState: Equatable {
+    var error: Error?
+    
+    static func == (_ lhs: ErrorState, _ rhs: ErrorState) -> Bool {
+        lhs.error?.localizedDescription == rhs.error?.localizedDescription
+    }
 }
 
-struct TrendsState: Equatable {}
+struct UserState: Equatable {
+    var userId = ""
+}
 
-struct SettingState: Equatable {}
+struct SettingsState: Equatable {}
 
 struct AppState: Equatable {
-    var calendar = CalendarState(title: "start")
-    var trends = TrendsState()
-    var settings = SettingState()
+    var userState = UserState()
+    var errorState = ErrorState()
+    var settingState = SettingsState()
 }

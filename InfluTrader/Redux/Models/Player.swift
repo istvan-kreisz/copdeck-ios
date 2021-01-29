@@ -9,7 +9,6 @@ import Foundation
 
 struct Player {
     struct Asset {
-        let
     }
     let bankHistory: [Double]
     let percentile: Int

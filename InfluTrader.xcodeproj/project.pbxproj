@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5D00B36525C39CC10060FBA6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5D00B36425C39CC10060FBA6 /* GoogleService-Info.plist */; };
 		5D696097258713760058BABE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D696096258713760058BABE /* AppDelegate.swift */; };
 		5D696099258713760058BABE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D696098258713760058BABE /* SceneDelegate.swift */; };
 		5D69609B258713760058BABE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D69609A258713760058BABE /* ContentView.swift */; };
@@ -16,12 +17,28 @@
 		5D6960AD2587149A0058BABE /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6960AC2587149A0058BABE /* Store.swift */; };
 		5D6960B1258714BF0058BABE /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6960B0258714BF0058BABE /* App.swift */; };
 		5D6960B4258714FB0058BABE /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6960B3258714FB0058BABE /* AppState.swift */; };
-		5D6960BA258717430058BABE /* World.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6960B9258717430058BABE /* World.swift */; };
+		5D6960BA258717430058BABE /* Environments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6960B9258717430058BABE /* Environments.swift */; };
 		5D6960C225873E870058BABE /* Influencer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6960C125873E870058BABE /* Influencer.swift */; };
 		5D6960C9258740270058BABE /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6960C8258740270058BABE /* Player.swift */; };
+		5D83155F25C39798008AB948 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D83155525C39798008AB948 /* Helpers.swift */; };
+		5D83156025C39798008AB948 /* IndicatorPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D83155725C39798008AB948 /* IndicatorPoint.swift */; };
+		5D83156125C39798008AB948 /* LineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D83155825C39798008AB948 /* LineView.swift */; };
+		5D83156225C39798008AB948 /* Legend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D83155925C39798008AB948 /* Legend.swift */; };
+		5D83156325C39798008AB948 /* LineChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D83155A25C39798008AB948 /* LineChartView.swift */; };
+		5D83156425C39798008AB948 /* MagnifierRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D83155B25C39798008AB948 /* MagnifierRect.swift */; };
+		5D83156525C39798008AB948 /* Path+QuadCurve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D83155C25C39798008AB948 /* Path+QuadCurve.swift */; };
+		5D83156625C39798008AB948 /* MultiLineChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D83155D25C39798008AB948 /* MultiLineChartView.swift */; };
+		5D83156725C39798008AB948 /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D83155E25C39798008AB948 /* Line.swift */; };
+		5D83156B25C397C4008AB948 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D83156A25C397C4008AB948 /* MainView.swift */; };
+		5DC00EAB25C3A331009A3AB9 /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC00EAA25C3A331009A3AB9 /* Authenticator.swift */; };
+		5DC00EAF25C3A387009A3AB9 /* DefaultAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC00EAE25C3A387009A3AB9 /* DefaultAuthenticator.swift */; };
+		5DC00EDD25C3BE0A009A3AB9 /* MockAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC00EDC25C3BE0A009A3AB9 /* MockAuthenticator.swift */; };
+		824926846FE3134EA3D5EBD8 /* Pods_InfluTrader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D549133C9B7C3B062D9A4D2 /* Pods_InfluTrader.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0D549133C9B7C3B062D9A4D2 /* Pods_InfluTrader.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_InfluTrader.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D00B36425C39CC10060FBA6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		5D696093258713760058BABE /* InfluTrader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InfluTrader.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D696096258713760058BABE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5D696098258713760058BABE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -33,9 +50,24 @@
 		5D6960AC2587149A0058BABE /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		5D6960B0258714BF0058BABE /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		5D6960B3258714FB0058BABE /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
-		5D6960B9258717430058BABE /* World.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = World.swift; sourceTree = "<group>"; };
+		5D6960B9258717430058BABE /* Environments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environments.swift; sourceTree = "<group>"; };
 		5D6960C125873E870058BABE /* Influencer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Influencer.swift; sourceTree = "<group>"; };
 		5D6960C8258740270058BABE /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		5D83155525C39798008AB948 /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		5D83155725C39798008AB948 /* IndicatorPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IndicatorPoint.swift; sourceTree = "<group>"; };
+		5D83155825C39798008AB948 /* LineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineView.swift; sourceTree = "<group>"; };
+		5D83155925C39798008AB948 /* Legend.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Legend.swift; sourceTree = "<group>"; };
+		5D83155A25C39798008AB948 /* LineChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineChartView.swift; sourceTree = "<group>"; };
+		5D83155B25C39798008AB948 /* MagnifierRect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MagnifierRect.swift; sourceTree = "<group>"; };
+		5D83155C25C39798008AB948 /* Path+QuadCurve.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Path+QuadCurve.swift"; sourceTree = "<group>"; };
+		5D83155D25C39798008AB948 /* MultiLineChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiLineChartView.swift; sourceTree = "<group>"; };
+		5D83155E25C39798008AB948 /* Line.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
+		5D83156A25C397C4008AB948 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		5DC00EAA25C3A331009A3AB9 /* Authenticator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authenticator.swift; sourceTree = "<group>"; };
+		5DC00EAE25C3A387009A3AB9 /* DefaultAuthenticator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAuthenticator.swift; sourceTree = "<group>"; };
+		5DC00EDC25C3BE0A009A3AB9 /* MockAuthenticator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockAuthenticator.swift; sourceTree = "<group>"; };
+		630E7DC56C63722AE2360C56 /* Pods-InfluTrader.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InfluTrader.release.xcconfig"; path = "Target Support Files/Pods-InfluTrader/Pods-InfluTrader.release.xcconfig"; sourceTree = "<group>"; };
+		6C337F3E851DD176F9F45E8E /* Pods-InfluTrader.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InfluTrader.debug.xcconfig"; path = "Target Support Files/Pods-InfluTrader/Pods-InfluTrader.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				824926846FE3134EA3D5EBD8 /* Pods_InfluTrader.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -54,6 +87,8 @@
 			children = (
 				5D696095258713760058BABE /* InfluTrader */,
 				5D696094258713760058BABE /* Products */,
+				FF1EEF4427F49F1DF04ADF63 /* Pods */,
+				6E511E69FD91ED256CC06E57 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -68,14 +103,12 @@
 		5D696095258713760058BABE /* InfluTrader */ = {
 			isa = PBXGroup;
 			children = (
+				5DC00EDF25C3C3DD009A3AB9 /* Shared */,
+				5D83156925C397B0008AB948 /* Screens */,
 				5D6960AB2587148E0058BABE /* Redux */,
-				5D696096258713760058BABE /* AppDelegate.swift */,
-				5D696098258713760058BABE /* SceneDelegate.swift */,
-				5D69609A258713760058BABE /* ContentView.swift */,
-				5D69609C258713770058BABE /* Assets.xcassets */,
-				5D6960A1258713770058BABE /* LaunchScreen.storyboard */,
+				5D83155625C39798008AB948 /* LineChart */,
+				5D00B36425C39CC10060FBA6 /* GoogleService-Info.plist */,
 				5D6960A4258713770058BABE /* Info.plist */,
-				5D69609E258713770058BABE /* Preview Content */,
 			);
 			path = InfluTrader;
 			sourceTree = "<group>";
@@ -91,6 +124,8 @@
 		5D6960AB2587148E0058BABE /* Redux */ = {
 			isa = PBXGroup;
 			children = (
+				5DC00EA725C3A2F8009A3AB9 /* Services */,
+				5D6960C025873E790058BABE /* Models */,
 				5D6960B62587155E0058BABE /* Environments */,
 				5D6960AC2587149A0058BABE /* Store.swift */,
 				5D6960B0258714BF0058BABE /* App.swift */,
@@ -102,9 +137,8 @@
 		5D6960B62587155E0058BABE /* Environments */ = {
 			isa = PBXGroup;
 			children = (
-				5D6960C025873E790058BABE /* Shared */,
 				5D6960B7258715810058BABE /* Home */,
-				5D6960B9258717430058BABE /* World.swift */,
+				5D6960B9258717430058BABE /* Environments.swift */,
 			);
 			path = Environments;
 			sourceTree = "<group>";
@@ -116,13 +150,85 @@
 			path = Home;
 			sourceTree = "<group>";
 		};
-		5D6960C025873E790058BABE /* Shared */ = {
+		5D6960C025873E790058BABE /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				5D6960C125873E870058BABE /* Influencer.swift */,
 				5D6960C8258740270058BABE /* Player.swift */,
 			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		5D83155625C39798008AB948 /* LineChart */ = {
+			isa = PBXGroup;
+			children = (
+				5D83155525C39798008AB948 /* Helpers.swift */,
+				5D83155725C39798008AB948 /* IndicatorPoint.swift */,
+				5D83155825C39798008AB948 /* LineView.swift */,
+				5D83155925C39798008AB948 /* Legend.swift */,
+				5D83155A25C39798008AB948 /* LineChartView.swift */,
+				5D83155B25C39798008AB948 /* MagnifierRect.swift */,
+				5D83155C25C39798008AB948 /* Path+QuadCurve.swift */,
+				5D83155D25C39798008AB948 /* MultiLineChartView.swift */,
+				5D83155E25C39798008AB948 /* Line.swift */,
+			);
+			path = LineChart;
+			sourceTree = "<group>";
+		};
+		5D83156925C397B0008AB948 /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				5D69609A258713760058BABE /* ContentView.swift */,
+				5D83156A25C397C4008AB948 /* MainView.swift */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		5DC00EA725C3A2F8009A3AB9 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				5DC00EA925C3A317009A3AB9 /* Authenticator */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		5DC00EA925C3A317009A3AB9 /* Authenticator */ = {
+			isa = PBXGroup;
+			children = (
+				5DC00EAA25C3A331009A3AB9 /* Authenticator.swift */,
+				5DC00EAE25C3A387009A3AB9 /* DefaultAuthenticator.swift */,
+				5DC00EDC25C3BE0A009A3AB9 /* MockAuthenticator.swift */,
+			);
+			path = Authenticator;
+			sourceTree = "<group>";
+		};
+		5DC00EDF25C3C3DD009A3AB9 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				5D696096258713760058BABE /* AppDelegate.swift */,
+				5D696098258713760058BABE /* SceneDelegate.swift */,
+				5D6960A1258713770058BABE /* LaunchScreen.storyboard */,
+				5D69609C258713770058BABE /* Assets.xcassets */,
+				5D69609E258713770058BABE /* Preview Content */,
+			);
 			path = Shared;
+			sourceTree = "<group>";
+		};
+		6E511E69FD91ED256CC06E57 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0D549133C9B7C3B062D9A4D2 /* Pods_InfluTrader.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FF1EEF4427F49F1DF04ADF63 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				6C337F3E851DD176F9F45E8E /* Pods-InfluTrader.debug.xcconfig */,
+				630E7DC56C63722AE2360C56 /* Pods-InfluTrader.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -132,9 +238,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5D6960A7258713770058BABE /* Build configuration list for PBXNativeTarget "InfluTrader" */;
 			buildPhases = (
+				48226E9C78C6C5FDB1043EDA /* [CP] Check Pods Manifest.lock */,
 				5D69608F258713760058BABE /* Sources */,
 				5D696090258713760058BABE /* Frameworks */,
 				5D696091258713760058BABE /* Resources */,
+				457339847248AFF1F3320420 /* [CP] Embed Pods Frameworks */,
+				DA3CF8FD0D08B1F5AAC009A6 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -183,12 +292,72 @@
 			buildActionMask = 2147483647;
 			files = (
 				5D6960A3258713770058BABE /* LaunchScreen.storyboard in Resources */,
+				5D00B36525C39CC10060FBA6 /* GoogleService-Info.plist in Resources */,
 				5D6960A0258713770058BABE /* Preview Assets.xcassets in Resources */,
 				5D69609D258713770058BABE /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		457339847248AFF1F3320420 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-InfluTrader/Pods-InfluTrader-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-InfluTrader/Pods-InfluTrader-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-InfluTrader/Pods-InfluTrader-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		48226E9C78C6C5FDB1043EDA /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-InfluTrader-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DA3CF8FD0D08B1F5AAC009A6 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-InfluTrader/Pods-InfluTrader-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-InfluTrader/Pods-InfluTrader-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-InfluTrader/Pods-InfluTrader-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		5D69608F258713760058BABE /* Sources */ = {
@@ -197,11 +366,24 @@
 			files = (
 				5D696097258713760058BABE /* AppDelegate.swift in Sources */,
 				5D696099258713760058BABE /* SceneDelegate.swift in Sources */,
+				5D83156625C39798008AB948 /* MultiLineChartView.swift in Sources */,
 				5D69609B258713760058BABE /* ContentView.swift in Sources */,
+				5D83156425C39798008AB948 /* MagnifierRect.swift in Sources */,
+				5D83156325C39798008AB948 /* LineChartView.swift in Sources */,
+				5D83156225C39798008AB948 /* Legend.swift in Sources */,
+				5DC00EDD25C3BE0A009A3AB9 /* MockAuthenticator.swift in Sources */,
+				5D83156025C39798008AB948 /* IndicatorPoint.swift in Sources */,
+				5D83156525C39798008AB948 /* Path+QuadCurve.swift in Sources */,
+				5DC00EAF25C3A387009A3AB9 /* DefaultAuthenticator.swift in Sources */,
+				5D83155F25C39798008AB948 /* Helpers.swift in Sources */,
 				5D6960B4258714FB0058BABE /* AppState.swift in Sources */,
 				5D6960B1258714BF0058BABE /* App.swift in Sources */,
-				5D6960BA258717430058BABE /* World.swift in Sources */,
+				5D83156B25C397C4008AB948 /* MainView.swift in Sources */,
+				5D6960BA258717430058BABE /* Environments.swift in Sources */,
+				5D83156125C39798008AB948 /* LineView.swift in Sources */,
 				5D6960C225873E870058BABE /* Influencer.swift in Sources */,
+				5D83156725C39798008AB948 /* Line.swift in Sources */,
+				5DC00EAB25C3A331009A3AB9 /* Authenticator.swift in Sources */,
 				5D6960C9258740270058BABE /* Player.swift in Sources */,
 				5D6960AD2587149A0058BABE /* Store.swift in Sources */,
 			);
@@ -339,6 +521,7 @@
 		};
 		5D6960A8258713770058BABE /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6C337F3E851DD176F9F45E8E /* Pods-InfluTrader.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -361,6 +544,7 @@
 		};
 		5D6960A9258713770058BABE /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 630E7DC56C63722AE2360C56 /* Pods-InfluTrader.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

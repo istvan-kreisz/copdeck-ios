@@ -47,8 +47,7 @@ final class Store<State, Action, Environment>: ObservableObject {
         let store = Store<DerivedState, DerivedAction, Void>(initialState: deriveState(state),
                                                              reducer: { _, action, _ in
                                                                  self.send(deriveAction(action))
-                                                                 return Empty(completeImmediately: true)
-                                                                     .eraseToAnyPublisher()
+                                                                 return Empty(completeImmediately: true).eraseToAnyPublisher()
                                                              },
                                                              environment: ())
 
