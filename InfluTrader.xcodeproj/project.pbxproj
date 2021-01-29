@@ -17,6 +17,8 @@
 		5D6960B1258714BF0058BABE /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6960B0258714BF0058BABE /* App.swift */; };
 		5D6960B4258714FB0058BABE /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6960B3258714FB0058BABE /* AppState.swift */; };
 		5D6960BA258717430058BABE /* World.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6960B9258717430058BABE /* World.swift */; };
+		5D6960C225873E870058BABE /* Influencer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6960C125873E870058BABE /* Influencer.swift */; };
+		5D6960C9258740270058BABE /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6960C8258740270058BABE /* Player.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +34,8 @@
 		5D6960B0258714BF0058BABE /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		5D6960B3258714FB0058BABE /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		5D6960B9258717430058BABE /* World.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = World.swift; sourceTree = "<group>"; };
+		5D6960C125873E870058BABE /* Influencer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Influencer.swift; sourceTree = "<group>"; };
+		5D6960C8258740270058BABE /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +102,7 @@
 		5D6960B62587155E0058BABE /* Environments */ = {
 			isa = PBXGroup;
 			children = (
+				5D6960C025873E790058BABE /* Shared */,
 				5D6960B7258715810058BABE /* Home */,
 				5D6960B9258717430058BABE /* World.swift */,
 			);
@@ -109,6 +114,15 @@
 			children = (
 			);
 			path = Home;
+			sourceTree = "<group>";
+		};
+		5D6960C025873E790058BABE /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				5D6960C125873E870058BABE /* Influencer.swift */,
+				5D6960C8258740270058BABE /* Player.swift */,
+			);
+			path = Shared;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -187,6 +201,8 @@
 				5D6960B4258714FB0058BABE /* AppState.swift in Sources */,
 				5D6960B1258714BF0058BABE /* App.swift in Sources */,
 				5D6960BA258717430058BABE /* World.swift in Sources */,
+				5D6960C225873E870058BABE /* Influencer.swift in Sources */,
+				5D6960C9258740270058BABE /* Player.swift in Sources */,
 				5D6960AD2587149A0058BABE /* Store.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
