@@ -84,8 +84,8 @@ struct CalendarContainerView: View {
     }
 }
 
-struct TrendsContainerView: View {
-    @EnvironmentObject var store: Store<TrendsState, TrendsAction, Void>
+struct UserContainerView: View {
+    @EnvironmentObject var store: Store<UserState, AuthenticationAction, Void>
 
     var body: some View {
         Text("summary")
@@ -97,6 +97,6 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
             .environmentObject(AppStore(initialState: .init(),
                                         reducer: appReducer,
-                                        environment: World()))
+                                        environment: World(isMock: true)))
     }
 }

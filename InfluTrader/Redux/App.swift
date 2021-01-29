@@ -81,7 +81,7 @@ func authenticatorReducer(state: inout UserState,
 
 func appReducer(state: inout AppState,
                 action: AppAction,
-                environment: Environment) -> AnyPublisher<AppAction, Never> {
+                environment: World) -> AnyPublisher<AppAction, Never> {
     switch action {
     case let .authenticator(action: action):
         return authenticatorReducer(state: &state.userState, action: action, environment: environment.authentication)
@@ -96,4 +96,4 @@ func appReducer(state: inout AppState,
     }
 }
 
-typealias AppStore = Store<AppState, AppAction, Environment>
+typealias AppStore = Store<AppState, AppAction, World>

@@ -10,17 +10,14 @@ import SwiftUI
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
-    let store = AppStore(initialState: .init(), reducer: appReducer, environment: World())
+    let store = AppStore(initialState: .init(), reducer: appReducer, environment: World(isMock: true))
 
-    func scene(_ scene: UIScene, willConnectTo session: UISceneSession,
-               options connectionOptions: UIScene.ConnectionOptions) {
-        guard let scene = scene as? UIWindowScene else {
-            return
-        }
+    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        guard let scene = scene as? UIWindowScene else { return }
 
         let window = UIWindow(windowScene: scene)
-        window.rootViewController = UIHostingController(rootView: ContentView()
-            .environmentObject(store))
+        let rootView = ContentView().environmentObject(store)
+        window.rootViewController = UIHostingController(rootView: rootView)
         self.window = window
         window.makeKeyAndVisible()
     }

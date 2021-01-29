@@ -28,7 +28,7 @@ class Authentication {
     }
 }
 
-class Environment {
+class World {
     private let isMock: Bool
     
     lazy var authentication = Authentication(authenticator: isMock ? MockAuthenticator() : DefaultAuthenticator())

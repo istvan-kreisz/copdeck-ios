@@ -109,6 +109,7 @@
 				5D83155625C39798008AB948 /* LineChart */,
 				5D00B36425C39CC10060FBA6 /* GoogleService-Info.plist */,
 				5D6960A4258713770058BABE /* Info.plist */,
+				5D69609E258713770058BABE /* Preview Content */,
 			);
 			path = InfluTrader;
 			sourceTree = "<group>";
@@ -209,7 +210,6 @@
 				5D696098258713760058BABE /* SceneDelegate.swift */,
 				5D6960A1258713770058BABE /* LaunchScreen.storyboard */,
 				5D69609C258713770058BABE /* Assets.xcassets */,
-				5D69609E258713770058BABE /* Preview Content */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
