@@ -14,8 +14,11 @@ import GoogleSignIn
 // import CryptoKit
 // import AuthenticationServices
 
-class DefaultAuthenticator: NSObject, Authenticator {
+enum AuthError: Error {
+    case userNotFound
+}
 
+class DefaultAuthenticator: NSObject, Authenticator {
     private var userChangesSubject = PassthroughSubject<String, Error>()
 
     // Unhashed nonce.
@@ -40,6 +43,8 @@ class DefaultAuthenticator: NSObject, Authenticator {
             signOut()
         case .setUserId:
             break
+//        case .setFBLoginButtonDelegate:
+//            break
         }
         return userChangesSubject.eraseToAnyPublisher()
     }
@@ -51,13 +56,25 @@ class DefaultAuthenticator: NSObject, Authenticator {
 
     func signUp(email: String, password: String) {
         Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
-            error.map { self?.userChangesSubject.send(completion: .failure($0)) }
+            self?.handleAuthResponse(result: authResult, error: error)
         }
     }
 
     func signIn(email: String, password: String) {
         Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
-            error.map { self?.userChangesSubject.send(completion: .failure($0)) }
+            self?.handleAuthResponse(result: authResult, error: error)
+        }
+    }
+    
+    private func handleAuthResponse(result: AuthDataResult?, error: Error?) {
+        guard error == nil else {
+            userChangesSubject.send(completion: .failure(error!))
+            return
+        }
+        if let uid = result?.user.uid {
+            userChangesSubject.send(uid)
+        } else {
+            userChangesSubject.send(completion: .failure(AuthError.userNotFound))
         }
     }
 
@@ -79,8 +96,6 @@ class DefaultAuthenticator: NSObject, Authenticator {
     }
 
     func signInWithGoogle() {
-        GIDSignIn.sharedInstance().clientID = FirebaseApp.app()!.options.clientID
-
         // Start the sign in flow!
         if let viewController = UIApplication.shared.windows.first?.rootViewController {
             GIDSignIn.sharedInstance()?.presentingViewController = viewController
@@ -91,6 +106,7 @@ class DefaultAuthenticator: NSObject, Authenticator {
     func signOut() {
         do {
             try Auth.auth().signOut()
+            userChangesSubject.send(completion: .finished)
         } catch let signOutError as NSError {
             userChangesSubject.send(completion: .failure(signOutError))
         }
@@ -98,13 +114,17 @@ class DefaultAuthenticator: NSObject, Authenticator {
 
     func resetPassword(email: String) {
         Auth.auth().sendPasswordReset(withEmail: email) { [weak self] error in
-            error.map { self?.userChangesSubject.send(completion: .failure($0)) }
+            if let error = error {
+                self?.userChangesSubject.send(completion: .failure(error))
+            } else {
+                self?.userChangesSubject.send(completion: .finished)
+            }
         }
     }
 
     fileprivate func signIn(credential: AuthCredential) {
         Auth.auth().signIn(with: credential) { [weak self] authResult, error in
-            error.map { self?.userChangesSubject.send(completion: .failure($0)) }
+            self?.handleAuthResponse(result: authResult, error: error)
         }
     }
 }
@@ -149,7 +169,7 @@ extension DefaultAuthenticator: GIDSignInDelegate {
 
 // MARK: - Sign in with Apple
 
- extension DefaultAuthenticator {
+extension DefaultAuthenticator {
 //
 //    private func randomNonceString(length: Int = 32) -> String {
 //        precondition(length > 0)
@@ -194,6 +214,7 @@ extension DefaultAuthenticator: GIDSignInDelegate {
 //        authorizationController.presentationContextProvider = self
 //        authorizationController.performRequests()
     }
+
 //
 //    private func sha256(_ input: String) -> String {
 //        let inputData = Data(input.utf8)
@@ -201,7 +222,7 @@ extension DefaultAuthenticator: GIDSignInDelegate {
 //        let hashString = hashedData.compactMap { String(format: "%02x", $0) }.joined()
 //        return hashString
 //    }
- }
+}
 
 // MARK: - Implementing Sign in with Apple with Firebase
 

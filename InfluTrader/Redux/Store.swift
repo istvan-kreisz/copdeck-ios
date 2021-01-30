@@ -16,7 +16,7 @@ typealias Reducer<State, Action, Environment> =
 final class Store<State, Action, Environment>: ObservableObject {
     @Published private(set) var state: State
 
-    private let environment: Environment
+    let environment: Environment
     private let reducer: Reducer<State, Action, Environment>
     private var effectCancellables: Set<AnyCancellable> = []
 
@@ -41,15 +41,16 @@ final class Store<State, Action, Environment>: ObservableObject {
 
     private var derivedCancellable: AnyCancellable?
 
-    func derived<DerivedState: Equatable, DerivedAction>(deriveState: @escaping (State) -> DerivedState,
-                                                         deriveAction: @escaping (DerivedAction) -> Action)
-        -> Store<DerivedState, DerivedAction, Void> {
-        let store = Store<DerivedState, DerivedAction, Void>(initialState: deriveState(state),
-                                                             reducer: { _, action, _ in
-                                                                 self.send(deriveAction(action))
-                                                                 return Empty(completeImmediately: true).eraseToAnyPublisher()
-                                                             },
-                                                             environment: ())
+    func derived<DerivedState: Equatable, DerivedAction, DerivedEnvironment>(deriveState: @escaping (State) -> DerivedState,
+                                                                             deriveAction: @escaping (DerivedAction) -> Action,
+                                                                             derivedEnvironment: DerivedEnvironment)
+        -> Store<DerivedState, DerivedAction, DerivedEnvironment> {
+        let store = Store<DerivedState, DerivedAction, DerivedEnvironment>(initialState: deriveState(state),
+                                                                           reducer: { _, action, _ in
+                                                                               self.send(deriveAction(action))
+                                                                               return Empty(completeImmediately: true).eraseToAnyPublisher()
+                                                                           },
+                                                                           environment: derivedEnvironment)
 
         store.derivedCancellable = $state
             .map(deriveState)

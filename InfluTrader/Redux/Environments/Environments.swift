@@ -29,12 +29,6 @@ class Authentication {
 }
 
 class World {
-    private let isMock: Bool
-    
-    lazy var authentication = Authentication(authenticator: isMock ? MockAuthenticator() : DefaultAuthenticator())
-    lazy var settings = AppSettings(settings: isMock ? DefaultSettings() : DefaultSettings())
-
-    init(isMock: Bool) {
-        self.isMock = isMock
-    }
+    let authentication = Authentication(authenticator: DebugSettings.shared.useMockData ? MockAuthenticator() : DefaultAuthenticator())
+    lazy var settings = AppSettings(settings: DebugSettings.shared.useMockData ? DefaultSettings() : DefaultSettings())
 }

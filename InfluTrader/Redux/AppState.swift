@@ -9,10 +9,10 @@ import Foundation
 
 
 struct ErrorState: Equatable {
-    var error: Error?
+    var error: AppError?
     
     static func == (_ lhs: ErrorState, _ rhs: ErrorState) -> Bool {
-        lhs.error?.localizedDescription == rhs.error?.localizedDescription
+        lhs.error?.id == rhs.error?.id
     }
 }
 

@@ -7,19 +7,35 @@
 
 import UIKit
 import SwiftUI
+// import FacebookLogin
+import GoogleSignIn
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
-    let store = AppStore(initialState: .init(), reducer: appReducer, environment: World(isMock: true))
+    let store = AppStore(initialState: .init(), reducer: appReducer, environment: World())
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let scene = scene as? UIWindowScene else { return }
 
+        setupUI()
+
+        let rootView = RootView().environmentObject(store)
         let window = UIWindow(windowScene: scene)
-        let rootView = ContentView().environmentObject(store)
-        window.rootViewController = UIHostingController(rootView: rootView)
+        let rootViewController = UIHostingController(rootView: rootView)
+        window.rootViewController = rootViewController
+        GIDSignIn.sharedInstance()?.presentingViewController = rootViewController
+        GIDSignIn.sharedInstance()?.restorePreviousSignIn()
         self.window = window
         window.makeKeyAndVisible()
+    }
+
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+//        guard let context = URLContexts.first else { return }
+        
+//        ApplicationDelegate.shared.application(UIApplication.shared,
+//                                               open: context.url,
+//                                               sourceApplication: context.options.sourceApplication,
+//                                               annotation: context.options.annotation)
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -48,5 +64,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Called as the scene transitions from the foreground to the background.
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
+    }
+
+    private func setupUI() {
+        UITableView.appearance().backgroundColor = .clear
+        UITableView.appearance().separatorStyle = .none
+        UITableView.appearance().separatorColor = .clear
+        UITableView.appearance().showsVerticalScrollIndicator = false
+        UITableViewCell.appearance().selectionStyle = .none
+        UINavigationBar.appearance().backgroundColor = UIColor.clear
     }
 }

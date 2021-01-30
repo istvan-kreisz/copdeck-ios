@@ -7,6 +7,26 @@
 
 import Foundation
 import Combine
+//import FacebookLogin
+
+struct AppError: Identifiable {
+    let id = UUID().uuidString
+    let title: String
+    let message: String
+    let error: Error?
+
+    init(title: String = "Ooops", message: String = "Unknown Error", error: Error? = nil) {
+        self.title = title
+        self.message = message
+        self.error = error
+    }
+    
+    init(error: Error) {
+        self.init(title: "", message: "", error: error)
+    }
+    
+    static var unknown: Self = .init(title: "", message: "")
+}
 
 enum GlobalErrors: Error {
     case unknown
@@ -21,6 +41,7 @@ enum AuthenticationAction {
     case signOut
     case passwordReset(username: String)
     case setUserId(userId: String)
+//    case setFBLoginButtonDelegate(delegate: LoginButtonDelegate)
 }
 
 enum SettingsAction {
@@ -29,7 +50,7 @@ enum SettingsAction {
 }
 
 enum ErrorAction {
-    case setError(error: Error?)
+    case setError(error: AppError?)
 }
 
 enum AppAction {
@@ -46,11 +67,6 @@ func settingReducer(state: inout SettingsState,
         state = SettingsState()
     case .action2:
         break
-//        return environment.service
-//            .publisher
-//            .replaceError(with: ())
-//            .map { TrendsAction.action1 }
-//            .eraseToAnyPublisher()
     }
     return Empty().eraseToAnyPublisher()
 }
@@ -70,11 +86,14 @@ func authenticatorReducer(state: inout UserState,
     case let .setUserId(userId):
         state.userId = userId
         return Empty().eraseToAnyPublisher()
+//    case let .setFBLoginButtonDelegate(delegate):
+//        delegate = environment.authenticator
+//        return Empty().eraseToAnyPublisher()
     default:
         return environment.authenticator.handle(action)
             .map { AppAction.authenticator(action: .setUserId(userId: $0)) }
-            .tryCatch { Just(AppAction.error(action: .setError(error: $0))) }
-            .replaceError(with: AppAction.error(action: .setError(error: GlobalErrors.unknown)))
+            .tryCatch { Just(AppAction.error(action: .setError(error: AppError(error: $0)))) }
+            .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
             .eraseToAnyPublisher()
     }
 }
