@@ -25,6 +25,10 @@ struct RootView: View {
                     .zIndex(1)
             } else {
                 MainView()
+                    .environmentObject(store
+                        .derived(deriveState: \.mainState,
+                                 deriveAction: AppAction.function,
+                                 derivedEnvironment: store.environment.main))
                     .zIndex(0)
             }
         }

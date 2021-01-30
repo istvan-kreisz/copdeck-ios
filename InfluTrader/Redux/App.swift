@@ -28,14 +28,14 @@ struct AppError: Identifiable, Error {
     static var unknown: Self = .init(title: "", message: "")
 }
 
-enum GlobalErrors: Error {
-    case unknown
+enum TradeType: String {
+    case buy, sell
 }
 
 enum FunctionAction {
     case set(mainState: MainState)
     // trade
-    case tradeStock
+    case tradeStock(stockId: String, amount: Int, type: TradeType)
     // data feed
     case getStockData
     case getMainFeedData
@@ -72,6 +72,7 @@ enum ErrorAction {
 }
 
 enum AppAction {
+    case none
     case function(action: FunctionAction)
     case error(action: ErrorAction)
     case authenticator(action: AuthenticationAction)
@@ -87,7 +88,7 @@ func settingReducer(state: inout SettingsState,
     case .action2:
         break
     }
-    return Empty().eraseToAnyPublisher()
+    return Empty(completeImmediately: true).eraseToAnyPublisher()
 }
 
 func errorReducer(state: inout ErrorState, action: ErrorAction) -> AnyPublisher<ErrorAction, Never> {
@@ -95,7 +96,7 @@ func errorReducer(state: inout ErrorState, action: ErrorAction) -> AnyPublisher<
     case let .setError(error: error):
         state.error = error
     }
-    return Empty().eraseToAnyPublisher()
+    return Empty(completeImmediately: true).eraseToAnyPublisher()
 }
 
 func authenticatorReducer(state: inout UserState,
@@ -104,7 +105,7 @@ func authenticatorReducer(state: inout UserState,
     switch action {
     case let .setUserId(userId):
         state.userId = userId
-        return Empty().eraseToAnyPublisher()
+        return Empty(completeImmediately: true).eraseToAnyPublisher()
 //    case let .setFBLoginButtonDelegate(delegate):
 //        delegate = environment.authenticator
 //        return Empty().eraseToAnyPublisher()
@@ -123,7 +124,13 @@ func mainReducer(state: inout MainState,
     switch action {
     case let .set(mainState: mainState):
         state = mainState
-        return Empty().eraseToAnyPublisher()
+        return Empty(completeImmediately: true).eraseToAnyPublisher()
+    case let .tradeStock(stockId: stockId, amount: amount, type: type):
+        return environment.functions.tradeStock(stockId: stockId, amount: amount, type: type)
+            .map { AppAction.none }
+            .tryCatch { Just(AppAction.error(action: .setError(error: AppError(error: $0)))) }
+            .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
+            .eraseToAnyPublisher()
     case .getMainFeedData:
         return environment.functions.getMainFeedData()
             .map { AppAction.function(action: .set(mainState: $0)) }
@@ -139,6 +146,8 @@ func appReducer(state: inout AppState,
                 action: AppAction,
                 environment: World) -> AnyPublisher<AppAction, Never> {
     switch action {
+    case .none:
+        return Empty(completeImmediately: true).eraseToAnyPublisher()
     case let .function(action: action):
         return mainReducer(state: &state.mainState, action: action, environment: environment.main)
     case let .authenticator(action: action):

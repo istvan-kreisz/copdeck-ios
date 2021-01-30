@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 protocol FunctionsManager {
-    func tradeStock()
+    func tradeStock(stockId: String, amount: Int, type: TradeType)  -> AnyPublisher<Void, AppError>
     func getStockData()
     func getMainFeedData() -> AnyPublisher<MainState, AppError>
     func getStocksHistory()

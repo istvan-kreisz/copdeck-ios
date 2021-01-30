@@ -9,14 +9,12 @@ import SwiftUI
 import FirebaseFunctions
 
 struct MainView: View {
-    @EnvironmentObject var store: Store<MainState, Functions, Functions>
+    @EnvironmentObject var store: Store<MainState, FunctionAction, Main>
 
     var body: some View {
         TabView {
             NavigationView {
-                Button("button 1") {
-                    print("button 1")
-                }
+                HomeView()
             }.tabItem {
                 Image(systemName: "heart.fill")
                     .imageScale(.large)
@@ -24,9 +22,7 @@ struct MainView: View {
             }
 
             NavigationView {
-                Button("button 2") {
-                    print("button 2")
-                }
+                Text("Second view")
             }.tabItem {
                 Image(systemName: "chevron.up.circle.fill")
                     .imageScale(.large)
@@ -34,7 +30,7 @@ struct MainView: View {
             }
         }
         .onAppear {
-            store.send(.)
+            store.send(.getMainFeedData)
         }
     }
 }

@@ -11,6 +11,8 @@
 		5D2D5AA025C529E3009598AA /* FunctionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5A9F25C529E3009598AA /* FunctionsManager.swift */; };
 		5D2D5AA325C52E9B009598AA /* MainFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5AA225C52E9B009598AA /* MainFeed.swift */; };
 		5D2D5AAF25C552B0009598AA /* DefaultFunctionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5AAE25C552B0009598AA /* DefaultFunctionsManager.swift */; };
+		5D3E872125C5CCD700FC65FE /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D3E872025C5CCD700FC65FE /* HomeView.swift */; };
+		5D3E872525C5D3FC00FC65FE /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D3E872425C5D3FC00FC65FE /* Array+Extensions.swift */; };
 		5D424CAE25C4FDCC0008D6F4 /* SignInButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424CAB25C4FDCC0008D6F4 /* SignInButton.swift */; };
 		5D424CCF25C4FE320008D6F4 /* StoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424CCE25C4FE320008D6F4 /* StoreReviewHelper.swift */; };
 		5D424CD425C4FF2F0008D6F4 /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424CD325C4FF2F0008D6F4 /* IAPManager.swift */; };
@@ -60,6 +62,8 @@
 		5D2D5A9F25C529E3009598AA /* FunctionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionsManager.swift; sourceTree = "<group>"; };
 		5D2D5AA225C52E9B009598AA /* MainFeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainFeed.swift; sourceTree = "<group>"; };
 		5D2D5AAE25C552B0009598AA /* DefaultFunctionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultFunctionsManager.swift; sourceTree = "<group>"; };
+		5D3E872025C5CCD700FC65FE /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		5D3E872425C5D3FC00FC65FE /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 		5D424CAB25C4FDCC0008D6F4 /* SignInButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInButton.swift; sourceTree = "<group>"; };
 		5D424CCE25C4FE320008D6F4 /* StoreReviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StoreReviewHelper.swift; path = ../../../../../../../Desktop/StoreReviewHelper.swift; sourceTree = "<group>"; };
 		5D424CD325C4FF2F0008D6F4 /* IAPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPManager.swift; sourceTree = "<group>"; };
@@ -172,6 +176,7 @@
 			children = (
 				5D424CF625C503D10008D6F4 /* UIScreen+Extensions.swift */,
 				5D424CFA25C503F00008D6F4 /* UIApplication+Extensions.swift */,
+				5D3E872425C5D3FC00FC65FE /* Array+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -218,17 +223,18 @@
 		5D424D2925C505E90008D6F4 /* Main */ = {
 			isa = PBXGroup;
 			children = (
-				5D424D2A25C505F90008D6F4 /* Main */,
+				5D83156A25C397C4008AB948 /* MainView.swift */,
+				5D424D2A25C505F90008D6F4 /* Home */,
 			);
 			path = Main;
 			sourceTree = "<group>";
 		};
-		5D424D2A25C505F90008D6F4 /* Main */ = {
+		5D424D2A25C505F90008D6F4 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				5D83156A25C397C4008AB948 /* MainView.swift */,
+				5D3E872025C5CCD700FC65FE /* HomeView.swift */,
 			);
-			path = Main;
+			path = Home;
 			sourceTree = "<group>";
 		};
 		5D424D4D25C509F50008D6F4 /* Components */ = {
@@ -532,6 +538,7 @@
 				5D424CF725C503D10008D6F4 /* UIScreen+Extensions.swift in Sources */,
 				5DC00EDD25C3BE0A009A3AB9 /* MockAuthenticator.swift in Sources */,
 				5DC00EAF25C3A387009A3AB9 /* DefaultAuthenticator.swift in Sources */,
+				5D3E872125C5CCD700FC65FE /* HomeView.swift in Sources */,
 				5D6960B4258714FB0058BABE /* AppState.swift in Sources */,
 				5D424CAE25C4FDCC0008D6F4 /* SignInButton.swift in Sources */,
 				5D424D2125C505450008D6F4 /* DimView.swift in Sources */,
@@ -543,6 +550,7 @@
 				5D424D4B25C509D20008D6F4 /* PasswordResetView.swift in Sources */,
 				5D424D2025C505450008D6F4 /* InputField.swift in Sources */,
 				5D424CD425C4FF2F0008D6F4 /* IAPManager.swift in Sources */,
+				5D3E872525C5D3FC00FC65FE /* Array+Extensions.swift in Sources */,
 				5D424CEE25C502F90008D6F4 /* Colors.swift in Sources */,
 				5D83156B25C397C4008AB948 /* MainView.swift in Sources */,
 				5D6960BA258717430058BABE /* Environments.swift in Sources */,
