@@ -9,34 +9,7 @@ import SwiftUI
 import FirebaseFunctions
 
 struct MainView: View {
-    @EnvironmentObject var store: Store<AppState, AppAction, World>
-
-    let functions = Functions.functions()
-
-    func loadView() {
-        functions.useEmulator(withHost: "http://istvans-macbook-pro-2.local", port: 5001)
-        functions.httpsCallable("getMainFeedData").call(["userId": "wTHauqSNruQewLr4FfB6k0tVIAg2"]) { result, error in
-            if let error = error as NSError? {
-                if error.domain == FunctionsErrorDomain {
-                    let code = FunctionsErrorCode(rawValue: error.code)
-                    let message = error.localizedDescription
-                    let details = error.userInfo[FunctionsErrorDetailsKey]
-                    print(message)
-                    print(details)
-                }
-            }
-            if let result = result?.data as? [String: Any], let jsonData = try? JSONSerialization.data(withJSONObject: result, options: .prettyPrinted) {
-                do {
-                    let mainFeed = try JSONDecoder().decode(MainFeed.self, from: jsonData)
-                    print(mainFeed)
-                } catch {
-                    print(error)
-                    print(result)
-                }
-                
-            }
-        }
-    }
+    @EnvironmentObject var store: Store<MainState, Functions, Functions>
 
     var body: some View {
         TabView {
@@ -60,10 +33,8 @@ struct MainView: View {
                 Text("trends")
             }
         }
-        .onTapGesture {
-            print("------------------")
-            print("------------------")
-            loadView()
+        .onAppear {
+            store.send(.)
         }
     }
 }

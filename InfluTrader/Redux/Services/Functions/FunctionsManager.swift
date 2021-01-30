@@ -9,5 +9,13 @@ import Foundation
 import Combine
 
 protocol FunctionsManager {
-    func handle(_ authAction: AuthenticationAction) -> AnyPublisher<String, Error>
+    func tradeStock()
+    func getStockData()
+    func getMainFeedData() -> AnyPublisher<MainState, AppError>
+    func getStocksHistory()
+    func getStocksInCategory()
+    func getUserData()
+    func changeUsername()
+    func getNews()
+    func search()
 }

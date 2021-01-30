@@ -10,7 +10,7 @@
 		5D00B36525C39CC10060FBA6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5D00B36425C39CC10060FBA6 /* GoogleService-Info.plist */; };
 		5D2D5AA025C529E3009598AA /* FunctionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5A9F25C529E3009598AA /* FunctionsManager.swift */; };
 		5D2D5AA325C52E9B009598AA /* MainFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5AA225C52E9B009598AA /* MainFeed.swift */; };
-		5D2D5AAB25C53F39009598AA /* Info-Debug.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5D2D5AAA25C53F39009598AA /* Info-Debug.plist */; };
+		5D2D5AAF25C552B0009598AA /* DefaultFunctionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5AAE25C552B0009598AA /* DefaultFunctionsManager.swift */; };
 		5D424CAE25C4FDCC0008D6F4 /* SignInButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424CAB25C4FDCC0008D6F4 /* SignInButton.swift */; };
 		5D424CCF25C4FE320008D6F4 /* StoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424CCE25C4FE320008D6F4 /* StoreReviewHelper.swift */; };
 		5D424CD425C4FF2F0008D6F4 /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424CD325C4FF2F0008D6F4 /* IAPManager.swift */; };
@@ -59,7 +59,7 @@
 		5D00B36425C39CC10060FBA6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		5D2D5A9F25C529E3009598AA /* FunctionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionsManager.swift; sourceTree = "<group>"; };
 		5D2D5AA225C52E9B009598AA /* MainFeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainFeed.swift; sourceTree = "<group>"; };
-		5D2D5AAA25C53F39009598AA /* Info-Debug.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "Info-Debug.plist"; sourceTree = "<group>"; };
+		5D2D5AAE25C552B0009598AA /* DefaultFunctionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultFunctionsManager.swift; sourceTree = "<group>"; };
 		5D424CAB25C4FDCC0008D6F4 /* SignInButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInButton.swift; sourceTree = "<group>"; };
 		5D424CCE25C4FE320008D6F4 /* StoreReviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StoreReviewHelper.swift; path = ../../../../../../../Desktop/StoreReviewHelper.swift; sourceTree = "<group>"; };
 		5D424CD325C4FF2F0008D6F4 /* IAPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPManager.swift; sourceTree = "<group>"; };
@@ -122,6 +122,7 @@
 			isa = PBXGroup;
 			children = (
 				5D2D5A9F25C529E3009598AA /* FunctionsManager.swift */,
+				5D2D5AAE25C552B0009598AA /* DefaultFunctionsManager.swift */,
 			);
 			path = Functions;
 			sourceTree = "<group>";
@@ -264,7 +265,6 @@
 				5D6960AB2587148E0058BABE /* Redux */,
 				5D00B36425C39CC10060FBA6 /* GoogleService-Info.plist */,
 				5D6960A4258713770058BABE /* Info.plist */,
-				5D2D5AAA25C53F39009598AA /* Info-Debug.plist */,
 				5D69609E258713770058BABE /* Preview Content */,
 			);
 			path = InfluTrader;
@@ -440,7 +440,6 @@
 			files = (
 				5D424CF225C503120008D6F4 /* Colors.xcassets in Resources */,
 				5D6960A3258713770058BABE /* LaunchScreen.storyboard in Resources */,
-				5D2D5AAB25C53F39009598AA /* Info-Debug.plist in Resources */,
 				5D424D2E25C509530008D6F4 /* Karla-ExtraBold.ttf in Resources */,
 				5D424D3025C5095B0008D6F4 /* Karla-ExtraLight.ttf in Resources */,
 				5D00B36525C39CC10060FBA6 /* GoogleService-Info.plist in Resources */,
@@ -527,6 +526,7 @@
 				5D424D1C25C505450008D6F4 /* Spinner.swift in Sources */,
 				5D696099258713760058BABE /* SceneDelegate.swift in Sources */,
 				5D424CCF25C4FE320008D6F4 /* StoreReviewHelper.swift in Sources */,
+				5D2D5AAF25C552B0009598AA /* DefaultFunctionsManager.swift in Sources */,
 				5D424CFF25C5041E0008D6F4 /* DebugSettings.swift in Sources */,
 				5D69609B258713760058BABE /* LoginView.swift in Sources */,
 				5D424CF725C503D10008D6F4 /* UIScreen+Extensions.swift in Sources */,

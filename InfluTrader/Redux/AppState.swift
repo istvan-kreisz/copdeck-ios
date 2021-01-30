@@ -26,4 +26,5 @@ struct AppState: Equatable {
     var userState = UserState()
     var errorState = ErrorState()
     var settingState = SettingsState()
+    var mainState = MainState()
 }

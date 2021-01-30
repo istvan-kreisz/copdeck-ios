@@ -7,9 +7,9 @@
 
 import Foundation
 import Combine
-//import FacebookLogin
+// import FacebookLogin
 
-struct AppError: Identifiable {
+struct AppError: Identifiable, Error {
     let id = UUID().uuidString
     let title: String
     let message: String
@@ -20,16 +20,34 @@ struct AppError: Identifiable {
         self.message = message
         self.error = error
     }
-    
+
     init(error: Error) {
         self.init(title: "", message: "", error: error)
     }
-    
+
     static var unknown: Self = .init(title: "", message: "")
 }
 
 enum GlobalErrors: Error {
     case unknown
+}
+
+enum FunctionAction {
+    case set(mainState: MainState)
+    // trade
+    case tradeStock
+    // data feed
+    case getStockData
+    case getMainFeedData
+    case getStocksHistory
+    case getStocksInCategory
+    // user
+    case getUserData
+    case changeUsername
+    // news
+    case getNews
+    // search
+    case search
 }
 
 enum AuthenticationAction {
@@ -54,6 +72,7 @@ enum ErrorAction {
 }
 
 enum AppAction {
+    case function(action: FunctionAction)
     case error(action: ErrorAction)
     case authenticator(action: AuthenticationAction)
     case settings(action: SettingsAction)
@@ -98,10 +117,30 @@ func authenticatorReducer(state: inout UserState,
     }
 }
 
+func mainReducer(state: inout MainState,
+                 action: FunctionAction,
+                 environment: Main) -> AnyPublisher<AppAction, Never> {
+    switch action {
+    case let .set(mainState: mainState):
+        state = mainState
+        return Empty().eraseToAnyPublisher()
+    case .getMainFeedData:
+        return environment.functions.getMainFeedData()
+            .map { AppAction.function(action: .set(mainState: $0)) }
+            .tryCatch { Just(AppAction.error(action: .setError(error: AppError(error: $0)))) }
+            .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
+            .eraseToAnyPublisher()
+    default:
+        return Empty().eraseToAnyPublisher()
+    }
+}
+
 func appReducer(state: inout AppState,
                 action: AppAction,
                 environment: World) -> AnyPublisher<AppAction, Never> {
     switch action {
+    case let .function(action: action):
+        return mainReducer(state: &state.mainState, action: action, environment: environment.main)
     case let .authenticator(action: action):
         return authenticatorReducer(state: &state.userState, action: action, environment: environment.authentication)
     case let .error(action: action):

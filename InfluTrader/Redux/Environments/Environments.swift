@@ -28,7 +28,16 @@ class Authentication {
     }
 }
 
+class Main {
+    let functions: FunctionsManager
+
+    init(functions: FunctionsManager) {
+        self.functions = functions
+    }
+}
+
 class World {
-    let authentication = Authentication(authenticator: DebugSettings.shared.useMockData ? MockAuthenticator() : DefaultAuthenticator())
-    lazy var settings = AppSettings(settings: DebugSettings.shared.useMockData ? DefaultSettings() : DefaultSettings())
+    let authentication = Authentication(authenticator: DefaultAuthenticator())
+    lazy var settings = AppSettings(settings: DefaultSettings())
+    lazy var main = Main(functions: DefaultFunctionsManager())
 }

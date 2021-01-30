@@ -7,25 +7,25 @@
 
 import Foundation
 
-struct MainFeed: Codable {
-    let user: User?
-    let userStocks: [String: Stock]?
-    let trendingStocks: [Stock]?
+struct MainState: Codable, Equatable {
+    var user: User?
+    var userStocks: [String: Stock]?
+    var trendingStocks: [Stock]?
 }
 
-struct User: Codable {
+struct User: Codable, Equatable {
     var starterCash: Int?
     var name: String?
     var cash: Double?
     var transactions: [String: [String: Int]]?
 }
 
-struct Stock: Codable {
+struct Stock: Codable, Equatable {
     var price: Double?
     var soldAmount: Int?
     var recentRecords: RecentRecords? = .init()
 
-    struct RecentRecords: Codable {
+    struct RecentRecords: Codable, Equatable {
         var percentChange: Int?
         var soldAmount: Int?
         var price: [String: Double]?

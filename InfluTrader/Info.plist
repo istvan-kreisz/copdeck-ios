@@ -38,13 +38,6 @@
                 <key>NSIncludesSubdomains</key>
                 <true/>
             </dict>
-            <key>istvans-macbook-pro-2.local:5001</key>
-            <dict>
-                <key>NSExceptionAllowsInsecureHTTPLoads</key>
-                <true/>
-                <key>NSIncludesSubdomains</key>
-                <true/>
-            </dict>
         </dict>
     </dict>
 
