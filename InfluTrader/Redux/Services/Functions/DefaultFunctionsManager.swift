@@ -9,32 +9,37 @@ import Foundation
 import Combine
 import FirebaseFunctions
 
-enum FunctionError {
-    case decodingFailure
-}
-
 class DefaultFunctionsManager: FunctionsManager {
     func tradeStock(userId: String, stockId: String, amount: Int, type: TradeType) -> AnyPublisher<MainState, AppError> {
-        callFirebaseFunction(functionName: "getMainFeedData", userId: userId)
+        callFirebaseFunction(functionName: "getMainFeedData",
+                             userId: userId,
+                             parameters: ["amount": amount, "tradeType": type.rawValue, "stockId": stockId])
     }
+
     func getStockData(userId: String, stockId: String, type: StockQueryType) -> AnyPublisher<Stock, AppError> {
-        callFirebaseFunction(functionName: "getMainFeedData", userId: userId)
+        callFirebaseFunction(functionName: "getMainFeedData", userId: userId, parameters: ["stockId": stockId, "queryType": type.rawValue])
     }
+
     func getStocksHistory(userId: String) -> AnyPublisher<[Stock], AppError> {
         callFirebaseFunction(functionName: "getMainFeedData", userId: userId)
     }
+
     func getStocksInCategory(userId: String, category: StockCategory) -> AnyPublisher<[Stock], AppError> {
-        callFirebaseFunction(functionName: "getMainFeedData", userId: userId)
+        callFirebaseFunction(functionName: "getMainFeedData", userId: userId, parameters: ["category": category.rawValue])
     }
+
     func getUserData(userId: String) -> AnyPublisher<User, AppError> {
         callFirebaseFunction(functionName: "getMainFeedData", userId: userId)
     }
+
     func changeUsername(userId: String, newName: String) -> AnyPublisher<User, AppError> {
-        callFirebaseFunction(functionName: "getMainFeedData", userId: userId)
+        callFirebaseFunction(functionName: "getMainFeedData", userId: userId, parameters: ["username": newName])
     }
+
     func search(userId: String, searchTerm: String) -> AnyPublisher<[String], AppError> {
-        callFirebaseFunction(functionName: "getMainFeedData", userId: userId)
+        callFirebaseFunction(functionName: "getMainFeedData", userId: userId, parameters: ["searchTerm": searchTerm])
     }
+
     func getNews(userId: String) {}
 
     private let functions = Functions.functions()
@@ -49,11 +54,29 @@ class DefaultFunctionsManager: FunctionsManager {
         callFirebaseFunction(functionName: "getMainFeedData", userId: userId)
     }
 
+    private func callFirebaseFunction(functionName: String,
+                                      userId: String,
+                                      parameters: [String: Any] = [:]) -> AnyPublisher<Void, AppError> {
+        Future<Void, AppError> { [weak self] completion in
+            self?.functions.httpsCallable(functionName).call(parameters.merging(["userId": userId]) { $1 }) { [weak self] result, error in
+                guard let self = self else { return }
+                do {
+                    try self.handleError(error)
+                    completion(.success(()))
+                } catch {
+                    let error = (error as? AppError) ?? AppError()
+                    completion(.failure(error))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+
     private func callFirebaseFunction<Model: Decodable>(functionName: String,
                                                         userId: String,
-                                                        parameters: [String: String] = [:]) -> AnyPublisher<Model, AppError> {
+                                                        parameters: [String: Any] = [:]) -> AnyPublisher<Model, AppError> {
         Future<Model, AppError> { [weak self] completion in
-            self?.functions.httpsCallable(functionName).call(parameters) { [weak self] result, error in
+            self?.functions.httpsCallable(functionName).call(parameters.merging(["userId": userId]) { $1 }) { [weak self] result, error in
                 guard let self = self else { return }
                 do {
                     try self.handleError(error)
