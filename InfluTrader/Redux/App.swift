@@ -9,27 +9,16 @@ import Foundation
 import Combine
 // import FacebookLogin
 
-struct AppError: Identifiable, Error {
-    let id = UUID().uuidString
-    let title: String
-    let message: String
-    let error: Error?
-
-    init(title: String = "Ooops", message: String = "Unknown Error", error: Error? = nil) {
-        self.title = title
-        self.message = message
-        self.error = error
-    }
-
-    init(error: Error) {
-        self.init(title: "", message: "", error: error)
-    }
-
-    static var unknown: Self = .init(title: "", message: "")
-}
-
 enum TradeType: String {
     case buy, sell
+}
+
+enum StockQueryType: String {
+    case shallow, deep
+}
+
+enum StockCategory: String {
+    case all, trending, highestValue, highestIncrease, highestDecrease
 }
 
 enum FunctionAction {
@@ -99,7 +88,7 @@ func errorReducer(state: inout ErrorState, action: ErrorAction) -> AnyPublisher<
     return Empty(completeImmediately: true).eraseToAnyPublisher()
 }
 
-func authenticatorReducer(state: inout UserState,
+func authenticatorReducer(state: inout UserIdState,
                           action: AuthenticationAction,
                           environment: Authentication) -> AnyPublisher<AppAction, Never> {
     switch action {
@@ -118,21 +107,21 @@ func authenticatorReducer(state: inout UserState,
     }
 }
 
-func mainReducer(state: inout MainState,
+func mainReducer(state: inout AppState,
                  action: FunctionAction,
                  environment: Main) -> AnyPublisher<AppAction, Never> {
     switch action {
     case let .set(mainState: mainState):
-        state = mainState
+        state.mainState = mainState
         return Empty(completeImmediately: true).eraseToAnyPublisher()
     case let .tradeStock(stockId: stockId, amount: amount, type: type):
-        return environment.functions.tradeStock(stockId: stockId, amount: amount, type: type)
-            .map { AppAction.none }
+        return environment.functions.tradeStock(userId: state.userIdState.userId, stockId: stockId, amount: amount, type: type)
+            .map { _ in AppAction.none }
             .tryCatch { Just(AppAction.error(action: .setError(error: AppError(error: $0)))) }
             .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
             .eraseToAnyPublisher()
     case .getMainFeedData:
-        return environment.functions.getMainFeedData()
+        return environment.functions.getMainFeedData(userId: state.userIdState.userId)
             .map { AppAction.function(action: .set(mainState: $0)) }
             .tryCatch { Just(AppAction.error(action: .setError(error: AppError(error: $0)))) }
             .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
@@ -149,9 +138,9 @@ func appReducer(state: inout AppState,
     case .none:
         return Empty(completeImmediately: true).eraseToAnyPublisher()
     case let .function(action: action):
-        return mainReducer(state: &state.mainState, action: action, environment: environment.main)
+        return mainReducer(state: &state, action: action, environment: environment.main)
     case let .authenticator(action: action):
-        return authenticatorReducer(state: &state.userState, action: action, environment: environment.authentication)
+        return authenticatorReducer(state: &state.userIdState, action: action, environment: environment.authentication)
     case let .error(action: action):
         return errorReducer(state: &state.errorState, action: action)
             .map(AppAction.error)

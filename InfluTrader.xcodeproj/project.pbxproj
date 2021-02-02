@@ -14,7 +14,6 @@
 		5D3E872125C5CCD700FC65FE /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D3E872025C5CCD700FC65FE /* HomeView.swift */; };
 		5D3E872525C5D3FC00FC65FE /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D3E872425C5D3FC00FC65FE /* Array+Extensions.swift */; };
 		5D424CAE25C4FDCC0008D6F4 /* SignInButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424CAB25C4FDCC0008D6F4 /* SignInButton.swift */; };
-		5D424CCF25C4FE320008D6F4 /* StoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424CCE25C4FE320008D6F4 /* StoreReviewHelper.swift */; };
 		5D424CD425C4FF2F0008D6F4 /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424CD325C4FF2F0008D6F4 /* IAPManager.swift */; };
 		5D424CEE25C502F90008D6F4 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424CED25C502F90008D6F4 /* Colors.swift */; };
 		5D424CF225C503120008D6F4 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D424CF125C503120008D6F4 /* Colors.xcassets */; };
@@ -39,6 +38,7 @@
 		5D424D4725C509AD0008D6F4 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424D4625C509AD0008D6F4 /* SignUpView.swift */; };
 		5D424D4B25C509D20008D6F4 /* PasswordResetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424D4A25C509D20008D6F4 /* PasswordResetView.swift */; };
 		5D424D5125C50AFA0008D6F4 /* Introspect in Frameworks */ = {isa = PBXBuildFile; productRef = 5D424D5025C50AFA0008D6F4 /* Introspect */; };
+		5D488E8925C8D54E00624FEF /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D488E8825C8D54E00624FEF /* AppError.swift */; };
 		5D696097258713760058BABE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D696096258713760058BABE /* AppDelegate.swift */; };
 		5D696099258713760058BABE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D696098258713760058BABE /* SceneDelegate.swift */; };
 		5D69609B258713760058BABE /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D69609A258713760058BABE /* LoginView.swift */; };
@@ -50,6 +50,7 @@
 		5D6960B4258714FB0058BABE /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6960B3258714FB0058BABE /* AppState.swift */; };
 		5D6960BA258717430058BABE /* Environments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6960B9258717430058BABE /* Environments.swift */; };
 		5D83156B25C397C4008AB948 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D83156A25C397C4008AB948 /* MainView.swift */; };
+		5DBCB6DD25C90A510025BC23 /* StoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DBCB6DC25C90A510025BC23 /* StoreReviewHelper.swift */; };
 		5DC00EAB25C3A331009A3AB9 /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC00EAA25C3A331009A3AB9 /* Authenticator.swift */; };
 		5DC00EAF25C3A387009A3AB9 /* DefaultAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC00EAE25C3A387009A3AB9 /* DefaultAuthenticator.swift */; };
 		5DC00EDD25C3BE0A009A3AB9 /* MockAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC00EDC25C3BE0A009A3AB9 /* MockAuthenticator.swift */; };
@@ -65,7 +66,6 @@
 		5D3E872025C5CCD700FC65FE /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		5D3E872425C5D3FC00FC65FE /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 		5D424CAB25C4FDCC0008D6F4 /* SignInButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInButton.swift; sourceTree = "<group>"; };
-		5D424CCE25C4FE320008D6F4 /* StoreReviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StoreReviewHelper.swift; path = ../../../../../../../Desktop/StoreReviewHelper.swift; sourceTree = "<group>"; };
 		5D424CD325C4FF2F0008D6F4 /* IAPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPManager.swift; sourceTree = "<group>"; };
 		5D424CD725C501B20008D6F4 /* Karla-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Karla-ExtraBold.ttf"; sourceTree = "<group>"; };
 		5D424CD825C501B20008D6F4 /* Karla-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Karla-Bold.ttf"; sourceTree = "<group>"; };
@@ -89,6 +89,7 @@
 		5D424D1625C505450008D6F4 /* DimView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DimView.swift; sourceTree = "<group>"; };
 		5D424D4625C509AD0008D6F4 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		5D424D4A25C509D20008D6F4 /* PasswordResetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetView.swift; sourceTree = "<group>"; };
+		5D488E8825C8D54E00624FEF /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
 		5D696093258713760058BABE /* InfluTrader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InfluTrader.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D696096258713760058BABE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5D696098258713760058BABE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -102,6 +103,7 @@
 		5D6960B3258714FB0058BABE /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		5D6960B9258717430058BABE /* Environments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environments.swift; sourceTree = "<group>"; };
 		5D83156A25C397C4008AB948 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		5DBCB6DC25C90A510025BC23 /* StoreReviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreReviewHelper.swift; sourceTree = "<group>"; };
 		5DC00EAA25C3A331009A3AB9 /* Authenticator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authenticator.swift; sourceTree = "<group>"; };
 		5DC00EAE25C3A387009A3AB9 /* DefaultAuthenticator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAuthenticator.swift; sourceTree = "<group>"; };
 		5DC00EDC25C3BE0A009A3AB9 /* MockAuthenticator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockAuthenticator.swift; sourceTree = "<group>"; };
@@ -134,7 +136,7 @@
 		5D424CCD25C4FE200008D6F4 /* StoreReviewHelper */ = {
 			isa = PBXGroup;
 			children = (
-				5D424CCE25C4FE320008D6F4 /* StoreReviewHelper.swift */,
+				5DBCB6DC25C90A510025BC23 /* StoreReviewHelper.swift */,
 			);
 			path = StoreReviewHelper;
 			sourceTree = "<group>";
@@ -309,6 +311,7 @@
 			isa = PBXGroup;
 			children = (
 				5D2D5AA225C52E9B009598AA /* MainFeed.swift */,
+				5D488E8825C8D54E00624FEF /* AppError.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -529,9 +532,9 @@
 				5D696097258713760058BABE /* AppDelegate.swift in Sources */,
 				5D424D1A25C505450008D6F4 /* InfoPopupView.swift in Sources */,
 				5D424D1D25C505450008D6F4 /* Modifiers.swift in Sources */,
+				5D488E8925C8D54E00624FEF /* AppError.swift in Sources */,
 				5D424D1C25C505450008D6F4 /* Spinner.swift in Sources */,
 				5D696099258713760058BABE /* SceneDelegate.swift in Sources */,
-				5D424CCF25C4FE320008D6F4 /* StoreReviewHelper.swift in Sources */,
 				5D2D5AAF25C552B0009598AA /* DefaultFunctionsManager.swift in Sources */,
 				5D424CFF25C5041E0008D6F4 /* DebugSettings.swift in Sources */,
 				5D69609B258713760058BABE /* LoginView.swift in Sources */,
@@ -554,6 +557,7 @@
 				5D424CEE25C502F90008D6F4 /* Colors.swift in Sources */,
 				5D83156B25C397C4008AB948 /* MainView.swift in Sources */,
 				5D6960BA258717430058BABE /* Environments.swift in Sources */,
+				5DBCB6DD25C90A510025BC23 /* StoreReviewHelper.swift in Sources */,
 				5D424D4725C509AD0008D6F4 /* SignUpView.swift in Sources */,
 				5DC00EAB25C3A331009A3AB9 /* Authenticator.swift in Sources */,
 				5D2D5AA325C52E9B009598AA /* MainFeed.swift in Sources */,

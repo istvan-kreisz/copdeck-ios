@@ -14,6 +14,29 @@ enum FunctionError {
 }
 
 class DefaultFunctionsManager: FunctionsManager {
+    func tradeStock(userId: String, stockId: String, amount: Int, type: TradeType) -> AnyPublisher<MainState, AppError> {
+        callFirebaseFunction(functionName: "getMainFeedData", userId: userId)
+    }
+    func getStockData(userId: String, stockId: String, type: StockQueryType) -> AnyPublisher<Stock, AppError> {
+        callFirebaseFunction(functionName: "getMainFeedData", userId: userId)
+    }
+    func getStocksHistory(userId: String) -> AnyPublisher<[Stock], AppError> {
+        callFirebaseFunction(functionName: "getMainFeedData", userId: userId)
+    }
+    func getStocksInCategory(userId: String, category: StockCategory) -> AnyPublisher<[Stock], AppError> {
+        callFirebaseFunction(functionName: "getMainFeedData", userId: userId)
+    }
+    func getUserData(userId: String) -> AnyPublisher<User, AppError> {
+        callFirebaseFunction(functionName: "getMainFeedData", userId: userId)
+    }
+    func changeUsername(userId: String, newName: String) -> AnyPublisher<User, AppError> {
+        callFirebaseFunction(functionName: "getMainFeedData", userId: userId)
+    }
+    func search(userId: String, searchTerm: String) -> AnyPublisher<[String], AppError> {
+        callFirebaseFunction(functionName: "getMainFeedData", userId: userId)
+    }
+    func getNews(userId: String) {}
+
     private let functions = Functions.functions()
 
     init() {
@@ -22,84 +45,50 @@ class DefaultFunctionsManager: FunctionsManager {
         #endif
     }
 
-    func getMainFeedData() -> AnyPublisher<MainState, AppError> {
-        Future<MainState, AppError> { [weak self] publisher in
-            self?.functions.httpsCallable("getMainFeedData").call(["userId": "wTHauqSNruQewLr4FfB6k0tVIAg2"]) { result, error in
-                if let error = error as NSError? {
-                    if error.domain == FunctionsErrorDomain {
-//                        let code = FunctionsErrorCode(rawValue: error.code)
-                        let message = error.localizedDescription
-//                        let details = error.userInfo[FunctionsErrorDetailsKey]
-                        publisher(.failure(AppError(message: message, error: error)))
-                    } else {
-                        publisher(.failure(AppError(title: "Network Error", message: error.localizedDescription, error: error)))
-                    }
-                } else {
-                    if let result = result?.data as? [String: Any] {
-                        do {
-                            let jsonData = try JSONSerialization.data(withJSONObject: result, options: .prettyPrinted)
-                            let mainState = try JSONDecoder().decode(MainState.self, from: jsonData)
-                            publisher(.success(mainState))
-                        } catch {
-                            publisher(.failure(AppError(title: "Network Error", message: "Data decoding failed", error: error)))
-                        }
-                    } else {
-                        publisher(.failure(AppError(title: "Network Error", message: "Data decoding failed")))
-                    }
+    func getMainFeedData(userId: String) -> AnyPublisher<MainState, AppError> {
+        callFirebaseFunction(functionName: "getMainFeedData", userId: userId)
+    }
+
+    private func callFirebaseFunction<Model: Decodable>(functionName: String,
+                                                        userId: String,
+                                                        parameters: [String: String] = [:]) -> AnyPublisher<Model, AppError> {
+        Future<Model, AppError> { [weak self] completion in
+            self?.functions.httpsCallable(functionName).call(parameters) { [weak self] result, error in
+                guard let self = self else { return }
+                do {
+                    try self.handleError(error)
+                    let result: Model = try self.decodeResult(result)
+                    completion(.success(result))
+                } catch {
+                    let error = (error as? AppError) ?? AppError()
+                    completion(.failure(error))
                 }
             }
         }
         .eraseToAnyPublisher()
     }
 
-    func tradeStock(stockId: String, amount: Int, type: TradeType) -> AnyPublisher<Void, AppError> {
-        Future<Void, AppError> { [weak self] publisher in
-            let body: [String: Any] = [
-                "userId": "wTHauqSNruQewLr4FfB6k0tVIAg2",
-                "stockId": stockId,
-                "amount": amount,
-                "tradeType": type.rawValue
-            ]
-
-            self?.functions.httpsCallable("tradeStock").call(body) { result, error in
-                if let error = error as NSError? {
-                    if error.domain == FunctionsErrorDomain {
-//                        let code = FunctionsErrorCode(rawValue: error.code)
-                        let message = error.localizedDescription
-//                        let details = error.userInfo[FunctionsErrorDetailsKey]
-                        publisher(.failure(AppError(message: message, error: error)))
-                    } else {
-                        publisher(.failure(AppError(title: "Network Error", message: error.localizedDescription, error: error)))
-                    }
-                } else {
-//                    if let result = result?.data as? [String: Any] {
-//                        do {
-//                            let jsonData = try JSONSerialization.data(withJSONObject: result, options: .prettyPrinted)
-//                            let mainState = try JSONDecoder().decode(MainState.self, from: jsonData)
-                            publisher(.success(()))
-//                        } catch {
-//                            publisher(.failure(AppError(title: "Network Error", message: "Data decoding failed", error: error)))
-//                        }
-//                    } else {
-//                        publisher(.failure(AppError(title: "Network Error", message: "Data decoding failed")))
-//                    }
-                }
+    private func decodeResult<Model: Decodable>(_ result: HTTPSCallableResult?) throws -> Model {
+        if let result = result?.data as? [String: Any] {
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: result, options: .prettyPrinted)
+                return try JSONDecoder().decode(Model.self, from: jsonData)
+            } catch {
+                throw AppError(title: "Network Error", message: "Data decoding failed", error: error)
             }
+        } else {
+            throw AppError(title: "Network Error", message: "Data decoding failed")
         }
-        .eraseToAnyPublisher()
     }
 
-    func getStockData() {}
-
-    func getStocksHistory() {}
-
-    func getStocksInCategory() {}
-
-    func getUserData() {}
-
-    func changeUsername() {}
-
-    func getNews() {}
-
-    func search() {}
+    private func handleError(_ error: Error?) throws {
+        if let error = error as NSError? {
+            if error.domain == FunctionsErrorDomain {
+                let message = error.localizedDescription
+                throw AppError(message: message, error: error)
+            } else {
+                throw AppError(title: "Network Error", message: error.localizedDescription, error: error)
+            }
+        }
+    }
 }

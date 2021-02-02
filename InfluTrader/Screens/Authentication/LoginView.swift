@@ -11,7 +11,7 @@ import GoogleSignIn
 
 struct LoginView: View {
     
-    @EnvironmentObject var store: Store<UserState, AuthenticationAction, Authentication>
+    @EnvironmentObject var store: Store<UserIdState, AuthenticationAction, Authentication>
 
     @State var email = ""
     @State var password = ""

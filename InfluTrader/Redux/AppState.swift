@@ -7,23 +7,18 @@
 
 import Foundation
 
+struct SettingsState: Equatable {}
 
 struct ErrorState: Equatable {
     var error: AppError?
-    
-    static func == (_ lhs: ErrorState, _ rhs: ErrorState) -> Bool {
-        lhs.error?.id == rhs.error?.id
-    }
 }
 
-struct UserState: Equatable {
+struct UserIdState: Equatable {
     var userId = ""
 }
 
-struct SettingsState: Equatable {}
-
 struct AppState: Equatable {
-    var userState = UserState()
+    var userIdState = UserIdState()
     var errorState = ErrorState()
     var settingState = SettingsState()
     var mainState = MainState()
