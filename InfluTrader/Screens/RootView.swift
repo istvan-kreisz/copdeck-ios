@@ -10,42 +10,33 @@ import SwiftUI
 struct RootView: View {
     @EnvironmentObject var store: Store<AppState, AppAction, World>
 
-    @State var errorShown = false
-    @State var appError: AppError?
     @State var userId: String = ""
 
     var body: some View {
-        Text("")
-//        Group {
-//            if store.state.userState.userId.isEmpty {
-//                LoginView()
-//                    .environmentObject(store
-//                        .derived(deriveState: \.userState,
-//                                 deriveAction: AppAction.authenticator,
-//                                 derivedEnvironment: store.environment.authentication))
-//                    .zIndex(1)
-//            } else {
-//                MainView()
-//                    .environmentObject(store
-//                        .derived(deriveState: \.mainState,
-//                                 deriveAction: AppAction.function,
-//                                 derivedEnvironment: store.environment.main))
-//                    .zIndex(0)
-//            }
-//        }
-//        .onReceive(store.$state) { state in
-//            if !state.userState.userId.isEmpty && self.userId.isEmpty { // when user just logged in
-//                UIApplication.shared.endEditing()
-//            }
-//            self.userId = state.userState.userId
-////            if let error = state.errorState.error {
-////                if self.appError?.id != error.id {
-////                    self.appError = state.error
-////                    self.errorShown = true
-////                }
-////            }
-//        }
-//        .alert(isPresented: $errorShown) {
+        ZStack {
+            if store.state.userIdState.userId.isEmpty {
+                LoginView()
+                    .environmentObject(store
+                                        .derived(deriveState: \.userIdState,
+                                 deriveAction: AppAction.authenticator,
+                                 derivedEnvironment: store.environment.authentication))
+                    .zIndex(1)
+            } else {
+                MainView()
+                    .environmentObject(store
+                        .derived(deriveState: \.mainState,
+                                 deriveAction: AppAction.function,
+                                 derivedEnvironment: store.environment.main))
+                    .zIndex(0)
+            }
+        }
+        .onReceive(store.$state) { state in
+            if !state.userIdState.userId.isEmpty && self.userId.isEmpty { // when user just logged in
+                UIApplication.shared.endEditing()
+            }
+            self.userId = state.userIdState.userId
+        }
+//        .alert(isPresented: store.state.errorState.error != nil) {
 //            Alert(title: Text(self.appError?.title ?? "Ooops"),
 //                  message: Text(self.appError?.message ?? "Unknown Error"),
 //                  dismissButton: .default(Text("OK")))

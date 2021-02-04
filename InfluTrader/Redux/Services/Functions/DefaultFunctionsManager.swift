@@ -84,6 +84,7 @@ class DefaultFunctionsManager: FunctionsManager {
                     completion(.success(result))
                 } catch {
                     let error = (error as? AppError) ?? AppError()
+                    print(error)
                     completion(.failure(error))
                 }
             }

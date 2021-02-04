@@ -1,5 +1,5 @@
 //
-//  MainFeed.swift
+//  MainState.swift
 //  InfluTrader
 //
 //  Created by István Kreisz on 1/30/21.
@@ -12,38 +12,43 @@ struct MainState: Codable, Equatable {
     var user: User?
     var userStocks: [Stock]?
     var trendingStocks: [Stock]?
+    var selectedStock: Stock?
+    var selectedUser: User?
+    var selectedUserStocks: [Stock]?
+    var selectedStocks: [Stock]?
+    var searchResults: [String]?
 }
 
 // MARK: - User
 struct User: Codable, Equatable {
-    var name: String?
-    var starterCash: Int?
-    var cash: Double?
-    var transactions: [Transaction]?
+//    var name: String
+    var starterCash: Int
+    var cash: Double
+    var transactions: [Transaction]
 }
 
 // MARK: - Transaction
 struct Transaction: Codable, Equatable {
-    var id: String?
-    var trades: [Trade]?
+    var id: String
+    var trades: [Trade]
 }
 
 // MARK: - Trade
 struct Trade: Codable, Equatable {
-    var time: String?
-    var amount: Int?
+    var time: String
+    var amount: Int
 }
 
-// MARK: - UserStock
-struct Stock: Codable, Equatable {
-    var id: String?
-    var price: Double?
-    var recentRecords: RecentRecords?
+// MARK: - Stock
+struct Stock: Codable, Equatable, Identifiable {
+    var id: String
+    var price: Double
+    var recentRecords: RecentRecords
     var soldAmount: Int?
     var stats: [Price]?
 }
 
-// MARK: - UserStockRecentRecords
+// MARK: - RecentRecords
 struct RecentRecords: Codable, Equatable {
     var soldAmount: Int?
     var transactions: [Price]?
