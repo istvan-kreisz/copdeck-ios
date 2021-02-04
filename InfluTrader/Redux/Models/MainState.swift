@@ -9,6 +9,7 @@ import Foundation
 
 // MARK: - Result
 struct MainState: Codable, Equatable {
+    var userId = ""
     var user: User?
     var userStocks: [Stock]?
     var trendingStocks: [Stock]?
@@ -17,11 +18,15 @@ struct MainState: Codable, Equatable {
     var selectedUserStocks: [Stock]?
     var selectedStocks: [Stock]?
     var searchResults: [String]?
+    
+    enum CodingKeys: String, CodingKey {
+        case user, userStocks, trendingStocks
+    }
 }
 
 // MARK: - User
 struct User: Codable, Equatable {
-//    var name: String
+    var name: String
     var starterCash: Int
     var cash: Double
     var transactions: [Transaction]

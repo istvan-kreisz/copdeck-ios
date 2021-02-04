@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
-    @EnvironmentObject var store: Store<MainState, FunctionAction, Main>
+    @EnvironmentObject var store: Store<MainState, MainAction, Main>
 
     func ownedAmount(of stock: Stock) -> Int {
         store.state.user?.transactions
@@ -18,7 +18,24 @@ struct HomeView: View {
 
     var body: some View {
         VStack {
-            Text("no")
+            Text(store.state.user?.name ?? "")
+//            ScrollView {
+//                HStack {
+//                    ForEach(store.state.trendingStocks ?? []) { stock in
+//                        VStack {
+//                            ZStack {
+//                                Circle()
+//                                    .frame(width: 80, height: 80)
+//                                Image("profile")
+//                                    .frame(width: 60, height: 60)
+//                                    .cornerRadius(30)
+//                            }
+//                            Text(stock.id)
+//                        }
+//                        .padding()
+//                    }
+//                }
+//            }
             List {
                 ForEach(store.state.userStocks ?? []) { stock in
                     HStack {
@@ -37,7 +54,7 @@ struct HomeView: View {
             }
         }
         .onAppear {
-            store.send(.changeUsername(newName: "hey"))
+            print(store.state.user?.name ?? "")
         }
     }
 }

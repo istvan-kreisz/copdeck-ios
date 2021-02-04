@@ -27,6 +27,8 @@ class DefaultAuthenticator: NSObject, Authenticator {
     func handle(_ authAction: AuthenticationAction) -> AnyPublisher<String, Error> {
         userChangesSubject = PassthroughSubject<String, Error>()
         switch authAction {
+        case .restoreState:
+            restoreState()
         case .signUp(userName: let username, password: let password):
             signUp(email: username, password: password)
         case .signIn(userName: let username, password: let password):
@@ -53,14 +55,18 @@ class DefaultAuthenticator: NSObject, Authenticator {
         super.init()
         GIDSignIn.sharedInstance().delegate = self
     }
+    
+    private func restoreState() {
+        GIDSignIn.sharedInstance()?.restorePreviousSignIn()
+    }
 
-    func signUp(email: String, password: String) {
+    private func signUp(email: String, password: String) {
         Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
             self?.handleAuthResponse(result: authResult, error: error)
         }
     }
 
-    func signIn(email: String, password: String) {
+    private func signIn(email: String, password: String) {
         Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
             self?.handleAuthResponse(result: authResult, error: error)
         }
@@ -95,7 +101,7 @@ class DefaultAuthenticator: NSObject, Authenticator {
 //        }
     }
 
-    func signInWithGoogle() {
+    private func signInWithGoogle() {
         // Start the sign in flow!
         if let viewController = UIApplication.shared.windows.first?.rootViewController {
             GIDSignIn.sharedInstance()?.presentingViewController = viewController
@@ -103,7 +109,7 @@ class DefaultAuthenticator: NSObject, Authenticator {
         }
     }
 
-    func signOut() {
+    private func signOut() {
         do {
             try Auth.auth().signOut()
             userChangesSubject.send(completion: .finished)
@@ -112,7 +118,7 @@ class DefaultAuthenticator: NSObject, Authenticator {
         }
     }
 
-    func resetPassword(email: String) {
+    private func resetPassword(email: String) {
         Auth.auth().sendPasswordReset(withEmail: email) { [weak self] error in
             if let error = error {
                 self?.userChangesSubject.send(completion: .failure(error))

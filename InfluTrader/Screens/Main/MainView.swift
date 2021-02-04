@@ -9,7 +9,7 @@ import SwiftUI
 import FirebaseFunctions
 
 struct MainView: View {
-    @EnvironmentObject var store: Store<MainState, FunctionAction, Main>
+    @EnvironmentObject var store: Store<MainState, MainAction, Main>
 
     var body: some View {
         TabView {

@@ -15,6 +15,8 @@ class MockAuthenticator: NSObject, Authenticator {
 
     func handle(_ authAction: AuthenticationAction) -> AnyPublisher<String, Error> {
         switch authAction {
+        case .restoreState:
+            userChangesSubject.send("hey")
         case .signUp:
             userChangesSubject.send("hey")
         case .signIn:

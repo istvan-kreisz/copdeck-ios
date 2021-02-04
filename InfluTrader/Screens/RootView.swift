@@ -10,30 +10,39 @@ import SwiftUI
 struct RootView: View {
     @EnvironmentObject var store: Store<AppState, AppAction, World>
 
-    @State var userId: String = ""
+    @State var userId: String?
 
     var body: some View {
         ZStack {
-            if store.state.userIdState.userId.isEmpty {
-                LoginView()
-                    .environmentObject(store
-                                        .derived(deriveState: \.userIdState,
-                                 deriveAction: AppAction.authenticator,
-                                 derivedEnvironment: store.environment.authentication))
-                    .zIndex(1)
+            if let userId = store.state.userIdState.userId {
+                if userId.isEmpty {
+                    LoginView()
+                        .environmentObject(store
+                            .derived(deriveState: \.userIdState,
+                                     deriveAction: AppAction.authenticator,
+                                     derivedEnvironment: store.environment.authentication))
+                        .zIndex(1)
+                } else {
+                    if store.state.mainState.userId.isEmpty {
+                        Text("Splashscreen")
+                    } else {
+                        MainView()
+                            .environmentObject(store
+                                .derived(deriveState: \.mainState,
+                                         deriveAction: AppAction.main,
+                                         derivedEnvironment: store.environment.main))
+                            .zIndex(0)
+                    }
+                }
             } else {
-                MainView()
-                    .environmentObject(store
-                        .derived(deriveState: \.mainState,
-                                 deriveAction: AppAction.function,
-                                 derivedEnvironment: store.environment.main))
-                    .zIndex(0)
+                Text("Splashscreen")
             }
         }
         .onReceive(store.$state) { state in
-            if !state.userIdState.userId.isEmpty && self.userId.isEmpty { // when user just logged in
-                UIApplication.shared.endEditing()
-            }
+//            if (state.userIdState.userId?.isEmpty == false) && (self.userId == nil || self.userId?.isEmpty == true) {
+//                // user just logged in
+//                UIApplication.shared.endEditing()
+//            }
             self.userId = state.userIdState.userId
         }
 //        .alert(isPresented: store.state.errorState.error != nil) {
@@ -41,6 +50,9 @@ struct RootView: View {
 //                  message: Text(self.appError?.message ?? "Unknown Error"),
 //                  dismissButton: .default(Text("OK")))
 //        }
+        .onAppear {
+            store.send(.authenticator(action: .restoreState))
+        }
     }
 }
 

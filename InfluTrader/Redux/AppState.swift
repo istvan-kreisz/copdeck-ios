@@ -14,7 +14,7 @@ struct ErrorState: Equatable {
 }
 
 struct UserIdState: Equatable {
-    var userId = ""
+    var userId: String?
 }
 
 struct AppState: Equatable {
