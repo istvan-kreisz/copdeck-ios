@@ -23,7 +23,20 @@ struct HomeView: View {
     var body: some View {
         ZStack {
             VStack {
-                Text(store.state.user?.name ?? "")
+                Text("Welcome " + (store.state.user?.name ?? "") + "!")
+                    .font(.bold(size: 25))
+                    .leftAligned()
+
+                Text("Your portfolio's value:")
+                    .font(.regular(size: 12))
+                    .foregroundColor(.customLightGray1)
+                    .leftAligned()
+                
+                Text("$10000")
+                    .font(.bold(size: 50))
+                    .leftAligned()
+
+
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(store.state.trendingStocks ?? []) { stock in
@@ -63,6 +76,7 @@ struct HomeView: View {
                     }
                 }
             }
+            .withDefaultPadding()
             if selectedStock != nil {
                 StockView(stock: $selectedStock)
                     .transition(.scale)
@@ -74,13 +88,20 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView()
+        let store = AppStore(initialState: .mockAppState,
+                             reducer: appReducer,
+                             environment: World(isMockInstance: true))
+        return Group {
+            HomeView()
+                .environmentObject(store
+                    .derived(deriveState: \.mainState,
+                             deriveAction: AppAction.main,
+                             derivedEnvironment: store.environment.main))
+        }
     }
 }
 
-
 struct StockView: View {
-
     @Binding var stock: Stock?
 
     var body: some View {
@@ -89,7 +110,7 @@ struct StockView: View {
             Button(action: {
                 self.stock = nil
             }) {
-                Text("Click me")
+                    Text("Click me")
             }
             .frame(width: 30, height: 30)
         }

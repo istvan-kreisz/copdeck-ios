@@ -73,6 +73,12 @@ struct DefaultPadding: ViewModifier {
     }
 }
 
+extension View {
+    func withDefaultPadding(padding: DefaultPadding.Padding = .all) -> some View {
+        ModifiedContent(content: self, modifier: DefaultPadding(padding: padding))
+    }
+}
+
 struct DefaultShadow: ViewModifier {
     func body(content: Content) -> some View {
         content
@@ -121,3 +127,36 @@ extension View {
         ModifiedContent(content: self, modifier: CenteredVertically())
     }
 }
+
+struct LeftAligned: ViewModifier {
+    
+    func body(content: Content) -> some View {
+        HStack {
+            content
+            Spacer()
+        }
+    }
+}
+
+extension View {
+    func leftAligned() -> some View {
+        ModifiedContent(content: self, modifier: LeftAligned())
+    }
+}
+
+struct RightAligned: ViewModifier {
+    
+    func body(content: Content) -> some View {
+        HStack {
+            Spacer()
+            content
+        }
+    }
+}
+
+extension View {
+    func rightAligned() -> some View {
+        ModifiedContent(content: self, modifier: RightAligned())
+    }
+}
+

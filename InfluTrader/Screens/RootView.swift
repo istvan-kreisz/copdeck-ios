@@ -59,8 +59,8 @@ struct RootView: View {
 struct RootView_Previews: PreviewProvider {
     static var previews: some View {
         RootView()
-            .environmentObject(AppStore(initialState: .init(),
+            .environmentObject(AppStore(initialState: .mockAppState,
                                         reducer: appReducer,
-                                        environment: World()))
+                                        environment: World(isMockInstance: true)))
     }
 }

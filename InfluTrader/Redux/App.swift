@@ -60,7 +60,6 @@ enum AuthenticationAction {
     case signInWithFacebook
     case signOut
     case passwordReset(username: String)
-    case setUserId(userId: String?)
 //    case setFBLoginButtonDelegate(delegate: LoginButtonDelegate)
 }
 
@@ -97,9 +96,11 @@ func errorReducer(state: inout ErrorState, action: ErrorAction) -> AnyPublisher<
     switch action {
     case let .setError(error: error):
         #if DEBUG
+        if let errorDescription = error?.localizedDescription {
             print("--------------")
-            print(error)
+            print(errorDescription)
             print("--------------")
+        }
         #endif
         state.error = error
     }
@@ -112,7 +113,9 @@ func authenticatorReducer(state: inout UserIdState,
     return environment.authenticator.handle(action)
         .map { AppAction.main(action: .setUserId($0)) }
         // todo: revise
-        .tryCatch {  Just(AppAction.authenticator(action: .setUserId(userId: ""))).merge(with: Just(AppAction.error(action: .setError(error: AppError(error: $0))))) }
+        .tryCatch {
+            Just(AppAction.main(action: .setUserId(""))).merge(with: Just(AppAction.error(action: .setError(error: AppError(error: $0)))))
+        }
         .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
         .eraseToAnyPublisher()
 }

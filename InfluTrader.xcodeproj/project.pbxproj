@@ -54,6 +54,17 @@
 		5DC00EAB25C3A331009A3AB9 /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC00EAA25C3A331009A3AB9 /* Authenticator.swift */; };
 		5DC00EAF25C3A387009A3AB9 /* DefaultAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC00EAE25C3A387009A3AB9 /* DefaultAuthenticator.swift */; };
 		5DC00EDD25C3BE0A009A3AB9 /* MockAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC00EDC25C3BE0A009A3AB9 /* MockAuthenticator.swift */; };
+		5DF03C8B25D9D90F001856B5 /* MockFunctionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03C8A25D9D90E001856B5 /* MockFunctionsManager.swift */; };
+		5DF03C8E25D9DB93001856B5 /* MainState+Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03C8D25D9DB93001856B5 /* MainState+Mock.swift */; };
+		5DF03C9925D9E533001856B5 /* IndicatorPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03C9125D9E533001856B5 /* IndicatorPoint.swift */; };
+		5DF03C9A25D9E533001856B5 /* LineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03C9225D9E533001856B5 /* LineView.swift */; };
+		5DF03C9B25D9E533001856B5 /* Legend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03C9325D9E533001856B5 /* Legend.swift */; };
+		5DF03C9C25D9E533001856B5 /* LineChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03C9425D9E533001856B5 /* LineChartView.swift */; };
+		5DF03C9D25D9E533001856B5 /* MagnifierRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03C9525D9E533001856B5 /* MagnifierRect.swift */; };
+		5DF03C9E25D9E533001856B5 /* Path+QuadCurve.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03C9625D9E533001856B5 /* Path+QuadCurve.swift */; };
+		5DF03C9F25D9E533001856B5 /* MultiLineChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03C9725D9E533001856B5 /* MultiLineChartView.swift */; };
+		5DF03CA025D9E533001856B5 /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03C9825D9E533001856B5 /* Line.swift */; };
+		5DF03CA325D9E549001856B5 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03CA225D9E549001856B5 /* Helpers.swift */; };
 		824926846FE3134EA3D5EBD8 /* Pods_InfluTrader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0D549133C9B7C3B062D9A4D2 /* Pods_InfluTrader.framework */; };
 /* End PBXBuildFile section */
 
@@ -107,6 +118,17 @@
 		5DC00EAA25C3A331009A3AB9 /* Authenticator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authenticator.swift; sourceTree = "<group>"; };
 		5DC00EAE25C3A387009A3AB9 /* DefaultAuthenticator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAuthenticator.swift; sourceTree = "<group>"; };
 		5DC00EDC25C3BE0A009A3AB9 /* MockAuthenticator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockAuthenticator.swift; sourceTree = "<group>"; };
+		5DF03C8A25D9D90E001856B5 /* MockFunctionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFunctionsManager.swift; sourceTree = "<group>"; };
+		5DF03C8D25D9DB93001856B5 /* MainState+Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MainState+Mock.swift"; sourceTree = "<group>"; };
+		5DF03C9125D9E533001856B5 /* IndicatorPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IndicatorPoint.swift; sourceTree = "<group>"; };
+		5DF03C9225D9E533001856B5 /* LineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineView.swift; sourceTree = "<group>"; };
+		5DF03C9325D9E533001856B5 /* Legend.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Legend.swift; sourceTree = "<group>"; };
+		5DF03C9425D9E533001856B5 /* LineChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineChartView.swift; sourceTree = "<group>"; };
+		5DF03C9525D9E533001856B5 /* MagnifierRect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MagnifierRect.swift; sourceTree = "<group>"; };
+		5DF03C9625D9E533001856B5 /* Path+QuadCurve.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Path+QuadCurve.swift"; sourceTree = "<group>"; };
+		5DF03C9725D9E533001856B5 /* MultiLineChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiLineChartView.swift; sourceTree = "<group>"; };
+		5DF03C9825D9E533001856B5 /* Line.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
+		5DF03CA225D9E549001856B5 /* Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		630E7DC56C63722AE2360C56 /* Pods-InfluTrader.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InfluTrader.release.xcconfig"; path = "Target Support Files/Pods-InfluTrader/Pods-InfluTrader.release.xcconfig"; sourceTree = "<group>"; };
 		6C337F3E851DD176F9F45E8E /* Pods-InfluTrader.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InfluTrader.debug.xcconfig"; path = "Target Support Files/Pods-InfluTrader/Pods-InfluTrader.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -129,6 +151,7 @@
 			children = (
 				5D2D5A9F25C529E3009598AA /* FunctionsManager.swift */,
 				5D2D5AAE25C552B0009598AA /* DefaultFunctionsManager.swift */,
+				5DF03C8A25D9D90E001856B5 /* MockFunctionsManager.swift */,
 			);
 			path = Functions;
 			sourceTree = "<group>";
@@ -312,6 +335,7 @@
 			children = (
 				5D2D5AA225C52E9B009598AA /* MainState.swift */,
 				5D488E8825C8D54E00624FEF /* AppError.swift */,
+				5DF03C8D25D9DB93001856B5 /* MainState+Mock.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -351,6 +375,7 @@
 		5DC00EDF25C3C3DD009A3AB9 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				5DF03C9025D9E533001856B5 /* LineChart */,
 				5D424D0225C504400008D6F4 /* Utilities */,
 				5D424CFD25C5040E0008D6F4 /* Debug */,
 				5D424CF525C503B60008D6F4 /* Extensions */,
@@ -362,6 +387,22 @@
 				5D69609C258713770058BABE /* Assets.xcassets */,
 			);
 			path = Shared;
+			sourceTree = "<group>";
+		};
+		5DF03C9025D9E533001856B5 /* LineChart */ = {
+			isa = PBXGroup;
+			children = (
+				5DF03CA225D9E549001856B5 /* Helpers.swift */,
+				5DF03C9125D9E533001856B5 /* IndicatorPoint.swift */,
+				5DF03C9225D9E533001856B5 /* LineView.swift */,
+				5DF03C9325D9E533001856B5 /* Legend.swift */,
+				5DF03C9425D9E533001856B5 /* LineChartView.swift */,
+				5DF03C9525D9E533001856B5 /* MagnifierRect.swift */,
+				5DF03C9625D9E533001856B5 /* Path+QuadCurve.swift */,
+				5DF03C9725D9E533001856B5 /* MultiLineChartView.swift */,
+				5DF03C9825D9E533001856B5 /* Line.swift */,
+			);
+			path = LineChart;
 			sourceTree = "<group>";
 		};
 		6E511E69FD91ED256CC06E57 /* Frameworks */ = {
@@ -528,22 +569,31 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5DF03C9D25D9E533001856B5 /* MagnifierRect.swift in Sources */,
 				5D424D4225C509610008D6F4 /* Fonts.swift in Sources */,
 				5D696097258713760058BABE /* AppDelegate.swift in Sources */,
 				5D424D1A25C505450008D6F4 /* InfoPopupView.swift in Sources */,
+				5DF03C9925D9E533001856B5 /* IndicatorPoint.swift in Sources */,
 				5D424D1D25C505450008D6F4 /* Modifiers.swift in Sources */,
 				5D488E8925C8D54E00624FEF /* AppError.swift in Sources */,
 				5D424D1C25C505450008D6F4 /* Spinner.swift in Sources */,
 				5D696099258713760058BABE /* SceneDelegate.swift in Sources */,
+				5DF03CA025D9E533001856B5 /* Line.swift in Sources */,
 				5D2D5AAF25C552B0009598AA /* DefaultFunctionsManager.swift in Sources */,
 				5D424CFF25C5041E0008D6F4 /* DebugSettings.swift in Sources */,
 				5D69609B258713760058BABE /* LoginView.swift in Sources */,
+				5DF03CA325D9E549001856B5 /* Helpers.swift in Sources */,
+				5DF03C9C25D9E533001856B5 /* LineChartView.swift in Sources */,
 				5D424CF725C503D10008D6F4 /* UIScreen+Extensions.swift in Sources */,
 				5DC00EDD25C3BE0A009A3AB9 /* MockAuthenticator.swift in Sources */,
 				5DC00EAF25C3A387009A3AB9 /* DefaultAuthenticator.swift in Sources */,
 				5D3E872125C5CCD700FC65FE /* HomeView.swift in Sources */,
+				5DF03C8E25D9DB93001856B5 /* MainState+Mock.swift in Sources */,
+				5DF03C9B25D9E533001856B5 /* Legend.swift in Sources */,
 				5D6960B4258714FB0058BABE /* AppState.swift in Sources */,
+				5DF03C9F25D9E533001856B5 /* MultiLineChartView.swift in Sources */,
 				5D424CAE25C4FDCC0008D6F4 /* SignInButton.swift in Sources */,
+				5DF03C8B25D9D90F001856B5 /* MockFunctionsManager.swift in Sources */,
 				5D424D2125C505450008D6F4 /* DimView.swift in Sources */,
 				5D424D0825C504AF0008D6F4 /* RootView.swift in Sources */,
 				5D2D5AA025C529E3009598AA /* FunctionsManager.swift in Sources */,
@@ -561,6 +611,8 @@
 				5D424D4725C509AD0008D6F4 /* SignUpView.swift in Sources */,
 				5DC00EAB25C3A331009A3AB9 /* Authenticator.swift in Sources */,
 				5D2D5AA325C52E9B009598AA /* MainState.swift in Sources */,
+				5DF03C9E25D9E533001856B5 /* Path+QuadCurve.swift in Sources */,
+				5DF03C9A25D9E533001856B5 /* LineView.swift in Sources */,
 				5D6960AD2587149A0058BABE /* Store.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -12,7 +12,7 @@ import GoogleSignIn
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
-    let store = AppStore(initialState: .init(), reducer: appReducer, environment: World())
+    let store = AppStore(initialState: .init(), reducer: appReducer, environment: World(isMockInstance: false))
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let scene = scene as? UIWindowScene else { return }

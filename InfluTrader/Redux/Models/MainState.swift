@@ -64,5 +64,5 @@ struct RecentRecords: Codable, Equatable {
 // MARK: - Price
 struct Price: Codable, Equatable {
     var time: String
-    var vale: Double
+    var value: Double
 }

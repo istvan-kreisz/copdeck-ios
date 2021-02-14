@@ -23,3 +23,10 @@ struct AppState: Equatable {
     var settingState = SettingsState()
     var mainState = MainState()
 }
+
+extension AppState {
+    static var mockAppState: AppState = .init(userIdState: .init(userId: "Kd24f2VebTWpTYYqAkSeHZwWhB83"),
+                                              errorState: .init(error: nil),
+                                              settingState: .init(),
+                                              mainState: .mockMainState)
+}

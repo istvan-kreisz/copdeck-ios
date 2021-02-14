@@ -31,8 +31,6 @@ class MockAuthenticator: NSObject, Authenticator {
             userChangesSubject.send("hey")
         case .passwordReset:
             break
-        case .setUserId:
-            break
         }
         return userChangesSubject.eraseToAnyPublisher()
     }

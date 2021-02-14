@@ -43,8 +43,6 @@ class DefaultAuthenticator: NSObject, Authenticator {
             resetPassword(email: email)
         case .signOut:
             signOut()
-        case .setUserId:
-            break
 //        case .setFBLoginButtonDelegate:
 //            break
         }
@@ -57,7 +55,7 @@ class DefaultAuthenticator: NSObject, Authenticator {
     }
     
     private func restoreState() {
-        GIDSignIn.sharedInstance()?.restorePreviousSignIn()
+        GIDSignIn.sharedInstance().restorePreviousSignIn()
     }
 
     private func signUp(email: String, password: String) {

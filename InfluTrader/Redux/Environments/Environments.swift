@@ -37,7 +37,15 @@ class Main {
 }
 
 class World {
-    let authentication = Authentication(authenticator: DefaultAuthenticator())
+
+    private let isMockInstance: Bool
+    
+    lazy var authentication = Authentication(authenticator: isMockInstance ? MockAuthenticator() : DefaultAuthenticator())
     lazy var settings = AppSettings(settings: DefaultSettings())
     lazy var main = Main(functions: DefaultFunctionsManager())
+
+    init(isMockInstance: Bool) {
+        self.isMockInstance = isMockInstance
+    }
+    
 }

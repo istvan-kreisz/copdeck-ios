@@ -30,9 +30,5 @@ struct MainView: View {
 //            }
 //        }
         HomeView()
-
-        .onAppear {
-            store.send(.getMainFeedData)
-        }
     }
 }
