@@ -12,7 +12,7 @@ struct AvatarView: View {
     private let imageURL: String
     private let text: String
     
-    init(imageURL: String, text: String) {
+    init(imageURL: String, text: String = "") {
         self.imageURL = imageURL
         self.text = text
     }
@@ -26,7 +26,9 @@ struct AvatarView: View {
                 ImageView(withURL: imageURL, size: size)
                     .cornerRadius(size / 2)
             }
-            Text(text)
+            if !text.isEmpty {
+                Text(text)                
+            }
         }
         .padding()
     }

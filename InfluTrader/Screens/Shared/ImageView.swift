@@ -17,7 +17,7 @@ class ImageLoader: ObservableObject {
     }
 
     init(urlString: String) {
-        guard let url = URL(string: urlString) else { return }
+        guard let url = URL(string: urlString), !urlString.isEmpty else { return }
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data else { return }
             DispatchQueue.main.async {
@@ -31,20 +31,42 @@ class ImageLoader: ObservableObject {
 struct ImageView: View {
     @ObservedObject var imageLoader: ImageLoader
     @State var image: UIImage = UIImage()
+    let url: String
     let size: CGFloat
 
     init(withURL url: String, size: CGFloat) {
-        imageLoader = ImageLoader(urlString: url)
+        self.url = url
         self.size = size
+        self.imageLoader = ImageLoader(urlString: url)
     }
 
     var body: some View {
-        Image(uiImage: image)
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(width: size, height: size)
-            .onReceive(imageLoader.didChange) { data in
-                self.image = UIImage(data: data) ?? UIImage()
+        #if DEBUG
+            if url.isEmpty {
+                Image("dude")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: size, height: size)
+                    .onReceive(imageLoader.didChange) { data in
+                        self.image = UIImage(data: data) ?? UIImage()
+                    }
+            } else {
+                Image(uiImage: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: size, height: size)
+                    .onReceive(imageLoader.didChange) { data in
+                        self.image = UIImage(data: data) ?? UIImage()
+                    }
             }
+        #else
+            Image(uiImage: image)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: size, height: size)
+                .onReceive(imageLoader.didChange) { data in
+                    self.image = UIImage(data: data) ?? UIImage()
+                }
+        #endif
     }
 }

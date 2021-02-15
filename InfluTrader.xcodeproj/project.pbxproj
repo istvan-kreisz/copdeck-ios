@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5D00B36525C39CC10060FBA6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5D00B36425C39CC10060FBA6 /* GoogleService-Info.plist */; };
+		5D21196125DA3769001FE5E5 /* StockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D21196025DA3769001FE5E5 /* StockView.swift */; };
 		5D2D5AA025C529E3009598AA /* FunctionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5A9F25C529E3009598AA /* FunctionsManager.swift */; };
 		5D2D5AA325C52E9B009598AA /* MainState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5AA225C52E9B009598AA /* MainState.swift */; };
 		5D2D5AAF25C552B0009598AA /* DefaultFunctionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5AAE25C552B0009598AA /* DefaultFunctionsManager.swift */; };
@@ -73,6 +74,7 @@
 /* Begin PBXFileReference section */
 		0D549133C9B7C3B062D9A4D2 /* Pods_InfluTrader.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_InfluTrader.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D00B36425C39CC10060FBA6 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		5D21196025DA3769001FE5E5 /* StockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockView.swift; sourceTree = "<group>"; };
 		5D2D5A9F25C529E3009598AA /* FunctionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionsManager.swift; sourceTree = "<group>"; };
 		5D2D5AA225C52E9B009598AA /* MainState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainState.swift; sourceTree = "<group>"; };
 		5D2D5AAE25C552B0009598AA /* DefaultFunctionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultFunctionsManager.swift; sourceTree = "<group>"; };
@@ -150,6 +152,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5D21195F25DA375C001FE5E5 /* Stock */ = {
+			isa = PBXGroup;
+			children = (
+				5D21196025DA3769001FE5E5 /* StockView.swift */,
+			);
+			path = Stock;
+			sourceTree = "<group>";
+		};
 		5D2D5A9E25C529CA009598AA /* Functions */ = {
 			isa = PBXGroup;
 			children = (
@@ -254,6 +264,7 @@
 		5D424D2925C505E90008D6F4 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				5D21195F25DA375C001FE5E5 /* Stock */,
 				5D83156A25C397C4008AB948 /* MainView.swift */,
 				5D424D2A25C505F90008D6F4 /* Home */,
 			);
@@ -584,6 +595,7 @@
 				5D488E8925C8D54E00624FEF /* AppError.swift in Sources */,
 				5D424D1C25C505450008D6F4 /* Spinner.swift in Sources */,
 				5D696099258713760058BABE /* SceneDelegate.swift in Sources */,
+				5D21196125DA3769001FE5E5 /* StockView.swift in Sources */,
 				5DF03CA025D9E533001856B5 /* Line.swift in Sources */,
 				5D2D5AAF25C552B0009598AA /* DefaultFunctionsManager.swift in Sources */,
 				5D424CFF25C5041E0008D6F4 /* DebugSettings.swift in Sources */,

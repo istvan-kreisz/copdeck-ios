@@ -22,77 +22,77 @@ struct HomeView: View {
 
     var body: some View {
         ZStack {
-            VStack {
-                Text("Welcome " + (store.state.user?.name ?? "") + "!")
-                    .font(.bold(size: 25))
-                    .leftAligned()
-
-                Text("Your portfolio's value:")
-                    .font(.regular(size: 12))
-                    .foregroundColor(.customLightGray1)
-                    .leftAligned()
-
-                HStack(alignment: .bottom) {
-                    Text("$10000")
-                        .font(.bold(size: 50))
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack {
+                    Text("Welcome " + (store.state.user?.name ?? "") + "!")
+                        .font(.bold(size: 25))
                         .leftAligned()
-                    Text("+3%")
-                        .font(.bold(size: 16))
+
+                    Text("Your portfolio's value:")
+                        .font(.regular(size: 12))
+                        .foregroundColor(.customLightGray1)
                         .leftAligned()
-                }
 
-                LineChartView(data: [1, 2, 1, 3, 4, 5, 4],
-                              title: "",
-                              form: ChartForm.large,
-                              rateValue: 20,
-                              dropShadow: false)
-
-                Text("Trending Influencers")
-                    .font(.bold(size: 22))
-                    .leftAligned()
-
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(store.state.trendingStocks ?? []) { stock in
-                            AvatarView(imageURL: "https://picsum.photos/200", text: stock.id)
-                                .onTapGesture {
-                                    selectedStock = stock
-                                }
-                        }
+                    HStack(alignment: .bottom) {
+                        Text("$10000")
+                            .font(.bold(size: 50))
+                            .leftAligned()
+                        Text("+3%")
+                            .font(.bold(size: 16))
+                            .leftAligned()
                     }
-                }
-            }
-            .withDefaultPadding()
-            
-            ZStack {
-                Color.customLightGray3
-                Text("Portfolio")
-                    .font(.bold(size: 16))
-                    .withDefaultPadding()
 
-                List {
-                    ForEach(store.state.userStocks ?? []) { stock in
+                    LineChartView(data: [1, 2, 1, 3, 4, 5, 4],
+                                  title: "",
+                                  form: ChartForm.large,
+                                  rateValue: 20,
+                                  dropShadow: false)
+
+                    Text("Trending Influencers")
+                        .font(.bold(size: 22))
+                        .leftAligned()
+
+                    ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
-                            Text(stock.id)
-                            Text("\(ownedAmount(of: stock))")
-                            Text("\(stock.price)")
-                            Button("Buy 1") {
-                                store.send(.tradeStock(stockId: stock.id, amount: 1, type: .buy))
-                            }
-                            Button("Sell 1") {
-                                store.send(.tradeStock(stockId: stock.id, amount: 1, type: .sell))
+                            ForEach(store.state.trendingStocks ?? []) { stock in
+                                AvatarView(imageURL: "", text: stock.id)
+                                    .onTapGesture {
+                                        selectedStock = stock
+                                    }
                             }
                         }
-                        .buttonStyle(PlainButtonStyle())
-                        .background(Color.clear)
                     }
                 }
-                .background(Color.clear)
                 .withDefaultPadding()
-            }
-            .edgesIgnoringSafeArea(.all)
 
-            
+                ZStack {
+                    Color.customLightGray3
+                    VStack {
+                        Text("Portfolio")
+                            .font(.bold(size: 16))
+                            .withDefaultPadding(padding: .top)
+
+                        ForEach(store.state.userStocks ?? []) { stock in
+                            HStack {
+                                AvatarView(imageURL: "")
+                                VStack(alignment: .leading) {
+                                    Text(stock.id)
+                                        .font(.regular(size: 16))
+                                    Text("+4%")
+                                        .font(.regular(size: 16))
+                                        .foregroundColor(.customGreen)
+                                }
+                                Spacer()
+                                Text("$\(stock.price)")
+                                    .font(.bold(size: 14))
+                            }
+                            .withDefaultPadding(padding: [.leading, .trailing])
+                        }
+                    }
+                }
+                .edgesIgnoringSafeArea(.all)
+            }
+
             if selectedStock != nil {
                 StockView(stock: $selectedStock)
                     .transition(.scale)
@@ -114,24 +114,5 @@ struct HomeView_Previews: PreviewProvider {
                              deriveAction: AppAction.main,
                              derivedEnvironment: store.environment.main))
         }
-    }
-}
-
-struct StockView: View {
-    @Binding var stock: Stock?
-
-    var body: some View {
-        VStack {
-            Text(stock?.id ?? "nah")
-            Button(action: {
-                self.stock = nil
-            }) {
-                    Text("Click me")
-            }
-            .frame(width: 30, height: 30)
-        }
-        .frame(width: UIScreen.screenWidth, height: UIScreen.screenHeight)
-        .background(Color.green)
-        .edgesIgnoringSafeArea(.all)
     }
 }
