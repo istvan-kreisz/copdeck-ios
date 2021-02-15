@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FirebaseFunctions
+import Erik
 
 struct MainView: View {
     @EnvironmentObject var store: Store<MainState, MainAction, Main>

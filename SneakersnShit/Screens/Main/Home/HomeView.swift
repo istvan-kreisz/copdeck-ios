@@ -92,12 +92,6 @@ struct HomeView: View {
                 }
                 .edgesIgnoringSafeArea(.all)
             }
-
-            if selectedStock != nil {
-                StockView(stock: $selectedStock)
-                    .transition(.scale)
-                    .animation(.spring(response: 0.5, dampingFraction: 0.6, blendDuration: 0))
-            }
         }
     }
 }

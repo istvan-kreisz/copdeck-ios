@@ -12,6 +12,7 @@ import GoogleSignIn
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
+    var scraper: Scraper!
     let store = AppStore(initialState: .init(), reducer: appReducer, environment: World(isMockInstance: false))
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -27,6 +28,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         GIDSignIn.sharedInstance()?.restorePreviousSignIn()
         self.window = window
         window.makeKeyAndVisible()
+        
+        scraper = Scraper()
     }
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
