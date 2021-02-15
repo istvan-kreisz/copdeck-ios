@@ -17,7 +17,7 @@ class Scraper: NSObject {
     override init() {
         super.init()
 
-        scrape(urlString: "https://www.klekt.com/new/api/product/view/53234", on: .klekt)
+        scrape(urlString: "https://restocks.net/p/air-jordan-1-mid-se-black-dark-beetroot-w", on: .restocks)
 //        scrape(urlString: "https://www.klekt.com/new/api/product/view/53234", on: .klekt)
 //        scrape(urlString: "https://stockx.com/nike-air-force-1-07-qs-love-letter", on: .stockX)
     }
@@ -40,7 +40,7 @@ class Scraper: NSObject {
             UIApplication.shared.windows.first?.addSubview(webView)
             webView.navigationDelegate = self
 
-            let url = URL(string: "https://stockx.com/nike-air-force-1-07-qs-love-letter")!
+            let url = URL(string: urlString)!
             let request = URLRequest(url: url)
             webView.tag = site.rawValue
             webView.load(request)
@@ -75,7 +75,30 @@ extension Scraper: WKNavigationDelegate {
         case .klekt:
             break
         case .restocks:
-            break
+            webView.evaluateJavaScript("document.documentElement.outerHTML.toString()") { (html: Any?, error: Error?) in
+                if let htmlString = html as? String {
+                    print(htmlString)
+                    if let doc = try? HTML(html: htmlString, encoding: .utf8) {
+                        for ul in doc.xpath("//ul") {
+                            if ul["class"] == "select__size__list" {
+                                for li in ul.xpath("//li") {
+                                    var size: String?
+                                    var price: String?
+                                    for span in li.xpath("//span") {
+                                        if span["class"] == "text" {
+                                            size = span.content
+                                        }
+                                        if span["class"] == "" && span.content?.contains("$") == true {
+                                            price = span.content
+                                        }
+                                    }
+                                    print(size, price)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
