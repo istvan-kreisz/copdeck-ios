@@ -11,6 +11,7 @@
 		5D2119AA25DA5CE0001FE5E5 /* Scraper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2119A925DA5CE0001FE5E5 /* Scraper.swift */; };
 		5D2119D725DA6605001FE5E5 /* Kanna in Frameworks */ = {isa = PBXBuildFile; productRef = 5D2119D625DA6605001FE5E5 /* Kanna */; };
 		5D2119DA25DA68C7001FE5E5 /* StockXResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2119D925DA68C7001FE5E5 /* StockXResult.swift */; };
+		5D2119DD25DA700D001FE5E5 /* KlektResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2119DC25DA700D001FE5E5 /* KlektResult.swift */; };
 		5D2D5AA025C529E3009598AA /* FunctionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5A9F25C529E3009598AA /* FunctionsManager.swift */; };
 		5D2D5AA325C52E9B009598AA /* MainState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5AA225C52E9B009598AA /* MainState.swift */; };
 		5D2D5AAF25C552B0009598AA /* DefaultFunctionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5AAE25C552B0009598AA /* DefaultFunctionsManager.swift */; };
@@ -78,6 +79,7 @@
 		5D2119A025DA541B001FE5E5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		5D2119A925DA5CE0001FE5E5 /* Scraper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scraper.swift; sourceTree = "<group>"; };
 		5D2119D925DA68C7001FE5E5 /* StockXResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockXResult.swift; sourceTree = "<group>"; };
+		5D2119DC25DA700D001FE5E5 /* KlektResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlektResult.swift; sourceTree = "<group>"; };
 		5D2D5A9F25C529E3009598AA /* FunctionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionsManager.swift; sourceTree = "<group>"; };
 		5D2D5AA225C52E9B009598AA /* MainState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainState.swift; sourceTree = "<group>"; };
 		5D2D5AAE25C552B0009598AA /* DefaultFunctionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultFunctionsManager.swift; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 			children = (
 				5D2119A925DA5CE0001FE5E5 /* Scraper.swift */,
 				5D2119D925DA68C7001FE5E5 /* StockXResult.swift */,
+				5D2119DC25DA700D001FE5E5 /* KlektResult.swift */,
 			);
 			path = Scraper;
 			sourceTree = "<group>";
@@ -627,6 +630,7 @@
 				5D424D2125C505450008D6F4 /* DimView.swift in Sources */,
 				5D424D0825C504AF0008D6F4 /* RootView.swift in Sources */,
 				5D2D5AA025C529E3009598AA /* FunctionsManager.swift in Sources */,
+				5D2119DD25DA700D001FE5E5 /* KlektResult.swift in Sources */,
 				5D424D0425C504510008D6F4 /* EmailValidator.swift in Sources */,
 				5D424CFB25C503F00008D6F4 /* UIApplication+Extensions.swift in Sources */,
 				5D6960B1258714BF0058BABE /* App.swift in Sources */,
