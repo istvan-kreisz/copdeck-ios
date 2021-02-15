@@ -31,34 +31,45 @@ struct HomeView: View {
                     .font(.regular(size: 12))
                     .foregroundColor(.customLightGray1)
                     .leftAligned()
-                
-                Text("$10000")
-                    .font(.bold(size: 50))
-                    .leftAligned()
 
+                HStack(alignment: .bottom) {
+                    Text("$10000")
+                        .font(.bold(size: 50))
+                        .leftAligned()
+                    Text("+3%")
+                        .font(.bold(size: 16))
+                        .leftAligned()
+                }
+
+                LineChartView(data: [1, 2, 1, 3, 4, 5, 4],
+                              title: "",
+                              form: ChartForm.large,
+                              rateValue: 20,
+                              dropShadow: false)
+
+                Text("Trending Influencers")
+                    .font(.bold(size: 22))
+                    .leftAligned()
 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(store.state.trendingStocks ?? []) { stock in
-                            VStack {
-                                ZStack {
-                                    Circle()
-                                        .frame(width: 80, height: 80)
-                                        .foregroundColor(colors.randomElement()!)
-                                    Image("profile")
-                                        .frame(width: 60, height: 60)
-                                        .cornerRadius(30)
+                            AvatarView(imageURL: "https://picsum.photos/200", text: stock.id)
+                                .onTapGesture {
+                                    selectedStock = stock
                                 }
-                                Text(stock.id)
-                            }
-                            .padding()
-                            .onTapGesture {
-                                selectedStock = stock
-                            }
                         }
                     }
                 }
-                .frame(height: 100)
+            }
+            .withDefaultPadding()
+            
+            ZStack {
+                Color.customLightGray3
+                Text("Portfolio")
+                    .font(.bold(size: 16))
+                    .withDefaultPadding()
+
                 List {
                     ForEach(store.state.userStocks ?? []) { stock in
                         HStack {
@@ -73,10 +84,15 @@ struct HomeView: View {
                             }
                         }
                         .buttonStyle(PlainButtonStyle())
+                        .background(Color.clear)
                     }
                 }
+                .background(Color.clear)
+                .withDefaultPadding()
             }
-            .withDefaultPadding()
+            .edgesIgnoringSafeArea(.all)
+
+            
             if selectedStock != nil {
                 StockView(stock: $selectedStock)
                     .transition(.scale)
