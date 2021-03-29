@@ -8,61 +8,72 @@
 import Foundation
 
 // MARK: - Result
-struct MainState: Codable, Equatable {
+
+struct MainState: Equatable {
     var userId = ""
     var user: User?
-    var userStocks: [Stock]?
-    var trendingStocks: [Stock]?
-    var selectedStock: Stock?
-    var selectedUser: User?
-    var selectedUserStocks: [Stock]?
-    var selectedStocks: [Stock]?
-    var searchResults: [String]?
-    
+    var searchResults: [Item]?
+
     enum CodingKeys: String, CodingKey {
-        case user, userStocks, trendingStocks
+        case user
     }
 }
 
-// MARK: - User
 struct User: Codable, Equatable {
-    var name: String
-    var starterCash: Int
-    var cash: Double
-    var transactions: [Transaction]
+    let id: String
+    let name: String?
+    let created: Double?
+    let updated: Double?
 }
 
-// MARK: - Transaction
-struct Transaction: Codable, Equatable {
-    var id: String
-    var trades: [Trade]
+
+enum ResellSite: String, Codable, Equatable {
+    case klekt, stockx, restocks
 }
 
-// MARK: - Trade
-struct Trade: Codable, Equatable {
-    var time: String
-    var amount: Int
+struct StoreInfo: Codable, Equatable {
+    let name: String
+    let sku: String
+    let slug: String
+    let retailPrice: Double?
+    let imageURL: String?
+    let referer: String?
+    let brand: String
+    let store: ResellSite
 }
 
-// MARK: - Stock
-struct Stock: Codable, Equatable, Identifiable {
-    var id: String
-    var price: Double
-    var recentRecords: RecentRecords
-    var soldAmount: Int?
-    var stats: [Price]?
+extension StoreInfo: Identifiable {
+    var id: String {
+        name
+    }
 }
 
-// MARK: - RecentRecords
-struct RecentRecords: Codable, Equatable {
-    var soldAmount: Int?
-    var transactions: [Price]?
-    var percentChange: Double?
-    var price: [Price]?
+struct StorePrices: Codable, Equatable {
+    struct InventoryElement: Codable, Equatable {
+        let size: String
+        let currency: String
+        let lowestAsk: Double
+        let highestBid: Double?
+    }
+    let store: ResellSite
+    let retailPrice: Double?
+    let inventory: [InventoryElement]
 }
 
-// MARK: - Price
-struct Price: Codable, Equatable {
-    var time: String
-    var value: Double
+struct Item: Codable, Equatable, Identifiable {
+    let id: String
+    let ownedByCount: Int?
+    let priceAlertCount: Int?
+    let storeInfo: [StoreInfo]
+    let storePrices: [StorePrices]
+    let created: Double?
+    let updated: Double?
+
+    func storeInfo(for store: ResellSite) -> StoreInfo? {
+        storeInfo.first { $0.store == store }
+    }
+
+    var stockxStoreInfo: StoreInfo? {
+        storeInfo(for: .stockx)
+    }
 }

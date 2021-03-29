@@ -13,7 +13,7 @@ import Combine
 typealias Reducer<State, Action, Environment> =
     (inout State, Action, Environment) -> AnyPublisher<Action, Never>?
 
-final class Store<State, Action, Environment>: ObservableObject {
+final class Store<State, Action: IdAble, Environment>: ObservableObject {
     @Published private(set) var state: State
 
     let environment: Environment
@@ -29,14 +29,16 @@ final class Store<State, Action, Environment>: ObservableObject {
     }
 
     func send(_ action: Action) {
-        guard let effect = reducer(&state, action, environment) else {
-            return
-        }
+        Throttler.throttle(delay: .milliseconds(200), id: action.id) { [weak self] in
+            guard let self = self, let effect = self.reducer(&self.state, action, self.environment) else {
+                return
+            }
 
-        effect
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: send)
-            .store(in: &effectCancellables)
+            effect
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: self.send)
+                .store(in: &self.effectCancellables)
+        }
     }
 
     private var derivedCancellable: AnyCancellable?

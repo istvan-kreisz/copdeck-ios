@@ -28,5 +28,5 @@ extension AppState {
     static var mockAppState: AppState = .init(userIdState: .init(userId: "Kd24f2VebTWpTYYqAkSeHZwWhB83"),
                                               errorState: .init(error: nil),
                                               settingState: .init(),
-                                              mainState: .mockMainState)
+                                              mainState: .init(userId: "", user: nil, searchResults: nil))
 }

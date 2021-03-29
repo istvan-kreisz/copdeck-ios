@@ -7,29 +7,28 @@
 
 import SwiftUI
 import FirebaseFunctions
-import Erik
 
 struct MainView: View {
     @EnvironmentObject var store: Store<MainState, MainAction, Main>
 
     var body: some View {
-//        TabView {
-//            NavigationView {
-//                HomeView()
-//            }.tabItem {
-//                Image(systemName: "heart.fill")
-//                    .imageScale(.large)
-//                Text("today")
-//            }
-//
-//            NavigationView {
-//                Text("Second view")
-//            }.tabItem {
-//                Image(systemName: "chevron.up.circle.fill")
-//                    .imageScale(.large)
-//                Text("trends")
-//            }
-//        }
-        HomeView()
+        TabView {
+            NavigationView {
+            HomeView()
+                .environmentObject(store)
+            }.tabItem {
+                Image(systemName: "magnifyingglass")
+                    .imageScale(.large)
+                Text("Search")
+            }
+
+            NavigationView {
+                Text("Inventory")
+            }.tabItem {
+                Image(systemName: "tray.2")
+                    .imageScale(.large)
+                Text("Inventory")
+            }
+        }
     }
 }

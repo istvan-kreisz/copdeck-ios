@@ -31,7 +31,8 @@ struct StoreReviewHelper {
 
     private func requestReview() {
         if #available(iOS 10.3, *) {
-            SKStoreReviewController.requestReview()
+            // todo: yo
+//            SKStoreReviewController.requestReview()
         }
     }
 }

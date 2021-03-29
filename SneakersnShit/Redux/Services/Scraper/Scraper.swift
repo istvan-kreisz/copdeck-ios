@@ -14,10 +14,11 @@ enum Site: Int {
 }
 
 class Scraper: NSObject {
+
     override init() {
         super.init()
-
-        scrape(urlString: "https://restocks.net/p/air-jordan-1-mid-se-black-dark-beetroot-w", on: .restocks)
+        
+//        scrape(urlString: "https://restocks.net/p/air-jordan-1-mid-se-black-dark-beetroot-w", on: .restocks)
 //        scrape(urlString: "https://www.klekt.com/new/api/product/view/53234", on: .klekt)
 //        scrape(urlString: "https://stockx.com/nike-air-force-1-07-qs-love-letter", on: .stockX)
     }
@@ -92,7 +93,7 @@ extension Scraper: WKNavigationDelegate {
                                             price = span.content
                                         }
                                     }
-                                    print(size, price)
+                                    print(size ?? "", price ?? "")
                                 }
                             }
                         }

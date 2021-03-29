@@ -10,47 +10,17 @@ import Combine
 import FirebaseFunctions
 
 class DefaultFunctionsManager: FunctionsManager {
-    func getMainFeedData(userId: String) -> AnyPublisher<MainState, AppError> {
-        callFirebaseFunction(functionName: "getMainFeedData", userId: userId)
+    func search(userId: String, searchTerm: String) -> AnyPublisher<[Item], AppError> {
+        callFirebaseFunctionArray(functionName: "search", userId: userId, parameters: ["searchTerm": searchTerm])
     }
-
-    func tradeStock(userId: String, stockId: String, amount: Int, type: TradeType) -> AnyPublisher<MainState, AppError> {
-        callFirebaseFunction(functionName: "tradeStock",
-                             userId: userId,
-                             parameters: ["amount": amount, "tradeType": type.rawValue, "stockId": stockId])
-    }
-
-    func getStockData(userId: String, stockId: String, type: StockQueryType) -> AnyPublisher<Stock, AppError> {
-        callFirebaseFunction(functionName: "getStockData", userId: userId, parameters: ["stockId": stockId, "queryType": type.rawValue])
-    }
-
-    func getStocksHistory(userId: String) -> AnyPublisher<[Stock], AppError> {
-        callFirebaseFunction(functionName: "getStocksHistory", userId: userId)
-    }
-
-    func getStocksInCategory(userId: String, category: StockCategory) -> AnyPublisher<[Stock], AppError> {
-        callFirebaseFunction(functionName: "getStocksInCategory", userId: userId, parameters: ["category": category.rawValue])
-    }
-
-    func getUserData(userId: String) -> AnyPublisher<User, AppError> {
-        callFirebaseFunction(functionName: "getUserData", userId: userId)
-    }
-
-    func changeUsername(userId: String, newName: String) -> AnyPublisher<User, AppError> {
-        callFirebaseFunction(functionName: "changeUsername", userId: userId, parameters: ["username": newName])
-    }
-
-    func search(userId: String, searchTerm: String) -> AnyPublisher<[String], AppError> {
-        callFirebaseFunction(functionName: "search", userId: userId, parameters: ["searchTerm": searchTerm])
-    }
-
-    func getNews(userId: String) {}
 
     private let functions = Functions.functions()
 
     init() {
         #if DEBUG
-            functions.useEmulator(withHost: "http://istvans-macbook-pro-2.local", port: 5001)
+            if DebugSettings.shared.useFunctionsEmulator {
+                functions.useEmulator(withHost: "http://istvans-macbook-pro-2.local", port: 5001)
+            }
         #endif
     }
 
@@ -92,11 +62,44 @@ class DefaultFunctionsManager: FunctionsManager {
         .eraseToAnyPublisher()
     }
 
+    private func callFirebaseFunctionArray<Model: Decodable>(functionName: String,
+                                                             userId: String,
+                                                             parameters: [String: Any] = [:]) -> AnyPublisher<[Model], AppError> {
+        Future<[Model], AppError> { [weak self] completion in
+            self?.functions.httpsCallable(functionName).call(parameters.merging(["userId": userId]) { $1 }) { [weak self] result, error in
+                guard let self = self else { return }
+                do {
+                    try self.handleError(error)
+                    let result: [Model] = try self.decodeResultArray(result)
+                    completion(.success(result))
+                } catch {
+                    let error = (error as? AppError) ?? AppError()
+                    print(error)
+                    completion(.failure(error))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+
     private func decodeResult<Model: Decodable>(_ result: HTTPSCallableResult?) throws -> Model {
         if let result = result?.data as? [String: Any] {
             do {
                 let jsonData = try JSONSerialization.data(withJSONObject: result, options: .prettyPrinted)
                 return try JSONDecoder().decode(Model.self, from: jsonData)
+            } catch {
+                throw AppError(title: "Network Error", message: "Data decoding failed", error: error)
+            }
+        } else {
+            throw AppError(title: "Network Error", message: "Data decoding failed")
+        }
+    }
+
+    private func decodeResultArray<Model: Decodable>(_ result: HTTPSCallableResult?) throws -> [Model] {
+        if let result = result?.data as? [Any] {
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: result, options: .prettyPrinted)
+                return try JSONDecoder().decode([Model].self, from: jsonData)
             } catch {
                 throw AppError(title: "Network Error", message: "Data decoding failed", error: error)
             }

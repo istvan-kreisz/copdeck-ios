@@ -6,93 +6,91 @@
 //
 
 import SwiftUI
+import Combine
 
 struct HomeView: View {
     @EnvironmentObject var store: Store<MainState, MainAction, Main>
 
     let colors: [Color] = [.red, .yellow, .green, .purple, .orange]
 
-    @State var selectedStock: Stock?
-
-    func ownedAmount(of stock: Stock) -> Int {
-        store.state.user?.transactions
-            .first(where: { $0.id == stock.id })
-            .map { $0.trades.map { $0.amount }.sum() } ?? 0
-    }
+    @State var searchText = ""
 
     var body: some View {
         ZStack {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack {
-                    Text("Welcome " + (store.state.user?.name ?? "") + "!")
-                        .font(.bold(size: 25))
-                        .leftAligned()
+                    TextField("Search", text: $searchText)
+                        .padding()
 
-                    Text("Your portfolio's value:")
-                        .font(.regular(size: 12))
-                        .foregroundColor(.customLightGray1)
-                        .leftAligned()
-
-                    HStack(alignment: .bottom) {
-                        Text("$10000")
-                            .font(.bold(size: 50))
-                            .leftAligned()
-                        Text("+3%")
-                            .font(.bold(size: 16))
-                            .leftAligned()
-                    }
-
-                    LineChartView(data: [1, 2, 1, 3, 4, 5, 4],
-                                  title: "",
-                                  form: ChartForm.large,
-                                  rateValue: 20,
-                                  dropShadow: false)
-
-                    Text("Trending Influencers")
-                        .font(.bold(size: 22))
-                        .leftAligned()
-
-                    ScrollView(.horizontal, showsIndicators: false) {
+                    ForEach(store.state.searchResults ?? []) { item in
                         HStack {
-                            ForEach(store.state.trendingStocks ?? []) { stock in
-                                AvatarView(imageURL: "", text: stock.id)
-                                    .onTapGesture {
-                                        selectedStock = stock
-                                    }
-                            }
-                        }
-                    }
-                }
-                .withDefaultPadding()
-
-                ZStack {
-                    Color.customLightGray3
-                    VStack {
-                        Text("Portfolio")
-                            .font(.bold(size: 16))
-                            .withDefaultPadding(padding: .top)
-
-                        ForEach(store.state.userStocks ?? []) { stock in
-                            HStack {
-                                AvatarView(imageURL: "")
-                                VStack(alignment: .leading) {
-                                    Text(stock.id)
-                                        .font(.regular(size: 16))
-                                    Text("+4%")
-                                        .font(.regular(size: 16))
-                                        .foregroundColor(.customGreen)
+                            Image(systemName: "tray.2")
+                                .frame(width: 80, height: 80)
+                            VStack {
+                                HStack {
+                                    Text((item.stockxStoreInfo ?? item.storeInfo.first)?.name ?? "")
+                                        .font(.semiBold(size: 13))
+                                    Spacer()
                                 }
-                                Spacer()
-                                Text("$\(stock.price)")
-                                    .font(.bold(size: 14))
+                                HStack(spacing: 10) {
+                                    ForEach(item.storeInfo) { storeInfo in
+                                        Text(storeInfo.store.rawValue)
+                                            .font(.regular(size: 12))
+                                    }
+                                    Spacer()
+                                }
                             }
-                            .withDefaultPadding(padding: [.leading, .trailing])
+                            Button(action: {
+                                self.addToInventory(item: item)
+                            }) {
+                                Text("Add")
+                                    .font(.bold(size: 18))
+                                    .foregroundColor(.blue)
+                            }
+                            .padding(.top, 15)
+                        }.onTapGesture {
+                            print("ayyyy")
                         }
                     }
+                    .withDefaultPadding()
+
+//                ZStack {
+//                    Color.customLightGray3
+//                    VStack {
+//                        Text("Portfolio")
+//                            .font(.bold(size: 16))
+//                            .withDefaultPadding(padding: .top)
+//
+//                        ForEach(store.state.userStocks ?? []) { stock in
+//                            HStack {
+//                                AvatarView(imageURL: "")
+//                                VStack(alignment: .leading) {
+//                                    Text(stock.id)
+//                                        .font(.regular(size: 16))
+//                                    Text("+4%")
+//                                        .font(.regular(size: 16))
+//                                        .foregroundColor(.customGreen)
+//                                }
+//                                Spacer()
+//                                Text("$\(stock.price)")
+//                                    .font(.bold(size: 14))
+//                            }
+//                            .withDefaultPadding(padding: [.leading, .trailing])
+//                        }
+//                    }
+//                }
+//                .edgesIgnoringSafeArea(.all)
                 }
-                .edgesIgnoringSafeArea(.all)
             }
         }
+        .onChange(of: searchText) { searchText in
+            store.send(.search(searchTerm: searchText))
+        }
+    }
+
+    func addToInventory(item: Item) {
+        print("yoooo")
+//        store.send(.)
     }
 }
 

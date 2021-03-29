@@ -3,32 +3,32 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>273795343006-62q9vkvo4hck04v54bfvqt374cs1ror9.apps.googleusercontent.com</string>
+	<string>451723603004-hcldole21rt7k6gd0vngicvhnrlaol76.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.273795343006-62q9vkvo4hck04v54bfvqt374cs1ror9</string>
+	<string>com.googleusercontent.apps.451723603004-hcldole21rt7k6gd0vngicvhnrlaol76</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCgxzTOAFHzac6pzDWFj8J5l7szK6AKHWA</string>
+	<string>AIzaSyCzBUaC55aRXdSwbN2-7zWsprbKOLNVxQo</string>
 	<key>GCM_SENDER_ID</key>
-	<string>273795343006</string>
+	<string>451723603004</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>istvankreisz.SneakersnShit</string>
 	<key>PROJECT_ID</key>
-	<string>sneakersnshit-d46f2</string>
+	<string>sneakersnshit-2e22f</string>
 	<key>STORAGE_BUCKET</key>
-	<string>sneakersnshit-d46f2.appspot.com</string>
+	<string>sneakersnshit-2e22f.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:273795343006:ios:e0345f133603e54c8dd18f</string>
+	<string>1:451723603004:ios:859c7a776aafe264d42739</string>
 </dict>
 </plist>
