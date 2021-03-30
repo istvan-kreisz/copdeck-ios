@@ -57,7 +57,6 @@ struct SearchView: View {
                         }.onTapGesture {
                             selectedItemId = item.id
                         }
-//                        .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
                     }
                 }
                 .withDefaultPadding()
@@ -70,8 +69,7 @@ struct SearchView: View {
     }
 
     func addToInventory(item: Item) {
-        print("yoooo")
-//        store.send(.)
+//        store.send(.inven)
     }
 }
 

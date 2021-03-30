@@ -55,18 +55,22 @@ struct ItemDetailView: View {
                         }
                     }
                 }
-
                 Spacer()
             }
         }
         .withDefaultPadding(padding: [.top, .leading, .trailing])
         .onAppear {
+            updateItem(newItem: store.state.selectedItem)
             store.send(.getItemDetails(item: item))
         }
         .onChange(of: store.state.selectedItem) { item in
-            guard let item = item else { return }
-            self.item.storePrices = item.storePrices
+            updateItem(newItem: item)
         }
+    }
+
+    private func updateItem(newItem: Item?) {
+        guard let newItem = newItem, newItem.id == self.item.id else { return }
+        self.item = newItem
     }
 }
 
