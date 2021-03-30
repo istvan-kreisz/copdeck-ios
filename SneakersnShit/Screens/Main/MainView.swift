@@ -14,8 +14,8 @@ struct MainView: View {
     var body: some View {
         TabView {
             NavigationView {
-            SearchView()
-                .environmentObject(store)
+                SearchView()
+                    .environmentObject(store)
             }.tabItem {
                 Image(systemName: "magnifyingglass")
                     .imageScale(.large)
@@ -23,7 +23,8 @@ struct MainView: View {
             }
 
             NavigationView {
-                Text("Inventory")
+                InventoryView()
+                    .environmentObject(store)
             }.tabItem {
                 Image(systemName: "tray.2")
                     .imageScale(.large)

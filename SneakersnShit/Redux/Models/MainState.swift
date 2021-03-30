@@ -129,3 +129,18 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     let updated: Double?
 }
 
+extension InventoryItem {
+    init(from item: Item) {
+        self.id = UUID().uuidString
+        self.itemId = item.id
+        self.name = item.bestStoreInfo?.name ?? ""
+        self.purchasePrice = item.bestStoreInfo?.retailPrice
+        self.size = "US 10"
+        self.condition = .new
+        self.status = nil
+        self.notes = nil
+        self.images = item.bestStoreInfo?.imageURL.map { [$0] }
+        self.created = nil
+        self.updated = nil
+    }
+}

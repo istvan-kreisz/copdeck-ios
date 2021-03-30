@@ -69,7 +69,7 @@ struct SearchView: View {
     }
 
     func addToInventory(item: Item) {
-//        store.send(.inven)
+        store.send(.addToInventory(inventoryItem: .init(from: item)))
     }
 }
 
