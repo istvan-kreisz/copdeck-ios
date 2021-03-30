@@ -45,6 +45,8 @@
 		5D424D4B25C509D20008D6F4 /* PasswordResetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424D4A25C509D20008D6F4 /* PasswordResetView.swift */; };
 		5D424D5125C50AFA0008D6F4 /* Introspect in Frameworks */ = {isa = PBXBuildFile; productRef = 5D424D5025C50AFA0008D6F4 /* Introspect */; };
 		5D488E8925C8D54E00624FEF /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D488E8825C8D54E00624FEF /* AppError.swift */; };
+		5D52E307261303AF00FA02B8 /* Publishers+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D52E306261303AF00FA02B8 /* Publishers+Extensions.swift */; };
+		5D52E30B2613063B00FA02B8 /* Encodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D52E30A2613063B00FA02B8 /* Encodable.swift */; };
 		5D696097258713760058BABE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D696096258713760058BABE /* AppDelegate.swift */; };
 		5D696099258713760058BABE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D696098258713760058BABE /* SceneDelegate.swift */; };
 		5D69609B258713760058BABE /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D69609A258713760058BABE /* LoginView.swift */; };
@@ -61,7 +63,6 @@
 		5DC00EAF25C3A387009A3AB9 /* DefaultAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC00EAE25C3A387009A3AB9 /* DefaultAuthenticator.swift */; };
 		5DC00EDD25C3BE0A009A3AB9 /* MockAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC00EDC25C3BE0A009A3AB9 /* MockAuthenticator.swift */; };
 		5DC3538F26117C7F00294DF0 /* ItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC3538E26117C7F00294DF0 /* ItemDetailView.swift */; };
-		5DF03C8B25D9D90F001856B5 /* MockFunctionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03C8A25D9D90E001856B5 /* MockFunctionsManager.swift */; };
 		5DF03C9925D9E533001856B5 /* IndicatorPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03C9125D9E533001856B5 /* IndicatorPoint.swift */; };
 		5DF03C9A25D9E533001856B5 /* LineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03C9225D9E533001856B5 /* LineView.swift */; };
 		5DF03C9B25D9E533001856B5 /* Legend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03C9325D9E533001856B5 /* Legend.swift */; };
@@ -114,6 +115,8 @@
 		5D424D4625C509AD0008D6F4 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		5D424D4A25C509D20008D6F4 /* PasswordResetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetView.swift; sourceTree = "<group>"; };
 		5D488E8825C8D54E00624FEF /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
+		5D52E306261303AF00FA02B8 /* Publishers+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publishers+Extensions.swift"; sourceTree = "<group>"; };
+		5D52E30A2613063B00FA02B8 /* Encodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encodable.swift; sourceTree = "<group>"; };
 		5D696093258713760058BABE /* SneakersnShit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SneakersnShit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D696096258713760058BABE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5D696098258713760058BABE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -132,7 +135,6 @@
 		5DC00EAE25C3A387009A3AB9 /* DefaultAuthenticator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAuthenticator.swift; sourceTree = "<group>"; };
 		5DC00EDC25C3BE0A009A3AB9 /* MockAuthenticator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockAuthenticator.swift; sourceTree = "<group>"; };
 		5DC3538E26117C7F00294DF0 /* ItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailView.swift; sourceTree = "<group>"; };
-		5DF03C8A25D9D90E001856B5 /* MockFunctionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFunctionsManager.swift; sourceTree = "<group>"; };
 		5DF03C9125D9E533001856B5 /* IndicatorPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IndicatorPoint.swift; sourceTree = "<group>"; };
 		5DF03C9225D9E533001856B5 /* LineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineView.swift; sourceTree = "<group>"; };
 		5DF03C9325D9E533001856B5 /* Legend.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Legend.swift; sourceTree = "<group>"; };
@@ -179,7 +181,6 @@
 			children = (
 				5D2D5A9F25C529E3009598AA /* FunctionsManager.swift */,
 				5D2D5AAE25C552B0009598AA /* DefaultFunctionsManager.swift */,
-				5DF03C8A25D9D90E001856B5 /* MockFunctionsManager.swift */,
 			);
 			path = Functions;
 			sourceTree = "<group>";
@@ -230,6 +231,8 @@
 				5D424CF625C503D10008D6F4 /* UIScreen+Extensions.swift */,
 				5D424CFA25C503F00008D6F4 /* UIApplication+Extensions.swift */,
 				5D3E872425C5D3FC00FC65FE /* Array+Extensions.swift */,
+				5D52E306261303AF00FA02B8 /* Publishers+Extensions.swift */,
+				5D52E30A2613063B00FA02B8 /* Encodable.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -606,6 +609,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D52E307261303AF00FA02B8 /* Publishers+Extensions.swift in Sources */,
 				5DF03C9D25D9E533001856B5 /* MagnifierRect.swift in Sources */,
 				5D424D4225C509610008D6F4 /* Fonts.swift in Sources */,
 				5D696097258713760058BABE /* AppDelegate.swift in Sources */,
@@ -631,8 +635,8 @@
 				5D6960B4258714FB0058BABE /* AppState.swift in Sources */,
 				5DF03C9F25D9E533001856B5 /* MultiLineChartView.swift in Sources */,
 				5D424CAE25C4FDCC0008D6F4 /* SignInButton.swift in Sources */,
-				5DF03C8B25D9D90F001856B5 /* MockFunctionsManager.swift in Sources */,
 				5D424D2125C505450008D6F4 /* DimView.swift in Sources */,
+				5D52E30B2613063B00FA02B8 /* Encodable.swift in Sources */,
 				5D424D0825C504AF0008D6F4 /* RootView.swift in Sources */,
 				5D2D5AA025C529E3009598AA /* FunctionsManager.swift in Sources */,
 				5D2119DD25DA700D001FE5E5 /* KlektResult.swift in Sources */,

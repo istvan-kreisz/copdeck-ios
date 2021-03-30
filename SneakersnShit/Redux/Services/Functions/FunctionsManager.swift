@@ -11,4 +11,6 @@ import Combine
 protocol FunctionsManager {
     func search(userId: String, searchTerm: String) -> AnyPublisher<[Item], AppError>
     func getItemDetails(for item: Item) -> AnyPublisher<Item, AppError>
+    func addToInventory(inventoryItem: InventoryItem) -> AnyPublisher<InventoryItem, AppError>
+    func removeFromInventory(inventoryItem: InventoryItem) -> AnyPublisher<Void, AppError>
 }

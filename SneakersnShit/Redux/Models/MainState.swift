@@ -7,14 +7,14 @@
 
 import Foundation
 
-// MARK: - Result
+// todo: refactor
 
 struct MainState: Equatable {
     var userId = ""
     var user: User?
     var searchResults: [Item]?
-    // todo: remove?
     var selectedItem: Item?
+    var inventoryItems: [InventoryItem] = []
 
     enum CodingKeys: String, CodingKey {
         case user
@@ -87,14 +87,45 @@ struct Item: Codable, Equatable, Identifiable {
             .compactMap { $0 }
             .first
     }
-
-    // todo: make this more generic
-    func dictionary() throws -> [String: Any] {
-        let encodedSelf = try JSONEncoder().encode(self)
-        if let dictionary = try JSONSerialization.jsonObject(with: encodedSelf) as? [String: Any] {
-            return dictionary
-        } else {
-            throw AppError(title: "Encoding Item Failed", message: "", error: nil)
-        }
-    }
 }
+
+struct ItemStatus: Codable, Equatable {
+
+}
+
+//const ItemStatus = union([
+//    object({
+//        listingPrices: defaulted(
+//            array(
+//                object({
+//                    store: Store,
+//                    price: number(),
+//                })
+//            ),
+//            () => []
+//        ),
+//    }),
+//    object({
+//        sellingPrice: Optional(number()),
+//        store: Optional(Store),
+//    }),
+//])
+
+enum Condition: String, Codable, Equatable {
+    case new, used
+}
+
+struct InventoryItem: Codable, Equatable, Identifiable {
+    let id: String
+    let itemId: String?
+    let name: String
+    let purchasePrice: Double?
+    let size: String
+    let condition: Condition
+    let status: ItemStatus?
+    let notes: String?
+    let images: [String]?
+    let created: Double?
+    let updated: Double?
+}
+

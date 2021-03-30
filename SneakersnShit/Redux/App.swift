@@ -24,6 +24,11 @@ enum MainAction {
     // item details
     case getItemDetails(item: Item)
     case setItemDetails(item: Item)
+    // inventory
+    case addToInventory(inventoryItem: InventoryItem)
+    case removeFromInventory(inventoryItem: InventoryItem)
+    case setInventoryItem(inventoryItem: InventoryItem)
+    case removeInventoryItem(inventoryItem: InventoryItem)
 }
 
 extension MainAction: IdAble {
@@ -49,10 +54,17 @@ extension MainAction: IdAble {
             return "getItemDetails"
         case .setItemDetails:
             return "setItemDetails"
+        case .addToInventory:
+            return "addToInventory"
+        case .removeFromInventory:
+            return "removeFromInventory"
+        case .setInventoryItem:
+            return "setInventoryItem"
+        case .removeInventoryItem:
+            return "removeInventoryItem"
         }
     }
 }
-
 
 enum AuthenticationAction {
     case restoreState
@@ -104,7 +116,6 @@ extension SettingsAction: IdAble {
         }
     }
 }
-
 
 enum ErrorAction {
     case setError(error: AppError?)
@@ -200,6 +211,8 @@ func mainReducer(state: inout AppState,
     case let .setUser(user):
         state.mainState.user = user
         return Empty(completeImmediately: true).eraseToAnyPublisher()
+    case .getMainFeedData:
+        return Empty(completeImmediately: true).eraseToAnyPublisher()
     case let .getUserData(userId: userId):
         print(userId)
 //        return environment.functions.getUserData(userId: userId)
@@ -224,9 +237,7 @@ func mainReducer(state: inout AppState,
         } else {
             return environment.functions.search(userId: state.mainState.userId, searchTerm: searchTerm)
                 .map { AppAction.main(action: .setSearchResults($0)) }
-                .tryCatch { Just(AppAction.error(action: .setError(error: AppError(error: $0)))) }
-                .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
-                .eraseToAnyPublisher()
+                .catchErrors()
         }
     case let .setSearchResults(searchResult):
         state.mainState.searchResults = searchResult
@@ -234,14 +245,32 @@ func mainReducer(state: inout AppState,
     case let .getItemDetails(item):
         return environment.functions.getItemDetails(for: item)
             .map { AppAction.main(action: .setItemDetails(item: $0)) }
-            .tryCatch { Just(AppAction.error(action: .setError(error: AppError(error: $0)))) }
-            .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
-            .eraseToAnyPublisher()
+            .catchErrors()
     case let .setItemDetails(item):
         state.mainState.selectedItem = item
         return Empty(completeImmediately: true).eraseToAnyPublisher()
-    default:
+    case let .addToInventory(inventoryItem):
+        return environment.functions.addToInventory(inventoryItem: inventoryItem)
+            .map { AppAction.main(action: .setInventoryItem(inventoryItem: $0)) }
+            .catchErrors()
+    case let .removeFromInventory(inventoryItem):
+        return environment.functions.removeFromInventory(inventoryItem: inventoryItem)
+            .map { AppAction.main(action: .removeInventoryItem(inventoryItem: inventoryItem)) }
+            .catchErrors()
+    case let .setInventoryItem(inventoryItem):
+        if let index = state.mainState.inventoryItems.firstIndex(where: { $0.id == inventoryItem.id }) {
+            state.mainState.inventoryItems[index] = inventoryItem
+        } else {
+            state.mainState.inventoryItems.append(inventoryItem)
+        }
         return Empty(completeImmediately: true).eraseToAnyPublisher()
+    case let .removeInventoryItem(inventoryItem):
+        if let index = state.mainState.inventoryItems.firstIndex(where: { $0.id == inventoryItem.id }) {
+            state.mainState.inventoryItems.remove(at: index)
+        }
+        return Empty(completeImmediately: true).eraseToAnyPublisher()
+//    default:
+//        return Empty(completeImmediately: true).eraseToAnyPublisher()
     }
 }
 

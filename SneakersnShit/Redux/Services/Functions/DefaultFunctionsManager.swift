@@ -10,17 +10,22 @@ import Combine
 import FirebaseFunctions
 
 class DefaultFunctionsManager: FunctionsManager {
+    // todo: refactor shit
+
     func search(userId: String, searchTerm: String) -> AnyPublisher<[Item], AppError> {
         callFirebaseFunctionArray(functionName: "search", userId: userId, parameters: ["searchTerm": searchTerm])
     }
 
     func getItemDetails(for item: Item) -> AnyPublisher<Item, AppError> {
-        do {
-            let parameters = try item.dictionary()
-            return callFirebaseFunction(functionName: "getItemDetails", parameters: parameters)
-        } catch {
-            return Fail(error: AppError(error: error)).eraseToAnyPublisher()
-        }
+        callFirebaseFunction(functionName: "getItemDetails", model: item)
+    }
+
+    func addToInventory(inventoryItem: InventoryItem) -> AnyPublisher<InventoryItem, AppError> {
+        callFirebaseFunction(functionName: "addInventoryItem", model: inventoryItem)
+    }
+
+    func removeFromInventory(inventoryItem: InventoryItem) -> AnyPublisher<Void, AppError> {
+        callFirebaseFunction(functionName: "removeInventoryItem", model: inventoryItem)
     }
 
     private let functions = Functions.functions()
@@ -33,38 +38,48 @@ class DefaultFunctionsManager: FunctionsManager {
         #endif
     }
 
-    private func callFirebaseFunction(functionName: String, parameters: Any?) -> AnyPublisher<Void, AppError> {
-        Future<Void, AppError> { [weak self] completion in
-            self?.functions.httpsCallable(functionName).call(parameters) { [weak self] result, error in
-                guard let self = self else { return }
-                do {
-                    try self.handleError(error)
-                    completion(.success(()))
-                } catch {
-                    let error = (error as? AppError) ?? AppError()
-                    completion(.failure(error))
+    private func callFirebaseFunction(functionName: String, model: Encodable) -> AnyPublisher<Void, AppError> {
+        do {
+            let parameters = try model.dictionary()
+            return Future<Void, AppError> { [weak self] completion in
+                self?.functions.httpsCallable(functionName).call(parameters) { [weak self] result, error in
+                    guard let self = self else { return }
+                    do {
+                        try self.handleError(error)
+                        completion(.success(()))
+                    } catch {
+                        let error = (error as? AppError) ?? AppError()
+                        completion(.failure(error))
+                    }
                 }
             }
+            .eraseToAnyPublisher()
+        } catch {
+            return Fail(error: AppError(error: error)).eraseToAnyPublisher()
         }
-        .eraseToAnyPublisher()
     }
 
-    private func callFirebaseFunction<Model: Decodable>(functionName: String, parameters: [String: Any] = [:]) -> AnyPublisher<Model, AppError> {
-        Future<Model, AppError> { [weak self] completion in
-            self?.functions.httpsCallable(functionName).call(parameters) { [weak self] result, error in
-                guard let self = self else { return }
-                do {
-                    try self.handleError(error)
-                    let result: Model = try self.decodeResult(result)
-                    completion(.success(result))
-                } catch {
-                    let error = (error as? AppError) ?? AppError()
-                    print(error)
-                    completion(.failure(error))
+    private func callFirebaseFunction<Model: Decodable>(functionName: String, model: Encodable) -> AnyPublisher<Model, AppError> {
+        do {
+            let parameters = try model.dictionary()
+            return Future<Model, AppError> { [weak self] completion in
+                self?.functions.httpsCallable(functionName).call(parameters) { [weak self] result, error in
+                    guard let self = self else { return }
+                    do {
+                        try self.handleError(error)
+                        let result: Model = try self.decodeResult(result)
+                        completion(.success(result))
+                    } catch {
+                        let error = (error as? AppError) ?? AppError()
+                        print(error)
+                        completion(.failure(error))
+                    }
                 }
             }
+            .eraseToAnyPublisher()
+        } catch {
+            return Fail(error: AppError(error: error)).eraseToAnyPublisher()
         }
-        .eraseToAnyPublisher()
     }
 
     private func callFirebaseFunctionArray<Model: Decodable>(functionName: String,
