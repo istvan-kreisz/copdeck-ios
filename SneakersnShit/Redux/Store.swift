@@ -28,17 +28,22 @@ final class Store<State, Action: IdAble, Environment>: ObservableObject {
         self.environment = environment
     }
 
+    // func send(_ action: Action, completion: ((AnyPublisher<Action, Never>) -> Void)? = nil) {
     func send(_ action: Action) {
-        Throttler.throttle(delay: .milliseconds(200), id: action.id) { [weak self] in
-            guard let self = self, let effect = self.reducer(&self.state, action, self.environment) else {
-                return
-            }
-
-            effect
-                .receive(on: DispatchQueue.main)
-                .sink(receiveValue: self.send)
-                .store(in: &self.effectCancellables)
+        Debouncer.debounce(delay: .milliseconds(500), id: action.id) { [weak self] in
+            self?.process(action)
         }
+    }
+
+    private func process(_ action: Action) {
+        guard let effect = self.reducer(&state, action, environment) else {
+            return
+        }
+
+        effect
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in self?.process($0) })
+            .store(in: &effectCancellables)
     }
 
     private var derivedCancellable: AnyCancellable?
@@ -49,7 +54,7 @@ final class Store<State, Action: IdAble, Environment>: ObservableObject {
         -> Store<DerivedState, DerivedAction, DerivedEnvironment> {
         let store = Store<DerivedState, DerivedAction, DerivedEnvironment>(initialState: deriveState(state),
                                                                            reducer: { _, action, _ in
-                                                                               self.send(deriveAction(action))
+                                                                               self.process(deriveAction(action))
                                                                                return Empty(completeImmediately: true).eraseToAnyPublisher()
                                                                            },
                                                                            environment: derivedEnvironment)

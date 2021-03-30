@@ -7,21 +7,6 @@
 
 import Foundation
 
-protocol IdAble: RawRepresentable {
+protocol IdAble {
     var id: String { get }
-}
-
-extension IdAble {
-    init?(rawValue: String) {
-        return nil
-    }
-
-    var rawValue: String {
-        guard let label = Mirror(reflecting: self).children.first?.label else {
-            return .init(describing: self)
-        }
-        return label
-    }
-
-    var id: String { rawValue }
 }

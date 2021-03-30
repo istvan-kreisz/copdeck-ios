@@ -14,6 +14,15 @@ class DefaultFunctionsManager: FunctionsManager {
         callFirebaseFunctionArray(functionName: "search", userId: userId, parameters: ["searchTerm": searchTerm])
     }
 
+    func getItemDetails(for item: Item) -> AnyPublisher<Item, AppError> {
+        do {
+            let parameters = try item.dictionary()
+            return callFirebaseFunction(functionName: "getItemDetails", parameters: parameters)
+        } catch {
+            return Fail(error: AppError(error: error)).eraseToAnyPublisher()
+        }
+    }
+
     private let functions = Functions.functions()
 
     init() {
@@ -24,11 +33,9 @@ class DefaultFunctionsManager: FunctionsManager {
         #endif
     }
 
-    private func callFirebaseFunction(functionName: String,
-                                      userId: String,
-                                      parameters: [String: Any] = [:]) -> AnyPublisher<Void, AppError> {
+    private func callFirebaseFunction(functionName: String, parameters: Any?) -> AnyPublisher<Void, AppError> {
         Future<Void, AppError> { [weak self] completion in
-            self?.functions.httpsCallable(functionName).call(parameters.merging(["userId": userId]) { $1 }) { [weak self] result, error in
+            self?.functions.httpsCallable(functionName).call(parameters) { [weak self] result, error in
                 guard let self = self else { return }
                 do {
                     try self.handleError(error)
@@ -42,11 +49,9 @@ class DefaultFunctionsManager: FunctionsManager {
         .eraseToAnyPublisher()
     }
 
-    private func callFirebaseFunction<Model: Decodable>(functionName: String,
-                                                        userId: String,
-                                                        parameters: [String: Any] = [:]) -> AnyPublisher<Model, AppError> {
+    private func callFirebaseFunction<Model: Decodable>(functionName: String, parameters: [String: Any] = [:]) -> AnyPublisher<Model, AppError> {
         Future<Model, AppError> { [weak self] completion in
-            self?.functions.httpsCallable(functionName).call(parameters.merging(["userId": userId]) { $1 }) { [weak self] result, error in
+            self?.functions.httpsCallable(functionName).call(parameters) { [weak self] result, error in
                 guard let self = self else { return }
                 do {
                     try self.handleError(error)

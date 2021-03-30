@@ -10,5 +10,5 @@ import Combine
 
 protocol FunctionsManager {
     func search(userId: String, searchTerm: String) -> AnyPublisher<[Item], AppError>
-//    func getItemDetails(userId: String, searchTerm: String) -> AnyPublisher<[SearchResult], AppError>
+    func getItemDetails(for item: Item) -> AnyPublisher<Item, AppError>
 }

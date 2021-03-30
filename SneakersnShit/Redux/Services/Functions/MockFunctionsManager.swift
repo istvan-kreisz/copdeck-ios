@@ -15,6 +15,9 @@ class MockFunctionsManager: FunctionsManager {
     func search(userId: String, searchTerm: String) -> AnyPublisher<[Item], AppError> {
         Empty().eraseToAnyPublisher()
     }
+    func getItemDetails(for item: Item) -> AnyPublisher<Item, AppError> {
+        Empty().eraseToAnyPublisher()
+    }
 
     init() {}
 }

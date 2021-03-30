@@ -14,7 +14,7 @@ struct MainView: View {
     var body: some View {
         TabView {
             NavigationView {
-            HomeView()
+            SearchView()
                 .environmentObject(store)
             }.tabItem {
                 Image(systemName: "magnifyingglass")

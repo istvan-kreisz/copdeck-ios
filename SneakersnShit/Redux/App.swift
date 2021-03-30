@@ -9,7 +9,7 @@ import Foundation
 import Combine
 // import FacebookLogin
 
-enum MainAction: IdAble {
+enum MainAction {
     case setUserId(String)
     case setMainState(MainState)
     case setUser(User)
@@ -21,9 +21,40 @@ enum MainAction: IdAble {
     // search
     case search(searchTerm: String)
     case setSearchResults([Item])
+    // item details
+    case getItemDetails(item: Item)
+    case setItemDetails(item: Item)
 }
 
-enum AuthenticationAction: IdAble {
+extension MainAction: IdAble {
+    var id: String {
+        switch self {
+        case .setUserId:
+            return "setUserId"
+        case .setMainState:
+            return "setMainState"
+        case .setUser:
+            return "setUser"
+        case .getMainFeedData:
+            return "getMainFeedData"
+        case .getUserData:
+            return "getUserData"
+        case .changeUsername:
+            return "changeUsername"
+        case .search:
+            return "search"
+        case .setSearchResults:
+            return "setSearchResults"
+        case .getItemDetails:
+            return "getItemDetails"
+        case .setItemDetails:
+            return "setItemDetails"
+        }
+    }
+}
+
+
+enum AuthenticationAction {
     case restoreState
     case signUp(userName: String, password: String)
     case signIn(userName: String, password: String)
@@ -35,13 +66,57 @@ enum AuthenticationAction: IdAble {
 //    case setFBLoginButtonDelegate(delegate: LoginButtonDelegate)
 }
 
-enum SettingsAction: IdAble {
+extension AuthenticationAction: IdAble {
+    var id: String {
+        switch self {
+        case .restoreState:
+            return "restoreState"
+        case .signUp:
+            return "signUp"
+        case .signIn:
+            return "signIn"
+        case .signInWithApple:
+            return "signInWithApple"
+        case .signInWithGoogle:
+            return "signInWithGoogle"
+        case .signInWithFacebook:
+            return "signInWithFacebook"
+        case .signOut:
+            return "signOut"
+        case .passwordReset:
+            return "passwordReset"
+        }
+    }
+}
+
+enum SettingsAction {
     case action1
     case action2
 }
 
-enum ErrorAction: IdAble {
+extension SettingsAction: IdAble {
+    var id: String {
+        switch self {
+        case .action1:
+            return "action1"
+        case .action2:
+            return "action2"
+        }
+    }
+}
+
+
+enum ErrorAction {
     case setError(error: AppError?)
+}
+
+extension ErrorAction: IdAble {
+    var id: String {
+        switch self {
+        case .setError:
+            return "setError"
+        }
+    }
 }
 
 enum AppAction {
@@ -53,19 +128,21 @@ enum AppAction {
 }
 
 extension AppAction: IdAble {
-    var rawValue: String {
+    var id: String {
+        var actionName = "AppAction."
         switch self {
         case .none:
-            return "AppAction.none"
+            actionName += "none"
         case let .main(action):
-            return action.id
+            actionName += action.id
         case let .error(action):
-            return action.id
+            actionName += action.id
         case let .authenticator(action):
-            return action.id
+            actionName += action.id
         case let .settings(action):
-            return action.id
+            actionName += action.id
         }
+        return actionName
     }
 }
 
@@ -141,13 +218,27 @@ func mainReducer(state: inout AppState,
 //            .eraseToAnyPublisher()
         return Empty(completeImmediately: true).eraseToAnyPublisher()
     case let .search(searchTerm: searchTerm):
-        return environment.functions.search(userId: state.mainState.userId, searchTerm: searchTerm)
-            .map { AppAction.main(action: .setSearchResults($0)) }
+        if searchTerm.isEmpty {
+            return Just(AppAction.main(action: .setSearchResults([])))
+                .eraseToAnyPublisher()
+        } else {
+            return environment.functions.search(userId: state.mainState.userId, searchTerm: searchTerm)
+                .map { AppAction.main(action: .setSearchResults($0)) }
+                .tryCatch { Just(AppAction.error(action: .setError(error: AppError(error: $0)))) }
+                .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
+                .eraseToAnyPublisher()
+        }
+    case let .setSearchResults(searchResult):
+        state.mainState.searchResults = searchResult
+        return Empty(completeImmediately: true).eraseToAnyPublisher()
+    case let .getItemDetails(item):
+        return environment.functions.getItemDetails(for: item)
+            .map { AppAction.main(action: .setItemDetails(item: $0)) }
             .tryCatch { Just(AppAction.error(action: .setError(error: AppError(error: $0)))) }
             .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
             .eraseToAnyPublisher()
-    case let .setSearchResults(searchResult):
-        state.mainState.searchResults = searchResult
+    case let .setItemDetails(item):
+        state.mainState.selectedItem = item
         return Empty(completeImmediately: true).eraseToAnyPublisher()
     default:
         return Empty(completeImmediately: true).eraseToAnyPublisher()

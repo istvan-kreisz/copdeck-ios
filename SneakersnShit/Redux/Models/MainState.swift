@@ -13,6 +13,8 @@ struct MainState: Equatable {
     var userId = ""
     var user: User?
     var searchResults: [Item]?
+    // todo: remove?
+    var selectedItem: Item?
 
     enum CodingKeys: String, CodingKey {
         case user
@@ -26,9 +28,8 @@ struct User: Codable, Equatable {
     let updated: Double?
 }
 
-
-enum ResellSite: String, Codable, Equatable {
-    case klekt, stockx, restocks
+enum ResellSite: String, Codable, Equatable, CaseIterable {
+    case stockx, klekt, restocks
 }
 
 struct StoreInfo: Codable, Equatable {
@@ -43,9 +44,7 @@ struct StoreInfo: Codable, Equatable {
 }
 
 extension StoreInfo: Identifiable {
-    var id: String {
-        name
-    }
+    var id: String { name }
 }
 
 struct StorePrices: Codable, Equatable {
@@ -55,9 +54,18 @@ struct StorePrices: Codable, Equatable {
         let lowestAsk: Double
         let highestBid: Double?
     }
+
     let store: ResellSite
     let retailPrice: Double?
     let inventory: [InventoryElement]
+}
+
+extension StorePrices: Identifiable {
+    var id: String { store.rawValue }
+}
+
+extension StorePrices.InventoryElement: Identifiable {
+    var id: String { size }
 }
 
 struct Item: Codable, Equatable, Identifiable {
@@ -65,7 +73,7 @@ struct Item: Codable, Equatable, Identifiable {
     let ownedByCount: Int?
     let priceAlertCount: Int?
     let storeInfo: [StoreInfo]
-    let storePrices: [StorePrices]
+    var storePrices: [StorePrices]
     let created: Double?
     let updated: Double?
 
@@ -73,7 +81,20 @@ struct Item: Codable, Equatable, Identifiable {
         storeInfo.first { $0.store == store }
     }
 
-    var stockxStoreInfo: StoreInfo? {
-        storeInfo(for: .stockx)
+    var bestStoreInfo: StoreInfo? {
+        ResellSite.allCases
+            .map { storeInfo(for: $0) }
+            .compactMap { $0 }
+            .first
+    }
+
+    // todo: make this more generic
+    func dictionary() throws -> [String: Any] {
+        let encodedSelf = try JSONEncoder().encode(self)
+        if let dictionary = try JSONSerialization.jsonObject(with: encodedSelf) as? [String: Any] {
+            return dictionary
+        } else {
+            throw AppError(title: "Encoding Item Failed", message: "", error: nil)
+        }
     }
 }
