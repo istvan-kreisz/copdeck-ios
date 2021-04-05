@@ -12,20 +12,41 @@ import FirebaseFunctions
 class DefaultFunctionsManager: FunctionsManager {
     // todo: refactor shit
 
-    func search(userId: String, searchTerm: String) -> AnyPublisher<[Item], AppError> {
-        callFirebaseFunctionArray(functionName: "search", userId: userId, parameters: ["searchTerm": searchTerm])
+    func search(searchTerm: String) -> AnyPublisher<[Item], AppError> {
+        struct Params: Encodable {
+            let searchTerm: String
+        }
+        return callFirebaseFunctionArray(functionName: "search", model: Params(searchTerm: searchTerm))
     }
 
     func getItemDetails(for item: Item) -> AnyPublisher<Item, AppError> {
-        callFirebaseFunction(functionName: "getItemDetails", model: item)
+        struct Params: Encodable {
+            let item: Item
+        }
+        return callFirebaseFunction(functionName: "getItemDetails", model: Params(item: item))
     }
 
-    func addToInventory(inventoryItem: InventoryItem) -> AnyPublisher<InventoryItem, AppError> {
-        callFirebaseFunction(functionName: "addInventoryItem", model: inventoryItem)
+    func addToInventory(userId: String, inventoryItem: InventoryItem) -> AnyPublisher<InventoryItem, AppError> {
+        struct Params: Encodable {
+            let userId: String
+            let inventoryItem: InventoryItem
+        }
+        return callFirebaseFunction(functionName: "addInventoryItem", model: Params(userId: userId, inventoryItem: inventoryItem))
     }
 
-    func removeFromInventory(inventoryItem: InventoryItem) -> AnyPublisher<Void, AppError> {
-        callFirebaseFunction(functionName: "removeInventoryItem", model: inventoryItem)
+    func removeFromInventory(userId: String, inventoryItem: InventoryItem) -> AnyPublisher<Void, AppError> {
+        struct Params: Encodable {
+            let userId: String
+            let inventoryItemId: String
+        }
+        return callFirebaseFunction(functionName: "removeInventoryItem", model: Params(userId: userId, inventoryItemId: inventoryItem.id))
+    }
+
+    func getInventoryItems(userId: String) -> AnyPublisher<[InventoryItem], AppError> {
+        struct Params: Encodable {
+            let userId: String
+        }
+        return callFirebaseFunctionArray(functionName: "getInventoryItems", model: Params(userId: userId))
     }
 
     private let functions = Functions.functions()
@@ -82,24 +103,27 @@ class DefaultFunctionsManager: FunctionsManager {
         }
     }
 
-    private func callFirebaseFunctionArray<Model: Decodable>(functionName: String,
-                                                             userId: String,
-                                                             parameters: [String: Any] = [:]) -> AnyPublisher<[Model], AppError> {
-        Future<[Model], AppError> { [weak self] completion in
-            self?.functions.httpsCallable(functionName).call(parameters.merging(["userId": userId]) { $1 }) { [weak self] result, error in
-                guard let self = self else { return }
-                do {
-                    try self.handleError(error)
-                    let result: [Model] = try self.decodeResultArray(result)
-                    completion(.success(result))
-                } catch {
-                    let error = (error as? AppError) ?? AppError()
-                    print(error)
-                    completion(.failure(error))
+    private func callFirebaseFunctionArray<Model: Decodable>(functionName: String, model: Encodable) -> AnyPublisher<[Model], AppError> {
+        do {
+            let parameters = try model.dictionary()
+            return Future<[Model], AppError> { [weak self] completion in
+                self?.functions.httpsCallable(functionName).call(parameters) { [weak self] result, error in
+                    guard let self = self else { return }
+                    do {
+                        try self.handleError(error)
+                        let result: [Model] = try self.decodeResultArray(result)
+                        completion(.success(result))
+                    } catch {
+                        let error = (error as? AppError) ?? AppError()
+                        print(error)
+                        completion(.failure(error))
+                    }
                 }
             }
+            .eraseToAnyPublisher()
+        } catch {
+            return Fail(error: AppError(error: error)).eraseToAnyPublisher()
         }
-        .eraseToAnyPublisher()
     }
 
     private func decodeResult<Model: Decodable>(_ result: HTTPSCallableResult?) throws -> Model {

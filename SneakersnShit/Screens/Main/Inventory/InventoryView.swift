@@ -58,10 +58,13 @@ struct InventoryView: View {
             }
             .frame(maxWidth: UIScreen.main.bounds.width)
         }
+        .onAppear {
+            store.send(.getInventoryItems)
+        }
     }
 
     func removeFromInventory(inventoryItem: InventoryItem) {
-
+        store.send(.removeFromInventory(inventoryItem: inventoryItem))
     }
 }
 

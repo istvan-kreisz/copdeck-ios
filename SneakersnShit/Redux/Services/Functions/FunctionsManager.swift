@@ -9,8 +9,9 @@ import Foundation
 import Combine
 
 protocol FunctionsManager {
-    func search(userId: String, searchTerm: String) -> AnyPublisher<[Item], AppError>
+    func search(searchTerm: String) -> AnyPublisher<[Item], AppError>
     func getItemDetails(for item: Item) -> AnyPublisher<Item, AppError>
-    func addToInventory(inventoryItem: InventoryItem) -> AnyPublisher<InventoryItem, AppError>
-    func removeFromInventory(inventoryItem: InventoryItem) -> AnyPublisher<Void, AppError>
+    func addToInventory(userId: String, inventoryItem: InventoryItem) -> AnyPublisher<InventoryItem, AppError>
+    func removeFromInventory(userId: String, inventoryItem: InventoryItem) -> AnyPublisher<Void, AppError>
+    func getInventoryItems(userId: String) -> AnyPublisher<[InventoryItem], AppError>
 }

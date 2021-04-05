@@ -43,13 +43,24 @@ struct ItemDetailView: View {
                     .font(.bold(size: 20))
 
                 HStack(spacing: 20) {
-                    ForEach(item.storePrices) { prices in
+                    item.priceTable.first.map { prices in
+                        VStack(spacing: 10) {
+                            Text("Size")
+                                .font(.regular(size: 12))
+                            VStack(spacing: 5) {
+                                ForEach(prices.inventory) { price in
+                                    Text(price.size)
+                                }
+                            }
+                        }
+                    }
+                    ForEach(item.priceTable) { prices in
                         VStack(spacing: 10) {
                             Text(prices.store.rawValue)
                                 .font(.regular(size: 12))
                             VStack(spacing: 5) {
                                 ForEach(prices.inventory) { price in
-                                    Text("$\(price.lowestAsk)")
+                                    Text(price.lowestAsk.map { "$\($0)" } ?? "-")
                                 }
                             }
                         }

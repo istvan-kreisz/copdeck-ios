@@ -51,8 +51,13 @@ struct StorePrices: Codable, Equatable {
     struct InventoryElement: Codable, Equatable {
         let size: String
         let currency: String
-        let lowestAsk: Double
-        let highestBid: Double?
+        let lowestAsk: Int?
+        let highestBid: Int?
+
+        var sizeTrimmed: String? {
+            let numString = size.trimmingCharacters(in: CharacterSet.letters.union(CharacterSet.whitespacesAndNewlines))
+            return Double(numString) != nil ? numString : nil
+        }
     }
 
     let store: ResellSite
@@ -87,13 +92,40 @@ struct Item: Codable, Equatable, Identifiable {
             .compactMap { $0 }
             .first
     }
+
+    struct PriceTableItem {
+        let size: String
+        let price: Double
+        let store: ResellSite
+    }
+
+    struct PriceTable {
+        let prices: PriceTableItem
+    }
+
+    // todo: update logic
+    var priceTable: [StorePrices] {
+        if let sizes = storePrices.sorted(by: { prices1, prices2 in
+            prices1.inventory.count < prices2.inventory.count
+        })
+            .last?.inventory
+            .compactMap({ $0.sizeTrimmed }) {
+            return ResellSite.allCases.map { site -> StorePrices in
+                StorePrices(store: site, retailPrice: nil, inventory: sizes.map { String($0) }.map { size -> StorePrices.InventoryElement in
+                    print(size)
+                    let price = storePrices.first(where: { $0.store == site })?.inventory.first(where: { $0.sizeTrimmed?.contains(size) == true })?.lowestAsk
+                    return StorePrices.InventoryElement(size: size, currency: "USD", lowestAsk: price, highestBid: nil)
+                })
+            }
+        } else {
+            return []
+        }
+    }
 }
 
-struct ItemStatus: Codable, Equatable {
+struct ItemStatus: Codable, Equatable, Hashable {}
 
-}
-
-//const ItemStatus = union([
+// const ItemStatus = union([
 //    object({
 //        listingPrices: defaulted(
 //            array(
@@ -109,7 +141,7 @@ struct ItemStatus: Codable, Equatable {
 //        sellingPrice: Optional(number()),
 //        store: Optional(Store),
 //    }),
-//])
+// ])
 
 enum Condition: String, Codable, Equatable {
     case new, used
@@ -129,6 +161,8 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     let updated: Double?
 }
 
+extension InventoryItem: Hashable {}
+
 extension InventoryItem {
     init(from item: Item) {
         self.id = UUID().uuidString
@@ -139,7 +173,7 @@ extension InventoryItem {
         self.condition = .new
         self.status = nil
         self.notes = nil
-        self.images = item.bestStoreInfo?.imageURL.map { [$0] }
+        self.images = item.storeInfo.first(where: { $0.imageURL != nil })?.imageURL.map { [$0] }
         self.created = nil
         self.updated = nil
     }

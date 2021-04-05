@@ -27,8 +27,9 @@ enum MainAction {
     // inventory
     case addToInventory(inventoryItem: InventoryItem)
     case removeFromInventory(inventoryItem: InventoryItem)
-    case setInventoryItem(inventoryItem: InventoryItem)
-    case removeInventoryItem(inventoryItem: InventoryItem)
+    case setInventoryItems(inventoryItems: [InventoryItem])
+    case removeInventoryItems(inventoryItems: [InventoryItem])
+    case getInventoryItems
 }
 
 extension MainAction: IdAble {
@@ -58,10 +59,12 @@ extension MainAction: IdAble {
             return "addToInventory"
         case .removeFromInventory:
             return "removeFromInventory"
-        case .setInventoryItem:
-            return "setInventoryItem"
-        case .removeInventoryItem:
-            return "removeInventoryItem"
+        case .setInventoryItems:
+            return "setInventoryItems"
+        case .removeInventoryItems:
+            return "removeInventoryItems"
+        case .getInventoryItems:
+            return "getInventoryItems"
         }
     }
 }
@@ -235,7 +238,7 @@ func mainReducer(state: inout AppState,
             return Just(AppAction.main(action: .setSearchResults([])))
                 .eraseToAnyPublisher()
         } else {
-            return environment.functions.search(userId: state.mainState.userId, searchTerm: searchTerm)
+            return environment.functions.search(searchTerm: searchTerm)
                 .map { AppAction.main(action: .setSearchResults($0)) }
                 .catchErrors()
         }
@@ -250,27 +253,33 @@ func mainReducer(state: inout AppState,
         state.mainState.selectedItem = item
         return Empty(completeImmediately: true).eraseToAnyPublisher()
     case let .addToInventory(inventoryItem):
-        return environment.functions.addToInventory(inventoryItem: inventoryItem)
-            .map { AppAction.main(action: .setInventoryItem(inventoryItem: $0)) }
+        return environment.functions.addToInventory(userId: state.mainState.userId, inventoryItem: inventoryItem)
+            .map { AppAction.main(action: .setInventoryItems(inventoryItems: [$0])) }
             .catchErrors()
     case let .removeFromInventory(inventoryItem):
-        return environment.functions.removeFromInventory(inventoryItem: inventoryItem)
-            .map { AppAction.main(action: .removeInventoryItem(inventoryItem: inventoryItem)) }
+        return environment.functions.removeFromInventory(userId: state.mainState.userId, inventoryItem: inventoryItem)
+            .map { AppAction.main(action: .removeInventoryItems(inventoryItems: [inventoryItem])) }
             .catchErrors()
-    case let .setInventoryItem(inventoryItem):
-        if let index = state.mainState.inventoryItems.firstIndex(where: { $0.id == inventoryItem.id }) {
-            state.mainState.inventoryItems[index] = inventoryItem
-        } else {
-            state.mainState.inventoryItems.append(inventoryItem)
+    case let .setInventoryItems(inventoryItems):
+        inventoryItems.forEach { inventoryItem in
+            if let index = state.mainState.inventoryItems.firstIndex(where: { $0.id == inventoryItem.id }) {
+                state.mainState.inventoryItems[index] = inventoryItem
+            } else {
+                state.mainState.inventoryItems.append(inventoryItem)
+            }
         }
         return Empty(completeImmediately: true).eraseToAnyPublisher()
-    case let .removeInventoryItem(inventoryItem):
-        if let index = state.mainState.inventoryItems.firstIndex(where: { $0.id == inventoryItem.id }) {
-            state.mainState.inventoryItems.remove(at: index)
+    case let .removeInventoryItems(inventoryItems):
+        inventoryItems.forEach { inventoryItem in
+            if let index = state.mainState.inventoryItems.firstIndex(where: { $0.id == inventoryItem.id }) {
+                state.mainState.inventoryItems.remove(at: index)
+            }
         }
         return Empty(completeImmediately: true).eraseToAnyPublisher()
-//    default:
-//        return Empty(completeImmediately: true).eraseToAnyPublisher()
+    case .getInventoryItems:
+        return environment.functions.getInventoryItems(userId: state.mainState.userId)
+            .map { AppAction.main(action: .setInventoryItems(inventoryItems: $0)) }
+            .catchErrors()
     }
 }
 
