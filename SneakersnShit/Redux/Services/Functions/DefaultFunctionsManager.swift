@@ -49,7 +49,7 @@ class DefaultFunctionsManager: FunctionsManager {
         return callFirebaseFunctionArray(functionName: "getInventoryItems", model: Params(userId: userId))
     }
 
-    private let functions = Functions.functions()
+    private let functions = Functions.functions(region: "europe-west1")
 
     init() {
         #if DEBUG
