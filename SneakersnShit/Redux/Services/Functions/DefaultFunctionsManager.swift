@@ -61,7 +61,7 @@ class DefaultFunctionsManager: FunctionsManager {
 
     private func callFirebaseFunction(functionName: String, model: Encodable) -> AnyPublisher<Void, AppError> {
         do {
-            let parameters = try model.dictionary()
+            let parameters = try model.asDictionary()
             return Future<Void, AppError> { [weak self] completion in
                 self?.functions.httpsCallable(functionName).call(parameters) { [weak self] result, error in
                     guard let self = self else { return }
@@ -82,7 +82,7 @@ class DefaultFunctionsManager: FunctionsManager {
 
     private func callFirebaseFunction<Model: Decodable>(functionName: String, model: Encodable) -> AnyPublisher<Model, AppError> {
         do {
-            let parameters = try model.dictionary()
+            let parameters = try model.asDictionary()
             return Future<Model, AppError> { [weak self] completion in
                 self?.functions.httpsCallable(functionName).call(parameters) { [weak self] result, error in
                     guard let self = self else { return }
@@ -105,7 +105,7 @@ class DefaultFunctionsManager: FunctionsManager {
 
     private func callFirebaseFunctionArray<Model: Decodable>(functionName: String, model: Encodable) -> AnyPublisher<[Model], AppError> {
         do {
-            let parameters = try model.dictionary()
+            let parameters = try model.asDictionary()
             return Future<[Model], AppError> { [weak self] completion in
                 self?.functions.httpsCallable(functionName).call(parameters) { [weak self] result, error in
                     guard let self = self else { return }

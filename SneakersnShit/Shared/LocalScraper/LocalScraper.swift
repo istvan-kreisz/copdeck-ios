@@ -7,39 +7,75 @@
 
 import UIKit
 import JavaScriptCore
+import OasisJSBridge
 
-class LocalScraper: NSObject {
-    static let shared = LocalScraper()
-    private let vm = JSVirtualMachine()
-    private let context: JSContext
+@objc protocol NativeProtocol: JSExport {
+    func setExchangeRates(_ exchangeRates: Any)
+//    func setItems(_ items: [Item])
+//    func setItem(_ item: Item)
+}
 
-    private override init() {
-        let jsCode = """
-         function randomNumber(min, max) {
-             min = Math.ceil(min);
-             max = Math.floor(max);
-             //The maximum is inclusive and the minimum is inclusive
-             return Math.floor(Math.random() * (max - min + 1)) + min;
-         }
-
-         function analyze(sentence) {
-             return randomNumber(-5, 5);
-         }
-         """
-        context = JSContext(virtualMachine: vm)
-        context.evaluateScript(jsCode)
+@objc class Native: NSObject, NativeProtocol {
+    func setExchangeRates(_ exchangeRates: Any) {
+        DispatchQueue.main.async {
+            print(exchangeRates)
+        }
     }
 
-    func analyze(_ sentence: String, completion: @escaping (_ score: Int) -> Void) {
-        // Run this asynchronously in the background
-        DispatchQueue.global(qos: .userInitiated).async {
-            var score = 0
-            if let result = self.context.objectForKeyedSubscript("analyze").call(withArguments: [sentence]) {
-                score = Int(result.toInt32())
-            }
-            DispatchQueue.main.async {
-                completion(score)
+//    func setItems(_ items: [Item]) {
+//        DispatchQueue.main.async {
+//            print(items)
+//        }
+//    }
+//
+//    func setItem(_ item: Item) {
+//        DispatchQueue.main.async {
+//            print(item)
+//        }
+//    }
+}
+
+class TestLogger: JSBridgeLoggingProtocol {
+    func log(level: JSBridgeLoggingLevel, message: String, file: StaticString, function: StaticString, line: UInt) {
+        print("[\(level.rawValue)]" + message)
+    }
+}
+
+class LocalScraper {
+    static let shared = LocalScraper()
+
+    private let native = Native()
+    private lazy var interpreter: JavascriptInterpreter = {
+        JSBridgeConfiguration.add(logger: TestLogger())
+        let interpreter = JavascriptInterpreter()
+        interpreter.jsContext.setObject(native, forKeyedSubscript: "native" as NSString)
+        return interpreter
+    }()
+
+    private init() {
+        guard let scraper = Bundle.main.url(forResource: "scraper.bundle", withExtension: "js"),
+              let jsCode = try? String.init(contentsOf: scraper)
+        else { return }
+        interpreter.evaluateString(js: jsCode) { [weak self] value, error in
+            if let error = error {
+                DispatchQueue.main.async {
+                    print(error)
+                }
+            } else {
+                self?.getExchangeRates()
             }
         }
+    }
+
+    func getExchangeRates() {
+        let apiConfig = APIConfig(currency: .init(code: "GBP", symbol: "£"),
+                                  isLoggingEnabled: true,
+                                  exchangeRates: ["usd": 1.2125, "gbp": 0.8571, "chf": 1.0883, "nok": 10.0828],
+                                  feeCalculation: .init(countryName: "Austria",
+                                                        stockx: .init(sellerLevel: 1, taxes: 0),
+                                                        goat: .init(commissionPercentage: 15, cashOutFee: 2.9, taxes: 0)))
+        guard let config = apiConfig.asJSON else { return }
+
+        interpreter.call(object: nil, functionName: "scraper.api.getExchangeRates", arguments: [config], completion: { result in })
     }
 }

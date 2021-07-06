@@ -101,6 +101,7 @@ PODS:
     - nanopb/encode (= 2.30907.0)
   - nanopb/decode (2.30907.0)
   - nanopb/encode (2.30907.0)
+  - OasisJSBridge (0.3.14)
   - PromisesObjC (1.2.12)
 
 DEPENDENCIES:
@@ -109,6 +110,7 @@ DEPENDENCIES:
   - Firebase/Crashlytics
   - Firebase/Functions
   - GoogleSignIn
+  - OasisJSBridge
 
 SPEC REPOS:
   trunk:
@@ -128,6 +130,7 @@ SPEC REPOS:
     - GTMAppAuth
     - GTMSessionFetcher
     - nanopb
+    - OasisJSBridge
     - PromisesObjC
 
 SPEC CHECKSUMS:
@@ -147,8 +150,9 @@ SPEC CHECKSUMS:
   GTMAppAuth: 197a8dabfea5d665224aa00d17f164fc2248dab9
   GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
   nanopb: 59221d7f958fb711001e6a449489542d92ae113e
+  OasisJSBridge: c7fcf62b65c1493190d69b235d6f54c24f464c58
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
 
-PODFILE CHECKSUM: 9ffbed3dbae3cdd81a8a70f85603b4618002931d
+PODFILE CHECKSUM: dcb02304e1abc8d0354fdbddfe5415a8f7e99a85
 
 COCOAPODS: 1.10.1

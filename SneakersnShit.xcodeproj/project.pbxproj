@@ -49,6 +49,8 @@
 		5D52E30B2613063B00FA02B8 /* Encodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D52E30A2613063B00FA02B8 /* Encodable.swift */; };
 		5D52E30F26130E2100FA02B8 /* InventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D52E30E26130E2100FA02B8 /* InventoryView.swift */; };
 		5D52E31226130E7500FA02B8 /* InventoryItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D52E31126130E7500FA02B8 /* InventoryItemDetailView.swift */; };
+		5D631220269330B900876D99 /* APIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D63121F269330B900876D99 /* APIConfig.swift */; };
+		5D6312222694797300876D99 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6312212694797300876D99 /* Item.swift */; };
 		5D696097258713760058BABE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D696096258713760058BABE /* AppDelegate.swift */; };
 		5D696099258713760058BABE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D696098258713760058BABE /* SceneDelegate.swift */; };
 		5D69609B258713760058BABE /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D69609A258713760058BABE /* LoginView.swift */; };
@@ -61,6 +63,7 @@
 		5D6960BA258717430058BABE /* Environments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6960B9258717430058BABE /* Environments.swift */; };
 		5D7B17CC26868CA60065D01C /* LocalScraper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D7B17CB26868CA60065D01C /* LocalScraper.swift */; };
 		5D83156B25C397C4008AB948 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D83156A25C397C4008AB948 /* MainView.swift */; };
+		5D9E85F126931F4300477377 /* scraper.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = 5D9E85F026931F4200477377 /* scraper.bundle.js */; };
 		5DBCB6DD25C90A510025BC23 /* StoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DBCB6DC25C90A510025BC23 /* StoreReviewHelper.swift */; };
 		5DC00EAB25C3A331009A3AB9 /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC00EAA25C3A331009A3AB9 /* Authenticator.swift */; };
 		5DC00EAF25C3A387009A3AB9 /* DefaultAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC00EAE25C3A387009A3AB9 /* DefaultAuthenticator.swift */; };
@@ -122,6 +125,8 @@
 		5D52E30A2613063B00FA02B8 /* Encodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Encodable.swift; sourceTree = "<group>"; };
 		5D52E30E26130E2100FA02B8 /* InventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryView.swift; sourceTree = "<group>"; };
 		5D52E31126130E7500FA02B8 /* InventoryItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryItemDetailView.swift; sourceTree = "<group>"; };
+		5D63121F269330B900876D99 /* APIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfig.swift; sourceTree = "<group>"; };
+		5D6312212694797300876D99 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		5D696093258713760058BABE /* SneakersnShit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SneakersnShit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D696096258713760058BABE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5D696098258713760058BABE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -136,6 +141,7 @@
 		5D6960B9258717430058BABE /* Environments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environments.swift; sourceTree = "<group>"; };
 		5D7B17CB26868CA60065D01C /* LocalScraper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalScraper.swift; sourceTree = "<group>"; };
 		5D83156A25C397C4008AB948 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		5D9E85F026931F4200477377 /* scraper.bundle.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = scraper.bundle.js; sourceTree = "<group>"; };
 		5DBCB6DC25C90A510025BC23 /* StoreReviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreReviewHelper.swift; sourceTree = "<group>"; };
 		5DC00EAA25C3A331009A3AB9 /* Authenticator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authenticator.swift; sourceTree = "<group>"; };
 		5DC00EAE25C3A387009A3AB9 /* DefaultAuthenticator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAuthenticator.swift; sourceTree = "<group>"; };
@@ -386,6 +392,7 @@
 			children = (
 				5D2D5AA225C52E9B009598AA /* MainState.swift */,
 				5D488E8825C8D54E00624FEF /* AppError.swift */,
+				5D6312212694797300876D99 /* Item.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -395,6 +402,7 @@
 			children = (
 				5D7B17CD26868D760065D01C /* JS */,
 				5D7B17CB26868CA60065D01C /* LocalScraper.swift */,
+				5D63121F269330B900876D99 /* APIConfig.swift */,
 			);
 			path = LocalScraper;
 			sourceTree = "<group>";
@@ -402,6 +410,7 @@
 		5D7B17CD26868D760065D01C /* JS */ = {
 			isa = PBXGroup;
 			children = (
+				5D91DD7C268B6233004558E7 /* dist */,
 			);
 			path = JS;
 			sourceTree = "<group>";
@@ -415,6 +424,14 @@
 				5D424D0B25C505450008D6F4 /* Shared */,
 			);
 			path = Screens;
+			sourceTree = "<group>";
+		};
+		5D91DD7C268B6233004558E7 /* dist */ = {
+			isa = PBXGroup;
+			children = (
+				5D9E85F026931F4200477377 /* scraper.bundle.js */,
+			);
+			path = dist;
 			sourceTree = "<group>";
 		};
 		5DC00EA725C3A2F8009A3AB9 /* Services */ = {
@@ -563,6 +580,7 @@
 			files = (
 				5D424CF225C503120008D6F4 /* Colors.xcassets in Resources */,
 				5D6960A3258713770058BABE /* LaunchScreen.storyboard in Resources */,
+				5D9E85F126931F4300477377 /* scraper.bundle.js in Resources */,
 				5D424D2E25C509530008D6F4 /* Karla-ExtraBold.ttf in Resources */,
 				5D424D3025C5095B0008D6F4 /* Karla-ExtraLight.ttf in Resources */,
 				5D424D3E25C509610008D6F4 /* Karla-Medium.ttf in Resources */,
@@ -670,6 +688,7 @@
 				5D6960B4258714FB0058BABE /* AppState.swift in Sources */,
 				5DF03C9F25D9E533001856B5 /* MultiLineChartView.swift in Sources */,
 				5D424CAE25C4FDCC0008D6F4 /* SignInButton.swift in Sources */,
+				5D6312222694797300876D99 /* Item.swift in Sources */,
 				5D424D2125C505450008D6F4 /* DimView.swift in Sources */,
 				5D52E30B2613063B00FA02B8 /* Encodable.swift in Sources */,
 				5D424D0825C504AF0008D6F4 /* RootView.swift in Sources */,
@@ -689,6 +708,7 @@
 				5D6960BA258717430058BABE /* Environments.swift in Sources */,
 				5DBCB6DD25C90A510025BC23 /* StoreReviewHelper.swift in Sources */,
 				5D424D4725C509AD0008D6F4 /* SignUpView.swift in Sources */,
+				5D631220269330B900876D99 /* APIConfig.swift in Sources */,
 				5D2119DA25DA68C7001FE5E5 /* StockXResult.swift in Sources */,
 				5DC00EAB25C3A331009A3AB9 /* Authenticator.swift in Sources */,
 				5DF03CAB25DA1CE7001856B5 /* ImageView.swift in Sources */,

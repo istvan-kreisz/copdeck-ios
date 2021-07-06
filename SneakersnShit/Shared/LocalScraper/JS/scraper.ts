@@ -1,61 +1,23 @@
-import { nodeAPI } from "@istvankreisz/copdeck-scraper";
-import { APIConfig } from "@istvankreisz/copdeck-scraper/dist/types";
+import { appAPI } from "@istvankreisz/copdeck-scraper-app";
+import { APIConfig, Item } from "@istvankreisz/copdeck-scraper-app/dist/types";
 
-const config: APIConfig = {
-  currency: { code: "GBP", symbol: "£" },
-  isLoggingEnabled: true,
-  proxies: [
-    // {
-    // 	host: '144.91.97.235',
-    // 	port: 80,
-    // 	protocol: 'http',
-    // },
-    // {
-    // 	host: '157.100.53.109',
-    // 	port: 999,
-    // 	protocol: 'http',
-    // },
-    // {
-    // 	host: '139.9.133.196',
-    // 	port: 808,
-    // 	protocol: 'http',
-    // },
-    // {
-    // 	host: '217.79.181.109',
-    // 	port: 443,
-    // 	protocol: 'http',
-    // },
-  ],
-  exchangeRates: { usd: 1.2125, gbp: 0.8571, chf: 1.0883, nok: 10.0828 },
-  feeCalculation: {
-    countryName: "Austria",
-    stockx: {
-      sellerLevel: 1,
-      taxes: 0,
+// @ts-ignore
+const nat = native
+
+export var api = {
+    getExchangeRates: async function(config: APIConfig) {
+        const rates = await appAPI.getExchangeRates(config)
+        nat.setExchangeRates(rates)
     },
-    goat: {
-      commissionPercentage: 9.5,
-      cashOutFee: 0.029,
-      taxes: 0,
+	searchItems: async function(searchTerm: string, apiConfig: APIConfig) {
+        const items = await appAPI.searchItems(searchTerm, apiConfig)
+        nat.setItems(items)
     },
-  },
-};
+    getItemPrices: async function(item: Item, apiConfig: APIConfig) {
+        const refreshedItem = await appAPI.getItemPrices(item, apiConfig)
+        nat.setItem(refreshedItem)
+    }
+}
 
-const test = async () => {
-  nodeAPI
-    .getExchangeRates(config)
-    .then((result) => {
-      console.log(result);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
+// todo: readd useragents
 
-export { test };
-
-// export class Analyzer {
-//   static analyze(phrase) {
-//     return phrase;
-//   }
-// }
