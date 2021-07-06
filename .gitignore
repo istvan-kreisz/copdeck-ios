@@ -32,13 +32,7 @@ DerivedData/
 
 **/Pods/
 
-\SneakersnShit/Redux/Services/LocalScraper/JS/node_modules/*
-SneakersnShit/Redux/Services/LocalScraper/JS/node_modules/**
-SneakersnShit/Redux/Services/LocalScraper/JS/node_modules/
-*/SneakersnShit/Redux/Services/LocalScraper/JS/node_modules
-**/SneakersnShit/Redux/Services/LocalScraper/JS/node_modules
-**/SneakersnShit/Redux/Services/LocalScraper/JS/node_modules/
-**/SneakersnShit/Redux/Services/LocalScraper/JS/node_modules/*
+**/SneakersnShit/Redux/Services/LocalScraper/JS/node_modules/**
 **/SneakersnShit/Redux/Services/LocalScraper/JS/package-lock.json
 **/SneakersnShit/Redux/Services/LocalScraper/JS/package.json
 **/SneakersnShit/Redux/Services/LocalScraper/JS/scraper.ts
