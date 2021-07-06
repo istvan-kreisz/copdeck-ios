@@ -7,10 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5D2119AA25DA5CE0001FE5E5 /* Scraper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2119A925DA5CE0001FE5E5 /* Scraper.swift */; };
 		5D2119D725DA6605001FE5E5 /* Kanna in Frameworks */ = {isa = PBXBuildFile; productRef = 5D2119D625DA6605001FE5E5 /* Kanna */; };
-		5D2119DA25DA68C7001FE5E5 /* StockXResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2119D925DA68C7001FE5E5 /* StockXResult.swift */; };
-		5D2119DD25DA700D001FE5E5 /* KlektResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2119DC25DA700D001FE5E5 /* KlektResult.swift */; };
 		5D2119E125DB0EFA001FE5E5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5D2119E025DB0EFA001FE5E5 /* GoogleService-Info.plist */; };
 		5D2D5AA025C529E3009598AA /* FunctionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5A9F25C529E3009598AA /* FunctionsManager.swift */; };
 		5D2D5AA325C52E9B009598AA /* MainState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5AA225C52E9B009598AA /* MainState.swift */; };
@@ -62,7 +59,7 @@
 		5D6960B1258714BF0058BABE /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6960B0258714BF0058BABE /* App.swift */; };
 		5D6960B4258714FB0058BABE /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6960B3258714FB0058BABE /* AppState.swift */; };
 		5D6960BA258717430058BABE /* Environments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6960B9258717430058BABE /* Environments.swift */; };
-		5D7B17CC26868CA60065D01C /* LocalScraper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D7B17CB26868CA60065D01C /* LocalScraper.swift */; };
+		5D7B17CC26868CA60065D01C /* Scraper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D7B17CB26868CA60065D01C /* Scraper.swift */; };
 		5D83156B25C397C4008AB948 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D83156A25C397C4008AB948 /* MainView.swift */; };
 		5D9E85F126931F4300477377 /* scraper.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = 5D9E85F026931F4200477377 /* scraper.bundle.js */; };
 		5DBCB6DD25C90A510025BC23 /* StoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DBCB6DC25C90A510025BC23 /* StoreReviewHelper.swift */; };
@@ -86,9 +83,6 @@
 
 /* Begin PBXFileReference section */
 		10F05964238EC7800C0C5A21 /* Pods-SneakersnShit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SneakersnShit.debug.xcconfig"; path = "Target Support Files/Pods-SneakersnShit/Pods-SneakersnShit.debug.xcconfig"; sourceTree = "<group>"; };
-		5D2119A925DA5CE0001FE5E5 /* Scraper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scraper.swift; sourceTree = "<group>"; };
-		5D2119D925DA68C7001FE5E5 /* StockXResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockXResult.swift; sourceTree = "<group>"; };
-		5D2119DC25DA700D001FE5E5 /* KlektResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlektResult.swift; sourceTree = "<group>"; };
 		5D2119E025DB0EFA001FE5E5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		5D2D5A9F25C529E3009598AA /* FunctionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionsManager.swift; sourceTree = "<group>"; };
 		5D2D5AA225C52E9B009598AA /* MainState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainState.swift; sourceTree = "<group>"; };
@@ -141,7 +135,7 @@
 		5D6960B0258714BF0058BABE /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		5D6960B3258714FB0058BABE /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		5D6960B9258717430058BABE /* Environments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environments.swift; sourceTree = "<group>"; };
-		5D7B17CB26868CA60065D01C /* LocalScraper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalScraper.swift; sourceTree = "<group>"; };
+		5D7B17CB26868CA60065D01C /* Scraper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scraper.swift; sourceTree = "<group>"; };
 		5D83156A25C397C4008AB948 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		5D9E85F026931F4200477377 /* scraper.bundle.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = scraper.bundle.js; sourceTree = "<group>"; };
 		5DBCB6DC25C90A510025BC23 /* StoreReviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreReviewHelper.swift; sourceTree = "<group>"; };
@@ -180,16 +174,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		5D2119A825DA5CD4001FE5E5 /* Scraper */ = {
-			isa = PBXGroup;
-			children = (
-				5D2119A925DA5CE0001FE5E5 /* Scraper.swift */,
-				5D2119D925DA68C7001FE5E5 /* StockXResult.swift */,
-				5D2119DC25DA700D001FE5E5 /* KlektResult.swift */,
-			);
-			path = Scraper;
-			sourceTree = "<group>";
-		};
 		5D2D5A9E25C529CA009598AA /* Functions */ = {
 			isa = PBXGroup;
 			children = (
@@ -405,7 +389,7 @@
 			isa = PBXGroup;
 			children = (
 				5D7B17CD26868D760065D01C /* JS */,
-				5D7B17CB26868CA60065D01C /* LocalScraper.swift */,
+				5D7B17CB26868CA60065D01C /* Scraper.swift */,
 			);
 			path = LocalScraper;
 			sourceTree = "<group>";
@@ -440,7 +424,7 @@
 		5DC00EA725C3A2F8009A3AB9 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				5D2119A825DA5CD4001FE5E5 /* Scraper */,
+				5D7B17CA26868C970065D01C /* LocalScraper */,
 				5D2D5A9E25C529CA009598AA /* Functions */,
 				5D424CD225C4FF210008D6F4 /* IAP */,
 				5D424CCD25C4FE200008D6F4 /* StoreReviewHelper */,
@@ -462,7 +446,6 @@
 		5DC00EDF25C3C3DD009A3AB9 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				5D7B17CA26868C970065D01C /* LocalScraper */,
 				5DF03C9025D9E533001856B5 /* LineChart */,
 				5D424D0225C504400008D6F4 /* Utilities */,
 				5D424CFD25C5040E0008D6F4 /* Debug */,
@@ -663,7 +646,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5D7B17CC26868CA60065D01C /* LocalScraper.swift in Sources */,
+				5D7B17CC26868CA60065D01C /* Scraper.swift in Sources */,
 				5D52E307261303AF00FA02B8 /* Publishers+Extensions.swift in Sources */,
 				5DF03C9D25D9E533001856B5 /* MagnifierRect.swift in Sources */,
 				5D424D4225C509610008D6F4 /* Fonts.swift in Sources */,
@@ -673,7 +656,6 @@
 				5D424D1D25C505450008D6F4 /* Modifiers.swift in Sources */,
 				5D488E8925C8D54E00624FEF /* AppError.swift in Sources */,
 				5D424D1C25C505450008D6F4 /* Spinner.swift in Sources */,
-				5D2119AA25DA5CE0001FE5E5 /* Scraper.swift in Sources */,
 				5D696099258713760058BABE /* SceneDelegate.swift in Sources */,
 				5DF03CA025D9E533001856B5 /* Line.swift in Sources */,
 				5D2D5AAF25C552B0009598AA /* DefaultFunctionsManager.swift in Sources */,
@@ -696,7 +678,6 @@
 				5D52E30B2613063B00FA02B8 /* Encodable+Extensions.swift in Sources */,
 				5D424D0825C504AF0008D6F4 /* RootView.swift in Sources */,
 				5D2D5AA025C529E3009598AA /* FunctionsManager.swift in Sources */,
-				5D2119DD25DA700D001FE5E5 /* KlektResult.swift in Sources */,
 				5D424D0425C504510008D6F4 /* EmailValidator.swift in Sources */,
 				5D424CFB25C503F00008D6F4 /* UIApplication+Extensions.swift in Sources */,
 				5D6960B1258714BF0058BABE /* App.swift in Sources */,
@@ -713,7 +694,6 @@
 				5DBCB6DD25C90A510025BC23 /* StoreReviewHelper.swift in Sources */,
 				5D424D4725C509AD0008D6F4 /* SignUpView.swift in Sources */,
 				5D631220269330B900876D99 /* APIConfig.swift in Sources */,
-				5D2119DA25DA68C7001FE5E5 /* StockXResult.swift in Sources */,
 				5DC00EAB25C3A331009A3AB9 /* Authenticator.swift in Sources */,
 				5DF03CAB25DA1CE7001856B5 /* ImageView.swift in Sources */,
 				5D2D5AA325C52E9B009598AA /* MainState.swift in Sources */,

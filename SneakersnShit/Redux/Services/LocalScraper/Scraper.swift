@@ -5,9 +5,9 @@
 //  Created by István Kreisz on 6/26/21.
 //
 
-import UIKit
 import JavaScriptCore
 import OasisJSBridge
+import Combine
 
 @objc protocol NativeProtocol: JSExport {
     func setExchangeRates(_ exchangeRates: Any)
@@ -33,7 +33,6 @@ import OasisJSBridge
     func setItem(_ item: Any) {
         guard let item = SItem(from: item) else { return }
         DispatchQueue.main.async {
-            print("itemmmmmmmmm")
             print(item)
         }
     }
@@ -77,7 +76,7 @@ class LocalScraper {
                     print(error)
                 }
             } else {
-                self?.searchItems(searchTerm: "yeezy")
+                self?.getExchangeRates()
             }
         }
     }
@@ -85,8 +84,28 @@ class LocalScraper {
     func getExchangeRates() {
         interpreter.call(object: nil, functionName: "scraper.api.getExchangeRates", arguments: [config], completion: { result in })
     }
+//
+//    func searchItems(searchTerm: String) {
+//        interpreter.call(object: nil, functionName: "scraper.api.searchItems", arguments: [searchTerm, config], completion: { result in })
+//    }
+//
+//    func search(searchTerm: String) -> AnyPublisher<[Item], AppError> {
+//        interpreter.call(object: nil, functionName: "scraper.api.searchItems", arguments: [searchTerm, config], completion: { result in })
+//    }
+//
+//    func getItemDetails(for item: Item) -> AnyPublisher<Item, AppError> {
+//
+//    }
+//    func addToInventory(userId: String, inventoryItem: InventoryItem) -> AnyPublisher<InventoryItem, AppError> {
+//
+//    }
+//
+//    func removeFromInventory(userId: String, inventoryItem: InventoryItem) -> AnyPublisher<Void, AppError> {
+//
+//    }
+//
+//    func getInventoryItems(userId: String) -> AnyPublisher<[InventoryItem], AppError> {
+//
+//    }
 
-    func searchItems(searchTerm: String) {
-        interpreter.call(object: nil, functionName: "scraper.api.searchItems", arguments: [searchTerm, config], completion: { result in })
-    }
 }
