@@ -13,13 +13,13 @@ struct SItem: Codable {
     let id: String
     let storeInfo: [SStoreInfo]
     let storePrices: [StorePrice]
-    let ownedByCount: Int
-    let priceAlertCount: Int
-    let created: Int
-    let updated: Int
-    let name: String
-    let retailPrice: Int
-    let imageURL: ImageURL
+    let ownedByCount: Int?
+    let priceAlertCount: Int?
+    let created: Int?
+    let updated: Int?
+    let name: String?
+    let retailPrice: Double?
+    let imageURL: ImageURL?
 }
 
 struct ImageURL: Codable {
@@ -36,18 +36,18 @@ struct SStoreInfo: Codable {
     let name: String
     let sku: String
     let slug: String
-    let retailPrice: Int
+    let retailPrice: Double?
     let brand: String
     let store: SStore
-    let imageURL: String
+    let imageURL: String?
     let url: String
     let sellUrl: String
     let buyUrl: String
-    let productId: String
+    let productId: String?
 }
 
 struct StorePrice: Codable {
-    let retailPrice: Int?
+    let retailPrice: Double?
     let store: SStore
     let inventory: [SInventoryItem]
 }
@@ -57,14 +57,16 @@ struct StorePrice: Codable {
 struct SInventoryItem: Codable {
     let size: String
     let currencyCode: CurrencyCode
-    let lowestAsk: Price
-    let highestBid: Price
+    let lowestAsk: Price?
+    let highestBid: Price?
+    let shoeCondition: String?
+    let boxCondition: String?
     let tags: [String]
 
     struct Price: Codable {
-        let noFees: Int
-        let withSellerFees: Int?
-        let withBuyerFees: Int?
+        let noFees: Double
+        let withSellerFees: Double?
+        let withBuyerFees: Double?
     }
 }
 

@@ -11,33 +11,39 @@ import OasisJSBridge
 
 @objc protocol NativeProtocol: JSExport {
     func setExchangeRates(_ exchangeRates: Any)
-//    func setItems(_ items: [Item])
-//    func setItem(_ item: Item)
+    func setItems(_ items: Any)
+    func setItem(_ item: Any)
 }
 
 @objc class Native: NSObject, NativeProtocol {
     func setExchangeRates(_ exchangeRates: Any) {
+        guard let rates = ExchangeRates(from: exchangeRates) else { return }
         DispatchQueue.main.async {
-            print(exchangeRates)
+            print(rates)
         }
     }
 
-//    func setItems(_ items: [Item]) {
-//        DispatchQueue.main.async {
-//            print(items)
-//        }
-//    }
-//
-//    func setItem(_ item: Item) {
-//        DispatchQueue.main.async {
-//            print(item)
-//        }
-//    }
+    func setItems(_ items: Any) {
+        guard let items = [SItem](from: items) else { return }
+        DispatchQueue.main.async {
+            print(items.count)
+        }
+    }
+
+    func setItem(_ item: Any) {
+        guard let item = SItem(from: item) else { return }
+        DispatchQueue.main.async {
+            print("itemmmmmmmmm")
+            print(item)
+        }
+    }
 }
 
 class TestLogger: JSBridgeLoggingProtocol {
     func log(level: JSBridgeLoggingLevel, message: String, file: StaticString, function: StaticString, line: UInt) {
-        print("[\(level.rawValue)]" + message)
+        if level != .verbose {
+            print("[\(level.rawValue)]" + message)
+        }
     }
 }
 
@@ -52,6 +58,15 @@ class LocalScraper {
         return interpreter
     }()
 
+    let apiConfig = APIConfig(currency: .init(code: "GBP", symbol: "£"),
+                              isLoggingEnabled: false,
+                              exchangeRates: .init(usd: 1.2125, gbp: 0.8571, chf: 1.0883, nok: 10.0828),
+                              feeCalculation: .init(countryName: "Austria",
+                                                    stockx: .init(sellerLevel: 1, taxes: 0),
+                                                    goat: .init(commissionPercentage: 15, cashOutFee: 2.9, taxes: 0)))
+
+    lazy var config = apiConfig.asJSON!
+
     private init() {
         guard let scraper = Bundle.main.url(forResource: "scraper.bundle", withExtension: "js"),
               let jsCode = try? String.init(contentsOf: scraper)
@@ -62,20 +77,16 @@ class LocalScraper {
                     print(error)
                 }
             } else {
-                self?.getExchangeRates()
+                self?.searchItems(searchTerm: "yeezy")
             }
         }
     }
 
     func getExchangeRates() {
-        let apiConfig = APIConfig(currency: .init(code: "GBP", symbol: "£"),
-                                  isLoggingEnabled: true,
-                                  exchangeRates: ["usd": 1.2125, "gbp": 0.8571, "chf": 1.0883, "nok": 10.0828],
-                                  feeCalculation: .init(countryName: "Austria",
-                                                        stockx: .init(sellerLevel: 1, taxes: 0),
-                                                        goat: .init(commissionPercentage: 15, cashOutFee: 2.9, taxes: 0)))
-        guard let config = apiConfig.asJSON else { return }
-
         interpreter.call(object: nil, functionName: "scraper.api.getExchangeRates", arguments: [config], completion: { result in })
+    }
+
+    func searchItems(searchTerm: String) {
+        interpreter.call(object: nil, functionName: "scraper.api.searchItems", arguments: [searchTerm, config], completion: { result in })
     }
 }

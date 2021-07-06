@@ -23,4 +23,8 @@ extension Encodable {
         else { return nil }
         return json
     }
+
+    func decode() -> Self? {
+        nil
+    }
 }
