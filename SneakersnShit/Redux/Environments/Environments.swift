@@ -38,7 +38,7 @@ class World {
     
     lazy var authentication = Authentication(authenticator: isMockInstance ? MockAuthenticator() : DefaultAuthenticator())
     lazy var settings = AppSettings(settings: DefaultSettings())
-    lazy var main = Main(api: BackendAPI())
+    lazy var main = Main(api: DefaultAPI(backendAPI: BackendAPI(), localScraper: LocalScraper()))
 
     init(isMockInstance: Bool) {
         self.isMockInstance = isMockInstance
