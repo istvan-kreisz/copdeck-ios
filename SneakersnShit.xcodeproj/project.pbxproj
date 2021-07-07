@@ -9,9 +9,9 @@
 /* Begin PBXBuildFile section */
 		5D2119D725DA6605001FE5E5 /* Kanna in Frameworks */ = {isa = PBXBuildFile; productRef = 5D2119D625DA6605001FE5E5 /* Kanna */; };
 		5D2119E125DB0EFA001FE5E5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5D2119E025DB0EFA001FE5E5 /* GoogleService-Info.plist */; };
-		5D2D5AA025C529E3009598AA /* FunctionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5A9F25C529E3009598AA /* FunctionsManager.swift */; };
+		5D2D5AA025C529E3009598AA /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5A9F25C529E3009598AA /* API.swift */; };
 		5D2D5AA325C52E9B009598AA /* MainState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5AA225C52E9B009598AA /* MainState.swift */; };
-		5D2D5AAF25C552B0009598AA /* DefaultFunctionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5AAE25C552B0009598AA /* DefaultFunctionsManager.swift */; };
+		5D2D5AAF25C552B0009598AA /* BackendAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5AAE25C552B0009598AA /* BackendAPI.swift */; };
 		5D3769762611709C00F9ED72 /* Debouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D3769752611709C00F9ED72 /* Debouncer.swift */; };
 		5D376979261174E100F9ED72 /* IdAble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D376978261174E100F9ED72 /* IdAble.swift */; };
 		5D3E872125C5CCD700FC65FE /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D3E872025C5CCD700FC65FE /* SearchView.swift */; };
@@ -68,6 +68,9 @@
 		5D63124C26950C4A00876D99 /* AuthenticationReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D63124B26950C4A00876D99 /* AuthenticationReducer.swift */; };
 		5D63124E26950C7600876D99 /* MainReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D63124D26950C7600876D99 /* MainReducer.swift */; };
 		5D63125026950CB400876D99 /* AppReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D63124F26950CB400876D99 /* AppReducer.swift */; };
+		5D631253269668FE00876D99 /* JSNativeBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D631252269668FE00876D99 /* JSNativeBridge.swift */; };
+		5D6312552696696500876D99 /* JSLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6312542696696500876D99 /* JSLogger.swift */; };
+		5D631257269669A600876D99 /* DefaultAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D631256269669A600876D99 /* DefaultAPI.swift */; };
 		5D696097258713760058BABE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D696096258713760058BABE /* AppDelegate.swift */; };
 		5D696099258713760058BABE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D696098258713760058BABE /* SceneDelegate.swift */; };
 		5D69609B258713760058BABE /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D69609A258713760058BABE /* LoginView.swift */; };
@@ -93,9 +96,9 @@
 /* Begin PBXFileReference section */
 		10F05964238EC7800C0C5A21 /* Pods-SneakersnShit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SneakersnShit.debug.xcconfig"; path = "Target Support Files/Pods-SneakersnShit/Pods-SneakersnShit.debug.xcconfig"; sourceTree = "<group>"; };
 		5D2119E025DB0EFA001FE5E5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		5D2D5A9F25C529E3009598AA /* FunctionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionsManager.swift; sourceTree = "<group>"; };
+		5D2D5A9F25C529E3009598AA /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		5D2D5AA225C52E9B009598AA /* MainState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainState.swift; sourceTree = "<group>"; };
-		5D2D5AAE25C552B0009598AA /* DefaultFunctionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultFunctionsManager.swift; sourceTree = "<group>"; };
+		5D2D5AAE25C552B0009598AA /* BackendAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendAPI.swift; sourceTree = "<group>"; };
 		5D3769752611709C00F9ED72 /* Debouncer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debouncer.swift; sourceTree = "<group>"; };
 		5D376978261174E100F9ED72 /* IdAble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdAble.swift; sourceTree = "<group>"; };
 		5D3E872025C5CCD700FC65FE /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
@@ -151,6 +154,9 @@
 		5D63124B26950C4A00876D99 /* AuthenticationReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationReducer.swift; sourceTree = "<group>"; };
 		5D63124D26950C7600876D99 /* MainReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainReducer.swift; sourceTree = "<group>"; };
 		5D63124F26950CB400876D99 /* AppReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReducer.swift; sourceTree = "<group>"; };
+		5D631252269668FE00876D99 /* JSNativeBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSNativeBridge.swift; sourceTree = "<group>"; };
+		5D6312542696696500876D99 /* JSLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSLogger.swift; sourceTree = "<group>"; };
+		5D631256269669A600876D99 /* DefaultAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAPI.swift; sourceTree = "<group>"; };
 		5D696093258713760058BABE /* SneakersnShit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SneakersnShit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D696096258713760058BABE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5D696098258713760058BABE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -195,8 +201,7 @@
 		5D2D5A9E25C529CA009598AA /* Functions */ = {
 			isa = PBXGroup;
 			children = (
-				5D2D5A9F25C529E3009598AA /* FunctionsManager.swift */,
-				5D2D5AAE25C552B0009598AA /* DefaultFunctionsManager.swift */,
+				5D2D5AAE25C552B0009598AA /* BackendAPI.swift */,
 			);
 			path = Functions;
 			sourceTree = "<group>";
@@ -390,6 +395,8 @@
 		5D6312512695BC3F00876D99 /* API */ = {
 			isa = PBXGroup;
 			children = (
+				5D2D5A9F25C529E3009598AA /* API.swift */,
+				5D631256269669A600876D99 /* DefaultAPI.swift */,
 				5D2D5A9E25C529CA009598AA /* Functions */,
 				5D7B17CA26868C970065D01C /* LocalScraper */,
 			);
@@ -474,6 +481,8 @@
 			children = (
 				5D7B17CD26868D760065D01C /* JS */,
 				5D7B17CB26868CA60065D01C /* Scraper.swift */,
+				5D631252269668FE00876D99 /* JSNativeBridge.swift */,
+				5D6312542696696500876D99 /* JSLogger.swift */,
 			);
 			path = LocalScraper;
 			sourceTree = "<group>";
@@ -731,9 +740,10 @@
 				5D63124E26950C7600876D99 /* MainReducer.swift in Sources */,
 				5D488E8925C8D54E00624FEF /* AppError.swift in Sources */,
 				5D424D1C25C505450008D6F4 /* Spinner.swift in Sources */,
+				5D631253269668FE00876D99 /* JSNativeBridge.swift in Sources */,
 				5D63123E26950AB600876D99 /* AuthenticationAction.swift in Sources */,
 				5D696099258713760058BABE /* SceneDelegate.swift in Sources */,
-				5D2D5AAF25C552B0009598AA /* DefaultFunctionsManager.swift in Sources */,
+				5D2D5AAF25C552B0009598AA /* BackendAPI.swift in Sources */,
 				5D424CFF25C5041E0008D6F4 /* DebugSettings.swift in Sources */,
 				5D69609B258713760058BABE /* LoginView.swift in Sources */,
 				5D424CF725C503D10008D6F4 /* UIScreen+Extensions.swift in Sources */,
@@ -743,13 +753,14 @@
 				5D52E30F26130E2100FA02B8 /* InventoryView.swift in Sources */,
 				5DF03CA725DA1BBF001856B5 /* AvatarView.swift in Sources */,
 				5D6960B4258714FB0058BABE /* AppState.swift in Sources */,
+				5D6312552696696500876D99 /* JSLogger.swift in Sources */,
 				5D424CAE25C4FDCC0008D6F4 /* SignInButton.swift in Sources */,
 				5D6312222694797300876D99 /* Item.swift in Sources */,
 				5D424D2125C505450008D6F4 /* DimView.swift in Sources */,
 				5D52E30B2613063B00FA02B8 /* Encodable+Extensions.swift in Sources */,
 				5D424D0825C504AF0008D6F4 /* RootView.swift in Sources */,
 				5D631229269504DA00876D99 /* DefaultSettings.swift in Sources */,
-				5D2D5AA025C529E3009598AA /* FunctionsManager.swift in Sources */,
+				5D2D5AA025C529E3009598AA /* API.swift in Sources */,
 				5D424D0425C504510008D6F4 /* EmailValidator.swift in Sources */,
 				5D424CFB25C503F00008D6F4 /* UIApplication+Extensions.swift in Sources */,
 				5D63122B2695066500876D99 /* ExchangeRates.swift in Sources */,
@@ -777,6 +788,7 @@
 				5D376979261174E100F9ED72 /* IdAble.swift in Sources */,
 				5D52E31226130E7500FA02B8 /* InventoryItemDetailView.swift in Sources */,
 				5D63124426950B2900876D99 /* AppAction.swift in Sources */,
+				5D631257269669A600876D99 /* DefaultAPI.swift in Sources */,
 				5D6960AD2587149A0058BABE /* ReduxStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

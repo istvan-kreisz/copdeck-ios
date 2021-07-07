@@ -1,5 +1,5 @@
 //
-//  FunctionsManager.swift
+//  API.swift
 //  SneakersnShit
 //
 //  Created by István Kreisz on 1/30/21.
@@ -8,7 +8,8 @@
 import Foundation
 import Combine
 
-protocol FunctionsManager {
+protocol API {
+    func getExchangeRates() -> AnyPublisher<ExchangeRates, AppError>
     func search(searchTerm: String) -> AnyPublisher<[Item], AppError>
     func getItemDetails(for item: Item) -> AnyPublisher<Item, AppError>
 //    func addToInventory(userId: String, inventoryItem: InventoryItem) -> AnyPublisher<InventoryItem, AppError>

@@ -9,50 +9,17 @@ import JavaScriptCore
 import OasisJSBridge
 import Combine
 
-@objc protocol NativeProtocol: JSExport {
-    func setExchangeRates(_ exchangeRates: Any)
-    func setItems(_ items: Any)
-    func setItem(_ item: Any)
-}
-
-@objc class Native: NSObject, NativeProtocol {
-    func setExchangeRates(_ exchangeRates: Any) {
-        guard let rates = ExchangeRates(from: exchangeRates) else { return }
-        DispatchQueue.main.async {
-            print(rates)
-        }
-    }
-
-    func setItems(_ items: Any) {
-        guard let items = [Item](from: items) else { return }
-        DispatchQueue.main.async {
-            print(items.count)
-        }
-    }
-
-    func setItem(_ item: Any) {
-        guard let item = Item(from: item) else { return }
-        DispatchQueue.main.async {
-            print(item)
-        }
-    }
-}
-
-class TestLogger: JSBridgeLoggingProtocol {
-    func log(level: JSBridgeLoggingLevel, message: String, file: StaticString, function: StaticString, line: UInt) {
-        if level != .verbose {
-            print("[\(level.rawValue)]" + message)
-        }
-    }
-}
-
 class LocalScraper {
-    static let shared = LocalScraper()
 
-    private let native = Native()
+    private var exchangeRatesSubject = PassthroughSubject<ExchangeRates, AppError>()
+    private var itemsSubject = PassthroughSubject<[Item], AppError>()
+    private var itemSubject = PassthroughSubject<Item, AppError>()
+
+    private let native = JSNativeBridge()
     private lazy var interpreter: JavascriptInterpreter = {
-        JSBridgeConfiguration.add(logger: TestLogger())
+        JSBridgeConfiguration.add(logger: JSLogger())
         let interpreter = JavascriptInterpreter()
+        native.delegate = self
         interpreter.jsContext.setObject(native, forKeyedSubscript: "native" as NSString)
         return interpreter
     }()
@@ -66,7 +33,7 @@ class LocalScraper {
 
     lazy var config = apiConfig.asJSON!
 
-    private init() {
+    init() {
         guard let scraper = Bundle.main.url(forResource: "scraper.bundle", withExtension: "js"),
               let jsCode = try? String.init(contentsOf: scraper)
         else { return }
@@ -75,37 +42,47 @@ class LocalScraper {
                 DispatchQueue.main.async {
                     print(error)
                 }
-            } else {
-                self?.getExchangeRates()
             }
         }
     }
+}
 
-    func getExchangeRates() {
+extension LocalScraper: API {
+    func getExchangeRates() -> AnyPublisher<ExchangeRates, AppError> {
+        exchangeRatesSubject.send(completion: .finished)
+        exchangeRatesSubject = PassthroughSubject<ExchangeRates, AppError>()
+
         interpreter.call(object: nil, functionName: "scraper.api.getExchangeRates", arguments: [config], completion: { result in })
+        return exchangeRatesSubject.first().eraseToAnyPublisher()
     }
-//
-//    func searchItems(searchTerm: String) {
-//        interpreter.call(object: nil, functionName: "scraper.api.searchItems", arguments: [searchTerm, config], completion: { result in })
-//    }
-//
-//    func search(searchTerm: String) -> AnyPublisher<[Item], AppError> {
-//        interpreter.call(object: nil, functionName: "scraper.api.searchItems", arguments: [searchTerm, config], completion: { result in })
-//    }
-//
-//    func getItemDetails(for item: Item) -> AnyPublisher<Item, AppError> {
-//
-//    }
-//    func addToInventory(userId: String, inventoryItem: InventoryItem) -> AnyPublisher<InventoryItem, AppError> {
-//
-//    }
-//
-//    func removeFromInventory(userId: String, inventoryItem: InventoryItem) -> AnyPublisher<Void, AppError> {
-//
-//    }
-//
-//    func getInventoryItems(userId: String) -> AnyPublisher<[InventoryItem], AppError> {
-//
-//    }
 
+    func search(searchTerm: String) -> AnyPublisher<[Item], AppError> {
+        itemsSubject.send(completion: .finished)
+        itemsSubject = PassthroughSubject<[Item], AppError>()
+
+        interpreter.call(object: nil, functionName: "scraper.api.searchItems", arguments: [config], completion: { result in })
+        return itemsSubject.first().eraseToAnyPublisher()
+    }
+
+    func getItemDetails(for item: Item) -> AnyPublisher<Item, AppError> {
+        itemSubject.send(completion: .finished)
+        itemSubject = PassthroughSubject<Item, AppError>()
+
+        interpreter.call(object: nil, functionName: "scraper.api.getItemPrices", arguments: [config], completion: { result in })
+        return itemSubject.first().eraseToAnyPublisher()
+    }
+}
+
+extension LocalScraper: JSNativeBridgeDelegate {
+    func setExchangeRates(_ exchangeRates: ExchangeRates) {
+        exchangeRatesSubject.send(exchangeRates)
+    }
+
+    func setItems(_ items: [Item]) {
+        itemsSubject.send(items)
+    }
+
+    func setItem(_ item: Item) {
+        itemSubject.send(item)
+    }
 }

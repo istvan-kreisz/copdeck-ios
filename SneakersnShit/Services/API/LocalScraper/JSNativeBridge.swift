@@ -1,0 +1,42 @@
+//
+//  JSNativeBridge.swift
+//  SneakersnShit
+//
+//  Created by István Kreisz on 7/8/21.
+//
+
+import Foundation
+import Combine
+import OasisJSBridge
+
+protocol JSNativeBridgeDelegate: AnyObject {
+    func setExchangeRates(_ exchangeRates: ExchangeRates)
+    func setItems(_ items: [Item])
+    func setItem(_ item: Item)
+}
+
+@objc class JSNativeBridge: NSObject {
+
+    weak var delegate: JSNativeBridgeDelegate?
+
+    func setExchangeRates(_ exchangeRates: Any) {
+        guard let exchangeRates = ExchangeRates(from: exchangeRates) else { return }
+        DispatchQueue.main.async { [weak self] in
+            self?.delegate?.setExchangeRates(exchangeRates)
+        }
+    }
+
+    func setItems(_ items: Any) {
+        guard let items = [Item](from: items) else { return }
+        DispatchQueue.main.async { [weak self] in
+            self?.delegate?.setItems(items)
+        }
+    }
+
+    func setItem(_ item: Any) {
+        guard let item = Item(from: item) else { return }
+        DispatchQueue.main.async { [weak self] in
+            self?.delegate?.setItem(item)
+        }
+    }
+}

@@ -25,10 +25,10 @@ class Authentication {
 }
 
 class Main {
-    let functions: FunctionsManager
+    let api: API
 
-    init(functions: FunctionsManager) {
-        self.functions = functions
+    init(api: API) {
+        self.api = api
     }
 }
 
@@ -38,7 +38,7 @@ class World {
     
     lazy var authentication = Authentication(authenticator: isMockInstance ? MockAuthenticator() : DefaultAuthenticator())
     lazy var settings = AppSettings(settings: DefaultSettings())
-    lazy var main = Main(functions: DefaultFunctionsManager())
+    lazy var main = Main(api: BackendAPI())
 
     init(isMockInstance: Bool) {
         self.isMockInstance = isMockInstance

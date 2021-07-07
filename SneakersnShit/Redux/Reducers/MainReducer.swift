@@ -41,7 +41,7 @@ func mainReducer(state: inout AppState,
             return Just(AppAction.main(action: .setSearchResults([])))
                 .eraseToAnyPublisher()
         } else {
-            return environment.functions.search(searchTerm: searchTerm)
+            return environment.api.search(searchTerm: searchTerm)
                 .map { AppAction.main(action: .setSearchResults($0)) }
                 .catchErrors()
         }
@@ -49,7 +49,7 @@ func mainReducer(state: inout AppState,
         state.mainState.searchResults = searchResult
         return Empty(completeImmediately: true).eraseToAnyPublisher()
     case let .getItemDetails(item):
-        return environment.functions.getItemDetails(for: item)
+        return environment.api.getItemDetails(for: item)
             .map { AppAction.main(action: .setItemDetails(item: $0)) }
             .catchErrors()
     case let .setItemDetails(item):

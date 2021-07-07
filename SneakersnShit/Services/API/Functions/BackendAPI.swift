@@ -1,5 +1,5 @@
 //
-//  DefaultFunctionsManager.swift
+//  BackendAPI.swift
 //  SneakersnShit
 //
 //  Created by István Kreisz on 1/30/21.
@@ -9,7 +9,11 @@ import Foundation
 import Combine
 import FirebaseFunctions
 
-class DefaultFunctionsManager: FunctionsManager {
+class BackendAPI: API {
+    func getExchangeRates() -> AnyPublisher<ExchangeRates, AppError> {
+        PassthroughSubject<ExchangeRates, AppError>().eraseToAnyPublisher()
+    }
+
     // todo: refactor shit
 
     func search(searchTerm: String) -> AnyPublisher<[Item], AppError> {
