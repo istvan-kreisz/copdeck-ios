@@ -40,7 +40,7 @@ struct SearchView: View {
                                 }
                                 HStack(spacing: 10) {
                                     ForEach(item.storeInfo) { storeInfo in
-                                        Text(storeInfo.store.rawValue)
+                                        Text(storeInfo.store.name.rawValue)
                                             .font(.regular(size: 12))
                                     }
                                     Spacer()
@@ -57,7 +57,7 @@ struct SearchView: View {
             .frame(maxWidth: UIScreen.main.bounds.width)
         }
         .onChange(of: searchText) { searchText in
-            store.send(.search(searchTerm: searchText))
+            store.send(.getSearchResults(searchTerm: searchText))
         }
     }
 

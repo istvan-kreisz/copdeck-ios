@@ -32,7 +32,7 @@ struct Item: Codable, Equatable, Identifiable {
     let retailPrice: Double?
     let imageURL: ImageURL?
 
-    struct StoreInfo: Codable, Equatable {
+    struct StoreInfo: Codable, Equatable, Identifiable {
         let name: String
         let sku: String
         let slug: String
@@ -44,6 +44,8 @@ struct Item: Codable, Equatable, Identifiable {
         let sellUrl: String
         let buyUrl: String
         let productId: String?
+
+        var id: String { name }
     }
 
     struct ImageURL: Codable, Equatable {
