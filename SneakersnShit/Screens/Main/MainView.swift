@@ -9,7 +9,7 @@ import SwiftUI
 import FirebaseFunctions
 
 struct MainView: View {
-    @EnvironmentObject var store: Store<MainState, MainAction, Main>
+    @EnvironmentObject var store: MainStore
 
     var body: some View {
         TabView {
@@ -22,14 +22,14 @@ struct MainView: View {
                 Text("Search")
             }
 
-            NavigationView {
-                InventoryView()
-                    .environmentObject(store)
-            }.tabItem {
-                Image(systemName: "tray.2")
-                    .imageScale(.large)
-                Text("Inventory")
-            }
+//            NavigationView {
+//                InventoryView()
+//                    .environmentObject(store)
+//            }.tabItem {
+//                Image(systemName: "tray.2")
+//                    .imageScale(.large)
+//                Text("Inventory")
+//            }
         }
     }
 }

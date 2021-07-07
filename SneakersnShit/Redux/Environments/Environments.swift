@@ -8,10 +8,6 @@
 import Foundation
 import Combine
 
-protocol Settings {}
-
-class DefaultSettings: Settings {}
-
 class AppSettings {
     let settings: Settings
 

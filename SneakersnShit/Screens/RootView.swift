@@ -8,17 +8,17 @@
 import SwiftUI
 
 struct RootView: View {
-    @EnvironmentObject var store: Store<AppState, AppAction, World>
+    @EnvironmentObject var store: AppStore
 
     @State var userId: String?
 
     var body: some View {
         ZStack {
-            if let userId = store.state.userIdState.userId {
+            if let userId = store.state.authenticationState.userId {
                 if userId.isEmpty {
                     LoginView()
                         .environmentObject(store
-                            .derived(deriveState: \.userIdState,
+                            .derived(deriveState: \.authenticationState,
                                      deriveAction: AppAction.authenticator,
                                      derivedEnvironment: store.environment.authentication))
                         .zIndex(1)
@@ -39,11 +39,11 @@ struct RootView: View {
             }
         }
         .onReceive(store.$state) { state in
-//            if (state.userIdState.userId?.isEmpty == false) && (self.userId == nil || self.userId?.isEmpty == true) {
+//            if (state.authenticationState.userId?.isEmpty == false) && (self.userId == nil || self.userId?.isEmpty == true) {
 //                // user just logged in
 //                UIApplication.shared.endEditing()
 //            }
-            self.userId = state.userIdState.userId
+            self.userId = state.authenticationState.userId
         }
 //        .alert(isPresented: store.state.errorState.error != nil) {
 //            Alert(title: Text(self.appError?.title ?? "Ooops"),

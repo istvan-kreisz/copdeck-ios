@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct SearchView: View {
-    @EnvironmentObject var store: Store<MainState, MainAction, Main>
+    @EnvironmentObject var store: MainStore
 
     let colors: [Color] = [.red, .yellow, .green, .purple, .orange]
 
@@ -47,13 +47,6 @@ struct SearchView: View {
                                 }
                                 .frame(maxWidth: 300)
                             }
-                            Button(action: {
-                                self.addToInventory(item: item)
-                            }) {
-                                    Text("Add")
-                                        .font(.bold(size: 18))
-                                        .foregroundColor(.blue)
-                            }
                         }.onTapGesture {
                             selectedItemId = item.id
                         }
@@ -68,9 +61,9 @@ struct SearchView: View {
         }
     }
 
-    func addToInventory(item: Item) {
-        store.send(.addToInventory(inventoryItem: .init(from: item)))
-    }
+//    func addToInventory(item: Item) {
+//        store.send(.addToInventory(inventoryItem: .init(from: item)))
+//    }
 }
 
 struct SearchView_Previews: PreviewProvider {

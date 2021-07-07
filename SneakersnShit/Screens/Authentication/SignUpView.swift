@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SignUpView: View {
-    @EnvironmentObject var store: Store<UserIdState, AuthenticationAction, Authentication>
+    @EnvironmentObject var store: AuthenticationStore
 
     @State var email = ""
     @State var password1 = ""

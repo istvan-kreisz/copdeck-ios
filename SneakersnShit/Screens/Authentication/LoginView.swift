@@ -11,7 +11,7 @@ import GoogleSignIn
 
 struct LoginView: View {
     
-    @EnvironmentObject var store: Store<UserIdState, AuthenticationAction, Authentication>
+    @EnvironmentObject var store: AuthenticationStore
 
     @State var email = ""
     @State var password = ""
@@ -111,7 +111,7 @@ struct LoginView: View {
 //struct LoginView_Previews: PreviewProvider {
 //    static var previews: some View {
 //        LoginView()
-//            .environmentObject(Store)
+//            .environmentObject(ReduxStore)
 //    }
 //}
 

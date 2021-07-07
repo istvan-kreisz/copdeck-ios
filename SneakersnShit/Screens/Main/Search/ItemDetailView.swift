@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct ItemDetailView: View {
-    @EnvironmentObject var store: Store<MainState, MainAction, Main>
+    @EnvironmentObject var store: MainStore
     @State private var item: Item
 
     init(item: Item) {
@@ -42,30 +42,30 @@ struct ItemDetailView: View {
                 Text("Price Comparison")
                     .font(.bold(size: 20))
 
-                HStack(spacing: 20) {
-                    item.priceTable.first.map { prices in
-                        VStack(spacing: 10) {
-                            Text("Size")
-                                .font(.regular(size: 12))
-                            VStack(spacing: 5) {
-                                ForEach(prices.inventory) { price in
-                                    Text(price.size)
-                                }
-                            }
-                        }
-                    }
-                    ForEach(item.priceTable) { prices in
-                        VStack(spacing: 10) {
-                            Text(prices.store.rawValue)
-                                .font(.regular(size: 12))
-                            VStack(spacing: 5) {
-                                ForEach(prices.inventory) { price in
-                                    Text(price.lowestAsk.map { "$\($0)" } ?? "-")
-                                }
-                            }
-                        }
-                    }
-                }
+//                HStack(spacing: 20) {
+//                    item.priceTable.first.map { prices in
+//                        VStack(spacing: 10) {
+//                            Text("Size")
+//                                .font(.regular(size: 12))
+//                            VStack(spacing: 5) {
+//                                ForEach(prices.inventory) { price in
+//                                    Text(price.size)
+//                                }
+//                            }
+//                        }
+//                    }
+//                    ForEach(item.priceTable) { prices in
+//                        VStack(spacing: 10) {
+//                            Text(prices.store.rawValue)
+//                                .font(.regular(size: 12))
+//                            VStack(spacing: 5) {
+//                                ForEach(prices.inventory) { price in
+//                                    Text(price.lowestAsk.map { "$\($0)" } ?? "-")
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
                 Spacer()
             }
         }
@@ -87,12 +87,15 @@ struct ItemDetailView: View {
 
 struct ItemDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        ItemDetailView(item: .init(id: "123",
-                                   ownedByCount: 0,
-                                   priceAlertCount: 0,
+        ItemDetailView(item: .init(id: "",
                                    storeInfo: [],
                                    storePrices: [],
+                                   ownedByCount: 0,
+                                   priceAlertCount: 0,
                                    created: 0,
-                                   updated: 0))
+                                   updated: 0,
+                                   name: "name",
+                                   retailPrice: 12,
+                                   imageURL: nil))
     }
 }
