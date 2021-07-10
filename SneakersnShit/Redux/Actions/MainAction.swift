@@ -13,6 +13,8 @@ enum MainAction {
     // user
     case getUserData(userId: String)
     case changeUsername(newName: String)
+    // exchange rates
+
     // search
     case getSearchResults(searchTerm: String)
     case setSearchResults([Item])

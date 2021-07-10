@@ -14,29 +14,29 @@ struct RootView: View {
 
     var body: some View {
         ZStack {
-            if let userId = store.state.authenticationState.userId {
-                if userId.isEmpty {
-                    LoginView()
-                        .environmentObject(store
-                            .derived(deriveState: \.authenticationState,
-                                     deriveAction: AppAction.authenticator,
-                                     derivedEnvironment: store.environment.authentication))
-                        .zIndex(1)
-                } else {
-                    if store.state.mainState.userId.isEmpty {
-                        Text("Splashscreen")
-                    } else {
+//            if let userId = store.state.authenticationState.userId {
+//                if userId.isEmpty {
+//                    LoginView()
+//                        .environmentObject(store
+//                            .derived(deriveState: \.authenticationState,
+//                                     deriveAction: AppAction.authenticator,
+//                                     derivedEnvironment: store.environment.authentication))
+//                        .zIndex(1)
+//                } else {
+//                    if store.state.mainState.userId.isEmpty {
+//                        Text("Splashscreen")
+//                    } else {
                         MainView()
                             .environmentObject(store
                                 .derived(deriveState: \.mainState,
                                          deriveAction: AppAction.main,
                                          derivedEnvironment: store.environment.main))
                             .zIndex(0)
-                    }
-                }
-            } else {
-                Text("Splashscreen")
-            }
+//                    }
+//                }
+//            } else {
+//                Text("Splashscreen")
+//            }
         }
         .onReceive(store.$state) { state in
 //            if (state.authenticationState.userId?.isEmpty == false) && (self.userId == nil || self.userId?.isEmpty == true) {
@@ -51,7 +51,7 @@ struct RootView: View {
 //                  dismissButton: .default(Text("OK")))
 //        }
         .onAppear {
-            store.send(.authenticator(action: .restoreState))
+//            store.send(.authenticator(action: .restoreState))
         }
     }
 }

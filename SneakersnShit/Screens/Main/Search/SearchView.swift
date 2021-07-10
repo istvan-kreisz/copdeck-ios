@@ -59,6 +59,9 @@ struct SearchView: View {
         .onChange(of: searchText) { searchText in
             store.send(.getSearchResults(searchTerm: searchText))
         }
+        .onAppear {
+            store.send(.getSearchResults(searchTerm: ""))
+        }
     }
 
 //    func addToInventory(item: Item) {

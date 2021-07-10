@@ -15,10 +15,11 @@ class LocalScraper {
     private var itemsSubject = PassthroughSubject<[Item], AppError>()
     private var itemSubject = PassthroughSubject<Item, AppError>()
 
-    private let native = JSNativeBridge()
+    private var native: JSNativeBridge!
     private lazy var interpreter: JavascriptInterpreter = {
         JSBridgeConfiguration.add(logger: JSLogger())
         let interpreter = JavascriptInterpreter()
+        native = JSNativeBridge()
         native.delegate = self
         interpreter.jsContext.setObject(native, forKeyedSubscript: "native" as NSString)
         return interpreter
@@ -37,11 +38,13 @@ class LocalScraper {
         guard let scraper = Bundle.main.url(forResource: "scraper.bundle", withExtension: "js"),
               let jsCode = try? String.init(contentsOf: scraper)
         else { return }
-        interpreter.evaluateString(js: jsCode) { [weak self] value, error in
+        interpreter.evaluateString(js: jsCode) { _, error in
             if let error = error {
                 DispatchQueue.main.async {
                     print(error)
                 }
+            } else {
+                //
             }
         }
     }
@@ -51,8 +54,8 @@ extension LocalScraper: API {
     func getExchangeRates() -> AnyPublisher<ExchangeRates, AppError> {
         exchangeRatesSubject.send(completion: .finished)
         exchangeRatesSubject = PassthroughSubject<ExchangeRates, AppError>()
-
         interpreter.call(object: nil, functionName: "scraper.api.getExchangeRates", arguments: [config], completion: { result in })
+
         return exchangeRatesSubject.first().eraseToAnyPublisher()
     }
 
@@ -60,7 +63,7 @@ extension LocalScraper: API {
         itemsSubject.send(completion: .finished)
         itemsSubject = PassthroughSubject<[Item], AppError>()
 
-        interpreter.call(object: nil, functionName: "scraper.api.searchItems", arguments: [config], completion: { result in })
+        interpreter.call(object: nil, functionName: "scraper.api.searchItems", arguments: [searchTerm, config], completion: { result in })
         return itemsSubject.first().eraseToAnyPublisher()
     }
 
@@ -68,7 +71,7 @@ extension LocalScraper: API {
         itemSubject.send(completion: .finished)
         itemSubject = PassthroughSubject<Item, AppError>()
 
-        interpreter.call(object: nil, functionName: "scraper.api.getItemPrices", arguments: [config], completion: { result in })
+        interpreter.call(object: nil, functionName: "scraper.api.getItemPrices", arguments: [item, config], completion: { result in })
         return itemSubject.first().eraseToAnyPublisher()
     }
 }

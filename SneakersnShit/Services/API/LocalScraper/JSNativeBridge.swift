@@ -15,7 +15,13 @@ protocol JSNativeBridgeDelegate: AnyObject {
     func setItem(_ item: Item)
 }
 
-@objc class JSNativeBridge: NSObject {
+@objc protocol NativeProtocol: JSExport {
+    func setExchangeRates(_ exchangeRates: Any)
+    func setItems(_ items: Any)
+    func setItem(_ item: Any)
+}
+
+@objc class JSNativeBridge: NSObject, NativeProtocol {
 
     weak var delegate: JSNativeBridgeDelegate?
 
