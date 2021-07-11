@@ -10,27 +10,53 @@ import FirebaseFunctions
 
 struct MainView: View {
     @EnvironmentObject var store: MainStore
+    @StateObject var viewRouter = ViewRouter()
 
     var body: some View {
-        TabView {
-            NavigationView {
-                SearchView()
-                    .environmentObject(store)
+        ZStack {
+            switch viewRouter.currentPage {
+            case .home:
+                NavigationView {
+                    Text("Home")
+                }
+            case .search:
+                NavigationView {
+                    SearchView()
+                        .environmentObject(store)
+                }
+            case .inventory:
+                NavigationView {
+                    Text("Inventory")
+                }
             }
-            .tabItem {
-                Image(systemName: "magnifyingglass")
-                    .imageScale(.large)
-                Text("Search")
+            VStack {
+                Spacer()
+                HStack(alignment: .center, spacing: 10) {
+                    Button("Home") {
+                        viewRouter.currentPage = .home
+                    }
+                    Button("Search") {
+                        viewRouter.currentPage = .search
+                    }
+                    Button("Inventory") {
+                        viewRouter.currentPage = .inventory
+                    }
+                }
             }
-
-//            NavigationView {
-//                InventoryView()
-//                    .environmentObject(store)
-//            }.tabItem {
-//                Image(systemName: "tray.2")
-//                    .imageScale(.large)
-//                Text("Inventory")
-//            }
         }
+    }
+}
+
+struct MainView_Previews: PreviewProvider {
+    static var previews: some View {
+        let store = AppStore(initialState: .mockAppState,
+                             reducer: appReducer,
+                             environment: World(isMockInstance: true))
+        return
+            MainView()
+                .environmentObject(store
+                    .derived(deriveState: \.mainState,
+                             deriveAction: AppAction.main,
+                             derivedEnvironment: store.environment.main))
     }
 }

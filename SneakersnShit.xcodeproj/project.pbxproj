@@ -89,6 +89,7 @@
 		5DC00EAF25C3A387009A3AB9 /* DefaultAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC00EAE25C3A387009A3AB9 /* DefaultAuthenticator.swift */; };
 		5DC00EDD25C3BE0A009A3AB9 /* MockAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC00EDC25C3BE0A009A3AB9 /* MockAuthenticator.swift */; };
 		5DC3538F26117C7F00294DF0 /* ItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC3538E26117C7F00294DF0 /* ItemDetailView.swift */; };
+		5DEBC088269B24BA000EEADC /* ViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEBC087269B24BA000EEADC /* ViewRouter.swift */; };
 		5DF03CA725DA1BBF001856B5 /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03CA625DA1BBF001856B5 /* AvatarView.swift */; };
 		5DF03CAB25DA1CE7001856B5 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03CAA25DA1CE7001856B5 /* ImageView.swift */; };
 		C0A401BBBC5AD2E508F6A578 /* Pods_SneakersnShit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE80E208C5DB6897B4D1B91A /* Pods_SneakersnShit.framework */; };
@@ -178,6 +179,7 @@
 		5DC00EAE25C3A387009A3AB9 /* DefaultAuthenticator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAuthenticator.swift; sourceTree = "<group>"; };
 		5DC00EDC25C3BE0A009A3AB9 /* MockAuthenticator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockAuthenticator.swift; sourceTree = "<group>"; };
 		5DC3538E26117C7F00294DF0 /* ItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailView.swift; sourceTree = "<group>"; };
+		5DEBC087269B24BA000EEADC /* ViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewRouter.swift; sourceTree = "<group>"; };
 		5DF03CA625DA1BBF001856B5 /* AvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarView.swift; sourceTree = "<group>"; };
 		5DF03CAA25DA1CE7001856B5 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		630E7DC56C63722AE2360C56 /* Pods-InfluTrader.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InfluTrader.release.xcconfig"; path = "Target Support Files/Pods-InfluTrader/Pods-InfluTrader.release.xcconfig"; sourceTree = "<group>"; };
@@ -501,6 +503,7 @@
 		5D83156925C397B0008AB948 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				5DEBC086269B24AA000EEADC /* TabBar */,
 				5D424D0725C504AF0008D6F4 /* RootView.swift */,
 				5D424D2925C505E90008D6F4 /* Main */,
 				5D424D2825C505C20008D6F4 /* Authentication */,
@@ -554,6 +557,14 @@
 				5D69609C258713770058BABE /* Assets.xcassets */,
 			);
 			path = Shared;
+			sourceTree = "<group>";
+		};
+		5DEBC086269B24AA000EEADC /* TabBar */ = {
+			isa = PBXGroup;
+			children = (
+				5DEBC087269B24BA000EEADC /* ViewRouter.swift */,
+			);
+			path = TabBar;
 			sourceTree = "<group>";
 		};
 		6E511E69FD91ED256CC06E57 /* Frameworks */ = {
@@ -740,6 +751,7 @@
 				5D63125026950CB400876D99 /* AppReducer.swift in Sources */,
 				5D424D1D25C505450008D6F4 /* Modifiers.swift in Sources */,
 				5D63123A26950A5900876D99 /* Stores.swift in Sources */,
+				5DEBC088269B24BA000EEADC /* ViewRouter.swift in Sources */,
 				5D63124E26950C7600876D99 /* MainReducer.swift in Sources */,
 				5D488E8925C8D54E00624FEF /* AppError.swift in Sources */,
 				5D424D1C25C505450008D6F4 /* Spinner.swift in Sources */,
