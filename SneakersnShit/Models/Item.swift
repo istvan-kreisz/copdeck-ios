@@ -15,9 +15,19 @@ enum StoreName: String, Codable, CaseIterable {
     case StockX, Klekt, GOAT
 }
 
+let ALLSTORES = zip(StoreId.allCases, StoreName.allCases).map { Store(id: $0, name: $1) }
+
 struct Store: Codable, Equatable {
     let id: StoreId
     let name: StoreName
+}
+
+enum PriceType {
+    case ask, bid
+}
+
+enum FeeType {
+    case none, buy, sell
 }
 
 struct Item: Codable, Equatable, Identifiable {
@@ -58,7 +68,7 @@ struct Item: Codable, Equatable, Identifiable {
         let store: Store
         let inventory: [InventoryItem]
 
-        struct InventoryItem: Codable, Equatable {
+        struct InventoryItem: Codable, Equatable, Identifiable {
             let size: String
             let currencyCode: Currency.CurrencyCode
             let lowestAsk: Price?
@@ -66,6 +76,8 @@ struct Item: Codable, Equatable, Identifiable {
             let shoeCondition: String?
             let boxCondition: String?
             let tags: [String]
+
+            var id: String { size }
 
             var sizeTrimmed: String? {
                 let numString = size.trimmingCharacters(in: CharacterSet.letters.union(CharacterSet.whitespacesAndNewlines))
@@ -82,6 +94,33 @@ struct Item: Codable, Equatable, Identifiable {
 }
 
 extension Item {
+    struct PriceItem {
+        struct PriceInfo {
+            let text: String
+            let num: Double
+        }
+
+        let ask: PriceInfo
+        let bid: PriceInfo
+        let sellLink: String?
+        let buyLink: String?
+    }
+
+    struct PriceRow {
+        struct Price {
+            let primaryText: String
+            let secondaryText: String
+            let price: Double
+            let buyLink: String?
+            let sellLink: String?
+            let store: Store
+        }
+
+        let lowest: Store?
+        let highest: Store?
+        let prices: [Price]
+    }
+
     func storeInfo(for storeId: StoreId) -> StoreInfo? {
         storeInfo.first { $0.store.id == storeId }
     }
@@ -93,33 +132,66 @@ extension Item {
             .first
     }
 
-    // todo: update logic
-    var priceTable: [StorePrice] {
-        []
-//        if let sizes = storePrices.sorted(by: { prices1, prices2 in
-//            prices1.inventory.count < prices2.inventory.count
-//        })
-//            .last?.inventory
-//            .compactMap({ $0.sizeTrimmed }) {
-//            return Store.allCases.map { site -> StorePrices in
-//                StorePrices(store: site, retailPrice: nil, inventory: sizes.map { String($0) }.map { size -> StorePrices.InventoryElement in
-//                    print(size)
-//                    let price = storePrices.first(where: { $0.store == site })?.inventory.first(where: { $0.sizeTrimmed?.contains(size) == true })?.lowestAsk
-//                    return StorePrices.InventoryElement(size: size, currency: "USD", lowestAsk: price, highestBid: nil)
-//                })
-//            }
-//        } else {
-//            return []
-//        }
+    var allStorePrices: [StorePrice] {
+        storePrices.filter { !$0.inventory.isEmpty }
     }
-}
 
-struct PriceTableItem {
-    let size: String
-    let price: Double
-    let store: Store
-}
+    var sizes: [String] {
+        allStorePrices.flatMap { store in store.inventory.map { $0.size } }
+    }
 
-struct PriceTable {
-    let prices: PriceTableItem
+    var sortedSizes: [String] {
+        sizes.sorted { a, b in
+            if let aNum = a.number, let bNum = b.number {
+                return aNum < bNum
+            } else {
+                return true
+            }
+        }
+    }
+
+    func price(size: String, storeId: StoreId, feeType: FeeType, currency: Currency) -> PriceItem {
+        let prices = allStorePrices.first(where: { $0.store.id == storeId })?.inventory.first(where: { $0.size == size })
+        let storeInfo = storeInfo.first(where: { $0.store.id == storeId })
+        let ask = prices?.lowestAsk
+        let bid = prices?.highestBid
+        var askPrice = ask?.noFees
+        var bidPrice = bid?.noFees
+        if feeType != .none {
+            askPrice = feeType == .buy ? ask?.withBuyerFees : ask?.withSellerFees
+            bidPrice = feeType == .buy ? bid?.withBuyerFees : bid?.withSellerFees
+        }
+        let askInfo: PriceItem.PriceInfo = askPrice.map {
+            PriceItem.PriceInfo(text: currency.symbol.rawValue + " \($0)", num: $0)
+        } ?? PriceItem.PriceInfo(text: "-", num: 0)
+        let bidInfo: PriceItem.PriceInfo = bidPrice.map {
+            PriceItem.PriceInfo(text: currency.symbol.rawValue + " \($0)", num: $0)
+        } ?? PriceItem.PriceInfo(text: "-", num: 0)
+
+        var sizeQuery = ""
+        if let sizeNum = size.number {
+            sizeQuery = storeId.rawValue == "goat" || storeId.rawValue == "stockx" ? "size=\(sizeNum)" : ""
+        }
+        return PriceItem(ask: askInfo, bid: bidInfo, sellLink: storeInfo?.sellUrl, buyLink: (storeInfo?.buyUrl).map { $0 + sizeQuery })
+    }
+
+    func prices(size: String, priceType: PriceType) -> PriceRow {
+        let prices = ALLSTORES.map { store -> PriceRow.Price in
+            let p = price(size: size, storeId: store.id, feeType: .buy, currency: .init(code: .eur, symbol: .eur))
+            return PriceRow.Price(primaryText: priceType == .ask ? p.ask.text : p.bid.text,
+                                  secondaryText: priceType == .ask ? p.bid.text : p.ask.text,
+                                  price: priceType == .ask ? p.ask.num : p.bid.num,
+                                  buyLink: p.buyLink,
+                                  sellLink: p.sellLink,
+                                  store: store)
+        }
+        let realPrices = prices.filter { $0.primaryText != "-" }
+        var lowest: Store?
+        var highest: Store?
+        if !realPrices.isEmpty {
+            lowest = realPrices.min(by: { $0.price < $1.price })?.store
+            highest = realPrices.max(by: { $0.price < $1.price })?.store
+        }
+        return PriceRow(lowest: lowest, highest: highest, prices: prices)
+    }
 }

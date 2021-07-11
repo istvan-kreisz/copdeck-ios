@@ -25,7 +25,7 @@ class LocalScraper {
         return interpreter
     }()
 
-    let apiConfig = APIConfig(currency: .init(code: .gbp, symbol: "£"),
+    let apiConfig = APIConfig(currency: .init(code: .gbp, symbol: .gbp),
                               isLoggingEnabled: true,
                               exchangeRates: .init(usd: 1.2125, gbp: 0.8571, chf: 1.0883, nok: 10.0828),
                               feeCalculation: .init(countryName: "Austria",
@@ -70,8 +70,11 @@ extension LocalScraper: API {
     func getItemDetails(for item: Item) -> AnyPublisher<Item, AppError> {
         itemSubject.send(completion: .finished)
         itemSubject = PassthroughSubject<Item, AppError>()
+        guard let itemJSON = item.asJSON else {
+            return Fail(outputType: Item.self, failure: AppError(title: "Error", message: "Invalid Item object", error: nil)).eraseToAnyPublisher()
+        }
 
-        interpreter.call(object: nil, functionName: "scraper.api.getItemPrices", arguments: [item, config], completion: { result in })
+        interpreter.call(object: nil, functionName: "scraper.api.getItemPrices", arguments: [itemJSON, config], completion: { result in })
         return itemSubject.first().eraseToAnyPublisher()
     }
 }

@@ -42,7 +42,7 @@ struct ItemDetailView: View {
                 Text("Price Comparison")
                     .font(.bold(size: 20))
 
-//                HStack(spacing: 20) {
+                HStack(spacing: 20) {
 //                    item.priceTable.first.map { prices in
 //                        VStack(spacing: 10) {
 //                            Text("Size")
@@ -56,16 +56,16 @@ struct ItemDetailView: View {
 //                    }
 //                    ForEach(item.priceTable) { prices in
 //                        VStack(spacing: 10) {
-//                            Text(prices.store.rawValue)
+//                            Text(prices.store)
 //                                .font(.regular(size: 12))
 //                            VStack(spacing: 5) {
 //                                ForEach(prices.inventory) { price in
-//                                    Text(price.lowestAsk.map { "$\($0)" } ?? "-")
+////                                    Text(price.lowestAsk.map { "$\($0)" } ?? "-")
 //                                }
 //                            }
 //                        }
 //                    }
-//                }
+                }
                 Spacer()
             }
         }
