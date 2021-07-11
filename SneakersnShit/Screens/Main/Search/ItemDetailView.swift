@@ -11,6 +11,7 @@ import Combine
 struct ItemDetailView: View {
     @EnvironmentObject var store: MainStore
     @State private var item: Item
+    @State private var priceType: PriceType = .ask
 
     init(item: Item) {
         self._item = State(initialValue: item)
@@ -42,29 +43,14 @@ struct ItemDetailView: View {
                 Text("Price Comparison")
                     .font(.bold(size: 20))
 
-                HStack(spacing: 20) {
-//                    item.priceTable.first.map { prices in
-//                        VStack(spacing: 10) {
-//                            Text("Size")
-//                                .font(.regular(size: 12))
-//                            VStack(spacing: 5) {
-//                                ForEach(prices.inventory) { price in
-//                                    Text(price.size)
-//                                }
-//                            }
-//                        }
-//                    }
-//                    ForEach(item.priceTable) { prices in
-//                        VStack(spacing: 10) {
-//                            Text(prices.store)
-//                                .font(.regular(size: 12))
-//                            VStack(spacing: 5) {
-//                                ForEach(prices.inventory) { price in
-////                                    Text(price.lowestAsk.map { "$\($0)" } ?? "-")
-//                                }
-//                            }
-//                        }
-//                    }
+                VStack(spacing: 20) {
+                    ForEach(item.allPriceRows(priceType: priceType)) { row in
+                        HStack(spacing: 5) {
+                            ForEach(row.prices) { price in
+                                Text(price.primaryText)
+                            }
+                        }
+                    }
                 }
                 Spacer()
             }
