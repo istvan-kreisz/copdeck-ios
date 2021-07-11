@@ -19,25 +19,27 @@ struct ItemDetailView: View {
 
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
-            VStack(spacing: 20) {
-                ImageView(withURL: item.bestStoreInfo?.imageURL ?? "", size: UIScreen.main.bounds.width - 60, aspectRatio: nil)
-                Text(item.bestStoreInfo?.brand ?? "")
-                    .font(.semiBold(size: 13))
-                Text(item.bestStoreInfo?.name ?? "")
-                    .font(.regular(size: 17))
-                HStack(spacing: 10) {
-                    VStack(spacing: 10) {
-                        Text(item.bestStoreInfo?.retailPrice.map { "$\($0)" } ?? "")
-                            .font(.bold(size: 15))
-                        Text("Retail Price")
-                            .font(.regular(size: 13))
-                    }
-                    Spacer()
-                    VStack(spacing: 10) {
-                        Text(item.id)
-                            .font(.bold(size: 15))
-                        Text("Style")
-                            .font(.regular(size: 13))
+            VStack(alignment: .center, spacing: 20) {
+                ImageView(withURL: item.bestStoreInfo?.imageURL ?? "", size: UIScreen.main.bounds.width - 80, aspectRatio: nil)
+                VStack {
+                    Text(item.bestStoreInfo?.brand ?? "")
+                        .font(.semiBold(size: 13))
+                    Text(item.bestStoreInfo?.name ?? "")
+                        .font(.regular(size: 17))
+                    HStack(spacing: 10) {
+                        VStack(spacing: 10) {
+                            Text(item.bestStoreInfo?.retailPrice.map { "$\($0)" } ?? "")
+                                .font(.bold(size: 15))
+                            Text("Retail Price")
+                                .font(.regular(size: 13))
+                        }
+                        Spacer()
+                        VStack(spacing: 10) {
+                            Text(item.id)
+                                .font(.bold(size: 15))
+                            Text("Style")
+                                .font(.regular(size: 13))
+                        }
                     }
                 }
                 Text("Price Comparison")
@@ -80,15 +82,26 @@ struct ItemDetailView: View {
 
 struct ItemDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        ItemDetailView(item: .init(id: "",
-                                   storeInfo: [],
-                                   storePrices: [],
-                                   ownedByCount: 0,
-                                   priceAlertCount: 0,
-                                   created: 0,
-                                   updated: 0,
-                                   name: "name",
-                                   retailPrice: 12,
-                                   imageURL: nil))
+        let storeInfo = Item.StoreInfo(name: "Stockx",
+                                       sku: "GHVDY45",
+                                       slug: "",
+                                       retailPrice: 234,
+                                       brand: "Adidas",
+                                       store: Store(id: .stockx, name: .StockX),
+                                       imageURL: "",
+                                       url: "",
+                                       sellUrl: "",
+                                       buyUrl: "",
+                                       productId: "")
+        return ItemDetailView(item: .init(id: "GHVDY45",
+                                          storeInfo: [storeInfo],
+                                          storePrices: [],
+                                          ownedByCount: 0,
+                                          priceAlertCount: 0,
+                                          created: 0,
+                                          updated: 0,
+                                          name: "yolo",
+                                          retailPrice: 12,
+                                          imageURL: nil))
     }
 }
