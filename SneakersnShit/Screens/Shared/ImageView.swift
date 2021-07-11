@@ -33,10 +33,12 @@ struct ImageView: View {
     @State var image: UIImage = UIImage()
     let url: String
     let size: CGFloat
+    let aspectRatio: CGFloat?
 
-    init(withURL url: String, size: CGFloat) {
+    init(withURL url: String, size: CGFloat, aspectRatio: CGFloat?) {
         self.url = url
         self.size = size
+        self.aspectRatio = aspectRatio
         self.imageLoader = ImageLoader(urlString: url)
     }
 
@@ -45,7 +47,7 @@ struct ImageView: View {
             if url.isEmpty {
                 Image("dude")
                     .resizable()
-                    .aspectRatio(contentMode: .fit)
+                    .aspectRatio(aspectRatio, contentMode: .fit)
                     .frame(width: size, height: size)
                     .onReceive(imageLoader.didChange) { data in
                         self.image = UIImage(data: data) ?? UIImage()
@@ -53,7 +55,7 @@ struct ImageView: View {
             } else {
                 Image(uiImage: image)
                     .resizable()
-                    .aspectRatio(contentMode: .fit)
+                    .aspectRatio(aspectRatio, contentMode: .fit)
                     .frame(width: size, height: size)
                     .onReceive(imageLoader.didChange) { data in
                         self.image = UIImage(data: data) ?? UIImage()
@@ -62,11 +64,17 @@ struct ImageView: View {
         #else
             Image(uiImage: image)
                 .resizable()
-                .aspectRatio(contentMode: .fit)
+                .aspectRatio(aspectRatio, contentMode: .fit)
                 .frame(width: size, height: size)
                 .onReceive(imageLoader.didChange) { data in
                     self.image = UIImage(data: data) ?? UIImage()
                 }
         #endif
+    }
+}
+
+struct ImageView_Previews: PreviewProvider {
+    static var previews: some View {
+        ImageView(withURL: "", size: 80, aspectRatio: 1)
     }
 }

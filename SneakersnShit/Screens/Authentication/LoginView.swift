@@ -38,7 +38,7 @@ struct LoginView: View {
                         InputField(text: $email,
                                    isEditing: $isEditing,
                                    placeHolder: "Email",
-                                   color: .customLightGray2,
+                                   color: .white,
                                    dismissKeyboardOnReturn: false,
                                    accessoryView: nil,
                                    keyboardType: .emailAddress,
@@ -47,7 +47,7 @@ struct LoginView: View {
                         InputField(text: $password,
                                    isEditing: $isEditing,
                                    placeHolder: "Password",
-                                   color: .customLightGray2,
+                                   color: .white,
                                    dismissKeyboardOnReturn: false,
                                    accessoryView: nil,
                                    keyboardType: .default,
@@ -67,7 +67,7 @@ struct LoginView: View {
                                                 
                         Text("OR")
                             .font(.bold(size: 28))
-                            .foregroundColor(.customLightGray2)//.customGreen)
+                            .foregroundColor(.customText1)
                             .centeredHorizontally()
                             .padding(.vertical, 2)
                         
@@ -94,8 +94,7 @@ struct LoginView: View {
                 }
                 .modifier(DefaultPadding(padding: [.top, .leading, .trailing]))
             }
-            .navigationBarTitle("")
-//            .navigationBarHidden(true)
+            .navigationbarHidden()
         }
     }
     

@@ -45,6 +45,19 @@ extension View {
     }
 }
 
+struct NavigationbarHidden: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .navigationBarTitle("")
+            .navigationBarHidden(true)
+    }
+}
+
+extension View {
+    func navigationbarHidden() -> some View {
+        ModifiedContent(content: self, modifier: NavigationbarHidden())
+    }
+}
 
 struct DefaultPadding: ViewModifier {
     
@@ -82,7 +95,13 @@ extension View {
 struct DefaultShadow: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .shadow(color: Color.black.opacity(0.22), radius: 3, x: 0, y: 1)
+            .shadow(color: Color.customAccent2, radius: 10, x: 0, y: 0)
+    }
+}
+
+extension View {
+    func withDefaultShadow() -> some View {
+        ModifiedContent(content: self, modifier: DefaultShadow())
     }
 }
 

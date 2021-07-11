@@ -56,8 +56,7 @@ struct PasswordResetView: View {
             .padding(.top, 30)
         }
         .modifier(DefaultPadding())
-        .navigationBarTitle("")
-//        .navigationBarHidden(true)
+        .navigationbarHidden()
     }
     
     private func resetPassword() {

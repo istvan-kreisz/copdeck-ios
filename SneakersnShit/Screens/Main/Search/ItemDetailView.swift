@@ -20,7 +20,7 @@ struct ItemDetailView: View {
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(spacing: 20) {
-                ImageView(withURL: item.bestStoreInfo?.imageURL ?? "", size: UIScreen.main.bounds.width - 60)
+                ImageView(withURL: item.bestStoreInfo?.imageURL ?? "", size: UIScreen.main.bounds.width - 60, aspectRatio: nil)
                 Text(item.bestStoreInfo?.brand ?? "")
                     .font(.semiBold(size: 13))
                 Text(item.bestStoreInfo?.name ?? "")
@@ -46,15 +46,22 @@ struct ItemDetailView: View {
                 VStack(spacing: 20) {
                     ForEach(item.allPriceRows(priceType: priceType)) { row in
                         HStack(spacing: 5) {
+                            Text(row.size)
+                                .frame(maxWidth: .infinity)
+                                .overlay(Capsule().stroke(Color.blue, lineWidth: 2))
                             ForEach(row.prices) { price in
                                 Text(price.primaryText)
+                                    .frame(maxWidth: .infinity)
+                                    .overlay(Capsule().stroke(Color.blue, lineWidth: 2))
                             }
                         }
+                        .padding(5)
                     }
                 }
                 Spacer()
             }
         }
+        .navigationBarHidden(false)
         .withDefaultPadding(padding: [.top, .leading, .trailing])
         .onAppear {
             updateItem(newItem: store.state.selectedItem)

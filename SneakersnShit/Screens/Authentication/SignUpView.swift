@@ -32,7 +32,7 @@ struct SignUpView: View {
                 InputField(text: $email,
                            isEditing: .constant(false),
                            placeHolder: "Email",
-                           color: .customLightGray2,
+                           color: .white,
                            dismissKeyboardOnReturn: false,
                            accessoryView: nil,
                            keyboardType: .emailAddress,
@@ -42,7 +42,7 @@ struct SignUpView: View {
                 InputField(text: $password1,
                            isEditing: .constant(false),
                            placeHolder: "Password",
-                           color: .customLightGray2,
+                           color: .white,
                            dismissKeyboardOnReturn: false,
                            accessoryView: nil,
                            keyboardType: .default,
@@ -52,7 +52,7 @@ struct SignUpView: View {
                 InputField(text: $password2,
                            isEditing: .constant(false),
                            placeHolder: "Confirm password",
-                           color: .customLightGray2,
+                           color: .white,
                            dismissKeyboardOnReturn: false,
                            accessoryView: nil,
                            keyboardType: .default,
@@ -67,7 +67,7 @@ struct SignUpView: View {
                     .padding(.top, 20)
 
                 DefaultButton(text: "Reset password",
-                              color: Color(.customRed),
+                              color: Color(.red),
                               tapped: presentPasswordResetView)
                     .centeredHorizontally()
             }
@@ -75,8 +75,7 @@ struct SignUpView: View {
             .padding(.vertical, 20)
         }
         .modifier(DefaultPadding())
-        .navigationBarTitle("")
-//        .navigationBarHidden(true)
+        .navigationbarHidden()
         .sheet(isPresented: $resetPasswordPresented) {
             PasswordResetView(reset: self.resetPassword)
         }

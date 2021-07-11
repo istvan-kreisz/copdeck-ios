@@ -16,7 +16,8 @@ struct MainView: View {
             NavigationView {
                 SearchView()
                     .environmentObject(store)
-            }.tabItem {
+            }
+            .tabItem {
                 Image(systemName: "magnifyingglass")
                     .imageScale(.large)
                 Text("Search")

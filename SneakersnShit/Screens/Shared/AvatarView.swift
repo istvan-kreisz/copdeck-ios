@@ -23,7 +23,7 @@ struct AvatarView: View {
                 Circle()
                     .frame(width: size, height: size)
                     .foregroundColor(Color.randomColor())
-                ImageView(withURL: imageURL, size: size)
+                ImageView(withURL: imageURL, size: size, aspectRatio: 1)
                     .cornerRadius(size / 2)
             }
             if !text.isEmpty {

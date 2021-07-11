@@ -18,44 +18,60 @@ struct SearchView: View {
 
     var body: some View {
         ZStack {
-            ScrollView(.vertical, showsIndicators: false) {
-                VStack {
-                    ForEach(store.state.searchResults ?? []) { item in
-                        NavigationLink(destination: ItemDetailView(item: item),
-                                       tag: item.id,
-                                       selection: self.$selectedItemId) { EmptyView() }
+            ForEach(store.state.searchResults ?? []) { item in
+                NavigationLink(destination: ItemDetailView(item: item),
+                               tag: item.id,
+                               selection: self.$selectedItemId) { EmptyView() }
+            }
+            VStack(alignment: .leading, spacing: 19) {
+                Text("Search")
+                    .font(.bold(size: 35))
+                    .leftAligned()
+                    .padding(.leading, 6)
+                    .padding(.horizontal, 28)
+
+                TextField("Search sneakers", text: $searchText)
+                    .frame(height: 42)
+                    .padding(.horizontal, 17)
+                    .background(Color.white)
+                    .cornerRadius(12)
+                    .withDefaultShadow()
+                    .padding(.horizontal, 22)
+
+                ScrollView(.vertical, showsIndicators: false) {
+                    if let resultCount = store.state.searchResults?.count {
+                        Text("\(resultCount) Results:")
+                            .font(.bold(size: 12))
+                            .leftAligned()
+                            .padding(.horizontal, 28)
                     }
-                    TextField("Search", text: $searchText)
-                        .padding(.vertical)
 
                     ForEach(store.state.searchResults ?? []) { item in
-                        HStack {
-                            ImageView(withURL: item.bestStoreInfo?.imageURL ?? "", size: 80)
+                        HStack(alignment: .center, spacing: 10) {
+                            ImageView(withURL: item.bestStoreInfo?.imageURL ?? "", size: 58, aspectRatio: nil)
                                 .cornerRadius(8)
-                            VStack {
-                                HStack {
-                                    Text((item.bestStoreInfo ?? item.storeInfo.first)?.name ?? "")
-                                        .font(.semiBold(size: 13))
-                                    Spacer()
-                                }
-                                HStack(spacing: 10) {
-                                    ForEach(item.storeInfo) { storeInfo in
-                                        Text(storeInfo.store.name.rawValue)
-                                            .font(.regular(size: 12))
-                                    }
-                                    Spacer()
-                                }
-                                .frame(maxWidth: 300)
-                            }
-                        }.onTapGesture {
+                            Text((item.bestStoreInfo ?? item.storeInfo.first)?.name ?? "")
+                                .font(.bold(size: 14))
+                            Spacer()
+                        }
+                        .padding(.horizontal, 8)
+                        .frame(height: 85)
+                        .background(Color.white)
+                        .cornerRadius(12)
+                        .withDefaultShadow()
+                        .onTapGesture {
                             selectedItemId = item.id
                         }
                     }
+                    .padding(.horizontal, 22)
+                    .padding(.vertical, 6)
                 }
-                .withDefaultPadding()
+                Spacer()
             }
             .frame(maxWidth: UIScreen.main.bounds.width)
         }
+        .navigationBarHidden(true)
+        .padding(.bottom, 10)
         .onChange(of: searchText) { searchText in
             store.send(.getSearchResults(searchTerm: searchText))
         }
