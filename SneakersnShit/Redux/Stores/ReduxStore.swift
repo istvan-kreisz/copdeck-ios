@@ -11,7 +11,7 @@ import Foundation
 import Combine
 
 typealias Reducer<State, Action, Environment> =
-    (inout State, Action, Environment) -> AnyPublisher<Action, Never>?
+    (inout State, Action, Environment) -> AnyPublisher<Action, Never>
 
 final class ReduxStore<State, Action: IdAble, Environment>: ObservableObject {
     @Published private(set) var state: State
@@ -28,21 +28,27 @@ final class ReduxStore<State, Action: IdAble, Environment>: ObservableObject {
         self.environment = environment
     }
 
-    // func send(_ action: Action, completion: ((AnyPublisher<Action, Never>) -> Void)? = nil) {
-    func send(_ action: Action) {
-        Debouncer.debounce(delay: .milliseconds(500), id: action.id) { [weak self] in
-            self?.process(action)
+    @discardableResult func send(_ action: Action) -> Future<Void, AppError> {
+        Future<Void, AppError> { promise in
+            Debouncer.debounce(delay: .milliseconds(500), id: action.id) { [weak self] in
+                self?.process(action, completed: promise)
+            } cancel: {
+                promise(.success(()))
+            }
         }
     }
 
-    private func process(_ action: Action) {
-        guard let effect = self.reducer(&state, action, environment) else {
-            return
-        }
-
-        effect
+    private func process(_ action: Action, completed: @escaping (Result<Void, AppError>) -> Void) {
+        var callCompleted = true
+        reducer(&state, action, environment)
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] in self?.process($0) })
+            .sink(receiveCompletion: { completion in
+                guard callCompleted else { return }
+                completed(.success(()))
+            }, receiveValue: { [weak self] in
+                callCompleted = false
+                self?.process($0, completed: completed)
+            })
             .store(in: &effectCancellables)
     }
 
@@ -53,11 +59,11 @@ final class ReduxStore<State, Action: IdAble, Environment>: ObservableObject {
                                                                              derivedEnvironment: DerivedEnvironment)
         -> ReduxStore<DerivedState, DerivedAction, DerivedEnvironment> {
         let store = ReduxStore<DerivedState, DerivedAction, DerivedEnvironment>(initialState: deriveState(state),
-                                                                           reducer: { _, action, _ in
-                                                                               self.process(deriveAction(action))
-                                                                               return Empty(completeImmediately: true).eraseToAnyPublisher()
-                                                                           },
-                                                                           environment: derivedEnvironment)
+                                                                                reducer: { [weak self] _, action, _ in
+                                                                                    self?.process(deriveAction(action), completed: { _ in })
+                                                                                    return Empty(completeImmediately: true).eraseToAnyPublisher()
+                                                                                },
+                                                                                environment: derivedEnvironment)
 
         store.derivedCancellable = $state
             .map(deriveState)

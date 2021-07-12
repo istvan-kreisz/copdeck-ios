@@ -38,8 +38,7 @@ func mainReducer(state: inout AppState,
         return Empty(completeImmediately: true).eraseToAnyPublisher()
     case let .getSearchResults(searchTerm: searchTerm):
         if searchTerm.isEmpty {
-            return Just(AppAction.main(action: .setSearchResults([])))
-                .eraseToAnyPublisher()
+            return Just(AppAction.main(action: .setSearchResults([]))).eraseToAnyPublisher()
         } else {
             return environment.api.search(searchTerm: searchTerm)
                 .map { AppAction.main(action: .setSearchResults($0)) }

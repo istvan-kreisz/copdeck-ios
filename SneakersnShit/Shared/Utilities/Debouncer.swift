@@ -9,12 +9,20 @@ import Foundation
 
 class Debouncer {
     private static var debounceWorkItems: [String: DispatchWorkItem] = [:]
+    private static var debounceCancelItems: [String: DispatchWorkItem] = [:]
 
-    static func debounce(delay: DispatchTimeInterval, id: String, queue: DispatchQueue = .main, action: @escaping (() -> Void)) {
+    static func debounce(delay: DispatchTimeInterval, id: String, queue: DispatchQueue = .main, action: @escaping (() -> Void), cancel: @escaping (() -> Void)) {
         debounceWorkItems[id]?.cancel()
+        debounceCancelItems[id]?.perform()
+
         let newWorkItem = DispatchWorkItem { action() }
+        let newCancelItem = DispatchWorkItem { cancel() }
+
         debounceWorkItems[id] = newWorkItem
+        debounceCancelItems[id] = newCancelItem
+
         queue.asyncAfter(deadline: .now() + delay, execute: newWorkItem)
+        queue.asyncAfter(deadline: .now() + delay) { debounceCancelItems[id]?.cancel() }
     }
 }
 

@@ -8,6 +8,11 @@
 import SwiftUI
 import Combine
 
+class Loader: ObservableObject {
+    @Published var update = ""
+    var cancellables: Set<AnyCancellable> = []
+}
+
 struct SearchView: View {
     @EnvironmentObject var store: MainStore
 
@@ -15,6 +20,8 @@ struct SearchView: View {
 
     @State private var searchText = ""
     @State private var selectedItemId: String?
+
+    @StateObject private var loader = Loader()
 
     var body: some View {
         ZStack {
@@ -74,6 +81,11 @@ struct SearchView: View {
         .navigationBarHidden(selectedItemId == nil)
         .onChange(of: searchText) { searchText in
             store.send(.getSearchResults(searchTerm: searchText))
+                .sink(receiveCompletion: { _ in
+                    print("done!")
+                }, receiveValue: { _ in })
+                .store(in: &loader.cancellables)
+
         }
     }
 
