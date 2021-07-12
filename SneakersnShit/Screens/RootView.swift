@@ -32,7 +32,6 @@ struct RootView: View {
                                          deriveAction: AppAction.main,
                                          derivedEnvironment: store.environment.main))
                             .zIndex(0)
-                            .background(Color.customBackground)
 //                    }
 //                }
 //            } else {

@@ -11,7 +11,7 @@ struct Currency: Codable {
     let code: CurrencyCode
     let symbol: CurrencySymbol
 
-    enum CurrencyCode: String, Codable, Equatable {
+    enum CurrencyCode: String, Codable, Equatable, CaseIterable {
         case gbp = "GBP"
         case usd = "USD"
         case eur = "EUR"
@@ -19,7 +19,7 @@ struct Currency: Codable {
         case chf = "CHF"
     }
 
-    enum CurrencySymbol: String, Codable, Equatable {
+    enum CurrencySymbol: String, Codable, Equatable, CaseIterable {
         case gbp = "£"
         case usd = "$"
         case eur = "€"
@@ -27,3 +27,5 @@ struct Currency: Codable {
         case chf = "CHF"
     }
 }
+
+let ALLCURRENCIES = zip(Currency.CurrencyCode.allCases, Currency.CurrencySymbol.allCases).map { Currency(code: $0, symbol: $1) }

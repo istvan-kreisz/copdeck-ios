@@ -17,7 +17,7 @@ enum StoreName: String, Codable, CaseIterable {
 
 let ALLSTORES = zip(StoreId.allCases, StoreName.allCases).map { Store(id: $0, name: $1) }
 
-struct Store: Codable, Equatable {
+struct Store: Codable, Equatable, Identifiable {
     let id: StoreId
     let name: StoreName
 }
@@ -117,12 +117,19 @@ extension Item {
 
             var id: String { store.id.rawValue }
         }
+
         let size: String
         let lowest: Store?
         let highest: Store?
         let prices: [Price]
 
         var id: String { size }
+    }
+
+    var currency: Currency {
+        ALLCURRENCIES.first {
+            $0.code == storePrices.first?.inventory.first?.currencyCode
+        } ?? Currency(code: .usd, symbol: .usd)
     }
 
     private func storeInfo(for storeId: StoreId) -> StoreInfo? {
@@ -181,7 +188,7 @@ extension Item {
 
     private func prices(size: String, priceType: PriceType) -> PriceRow {
         let prices = ALLSTORES.map { store -> PriceRow.Price in
-            let p = price(size: size, storeId: store.id, feeType: .buy, currency: .init(code: .eur, symbol: .eur))
+            let p = price(size: size, storeId: store.id, feeType: .buy, currency: currency)
             return PriceRow.Price(primaryText: priceType == .ask ? p.ask.text : p.bid.text,
                                   secondaryText: priceType == .ask ? p.bid.text : p.ask.text,
                                   price: priceType == .ask ? p.ask.num : p.bid.num,

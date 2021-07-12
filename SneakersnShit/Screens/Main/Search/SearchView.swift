@@ -18,6 +18,7 @@ struct SearchView: View {
 
     var body: some View {
         ZStack {
+            Color.customBackground.edgesIgnoringSafeArea(.all)
             ForEach(store.state.searchResults ?? []) { item in
                 NavigationLink(destination: ItemDetailView(item: item),
                                tag: item.id,
@@ -70,8 +71,7 @@ struct SearchView: View {
             }
             .frame(maxWidth: UIScreen.main.bounds.width)
         }
-        .navigationBarHidden(true)
-        .padding(.bottom, 10)
+        .navigationBarHidden(selectedItemId == nil)
         .onChange(of: searchText) { searchText in
             store.send(.getSearchResults(searchTerm: searchText))
         }

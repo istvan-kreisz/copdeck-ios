@@ -21,50 +21,82 @@ struct ItemDetailView: View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .center, spacing: 20) {
                 ImageView(withURL: item.bestStoreInfo?.imageURL ?? "", size: UIScreen.main.bounds.width - 80, aspectRatio: nil)
-                VStack {
-                    Text(item.bestStoreInfo?.brand ?? "")
-                        .font(.semiBold(size: 13))
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(item.bestStoreInfo?.brand.uppercased() ?? "")
+                        .font(.bold(size: 12))
+                        .foregroundColor(.customText2)
                     Text(item.bestStoreInfo?.name ?? "")
-                        .font(.regular(size: 17))
+                        .font(.bold(size: 30))
+                        .foregroundColor(.customText1)
+                        .padding(.bottom, 8)
                     HStack(spacing: 10) {
-                        VStack(spacing: 10) {
-                            Text(item.bestStoreInfo?.retailPrice.map { "$\($0)" } ?? "")
-                                .font(.bold(size: 15))
+                        VStack(spacing: 2) {
+                            Text(item.bestStoreInfo?.retailPrice.map { "\(item.currency.symbol.rawValue)\($0.rounded(toPlaces: 1))" } ?? "")
+                                .font(.bold(size: 20))
+                                .foregroundColor(.customText1)
                             Text("Retail Price")
-                                .font(.regular(size: 13))
+                                .font(.regular(size: 15))
+                                .foregroundColor(.customText2)
                         }
                         Spacer()
-                        VStack(spacing: 10) {
+                        VStack(spacing: 2) {
                             Text(item.id)
-                                .font(.bold(size: 15))
+                                .font(.bold(size: 20))
+                                .foregroundColor(.customText1)
                             Text("Style")
-                                .font(.regular(size: 13))
+                                .font(.regular(size: 15))
+                                .foregroundColor(.customText2)
                         }
                     }
                 }
-                Text("Price Comparison")
-                    .font(.bold(size: 20))
+                .padding(.horizontal, 28)
+                .padding(.top, 14)
+                .padding(.bottom, 30)
 
-                VStack(spacing: 20) {
-                    ForEach(item.allPriceRows(priceType: priceType)) { row in
-                        HStack(spacing: 5) {
-                            Text(row.size)
-                                .frame(maxWidth: .infinity)
-                                .overlay(Capsule().stroke(Color.blue, lineWidth: 2))
-                            ForEach(row.prices) { price in
-                                Text(price.primaryText)
+                ZStack {
+                    Color.customBackground.edgesIgnoringSafeArea(.all)
+                    VStack(alignment: .leading) {
+                        Text("Price Comparison")
+                            .font(.bold(size: 20))
+
+                        VStack(spacing: 20) {
+                            HStack(spacing: 10) {
+                                Text("Size")
+                                    .font(.regular(size: 14))
+                                    .foregroundColor(.customText2)
                                     .frame(maxWidth: .infinity)
-                                    .overlay(Capsule().stroke(Color.blue, lineWidth: 2))
+                                ForEach(ALLSTORES) { store in
+                                    Text(store.name.rawValue)
+                                        .font(.bold(size: 18))
+                                        .foregroundColor(.customText1)
+                                        .frame(maxWidth: .infinity)
+                                }
+                            }
+                            .padding(5)
+
+                            ForEach(item.allPriceRows(priceType: priceType)) { row in
+                                HStack(spacing: 10) {
+                                    Text(row.size)
+                                        .frame(height: 32)
+                                        .frame(maxWidth: .infinity)
+                                        .background(Color.customAccent2)
+                                        .clipShape(Capsule())
+                                    ForEach(row.prices) { price in
+                                        Text(price.primaryText)
+                                            .frame(height: 32)
+                                            .frame(maxWidth: .infinity)
+                                            .overlay(Capsule().stroke(row.highest?.id == price.store.id ? Color.customGreen : Color.clear, lineWidth: 2))
+                                    }
+                                }
+                                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0))
                             }
                         }
-                        .padding(5)
                     }
+                    .padding(.horizontal, 28)
+                    .padding(.vertical, 37)
                 }
-                Spacer()
             }
         }
-        .navigationBarHidden(false)
-        .withDefaultPadding(padding: [.top, .leading, .trailing])
         .onAppear {
             updateItem(newItem: store.state.selectedItem)
             store.send(.getItemDetails(item: item))
