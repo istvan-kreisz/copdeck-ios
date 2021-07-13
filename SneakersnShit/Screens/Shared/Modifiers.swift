@@ -39,23 +39,11 @@ struct KeyboardAwareModifier: ViewModifier {
     }
 }
 
-extension View {
-    func KeyboardAwarePadding(offset: CGFloat = 0.0) -> some View {
-        ModifiedContent(content: self, modifier: KeyboardAwareModifier(offset: offset))
-    }
-}
-
 struct NavigationbarHidden: ViewModifier {
     func body(content: Content) -> some View {
         content
             .navigationBarTitle("")
             .navigationBarHidden(true)
-    }
-}
-
-extension View {
-    func navigationbarHidden() -> some View {
-        ModifiedContent(content: self, modifier: NavigationbarHidden())
     }
 }
 
@@ -86,22 +74,10 @@ struct DefaultPadding: ViewModifier {
     }
 }
 
-extension View {
-    func withDefaultPadding(padding: DefaultPadding.Padding = .all) -> some View {
-        ModifiedContent(content: self, modifier: DefaultPadding(padding: padding))
-    }
-}
-
 struct DefaultShadow: ViewModifier {
     func body(content: Content) -> some View {
         content
             .shadow(color: Color.customAccent3, radius: 5, x: 0, y: 0)
-    }
-}
-
-extension View {
-    func withDefaultShadow() -> some View {
-        ModifiedContent(content: self, modifier: DefaultShadow())
     }
 }
 
@@ -114,7 +90,6 @@ struct DefaultInsets: ViewModifier {
 }
 
 struct CenteredHorizontally: ViewModifier {
-    
     func body(content: Content) -> some View {
         HStack {
             Spacer()
@@ -124,14 +99,7 @@ struct CenteredHorizontally: ViewModifier {
     }
 }
 
-extension View {
-    func centeredHorizontally() -> some View {
-        ModifiedContent(content: self, modifier: CenteredHorizontally())
-    }
-}
-
 struct CenteredVertically: ViewModifier {
-    
     func body(content: Content) -> some View {
         VStack {
             Spacer()
@@ -141,30 +109,16 @@ struct CenteredVertically: ViewModifier {
     }
 }
 
-extension View {
-    func centeredVertically() -> some View {
-        ModifiedContent(content: self, modifier: CenteredVertically())
-    }
-}
-
 struct LeftAligned: ViewModifier {
-    
     func body(content: Content) -> some View {
         HStack {
             content
             Spacer()
         }
-    }
-}
-
-extension View {
-    func leftAligned() -> some View {
-        ModifiedContent(content: self, modifier: LeftAligned())
     }
 }
 
 struct RightAligned: ViewModifier {
-    
     func body(content: Content) -> some View {
         HStack {
             Spacer()
@@ -172,10 +126,3 @@ struct RightAligned: ViewModifier {
         }
     }
 }
-
-extension View {
-    func rightAligned() -> some View {
-        ModifiedContent(content: self, modifier: RightAligned())
-    }
-}
-

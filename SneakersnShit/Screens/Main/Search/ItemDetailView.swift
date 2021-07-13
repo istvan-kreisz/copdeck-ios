@@ -12,6 +12,13 @@ struct ItemDetailView: View {
     @EnvironmentObject var store: MainStore
     @State private var item: Item
     @State private var priceType: PriceType = .ask
+    @State private var feeType: FeeType = .none
+
+    enum BorderStyle {
+        case red, green, regular
+    }
+
+    @StateObject private var loader = Loader()
 
     init(item: Item) {
         self._item = State(initialValue: item)
@@ -74,6 +81,11 @@ struct ItemDetailView: View {
                             }
                             .padding(5)
 
+                            if loader.isLoading {
+                                CustomSpinner(text: "Loading...", animate: true)
+                                    .padding(5)
+                            }
+
                             ForEach(item.allPriceRows(priceType: priceType)) { row in
                                 HStack(spacing: 10) {
                                     Text(row.size)
@@ -82,10 +94,19 @@ struct ItemDetailView: View {
                                         .background(Color.customAccent2)
                                         .clipShape(Capsule())
                                     ForEach(row.prices) { price in
+
                                         Text(price.primaryText)
                                             .frame(height: 32)
                                             .frame(maxWidth: .infinity)
-                                            .overlay(Capsule().stroke(row.highest?.id == price.store.id ? Color.customGreen : Color.clear, lineWidth: 2))
+                                            .if(price.store.id == row.lowest?.id && (feeType == .buy || feeType == .none)) {
+                                                $0.overlay(Capsule().stroke(Color.customGreen, lineWidth: 2))
+                                            } else: {
+                                                $0.if(price.store.id == row.highest?.id && (feeType == .buy || feeType == .none)) {
+                                                    $0.overlay(Capsule().stroke(Color.customRed, lineWidth: 2))
+                                                } else: {
+                                                    $0.overlay(Capsule().stroke(Color.customAccent1, lineWidth: 2))
+                                                }
+                                            }
                                     }
                                 }
                                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0))
@@ -99,7 +120,7 @@ struct ItemDetailView: View {
         }
         .onAppear {
             updateItem(newItem: store.state.selectedItem)
-            store.send(.getItemDetails(item: item))
+            store.send(.getItemDetails(item: item), completed: loader.getLoader())
         }
         .onChange(of: store.state.selectedItem) { item in
             updateItem(newItem: item)
