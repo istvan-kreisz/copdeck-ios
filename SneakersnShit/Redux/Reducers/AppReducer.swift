@@ -10,7 +10,8 @@ import Combine
 
 func appReducer(state: inout AppState,
                 action: AppAction,
-                environment: World) -> AnyPublisher<AppAction, Never> {
+                environment: World,
+                completed: ((Result<Void, AppError>) -> Void)?) -> AnyPublisher<AppAction, Never> {
     switch action {
     case .none:
         return Empty(completeImmediately: true).eraseToAnyPublisher()

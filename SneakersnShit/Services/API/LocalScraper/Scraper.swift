@@ -85,6 +85,7 @@ extension LocalScraper: JSNativeBridgeDelegate {
     }
 
     func setItems(_ items: [Item]) {
+        print("got em")
         itemsSubject.send(items)
     }
 

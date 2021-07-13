@@ -12,17 +12,21 @@ class Debouncer {
     private static var debounceCancelItems: [String: DispatchWorkItem] = [:]
 
     static func debounce(delay: DispatchTimeInterval, id: String, queue: DispatchQueue = .main, action: @escaping (() -> Void), cancel: @escaping (() -> Void)) {
-        debounceWorkItems[id]?.cancel()
-        debounceCancelItems[id]?.perform()
+        DispatchQueue.main.async {
+            debounceWorkItems[id]?.cancel()
+            debounceCancelItems[id]?.perform()
 
-        let newWorkItem = DispatchWorkItem { action() }
-        let newCancelItem = DispatchWorkItem { cancel() }
+            let newWorkItem = DispatchWorkItem { action() }
+            let newCancelItem = DispatchWorkItem { cancel() }
 
-        debounceWorkItems[id] = newWorkItem
-        debounceCancelItems[id] = newCancelItem
+            debounceWorkItems[id] = newWorkItem
+            debounceCancelItems[id] = newCancelItem
 
-        queue.asyncAfter(deadline: .now() + delay, execute: newWorkItem)
-        queue.asyncAfter(deadline: .now() + delay) { debounceCancelItems[id]?.cancel() }
+            queue.asyncAfter(deadline: .now() + delay) {
+                debounceWorkItems[id]?.perform()
+                debounceCancelItems[id]?.cancel()
+            }
+        }
     }
 }
 

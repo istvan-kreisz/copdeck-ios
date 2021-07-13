@@ -8,11 +8,6 @@
 import SwiftUI
 import Combine
 
-class Loader: ObservableObject {
-    @Published var update = ""
-    var cancellables: Set<AnyCancellable> = []
-}
-
 struct SearchView: View {
     @EnvironmentObject var store: MainStore
 
@@ -47,6 +42,11 @@ struct SearchView: View {
                     .padding(.horizontal, 22)
 
                 ScrollView(.vertical, showsIndicators: false) {
+                    if loader.isLoading {
+                        CustomSpinner(text: "Loading...", animate: true)
+                            .padding(.horizontal, 22)
+                            .padding(.top, 5)
+                    }
                     if let resultCount = store.state.searchResults?.count {
                         Text("\(resultCount) Results:")
                             .font(.bold(size: 12))
@@ -80,12 +80,7 @@ struct SearchView: View {
         }
         .navigationBarHidden(selectedItemId == nil)
         .onChange(of: searchText) { searchText in
-            store.send(.getSearchResults(searchTerm: searchText))
-                .sink(receiveCompletion: { _ in
-                    print("done!")
-                }, receiveValue: { _ in })
-                .store(in: &loader.cancellables)
-
+            store.send(.getSearchResults(searchTerm: searchText), completed: loader.getLoader())
         }
     }
 

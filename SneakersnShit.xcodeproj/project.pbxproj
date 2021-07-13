@@ -89,6 +89,7 @@
 		5DC00EAB25C3A331009A3AB9 /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC00EAA25C3A331009A3AB9 /* Authenticator.swift */; };
 		5DC00EAF25C3A387009A3AB9 /* DefaultAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC00EAE25C3A387009A3AB9 /* DefaultAuthenticator.swift */; };
 		5DC00EDD25C3BE0A009A3AB9 /* MockAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC00EDC25C3BE0A009A3AB9 /* MockAuthenticator.swift */; };
+		5DC2C102269E098C00674756 /* Loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC2C101269E098C00674756 /* Loader.swift */; };
 		5DC3538F26117C7F00294DF0 /* ItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC3538E26117C7F00294DF0 /* ItemDetailView.swift */; };
 		5DEBC088269B24BA000EEADC /* ViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEBC087269B24BA000EEADC /* ViewRouter.swift */; };
 		5DEBC08A269B3DE8000EEADC /* Double+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEBC089269B3DE8000EEADC /* Double+Extensions.swift */; };
@@ -181,6 +182,7 @@
 		5DC00EAA25C3A331009A3AB9 /* Authenticator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authenticator.swift; sourceTree = "<group>"; };
 		5DC00EAE25C3A387009A3AB9 /* DefaultAuthenticator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAuthenticator.swift; sourceTree = "<group>"; };
 		5DC00EDC25C3BE0A009A3AB9 /* MockAuthenticator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockAuthenticator.swift; sourceTree = "<group>"; };
+		5DC2C101269E098C00674756 /* Loader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loader.swift; sourceTree = "<group>"; };
 		5DC3538E26117C7F00294DF0 /* ItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailView.swift; sourceTree = "<group>"; };
 		5DEBC087269B24BA000EEADC /* ViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewRouter.swift; sourceTree = "<group>"; };
 		5DEBC089269B3DE8000EEADC /* Double+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extensions.swift"; sourceTree = "<group>"; };
@@ -298,6 +300,7 @@
 				5DF03CA625DA1BBF001856B5 /* AvatarView.swift */,
 				5DF03CAA25DA1CE7001856B5 /* ImageView.swift */,
 				5D30BA41269C3EAD0062F6AB /* CustomSpinner.swift */,
+				5DC2C101269E098C00674756 /* Loader.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -754,6 +757,7 @@
 				5D424D4225C509610008D6F4 /* Fonts.swift in Sources */,
 				5D696097258713760058BABE /* AppDelegate.swift in Sources */,
 				5D424D1A25C505450008D6F4 /* InfoPopupView.swift in Sources */,
+				5DC2C102269E098C00674756 /* Loader.swift in Sources */,
 				5D63125026950CB400876D99 /* AppReducer.swift in Sources */,
 				5D424D1D25C505450008D6F4 /* Modifiers.swift in Sources */,
 				5D63123A26950A5900876D99 /* Stores.swift in Sources */,

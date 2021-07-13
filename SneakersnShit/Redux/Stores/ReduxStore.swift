@@ -11,7 +11,7 @@ import Foundation
 import Combine
 
 typealias Reducer<State, Action, Environment> =
-    (inout State, Action, Environment) -> AnyPublisher<Action, Never>
+    (inout State, Action, Environment, ((Result<Void, AppError>) -> Void)?) -> AnyPublisher<Action, Never>
 
 final class ReduxStore<State, Action: IdAble, Environment>: ObservableObject {
     @Published private(set) var state: State
@@ -19,6 +19,10 @@ final class ReduxStore<State, Action: IdAble, Environment>: ObservableObject {
     let environment: Environment
     private let reducer: Reducer<State, Action, Environment>
     private var effectCancellables: Set<AnyCancellable> = []
+
+    private var isRootStore: Bool {
+        type(of: self) == ReduxStore<AppState, AppAction, World>.self
+    }
 
     init(initialState: State,
          reducer: @escaping Reducer<State, Action, Environment>,
@@ -28,25 +32,27 @@ final class ReduxStore<State, Action: IdAble, Environment>: ObservableObject {
         self.environment = environment
     }
 
-    @discardableResult func send(_ action: Action) -> Future<Void, AppError> {
-        Future<Void, AppError> { promise in
-            Debouncer.debounce(delay: .milliseconds(500), id: action.id) { [weak self] in
-                self?.process(action, completed: promise)
-            } cancel: {
-                promise(.success(()))
-            }
+    func send(_ action: Action, completed: ((Result<Void, AppError>) -> Void)? = nil) {
+//        print("~~~~", action, isRootStore)
+        Debouncer.debounce(delay: .milliseconds(500), id: action.id) { [weak self] in
+            self?.process(action, completed: completed)
+        } cancel: {
+//            print("XX", action)
+            completed?(.success(()))
         }
     }
 
-    private func process(_ action: Action, completed: @escaping (Result<Void, AppError>) -> Void) {
-        var callCompleted = true
-        reducer(&state, action, environment)
+    private func process(_ action: Action, completed: ((Result<Void, AppError>) -> Void)?) {
+//        print("::::", action)
+        reducer(&state, action, environment, completed)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                guard callCompleted else { return }
-                completed(.success(()))
+            .sink(receiveCompletion: { [weak self] completion in
+//                print("XX", action, self?.isRootStore == true)
+                if self?.isRootStore == true {
+                    completed?(.success(()))
+                }
             }, receiveValue: { [weak self] in
-                callCompleted = false
+//                print("--", action, self?.isRootStore == true)
                 self?.process($0, completed: completed)
             })
             .store(in: &effectCancellables)
@@ -59,8 +65,8 @@ final class ReduxStore<State, Action: IdAble, Environment>: ObservableObject {
                                                                              derivedEnvironment: DerivedEnvironment)
         -> ReduxStore<DerivedState, DerivedAction, DerivedEnvironment> {
         let store = ReduxStore<DerivedState, DerivedAction, DerivedEnvironment>(initialState: deriveState(state),
-                                                                                reducer: { [weak self] _, action, _ in
-                                                                                    self?.process(deriveAction(action), completed: { _ in })
+                                                                                reducer: { [weak self] _, action, _, completed in
+                                                                                    self?.process(deriveAction(action), completed: completed)
                                                                                     return Empty(completeImmediately: true).eraseToAnyPublisher()
                                                                                 },
                                                                                 environment: derivedEnvironment)
