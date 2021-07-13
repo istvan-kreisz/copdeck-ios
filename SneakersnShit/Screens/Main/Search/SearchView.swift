@@ -15,11 +15,17 @@ struct SearchView: View {
 
     @State private var searchText = ""
     @State private var selectedItemId: String?
+    @Binding var hasPushedView: Bool
 
     @StateObject private var loader = Loader()
 
     var body: some View {
-        ZStack {
+        let selectedId = Binding<String?>(get: { selectedItemId },
+                                          set: { id in
+                                              selectedItemId = id
+                                              hasPushedView = id != nil
+                                          })
+        return ZStack {
             Color.customBackground.edgesIgnoringSafeArea(.all)
             ForEach(store.state.searchResults ?? []) { item in
                 NavigationLink(destination: ItemDetailView(item: item),
@@ -68,7 +74,7 @@ struct SearchView: View {
                         .cornerRadius(12)
                         .withDefaultShadow()
                         .onTapGesture {
-                            selectedItemId = item.id
+                            selectedId.wrappedValue = item.id
                         }
                     }
                     .padding(.horizontal, 22)
@@ -84,9 +90,9 @@ struct SearchView: View {
         }
     }
 
-//    func addToInventory(item: Item) {
+    func addToInventory(item: Item) {
 //        store.send(.addToInventory(inventoryItem: .init(from: item)))
-//    }
+    }
 }
 
 struct SearchView_Previews: PreviewProvider {
@@ -95,7 +101,7 @@ struct SearchView_Previews: PreviewProvider {
                              reducer: appReducer,
                              environment: World(isMockInstance: true))
         return Group {
-            SearchView()
+            SearchView(hasPushedView: .constant(false))
                 .environmentObject(store
                     .derived(deriveState: \.mainState,
                              deriveAction: AppAction.main,

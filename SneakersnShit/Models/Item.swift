@@ -22,12 +22,16 @@ struct Store: Codable, Equatable, Identifiable {
     let name: StoreName
 }
 
-enum PriceType {
+enum PriceType: String, CaseIterable, Identifiable {
     case ask, bid
+
+    var id: String { rawValue }
 }
 
-enum FeeType {
+enum FeeType: String, CaseIterable, Identifiable {
     case none, buy, sell
+
+    var id: String { rawValue }
 }
 
 struct Item: Codable, Equatable, Identifiable {
@@ -186,9 +190,9 @@ extension Item {
         return PriceItem(ask: askInfo, bid: bidInfo, sellLink: storeInfo?.sellUrl, buyLink: (storeInfo?.buyUrl).map { $0 + sizeQuery })
     }
 
-    private func prices(size: String, priceType: PriceType) -> PriceRow {
+    private func prices(size: String, priceType: PriceType, feeType: FeeType) -> PriceRow {
         let prices = ALLSTORES.map { store -> PriceRow.Price in
-            let p = price(size: size, storeId: store.id, feeType: .buy, currency: currency)
+            let p = price(size: size, storeId: store.id, feeType: feeType, currency: currency)
             return PriceRow.Price(primaryText: priceType == .ask ? p.ask.text : p.bid.text,
                                   secondaryText: priceType == .ask ? p.bid.text : p.ask.text,
                                   price: priceType == .ask ? p.ask.num : p.bid.num,
@@ -206,7 +210,7 @@ extension Item {
         return PriceRow(size: size, lowest: lowest, highest: highest, prices: prices)
     }
 
-    func allPriceRows(priceType: PriceType) -> [PriceRow] {
-        sortedSizes.map { prices(size: $0, priceType: priceType) }
+    func allPriceRows(priceType: PriceType, feeType: FeeType) -> [PriceRow] {
+        sortedSizes.map { prices(size: $0, priceType: priceType, feeType: feeType) }
     }
 }

@@ -36,20 +36,12 @@ extension View {
         ModifiedContent(content: self, modifier: NavigationbarHidden())
     }
 
-    func KeyboardAwarePadding(offset: CGFloat = 0.0) -> some View {
+    func keyboardAwarePadding(offset: CGFloat = 0.0) -> some View {
         ModifiedContent(content: self, modifier: KeyboardAwareModifier(offset: offset))
     }
 
     @ViewBuilder func `if`<Content: View>(_ condition: @autoclosure () -> Bool, transform: (Self) -> Content) -> some View {
         if condition() {
-            transform(self)
-        } else {
-            self
-        }
-    }
-
-    @ViewBuilder func `if`<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
-        if condition {
             transform(self)
         } else {
             self

@@ -14,6 +14,8 @@ struct ItemDetailView: View {
     @State private var priceType: PriceType = .ask
     @State private var feeType: FeeType = .none
 
+    @State private var openAddToInventory = false
+
     enum BorderStyle {
         case red, green, regular
     }
@@ -58,15 +60,70 @@ struct ItemDetailView: View {
                 }
                 .padding(.horizontal, 28)
                 .padding(.top, 14)
-                .padding(.bottom, 30)
+                .padding(.bottom, 20)
 
                 ZStack {
                     Color.customBackground.edgesIgnoringSafeArea(.all)
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 10) {
                         Text("Price Comparison")
                             .font(.bold(size: 20))
+                        Text("Tap price to visit website")
+                            .font(.regular(size: 14))
+                            .foregroundColor(.customText2)
 
-                        VStack(spacing: 20) {
+                        VStack(alignment: .leading, spacing: 20) {
+                            HStack(spacing: 10) {
+                                ForEach(PriceType.allCases) { priceType in
+                                    Text(priceType.rawValue.capitalized)
+                                        .frame(width: 60, height: 31)
+                                        .if(priceType == self.priceType) {
+                                            $0
+                                                .foregroundColor(Color.white)
+                                                .background(Capsule().fill(Color.customBlue))
+                                        } else: {
+                                            $0
+                                                .foregroundColor(Color.customText1)
+                                                .background(Capsule().stroke(Color.customBlue, lineWidth: 2))
+                                        }
+                                        .onTapGesture {
+                                            self.priceType = priceType
+                                        }
+                                }
+                            }
+                            HStack(spacing: 10) {
+                                ForEach(FeeType.allCases) { feeType in
+                                    Text(feeType.rawValue.capitalized)
+                                        .frame(width: 60, height: 31)
+                                        .if(feeType == self.feeType) {
+                                            $0
+                                                .foregroundColor(Color.white)
+                                                .background(Capsule().fill(Color.customPurple))
+                                        } else: {
+                                            $0
+                                                .foregroundColor(Color.customText1)
+                                                .background(Capsule().stroke(Color.customPurple, lineWidth: 2))
+                                        }
+                                        .onTapGesture {
+                                            self.feeType = feeType
+                                        }
+                                }
+                            }
+                            .padding(.top, -10)
+
+                            HStack(alignment: .center, spacing: 3) {
+                                Text("Refresh Prices")
+                                    .foregroundColor(.customOrange)
+                                    .font(.bold(size: 16))
+                                Image(systemName: "arrow.clockwise")
+                                    .font(.bold(size: 13))
+                                    .foregroundColor(.customOrange)
+                            }
+                            .padding(.top, 5)
+                            .padding(.bottom, -5)
+                            .onTapGesture {
+                                refreshPrices()
+                            }
+
                             HStack(spacing: 10) {
                                 Text("Size")
                                     .font(.regular(size: 14))
@@ -77,6 +134,12 @@ struct ItemDetailView: View {
                                         .font(.bold(size: 18))
                                         .foregroundColor(.customText1)
                                         .frame(maxWidth: .infinity)
+                                        .onTapGesture {
+                                            if let link = item.storeInfo.first(where: { $0.store.id == store.id })?.url,
+                                               let url = URL(string: link) {
+                                                UIApplication.shared.open(url)
+                                            }
+                                        }
                                 }
                             }
                             .padding(5)
@@ -86,7 +149,7 @@ struct ItemDetailView: View {
                                     .padding(5)
                             }
 
-                            ForEach(item.allPriceRows(priceType: priceType)) { row in
+                            ForEach(item.allPriceRows(priceType: priceType, feeType: feeType)) { row in
                                 HStack(spacing: 10) {
                                     Text(row.size)
                                         .frame(height: 32)
@@ -94,7 +157,6 @@ struct ItemDetailView: View {
                                         .background(Color.customAccent2)
                                         .clipShape(Capsule())
                                     ForEach(row.prices) { price in
-
                                         Text(price.primaryText)
                                             .frame(height: 32)
                                             .frame(maxWidth: .infinity)
@@ -107,9 +169,37 @@ struct ItemDetailView: View {
                                                     $0.overlay(Capsule().stroke(Color.customAccent1, lineWidth: 2))
                                                 }
                                             }
+                                            .onTapGesture {
+                                                var link: String?
+                                                switch feeType {
+                                                case .buy:
+                                                    link = price.buyLink
+                                                case .sell:
+                                                    link = price.sellLink
+                                                case .none:
+                                                    link = price.buyLink
+                                                }
+                                                if let link = link, let url = URL(string: link) {
+                                                    UIApplication.shared.open(url)
+                                                }
+                                            }
                                     }
                                 }
                                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0))
+                            }
+
+                            HStack(alignment: .center, spacing: 5) {
+                                Text("Add to Inventory".uppercased())
+                                    .font(.bold(size: 12))
+                                    .foregroundColor(.white)
+                                Image(systemName: "chevron.right")
+                                    .font(.bold(size: 12))
+                                    .foregroundColor(.white)
+                            }
+                            .frame(width: 205, height: 47)
+                            .background(Capsule().fill(Color.customBlack))
+                            .onTapGesture {
+                                openAddToInventory = true
                             }
                         }
                     }
@@ -120,11 +210,15 @@ struct ItemDetailView: View {
         }
         .onAppear {
             updateItem(newItem: store.state.selectedItem)
-            store.send(.getItemDetails(item: item), completed: loader.getLoader())
+            refreshPrices()
         }
         .onChange(of: store.state.selectedItem) { item in
             updateItem(newItem: item)
         }
+    }
+
+    private func refreshPrices() {
+        store.send(.getItemDetails(item: item), completed: loader.getLoader())
     }
 
     private func updateItem(newItem: Item?) {
