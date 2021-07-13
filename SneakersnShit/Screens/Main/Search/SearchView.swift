@@ -25,7 +25,7 @@ struct SearchView: View {
                                               selectedItemId = id
                                               hasPushedView = id != nil
                                           })
-        return ZStack {
+        ZStack {
             Color.customBackground.edgesIgnoringSafeArea(.all)
             ForEach(store.state.searchResults ?? []) { item in
                 NavigationLink(destination: ItemDetailView(item: item),
