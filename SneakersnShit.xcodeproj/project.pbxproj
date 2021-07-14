@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5D0E5A11269E4EDE006D7E9C /* AddToInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0E5A10269E4EDE006D7E9C /* AddToInventoryView.swift */; };
+		5D0E5A13269E60DB006D7E9C /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0E5A12269E60DB006D7E9C /* TextField.swift */; };
 		5D2119D725DA6605001FE5E5 /* Kanna in Frameworks */ = {isa = PBXBuildFile; productRef = 5D2119D625DA6605001FE5E5 /* Kanna */; };
 		5D2119E125DB0EFA001FE5E5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5D2119E025DB0EFA001FE5E5 /* GoogleService-Info.plist */; };
 		5D2D5AA025C529E3009598AA /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5A9F25C529E3009598AA /* API.swift */; };
@@ -102,6 +104,8 @@
 
 /* Begin PBXFileReference section */
 		10F05964238EC7800C0C5A21 /* Pods-SneakersnShit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SneakersnShit.debug.xcconfig"; path = "Target Support Files/Pods-SneakersnShit/Pods-SneakersnShit.debug.xcconfig"; sourceTree = "<group>"; };
+		5D0E5A10269E4EDE006D7E9C /* AddToInventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToInventoryView.swift; sourceTree = "<group>"; };
+		5D0E5A12269E60DB006D7E9C /* TextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
 		5D2119E025DB0EFA001FE5E5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		5D2D5A9F25C529E3009598AA /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		5D2D5AA225C52E9B009598AA /* MainState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainState.swift; sourceTree = "<group>"; };
@@ -212,6 +216,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5D0E5A0F269E4EC9006D7E9C /* AddToInventory */ = {
+			isa = PBXGroup;
+			children = (
+				5D0E5A10269E4EDE006D7E9C /* AddToInventoryView.swift */,
+			);
+			path = AddToInventory;
+			sourceTree = "<group>";
+		};
 		5D2D5A9E25C529CA009598AA /* Functions */ = {
 			isa = PBXGroup;
 			children = (
@@ -306,6 +318,7 @@
 				5DF03CAA25DA1CE7001856B5 /* ImageView.swift */,
 				5D30BA41269C3EAD0062F6AB /* CustomSpinner.swift */,
 				5DC2C101269E098C00674756 /* Loader.swift */,
+				5D0E5A12269E60DB006D7E9C /* TextField.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -328,6 +341,7 @@
 				5D36AA0A269E46300049640A /* TabBar.swift */,
 				5D52E30D26130E0700FA02B8 /* Inventory */,
 				5D424D2A25C505F90008D6F4 /* Search */,
+				5D0E5A0F269E4EC9006D7E9C /* AddToInventory */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -796,9 +810,11 @@
 				5D631229269504DA00876D99 /* DefaultSettings.swift in Sources */,
 				5D2D5AA025C529E3009598AA /* API.swift in Sources */,
 				5D424D0425C504510008D6F4 /* EmailValidator.swift in Sources */,
+				5D0E5A13269E60DB006D7E9C /* TextField.swift in Sources */,
 				5D424CFB25C503F00008D6F4 /* UIApplication+Extensions.swift in Sources */,
 				5D63122B2695066500876D99 /* ExchangeRates.swift in Sources */,
 				5D63122D2695068300876D99 /* Currency.swift in Sources */,
+				5D0E5A11269E4EDE006D7E9C /* AddToInventoryView.swift in Sources */,
 				5D6312242694D83100876D99 /* Decodable+Extensions.swift in Sources */,
 				5D6312322695098E00876D99 /* SettingsState.swift in Sources */,
 				5D3769762611709C00F9ED72 /* Debouncer.swift in Sources */,

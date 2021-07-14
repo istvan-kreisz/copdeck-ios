@@ -36,10 +36,6 @@ extension View {
         ModifiedContent(content: self, modifier: NavigationbarHidden())
     }
 
-    func keyboardAwarePadding(offset: CGFloat = 0.0) -> some View {
-        ModifiedContent(content: self, modifier: KeyboardAwareModifier(offset: offset))
-    }
-
     @ViewBuilder func `if`<Content: View>(_ condition: @autoclosure () -> Bool, transform: (Self) -> Content) -> some View {
         if condition() {
             transform(self)
@@ -55,6 +51,15 @@ extension View {
             ifTransform(self)
         } else {
             elseTransform(self)
+        }
+    }
+
+    func placeholder<Content: View>(when shouldShow: Bool,
+                                    alignment: Alignment = .leading,
+                                    @ViewBuilder placeholder: () -> Content) -> some View {
+        ZStack(alignment: alignment) {
+            placeholder().opacity(shouldShow ? 1 : 0)
+            self
         }
     }
 }

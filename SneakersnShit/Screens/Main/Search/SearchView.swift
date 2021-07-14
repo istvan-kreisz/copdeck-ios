@@ -39,12 +39,7 @@ struct SearchView: View {
                     .padding(.leading, 6)
                     .padding(.horizontal, 28)
 
-                TextField("Search sneakers", text: $searchText)
-                    .frame(height: 42)
-                    .padding(.horizontal, 17)
-                    .background(Color.white)
-                    .cornerRadius(12)
-                    .withDefaultShadow()
+                CustomTextField(title: nil, placeHolder: "Search sneakers", text: $searchText)
                     .padding(.horizontal, 22)
 
                 ScrollView(.vertical, showsIndicators: false) {
@@ -80,8 +75,8 @@ struct SearchView: View {
                     .padding(.horizontal, 22)
                     .padding(.vertical, 6)
                 }
-                Spacer()
             }
+            .edgesIgnoringSafeArea(.bottom)
             .frame(maxWidth: UIScreen.main.bounds.width)
         }
         .navigationBarHidden(selectedItemId == nil)
