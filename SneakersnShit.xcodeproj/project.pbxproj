@@ -87,6 +87,8 @@
 		5D7B17CC26868CA60065D01C /* Scraper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D7B17CB26868CA60065D01C /* Scraper.swift */; };
 		5D83156B25C397C4008AB948 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D83156A25C397C4008AB948 /* MainView.swift */; };
 		5D95570C269A60DA00CCC2E7 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D95570B269A60DA00CCC2E7 /* String+Extensions.swift */; };
+		5D9C8E3D269F2F31008538D6 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C8E3C269F2F31008538D6 /* RoundedButton.swift */; };
+		5D9C8E3F269FAB8B008538D6 /* NextButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C8E3E269FAB8B008538D6 /* NextButton.swift */; };
 		5D9E85F126931F4300477377 /* scraper.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = 5D9E85F026931F4200477377 /* scraper.bundle.js */; };
 		5DBCB6DD25C90A510025BC23 /* StoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DBCB6DC25C90A510025BC23 /* StoreReviewHelper.swift */; };
 		5DC00EAB25C3A331009A3AB9 /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC00EAA25C3A331009A3AB9 /* Authenticator.swift */; };
@@ -184,6 +186,8 @@
 		5D7B17CB26868CA60065D01C /* Scraper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scraper.swift; sourceTree = "<group>"; };
 		5D83156A25C397C4008AB948 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		5D95570B269A60DA00CCC2E7 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		5D9C8E3C269F2F31008538D6 /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
+		5D9C8E3E269FAB8B008538D6 /* NextButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextButton.swift; sourceTree = "<group>"; };
 		5D9E85F026931F4200477377 /* scraper.bundle.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = scraper.bundle.js; sourceTree = "<group>"; };
 		5DBCB6DC25C90A510025BC23 /* StoreReviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreReviewHelper.swift; sourceTree = "<group>"; };
 		5DC00EAA25C3A331009A3AB9 /* Authenticator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authenticator.swift; sourceTree = "<group>"; };
@@ -319,6 +323,8 @@
 				5D30BA41269C3EAD0062F6AB /* CustomSpinner.swift */,
 				5DC2C101269E098C00674756 /* Loader.swift */,
 				5D0E5A12269E60DB006D7E9C /* TextField.swift */,
+				5D9C8E3C269F2F31008538D6 /* RoundedButton.swift */,
+				5D9C8E3E269FAB8B008538D6 /* NextButton.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -787,9 +793,11 @@
 				5D488E8925C8D54E00624FEF /* AppError.swift in Sources */,
 				5D424D1C25C505450008D6F4 /* Spinner.swift in Sources */,
 				5D631253269668FE00876D99 /* JSNativeBridge.swift in Sources */,
+				5D9C8E3F269FAB8B008538D6 /* NextButton.swift in Sources */,
 				5D95570C269A60DA00CCC2E7 /* String+Extensions.swift in Sources */,
 				5D63123E26950AB600876D99 /* AuthenticationAction.swift in Sources */,
 				5D696099258713760058BABE /* SceneDelegate.swift in Sources */,
+				5D9C8E3D269F2F31008538D6 /* RoundedButton.swift in Sources */,
 				5D2D5AAF25C552B0009598AA /* BackendAPI.swift in Sources */,
 				5D424CFF25C5041E0008D6F4 /* DebugSettings.swift in Sources */,
 				5D69609B258713760058BABE /* LoginView.swift in Sources */,

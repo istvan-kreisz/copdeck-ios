@@ -60,13 +60,15 @@ struct SignUpView: View {
                            onFinishedEditing: signUp)
                     .textContentType(.newPassword)
 
-                DefaultButton(text: "Sign up",
+                RoundedButton(text: "Sign up",
+                              size: .init(width: 300, height: 60),
                               color: .customGreen,
                               tapped: signUp)
                     .centeredHorizontally()
                     .padding(.top, 20)
 
-                DefaultButton(text: "Reset password",
+                RoundedButton(text: "Reset password",
+                              size: .init(width: 300, height: 60),
                               color: Color(.red),
                               tapped: presentPasswordResetView)
                     .centeredHorizontally()

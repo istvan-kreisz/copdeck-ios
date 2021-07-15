@@ -190,21 +190,13 @@ struct ItemDetailView: View {
                                     .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0))
                                 }
 
-                                HStack(alignment: .center, spacing: 5) {
-                                    Text("Add to Inventory".uppercased())
-                                        .font(.bold(size: 14))
-                                        .foregroundColor(.white)
-                                    Image(systemName: "chevron.right")
-                                        .font(.bold(size: 14))
-                                        .foregroundColor(.white)
-                                }
-                                .frame(width: 205, height: 47)
-                                .background(Capsule().fill(Color.customBlack))
-                                .centeredHorizontally()
-                                .padding(.top, 20)
-                                .onTapGesture {
-                                    addToInventory = true
-                                }
+                                NextButton(text: "Add to Inventory",
+                                           size: .init(width: 230, height: 60),
+                                           color: .customBlack,
+                                           tapped: { addToInventory = true })
+                                    .frame(width: 220, height: 50)
+                                    .centeredHorizontally()
+                                    .padding(.top, 20)
                             }
                         }
                         .padding(.horizontal, 28)
