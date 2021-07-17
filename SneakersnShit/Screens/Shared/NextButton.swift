@@ -9,9 +9,10 @@ import SwiftUI
 
 struct NextButton: View {
     let text: String
+    let size: CGSize
+    let maxSize: CGSize?
     let color: Color
     let tapped: () -> Void
-    let size: CGSize
 
     func iconView() -> AnyView {
         return AnyView(ZStack {
@@ -24,15 +25,20 @@ struct NextButton: View {
         })
     }
 
-    init(text: String, size: CGSize, color: Color = .customBlack, tapped: @escaping () -> Void) {
+    init(text: String,
+         size: CGSize,
+         maxSize: CGSize? = nil,
+         color: Color = .customBlack,
+         tapped: @escaping () -> Void) {
         self.text = text
         self.size = size
+        self.maxSize = maxSize
         self.color = color
         self.tapped = tapped
     }
 
     var body: some View {
-        RoundedButton(text: text, size: size, color: color, accessoryView: iconView(), tapped: tapped)
+        RoundedButton(text: text, size: size, maxSize: maxSize, color: color, accessoryView: iconView(), tapped: tapped)
     }
 }
 

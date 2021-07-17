@@ -20,6 +20,8 @@ struct LoginView: View {
 
     let color: Color = .customBlue
 
+    static let horizontalPadding: CGFloat = 28
+
     init() {}
 
     var body: some View {
@@ -92,15 +94,15 @@ struct LoginView: View {
                         .padding(.bottom, 20)
 
                     NextButton(text: "Sign In",
-                               size: .init(width: 300, height: 60),
+                               size: .init(width: UIScreen.screenWidth - Self.horizontalPadding * 2, height: 60),
                                color: .customBlue,
                                tapped: signIn)
                         .frame(height: 60)
-                        .frame(maxWidth: .infinity)
+                        .frame(maxWidth: UIScreen.screenWidth - 56)
                         .centeredHorizontally()
                         .padding(.top, 20)
                     NextButton(text: "Create an account",
-                               size: .init(width: 300, height: 60),
+                               size: .init(width: UIScreen.screenWidth - Self.horizontalPadding * 2, height: 60),
                                color: .customPurple,
                                tapped: signUp)
                         .frame(height: 60)
