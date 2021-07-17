@@ -31,12 +31,12 @@ struct PasswordResetView: View {
                         Spacer()
                     }
                 }
-                InputField(text: $email,
+                TextFieldUnderlined(text: $email,
                            isEditing: .constant(false),
                            placeHolder: "Email",
                            color: .customGreen,
                            dismissKeyboardOnReturn: true,
-                           accessoryView: nil,
+                           icon: nil,
                            keyboardType: .emailAddress,
                            isSecureField: false,
                            onFinishedEditing: {})

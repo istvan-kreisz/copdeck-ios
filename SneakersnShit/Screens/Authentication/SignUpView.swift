@@ -29,32 +29,32 @@ struct SignUpView: View {
                         .foregroundColor(.customRed)
                         .centeredHorizontally()
                 }
-                InputField(text: $email,
+                TextFieldUnderlined(text: $email,
                            isEditing: .constant(false),
                            placeHolder: "Email",
                            color: .white,
                            dismissKeyboardOnReturn: false,
-                           accessoryView: nil,
+                           icon: nil,
                            keyboardType: .emailAddress,
                            isSecureField: false,
                            onFinishedEditing: {})
                     .textContentType(.emailAddress)
-                InputField(text: $password1,
+                TextFieldUnderlined(text: $password1,
                            isEditing: .constant(false),
                            placeHolder: "Password",
                            color: .white,
                            dismissKeyboardOnReturn: false,
-                           accessoryView: nil,
+                           icon: nil,
                            keyboardType: .default,
                            isSecureField: true,
                            onFinishedEditing: {})
                     .textContentType(.newPassword)
-                InputField(text: $password2,
+                TextFieldUnderlined(text: $password2,
                            isEditing: .constant(false),
                            placeHolder: "Confirm password",
                            color: .white,
                            dismissKeyboardOnReturn: false,
-                           accessoryView: nil,
+                           icon: nil,
                            keyboardType: .default,
                            isSecureField: true,
                            onFinishedEditing: signUp)

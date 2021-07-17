@@ -39,7 +39,7 @@ struct SearchView: View {
                     .padding(.leading, 6)
                     .padding(.horizontal, 28)
 
-                CustomTextField(title: nil, placeHolder: "Search sneakers", text: $searchText)
+                TextFieldRounded(title: nil, placeHolder: "Search sneakers", text: $searchText)
                     .padding(.horizontal, 22)
 
                 ScrollView(.vertical, showsIndicators: false) {

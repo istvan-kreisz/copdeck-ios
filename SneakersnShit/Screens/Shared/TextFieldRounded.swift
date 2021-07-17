@@ -1,5 +1,5 @@
 //
-//  TextField.swift
+//  TextFieldRounded.swift
 //  SneakersnShit
 //
 //  Created by István Kreisz on 7/14/21.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CustomTextField: View {
+struct TextFieldRounded: View {
     var title: String?
     var placeHolder: String
     @Binding var text: String

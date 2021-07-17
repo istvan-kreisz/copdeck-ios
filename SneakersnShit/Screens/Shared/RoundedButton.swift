@@ -26,15 +26,25 @@ struct RoundedButton: View {
         Button(action: tapped, label: {
             HStack(alignment: .center, spacing: 10) {
                 Text(text.uppercased())
-                    .font(.bold(size: 14))
+                    .font(.bold(size: 16))
                     .foregroundColor(.white)
-                    .padding(.leading, 15)
+                    .padding(.leading, 20)
                 Spacer()
                 accessoryView
-                    .padding(.trailing, 15)
+                    .padding(.trailing, 20)
             }
             .frame(width: size.width, height: size.height)
             .background(Capsule().fill(color))
         })
+    }
+}
+
+struct RoundedButton_Previews: PreviewProvider {
+    static var previews: some View {
+        RoundedButton(text: "Button",
+                      size: .init(width: 200, height: 50),
+                      color: .customBlack,
+                      accessoryView: nil,
+                      tapped: {})
     }
 }

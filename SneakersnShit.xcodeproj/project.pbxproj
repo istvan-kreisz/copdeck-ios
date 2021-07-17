@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5D0E5A11269E4EDE006D7E9C /* AddToInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0E5A10269E4EDE006D7E9C /* AddToInventoryView.swift */; };
-		5D0E5A13269E60DB006D7E9C /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0E5A12269E60DB006D7E9C /* TextField.swift */; };
+		5D0E5A13269E60DB006D7E9C /* TextFieldRounded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0E5A12269E60DB006D7E9C /* TextFieldRounded.swift */; };
 		5D2119D725DA6605001FE5E5 /* Kanna in Frameworks */ = {isa = PBXBuildFile; productRef = 5D2119D625DA6605001FE5E5 /* Kanna */; };
 		5D2119E125DB0EFA001FE5E5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5D2119E025DB0EFA001FE5E5 /* GoogleService-Info.plist */; };
 		5D2D5AA025C529E3009598AA /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5A9F25C529E3009598AA /* API.swift */; };
@@ -32,7 +32,7 @@
 		5D424D1A25C505450008D6F4 /* InfoPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424D0E25C505450008D6F4 /* InfoPopupView.swift */; };
 		5D424D1C25C505450008D6F4 /* Spinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424D1025C505450008D6F4 /* Spinner.swift */; };
 		5D424D1D25C505450008D6F4 /* Modifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424D1125C505450008D6F4 /* Modifiers.swift */; };
-		5D424D2025C505450008D6F4 /* InputField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424D1525C505450008D6F4 /* InputField.swift */; };
+		5D424D2025C505450008D6F4 /* TextFieldUnderlined.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424D1525C505450008D6F4 /* TextFieldUnderlined.swift */; };
 		5D424D2125C505450008D6F4 /* DimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424D1625C505450008D6F4 /* DimView.swift */; };
 		5D424D2E25C509530008D6F4 /* Karla-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5D424CD725C501B20008D6F4 /* Karla-ExtraBold.ttf */; };
 		5D424D3025C5095B0008D6F4 /* Karla-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5D424CD925C501B20008D6F4 /* Karla-ExtraLight.ttf */; };
@@ -107,7 +107,7 @@
 /* Begin PBXFileReference section */
 		10F05964238EC7800C0C5A21 /* Pods-SneakersnShit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SneakersnShit.debug.xcconfig"; path = "Target Support Files/Pods-SneakersnShit/Pods-SneakersnShit.debug.xcconfig"; sourceTree = "<group>"; };
 		5D0E5A10269E4EDE006D7E9C /* AddToInventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToInventoryView.swift; sourceTree = "<group>"; };
-		5D0E5A12269E60DB006D7E9C /* TextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
+		5D0E5A12269E60DB006D7E9C /* TextFieldRounded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldRounded.swift; sourceTree = "<group>"; };
 		5D2119E025DB0EFA001FE5E5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		5D2D5A9F25C529E3009598AA /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		5D2D5AA225C52E9B009598AA /* MainState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainState.swift; sourceTree = "<group>"; };
@@ -138,7 +138,7 @@
 		5D424D0E25C505450008D6F4 /* InfoPopupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoPopupView.swift; sourceTree = "<group>"; };
 		5D424D1025C505450008D6F4 /* Spinner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Spinner.swift; sourceTree = "<group>"; };
 		5D424D1125C505450008D6F4 /* Modifiers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Modifiers.swift; sourceTree = "<group>"; };
-		5D424D1525C505450008D6F4 /* InputField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputField.swift; sourceTree = "<group>"; };
+		5D424D1525C505450008D6F4 /* TextFieldUnderlined.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldUnderlined.swift; sourceTree = "<group>"; };
 		5D424D1625C505450008D6F4 /* DimView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DimView.swift; sourceTree = "<group>"; };
 		5D424D4625C509AD0008D6F4 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		5D424D4A25C509D20008D6F4 /* PasswordResetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetView.swift; sourceTree = "<group>"; };
@@ -316,13 +316,13 @@
 				5D424D0E25C505450008D6F4 /* InfoPopupView.swift */,
 				5D424D1025C505450008D6F4 /* Spinner.swift */,
 				5D424D1125C505450008D6F4 /* Modifiers.swift */,
-				5D424D1525C505450008D6F4 /* InputField.swift */,
+				5D424D1525C505450008D6F4 /* TextFieldUnderlined.swift */,
 				5D424D1625C505450008D6F4 /* DimView.swift */,
 				5DF03CA625DA1BBF001856B5 /* AvatarView.swift */,
 				5DF03CAA25DA1CE7001856B5 /* ImageView.swift */,
 				5D30BA41269C3EAD0062F6AB /* CustomSpinner.swift */,
 				5DC2C101269E098C00674756 /* Loader.swift */,
-				5D0E5A12269E60DB006D7E9C /* TextField.swift */,
+				5D0E5A12269E60DB006D7E9C /* TextFieldRounded.swift */,
 				5D9C8E3C269F2F31008538D6 /* RoundedButton.swift */,
 				5D9C8E3E269FAB8B008538D6 /* NextButton.swift */,
 			);
@@ -818,7 +818,7 @@
 				5D631229269504DA00876D99 /* DefaultSettings.swift in Sources */,
 				5D2D5AA025C529E3009598AA /* API.swift in Sources */,
 				5D424D0425C504510008D6F4 /* EmailValidator.swift in Sources */,
-				5D0E5A13269E60DB006D7E9C /* TextField.swift in Sources */,
+				5D0E5A13269E60DB006D7E9C /* TextFieldRounded.swift in Sources */,
 				5D424CFB25C503F00008D6F4 /* UIApplication+Extensions.swift in Sources */,
 				5D63122B2695066500876D99 /* ExchangeRates.swift in Sources */,
 				5D63122D2695068300876D99 /* Currency.swift in Sources */,
@@ -827,7 +827,7 @@
 				5D6312322695098E00876D99 /* SettingsState.swift in Sources */,
 				5D3769762611709C00F9ED72 /* Debouncer.swift in Sources */,
 				5D424D4B25C509D20008D6F4 /* PasswordResetView.swift in Sources */,
-				5D424D2025C505450008D6F4 /* InputField.swift in Sources */,
+				5D424D2025C505450008D6F4 /* TextFieldUnderlined.swift in Sources */,
 				5DC3538F26117C7F00294DF0 /* ItemDetailView.swift in Sources */,
 				5D424CD425C4FF2F0008D6F4 /* IAPManager.swift in Sources */,
 				5D3E872525C5D3FC00FC65FE /* Array+Extensions.swift in Sources */,

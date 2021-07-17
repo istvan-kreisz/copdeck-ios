@@ -36,8 +36,8 @@ struct AddToInventoryView: View {
                             .foregroundColor(.customText1)
                             .padding(.bottom, 8)
                         HStack(spacing: 10) {
-                            CustomTextField(title: "name", placeHolder: "name", text: $name)
-                            CustomTextField(title: "styleid (optional)", placeHolder: "styleid", text: $styleId)
+                            TextFieldRounded(title: "name", placeHolder: "name", text: $name)
+                            TextFieldRounded(title: "styleid (optional)", placeHolder: "styleid", text: $styleId)
                         }
                     }
                     .padding(.horizontal, 28)

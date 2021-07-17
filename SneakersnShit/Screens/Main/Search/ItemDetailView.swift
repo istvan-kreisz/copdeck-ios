@@ -28,7 +28,9 @@ struct ItemDetailView: View {
 
     var body: some View {
         ZStack {
-            NavigationLink("", destination: AddToInventoryView(item: item, addToInventory: $addToInventory), isActive: $addToInventory)
+            NavigationLink("",
+                           destination: AddToInventoryView(item: item, addToInventory: $addToInventory),
+                           isActive: $addToInventory)
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .center, spacing: 20) {
                     ImageView(withURL: item.bestStoreInfo?.imageURL ?? "", size: UIScreen.main.bounds.width - 80, aspectRatio: nil)

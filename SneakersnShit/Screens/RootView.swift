@@ -13,7 +13,12 @@ struct RootView: View {
     @State var userId: String?
 
     var body: some View {
-        ZStack {
+        LoginView()
+            .environmentObject(store
+                .derived(deriveState: \.authenticationState,
+                         deriveAction: AppAction.authenticator,
+                         derivedEnvironment: store.environment.authentication))
+//        ZStack {
 //            if let userId = store.state.authenticationState.userId {
 //                if userId.isEmpty {
 //                    LoginView()
@@ -26,18 +31,18 @@ struct RootView: View {
 //                    if store.state.mainState.userId.isEmpty {
 //                        Text("Splashscreen")
 //                    } else {
-                        MainView()
-                            .environmentObject(store
-                                .derived(deriveState: \.mainState,
-                                         deriveAction: AppAction.main,
-                                         derivedEnvironment: store.environment.main))
-                            .zIndex(0)
+//                        MainView()
+//                            .environmentObject(store
+//                                .derived(deriveState: \.mainState,
+//                                         deriveAction: AppAction.main,
+//                                         derivedEnvironment: store.environment.main))
+//                            .zIndex(0)
 //                    }
 //                }
 //            } else {
 //                Text("Splashscreen")
 //            }
-        }
+//        }
         .onReceive(store.$state) { state in
 //            if (state.authenticationState.userId?.isEmpty == false) && (self.userId == nil || self.userId?.isEmpty == true) {
 //                // user just logged in
