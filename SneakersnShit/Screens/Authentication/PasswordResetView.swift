@@ -8,57 +8,61 @@
 import SwiftUI
 
 struct PasswordResetView: View {
-    
     struct Feedback {
         let message: String
         let isError: Bool
     }
-            
+
     @State var feedback: Feedback?
     @State var email = ""
-    
+
     let reset: (String) -> Void
-    
+
     var body: some View {
-        VStack(alignment: .center, spacing: 20) {
-            List {
-                if let feedback = self.feedback {
-                    HStack {
-                        Spacer()
-                        Text(feedback.message)
-                            .font(.semiBold(size: 16))
-                            .foregroundColor(feedback.isError ? .customRed : .customGreen)
-                        Spacer()
-                    }
-                }
+        ZStack {
+            Color.customBackground.edgesIgnoringSafeArea(.all)
+            VStack(alignment: .center, spacing: 8) {
+                Spacer()
+                Text("Forgot your password?")
+                    .font(.bold(size: 22))
+                    .foregroundColor(.customText1)
+                    .leftAligned()
+                Text("Enter your email below and we'll send you a reset link.")
+                    .font(.regular(size: 16))
+                    .foregroundColor(.customText2)
+                    .leftAligned()
+                Spacer()
+
                 TextFieldUnderlined(text: $email,
-                           isEditing: .constant(false),
-                           placeHolder: "Email",
-                           color: .customGreen,
-                           dismissKeyboardOnReturn: true,
-                           icon: nil,
-                           keyboardType: .emailAddress,
-                           isSecureField: false,
-                           onFinishedEditing: {})
-                .textContentType(.emailAddress)
-                HStack {
-                    Spacer()
-                    Button(action: resetPassword) {
-                        Text("Send reset link")
-                            .font(.semiBold(size: 25))
-                            .foregroundColor(Color(.label))
-                    }
-                    .padding(.top, 15)
-                    Spacer()
+                                    isEditing: .constant(false),
+                                    placeHolder: "Email",
+                                    color: .customText1,
+                                    dismissKeyboardOnReturn: true,
+                                    icon: Image("profile"),
+                                    keyboardType: .emailAddress,
+                                    isSecureField: false,
+                                    onFinishedEditing: {})
+
+                NextButton(text: "Send reset link",
+                           size: .init(width: UIScreen.screenWidth - horizontalPadding * 2, height: 60),
+                           color: .customBlue,
+                           tapped: resetPassword)
+                    .centeredHorizontally()
+                    .padding(.top, 20)
+
+                if let feedback = self.feedback {
+                    Text(feedback.message)
+                        .font(.semiBold(size: 16))
+                        .foregroundColor(feedback.isError ? .customRed : .customGreen)
+                        .centeredHorizontally()
                 }
+                Spacer()
             }
-            .modifier(DefaultInsets())
-            .padding(.top, 30)
+            .withDefaultPadding(padding: .horizontal)
+            .navigationbarHidden()
         }
-        .modifier(DefaultPadding())
-        .navigationbarHidden()
     }
-    
+
     private func resetPassword() {
         guard isValidEmail(email) else {
             feedback = Feedback(message: "Please enter a valid email address", isError: true)
@@ -74,5 +78,9 @@ extension PasswordResetView: EmailValidator {}
 struct PasswordResetView_Previews: PreviewProvider {
     static var previews: some View {
         PasswordResetView { _ in }
+            .previewDevice("iPhone 8")
+            .environmentObject(AppStore(initialState: .mockAppState,
+                                        reducer: appReducer,
+                                        environment: World(isMockInstance: true)))
     }
 }

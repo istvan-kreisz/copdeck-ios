@@ -18,6 +18,8 @@ struct LoginView: View {
     @State var isEditing = false
     @State var signUpTapped = false
 
+    @State var resetPasswordPresented = false
+
     let color: Color = .customBlue
 
     init() {}
@@ -118,6 +120,9 @@ struct LoginView: View {
                 .padding(.horizontal, horizontalPadding)
             }
             .navigationbarHidden()
+            .sheet(isPresented: $resetPasswordPresented) {
+                PasswordResetView(reset: resetPassword)
+            }
         }
     }
 
@@ -130,7 +135,11 @@ struct LoginView: View {
     }
 
     private func forgotPassword() {
-        signUpTapped = true
+        resetPasswordPresented = true
+    }
+
+    private func resetPassword(email: String) {
+        store.send(.passwordReset(username: email))
     }
 }
 
