@@ -29,6 +29,8 @@ struct DefaultPadding: ViewModifier {
         static let leading = Padding(rawValue: 1 << 2)
         static let trailing = Padding(rawValue: 1 << 3)
         static let all: Padding = [.top, .bottom, .leading, .trailing]
+        static let horizontal: Padding = [.leading, .trailing]
+        static let vertical: Padding = [.top, .bottom]
     }
     
     init(padding: Padding = .all) {
@@ -39,8 +41,8 @@ struct DefaultPadding: ViewModifier {
         content
             .padding(.top, padding.contains(.top) ? 30 : 0)
             .padding(.bottom, padding.contains(.bottom) ? 90 : 0)
-            .padding(.leading, padding.contains(.leading) ? 20 : 0)
-            .padding(.trailing, padding.contains(.trailing) ? 20 : 0)
+            .padding(.leading, padding.contains(.leading) ? horizontalPadding : 0)
+            .padding(.trailing, padding.contains(.trailing) ? horizontalPadding : 0)
     }
 }
 
