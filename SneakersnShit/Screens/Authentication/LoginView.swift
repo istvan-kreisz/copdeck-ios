@@ -61,10 +61,10 @@ struct LoginView: View {
                                      imageColor: nil,
                                      backgroundColor: Color(r: 66, g: 103, b: 178),
                                      action: {
-                                        #warning("yo")
+                                         #warning("yo")
                                      },
                                      initBlock: {
-                                        #warning("yo")
+                                         #warning("yo")
 //                                         store.send(action: .setFBLoginButtonDelegate(self.facebookButton.delegate))
                                      })
                         Spacer()
@@ -93,25 +93,36 @@ struct LoginView: View {
                         .padding(.top, 25)
                         .padding(.bottom, 20)
 
-                    NextButton(text: "Sign In",
-                               size: .init(width: UIScreen.screenWidth - Self.horizontalPadding * 2, height: 60),
-                               color: .customBlue,
-                               tapped: signIn)
-                        .frame(height: 60)
-                        .frame(maxWidth: UIScreen.screenWidth - 56)
-                        .centeredHorizontally()
-                        .padding(.top, 20)
-                    NextButton(text: "Create an account",
-                               size: .init(width: UIScreen.screenWidth - Self.horizontalPadding * 2, height: 60),
-                               color: .customPurple,
-                               tapped: signUp)
-                        .frame(height: 60)
-                        .frame(maxWidth: .infinity)
-                        .centeredHorizontally()
-                        .padding(.top, 20)
+                    Group {
+                        NextButton(text: "Sign In",
+                                   size: .init(width: UIScreen.screenWidth - Self.horizontalPadding * 2, height: 60),
+                                   color: .customBlue,
+                                   tapped: signIn)
+                            .frame(height: 60)
+                            .frame(maxWidth: UIScreen.screenWidth - 56)
+                            .centeredHorizontally()
+                            .padding(.top, 20)
+                        NextButton(text: "Create an account",
+                                   size: .init(width: UIScreen.screenWidth - Self.horizontalPadding * 2, height: 60),
+                                   color: .customPurple,
+                                   tapped: signUp)
+                            .frame(height: 60)
+                            .frame(maxWidth: .infinity)
+                            .centeredHorizontally()
+                            .padding(.top, 20)
+                    }
+                    Button.init(action: self.forgotPassword, label: {
+                        Text("Forgot password?")
+                            .underline()
+                            .font(.regular(size: 16))
+                            .foregroundColor(.customText1)
+                    })
+                    .leftAligned()
+                    .padding(.top, 10)
+                    .padding(.leading, 10)
                     Spacer()
                 }
-                .padding(.horizontal, 28)
+                .padding(.horizontal, Self.horizontalPadding)
             }
             .navigationbarHidden()
         }
@@ -122,6 +133,10 @@ struct LoginView: View {
     }
 
     private func signUp() {
+        signUpTapped = true
+    }
+
+    private func forgotPassword() {
         signUpTapped = true
     }
 }

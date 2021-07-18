@@ -46,7 +46,7 @@ struct TextFieldUnderlined: View {
             }
             .background(Color.clear)
             .foregroundColor(color)
-            .font(.bold(size: 20))
+            .font(.regular(size: 20))
             .padding(.leading)
             Rectangle()
                 .fill(Color.customAccent2)
