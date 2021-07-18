@@ -38,7 +38,12 @@ struct NextButton: View {
     }
 
     var body: some View {
-        RoundedButton(text: text, size: size, maxSize: maxSize, color: color, accessoryView: iconView(), tapped: tapped)
+        RoundedButton(text: text,
+                      size: size,
+                      maxSize: maxSize,
+                      color: color,
+                      accessoryView: iconView(),
+                      tapped: tapped)
     }
 }
 
