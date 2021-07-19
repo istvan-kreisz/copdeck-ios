@@ -26,8 +26,9 @@ struct SignUpView: View {
         ZStack {
             Color.customBackground.edgesIgnoringSafeArea(.all)
             VStack(alignment: .center, spacing: 8) {
-                Spacer()
-                Text("Welcome to CopDeck!")
+                NavigationBar(title: nil, isBackButtonVisible: true, style: .light)
+
+                Text("Sign up")
                     .font(.bold(size: 22))
                     .foregroundColor(.customText1)
                     .leftAligned()
@@ -92,7 +93,7 @@ struct SignUpView: View {
                 }
                 Spacer()
             }
-            .withDefaultPadding(padding: .horizontal)
+            .withDefaultPadding(padding: [.horizontal])
             .navigationbarHidden()
             .sheet(isPresented: $resetPasswordPresented) {
                 PasswordResetView(reset: resetPassword)

@@ -39,8 +39,8 @@ struct DefaultPadding: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-            .padding(.top, padding.contains(.top) ? 30 : 0)
-            .padding(.bottom, padding.contains(.bottom) ? 90 : 0)
+            .padding(.top, padding.contains(.top) ? 20 : 0)
+            .padding(.bottom, padding.contains(.bottom) ? 30 : 0)
             .padding(.leading, padding.contains(.leading) ? horizontalPadding : 0)
             .padding(.trailing, padding.contains(.trailing) ? horizontalPadding : 0)
     }

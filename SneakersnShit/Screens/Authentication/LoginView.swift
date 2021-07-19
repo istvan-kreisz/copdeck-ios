@@ -32,7 +32,7 @@ struct LoginView: View {
                                destination: SignUpView(),
                                isActive: $signUpTapped)
                 VStack(alignment: .center, spacing: 8) {
-                    Spacer()
+                    NavigationBar.placeHolder
 
                     Text("Welcome to CopDeck!")
                         .font(.bold(size: 22))
