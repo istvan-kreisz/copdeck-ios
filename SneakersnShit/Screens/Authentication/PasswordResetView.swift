@@ -34,7 +34,6 @@ struct PasswordResetView: View {
                 Spacer()
 
                 TextFieldUnderlined(text: $email,
-                                    isEditing: .constant(false),
                                     placeHolder: "Email",
                                     color: .customText1,
                                     dismissKeyboardOnReturn: true,

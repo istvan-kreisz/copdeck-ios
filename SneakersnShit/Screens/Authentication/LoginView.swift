@@ -15,7 +15,6 @@ struct LoginView: View {
     @State var email = ""
     @State var password = ""
 
-    @State var isEditing = false
     @State var signUpTapped = false
 
     @State var resetPasswordPresented = false
@@ -73,7 +72,6 @@ struct LoginView: View {
 
                     Spacer()
                     TextFieldUnderlined(text: $email,
-                                        isEditing: $isEditing,
                                         placeHolder: "Email",
                                         color: .customText1,
                                         dismissKeyboardOnReturn: false,
@@ -82,7 +80,6 @@ struct LoginView: View {
                                         isSecureField: false,
                                         onFinishedEditing: {})
                     TextFieldUnderlined(text: $password,
-                                        isEditing: $isEditing,
                                         placeHolder: "Password",
                                         color: .customText1,
                                         dismissKeyboardOnReturn: false,

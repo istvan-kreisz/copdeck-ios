@@ -7,11 +7,9 @@
 //
 
 import SwiftUI
-import Introspect
 
 struct TextFieldUnderlined: View {
     @Binding var text: String
-    @Binding var isEditing: Bool
     let placeHolder: String
     let color: Color
     let dismissKeyboardOnReturn: Bool
@@ -37,13 +35,6 @@ struct TextFieldUnderlined: View {
             }
             .ignoresSafeArea(.keyboard, edges: .bottom)
             .keyboardType(keyboardType)
-            .introspectTextField {
-                if isEditing {
-                    $0.becomeFirstResponder()
-                } else if dismissKeyboardOnReturn {
-                    $0.resignFirstResponder()
-                }
-            }
             .background(Color.clear)
             .foregroundColor(color)
             .font(.regular(size: 20))
@@ -61,7 +52,6 @@ struct TextFieldUnderlined: View {
 struct InputField_Previews: PreviewProvider {
     static var previews: some View {
         TextFieldUnderlined(text: .constant("email"),
-                            isEditing: .constant(false),
                             placeHolder: "Email",
                             color: .clear,
                             dismissKeyboardOnReturn: false,

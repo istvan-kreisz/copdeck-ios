@@ -24,8 +24,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let rootViewController = UIHostingController(rootView: rootView)
         window.rootViewController = rootViewController
 
-        GIDSignIn.sharedInstance()?.presentingViewController = rootViewController
-        GIDSignIn.sharedInstance()?.restorePreviousSignIn()
+        #warning("yo")
+//        GIDSignIn.sharedInstance.presentingViewController = rootViewController
+//        GIDSignIn.sharedInstance.restorePreviousSignIn()
         
         self.window = window
         window.makeKeyAndVisible()

@@ -40,7 +40,6 @@ struct SignUpView: View {
 
                 Group {
                     TextFieldUnderlined(text: $email,
-                                        isEditing: .constant(false),
                                         placeHolder: "Email",
                                         color: .customText1,
                                         dismissKeyboardOnReturn: false,
@@ -49,7 +48,6 @@ struct SignUpView: View {
                                         isSecureField: false,
                                         onFinishedEditing: {})
                     TextFieldUnderlined(text: $password1,
-                                        isEditing: .constant(false),
                                         placeHolder: "Password",
                                         color: .customText1,
                                         dismissKeyboardOnReturn: false,
@@ -58,7 +56,6 @@ struct SignUpView: View {
                                         isSecureField: true,
                                         onFinishedEditing: {})
                     TextFieldUnderlined(text: $password2,
-                                        isEditing: .constant(false),
                                         placeHolder: "Confirm password",
                                         color: .customText1,
                                         dismissKeyboardOnReturn: false,

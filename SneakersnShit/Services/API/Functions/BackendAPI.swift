@@ -58,7 +58,7 @@ class BackendAPI: API {
     init() {
         #if DEBUG
             if DebugSettings.shared.useFunctionsEmulator {
-                functions.useEmulator(withHost: "http://istvans-macbook-pro-2.local", port: 5001)
+                functions.useFunctionsEmulator(origin: "http://istvans-macbook-pro-2.local:5001")
             }
         #endif
     }

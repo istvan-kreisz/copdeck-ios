@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         _ = IAPHelper.shared
         FirebaseApp.configure()
-        GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
+//        GIDSignIn.sharedInstance.clientID = FirebaseApp.app()?.options.clientID
 //        ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
         StoreReviewHelper.incrementAppOpenedCount()
         return true
@@ -28,7 +28,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //                                               sourceApplication: options[UIApplication.OpenURLOptionsKey.sourceApplication] as? String,
 //                                               annotation: options[UIApplication.OpenURLOptionsKey.annotation]
 //        )
-        GIDSignIn.sharedInstance().handle(url)
+//        GIDSignIn.sharedInstance.handle(url)
+        return true
     }
 
     // MARK: UISceneSession Lifecycle

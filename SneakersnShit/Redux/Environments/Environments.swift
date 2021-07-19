@@ -8,14 +8,6 @@
 import Foundation
 import Combine
 
-class AppSettings {
-    let settings: Settings
-
-    init(settings: Settings) {
-        self.settings = settings
-    }
-}
-
 class Authentication {
     let authenticator: Authenticator
 
@@ -37,7 +29,6 @@ class World {
     private let isMockInstance: Bool
     
     lazy var authentication = Authentication(authenticator: isMockInstance ? MockAuthenticator() : DefaultAuthenticator())
-    lazy var settings = AppSettings(settings: DefaultSettings())
     lazy var main = Main(api: DefaultAPI(backendAPI: BackendAPI(), localScraper: LocalScraper()))
 
     init(isMockInstance: Bool) {

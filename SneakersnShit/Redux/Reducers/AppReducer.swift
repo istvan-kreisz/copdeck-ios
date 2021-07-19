@@ -23,9 +23,5 @@ func appReducer(state: inout AppState,
         return errorReducer(state: &state.errorState, action: action)
             .map(AppAction.error)
             .eraseToAnyPublisher()
-    case let .settings(action: action):
-        return settingReducer(state: &state.settingState, action: action, environment: environment.settings)
-            .map(AppAction.settings)
-            .eraseToAnyPublisher()
     }
 }

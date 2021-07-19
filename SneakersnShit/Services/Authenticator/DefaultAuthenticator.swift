@@ -51,11 +51,11 @@ class DefaultAuthenticator: NSObject, Authenticator {
 
     override init() {
         super.init()
-        GIDSignIn.sharedInstance().delegate = self
+//        GIDSignIn.sharedInstance.delegate = self
     }
     
     private func restoreState() {
-        GIDSignIn.sharedInstance().restorePreviousSignIn()
+//        GIDSignIn.sharedInstance.restorePreviousSignIn()
     }
 
     private func signUp(email: String, password: String) {
@@ -102,8 +102,8 @@ class DefaultAuthenticator: NSObject, Authenticator {
     private func signInWithGoogle() {
         // Start the sign in flow!
         if let viewController = UIApplication.shared.windows.first?.rootViewController {
-            GIDSignIn.sharedInstance()?.presentingViewController = viewController
-            GIDSignIn.sharedInstance()?.signIn()
+//            GIDSignIn.sharedInstance.presentingViewController = viewController
+//            GIDSignIn.sharedInstance.signIn()
         }
     }
 
@@ -135,22 +135,22 @@ class DefaultAuthenticator: NSObject, Authenticator {
 
 // MARK: - Sign in with Google
 
-extension DefaultAuthenticator: GIDSignInDelegate {
-    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error?) {
-        guard error == nil else {
-            error.map { userChangesSubject.send(completion: .failure($0)) }
-            return
-        }
-
-        guard let authentication = user.authentication else { return }
-        let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken, accessToken: authentication.accessToken)
-        self.signIn(credential: credential)
-    }
-
-    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
-        error.map { userChangesSubject.send(completion: .failure($0)) }
-    }
-}
+//extension DefaultAuthenticator: GIDSignInDelegate {
+//    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error?) {
+//        guard error == nil else {
+//            error.map { userChangesSubject.send(completion: .failure($0)) }
+//            return
+//        }
+//
+//        guard let authentication = user.authentication else { return }
+//        let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken, accessToken: authentication.accessToken)
+//        self.signIn(credential: credential)
+//    }
+//
+//    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
+//        error.map { userChangesSubject.send(completion: .failure($0)) }
+//    }
+//}
 
 // MARK: - Sign in with Facebook
 
