@@ -152,7 +152,7 @@ extension Item {
     }
 
     private var sizes: [String] {
-        allStorePrices.flatMap { store in store.inventory.map { $0.size } }
+        Array(Set(allStorePrices.flatMap { store in store.inventory.map { $0.size } }))
     }
 
     private var sortedSizes: [String] {

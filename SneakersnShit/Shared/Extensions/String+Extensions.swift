@@ -8,7 +8,9 @@
 import Foundation
 
 extension String {
-    var number: Int? {
-        Int(components(separatedBy: CharacterSet.decimalDigits.inverted).joined())
+    var number: Double? {
+        Double(components(separatedBy: CharacterSet.decimalDigits.inverted)
+            .filter { Double($0) != nil }
+            .joined(separator: "."))
     }
 }

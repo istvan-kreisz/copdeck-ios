@@ -52,14 +52,6 @@ struct ItemDetailView: View {
                             .foregroundColor(.customText1)
                             .padding(.bottom, 8)
                         HStack(spacing: 10) {
-                            VStack(spacing: 2) {
-                                Text(item.bestStoreInfo?.retailPrice.map { "\(item.currency.symbol.rawValue)\($0.rounded(toPlaces: 1))" } ?? "")
-                                    .font(.bold(size: 20))
-                                    .foregroundColor(.customText1)
-                                Text("Retail Price")
-                                    .font(.regular(size: 15))
-                                    .foregroundColor(.customText2)
-                            }
                             Spacer()
                             VStack(spacing: 2) {
                                 Text(item.id)
@@ -69,6 +61,16 @@ struct ItemDetailView: View {
                                     .font(.regular(size: 15))
                                     .foregroundColor(.customText2)
                             }
+                            Spacer()
+                            VStack(spacing: 2) {
+                                Text(item.bestStoreInfo?.retailPrice.map { "\(item.currency.symbol.rawValue)\($0.rounded(toPlaces: 1))" } ?? "")
+                                    .font(.bold(size: 20))
+                                    .foregroundColor(.customText1)
+                                Text("Retail Price")
+                                    .font(.regular(size: 15))
+                                    .foregroundColor(.customText2)
+                            }
+                            Spacer()
                         }
                     }
                     .withDefaultPadding(padding: .horizontal)
@@ -176,7 +178,7 @@ struct ItemDetailView: View {
                                                 .if(price.store.id == row.lowest?.id && (feeType == .buy || feeType == .none)) {
                                                     $0.overlay(Capsule().stroke(Color.customGreen, lineWidth: 2))
                                                 } else: {
-                                                    $0.if(price.store.id == row.highest?.id && (feeType == .buy || feeType == .none)) {
+                                                    $0.if(price.store.id == row.highest?.id && (feeType == .sell || feeType == .none)) {
                                                         $0.overlay(Capsule().stroke(Color.customRed, lineWidth: 2))
                                                     } else: {
                                                         $0.overlay(Capsule().stroke(Color.customAccent1, lineWidth: 2))
