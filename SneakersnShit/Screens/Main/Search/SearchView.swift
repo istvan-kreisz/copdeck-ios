@@ -79,7 +79,7 @@ struct SearchView: View {
             .edgesIgnoringSafeArea(.bottom)
             .frame(maxWidth: UIScreen.main.bounds.width)
         }
-        .navigationBarHidden(selectedItemId == nil)
+        .navigationbarHidden()
         .onChange(of: searchText) { searchText in
             store.send(.getSearchResults(searchTerm: searchText), completed: loader.getLoader())
         }

@@ -31,9 +31,18 @@ struct ItemDetailView: View {
             NavigationLink("",
                            destination: AddToInventoryView(item: item, addToInventory: $addToInventory),
                            isActive: $addToInventory)
+
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .center, spacing: 20) {
-                    ImageView(withURL: item.bestStoreInfo?.imageURL ?? "", size: UIScreen.main.bounds.width - 80, aspectRatio: nil)
+                    ZStack {
+                        ImageView(withURL: item.bestStoreInfo?.imageURL ?? "",
+                                  size: UIScreen.main.bounds.width - 80,
+                                  aspectRatio: nil)
+                        NavigationBar(title: nil, isBackButtonVisible: true, style: .dark)
+                            .withDefaultPadding(padding: .horizontal)
+                            .topAligned()
+                    }
+
                     VStack(alignment: .leading, spacing: 8) {
                         Text(item.bestStoreInfo?.brand.uppercased() ?? "")
                             .font(.bold(size: 12))
@@ -62,7 +71,7 @@ struct ItemDetailView: View {
                             }
                         }
                     }
-                    .padding(.horizontal, 28)
+                    .withDefaultPadding(padding: .horizontal)
                     .padding(.top, 14)
                     .padding(.bottom, 20)
 
@@ -193,7 +202,7 @@ struct ItemDetailView: View {
                                 }
 
                                 NextButton(text: "Add to Inventory",
-                                           size: .init(width: 230, height: 60),
+                                           size: .init(width: 260, height: 60),
                                            color: .customBlack,
                                            tapped: { addToInventory = true })
                                     .frame(width: 220, height: 50)
@@ -206,6 +215,7 @@ struct ItemDetailView: View {
                     }
                 }
             }
+            .navigationbarHidden()
             .onAppear {
                 updateItem(newItem: store.state.selectedItem)
                 refreshPrices()

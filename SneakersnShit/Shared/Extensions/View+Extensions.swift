@@ -16,6 +16,14 @@ extension View {
         ModifiedContent(content: self, modifier: RightAligned())
     }
 
+    func topAligned() -> some View {
+        ModifiedContent(content: self, modifier: TopAligned())
+    }
+
+    func bottomAligned() -> some View {
+        ModifiedContent(content: self, modifier: BottomAligned())
+    }
+
     func centeredVertically() -> some View {
         ModifiedContent(content: self, modifier: CenteredVertically())
     }

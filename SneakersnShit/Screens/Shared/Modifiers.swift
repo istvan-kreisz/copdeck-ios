@@ -98,3 +98,22 @@ struct RightAligned: ViewModifier {
         }
     }
 }
+
+struct TopAligned: ViewModifier {
+    func body(content: Content) -> some View {
+        VStack {
+            content
+            Spacer()
+        }
+    }
+}
+
+struct BottomAligned: ViewModifier {
+    func body(content: Content) -> some View {
+        VStack {
+            content
+            Spacer()
+        }
+    }
+}
+
