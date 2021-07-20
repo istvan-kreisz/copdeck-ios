@@ -12,7 +12,7 @@ import SwiftUI
 
 extension Font {
     static func extraLight(size: CGFloat) -> Font { return Font.custom("Karla-ExtraLight", size: size) }
-    static func light(size: CGFloat) -> Font { return Font.custom("Nunito-Light", size: size) }
+    static func light(size: CGFloat) -> Font { return Font.custom("Karla-Light", size: size) }
     static func regular(size: CGFloat) -> Font { return Font.custom("Karla-Regular", size: size) }
     static func medium(size: CGFloat) -> Font { return Font.custom("Karla-Medium", size: size) }
     static func semiBold(size: CGFloat) -> Font { return Font.custom("Karla-SemiBold", size: size) }

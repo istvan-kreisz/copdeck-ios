@@ -12,14 +12,13 @@ import GoogleSignIn
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
-    let store = AppStore(initialState: .init(), reducer: appReducer, environment: World(isMockInstance: false))
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let scene = scene as? UIWindowScene else { return }
 
         setupUI()
 
-        let rootView = RootView().environmentObject(store)
+        let rootView = RootView().environmentObject(AppStore.default)
         let window = UIWindow(windowScene: scene)
         let rootViewController = UIHostingController(rootView: rootView)
         window.rootViewController = rootViewController

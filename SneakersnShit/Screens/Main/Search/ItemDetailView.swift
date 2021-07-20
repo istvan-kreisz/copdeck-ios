@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct ItemDetailView: View {
-    @EnvironmentObject var store: MainStore
+    @EnvironmentObject var store: AppStore
     @State private var item: Item
     @State private var priceType: PriceType = .ask
     @State private var feeType: FeeType = .none
@@ -229,7 +229,7 @@ struct ItemDetailView: View {
     }
 
     private func refreshPrices() {
-        store.send(.getItemDetails(item: item), completed: loader.getLoader())
+        store.send(.main(action: .getItemDetails(item: item)), completed: loader.getLoader())
     }
 
     private func updateItem(newItem: Item?) {

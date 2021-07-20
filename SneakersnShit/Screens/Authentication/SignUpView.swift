@@ -10,7 +10,7 @@ import GoogleSignIn
 // import FacebookLogin
 
 struct SignUpView: View {
-    @EnvironmentObject var store: AuthenticationStore
+    @EnvironmentObject var store: AppStore
 
     @State var email = ""
     @State var password1 = ""
@@ -112,11 +112,11 @@ struct SignUpView: View {
             return
         }
         errorMessage = nil
-        store.send(.signUp(userName: email, password: password1))
+        store.send(.authentication(action: .signUp(userName: email, password: password1)))
     }
 
     private func resetPassword(email: String) {
-        store.send(.passwordReset(username: email))
+        store.send(.authentication(action: .passwordReset(username: email)))
     }
 }
 
@@ -126,8 +126,6 @@ struct SignupView_Previews: PreviewProvider {
     static var previews: some View {
         SignUpView()
             .previewDevice("iPhone 8")
-            .environmentObject(AppStore(initialState: .mockAppState,
-                                        reducer: appReducer,
-                                        environment: World(isMockInstance: true)))
+            .environmentObject(AppStore.default)
     }
 }

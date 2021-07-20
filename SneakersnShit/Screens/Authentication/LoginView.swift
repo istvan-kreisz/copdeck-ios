@@ -10,7 +10,7 @@ import GoogleSignIn
 // import FacebookLogin
 
 struct LoginView: View {
-    @EnvironmentObject var store: AuthenticationStore
+    @EnvironmentObject var store: AppStore
 
     @State var email = ""
     @State var password = ""
@@ -47,13 +47,13 @@ struct LoginView: View {
                                      text: "Sign in with Apple",
                                      imageColor: .white,
                                      backgroundColor: .customBlack,
-                                     action: { store.send(.signInWithApple) },
+                                     action: { store.send(.authentication(action: .signInWithApple)) },
                                      initBlock: {})
                         SignInButton(imageName: "google",
                                      text: "Sign in with Google",
                                      imageColor: nil,
                                      backgroundColor: .white,
-                                     action: { store.send(.signInWithGoogle) },
+                                     action: { store.send(.authentication(action:.signInWithGoogle)) },
                                      initBlock: {})
                         SignInButton(imageName: "facebook",
                                      text: "Sign in with Facebook",
@@ -109,9 +109,9 @@ struct LoginView: View {
                             .font(.regular(size: 16))
                             .foregroundColor(.customText1)
                     })
-                    .leftAligned()
-                    .padding(.top, 10)
-                    .padding(.leading, 10)
+                        .leftAligned()
+                        .padding(.top, 10)
+                        .padding(.leading, 10)
                     Spacer()
                 }
                 .padding(.horizontal, horizontalPadding)
@@ -124,7 +124,7 @@ struct LoginView: View {
     }
 
     private func signIn() {
-        store.send(.signIn(userName: email, password: password))
+        store.send(.authentication(action: .signIn(userName: email, password: password)))
     }
 
     private func signUp() {
@@ -136,7 +136,7 @@ struct LoginView: View {
     }
 
     private func resetPassword(email: String) {
-        store.send(.passwordReset(username: email))
+        store.send(.authentication(action: .passwordReset(username: email)))
     }
 }
 
@@ -144,8 +144,6 @@ struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         LoginView()
             .previewDevice("iPhone 8")
-            .environmentObject(AppStore(initialState: .mockAppState,
-                                        reducer: appReducer,
-                                        environment: World(isMockInstance: true)))
+            .environmentObject(AppStore.default)
     }
 }

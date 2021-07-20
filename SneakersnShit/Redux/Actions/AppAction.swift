@@ -11,7 +11,7 @@ enum AppAction {
     case none
     case main(action: MainAction)
     case error(action: ErrorAction)
-    case authenticator(action: AuthenticationAction)
+    case authentication(action: AuthenticationAction)
 }
 
 extension AppAction: IdAble {
@@ -24,7 +24,7 @@ extension AppAction: IdAble {
             actionName += action.id
         case let .error(action):
             actionName += action.id
-        case let .authenticator(action):
+        case let .authentication(action):
             actionName += action.id
         }
         return actionName

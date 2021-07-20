@@ -25,6 +25,7 @@ class DefaultAuthenticator: NSObject, Authenticator {
 //    fileprivate var currentNonce: String?
 
     func handle(_ authAction: AuthenticationAction) -> AnyPublisher<String, Error> {
+        userChangesSubject.send(completion: .finished)
         userChangesSubject = PassthroughSubject<String, Error>()
         switch authAction {
         case .restoreState:
@@ -49,13 +50,10 @@ class DefaultAuthenticator: NSObject, Authenticator {
         return userChangesSubject.eraseToAnyPublisher()
     }
 
-    override init() {
-        super.init()
-//        GIDSignIn.sharedInstance.delegate = self
-    }
-    
     private func restoreState() {
-//        GIDSignIn.sharedInstance.restorePreviousSignIn()
+        GIDSignIn.sharedInstance.restorePreviousSignIn { [weak self] user, error in
+            self?.handleGoogleSignInResult(user: user, error: error)
+        }
     }
 
     private func signUp(email: String, password: String) {
@@ -69,10 +67,10 @@ class DefaultAuthenticator: NSObject, Authenticator {
             self?.handleAuthResponse(result: authResult, error: error)
         }
     }
-    
+
     private func handleAuthResponse(result: AuthDataResult?, error: Error?) {
-        guard error == nil else {
-            userChangesSubject.send(completion: .failure(error!))
+        if let error = error {
+            userChangesSubject.send(completion: .failure(error))
             return
         }
         if let uid = result?.user.uid {
@@ -100,11 +98,26 @@ class DefaultAuthenticator: NSObject, Authenticator {
     }
 
     private func signInWithGoogle() {
-        // Start the sign in flow!
         if let viewController = UIApplication.shared.windows.first?.rootViewController {
-//            GIDSignIn.sharedInstance.presentingViewController = viewController
-//            GIDSignIn.sharedInstance.signIn()
+            guard let clientID = FirebaseApp.app()?.options.clientID else { return }
+            let config = GIDConfiguration(clientID: clientID)
+            GIDSignIn.sharedInstance.signIn(with: config, presenting: viewController) { [weak self] user, error in
+                self?.handleGoogleSignInResult(user: user, error: error)
+            }
         }
+    }
+
+    private func handleGoogleSignInResult(user: GIDGoogleUser?, error: Error?) {
+        if let error = error {
+            userChangesSubject.send(completion: .failure(error))
+            return
+        }
+
+        guard let authentication = user?.authentication, let idToken = authentication.idToken
+        else { return }
+        let credential = GoogleAuthProvider.credential(withIDToken: idToken,
+                                                       accessToken: authentication.accessToken)
+        signIn(credential: credential)
     }
 
     private func signOut() {
@@ -132,25 +145,6 @@ class DefaultAuthenticator: NSObject, Authenticator {
         }
     }
 }
-
-// MARK: - Sign in with Google
-
-//extension DefaultAuthenticator: GIDSignInDelegate {
-//    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error?) {
-//        guard error == nil else {
-//            error.map { userChangesSubject.send(completion: .failure($0)) }
-//            return
-//        }
-//
-//        guard let authentication = user.authentication else { return }
-//        let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken, accessToken: authentication.accessToken)
-//        self.signIn(credential: credential)
-//    }
-//
-//    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
-//        error.map { userChangesSubject.send(completion: .failure($0)) }
-//    }
-//}
 
 // MARK: - Sign in with Facebook
 

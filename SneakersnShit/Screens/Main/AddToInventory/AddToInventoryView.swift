@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AddToInventoryView: View {
-    @EnvironmentObject var store: MainStore
+    @EnvironmentObject var store: AppStore
     @State var item: Item
     @State var name: String
     @State var styleId: String

@@ -15,46 +15,36 @@ struct RootView: View {
     #warning("refactor")
 
     var body: some View {
-        let presentErrorAlert = Binding<Bool>(get: { store.state.errorState.error != nil }, set: { _ in })
+        let presentErrorAlert = Binding<Bool>(get: { store.state.error != nil }, set: { _ in })
         ZStack {
-            if let userId = store.state.authenticationState.userId {
+            if let userId = store.state.userId {
                 if userId.isEmpty {
                     LoginView()
-                        .environmentObject(store
-                            .derived(deriveState: \.authenticationState,
-                                     deriveAction: AppAction.authenticator,
-                                     derivedEnvironment: store.environment.authentication))
+                        .environmentObject(store)
                         .zIndex(1)
                 } else {
-                    if store.state.mainState.userId.isEmpty {
-                        Text("Splashscreen")
-                    } else {
-                        MainView()
-                            .environmentObject(store
-                                .derived(deriveState: \.mainState,
-                                         deriveAction: AppAction.main,
-                                         derivedEnvironment: store.environment.main))
-                            .zIndex(0)
-                    }
+                    MainView()
+                        .environmentObject(store)
+                        .zIndex(0)
                 }
             } else {
                 Text("Splashscreen")
             }
         }
         .onReceive(store.$state) { state in
-            if (state.authenticationState.userId?.isEmpty == false) && (userId == nil || userId?.isEmpty == true) {
+            if (state.userId?.isEmpty == false) && (userId == nil || userId?.isEmpty == true) {
                 // user just logged in
                 UIApplication.shared.endEditing()
             }
-            userId = state.authenticationState.userId
+            userId = state.userId
         }
         .alert(isPresented: presentErrorAlert) {
-            Alert(title: Text(store.state.errorState.error?.title ?? "Ooops"),
-                  message: Text(store.state.errorState.error?.message ?? "Unknown Error"),
+            Alert(title: Text(store.state.error?.title ?? "Ooops"),
+                  message: Text(store.state.error?.message ?? "Unknown Error"),
                   dismissButton: .default(Text("OK")))
         }
         .onAppear {
-            store.send(.authenticator(action: .restoreState))
+            store.send(.authentication(action: .restoreState))
         }
     }
 }
@@ -62,8 +52,6 @@ struct RootView: View {
 struct RootView_Previews: PreviewProvider {
     static var previews: some View {
         RootView()
-            .environmentObject(AppStore(initialState: .mockAppState,
-                                        reducer: appReducer,
-                                        environment: World(isMockInstance: true)))
+            .environmentObject(AppStore.default)
     }
 }

@@ -1,50 +1,55 @@
-////
-////  FirebaseWriteService.swift
-////  ToDo
-////
-////  Created by István Kreisz on 4/7/20.
-////  Copyright © 2020 István Kreisz. All rights reserved.
-////
 //
-//import Foundation
-//import Firebase
+//  FirebaseWriteService.swift
+//  ToDo
 //
+//  Created by István Kreisz on 4/7/20.
+//  Copyright © 2020 István Kreisz. All rights reserved.
 //
-//class FirebaseService: DatabaseManager {
-//    
-//    let firestore = Firestore.firestore()
-//    let userRef: DocumentReference?
-//    var listener: ListenerRegistration?
-//
-//    private weak var delegate: FirebaseServiceDelegate?
-//
-//    func setup(userId: String, delegate: FirebaseServiceDelegate?) {
-//        self.delegate = delegate
-//        userRef = firestore.collection("users").document(userId)
-//        listenToChanges(userId: userId)
-//    }
-//
-//    func listenToChanges(userId: String) {
-//        listener = listRef?
-//            .addSnapshotListener { snapshot, error in
-//                guard let documents = snapshot?.documents else {
-//                    print("Error fetching documents: \(error!)")
-//                    return
+
+
+import Foundation
+import Firebase
+
+class FirebaseService: DatabaseManager {
+
+    let firestore = Firestore.firestore()
+    var userRef: DocumentReference?
+    var listener: ListenerRegistration?
+
+    private weak var delegate: DatabaseManagerDelegate?
+
+    func setup(userId: String, delegate: DatabaseManagerDelegate?) {
+        self.delegate = delegate
+        userRef = firestore.collection("users").document(userId)
+        listenToChanges(userId: userId)
+    }
+
+    func listenToChanges(userId: String) {
+        listener = userRef?.collection("inventory")
+            .addSnapshotListener { snapshot, error in
+                guard let documents = snapshot?.documents else {
+                    print("Error fetching documents: \(error!)")
+                    return
+                }
+
+//                let lists = documents.compactMap {
+//                    Item($0)
+////                    TodoList(from: $0.data())
 //                }
-//
-////                let lists = documents.compactMap {
-////                    Item($0)
-//////                    TodoList(from: $0.data())
-////                }
-////                updated(lists)
-//        }
-//    }
-//
-//    func stopListening() {
-//        listener?.remove()
-//    }
-//
-//
+//                updated(lists)
+        }
+    }
+
+    func stopListening() {
+        listener?.remove()
+    }
+
+    func addToInventory(item: Item) {}
+    func deleteFromInventory(item: Item) {}
+    func updateSettings(settings: CopDeckSettings) {}
+
+}
+
 ////    func addTodo(with text: String, priority: Priority, toList list: TodoList) {
 ////        let todo = Todo(text: text,
 ////                        priority: priority,

@@ -9,7 +9,8 @@ import SwiftUI
 import FirebaseFunctions
 
 struct MainView: View {
-    @EnvironmentObject var store: MainStore
+    @EnvironmentObject var store: AppStore
+
     @StateObject var viewRouter = ViewRouter()
 
     @State private var hasPushedView = false
@@ -28,7 +29,8 @@ struct MainView: View {
                 }
             case .inventory:
                 NavigationView {
-                    Text("Inventory")
+                    InventoryView()
+                        .environmentObject(store)
                 }
             }
             TabBar(viewRouter: viewRouter)
@@ -41,14 +43,8 @@ struct MainView: View {
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        let store = AppStore(initialState: .mockAppState,
-                             reducer: appReducer,
-                             environment: World(isMockInstance: true))
         return
             MainView()
-                .environmentObject(store
-                    .derived(deriveState: \.mainState,
-                             deriveAction: AppAction.main,
-                             derivedEnvironment: store.environment.main))
+                .environmentObject(AppStore.default)
     }
 }

@@ -8,31 +8,20 @@
 import Foundation
 import Combine
 
-class Authentication {
-    let authenticator: Authenticator
-
-    init(authenticator: Authenticator) {
-        self.authenticator = authenticator
-    }
-}
-
-class Main {
+class App {
     let api: API
+    let authenticator: Authenticator
+    let databaseManager: DatabaseManager
 
-    init(api: API) {
+    init(api: API, authenticator: Authenticator, databaseManager: DatabaseManager) {
         self.api = api
+        self.authenticator = authenticator
+        self.databaseManager = databaseManager
     }
-}
 
-class World {
-
-    private let isMockInstance: Bool
-    
-    lazy var authentication = Authentication(authenticator: isMockInstance ? MockAuthenticator() : DefaultAuthenticator())
-    lazy var main = Main(api: DefaultAPI(backendAPI: BackendAPI(), localScraper: LocalScraper()))
-
-    init(isMockInstance: Bool) {
-        self.isMockInstance = isMockInstance
+    convenience init() {
+        self.init(api: DefaultAPI(backendAPI: BackendAPI(), localScraper: LocalScraper()),
+                authenticator: DefaultAuthenticator(),
+                databaseManager: FirebaseService())
     }
-    
 }

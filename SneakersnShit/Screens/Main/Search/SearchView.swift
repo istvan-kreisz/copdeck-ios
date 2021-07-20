@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct SearchView: View {
-    @EnvironmentObject var store: MainStore
+    @EnvironmentObject var store: AppStore
 
     let colors: [Color] = [.red, .yellow, .green, .purple, .orange]
 
@@ -81,7 +81,7 @@ struct SearchView: View {
         }
         .navigationbarHidden()
         .onChange(of: searchText) { searchText in
-            store.send(.getSearchResults(searchTerm: searchText), completed: loader.getLoader())
+            store.send(.main(action: .getSearchResults(searchTerm: searchText)), completed: loader.getLoader())
         }
     }
 
@@ -92,15 +92,9 @@ struct SearchView: View {
 
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
-        let store = AppStore(initialState: .mockAppState,
-                             reducer: appReducer,
-                             environment: World(isMockInstance: true))
         return Group {
             SearchView(hasPushedView: .constant(false))
-                .environmentObject(store
-                    .derived(deriveState: \.mainState,
-                             deriveAction: AppAction.main,
-                             derivedEnvironment: store.environment.main))
+                .environmentObject(AppStore.default)
         }
     }
 }

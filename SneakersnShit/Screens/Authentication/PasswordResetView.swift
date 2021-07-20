@@ -78,8 +78,6 @@ struct PasswordResetView_Previews: PreviewProvider {
     static var previews: some View {
         PasswordResetView { _ in }
             .previewDevice("iPhone 8")
-            .environmentObject(AppStore(initialState: .mockAppState,
-                                        reducer: appReducer,
-                                        environment: World(isMockInstance: true)))
+            .environmentObject(AppStore.default)
     }
 }

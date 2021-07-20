@@ -21,7 +21,7 @@ final class ReduxStore<State, Action: IdAble, Environment>: ObservableObject {
     private var effectCancellables: Set<AnyCancellable> = []
 
     private var isRootStore: Bool {
-        type(of: self) == ReduxStore<AppState, AppAction, World>.self
+        type(of: self) == ReduxStore<AppState, AppAction, App>.self
     }
 
     init(initialState: State,
@@ -33,26 +33,21 @@ final class ReduxStore<State, Action: IdAble, Environment>: ObservableObject {
     }
 
     func send(_ action: Action, completed: ((Result<Void, AppError>) -> Void)? = nil) {
-//        print("~~~~", action, isRootStore)
         Debouncer.debounce(delay: .milliseconds(500), id: action.id) { [weak self] in
             self?.process(action, completed: completed)
         } cancel: {
-//            print("XX", action)
             completed?(.success(()))
         }
     }
 
     private func process(_ action: Action, completed: ((Result<Void, AppError>) -> Void)?) {
-//        print("::::", action)
         reducer(&state, action, environment, completed)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
-//                print("XX", action, self?.isRootStore == true)
                 if self?.isRootStore == true {
                     completed?(.success(()))
                 }
             }, receiveValue: { [weak self] in
-//                print("--", action, self?.isRootStore == true)
                 self?.process($0, completed: completed)
             })
             .store(in: &effectCancellables)
