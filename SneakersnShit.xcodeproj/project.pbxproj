@@ -65,7 +65,6 @@
 		5D6312552696696500876D99 /* JSLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6312542696696500876D99 /* JSLogger.swift */; };
 		5D631257269669A600876D99 /* DefaultAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D631256269669A600876D99 /* DefaultAPI.swift */; };
 		5D696097258713760058BABE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D696096258713760058BABE /* AppDelegate.swift */; };
-		5D696099258713760058BABE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D696098258713760058BABE /* SceneDelegate.swift */; };
 		5D69609B258713760058BABE /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D69609A258713760058BABE /* LoginView.swift */; };
 		5D69609D258713770058BABE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D69609C258713770058BABE /* Assets.xcassets */; };
 		5D6960A0258713770058BABE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D69609F258713770058BABE /* Preview Assets.xcassets */; };
@@ -92,6 +91,8 @@
 		5DC2C105269E2BD800674756 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC2C104269E2BD800674756 /* View+Extensions.swift */; };
 		5DC3538F26117C7F00294DF0 /* ItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC3538E26117C7F00294DF0 /* ItemDetailView.swift */; };
 		5DCC466526A7A5D5007671BC /* ShareReplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCC466426A7A5D5007671BC /* ShareReplay.swift */; };
+		5DCC466826A7A96C007671BC /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 5DCC466726A7A96C007671BC /* FacebookCore */; };
+		5DCC466A26A7A96C007671BC /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 5DCC466926A7A96C007671BC /* FacebookLogin */; };
 		5DEBC088269B24BA000EEADC /* ViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEBC087269B24BA000EEADC /* ViewRouter.swift */; };
 		5DEBC08A269B3DE8000EEADC /* Double+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEBC089269B3DE8000EEADC /* Double+Extensions.swift */; };
 		5DF03CA725DA1BBF001856B5 /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03CA625DA1BBF001856B5 /* AvatarView.swift */; };
@@ -160,7 +161,6 @@
 		5D631256269669A600876D99 /* DefaultAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAPI.swift; sourceTree = "<group>"; };
 		5D696093258713760058BABE /* SneakersnShit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SneakersnShit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D696096258713760058BABE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		5D696098258713760058BABE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		5D69609A258713760058BABE /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		5D69609C258713770058BABE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5D69609F258713770058BABE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -204,6 +204,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0A401BBBC5AD2E508F6A578 /* Pods_SneakersnShit.framework in Frameworks */,
+				5DCC466826A7A96C007671BC /* FacebookCore in Frameworks */,
+				5DCC466A26A7A96C007671BC /* FacebookLogin in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -572,7 +574,6 @@
 				5D424CEC25C502EA0008D6F4 /* Colors */,
 				5D424CE625C501BA0008D6F4 /* Fonts */,
 				5D696096258713760058BABE /* AppDelegate.swift */,
-				5D696098258713760058BABE /* SceneDelegate.swift */,
 				5D6960A1258713770058BABE /* LaunchScreen.storyboard */,
 				5D2119E025DB0EFA001FE5E5 /* GoogleService-Info.plist */,
 				5D69609C258713770058BABE /* Assets.xcassets */,
@@ -627,6 +628,8 @@
 			);
 			name = SneakersnShit;
 			packageProductDependencies = (
+				5DCC466726A7A96C007671BC /* FacebookCore */,
+				5DCC466926A7A96C007671BC /* FacebookLogin */,
 			);
 			productName = InfluTrader;
 			productReference = 5D696093258713760058BABE /* SneakersnShit.app */;
@@ -656,8 +659,7 @@
 			);
 			mainGroup = 5D69608A258713760058BABE;
 			packageReferences = (
-				5D424D4F25C50AFA0008D6F4 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */,
-				5D2119D525DA6605001FE5E5 /* XCRemoteSwiftPackageReference "Kanna" */,
+				5DCC466626A7A96C007671BC /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
 			);
 			productRefGroup = 5D696094258713760058BABE /* Products */;
 			projectDirPath = "";
@@ -760,7 +762,6 @@
 				5D631253269668FE00876D99 /* JSNativeBridge.swift in Sources */,
 				5D9C8E3F269FAB8B008538D6 /* NextButton.swift in Sources */,
 				5D95570C269A60DA00CCC2E7 /* String+Extensions.swift in Sources */,
-				5D696099258713760058BABE /* SceneDelegate.swift in Sources */,
 				5D9C8E3D269F2F31008538D6 /* RoundedButton.swift in Sources */,
 				5D2D5AAF25C552B0009598AA /* BackendAPI.swift in Sources */,
 				5D424CFF25C5041E0008D6F4 /* DebugSettings.swift in Sources */,
@@ -1019,23 +1020,28 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		5D2119D525DA6605001FE5E5 /* XCRemoteSwiftPackageReference "Kanna" */ = {
+		5DCC466626A7A96C007671BC /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/tid-kijyun/Kanna.git";
+			repositoryURL = "https://github.com/facebook/facebook-ios-sdk";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 5.2.4;
-			};
-		};
-		5D424D4F25C50AFA0008D6F4 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/siteline/SwiftUI-Introspect.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.2;
+				minimumVersion = 11.0.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5DCC466726A7A96C007671BC /* FacebookCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5DCC466626A7A96C007671BC /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookCore;
+		};
+		5DCC466926A7A96C007671BC /* FacebookLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5DCC466626A7A96C007671BC /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
+			productName = FacebookLogin;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5D69608B258713760058BABE /* Project object */;
 }

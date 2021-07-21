@@ -53,14 +53,14 @@ struct LoginView: View {
                                      text: "Sign in with Google",
                                      imageColor: nil,
                                      backgroundColor: .white,
-                                     action: { store.send(.authentication(action:.signInWithGoogle)) },
+                                     action: { store.send(.authentication(action: .signInWithGoogle)) },
                                      initBlock: {})
                         SignInButton(imageName: "facebook",
                                      text: "Sign in with Facebook",
                                      imageColor: nil,
                                      backgroundColor: Color(r: 66, g: 103, b: 178),
                                      action: {
-                                         #warning("yo")
+                                         store.send(.authentication(action: .signInWithFacebook))
                                      },
                                      initBlock: {
                                          #warning("yo")
