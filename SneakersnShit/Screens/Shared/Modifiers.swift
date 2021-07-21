@@ -41,8 +41,8 @@ struct DefaultPadding: ViewModifier {
         content
             .padding(.top, padding.contains(.top) ? 20 : 0)
             .padding(.bottom, padding.contains(.bottom) ? 30 : 0)
-            .padding(.leading, padding.contains(.leading) ? horizontalPadding : 0)
-            .padding(.trailing, padding.contains(.trailing) ? horizontalPadding : 0)
+            .padding(.leading, padding.contains(.leading) ? Styles.horizontalPadding : 0)
+            .padding(.trailing, padding.contains(.trailing) ? Styles.horizontalPadding : 0)
     }
 }
 

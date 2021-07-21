@@ -18,13 +18,15 @@ struct InventoryView: View {
 //                           destination: AddToInventoryView(item: item, addToInventory: $addToInventory),
 //                           isActive: $addToInventory)
 
-            ScrollView(.vertical, showsIndicators: false) {
-                VStack(alignment: .center, spacing: 20) {
-                    Button("Sign out") {
-                        authStore.send(.authentication(action: .signOut))
-                    }
-                }
-            }
+            NewItemCard()
+
+//            ScrollView(.vertical, showsIndicators: false) {
+//                VStack(alignment: .center, spacing: 20) {
+//                    Button("Sign out") {
+//                        authStore.send(.authentication(action: .signOut))
+//                    }
+//                }
+//            }
         }
     }
 

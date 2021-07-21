@@ -155,7 +155,7 @@ extension Item {
         Array(Set(allStorePrices.flatMap { store in store.inventory.map { $0.size } }))
     }
 
-    private var sortedSizes: [String] {
+    var sortedSizes: [String] {
         sizes.sorted { a, b in
             if let aNum = a.number, let bNum = b.number {
                 return aNum < bNum

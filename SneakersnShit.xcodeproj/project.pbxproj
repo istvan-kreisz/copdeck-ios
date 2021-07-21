@@ -94,6 +94,8 @@
 		5DCC466826A7A96C007671BC /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 5DCC466726A7A96C007671BC /* FacebookCore */; };
 		5DCC466A26A7A96C007671BC /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 5DCC466926A7A96C007671BC /* FacebookLogin */; };
 		5DCC466C26A88367007671BC /* InventoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCC466B26A88367007671BC /* InventoryItem.swift */; };
+		5DCC466E26A8CEDE007671BC /* NewItemCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCC466D26A8CEDE007671BC /* NewItemCard.swift */; };
+		5DCC467026A8D759007671BC /* DropDownMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCC466F26A8D759007671BC /* DropDownMenu.swift */; };
 		5DEBC088269B24BA000EEADC /* ViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEBC087269B24BA000EEADC /* ViewRouter.swift */; };
 		5DEBC08A269B3DE8000EEADC /* Double+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEBC089269B3DE8000EEADC /* Double+Extensions.swift */; };
 		5DF03CA725DA1BBF001856B5 /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03CA625DA1BBF001856B5 /* AvatarView.swift */; };
@@ -190,6 +192,8 @@
 		5DC3538E26117C7F00294DF0 /* ItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailView.swift; sourceTree = "<group>"; };
 		5DCC466426A7A5D5007671BC /* ShareReplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareReplay.swift; sourceTree = "<group>"; };
 		5DCC466B26A88367007671BC /* InventoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryItem.swift; sourceTree = "<group>"; };
+		5DCC466D26A8CEDE007671BC /* NewItemCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewItemCard.swift; sourceTree = "<group>"; };
+		5DCC466F26A8D759007671BC /* DropDownMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownMenu.swift; sourceTree = "<group>"; };
 		5DEBC087269B24BA000EEADC /* ViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewRouter.swift; sourceTree = "<group>"; };
 		5DEBC089269B3DE8000EEADC /* Double+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extensions.swift"; sourceTree = "<group>"; };
 		5DF03CA625DA1BBF001856B5 /* AvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarView.swift; sourceTree = "<group>"; };
@@ -218,6 +222,7 @@
 			isa = PBXGroup;
 			children = (
 				5D0E5A10269E4EDE006D7E9C /* AddToInventoryView.swift */,
+				5DCC466D26A8CEDE007671BC /* NewItemCard.swift */,
 			);
 			path = AddToInventory;
 			sourceTree = "<group>";
@@ -322,6 +327,7 @@
 				5D9C8E3E269FAB8B008538D6 /* NextButton.swift */,
 				5D6B112D26A46E3A00B6B67A /* NavigationBar.swift */,
 				5DCC466426A7A5D5007671BC /* ShareReplay.swift */,
+				5DCC466F26A8D759007671BC /* DropDownMenu.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -754,6 +760,7 @@
 				5D424D1A25C505450008D6F4 /* InfoPopupView.swift in Sources */,
 				5DA5140526A614530067C4A2 /* DefaultAuthenticator_.swift in Sources */,
 				5DC2C102269E098C00674756 /* Loader.swift in Sources */,
+				5DCC466E26A8CEDE007671BC /* NewItemCard.swift in Sources */,
 				5D19B0AE26A6D7CA00A31F4E /* AuthenticationAction.swift in Sources */,
 				5D63125026950CB400876D99 /* AppReducer.swift in Sources */,
 				5D424D1D25C505450008D6F4 /* Modifiers.swift in Sources */,
@@ -783,6 +790,7 @@
 				5D6312222694797300876D99 /* Item.swift in Sources */,
 				5D424D2125C505450008D6F4 /* DimView.swift in Sources */,
 				5D52E30B2613063B00FA02B8 /* Encodable+Extensions.swift in Sources */,
+				5DCC467026A8D759007671BC /* DropDownMenu.swift in Sources */,
 				5D424D0825C504AF0008D6F4 /* RootView.swift in Sources */,
 				5DEBC08A269B3DE8000EEADC /* Double+Extensions.swift in Sources */,
 				5D2D5AA025C529E3009598AA /* API.swift in Sources */,

@@ -66,7 +66,7 @@ struct SignUpView: View {
                 }
 
                 NextButton(text: "Sign up",
-                           size: .init(width: UIScreen.screenWidth - horizontalPadding * 2, height: 60),
+                           size: .init(width: UIScreen.screenWidth - Styles.horizontalPadding * 2, height: 60),
                            color: .customBlue,
                            tapped: signUp)
                     .centeredHorizontally()

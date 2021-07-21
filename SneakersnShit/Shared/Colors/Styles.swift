@@ -5,6 +5,10 @@
 //  Created by István Kreisz on 7/18/21.
 //
 
-import UIKit
+import SwiftUI
 
-let horizontalPadding: CGFloat = 28
+enum Styles {
+    static let horizontalPadding: CGFloat = 28
+    static let inputFieldHeight: CGFloat = 42
+    static let cornerRadius: CGFloat = 12
+}

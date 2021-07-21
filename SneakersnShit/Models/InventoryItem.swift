@@ -15,11 +15,11 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     let id: String
     let itemId: String?
     var item: Item?
-    let name: String
-    let purchasePrice: Double?
-    let size: String
-    let condition: Condition
-    let notes: String?
+    var name: String
+    var purchasePrice: Double?
+    var size: String
+    var condition: Condition
+    var notes: String?
     let created: Double?
     let updated: Double?
 
@@ -31,5 +31,20 @@ struct InventoryItem: Codable, Equatable, Identifiable {
 
     enum CodingKeys: String, CodingKey {
         case id, itemId, name, purchasePrice, size, condition, notes, created, updated
+    }
+}
+
+extension InventoryItem {
+    init(from item: Item) {
+        self.init(id: UUID().uuidString,
+                  itemId: item.id,
+                  item: item,
+                  name: item.name ?? "",
+                  purchasePrice: item.retailPrice,
+                  size: item.sortedSizes.first ?? "",
+                  condition: .new,
+                  notes: nil,
+                  created: nil,
+                  updated: Date().timeIntervalSince1970)
     }
 }

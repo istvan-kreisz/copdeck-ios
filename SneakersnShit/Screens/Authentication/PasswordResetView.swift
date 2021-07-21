@@ -43,7 +43,7 @@ struct PasswordResetView: View {
                                     onFinishedEditing: {})
 
                 NextButton(text: "Send reset link",
-                           size: .init(width: UIScreen.screenWidth - horizontalPadding * 2, height: 60),
+                           size: .init(width: UIScreen.screenWidth - Styles.horizontalPadding * 2, height: 60),
                            color: .customBlue,
                            tapped: resetPassword)
                     .centeredHorizontally()

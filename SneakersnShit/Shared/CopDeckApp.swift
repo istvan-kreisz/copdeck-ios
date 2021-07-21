@@ -26,6 +26,8 @@ struct CopDeckApp: App {
                 break
             case .inactive:
                 break
+            @unknown default:
+                break
             }
         }
     }

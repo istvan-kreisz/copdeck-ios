@@ -10,5 +10,5 @@ import Foundation
 typealias AppStore = ReduxStore<AppState, AppAction, World>
 
 extension AppStore {
-    static let `default` = AppStore(initialState: .init(), reducer: appReducer, environment: World())
+    static let `default` = AppStore(state: .init(), reducer: appReducer, environment: World())
 }
