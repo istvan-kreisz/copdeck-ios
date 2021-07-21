@@ -1,6 +1,6 @@
 //
 //  DefaultAuthenticator.swift
-//  SneakersnShit
+//  CopDeck
 //
 //  Created by István Kreisz on 1/28/21.
 //
@@ -21,6 +21,9 @@ enum AuthError: Error {
 }
 
 class DefaultAuthenticator: NSObject, Authenticator {
+    static private let auth = Auth.auth()
+    static var user: FirebaseAuth.User? { auth.currentUser }
+
     private var userChangesSubject = PassthroughSubject<String, Error>()
 
 //    fileprivate var currentNonce: String?
@@ -58,7 +61,7 @@ class DefaultAuthenticator: NSObject, Authenticator {
             }
         } else if let fbAccessToken = AccessToken.current?.tokenString {
             handleFacebookSignInResult(accessToken: fbAccessToken)
-        } else if let user = Auth.auth().currentUser {
+        } else if let user = Self.auth.currentUser {
             sendResultWithDelay(user.uid)
         } else {
             signOut()
@@ -66,13 +69,13 @@ class DefaultAuthenticator: NSObject, Authenticator {
     }
 
     private func signUp(email: String, password: String) {
-        Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
+        Self.auth.createUser(withEmail: email, password: password) { [weak self] authResult, error in
             self?.handleAuthResponse(result: authResult, error: error)
         }
     }
 
     private func signIn(email: String, password: String) {
-        Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
+        Self.auth.signIn(withEmail: email, password: password) { [weak self] authResult, error in
             self?.handleAuthResponse(result: authResult, error: error)
         }
     }
@@ -131,7 +134,7 @@ class DefaultAuthenticator: NSObject, Authenticator {
             if AuthenticationToken.current != nil || AccessToken.current != nil {
                 signoutFacebook = true
             }
-            try Auth.auth().signOut()
+            try Self.auth.signOut()
             if signoutGoogle {
                 GIDSignIn.sharedInstance.signOut()
             }
@@ -151,7 +154,7 @@ class DefaultAuthenticator: NSObject, Authenticator {
     }
 
     private func resetPassword(email: String) {
-        Auth.auth().sendPasswordReset(withEmail: email) { [weak self] error in
+        Self.auth.sendPasswordReset(withEmail: email) { [weak self] error in
             if let error = error {
                 self?.userChangesSubject.send(completion: .failure(error))
             } else {
@@ -161,7 +164,7 @@ class DefaultAuthenticator: NSObject, Authenticator {
     }
 
     fileprivate func signIn(credential: AuthCredential) {
-        Auth.auth().signIn(with: credential) { [weak self] authResult, error in
+        Self.auth.signIn(with: credential) { [weak self] authResult, error in
             self?.handleAuthResponse(result: authResult, error: error)
         }
     }

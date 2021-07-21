@@ -1,6 +1,6 @@
 //
 //  CustomSpinner.swift
-//  SneakersnShit
+//  CopDeck
 //
 //  Created by István Kreisz on 7/12/21.
 //

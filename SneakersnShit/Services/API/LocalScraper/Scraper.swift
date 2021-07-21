@@ -1,6 +1,6 @@
 //
 //  LocalScraper.swift
-//  SneakersnShit
+//  CopDeck
 //
 //  Created by István Kreisz on 6/26/21.
 //

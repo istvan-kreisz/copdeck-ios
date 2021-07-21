@@ -1,6 +1,6 @@
 //
 //  IAPManager.swift
-//  SneakersnShit
+//  CopDeck
 //
 //  Created by István Kreisz on 1/29/21.
 //

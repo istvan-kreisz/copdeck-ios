@@ -1,6 +1,6 @@
 //
 //  DatabaseManager.swift
-//  SneakersnShit
+//  CopDeck
 //
 //  Created by István Kreisz on 7/19/21.
 //
@@ -9,6 +9,8 @@ import Foundation
 import Combine
 
 protocol DatabaseManagerDelegate: AnyObject {
+    func updatedInventoryItems(newInventoryItems: [InventoryItem])
+    func updatedSettings(newSettings: CopDeckSettings)
     func updatedItems(newItems: [Item])
 }
 
@@ -17,8 +19,9 @@ protocol DatabaseManager {
     func setup(userId: String, delegate: DatabaseManagerDelegate?)
 
     // write
-    func addToInventory(item: Item)
-    func deleteFromInventory(item: Item)
+    func add(inventoryItem: InventoryItem)
+    func delete(inventoryItem: InventoryItem)
+    func update(inventoryItem: InventoryItem)
     func updateSettings(settings: CopDeckSettings)
 
     // read

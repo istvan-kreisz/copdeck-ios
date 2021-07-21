@@ -1,6 +1,6 @@
 //
 //  SignInButton.swift
-//  ToDo
+//  CopDeck
 //
 //  Created by István Kreisz on 4/12/20.
 //  Copyright © 2020 István Kreisz. All rights reserved.

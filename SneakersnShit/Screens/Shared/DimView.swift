@@ -1,6 +1,6 @@
 //
 //  DimView.swift
-//  ToDo
+//  CopDeck
 //
 //  Created by István Kreisz on 4/5/20.
 //  Copyright © 2020 István Kreisz. All rights reserved.

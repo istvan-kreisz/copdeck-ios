@@ -1,13 +1,13 @@
 //
 //  Currency.swift
-//  SneakersnShit
+//  CopDeck
 //
 //  Created by István Kreisz on 7/6/21.
 //
 
 import Foundation
 
-struct Currency: Codable {
+struct Currency: Codable, Equatable {
     let code: CurrencyCode
     let symbol: CurrencySymbol
 

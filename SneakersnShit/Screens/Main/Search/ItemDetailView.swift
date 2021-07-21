@@ -1,6 +1,6 @@
 //
 //  ItemDetailView.swift
-//  SneakersnShit
+//  CopDeck
 //
 //  Created by István Kreisz on 3/28/21.
 //

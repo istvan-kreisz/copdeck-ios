@@ -1,6 +1,6 @@
 //
 //  InventoryItemDetailView.swift
-//  SneakersnShit
+//  CopDeck
 //
 //  Created by István Kreisz on 3/30/21.
 //

@@ -1,26 +1,26 @@
 //
 //  CopDeckSettings.swift
-//  SneakersnShit
+//  CopDeck
 //
 //  Created by István Kreisz on 7/19/21.
 //
 
 import Foundation
 
-struct CopDeckSettings {
+struct CopDeckSettings: Codable, Equatable {
     let currency: Currency
     let updateInterval: Double
     let notificationFrequency: Double
     let darkModeOn: Bool
     let feeCalculation: FeeCalculation
 
-    struct FeeCalculation {
+    struct FeeCalculation: Codable, Equatable {
         let countryName: String
         let stockx: StockX
         let goat: Goat
 
-        struct StockX {
-            enum SellerLevel: Int {
+        struct StockX: Codable, Equatable {
+            enum SellerLevel: Int, Codable, Equatable {
                 case Level1 = 1
                 case Level2 = 2
                 case Level3 = 3
@@ -31,14 +31,14 @@ struct CopDeckSettings {
             let taxes: Double
         }
 
-        struct Goat {
-            enum CommissionPercentage: Double {
+        struct Goat: Codable, Equatable {
+            enum CommissionPercentage: Double, Codable, Equatable {
                 case low = 9.5
                 case mid = 15
                 case high = 20
             }
 
-            enum CashoutFee: Double {
+            enum CashoutFee: Double, Codable, Equatable {
                 case none = 0
                 case regular = 0.029
             }
