@@ -19,9 +19,8 @@ protocol DatabaseManager {
     func setup(userId: String, delegate: DatabaseManagerDelegate?)
 
     // write
-    func add(inventoryItem: InventoryItem)
-    func delete(inventoryItem: InventoryItem)
     func update(inventoryItem: InventoryItem)
+    func delete(inventoryItem: InventoryItem)
     func updateSettings(settings: CopDeckSettings)
 
     // read
