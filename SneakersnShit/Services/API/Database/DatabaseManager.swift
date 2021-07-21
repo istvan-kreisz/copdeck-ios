@@ -8,21 +8,16 @@
 import Foundation
 import Combine
 
-protocol DatabaseManagerDelegate: AnyObject {
-    func updatedInventoryItems(newInventoryItems: [InventoryItem])
-    func updatedSettings(newSettings: CopDeckSettings)
-    func updatedItems(newItems: [Item])
-}
-
 protocol DatabaseManager {
+    var inventoryItemsPublisher: AnyPublisher<[InventoryItem], Never> { get }
+    var settingsPublisher: AnyPublisher<CopDeckSettings, Never> { get }
+    var errorsPublisher: AnyPublisher<AppError, Never> { get }
     // init
-    func setup(userId: String, delegate: DatabaseManagerDelegate?)
-
+    func setup(userId: String)
     // write
     func update(inventoryItem: InventoryItem)
     func delete(inventoryItem: InventoryItem)
     func updateSettings(settings: CopDeckSettings)
-
     // read
     func listenToChanges(userId: String)
     func stopListening()

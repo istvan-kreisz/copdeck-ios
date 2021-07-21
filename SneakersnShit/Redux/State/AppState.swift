@@ -12,5 +12,6 @@ struct AppState: Equatable {
     var user: User?
     var searchResults: [Item]?
     var selectedItem: Item?
+    var inventoryItems: [InventoryItem]
     var error: AppError?
 }

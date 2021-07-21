@@ -8,40 +8,108 @@
 
 import Foundation
 import Firebase
+import Combine
 
 class FirebaseService: DatabaseManager {
     private let firestore = Firestore.firestore()
 
+    var allInventoryItems: [InventoryItem] {
+        inventoryItemsSubject.value
+    }
+
+    var allItems: [Item] {
+        Array(allInventoryItems
+            .compactMap { $0.item }
+            .reduce([:]) { dict, item in
+                dict.merging([item.id: item]) { _, new in new }
+            }
+            .values)
+    }
+
+    private let inventoryItemsSubject = CurrentValueSubject<[InventoryItem], Never>([])
+    private let settingsSubject = PassthroughSubject<CopDeckSettings, Never>()
+    private let errorsSubject = PassthroughSubject<AppError, Never>()
+
+    var inventoryItemsPublisher: AnyPublisher<[InventoryItem], Never> {
+        inventoryItemsSubject.eraseToAnyPublisher()
+    }
+
+    var settingsPublisher: AnyPublisher<CopDeckSettings, Never> {
+        settingsSubject.eraseToAnyPublisher()
+    }
+
+    var errorsPublisher: AnyPublisher<AppError, Never> {
+        errorsSubject.eraseToAnyPublisher()
+    }
+
     private var userRef: DocumentReference?
     private var userSettingsRef: DocumentReference?
+
+    private var itemsRef: CollectionReference?
     private var userInventoryRef: CollectionReference?
     private var sneakersRef: CollectionReference?
 
     private var inventoryListener: ListenerRegistration?
     private var settingsListener: ListenerRegistration?
-//    private var settingsListener: ListenerRegistration?
+    private var itemsListeners: [String: ListenerRegistration] = [:]
 
-    private weak var delegate: DatabaseManagerDelegate?
-
-    func setup(userId: String, delegate: DatabaseManagerDelegate?) {
-        self.delegate = delegate
+    func setup(userId: String) {
         userRef = firestore.collection("users").document(userId)
         userSettingsRef = userRef?.collection("userinfo").document("settings")
+
+        itemsRef = firestore.collection("items")
         userInventoryRef = userRef?.collection("inventory")
         sneakersRef = firestore.collection("sneakers")
+
         listenToChanges(userId: userId)
     }
 
     func listenToChanges(userId: String) {
+        addInventoryListener()
+        addSettingsListener()
+    }
+
+    private func addInventoryListener() {
         inventoryListener = addCollectionListener(collectionRef: userInventoryRef,
                                                   updated: { [weak self] (all: [InventoryItem],
-                                                                          sadded: [InventoryItem],
+                                                                          added: [InventoryItem],
                                                                           removed: [InventoryItem],
                                                                           modified: [InventoryItem]) in
-                                                          self?.delegate?.updatedInventoryItems(newInventoryItems: all)
+                                                          guard let self = self else { return }
+                                                          added.forEach { [weak self] inventoryItem in
+                                                              self?.addItemListener(for: inventoryItem.id)
+                                                          }
+                                                          removed.forEach { [weak self] inventoryItem in
+                                                              self?.removeItemListener(for: inventoryItem.id)
+                                                          }
+
+                                                          let newInventoryItems = all.map { new -> InventoryItem in
+                                                              new.copy(with: self.allItems.first(where: { $0.id == new.itemId }))
+                                                          }
+                                                          self.inventoryItemsSubject.send(newInventoryItems)
                                                   })
+    }
+
+    private func addItemListener(for itemId: String) {
+        guard itemsListeners[itemId] == nil else { return }
+        itemsListeners[itemId] = addDocumentListener(documentRef: itemsRef?.document(itemId),
+                                                     updated: { [weak self] (item: Item) in
+                                                         guard let self = self else { return }
+                                                         let newInventoryItems = self.allInventoryItems.map { new -> InventoryItem in
+                                                             new.itemId == itemId ? new.copy(with: item) : new
+                                                         }
+                                                         self.inventoryItemsSubject.send(newInventoryItems)
+                                                     })
+    }
+
+    private func removeItemListener(for itemId: String) {
+        itemsListeners[itemId]?.remove()
+        itemsListeners[itemId] = nil
+    }
+
+    private func addSettingsListener() {
         settingsListener = addDocumentListener(documentRef: userSettingsRef, updated: { [weak self] (settings: CopDeckSettings) in
-            self?.delegate?.updatedSettings(newSettings: settings)
+            self?.settingsSubject.send(settings)
         })
     }
 
@@ -78,15 +146,13 @@ class FirebaseService: DatabaseManager {
 
     private func addDocumentListener<T: Codable>(documentRef: DocumentReference?, updated: @escaping (T) -> Void) -> ListenerRegistration? {
         documentRef?
-            .addSnapshotListener { snapshot, error in
+            .addSnapshotListener { [weak self] snapshot, error in
                 if let error = error {
-                    print("Error fetching document: \(error)")
+                    self?.errorsSubject.send(AppError(error: error))
                     return
                 }
                 if let document = snapshot?.data(), let result = T(from: document) {
                     updated(result)
-                } else {
-                    #warning("now what?")
                 }
             }
     }
@@ -94,6 +160,7 @@ class FirebaseService: DatabaseManager {
     func stopListening() {
         inventoryListener?.remove()
         settingsListener?.remove()
+        itemsListeners.values.forEach { $0.remove() }
     }
 
     func delete(inventoryItem: InventoryItem) {
@@ -101,9 +168,7 @@ class FirebaseService: DatabaseManager {
             .document(inventoryItem.id)
             .delete { [weak self] error in
                 if let error = error {
-                    #warning("todo")
-                } else {
-                    #warning("todo")
+                    self?.errorsSubject.send(AppError(error: error))
                 }
             }
     }
@@ -114,9 +179,7 @@ class FirebaseService: DatabaseManager {
                 .document(inventoryItem.id)
                 .setData(dict, merge: true) { [weak self] error in
                     if let error = error {
-                        #warning("todo")
-                    } else {
-                        #warning("todo")
+                        self?.errorsSubject.send(AppError(error: error))
                     }
                 }
         }
@@ -127,9 +190,7 @@ class FirebaseService: DatabaseManager {
             userSettingsRef?
                 .setData(dict, merge: true) { [weak self] error in
                     if let error = error {
-                        #warning("todo")
-                    } else {
-                        #warning("todo")
+                        self?.errorsSubject.send(AppError(error: error))
                     }
                 }
         }
