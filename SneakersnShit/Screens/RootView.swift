@@ -12,6 +12,12 @@ struct RootView: View {
 
     @State var userId: String?
 
+    class ViewState {
+        var firstShow = true
+    }
+
+    var viewState = ViewState()
+
     #warning("refactor")
 
     var body: some View {
@@ -44,7 +50,10 @@ struct RootView: View {
                   dismissButton: .default(Text("OK")))
         }
         .onAppear {
-            store.send(.authentication(action: .restoreState))
+            if viewState.firstShow {
+                viewState.firstShow = false
+                store.send(.authentication(action: .restoreState))
+            }
         }
     }
 }

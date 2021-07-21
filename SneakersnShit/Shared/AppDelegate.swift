@@ -11,8 +11,7 @@ import GoogleSignIn
 // import FacebookCore
 // import FacebookLogin
 
-@main
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         _ = IAPHelper.shared
         FirebaseApp.configure()

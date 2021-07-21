@@ -10,7 +10,7 @@ import Combine
 
 func appReducer(state: inout AppState,
                 action: AppAction,
-                environment: App,
+                environment: World,
                 completed: ((Result<Void, AppError>) -> Void)?) -> AnyPublisher<AppAction, Never> {
     switch action {
     case .none:
@@ -22,6 +22,10 @@ func appReducer(state: inout AppState,
             return Empty(completeImmediately: true).eraseToAnyPublisher()
         case let .setUser(user):
             state.user = user
+            return Empty(completeImmediately: true).eraseToAnyPublisher()
+        case .signOutUser:
+            state.user = nil
+            state.userId = ""
             return Empty(completeImmediately: true).eraseToAnyPublisher()
         case let .getUserData(userId: userId):
             print(userId)
@@ -89,14 +93,20 @@ func appReducer(state: inout AppState,
         }
     case let .authentication(action: action):
         return environment.authenticator.handle(action)
-            .map { AppAction.main(action: .setUserId($0)) }
+            .share(replay: 1)
+            .map { userId in
+                if userId.isEmpty {
+                    return AppAction.main(action: .signOutUser)
+                } else {
+                    return AppAction.main(action: .setUserId(userId))
+                }
+            }
             // todo: revise
             .tryCatch {
                 Just(AppAction.main(action: .setUserId(""))).merge(with: Just(AppAction.error(action: .setError(error: AppError(error: $0)))))
             }
             .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
             .eraseToAnyPublisher()
-//        return authenticatorReducer(state: &state.authenticationState, action: action, environment: environment.authentication)
     case let .error(action: action):
         switch action {
         case let .setError(error: error):

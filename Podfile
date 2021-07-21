@@ -1,4 +1,4 @@
-platform :ios, '14.1'
+platform :ios, '14.0'
 
 target 'SneakersnShit' do
   use_frameworks!
@@ -19,7 +19,7 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.1'
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
     end
   end
 end

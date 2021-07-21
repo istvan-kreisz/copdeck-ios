@@ -52,7 +52,7 @@ class DefaultAuthenticator: NSObject, Authenticator {
 
     private func restoreState() {
         GIDSignIn.sharedInstance.restorePreviousSignIn { [weak self] user, error in
-            self?.handleGoogleSignInResult(user: user, error: error)
+            self?.handleGoogleSignInResult(user: user, error: error, isRestore: true)
         }
     }
 
@@ -102,14 +102,18 @@ class DefaultAuthenticator: NSObject, Authenticator {
             guard let clientID = FirebaseApp.app()?.options.clientID else { return }
             let config = GIDConfiguration(clientID: clientID)
             GIDSignIn.sharedInstance.signIn(with: config, presenting: viewController) { [weak self] user, error in
-                self?.handleGoogleSignInResult(user: user, error: error)
+                self?.handleGoogleSignInResult(user: user, error: error, isRestore: false)
             }
         }
     }
 
-    private func handleGoogleSignInResult(user: GIDGoogleUser?, error: Error?) {
+    private func handleGoogleSignInResult(user: GIDGoogleUser?, error: Error?, isRestore: Bool) {
         if let error = error {
-            userChangesSubject.send(completion: .failure(error))
+            if isRestore {
+                userChangesSubject.send("")
+            } else {
+                userChangesSubject.send(completion: .failure(error))
+            }
             return
         }
 
@@ -122,8 +126,17 @@ class DefaultAuthenticator: NSObject, Authenticator {
 
     private func signOut() {
         do {
+            var signoutGoogle = false
+            if GIDSignIn.sharedInstance.currentUser != nil {
+                signoutGoogle = true
+            }
             try Auth.auth().signOut()
-            userChangesSubject.send(completion: .finished)
+            if signoutGoogle {
+                GIDSignIn.sharedInstance.signOut()
+            }
+            Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { [weak self] _ in
+                self?.userChangesSubject.send("")
+            }
         } catch let signOutError as NSError {
             userChangesSubject.send(completion: .failure(signOutError))
         }

@@ -21,7 +21,7 @@ final class ReduxStore<State, Action: IdAble, Environment>: ObservableObject {
     private var effectCancellables: Set<AnyCancellable> = []
 
     private var isRootStore: Bool {
-        type(of: self) == ReduxStore<AppState, AppAction, App>.self
+        type(of: self) == ReduxStore<AppState, AppAction, World>.self
     }
 
     init(initialState: State,

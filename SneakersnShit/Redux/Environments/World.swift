@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class App {
+class World {
     let api: API
     let authenticator: Authenticator
     let databaseManager: DatabaseManager

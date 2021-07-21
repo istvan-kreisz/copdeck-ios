@@ -10,6 +10,7 @@ import Foundation
 enum MainAction {
     case setUserId(String)
     case setUser(User)
+    case signOutUser
     // user
     case getUserData(userId: String)
     case changeUsername(newName: String)
@@ -36,6 +37,8 @@ extension MainAction: IdAble {
             return "setUserId"
         case .setUser:
             return "setUser"
+        case .signOutUser:
+            return "signOutUser"
         case .getUserData:
             return "getUserData"
         case .changeUsername:
