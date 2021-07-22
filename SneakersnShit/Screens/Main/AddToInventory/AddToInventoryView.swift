@@ -42,22 +42,19 @@ struct AddToInventoryView: View {
     }
 
     var body: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            VStack(alignment: .center, spacing: 20) {
-                ZStack {
+        ZStack {
+            NavigationBar(title: nil, isBackButtonVisible: true, style: .dark)
+                .withDefaultPadding(padding: .horizontal)
+                .topAligned()
+                .zIndex(1)
+
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(alignment: .center, spacing: 20) {
                     ImageView(withURL: item.bestStoreInfo?.imageURL ?? "",
                               size: UIScreen.main.bounds.width - 80,
                               aspectRatio: nil)
                         .background(Color.white)
-                    NavigationBar(title: nil, isBackButtonVisible: true, style: .dark)
-                        .withDefaultPadding(padding: .horizontal)
-                        .topAligned()
-                }.zIndex(1)
 
-                ZStack {
-                    Color.customBackground
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .edgesIgnoringSafeArea(.all)
                     VStack(alignment: .center, spacing: 8) {
                         Text("Add To Inventory")
                             .font(.bold(size: 30))
@@ -78,9 +75,9 @@ struct AddToInventoryView: View {
                     .padding(.horizontal, 28)
                     .padding(.top, 14)
                     .padding(.bottom, 20)
-                    .background(Color.customBackground.frame(maxWidth: .infinity,
-                                                             minHeight: 10000,
-                                                             maxHeight: .infinity).edgesIgnoringSafeArea(.all))
+                    .background(Color.customBackground
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .edgesIgnoringSafeArea(.all))
                 }
             }
         }

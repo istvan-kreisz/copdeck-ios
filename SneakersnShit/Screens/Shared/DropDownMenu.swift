@@ -47,7 +47,6 @@ struct DropDownMenu: View {
                 .frame(height: Styles.inputFieldHeight)
                 .background(Color.customAccent4)
                 .cornerRadius(Styles.cornerRadius)
-                .withDefaultShadow()
             }
         }
     }

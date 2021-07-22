@@ -13,7 +13,7 @@ struct NewItemCard: View {
     @State var soldOn = "NONE"
 
     var body: some View {
-        Form {
+//        Form {
             VStack(alignment: .leading, spacing: 11) {
                 HStack(alignment: .top, spacing: 11) {
                     let condition = Binding<String>(get: { inventoryItem.condition.rawValue },
@@ -80,7 +80,7 @@ struct NewItemCard: View {
                     }
                 }
             }
-        }
+//        }
         .padding(10)
         .background(Color.white)
         .cornerRadius(12)
