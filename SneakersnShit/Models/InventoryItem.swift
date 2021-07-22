@@ -11,6 +11,14 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     enum Condition: String, Codable, CaseIterable {
         case new, used
     }
+    struct ListingPrice: Codable, Equatable {
+        let storeId: StoreId
+        var price: Double
+    }
+    struct SoldPrice: Codable, Equatable {
+        let storeId: StoreId?
+        var price: Double?
+    }
 
     let id: String
     let itemId: String?
@@ -19,6 +27,8 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     var purchasePrice: Double?
     var size: String
     var condition: Condition
+    var listingPrices: [ListingPrice] = []
+    var soldPrice: SoldPrice?
     var notes: String?
     let created: Double?
     let updated: Double?
@@ -43,8 +53,9 @@ extension InventoryItem {
                   purchasePrice: item.retailPrice,
                   size: item.sortedSizes.first ?? "",
                   condition: .new,
-                  notes: nil,
-                  created: nil,
+                  soldPrice: .init(storeId: .goat, price: 234),
+                  notes: "these are my notes bitch",
+                  created: Date().timeIntervalSince1970,
                   updated: Date().timeIntervalSince1970)
     }
 }

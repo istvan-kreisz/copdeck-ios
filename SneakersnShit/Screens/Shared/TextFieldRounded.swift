@@ -8,24 +8,28 @@
 import SwiftUI
 
 struct TextFieldRounded: View {
+    enum Style {
+        case white, gray
+    }
+
     var title: String?
     var placeHolder: String
-    var backgroundColor = Color.white
+    let style: Style
     @Binding var text: String
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title ?? "")
                 .font(.regular(size: 12))
-                .foregroundColor(.customText1)
+                .foregroundColor(.customText2)
                 .padding(.leading, 5)
 
             TextField(placeHolder, text: $text)
                 .frame(height: Styles.inputFieldHeight)
                 .padding(.horizontal, 17)
-                .background(backgroundColor)
+                .background(style == .white ? Color.white : Color.customAccent4)
                 .cornerRadius(Styles.cornerRadius)
-                .withDefaultShadow()
+                .if(style == .white) { $0.withDefaultShadow() }
                 .ignoresSafeArea(.keyboard, edges: .bottom)
         }
     }

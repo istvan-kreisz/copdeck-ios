@@ -18,7 +18,7 @@ struct InventoryView: View {
 //                           destination: AddToInventoryView(item: item, addToInventory: $addToInventory),
 //                           isActive: $addToInventory)
 
-            NewItemCard()
+            NewItemCard(inventoryItem: .constant(.init(from: .sample)))
 
 //            ScrollView(.vertical, showsIndicators: false) {
 //                VStack(alignment: .center, spacing: 20) {

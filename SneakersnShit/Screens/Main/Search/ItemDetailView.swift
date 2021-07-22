@@ -15,6 +15,7 @@ struct ItemDetailView: View {
     @State private var feeType: FeeType = .none
 
     @State private var addToInventory = false
+    @State private var firstShow = true
 
     enum BorderStyle {
         case red, green, regular
@@ -220,7 +221,10 @@ struct ItemDetailView: View {
             .navigationbarHidden()
             .onAppear {
                 updateItem(newItem: store.state.selectedItem)
-                refreshPrices()
+                if firstShow {
+                    firstShow = false
+                    refreshPrices()
+                }
             }
             .onChange(of: store.state.selectedItem) { item in
                 updateItem(newItem: item)

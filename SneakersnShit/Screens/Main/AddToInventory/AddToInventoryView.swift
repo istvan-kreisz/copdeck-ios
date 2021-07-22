@@ -61,8 +61,14 @@ struct AddToInventoryView: View {
                             .foregroundColor(.customText1)
                             .padding(.bottom, 8)
                         HStack(spacing: 10) {
-                            TextFieldRounded(title: "name", placeHolder: "name", text: $name)
-                            TextFieldRounded(title: "styleid (optional)", placeHolder: "styleid", text: $styleId)
+                            TextFieldRounded(title: "name",
+                                             placeHolder: "name",
+                                             style: .white,
+                                             text: $name)
+                            TextFieldRounded(title: "styleid (optional)",
+                                             placeHolder: "styleid",
+                                             style: .white,
+                                             text: $styleId)
                         }
                         Form {
 //                            VStack(alignment: .center, spacing: 10) {
@@ -71,11 +77,11 @@ struct AddToInventoryView: View {
 
                                 TextFieldRounded(title: "purchase price",
                                                  placeHolder: inventoryItem1.purchasePrice.asString,
-                                                 backgroundColor: .customAccent4,
+                                                 style: .gray,
                                                  text: $inventoryItem1.name)
                                 TextFieldRounded(title: "purchase price",
                                                  placeHolder: inventoryItem1.purchasePrice.asString,
-                                                 backgroundColor: .customAccent4,
+                                                 style: .gray,
                                                  text: $inventoryItem1.name)
 
 //                                    GroupBox {
@@ -105,6 +111,7 @@ struct AddToInventoryView: View {
                 }
             }
         }
+        .navigationbarHidden()
         .simultaneousGesture(DragGesture().onChanged {
             if abs($0.translation.height) > 0 {
                 UIApplication.shared.endEditing()
@@ -119,27 +126,6 @@ struct AddToInventoryView: View {
 
 struct AddToInventoryView_Previews: PreviewProvider {
     static var previews: some View {
-        let storeInfo = Item.StoreInfo(name: "Stockx",
-                                       sku: "GHVDY45",
-                                       slug: "",
-                                       retailPrice: 234,
-                                       brand: "Adidas",
-                                       store: Store(id: .stockx, name: .StockX),
-                                       imageURL: "",
-                                       url: "",
-                                       sellUrl: "",
-                                       buyUrl: "",
-                                       productId: "")
-        let item = Item(id: "GHVDY45",
-                        storeInfo: [storeInfo],
-                        storePrices: [],
-                        ownedByCount: 0,
-                        priceAlertCount: 0,
-                        created: 0,
-                        updated: 0,
-                        name: "yolo",
-                        retailPrice: 12,
-                        imageURL: nil)
-        return AddToInventoryView(item: item, addToInventory: .constant(true))
+        return AddToInventoryView(item: Item.sample, addToInventory: .constant(true))
     }
 }

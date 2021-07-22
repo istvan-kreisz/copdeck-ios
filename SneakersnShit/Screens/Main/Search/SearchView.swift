@@ -30,7 +30,7 @@ struct SearchView: View {
             ForEach(store.state.searchResults ?? []) { item in
                 NavigationLink(destination: ItemDetailView(item: item),
                                tag: item.id,
-                               selection: self.$selectedItemId) { EmptyView() }
+                               selection: $selectedItemId) { EmptyView() }
             }
             VStack(alignment: .leading, spacing: 19) {
                 Text("Search")
@@ -39,7 +39,10 @@ struct SearchView: View {
                     .padding(.leading, 6)
                     .padding(.horizontal, 28)
 
-                TextFieldRounded(title: nil, placeHolder: "Search sneakers", text: $searchText)
+                TextFieldRounded(title: nil,
+                                 placeHolder: "Search sneakers",
+                                 style: .white,
+                                 text: $searchText)
                     .padding(.horizontal, 22)
 
                 ScrollView(.vertical, showsIndicators: false) {

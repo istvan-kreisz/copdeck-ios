@@ -17,7 +17,7 @@ struct DropDownMenu: View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title)
                 .font(.regular(size: 12))
-                .foregroundColor(.customText1)
+                .foregroundColor(.customText2)
                 .padding(.leading, 5)
 
             ZStack(alignment: Alignment(horizontal: .leading, vertical: .center)) {
@@ -40,6 +40,7 @@ struct DropDownMenu: View {
                         .padding(.trailing, 10)
                         .centeredVertically()
                         .rightAligned()
+                        .allowsHitTesting(false)
                 }
                 .frame(height: Styles.inputFieldHeight)
                 .background(Color.customAccent4)

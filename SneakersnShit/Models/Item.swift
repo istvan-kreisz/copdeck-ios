@@ -214,3 +214,27 @@ extension Item {
         sortedSizes.map { prices(size: $0, priceType: priceType, feeType: feeType) }
     }
 }
+
+extension Item {
+    static let sample =
+        Item(id: "GHVDY45",
+             storeInfo: [Item.StoreInfo(name: "Stockx",
+                                        sku: "GHVDY45",
+                                        slug: "",
+                                        retailPrice: 234,
+                                        brand: "Adidas",
+                                        store: Store(id: .stockx, name: .StockX),
+                                        imageURL: "",
+                                        url: "",
+                                        sellUrl: "",
+                                        buyUrl: "",
+                                        productId: "")],
+             storePrices: [],
+             ownedByCount: 0,
+             priceAlertCount: 0,
+             created: 0,
+             updated: 0,
+             name: "yolo",
+             retailPrice: 12,
+             imageURL: nil)
+}
