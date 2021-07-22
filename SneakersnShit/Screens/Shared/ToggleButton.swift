@@ -17,7 +17,7 @@ struct ToggleButton: View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title)
                 .font(.regular(size: 12))
-                .foregroundColor(.customText1)
+                .foregroundColor(.customText2)
                 .padding(.leading, 5)
 
             HStack(spacing: 10) {

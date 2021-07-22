@@ -16,6 +16,7 @@ struct TextFieldRounded: View {
     var placeHolder: String
     let style: Style
     @Binding var text: String
+    var width: CGFloat? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -25,7 +26,7 @@ struct TextFieldRounded: View {
                 .padding(.leading, 5)
 
             TextField(placeHolder, text: $text)
-                .frame(height: Styles.inputFieldHeight)
+                .frame(width: width, height: Styles.inputFieldHeight)
                 .padding(.horizontal, 17)
                 .background(style == .white ? Color.white : Color.customAccent4)
                 .cornerRadius(Styles.cornerRadius)

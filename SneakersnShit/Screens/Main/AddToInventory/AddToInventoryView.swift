@@ -48,13 +48,16 @@ struct AddToInventoryView: View {
                     ImageView(withURL: item.bestStoreInfo?.imageURL ?? "",
                               size: UIScreen.main.bounds.width - 80,
                               aspectRatio: nil)
+                        .background(Color.white)
                     NavigationBar(title: nil, isBackButtonVisible: true, style: .dark)
                         .withDefaultPadding(padding: .horizontal)
                         .topAligned()
-                }
+                }.zIndex(1)
 
                 ZStack {
-                    Color.customBackground.edgesIgnoringSafeArea(.all)
+                    Color.customBackground
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .edgesIgnoringSafeArea(.all)
                     VStack(alignment: .center, spacing: 8) {
                         Text("Add To Inventory")
                             .font(.bold(size: 30))
@@ -70,44 +73,14 @@ struct AddToInventoryView: View {
                                              style: .white,
                                              text: $styleId)
                         }
-                        Form {
-//                            VStack(alignment: .center, spacing: 10) {
-//                                Section {
-//                            HStack(alignment: .center, spacing: 10) {
-
-                                TextFieldRounded(title: "purchase price",
-                                                 placeHolder: inventoryItem1.purchasePrice.asString,
-                                                 style: .gray,
-                                                 text: $inventoryItem1.name)
-                                TextFieldRounded(title: "purchase price",
-                                                 placeHolder: inventoryItem1.purchasePrice.asString,
-                                                 style: .gray,
-                                                 text: $inventoryItem1.name)
-
-//                                    GroupBox {
-//                                        DisclosureGroup("Menu 1") {
-//                                            Text("Item 1")
-//                                            Text("Item 2")
-//                                            Text("Item 3")
-//                                            Text("Item 3")
-//                                            Text("Item 3")
-//                                            Text("Item 3")
-//                                            Text("Item 3")
-//                                        }
-//                                    }
-//                            }
-//                                }
-//                            }
-                        }
-//                        .padding(.vertical, 6)
-//                        .padding(.horizontal, 10)
-//                        .background(Color.white)
-//                        .cornerRadius(12)
-//                        .withDefaultShadow()
+                        NewItemCard(inventoryItem: $inventoryItem1)
                     }
                     .padding(.horizontal, 28)
                     .padding(.top, 14)
                     .padding(.bottom, 20)
+                    .background(Color.customBackground.frame(maxWidth: .infinity,
+                                                             minHeight: 10000,
+                                                             maxHeight: .infinity).edgesIgnoringSafeArea(.all))
                 }
             }
         }

@@ -33,7 +33,7 @@ struct NewItemCard: View {
                 if status == "LISTED" {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("listing prices (optional)")
-                            .font(.medium(size: 12))
+                            .font(.semiBold(size: 12))
                             .foregroundColor(.customBlack)
                             .padding(.leading, 5)
 
@@ -57,6 +57,7 @@ struct NewItemCard: View {
                             }
                         }
                     }
+                    .padding(.top, 5)
                 } else if status == "SOLD" {
                     let text =
                         Binding<String>(get: { (inventoryItem.soldPrice?.price).asString },
@@ -66,10 +67,13 @@ struct NewItemCard: View {
 
                                         })
                     VStack(alignment: .leading, spacing: 11) {
-                        TextFieldRounded(title: "selling price (optional)",
-                                         placeHolder: "$0",
-                                         style: .gray,
-                                         text: text)
+                        HStack {
+                            TextFieldRounded(title: "selling price (optional)",
+                                             placeHolder: "$0",
+                                             style: .gray,
+                                             text: text)
+                            Spacer()
+                        }
                         ToggleButton(title: "sold on (optional)",
                                      selection: $soldOn,
                                      options: ["NONE"] + ALLSTORES.map { $0.id.rawValue.uppercased() })

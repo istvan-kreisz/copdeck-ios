@@ -8,6 +8,8 @@
 import Foundation
 import SwiftUI
 
+#warning("fix tappable area")
+
 struct DropDownMenu: View {
     var title: String
     @Binding var selectedItem: String
