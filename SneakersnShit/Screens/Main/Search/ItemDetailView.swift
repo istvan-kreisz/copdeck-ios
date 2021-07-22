@@ -208,7 +208,7 @@ struct ItemDetailView: View {
                                            size: .init(width: 260, height: 60),
                                            color: .customBlack,
                                            tapped: { addToInventory = true })
-                                    .frame(width: 220, height: 50)
+                                    .disabled(loader.isLoading)
                                     .centeredHorizontally()
                                     .padding(.top, 20)
                             }

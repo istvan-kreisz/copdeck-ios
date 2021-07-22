@@ -42,7 +42,7 @@ struct NextButton: View {
                       size: size,
                       maxSize: maxSize,
                       color: color,
-                      accessoryView: iconView(),
+                      accessoryView: (iconView(), .right, nil, .middle),
                       tapped: tapped)
     }
 }

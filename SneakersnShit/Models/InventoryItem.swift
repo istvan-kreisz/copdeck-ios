@@ -45,7 +45,7 @@ struct InventoryItem: Codable, Equatable, Identifiable {
 }
 
 extension InventoryItem {
-    init(from item: Item) {
+    init(fromItem item: Item) {
         self.init(id: UUID().uuidString,
                   itemId: item.id,
                   item: item,
