@@ -13,7 +13,7 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     }
     struct ListingPrice: Codable, Equatable {
         let storeId: StoreId
-        var price: Double
+        var price: Int
     }
     struct SoldPrice: Codable, Equatable {
         let storeId: StoreId?
@@ -50,11 +50,11 @@ extension InventoryItem {
                   itemId: item.id,
                   item: item,
                   name: item.name ?? "",
-                  purchasePrice: item.retailPrice,
+                  purchasePrice: nil,
                   size: item.sortedSizes.first ?? "",
                   condition: .new,
-                  soldPrice: .init(storeId: .goat, price: 234),
-                  notes: "these are my notes bitch",
+                  soldPrice: nil,
+                  notes: nil,
                   created: Date().timeIntervalSince1970,
                   updated: Date().timeIntervalSince1970)
     }

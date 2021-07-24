@@ -26,6 +26,7 @@ struct NewItemCard: View {
                 TextFieldRounded(title: "purchase price",
                                  placeHolder: (inventoryItem.item?.retailPrice).asString,
                                  style: .gray,
+                                 keyboardType: .numberPad,
                                  text: purchasePrice)
                 DropDownMenu(title: "size",
                              selectedItem: $inventoryItem.size,
@@ -53,11 +54,12 @@ struct NewItemCard: View {
                                                     if let index = inventoryItem.listingPrices.firstIndex(where: { $0.storeId == store.id }) {
                                                         inventoryItem.listingPrices.remove(at: index)
                                                     }
-                                                    inventoryItem.listingPrices.append(.init(storeId: store.id, price: Double(new) ?? 0))
+                                                    inventoryItem.listingPrices.append(.init(storeId: store.id, price: Int(new) ?? 0))
                                                 })
                             TextFieldRounded(title: store.id.rawValue.lowercased(),
                                              placeHolder: "$0",
                                              style: .gray,
+                                             keyboardType: .numberPad,
                                              text: text)
                         }
                     }
@@ -69,18 +71,24 @@ struct NewItemCard: View {
                                     set: { new in
                                         inventoryItem.soldPrice = .init(storeId: inventoryItem.soldPrice?.storeId,
                                                                         price: Double(new))
-
                                     })
+                let soldOn =
+                    Binding<String>(get: { inventoryItem.soldPrice?.storeId?.rawValue.uppercased() ?? "NONE" },
+                                    set: { new in
+                                        inventoryItem.soldPrice = .init(storeId: StoreId(rawValue: new), price: inventoryItem.soldPrice?.price)
+                                    })
+
                 VStack(alignment: .leading, spacing: 11) {
                     HStack {
                         TextFieldRounded(title: "selling price (optional)",
                                          placeHolder: "$0",
                                          style: .gray,
+                                         keyboardType: .numberPad,
                                          text: text)
                         Rectangle().fill(Color.clear).frame(height: 1)
                     }
                     ToggleButton(title: "sold on (optional)",
-                                 selection: $soldOn,
+                                 selection: soldOn,
                                  options: ["NONE"] + ALLSTORES.map { $0.id.rawValue.uppercased() })
                 }
             }

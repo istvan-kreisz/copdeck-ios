@@ -12,9 +12,3 @@ extension Double {
         String(format: "%.\(places)f", self)
     }
 }
-
-extension Optional where Wrapped == Double {
-    var asString: String {
-        map { String($0) } ?? ""
-    }
-}

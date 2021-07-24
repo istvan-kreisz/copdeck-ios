@@ -34,7 +34,7 @@ struct RootView: View {
                         .zIndex(0)
                 }
             } else {
-                Text("Splashscreen")
+                EmptyView()
             }
         }
         .onReceive(store.$state) { state in

@@ -96,7 +96,7 @@ struct AddToInventoryView: View {
                         }
                         if itemCount != allInventoryItems.count {
                             RoundedButton(text: "Add More",
-                                          size: .init(width: 115, height: 30),
+                                          size: .init(width: 110, height: 30),
                                           fontSize: 12,
                                           color: .clear,
                                           borderColor: Color.customBlue.opacity(0.4),
@@ -163,7 +163,6 @@ struct AddToInventoryView: View {
     }
 
     private func addItems() {
-        //
     }
 }
 

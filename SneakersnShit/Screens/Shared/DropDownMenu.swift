@@ -34,11 +34,11 @@ struct DropDownMenu: View {
                     .padding(10)
                     .padding(.trailing, 10)
                     .frame(width: geo.frame(in: .local).width)
-                    .foregroundColor(.customText1)
+                    .foregroundColor(.customText2)
 
                     Image(systemName: "chevron.down")
                         .font(.bold(size: 14))
-                        .foregroundColor(.customText1)
+                        .foregroundColor(.customText2)
                         .padding(.trailing, 10)
                         .centeredVertically()
                         .rightAligned()

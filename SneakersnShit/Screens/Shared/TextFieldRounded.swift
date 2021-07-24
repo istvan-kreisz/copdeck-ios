@@ -18,6 +18,7 @@ struct TextFieldRounded: View {
     var title: String?
     var placeHolder: String
     let style: Style
+    var keyboardType: UIKeyboardType = .default
     var size: Size = .regular
     @Binding var text: String
     var width: CGFloat? = nil
@@ -32,6 +33,8 @@ struct TextFieldRounded: View {
 
             if size == .regular {
                 TextField(placeHolder, text: $text)
+                    .keyboardType(keyboardType)
+                    .foregroundColor(.customText2)
                     .frame(width: width, height: Styles.inputFieldHeight)
                     .padding(.horizontal, 17)
                     .background(style == .white ? Color.white : Color.customAccent4)
@@ -40,13 +43,22 @@ struct TextFieldRounded: View {
                     .ignoresSafeArea(.keyboard, edges: .bottom)
             } else {
                 TextEditor(text: $text)
+                    .keyboardType(keyboardType)
+                    .foregroundColor(.customText2)
+                    .ignoresSafeArea(.keyboard, edges: .bottom)
                     .frame(width: width, height: Styles.inputFieldHeightLarge)
                     .padding(.horizontal, 17)
                     .background(style == .white ? Color.white : Color.customAccent4)
                     .cornerRadius(Styles.cornerRadius)
                     .if(style == .white) { $0.withDefaultShadow() }
-                    .ignoresSafeArea(.keyboard, edges: .bottom)
             }
         }
+    }
+}
+
+
+struct TextFieldRounded_Previews: PreviewProvider {
+    static var previews: some View {
+        return TextFieldRounded(placeHolder: "heey", style: .gray, text: .constant(""))
     }
 }
