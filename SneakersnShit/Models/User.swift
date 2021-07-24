@@ -12,4 +12,5 @@ struct User: Codable, Equatable {
     let name: String?
     let created: Double?
     let updated: Double?
+    let settings: CopDeckSettings?
 }

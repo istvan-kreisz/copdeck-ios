@@ -9,19 +9,18 @@ import Foundation
 import Combine
 
 class World {
-    let api: API
+    let dataController: DataController
     let authenticator: Authenticator
-    let databaseManager: DatabaseManager
 
-    init(api: API, authenticator: Authenticator, databaseManager: DatabaseManager) {
-        self.api = api
+    init(dataController: DataController, authenticator: Authenticator) {
+        self.dataController = dataController
         self.authenticator = authenticator
-        self.databaseManager = databaseManager
     }
 
     convenience init() {
-        self.init(api: DefaultAPI(backendAPI: BackendAPI(), localScraper: LocalScraper()),
-                authenticator: DefaultAuthenticator(),
-                databaseManager: FirebaseService())
+        self.init(dataController: DefaultDataController(backendAPI: BackendAPI(),
+                                                        localScraper: LocalScraper(),
+                                                        databaseManager: FirebaseService()),
+                  authenticator: DefaultAuthenticator())
     }
 }

@@ -23,7 +23,7 @@ enum MainAction {
     case getItemDetails(item: Item)
     case setItemDetails(item: Item)
     // inventory
-//    case addToInventory(inventoryItem: InventoryItem)
+    case addToInventory(inventoryItems: [InventoryItem])
 //    case removeFromInventory(inventoryItem: InventoryItem)
 //    case setInventoryItems(inventoryItems: [InventoryItem])
 //    case removeInventoryItems(inventoryItems: [InventoryItem])
@@ -51,8 +51,8 @@ extension MainAction: IdAble {
             return "getItemDetails"
         case .setItemDetails:
             return "setItemDetails"
-//        case .addToInventory:
-//            return "addToInventory"
+        case .addToInventory:
+            return "addToInventory"
 //        case .removeFromInventory:
 //            return "removeFromInventory"
 //        case .setInventoryItems:

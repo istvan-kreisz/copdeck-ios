@@ -163,6 +163,7 @@ struct AddToInventoryView: View {
     }
 
     private func addItems() {
+        allInventoryItems.compactMap { $0 }
     }
 }
 

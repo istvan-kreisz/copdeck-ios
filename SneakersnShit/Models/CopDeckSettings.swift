@@ -12,12 +12,12 @@ struct CopDeckSettings: Codable, Equatable {
     let updateInterval: Double
     let notificationFrequency: Double
     let darkModeOn: Bool
-    let feeCalculation: FeeCalculation
+    var feeCalculation: FeeCalculation
 
     struct FeeCalculation: Codable, Equatable {
         let countryName: String
-        let stockx: StockX
-        let goat: Goat
+        var stockx: StockX?
+        var goat: Goat?
 
         struct StockX: Codable, Equatable {
             enum SellerLevel: Int, Codable, Equatable {

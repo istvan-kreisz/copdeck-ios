@@ -14,11 +14,11 @@ typealias Reducer<State, Action, Environment> =
     (inout State, Action, Environment, ((Result<Void, AppError>) -> Void)?) -> AnyPublisher<Action, Never>
 
 final class ReduxStore<State, Action: IdAble, Environment>: ObservableObject {
-    @Published private(set) var state: State
+    @Published var state: State
 
     let environment: Environment
     private let reducer: Reducer<State, Action, Environment>
-    private var effectCancellables: Set<AnyCancellable> = []
+    var effectCancellables: Set<AnyCancellable> = []
 
     init(state: State, reducer: @escaping Reducer<State, Action, Environment>, environment: Environment) {
         self.state = state

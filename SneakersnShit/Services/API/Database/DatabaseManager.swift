@@ -9,16 +9,18 @@ import Foundation
 import Combine
 
 protocol DatabaseManager {
-    var inventoryItemsPublisher: AnyPublisher<[InventoryItem], Never> { get }
-    var settingsPublisher: AnyPublisher<CopDeckSettings, Never> { get }
-    var errorsPublisher: AnyPublisher<AppError, Never> { get }
     // init
     func setup(userId: String)
+    // deinit
+    func stopListening()
+    // read
+    var inventoryItemsPublisher: AnyPublisher<[InventoryItem], Never> { get }
+    var userPublisher: AnyPublisher<User, Never> { get }
+    var exchangeRatesPublisher: AnyPublisher<ExchangeRates, Never> { get }
+    var errorsPublisher: AnyPublisher<AppError, Never> { get }
     // write
+    func add(inventoryItems: [InventoryItem])
     func update(inventoryItem: InventoryItem)
     func delete(inventoryItem: InventoryItem)
     func updateSettings(settings: CopDeckSettings)
-    // read
-    func listenToChanges(userId: String)
-    func stopListening()
 }

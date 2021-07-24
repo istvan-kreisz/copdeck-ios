@@ -19,6 +19,7 @@ func appReducer(state: inout AppState,
         switch action {
         case let .setUserId(userId):
             state.userId = userId
+            environment.dataController.setup(userId: userId)
             return Empty(completeImmediately: true).eraseToAnyPublisher()
         case let .setUser(user):
             state.user = user
@@ -26,6 +27,7 @@ func appReducer(state: inout AppState,
         case .signOutUser:
             state.user = nil
             state.userId = ""
+            environment.dataController.stopListening()
             return Empty(completeImmediately: true).eraseToAnyPublisher()
         case let .getUserData(userId: userId):
             print(userId)
@@ -48,7 +50,7 @@ func appReducer(state: inout AppState,
             if searchTerm.isEmpty {
                 return Just(AppAction.main(action: .setSearchResults([]))).eraseToAnyPublisher()
             } else {
-                return environment.api.search(searchTerm: searchTerm)
+                return environment.dataController.search(searchTerm: searchTerm)
                     .map { AppAction.main(action: .setSearchResults($0)) }
                     .catchErrors()
             }
@@ -56,16 +58,15 @@ func appReducer(state: inout AppState,
             state.searchResults = searchResult
             return Empty(completeImmediately: true).eraseToAnyPublisher()
         case let .getItemDetails(item):
-            return environment.api.getItemDetails(for: item)
+            return environment.dataController.getItemDetails(for: item)
                 .map { AppAction.main(action: .setItemDetails(item: $0)) }
                 .catchErrors()
         case let .setItemDetails(item):
             state.selectedItem = item
             return Empty(completeImmediately: true).eraseToAnyPublisher()
-            //    case let .addToInventory(inventoryItem):
-            //        return environment.functions.addToInventory(userId: state.mainState.userId, inventoryItem: inventoryItem)
-            //            .map { AppAction.main(action: .setInventoryItems(inventoryItems: [$0])) }
-            //            .catchErrors()
+        case let .addToInventory(inventoryItems):
+            environment.dataController.add(inventoryItems: inventoryItems)
+            return Empty(completeImmediately: true).eraseToAnyPublisher()
             //    case let .removeFromInventory(inventoryItem):
             //        return environment.functions.removeFromInventory(userId: state.mainState.userId, inventoryItem: inventoryItem)
             //            .map { AppAction.main(action: .removeInventoryItems(inventoryItems: [inventoryItem])) }

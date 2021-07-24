@@ -79,6 +79,7 @@
 		5D9C8E3D269F2F31008538D6 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C8E3C269F2F31008538D6 /* RoundedButton.swift */; };
 		5D9C8E3F269FAB8B008538D6 /* NextButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C8E3E269FAB8B008538D6 /* NextButton.swift */; };
 		5D9D51F226AC0E8F00AB1F30 /* Optional+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D51F126AC0E8F00AB1F30 /* Optional+Extensions.swift */; };
+		5D9D51F426AC161000AB1F30 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D51F326AC161000AB1F30 /* DataController.swift */; };
 		5D9E85F126931F4300477377 /* scraper.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = 5D9E85F026931F4200477377 /* scraper.bundle.js */; };
 		5DA5140426A614530067C4A2 /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140026A614530067C4A2 /* FirebaseService.swift */; };
 		5DA5140526A614530067C4A2 /* DefaultAuthenticator_.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140126A614530067C4A2 /* DefaultAuthenticator_.swift */; };
@@ -181,6 +182,7 @@
 		5D9C8E3C269F2F31008538D6 /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
 		5D9C8E3E269FAB8B008538D6 /* NextButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextButton.swift; sourceTree = "<group>"; };
 		5D9D51F126AC0E8F00AB1F30 /* Optional+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Extensions.swift"; sourceTree = "<group>"; };
+		5D9D51F326AC161000AB1F30 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		5D9E85F026931F4200477377 /* scraper.bundle.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = scraper.bundle.js; sourceTree = "<group>"; };
 		5DA5140026A614530067C4A2 /* FirebaseService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
 		5DA5140126A614530067C4A2 /* DefaultAuthenticator_.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultAuthenticator_.swift; sourceTree = "<group>"; };
@@ -430,6 +432,7 @@
 				5DA513FF26A6143A0067C4A2 /* Database */,
 				5D2D5A9F25C529E3009598AA /* API.swift */,
 				5D631256269669A600876D99 /* DefaultAPI.swift */,
+				5D9D51F326AC161000AB1F30 /* DataController.swift */,
 				5D2D5A9E25C529CA009598AA /* Functions */,
 				5D7B17CA26868C970065D01C /* LocalScraper */,
 			);
@@ -759,6 +762,7 @@
 				5D63122F269506AE00876D99 /* User.swift in Sources */,
 				5D7B17CC26868CA60065D01C /* Scraper.swift in Sources */,
 				5DA5140926A6149D0067C4A2 /* DatabaseManager.swift in Sources */,
+				5D9D51F426AC161000AB1F30 /* DataController.swift in Sources */,
 				5D52E307261303AF00FA02B8 /* Publishers+Extensions.swift in Sources */,
 				5D424D4225C509610008D6F4 /* Fonts.swift in Sources */,
 				5D696097258713760058BABE /* AppDelegate.swift in Sources */,

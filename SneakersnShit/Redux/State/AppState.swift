@@ -14,4 +14,5 @@ struct AppState: Equatable {
     var selectedItem: Item?
     var inventoryItems: [InventoryItem] = []
     var error: AppError?
+    var exchangeRates: ExchangeRates?
 }
