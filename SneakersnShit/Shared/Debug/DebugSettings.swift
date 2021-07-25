@@ -24,4 +24,8 @@ struct DebugSettings {
     var useFunctionsEmulator: Bool {
         bool(for: "useFunctionsEmulator")
     }
+
+    var showScraperLogs: Bool {
+        bool(for: "showScraperLogs")
+    }
 }

@@ -13,30 +13,25 @@ struct MainView: View {
 
     @StateObject var viewRouter = ViewRouter()
 
-    @State private var hasPushedView = false
+    @State private var view1Shown = false
+    @State private var view2Shown = false
+    @State private var view3Shown = false
 
     var body: some View {
         ZStack {
             switch viewRouter.currentPage {
             case .home:
-                NavigationView {
-                    Text("Home")
-                }
+                Text("Home")
+                    .modifier(WrappedMainView(viewRouter: viewRouter))
             case .search:
-                NavigationView {
-                    SearchView(hasPushedView: $hasPushedView)
-                        .environmentObject(store)
-                }
+                SearchView()
+                    .modifier(WrappedMainView(viewRouter: viewRouter))
+                    .environmentObject(store)
             case .inventory:
-                NavigationView {
-                    InventoryView()
-                        .environmentObject(store)
-                }
+                InventoryView()
+                    .modifier(WrappedMainView(viewRouter: viewRouter))
+                    .environmentObject(store)
             }
-            TabBar(viewRouter: viewRouter)
-                .if(hasPushedView) {
-                    $0.hidden()
-                }
         }
     }
 }

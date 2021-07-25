@@ -11,4 +11,8 @@ extension Double {
     func rounded(toPlaces places: Int) -> String {
         String(format: "%.\(places)f", self)
     }
+
+    func isOlderThan(minutes: Double) -> Bool {
+        (Date().timeIntervalSince1970 - self / 1000) / 60 > minutes
+    }
 }

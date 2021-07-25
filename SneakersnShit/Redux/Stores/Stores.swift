@@ -41,16 +41,14 @@ extension AppStore {
 
     func setupTimers() {
         refreshExchangeRatesIfNeeded()
-        #warning("update")
-        Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in
+        Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
             self?.refreshExchangeRatesIfNeeded()
         }
     }
 
     func refreshExchangeRatesIfNeeded() {
         if let lastUpdated = state.exchangeRates?.updated {
-            let timeDiff = (Date().timeIntervalSince1970 - lastUpdated / 1000) / 3600
-            if timeDiff > 1 {
+            if lastUpdated.isOlderThan(minutes: 60) {
                 send(.main(action: .getExchangeRates))
             }
         } else {

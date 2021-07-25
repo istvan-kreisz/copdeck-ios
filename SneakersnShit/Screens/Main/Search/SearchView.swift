@@ -15,16 +15,12 @@ struct SearchView: View {
 
     @State private var searchText = ""
     @State private var selectedItemId: String?
-    @Binding var hasPushedView: Bool
 
     @StateObject private var loader = Loader()
 
     var body: some View {
         let selectedId = Binding<String?>(get: { selectedItemId },
-                                          set: { id in
-                                              selectedItemId = id
-                                              hasPushedView = id != nil
-                                          })
+                                          set: { id in selectedItemId = id })
         ZStack {
             Color.customBackground.edgesIgnoringSafeArea(.all)
             ForEach(store.state.searchResults ?? []) { item in
@@ -87,16 +83,12 @@ struct SearchView: View {
             store.send(.main(action: .getSearchResults(searchTerm: searchText)), completed: loader.getLoader())
         }
     }
-
-    func addToInventory(item: Item) {
-//        store.send(.addToInventory(inventoryItem: .init(from: item)))
-    }
 }
 
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         return Group {
-            SearchView(hasPushedView: .constant(false))
+            SearchView()
                 .environmentObject(AppStore.default)
         }
     }

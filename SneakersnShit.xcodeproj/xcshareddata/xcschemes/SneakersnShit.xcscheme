@@ -57,6 +57,11 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "showScraperLogs"
+            value = "true"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "useFunctionsEmulator"
             value = "true"
             isEnabled = "NO">

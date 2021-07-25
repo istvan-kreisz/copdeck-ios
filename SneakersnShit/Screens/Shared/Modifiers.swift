@@ -117,3 +117,20 @@ struct BottomAligned: ViewModifier {
     }
 }
 
+struct WrappedMainView: ViewModifier {
+
+    @ObservedObject var viewRouter: ViewRouter
+
+    init(viewRouter: ViewRouter) {
+        self.viewRouter = viewRouter
+    }
+
+    func body(content: Content) -> some View {
+        NavigationView {
+            ZStack {
+                content
+                TabBar(viewRouter: viewRouter)
+            }
+        }
+    }
+}

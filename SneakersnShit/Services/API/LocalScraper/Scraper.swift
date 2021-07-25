@@ -25,14 +25,18 @@ class LocalScraper {
     }()
 
     func config(from settings: CopDeckSettings, exchangeRates: ExchangeRates) -> Any {
-        let feeCalculation = APIConfig.FeeCalculation(countryName: "",
+        let feeCalculation = APIConfig.FeeCalculation(countryName: settings.feeCalculation.country.name,
                                                       stockx: .init(sellerLevel: (settings.feeCalculation.stockx?.sellerLevel.rawValue) ?? 1,
                                                                     taxes: (settings.feeCalculation.stockx?.taxes) ?? 0),
                                                       goat: .init(commissionPercentage: (settings.feeCalculation.goat?.commissionPercentage.rawValue) ?? 0,
                                                                   cashOutFee: (settings.feeCalculation.goat?.cashOutFee.rawValue) ?? 0.0,
                                                                   taxes: (settings.feeCalculation.goat?.taxes) ?? 0))
+        var showLogs = false
+        #if DEBUG
+        showLogs = true && DebugSettings.shared.showScraperLogs
+        #endif
         return APIConfig(currency: settings.currency,
-                         isLoggingEnabled: true,
+                         isLoggingEnabled: showLogs,
                          exchangeRates: exchangeRates,
                          feeCalculation: feeCalculation).asJSON!
     }
@@ -55,6 +59,9 @@ class LocalScraper {
 
 extension LocalScraper: API {
     func getItemDetails(for item: Item?, itemId: String, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
+        if DebugSettings.shared.showScraperLogs {
+            print("scraping...")
+        }
         if let item = item {
             return getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates)
         } else {
@@ -105,7 +112,6 @@ extension LocalScraper: JSNativeBridgeDelegate {
     }
 
     func setItems(_ items: [Item]) {
-        print("got em")
         itemsSubject.send(items)
     }
 
