@@ -24,6 +24,7 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     let itemId: String?
     var name: String
     var purchasePrice: Double?
+    let imageURL: String?
     var size: String
     var condition: Condition
     var listingPrices: [ListingPrice] = []
@@ -33,7 +34,7 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     let updated: Double?
 
     enum CodingKeys: String, CodingKey {
-        case id, itemId, name, purchasePrice, size, condition, notes, created, updated
+        case id, itemId, name, purchasePrice, imageURL, size, condition, notes, created, updated
     }
 }
 
@@ -43,6 +44,7 @@ extension InventoryItem {
                   itemId: item.id,
                   name: item.name ?? "",
                   purchasePrice: nil,
+                  imageURL: item.imageURL?.url,
                   size: item.sortedSizes.first ?? "",
                   condition: .new,
                   soldPrice: nil,

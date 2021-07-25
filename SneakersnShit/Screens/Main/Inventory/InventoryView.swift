@@ -12,7 +12,6 @@ struct InventoryView: View {
     @EnvironmentObject var store: AppStore
     @State private var selectedInventoryItemId: String?
 
-    @StateObject private var loader = Loader()
     @State private var searchText = ""
 
     var body: some View {
@@ -31,41 +30,25 @@ struct InventoryView: View {
                     .padding(.horizontal, 28)
 
                 TextFieldRounded(title: nil,
-                                 placeHolder: "Search in your inventory",
+                                 placeHolder: "Search your inventory",
                                  style: .white,
                                  text: $searchText)
                     .padding(.horizontal, 22)
 
                 ScrollView(.vertical, showsIndicators: false) {
-                    if loader.isLoading {
-                        CustomSpinner(text: "Loading...", animate: true)
-                            .padding(.horizontal, 22)
-                            .padding(.top, 5)
-                    }
-                    if let resultCount = store.state.inventorySearchResults?.count {
+                    if let resultCount = store.state.inventorySearchResults?.count, !searchText.isEmpty {
                         Text("\(resultCount) Results:")
                             .font(.bold(size: 12))
                             .leftAligned()
                             .padding(.horizontal, 28)
                     }
 
-                    ForEach(store.state.inventoryItems) { inventoryItem in
-                        Text(inventoryItem.name)
-//                        HStack(alignment: .center, spacing: 10) {
-//                            ImageView(withURL: inventoryItem.bestStoreInfo?.imageURL ?? "", size: 58, aspectRatio: nil)
-//                                .cornerRadius(8)
-//                            Text((item.bestStoreInfo ?? item.storeInfo.first)?.name ?? "")
-//                                .font(.bold(size: 14))
-//                            Spacer()
-//                        }
-//                        .padding(.horizontal, 8)
-//                        .frame(height: 85)
-//                        .background(Color.white)
-//                        .cornerRadius(12)
-//                        .withDefaultShadow()
-//                        .onTapGesture {
-//                            selectedInventoryItemId.wrappedValue = inventoryItem.id
-//                        }
+                    ForEach(searchText.isEmpty ? store.state.inventoryItems : (store.state.inventorySearchResults ?? [])) { inventoryItem in
+                        ListItem(title: inventoryItem.name,
+                                 imageURL: inventoryItem.imageURL ?? "",
+                                 accessoryView: nil) {
+                            selectedInventoryItemId = inventoryItem.id
+                        }
                     }
                     .padding(.horizontal, 22)
                     .padding(.vertical, 6)
@@ -76,7 +59,7 @@ struct InventoryView: View {
         }
         .navigationbarHidden()
         .onChange(of: searchText) { searchText in
-//            store.send(.main(action: .getSearchResults(searchTerm: searchText)), completed: loader.getLoader())
+            store.send(.main(action: .getInventorySearchResults(searchTerm: searchText)))
         }
     }
 

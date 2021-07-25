@@ -58,7 +58,7 @@ func appReducer(state: inout AppState,
                 state.inventorySearchResults = []
                 return Empty(completeImmediately: true).eraseToAnyPublisher()
             } else {
-                state.inventorySearchResults = state.inventoryItems.filter { $0.name.contains(searchTerm) }
+                state.inventorySearchResults = state.inventoryItems.filter { $0.name.lowercased().contains(searchTerm.lowercased()) }
                 return Empty(completeImmediately: true).eraseToAnyPublisher()
             }
         case let .removeFromInventory(inventoryItems):

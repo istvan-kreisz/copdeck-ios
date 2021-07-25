@@ -17,8 +17,6 @@ struct SearchView: View {
     @StateObject private var loader = Loader()
 
     var body: some View {
-        let selectedId = Binding<String?>(get: { selectedItemId },
-                                          set: { id in selectedItemId = id })
         ZStack {
             Color.customBackground.edgesIgnoringSafeArea(.all)
             ForEach(store.state.searchResults ?? []) { item in
@@ -53,20 +51,9 @@ struct SearchView: View {
                     }
 
                     ForEach(store.state.searchResults ?? []) { item in
-                        HStack(alignment: .center, spacing: 10) {
-                            ImageView(withURL: item.bestStoreInfo?.imageURL ?? "", size: 58, aspectRatio: nil)
-                                .cornerRadius(8)
-                            Text((item.bestStoreInfo ?? item.storeInfo.first)?.name ?? "")
-                                .font(.bold(size: 14))
-                            Spacer()
-                        }
-                        .padding(.horizontal, 8)
-                        .frame(height: 85)
-                        .background(Color.white)
-                        .cornerRadius(12)
-                        .withDefaultShadow()
-                        .onTapGesture {
-                            selectedId.wrappedValue = item.id
+                        ListItem(title: (item.bestStoreInfo ?? item.storeInfo.first)?.name ?? "",
+                                 imageURL: item.bestStoreInfo?.imageURL ?? "") {
+                                selectedItemId = item.id
                         }
                     }
                     .padding(.horizontal, 22)
