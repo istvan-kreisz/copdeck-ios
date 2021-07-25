@@ -81,6 +81,8 @@
 		5D9D51F226AC0E8F00AB1F30 /* Optional+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D51F126AC0E8F00AB1F30 /* Optional+Extensions.swift */; };
 		5D9D51F426AC161000AB1F30 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D51F326AC161000AB1F30 /* DataController.swift */; };
 		5D9D51F826ADA07700AB1F30 /* Country.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D51F726ADA07700AB1F30 /* Country.swift */; };
+		5D9D51FB26AE1BE500AB1F30 /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = 5D9D51FA26AE1BE500AB1F30 /* Nuke */; };
+		5D9D51FE26AE1C0B00AB1F30 /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 5D9D51FD26AE1C0B00AB1F30 /* NukeUI */; };
 		5D9E85F126931F4300477377 /* scraper.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = 5D9E85F026931F4200477377 /* scraper.bundle.js */; };
 		5DA5140426A614530067C4A2 /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140026A614530067C4A2 /* FirebaseService.swift */; };
 		5DA5140926A6149D0067C4A2 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140826A6149D0067C4A2 /* DatabaseManager.swift */; };
@@ -215,9 +217,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D9D51FE26AE1C0B00AB1F30 /* NukeUI in Frameworks */,
 				C0A401BBBC5AD2E508F6A578 /* Pods_SneakersnShit.framework in Frameworks */,
 				5DCC466826A7A96C007671BC /* FacebookCore in Frameworks */,
 				5DCC466A26A7A96C007671BC /* FacebookLogin in Frameworks */,
+				5D9D51FB26AE1BE500AB1F30 /* Nuke in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -648,6 +652,8 @@
 			packageProductDependencies = (
 				5DCC466726A7A96C007671BC /* FacebookCore */,
 				5DCC466926A7A96C007671BC /* FacebookLogin */,
+				5D9D51FA26AE1BE500AB1F30 /* Nuke */,
+				5D9D51FD26AE1C0B00AB1F30 /* NukeUI */,
 			);
 			productName = InfluTrader;
 			productReference = 5D696093258713760058BABE /* SneakersnShit.app */;
@@ -678,6 +684,8 @@
 			mainGroup = 5D69608A258713760058BABE;
 			packageReferences = (
 				5DCC466626A7A96C007671BC /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
+				5D9D51F926AE1BE500AB1F30 /* XCRemoteSwiftPackageReference "Nuke" */,
+				5D9D51FC26AE1C0B00AB1F30 /* XCRemoteSwiftPackageReference "NukeUI" */,
 			);
 			productRefGroup = 5D696094258713760058BABE /* Products */;
 			projectDirPath = "";
@@ -1044,6 +1052,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		5D9D51F926AE1BE500AB1F30 /* XCRemoteSwiftPackageReference "Nuke" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/Nuke.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.3.1;
+			};
+		};
+		5D9D51FC26AE1C0B00AB1F30 /* XCRemoteSwiftPackageReference "NukeUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/NukeUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.4;
+			};
+		};
 		5DCC466626A7A96C007671BC /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/facebook/facebook-ios-sdk";
@@ -1055,6 +1079,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		5D9D51FA26AE1BE500AB1F30 /* Nuke */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5D9D51F926AE1BE500AB1F30 /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = Nuke;
+		};
+		5D9D51FD26AE1C0B00AB1F30 /* NukeUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5D9D51FC26AE1C0B00AB1F30 /* XCRemoteSwiftPackageReference "NukeUI" */;
+			productName = NukeUI;
+		};
 		5DCC466726A7A96C007671BC /* FacebookCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 5DCC466626A7A96C007671BC /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
