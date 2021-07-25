@@ -166,14 +166,18 @@ class FirebaseService: DatabaseManager {
         }.eraseToAnyPublisher()
     }
 
-    func delete(inventoryItem: InventoryItem) {
-        userInventoryRef?
-            .document(inventoryItem.id)
-            .delete { [weak self] error in
-                if let error = error {
-                    self?.errorsSubject.send(AppError(error: error))
-                }
+    func delete(inventoryItems: [InventoryItem]) {
+        let batch = firestore.batch()
+        inventoryItems
+            .forEach { inventoryItem in
+                _ = (userInventoryRef?.document(inventoryItem.id)).map { batch.deleteDocument($0) }
             }
+
+        batch.commit { [weak self] error in
+            if let error = error {
+                self?.errorsSubject.send(AppError(error: error))
+            }
+        }
     }
 
     func add(exchangeRates: ExchangeRates) {

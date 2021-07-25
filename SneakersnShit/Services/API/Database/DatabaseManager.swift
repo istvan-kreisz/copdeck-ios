@@ -26,6 +26,6 @@ protocol DatabaseManager {
     func add(exchangeRates: ExchangeRates)
     func update(item: Item, settings: CopDeckSettings)
     func update(inventoryItem: InventoryItem)
-    func delete(inventoryItem: InventoryItem)
+    func delete(inventoryItems: [InventoryItem])
     func updateSettings(settings: CopDeckSettings)
 }

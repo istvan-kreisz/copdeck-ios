@@ -107,8 +107,8 @@ class DefaultDataController: DataController {
         databaseManager.update(inventoryItem: inventoryItem)
     }
 
-    func delete(inventoryItem: InventoryItem) {
-        databaseManager.delete(inventoryItem: inventoryItem)
+    func delete(inventoryItems: [InventoryItem]) {
+        databaseManager.delete(inventoryItems: inventoryItems)
     }
 
     func updateSettings(settings: CopDeckSettings) {

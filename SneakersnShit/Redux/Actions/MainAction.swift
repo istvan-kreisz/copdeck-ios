@@ -20,10 +20,8 @@ enum MainAction {
     case setSelectedItem(item: Item)
     // inventory
     case addToInventory(inventoryItems: [InventoryItem])
-//    case removeFromInventory(inventoryItem: InventoryItem)
-//    case setInventoryItems(inventoryItems: [InventoryItem])
-//    case removeInventoryItems(inventoryItems: [InventoryItem])
-//    case getInventoryItems
+    case getInventorySearchResults(searchTerm: String)
+    case removeFromInventory(inventoryItems: [InventoryItem])
 }
 
 extension MainAction: IdAble {
@@ -45,14 +43,10 @@ extension MainAction: IdAble {
             return "setSelectedItem"
         case .addToInventory:
             return "addToInventory"
-//        case .removeFromInventory:
-//            return "removeFromInventory"
-//        case .setInventoryItems:
-//            return "setInventoryItems"
-//        case .removeInventoryItems:
-//            return "removeInventoryItems"
-//        case .getInventoryItems:
-//            return "getInventoryItems"
+        case .getInventorySearchResults:
+            return "getInventorySearchResults"
+        case .removeFromInventory:
+            return "removeFromInventory"
         }
     }
 }

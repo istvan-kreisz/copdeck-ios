@@ -8,8 +8,6 @@
 import Foundation
 import Combine
 
-#warning("make sure updated & created works correctly")
-
 func appReducer(state: inout AppState,
                 action: AppAction,
                 environment: World,
@@ -55,30 +53,17 @@ func appReducer(state: inout AppState,
         case let .addToInventory(inventoryItems):
             environment.dataController.add(inventoryItems: inventoryItems)
             return Empty(completeImmediately: true).eraseToAnyPublisher()
-        //    case let .removeFromInventory(inventoryItem):
-        //        return environment.functions.removeFromInventory(userId: state.mainState.userId, inventoryItem: inventoryItem)
-        //            .map { AppAction.main(action: .removeInventoryItems(inventoryItems: [inventoryItem])) }
-        //            .catchErrors()
-        //    case let .setInventoryItems(inventoryItems):
-        //        inventoryItems.forEach { inventoryItem in
-        //            if let index = state.mainState.inventoryItems.firstIndex(where: { $0.id == inventoryItem.id }) {
-        //                state.mainState.inventoryItems[index] = inventoryItem
-        //            } else {
-        //                state.mainState.inventoryItems.append(inventoryItem)
-        //            }
-        //        }
-        //        return Empty(completeImmediately: true).eraseToAnyPublisher()
-        //    case let .removeInventoryItems(inventoryItems):
-        //        inventoryItems.forEach { inventoryItem in
-        //            if let index = state.mainState.inventoryItems.firstIndex(where: { $0.id == inventoryItem.id }) {
-        //                state.mainState.inventoryItems.remove(at: index)
-        //            }
-        //        }
-        //        return Empty(completeImmediately: true).eraseToAnyPublisher()
-        //    case .getInventoryItems:
-        //        return environment.functions.getInventoryItems(userId: state.mainState.userId)
-        //            .map { AppAction.main(action: .setInventoryItems(inventoryItems: $0)) }
-        //            .catchErrors()
+        case let .getInventorySearchResults(searchTerm):
+            if searchTerm.isEmpty {
+                state.inventorySearchResults = []
+                return Empty(completeImmediately: true).eraseToAnyPublisher()
+            } else {
+                state.inventorySearchResults = state.inventoryItems.filter { $0.name.contains(searchTerm) }
+                return Empty(completeImmediately: true).eraseToAnyPublisher()
+            }
+        case let .removeFromInventory(inventoryItems):
+            environment.dataController.delete(inventoryItems: inventoryItems)
+            return Empty(completeImmediately: true).eraseToAnyPublisher()
         case .getExchangeRates:
             return environment.dataController.getExchangeRates(settings: state.settings, exchangeRates: state.rates)
                 .map {

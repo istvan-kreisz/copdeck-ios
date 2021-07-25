@@ -11,8 +11,6 @@ import Combine
 struct SearchView: View {
     @EnvironmentObject var store: AppStore
 
-    let colors: [Color] = [.red, .yellow, .green, .purple, .orange]
-
     @State private var searchText = ""
     @State private var selectedItemId: String?
 

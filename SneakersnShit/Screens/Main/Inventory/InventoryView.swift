@@ -9,53 +9,50 @@ import SwiftUI
 import Combine
 
 struct InventoryView: View {
-    @EnvironmentObject var authStore: AppStore
+    @EnvironmentObject var store: AppStore
     @State private var selectedInventoryItemId: String?
 
-    var body: some View {EmptyView()}
+    @StateObject private var loader = Loader()
+    @State private var searchText = ""
 
-//    var body: some View {
-//        let selectedId = Binding<String?>(get: { selectedInventoryItemId },
-//                                          set: { id in
-//                                            selectedInventoryItemId = id
-//                                              hasPushedView = id != nil
-//                                          })
-//        ZStack {
-//            Color.customBackground.edgesIgnoringSafeArea(.all)
-//            ForEach(store.state.searchResults ?? []) { item in
-//                NavigationLink(destination: ItemDetailView(item: item),
-//                               tag: item.id,
-//                               selection: $selectedItemId) { EmptyView() }
-//            }
-//            VStack(alignment: .leading, spacing: 19) {
-//                Text("Search")
-//                    .font(.bold(size: 35))
-//                    .leftAligned()
-//                    .padding(.leading, 6)
-//                    .padding(.horizontal, 28)
-//
-//                TextFieldRounded(title: nil,
-//                                 placeHolder: "Search sneakers",
-//                                 style: .white,
-//                                 text: $searchText)
-//                    .padding(.horizontal, 22)
-//
-//                ScrollView(.vertical, showsIndicators: false) {
-//                    if loader.isLoading {
-//                        CustomSpinner(text: "Loading...", animate: true)
-//                            .padding(.horizontal, 22)
-//                            .padding(.top, 5)
-//                    }
-//                    if let resultCount = store.state.searchResults?.count {
-//                        Text("\(resultCount) Results:")
-//                            .font(.bold(size: 12))
-//                            .leftAligned()
-//                            .padding(.horizontal, 28)
-//                    }
-//
-//                    ForEach(store.state.searchResults ?? []) { item in
+    var body: some View {
+        ZStack {
+            Color.customBackground.edgesIgnoringSafeArea(.all)
+            ForEach(store.state.inventoryItems) { inventoryItem in
+                NavigationLink(destination: InventoryItemDetailView(inventoryItem: inventoryItem),
+                               tag: inventoryItem.id,
+                               selection: $selectedInventoryItemId) { EmptyView() }
+            }
+            VStack(alignment: .leading, spacing: 19) {
+                Text("Inventory")
+                    .font(.bold(size: 35))
+                    .leftAligned()
+                    .padding(.leading, 6)
+                    .padding(.horizontal, 28)
+
+                TextFieldRounded(title: nil,
+                                 placeHolder: "Search in your inventory",
+                                 style: .white,
+                                 text: $searchText)
+                    .padding(.horizontal, 22)
+
+                ScrollView(.vertical, showsIndicators: false) {
+                    if loader.isLoading {
+                        CustomSpinner(text: "Loading...", animate: true)
+                            .padding(.horizontal, 22)
+                            .padding(.top, 5)
+                    }
+                    if let resultCount = store.state.inventorySearchResults?.count {
+                        Text("\(resultCount) Results:")
+                            .font(.bold(size: 12))
+                            .leftAligned()
+                            .padding(.horizontal, 28)
+                    }
+
+                    ForEach(store.state.inventoryItems) { inventoryItem in
+                        Text(inventoryItem.name)
 //                        HStack(alignment: .center, spacing: 10) {
-//                            ImageView(withURL: item.bestStoreInfo?.imageURL ?? "", size: 58, aspectRatio: nil)
+//                            ImageView(withURL: inventoryItem.bestStoreInfo?.imageURL ?? "", size: 58, aspectRatio: nil)
 //                                .cornerRadius(8)
 //                            Text((item.bestStoreInfo ?? item.storeInfo.first)?.name ?? "")
 //                                .font(.bold(size: 14))
@@ -67,21 +64,21 @@ struct InventoryView: View {
 //                        .cornerRadius(12)
 //                        .withDefaultShadow()
 //                        .onTapGesture {
-//                            selectedId.wrappedValue = item.id
+//                            selectedInventoryItemId.wrappedValue = inventoryItem.id
 //                        }
-//                    }
-//                    .padding(.horizontal, 22)
-//                    .padding(.vertical, 6)
-//                }
-//            }
-//            .edgesIgnoringSafeArea(.bottom)
-//            .frame(maxWidth: UIScreen.main.bounds.width)
-//        }
-//        .navigationbarHidden()
-//        .onChange(of: searchText) { searchText in
+                    }
+                    .padding(.horizontal, 22)
+                    .padding(.vertical, 6)
+                }
+            }
+            .edgesIgnoringSafeArea(.bottom)
+            .frame(maxWidth: UIScreen.main.bounds.width)
+        }
+        .navigationbarHidden()
+        .onChange(of: searchText) { searchText in
 //            store.send(.main(action: .getSearchResults(searchTerm: searchText)), completed: loader.getLoader())
-//        }
-//    }
+        }
+    }
 
 //    func deleteFromInventory(inventoryItem: InventoryItem) {
 //        store.send(.removeFromInventory(inventoryItem: inventoryItem))

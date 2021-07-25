@@ -10,12 +10,7 @@ import FirebaseFunctions
 
 struct MainView: View {
     @EnvironmentObject var store: AppStore
-
     @StateObject var viewRouter = ViewRouter()
-
-    @State private var view1Shown = false
-    @State private var view2Shown = false
-    @State private var view3Shown = false
 
     var body: some View {
         ZStack {
@@ -23,6 +18,7 @@ struct MainView: View {
             case .home:
                 Text("Home")
                     .modifier(WrappedMainView(viewRouter: viewRouter))
+                    .environmentObject(store)
             case .search:
                 SearchView()
                     .modifier(WrappedMainView(viewRouter: viewRouter))
