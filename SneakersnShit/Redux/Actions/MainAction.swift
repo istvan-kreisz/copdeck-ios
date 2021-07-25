@@ -8,20 +8,15 @@
 import Foundation
 
 enum MainAction {
-    case setUserId(String)
-    case setUser(User)
-    case signOutUser
-    // user
-    case getUserData(userId: String)
-    case changeUsername(newName: String)
+    case signOut
+    case setUser(user: User)
     // exchange rates
-
+    case getExchangeRates
     // search
     case getSearchResults(searchTerm: String)
-    case setSearchResults([Item])
+    case setSearchResults(searchResults: [Item])
     // item details
     case getItemDetails(item: Item)
-    case setItemDetails(item: Item)
     // inventory
     case addToInventory(inventoryItems: [InventoryItem])
 //    case removeFromInventory(inventoryItem: InventoryItem)
@@ -33,24 +28,18 @@ enum MainAction {
 extension MainAction: IdAble {
     var id: String {
         switch self {
-        case .setUserId:
-            return "setUserId"
+        case .signOut:
+            return "signOut"
         case .setUser:
             return "setUser"
-        case .signOutUser:
-            return "signOutUser"
-        case .getUserData:
-            return "getUserData"
-        case .changeUsername:
-            return "changeUsername"
+        case .getExchangeRates:
+            return "getExchangeRates"
         case .getSearchResults:
             return "getSearchResults"
         case .setSearchResults:
             return "setSearchResults"
         case .getItemDetails:
             return "getItemDetails"
-        case .setItemDetails:
-            return "setItemDetails"
         case .addToInventory:
             return "addToInventory"
 //        case .removeFromInventory:

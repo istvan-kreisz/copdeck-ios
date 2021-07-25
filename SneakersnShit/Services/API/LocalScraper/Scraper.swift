@@ -27,7 +27,7 @@ class LocalScraper {
 
     let apiConfig = APIConfig(currency: .init(code: .gbp, symbol: .gbp),
                               isLoggingEnabled: true,
-                              exchangeRates: .init(usd: 1.2125, gbp: 0.8571, chf: 1.0883, nok: 10.0828),
+                              exchangeRates: .init(usd: 1.2125, gbp: 0.8571, chf: 1.0883, nok: 10.0828, updated: Date().timeIntervalSince1970),
                               feeCalculation: .init(countryName: "Austria",
                                                     stockx: .init(sellerLevel: 1, taxes: 0),
                                                     goat: .init(commissionPercentage: 15, cashOutFee: 2.9, taxes: 0)))

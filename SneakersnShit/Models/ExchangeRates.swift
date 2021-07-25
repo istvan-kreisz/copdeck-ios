@@ -12,4 +12,5 @@ struct ExchangeRates: Codable, Equatable {
     let gbp: Double
     let chf: Double
     let nok: Double
+    let updated: Double?
 }

@@ -8,6 +8,8 @@
 import Foundation
 import Combine
 
+#warning("make sure updated & created works correctly")
+
 func appReducer(state: inout AppState,
                 action: AppAction,
                 environment: World,
@@ -17,94 +19,92 @@ func appReducer(state: inout AppState,
         return Empty(completeImmediately: true).eraseToAnyPublisher()
     case let .main(action: action):
         switch action {
-        case let .setUserId(userId):
-            state.userId = userId
-            environment.dataController.setup(userId: userId)
-            return Empty(completeImmediately: true).eraseToAnyPublisher()
-        case let .setUser(user):
-            state.user = user
-            return Empty(completeImmediately: true).eraseToAnyPublisher()
-        case .signOutUser:
+        case .signOut:
             state.user = nil
-            state.userId = ""
+            if !state.firstLoadDone {
+                state.firstLoadDone = true
+            }
             environment.dataController.stopListening()
             return Empty(completeImmediately: true).eraseToAnyPublisher()
-        case let .getUserData(userId: userId):
-            print(userId)
-            //        return environment.functions.getUserData(userId: userId)
-            //            .map { AppAction.main(action: .setUser($0, userId)) }
-            //            .tryCatch { Just(AppAction.error(action: .setError(error: AppError(error: $0)))) }
-            //            .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
-            //            .eraseToAnyPublisher()
-            return Empty(completeImmediately: true).eraseToAnyPublisher()
-        case let .changeUsername(newName: newName):
-            print(newName)
-            //        let userId = state.mainState.userId
-            //        return environment.functions.changeUsername(userId: userId, newName: newName)
-            //            .map { AppAction.main(action: .setUser($0, userId)) }
-            //            .tryCatch { Just(AppAction.error(action: .setError(error: AppError(error: $0)))) }
-            //            .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
-            //            .eraseToAnyPublisher()
+        case let .setUser(user):
+            if !state.firstLoadDone {
+                state.firstLoadDone = true
+            }
+            state.user = user
             return Empty(completeImmediately: true).eraseToAnyPublisher()
         case let .getSearchResults(searchTerm: searchTerm):
             if searchTerm.isEmpty {
-                return Just(AppAction.main(action: .setSearchResults([]))).eraseToAnyPublisher()
+                state.searchResults = []
+                return Empty(completeImmediately: true).eraseToAnyPublisher()
             } else {
                 return environment.dataController.search(searchTerm: searchTerm)
-                    .map { AppAction.main(action: .setSearchResults($0)) }
-                    .catchErrors()
+                    .map { AppAction.main(action: .setSearchResults(searchResults: $0)) }
+                    .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
+                    .eraseToAnyPublisher()
             }
-        case let .setSearchResults(searchResult):
-            state.searchResults = searchResult
+        case let .setSearchResults(searchResults):
+            state.searchResults = searchResults
             return Empty(completeImmediately: true).eraseToAnyPublisher()
         case let .getItemDetails(item):
-            return environment.dataController.getItemDetails(for: item)
-                .map { AppAction.main(action: .setItemDetails(item: $0)) }
-                .catchErrors()
-        case let .setItemDetails(item):
-            state.selectedItem = item
-            return Empty(completeImmediately: true).eraseToAnyPublisher()
+            return Just(AppAction.none).eraseToAnyPublisher()
+//            return environment.dataController.getItemDetails(for: item)
+//                .flatMap {
+//                    state.selectedItem = $0
+//                    return Empty(completeImmediately: true).eraseToAnyPublisher()
+//
+//                }
+//                .catchErrors()
         case let .addToInventory(inventoryItems):
             environment.dataController.add(inventoryItems: inventoryItems)
             return Empty(completeImmediately: true).eraseToAnyPublisher()
-            //    case let .removeFromInventory(inventoryItem):
-            //        return environment.functions.removeFromInventory(userId: state.mainState.userId, inventoryItem: inventoryItem)
-            //            .map { AppAction.main(action: .removeInventoryItems(inventoryItems: [inventoryItem])) }
-            //            .catchErrors()
-            //    case let .setInventoryItems(inventoryItems):
-            //        inventoryItems.forEach { inventoryItem in
-            //            if let index = state.mainState.inventoryItems.firstIndex(where: { $0.id == inventoryItem.id }) {
-            //                state.mainState.inventoryItems[index] = inventoryItem
-            //            } else {
-            //                state.mainState.inventoryItems.append(inventoryItem)
-            //            }
-            //        }
-            //        return Empty(completeImmediately: true).eraseToAnyPublisher()
-            //    case let .removeInventoryItems(inventoryItems):
-            //        inventoryItems.forEach { inventoryItem in
-            //            if let index = state.mainState.inventoryItems.firstIndex(where: { $0.id == inventoryItem.id }) {
-            //                state.mainState.inventoryItems.remove(at: index)
-            //            }
-            //        }
-            //        return Empty(completeImmediately: true).eraseToAnyPublisher()
-            //    case .getInventoryItems:
-            //        return environment.functions.getInventoryItems(userId: state.mainState.userId)
-            //            .map { AppAction.main(action: .setInventoryItems(inventoryItems: $0)) }
-            //            .catchErrors()
+        //    case let .removeFromInventory(inventoryItem):
+        //        return environment.functions.removeFromInventory(userId: state.mainState.userId, inventoryItem: inventoryItem)
+        //            .map { AppAction.main(action: .removeInventoryItems(inventoryItems: [inventoryItem])) }
+        //            .catchErrors()
+        //    case let .setInventoryItems(inventoryItems):
+        //        inventoryItems.forEach { inventoryItem in
+        //            if let index = state.mainState.inventoryItems.firstIndex(where: { $0.id == inventoryItem.id }) {
+        //                state.mainState.inventoryItems[index] = inventoryItem
+        //            } else {
+        //                state.mainState.inventoryItems.append(inventoryItem)
+        //            }
+        //        }
+        //        return Empty(completeImmediately: true).eraseToAnyPublisher()
+        //    case let .removeInventoryItems(inventoryItems):
+        //        inventoryItems.forEach { inventoryItem in
+        //            if let index = state.mainState.inventoryItems.firstIndex(where: { $0.id == inventoryItem.id }) {
+        //                state.mainState.inventoryItems.remove(at: index)
+        //            }
+        //        }
+        //        return Empty(completeImmediately: true).eraseToAnyPublisher()
+        //    case .getInventoryItems:
+        //        return environment.functions.getInventoryItems(userId: state.mainState.userId)
+        //            .map { AppAction.main(action: .setInventoryItems(inventoryItems: $0)) }
+        //            .catchErrors()
+        case .getExchangeRates:
+            return environment.dataController.getExchangeRates()
+                .map {
+                    environment.dataController.add(exchangeRates: $0)
+                    return AppAction.none
+                }
+                .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
+                .eraseToAnyPublisher()
         }
     case let .authentication(action: action):
         return environment.authenticator.handle(action)
-            .share(replay: 1)
-            .map { userId in
+            .flatMap { userId -> AnyPublisher<AppAction, Never> in
                 if userId.isEmpty {
-                    return AppAction.main(action: .signOutUser)
+                    return Just(AppAction.main(action: .signOut)).eraseToAnyPublisher()
                 } else {
-                    return AppAction.main(action: .setUserId(userId))
+                    environment.dataController.setup(userId: userId)
+                    return environment.dataController.getUser(withId: userId)
+                        .flatMap { Just(AppAction.main(action: .setUser(user: $0))) }
+                        .tryCatch {
+                            Just(AppAction.main(action: .signOut)).merge(with: Just(AppAction.error(action: .setError(error: AppError(error: $0)))))
+                        }
+                        .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
+                        .eraseToAnyPublisher()
                 }
-            }
-            // todo: revise
-            .tryCatch {
-                Just(AppAction.main(action: .setUserId(""))).merge(with: Just(AppAction.error(action: .setError(error: AppError(error: $0)))))
             }
             .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
             .eraseToAnyPublisher()

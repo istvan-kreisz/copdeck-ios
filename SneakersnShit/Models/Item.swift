@@ -40,8 +40,8 @@ struct Item: Codable, Equatable, Identifiable {
     let storePrices: [StorePrice]
     let ownedByCount: Int?
     let priceAlertCount: Int?
-    let created: Int?
-    let updated: Int?
+    let created: Double?
+    let updated: Double?
     let name: String?
     let retailPrice: Double?
     let imageURL: ImageURL?

@@ -10,21 +10,17 @@ import SwiftUI
 struct RootView: View {
     @EnvironmentObject var store: AppStore
 
-    @State var userId: String?
-
     class ViewState {
         var firstShow = true
     }
 
     var viewState = ViewState()
 
-    #warning("refactor")
-
     var body: some View {
         let presentErrorAlert = Binding<Bool>(get: { store.state.error != nil }, set: { _ in })
         ZStack {
-            if let userId = store.state.userId {
-                if userId.isEmpty {
+            if store.state.firstLoadDone {
+                if store.state.user?.id.isEmpty ?? true {
                     LoginView()
                         .environmentObject(store)
                         .zIndex(1)
@@ -34,19 +30,18 @@ struct RootView: View {
                         .zIndex(0)
                 }
             } else {
-                EmptyView()
+                Text("splashscreen")
             }
         }
         .onReceive(store.$state) { state in
-            if (state.userId?.isEmpty == false) && (userId == nil || userId?.isEmpty == true) {
-                // user just logged in
+            // user just logged in
+            if (state.user != nil) {
                 UIApplication.shared.endEditing()
             }
-            userId = state.userId
         }
         .alert(isPresented: presentErrorAlert) {
-            Alert(title: Text(store.state.error?.title ?? "Ooops"),
-                  message: Text(store.state.error?.message ?? "Unknown Error"),
+            Alert(title: Text((store.state.error?.title) ?? "Ooops"),
+                  message: Text((store.state.error?.message) ?? "Unknown Error"),
                   dismissButton: .default(Text("OK")))
         }
         .onAppear {

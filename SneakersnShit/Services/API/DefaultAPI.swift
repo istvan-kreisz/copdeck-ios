@@ -39,6 +39,14 @@ class DefaultDataController: DataController {
 
     lazy var errorsPublisher: AnyPublisher<AppError, Never> = databaseManager.errorsPublisher
 
+    func getUser(withId id: String) -> AnyPublisher<User, AppError> {
+        databaseManager.getUser(withId: id)
+    }
+
+    func add(exchangeRates: ExchangeRates) {
+        databaseManager.add(exchangeRates: exchangeRates)
+    }
+
     func setup(userId: String) {
         databaseManager.setup(userId: userId)
     }

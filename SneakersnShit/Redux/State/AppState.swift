@@ -8,8 +8,8 @@
 import Foundation
 
 struct AppState: Equatable {
-    var userId: String?
     var user: User?
+    var firstLoadDone = false
     var searchResults: [Item]?
     var selectedItem: Item?
     var inventoryItems: [InventoryItem] = []

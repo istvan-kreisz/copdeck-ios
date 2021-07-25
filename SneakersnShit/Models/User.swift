@@ -14,3 +14,9 @@ struct User: Codable, Equatable {
     let updated: Double?
     let settings: CopDeckSettings?
 }
+
+extension User {
+    init(id: String) {
+        self.init(id: id, name: nil, created: nil, updated: nil, settings: nil)
+    }
+}

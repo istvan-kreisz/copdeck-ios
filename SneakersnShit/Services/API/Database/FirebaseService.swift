@@ -55,20 +55,19 @@ class FirebaseService: DatabaseManager {
     private var itemsListeners: [String: ListenerRegistration] = [:]
 
     init() {
+        itemsRef = firestore.collection("items")
+        userInventoryRef = userRef?.collection("inventory")
+        exchangeRatesRef = firestore.collection("info").document("exchangerates")
+
         addExchangeRatesListener()
     }
 
     func setup(userId: String) {
         userRef = firestore.collection("users").document(userId)
-
-        itemsRef = firestore.collection("items")
-        userInventoryRef = userRef?.collection("inventory")
-        exchangeRatesRef = firestore.collection("info").document("exchangerates")
-
-        listenToChanges(userId: userId)
+        listenToChanges()
     }
 
-    private func listenToChanges(userId: String) {
+    private func listenToChanges() {
         stopListening()
         addUserListener()
         addInventoryListener()
@@ -170,6 +169,20 @@ class FirebaseService: DatabaseManager {
         itemsListeners.values.forEach { $0.remove() }
     }
 
+    func getUser(withId id: String) -> AnyPublisher<User, AppError> {
+        Future { [weak self] promise in
+            self?.firestore.collection("users").document(id).getDocument { snapshot, error in
+                if let dict = snapshot?.data(), let user = User(from: dict) {
+                    promise(.success(user))
+                } else if let error = error {
+                    promise(.failure(AppError(error: error)))
+                } else {
+                    promise(.success(User(id: id)))
+                }
+            }
+        }.eraseToAnyPublisher()
+    }
+
     func delete(inventoryItem: InventoryItem) {
         userInventoryRef?
             .document(inventoryItem.id)
@@ -178,6 +191,16 @@ class FirebaseService: DatabaseManager {
                     self?.errorsSubject.send(AppError(error: error))
                 }
             }
+    }
+
+    func add(exchangeRates: ExchangeRates) {
+        if let dict = try? exchangeRates.asDictionary() {
+            exchangeRatesRef?.setData(dict) { error in
+                if let error = error {
+                    print(error)
+                }
+            }
+        }
     }
 
     func add(inventoryItems: [InventoryItem]) {
