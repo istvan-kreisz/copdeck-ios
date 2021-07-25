@@ -44,42 +44,44 @@ struct ItemDetailView: View {
                             .topAligned()
                     }
 
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text(item.bestStoreInfo?.brand.uppercased() ?? "")
-                            .font(.bold(size: 12))
-                            .foregroundColor(.customText2)
-                        Text(item.bestStoreInfo?.name ?? "")
-                            .font(.bold(size: 30))
-                            .foregroundColor(.customText1)
-                            .padding(.bottom, 8)
-                        HStack(spacing: 10) {
-                            Spacer()
-                            VStack(spacing: 2) {
-                                Text(item.id)
-                                    .font(.bold(size: 20))
-                                    .foregroundColor(.customText1)
-                                Text("Style")
-                                    .font(.regular(size: 15))
-                                    .foregroundColor(.customText2)
-                            }
-                            Spacer()
-                            VStack(spacing: 2) {
-                                Text(item.bestStoreInfo?.retailPrice.map { "\(item.currency.symbol.rawValue)\($0.rounded(toPlaces: 1))" } ?? "")
-                                    .font(.bold(size: 20))
-                                    .foregroundColor(.customText1)
-                                Text("Retail Price")
-                                    .font(.regular(size: 15))
-                                    .foregroundColor(.customText2)
-                            }
-                            Spacer()
-                        }
-                    }
-                    .withDefaultPadding(padding: .horizontal)
-                    .padding(.top, 14)
-                    .padding(.bottom, 20)
-
                     ZStack {
                         Color.customBackground.edgesIgnoringSafeArea(.all)
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(item.bestStoreInfo?.brand.uppercased() ?? "")
+                                .font(.bold(size: 12))
+                                .foregroundColor(.customText2)
+                            Text(item.bestStoreInfo?.name ?? "")
+                                .font(.bold(size: 30))
+                                .foregroundColor(.customText1)
+                                .padding(.bottom, 8)
+                            HStack(spacing: 10) {
+                                Spacer()
+                                VStack(spacing: 2) {
+                                    Text(item.id)
+                                        .font(.bold(size: 20))
+                                        .foregroundColor(.customText1)
+                                    Text("Style")
+                                        .font(.regular(size: 15))
+                                        .foregroundColor(.customText2)
+                                }
+                                Spacer()
+                                VStack(spacing: 2) {
+                                    Text(item.bestStoreInfo?.retailPrice.map { "\(item.currency.symbol.rawValue)\($0.rounded(toPlaces: 1))" } ?? "")
+                                        .font(.bold(size: 20))
+                                        .foregroundColor(.customText1)
+                                    Text("Retail Price")
+                                        .font(.regular(size: 15))
+                                        .foregroundColor(.customText2)
+                                }
+                                Spacer()
+                            }
+                        }
+                        .withDefaultPadding(padding: .horizontal)
+                        .padding(.top, 14)
+                        .padding(.bottom, 20)
+                    }
+
+                    ZStack {
                         VStack(alignment: .leading, spacing: 10) {
                             Text("Price Comparison")
                                 .font(.bold(size: 20))
@@ -203,21 +205,21 @@ struct ItemDetailView: View {
                                     }
                                     .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0))
                                 }
-
-                                NextButton(text: "Add to Inventory",
-                                           size: .init(width: 260, height: 60),
-                                           color: .customBlack,
-                                           tapped: { addToInventory = true })
-                                    .disabled(loader.isLoading)
-                                    .centeredHorizontally()
-                                    .padding(.top, 20)
                             }
                         }
                         .padding(.horizontal, 28)
                         .padding(.vertical, 37)
+                        .padding(.bottom, 100)
                     }
                 }
             }
+            .withFloatingButton(button: NextButton(text: "Add to Inventory",
+                                                   size: .init(width: 260, height: 60),
+                                                   color: .customBlack,
+                                                   tapped: { addToInventory = true })
+                    .disabled(loader.isLoading)
+                    .centeredHorizontally()
+                    .padding(.top, 20))
             .navigationbarHidden()
             .onAppear {
                 updateItem(newItem: store.state.selectedItem)

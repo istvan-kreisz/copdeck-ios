@@ -74,4 +74,8 @@ extension View {
     func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
+
+    func withFloatingButton<V: View>(button: V) -> some View {
+        ModifiedContent(content: self, modifier: WithFloatingButton(button: button))
+    }
 }

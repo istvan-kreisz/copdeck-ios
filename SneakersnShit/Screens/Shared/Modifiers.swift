@@ -18,9 +18,8 @@ struct NavigationbarHidden: ViewModifier {
 }
 
 struct DefaultPadding: ViewModifier {
-    
     let padding: Padding
-    
+
     struct Padding: OptionSet {
         let rawValue: Int
 
@@ -32,11 +31,11 @@ struct DefaultPadding: ViewModifier {
         static let horizontal: Padding = [.leading, .trailing]
         static let vertical: Padding = [.top, .bottom]
     }
-    
+
     init(padding: Padding = .all) {
         self.padding = padding
     }
-    
+
     func body(content: Content) -> some View {
         content
             .padding(.top, padding.contains(.top) ? 20 : 0)
@@ -54,7 +53,6 @@ struct DefaultShadow: ViewModifier {
 }
 
 struct DefaultInsets: ViewModifier {
-    
     func body(content: Content) -> some View {
         content
             .listRowInsets(EdgeInsets(top: 7, leading: 15, bottom: 7, trailing: 15))
@@ -118,7 +116,6 @@ struct BottomAligned: ViewModifier {
 }
 
 struct WrappedMainView: ViewModifier {
-
     @ObservedObject var viewRouter: ViewRouter
 
     init(viewRouter: ViewRouter) {
@@ -127,9 +124,28 @@ struct WrappedMainView: ViewModifier {
 
     func body(content: Content) -> some View {
         NavigationView {
-            ZStack {
-                content
-                TabBar(viewRouter: viewRouter)
+            content
+                .withFloatingButton(button: TabBar(viewRouter: viewRouter))
+        }
+    }
+}
+
+struct WithFloatingButton<V: View>: ViewModifier {
+    var button: V
+
+    init(button: V) {
+        self.button = button
+    }
+
+    func body(content: Content) -> some View {
+        ZStack {
+            content
+            VStack {
+                Spacer()
+                    .layoutPriority(2)
+                button
+                    .layoutPriority(2)
+                Spacer(minLength: 35)
             }
         }
     }
