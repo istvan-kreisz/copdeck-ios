@@ -15,4 +15,12 @@ struct AppState: Equatable {
     var inventoryItems: [InventoryItem] = []
     var error: AppError?
     var exchangeRates: ExchangeRates?
+
+    var settings: CopDeckSettings {
+        user?.settings ?? .default
+    }
+
+    var rates: ExchangeRates {
+        exchangeRates ?? .default
+    }
 }

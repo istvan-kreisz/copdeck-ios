@@ -22,7 +22,6 @@ struct InventoryItem: Codable, Equatable, Identifiable {
 
     let id: String
     let itemId: String?
-    var item: Item?
     var name: String
     var purchasePrice: Double?
     var size: String
@@ -33,12 +32,6 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     let created: Double?
     let updated: Double?
 
-    func copy(with newItem: Item?) -> InventoryItem {
-        var copy = self
-        copy.item = newItem
-        return copy
-    }
-
     enum CodingKeys: String, CodingKey {
         case id, itemId, name, purchasePrice, size, condition, notes, created, updated
     }
@@ -48,7 +41,6 @@ extension InventoryItem {
     init(fromItem item: Item) {
         self.init(id: UUID().uuidString,
                   itemId: item.id,
-                  item: item,
                   name: item.name ?? "",
                   purchasePrice: nil,
                   size: item.sortedSizes.first ?? "",

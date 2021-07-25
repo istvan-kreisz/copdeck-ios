@@ -13,16 +13,8 @@ import Combine
 class FirebaseService: DatabaseManager {
     private let firestore = Firestore.firestore()
 
-    var allInventoryItems: [InventoryItem] {
-        inventoryItemsSubject.value
-    }
-
-    var allItems: [Item] {
-        allInventoryItems.allItems
-    }
-
     private let inventoryItemsSubject = CurrentValueSubject<[InventoryItem], Never>([])
-    private let userSubject = PassthroughSubject<User, Never>()
+    private let userSubject = CurrentValueSubject<User?, Never>(nil)
     private let exchangeRatesSubject = PassthroughSubject<ExchangeRates, Never>()
     private let errorsSubject = PassthroughSubject<AppError, Never>()
 
@@ -31,7 +23,7 @@ class FirebaseService: DatabaseManager {
     }
 
     var userPublisher: AnyPublisher<User, Never> {
-        userSubject.eraseToAnyPublisher()
+        userSubject.compactMap { $0 }.eraseToAnyPublisher()
     }
 
     var exchangeRatesPublisher: AnyPublisher<ExchangeRates, Never> {
@@ -52,11 +44,13 @@ class FirebaseService: DatabaseManager {
     private var inventoryListener: ListenerRegistration?
     private var userListener: ListenerRegistration?
     private var exchangeRatesListener: ListenerRegistration?
-    private var itemsListeners: [String: ListenerRegistration] = [:]
+
+    private var settings: CopDeckSettings {
+        userSubject.value?.settings ?? .default
+    }
 
     init() {
         itemsRef = firestore.collection("items")
-        userInventoryRef = userRef?.collection("inventory")
         exchangeRatesRef = firestore.collection("info").document("exchangerates")
 
         addExchangeRatesListener()
@@ -64,6 +58,8 @@ class FirebaseService: DatabaseManager {
 
     func setup(userId: String) {
         userRef = firestore.collection("users").document(userId)
+        userInventoryRef = userRef?.collection("inventory")
+
         listenToChanges()
     }
 
@@ -83,40 +79,12 @@ class FirebaseService: DatabaseManager {
                                                                           added: [InventoryItem],
                                                                           removed: [InventoryItem],
                                                                           modified: [InventoryItem]) in
-                                                          guard let self = self else { return }
-                                                          added.forEach { [weak self] inventoryItem in
-                                                              self?.addItemListener(for: inventoryItem.id)
-                                                          }
-                                                          removed.forEach { [weak self] inventoryItem in
-                                                              self?.removeItemListener(for: inventoryItem.id)
-                                                          }
-
-                                                          let newInventoryItems = all.map { new -> InventoryItem in
-                                                              new.copy(with: self.allItems.first(where: { $0.id == new.itemId }))
-                                                          }
-                                                          self.inventoryItemsSubject.send(newInventoryItems)
+                                                          self?.inventoryItemsSubject.send(all)
                                                   })
     }
 
     private func addExchangeRatesListener() {
         exchangeRatesListener = addDocumentListener(documentRef: exchangeRatesRef, updated: { [weak self] in self?.exchangeRatesSubject.send($0) })
-    }
-
-    private func addItemListener(for itemId: String) {
-        guard itemsListeners[itemId] == nil else { return }
-        itemsListeners[itemId] = addDocumentListener(documentRef: itemsRef?.document(itemId),
-                                                     updated: { [weak self] (item: Item) in
-                                                         guard let self = self else { return }
-                                                         let newInventoryItems = self.allInventoryItems.map { new -> InventoryItem in
-                                                             new.itemId == itemId ? new.copy(with: item) : new
-                                                         }
-                                                         self.inventoryItemsSubject.send(newInventoryItems)
-                                                     })
-    }
-
-    private func removeItemListener(for itemId: String) {
-        itemsListeners[itemId]?.remove()
-        itemsListeners[itemId] = nil
     }
 
     private func addCollectionListener<T: Codable>(collectionRef: CollectionReference?,
@@ -166,18 +134,33 @@ class FirebaseService: DatabaseManager {
     func stopListening() {
         inventoryListener?.remove()
         userListener?.remove()
-        itemsListeners.values.forEach { $0.remove() }
     }
 
     func getUser(withId id: String) -> AnyPublisher<User, AppError> {
         Future { [weak self] promise in
             self?.firestore.collection("users").document(id).getDocument { snapshot, error in
-                if let dict = snapshot?.data(), let user = User(from: dict) {
+                if let dict = snapshot?.data(), var user = User(from: dict) {
+                    user.settings = user.settings ?? CopDeckSettings.default
                     promise(.success(user))
                 } else if let error = error {
                     promise(.failure(AppError(error: error)))
                 } else {
-                    promise(.success(User(id: id)))
+                    var user = User(id: id)
+                    user.settings = user.settings ?? CopDeckSettings.default
+                    user.noSetup = true
+                    promise(.success(user))
+                }
+            }
+        }.eraseToAnyPublisher()
+    }
+
+    func getItem(withId id: String, settings: CopDeckSettings) -> AnyPublisher<Item, AppError> {
+        Future { [weak self] promise in
+            self?.itemsRef?.document(Item.databaseId(itemId: id, settings: settings)).getDocument { snapshot, error in
+                if let dict = snapshot?.data(), let item = Item(from: dict) {
+                    promise(.success(item))
+                } else {
+                    promise(.failure(error.map { AppError(error: $0) } ?? AppError.unknown))
                 }
             }
         }.eraseToAnyPublisher()
@@ -204,45 +187,31 @@ class FirebaseService: DatabaseManager {
     }
 
     func add(inventoryItems: [InventoryItem]) {
-        let savedItems = allItems
-        let newItems = inventoryItems.allItems.filter { item in
-            !savedItems.contains(where: { $0.id == item.id })
-        }
-
-        // add inventory items
         let batch = firestore.batch()
         inventoryItems
             .compactMap { inventoryItem -> (String, [String: Any])? in
-                if let dict = try? inventoryItem.asDictionary() {
-                    return (inventoryItem.id, dict)
-                } else {
-                    return nil
-                }
+                (try? inventoryItem.asDictionary()).map { (inventoryItem.id, $0) } ?? nil
             }
             .forEach { id, dict in
-                if let inventoryItemRef = userInventoryRef?.document(id) {
-                    batch.setData(dict, forDocument: inventoryItemRef)
-                }
-            }
-
-        newItems
-            .compactMap { item -> (String, [String: Any])? in
-                if let dict = try? item.asDictionary() {
-                    return (item.id, dict)
-                } else {
-                    return nil
-                }
-            }
-            .forEach { id, dict in
-                if let itemRef = itemsRef?.document(id) {
-                    batch.setData(dict, forDocument: itemRef)
-                }
+                _ = (userInventoryRef?.document(id)).map { batch.setData(dict, forDocument: $0) }
             }
 
         batch.commit { [weak self] error in
             if let error = error {
                 self?.errorsSubject.send(AppError(error: error))
             }
+        }
+    }
+
+    func update(item: Item, settings: CopDeckSettings) {
+        if let dict = try? item.asDictionary() {
+            itemsRef?
+                .document(item.databaseId(settings: settings))
+                .setData(dict, merge: true) { [weak self] error in
+                    if let error = error {
+                        self?.errorsSubject.send(AppError(error: error))
+                    }
+                }
         }
     }
 

@@ -9,12 +9,14 @@ import SwiftUI
 
 struct RootView: View {
     @EnvironmentObject var store: AppStore
+    @State var user: User?
 
     class ViewState {
         var firstShow = true
     }
 
     var viewState = ViewState()
+
 
     var body: some View {
         let presentErrorAlert = Binding<Bool>(get: { store.state.error != nil }, set: { _ in })
@@ -35,7 +37,8 @@ struct RootView: View {
         }
         .onReceive(store.$state) { state in
             // user just logged in
-            if (state.user != nil) {
+            if (state.user != nil && user == nil) {
+                user = state.user
                 UIApplication.shared.endEditing()
             }
         }

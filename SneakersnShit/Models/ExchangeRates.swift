@@ -14,3 +14,7 @@ struct ExchangeRates: Codable, Equatable {
     let nok: Double
     let updated: Double?
 }
+
+extension ExchangeRates {
+    static let `default` = ExchangeRates(usd: 1.2125, gbp: 0.8571, chf: 1.0883, nok: 10.0828, updated: Date().timeIntervalSince1970 * 1000)
+}

@@ -10,20 +10,34 @@ import Combine
 import FirebaseFunctions
 
 class BackendAPI: API {
-    func getExchangeRates() -> AnyPublisher<ExchangeRates, AppError> {
+    func getItemDetails(for item: Item?, itemId: String, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
+        if let item = item {
+            return getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates)
+        } else {
+            return getItemDetails(forItemWithId: itemId, settings: settings, exchangeRates: exchangeRates)
+        }
+    }
+
+    private func getItemDetails(forItemWithId id: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
+        search(searchTerm: id, settings: settings, exchangeRates: exchangeRates)
+            .compactMap { items in items.first(where: { $0.id == id }) }
+            .eraseToAnyPublisher()
+    }
+
+    func getExchangeRates(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<ExchangeRates, AppError> {
         PassthroughSubject<ExchangeRates, AppError>().eraseToAnyPublisher()
     }
 
     // todo: refactor shit
 
-    func search(searchTerm: String) -> AnyPublisher<[Item], AppError> {
+    func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
         struct Params: Encodable {
             let searchTerm: String
         }
         return callFirebaseFunctionArray(functionName: "search", model: Params(searchTerm: searchTerm))
     }
 
-    func getItemDetails(for item: Item) -> AnyPublisher<Item, AppError> {
+    private func getItemDetails(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
         struct Params: Encodable {
             let item: Item
         }

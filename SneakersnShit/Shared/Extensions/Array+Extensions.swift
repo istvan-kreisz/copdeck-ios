@@ -12,12 +12,3 @@ extension Array where Element: Numeric {
         reduce(0, +)
     }
 }
-
-extension Array where Element == InventoryItem {
-    var allItems: [Item] {
-        compactMap { $0.item }
-            .reduce([:]) { dict, item in
-                dict.merging([item.id: item]) { _, new in new }
-            }.values.map { $0 }
-    }
-}

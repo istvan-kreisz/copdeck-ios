@@ -16,7 +16,8 @@ enum MainAction {
     case getSearchResults(searchTerm: String)
     case setSearchResults(searchResults: [Item])
     // item details
-    case getItemDetails(item: Item)
+    case getItemDetails(item: Item?, itemId: String, forced: Bool)
+    case setSelectedItem(item: Item)
     // inventory
     case addToInventory(inventoryItems: [InventoryItem])
 //    case removeFromInventory(inventoryItem: InventoryItem)
@@ -40,6 +41,8 @@ extension MainAction: IdAble {
             return "setSearchResults"
         case .getItemDetails:
             return "getItemDetails"
+        case .setSelectedItem:
+            return "setSelectedItem"
         case .addToInventory:
             return "addToInventory"
 //        case .removeFromInventory:

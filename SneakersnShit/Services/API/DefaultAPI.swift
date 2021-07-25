@@ -19,16 +19,42 @@ class DefaultDataController: DataController {
         self.databaseManager = databaseManager
     }
 
-    func getExchangeRates() -> AnyPublisher<ExchangeRates, AppError> {
-        localScraper.getExchangeRates()
+    func getExchangeRates(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<ExchangeRates, AppError> {
+        localScraper.getExchangeRates(settings: settings, exchangeRates: exchangeRates)
     }
 
-    func search(searchTerm: String) -> AnyPublisher<[Item], AppError> {
-        localScraper.search(searchTerm: searchTerm)
+    func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
+        localScraper.search(searchTerm: searchTerm, settings: settings, exchangeRates: exchangeRates)
     }
 
-    func getItemDetails(for item: Item) -> AnyPublisher<Item, AppError> {
-        localScraper.getItemDetails(for: item)
+    func getItemDetails(for item: Item?,
+                        itemId: String,
+                        forced: Bool,
+                        settings: CopDeckSettings,
+                        exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
+        if forced {
+            return localScraper
+                .getItemDetails(for: item, itemId: itemId, forced: forced, settings: settings, exchangeRates: exchangeRates)
+                .handleEvents(receiveOutput: { [weak self] item in
+                    self?.databaseManager.update(item: item, settings: settings)
+                })
+                .eraseToAnyPublisher()
+        } else {
+            return databaseManager.getItem(withId: itemId, settings: settings)
+                .tryCatch { [weak self] error -> AnyPublisher<Item, AppError> in
+                    guard let self = self else {
+                        return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
+                    }
+                    return self.localScraper
+                        .getItemDetails(for: item, itemId: itemId, forced: forced, settings: settings, exchangeRates: exchangeRates)
+                        .handleEvents(receiveOutput: { [weak self] item in
+                            self?.databaseManager.update(item: item, settings: settings)
+                        })
+                        .eraseToAnyPublisher()
+                }
+                .mapError { error in (error as? AppError) ?? AppError(error: error) }
+                .eraseToAnyPublisher()
+        }
     }
 
     lazy var inventoryItemsPublisher: AnyPublisher<[InventoryItem], Never> = databaseManager.inventoryItemsPublisher
@@ -43,6 +69,10 @@ class DefaultDataController: DataController {
         databaseManager.getUser(withId: id)
     }
 
+    func getItem(withId id: String, settings: CopDeckSettings) -> AnyPublisher<Item, AppError> {
+        databaseManager.getItem(withId: id, settings: settings)
+    }
+
     func add(exchangeRates: ExchangeRates) {
         databaseManager.add(exchangeRates: exchangeRates)
     }
@@ -53,6 +83,10 @@ class DefaultDataController: DataController {
 
     func add(inventoryItems: [InventoryItem]) {
         databaseManager.add(inventoryItems: inventoryItems)
+    }
+
+    func update(item: Item, settings: CopDeckSettings) {
+        databaseManager.update(item: item, settings: settings)
     }
 
     func update(inventoryItem: InventoryItem) {
@@ -70,5 +104,4 @@ class DefaultDataController: DataController {
     func stopListening() {
         databaseManager.stopListening()
     }
-
 }

@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 struct CopDeckSettings: Codable, Equatable {
     let currency: Currency
     let updateInterval: Double
@@ -15,16 +16,16 @@ struct CopDeckSettings: Codable, Equatable {
     var feeCalculation: FeeCalculation
 
     struct FeeCalculation: Codable, Equatable {
-        let countryName: String
+        let country: Country
         var stockx: StockX?
         var goat: Goat?
 
         struct StockX: Codable, Equatable {
             enum SellerLevel: Int, Codable, Equatable {
-                case Level1 = 1
-                case Level2 = 2
-                case Level3 = 3
-                case Level4 = 4
+                case level1 = 1
+                case level2 = 2
+                case level3 = 3
+                case level4 = 4
             }
 
             let sellerLevel: SellerLevel
@@ -48,4 +49,14 @@ struct CopDeckSettings: Codable, Equatable {
             let taxes: Double
         }
     }
+}
+
+extension CopDeckSettings {
+    static let `default` = CopDeckSettings(currency: Currency(code: .eur, symbol: .eur),
+                                           updateInterval: 60,
+                                           notificationFrequency: 24,
+                                           darkModeOn: false,
+                                           feeCalculation: .init(country: .US,
+                                                                 stockx: .init(sellerLevel: .level1, taxes: 0),
+                                                                 goat: .init(commissionPercentage: .low, cashOutFee: .none, taxes: 0)))
 }

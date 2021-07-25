@@ -27,7 +27,7 @@ extension AppStore {
             .store(in: &effectCancellables)
 
         environment.dataController.userPublisher
-            .sink { [weak self] in self?.state.user = $0 }
+            .sink { [weak self] newUser in self?.state.user = newUser }
             .store(in: &effectCancellables)
 
         environment.dataController.inventoryItemsPublisher
@@ -41,11 +41,9 @@ extension AppStore {
 
     func setupTimers() {
         refreshExchangeRatesIfNeeded()
-        refreshItemsIfNeeded()
         #warning("update")
         Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in
             self?.refreshExchangeRatesIfNeeded()
-            self?.refreshItemsIfNeeded()
         }
     }
 
@@ -60,14 +58,7 @@ extension AppStore {
         }
     }
 
-    func refreshItemsIfNeeded() {
-        let itemsToUpdate = state.inventoryItems.allItems.filter { item in
-            if let updated = item.updated {
-                let timeDiff = (Date().timeIntervalSince1970 - updated / 1000) / 60
-                return timeDiff >= 10
-            } else {
-                return false
-            }
-        }
+    func randomDelay(min: Double = 0.0, max: Double = 0.5) -> Double {
+        Double.random(in: min ..< max)
     }
 }

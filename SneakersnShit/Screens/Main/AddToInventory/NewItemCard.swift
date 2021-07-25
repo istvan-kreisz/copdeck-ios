@@ -9,11 +9,13 @@ import SwiftUI
 
 struct NewItemCard: View {
     @Binding var inventoryItem: InventoryItem
+    let item: Item
     @State var status = "NONE"
     @State var soldOn = "NONE"
 
-    init(inventoryItem: Binding<InventoryItem>?) {
+    init(inventoryItem: Binding<InventoryItem>?, item: Item) {
         self._inventoryItem = inventoryItem ?? Binding.constant(InventoryItem.init(fromItem: .sample))
+        self.item = item
     }
 
     var body: some View {
@@ -24,13 +26,13 @@ struct NewItemCard: View {
                 let purchasePrice = Binding<String>(get: { inventoryItem.purchasePrice.asString },
                                                     set: { new in inventoryItem.purchasePrice = Double(new) })
                 TextFieldRounded(title: "purchase price",
-                                 placeHolder: (inventoryItem.item?.retailPrice).asString,
+                                 placeHolder: (item.retailPrice).asString,
                                  style: .gray,
                                  keyboardType: .numberPad,
                                  text: purchasePrice)
                 DropDownMenu(title: "size",
                              selectedItem: $inventoryItem.size,
-                             options: inventoryItem.item?.sortedSizes ?? [])
+                             options: item.sortedSizes)
                 DropDownMenu(title: "condition",
                              selectedItem: condition,
                              options: InventoryItem.Condition.allCases.map { $0.rawValue })
@@ -102,6 +104,6 @@ struct NewItemCard: View {
 
 struct NewItemCard_Previews: PreviewProvider {
     static var previews: some View {
-        NewItemCard(inventoryItem: .constant(.init(fromItem: .sample)))
+        NewItemCard(inventoryItem: .constant(InventoryItem.init(fromItem: Item.sample)), item: Item.sample)
     }
 }

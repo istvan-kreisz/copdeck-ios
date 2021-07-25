@@ -37,7 +37,7 @@ func appReducer(state: inout AppState,
                 state.searchResults = []
                 return Empty(completeImmediately: true).eraseToAnyPublisher()
             } else {
-                return environment.dataController.search(searchTerm: searchTerm)
+                return environment.dataController.search(searchTerm: searchTerm, settings: state.settings, exchangeRates: state.rates)
                     .map { AppAction.main(action: .setSearchResults(searchResults: $0)) }
                     .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
                     .eraseToAnyPublisher()
@@ -45,15 +45,13 @@ func appReducer(state: inout AppState,
         case let .setSearchResults(searchResults):
             state.searchResults = searchResults
             return Empty(completeImmediately: true).eraseToAnyPublisher()
-        case let .getItemDetails(item):
-            return Just(AppAction.none).eraseToAnyPublisher()
-//            return environment.dataController.getItemDetails(for: item)
-//                .flatMap {
-//                    state.selectedItem = $0
-//                    return Empty(completeImmediately: true).eraseToAnyPublisher()
-//
-//                }
-//                .catchErrors()
+        case let .getItemDetails(item, itemId, forced):
+            return environment.dataController.getItemDetails(for: item, itemId: itemId, forced: forced, settings: state.settings, exchangeRates: state.rates)
+                .map { AppAction.main(action: .setSelectedItem(item: $0)) }
+                .catchErrors()
+        case .setSelectedItem(let item):
+            state.selectedItem = item
+            return Empty(completeImmediately: true).eraseToAnyPublisher()
         case let .addToInventory(inventoryItems):
             environment.dataController.add(inventoryItems: inventoryItems)
             return Empty(completeImmediately: true).eraseToAnyPublisher()
@@ -82,7 +80,7 @@ func appReducer(state: inout AppState,
         //            .map { AppAction.main(action: .setInventoryItems(inventoryItems: $0)) }
         //            .catchErrors()
         case .getExchangeRates:
-            return environment.dataController.getExchangeRates()
+            return environment.dataController.getExchangeRates(settings: state.settings, exchangeRates: state.rates)
                 .map {
                     environment.dataController.add(exchangeRates: $0)
                     return AppAction.none

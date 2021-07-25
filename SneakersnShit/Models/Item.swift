@@ -238,3 +238,13 @@ extension Item {
              retailPrice: 12,
              imageURL: nil)
 }
+
+extension Item {
+    func databaseId(settings: CopDeckSettings) -> String {
+        "\(id)-\(settings.feeCalculation.country.region)-\(settings.currency.code.rawValue)"
+    }
+
+    static func databaseId(itemId: String, settings: CopDeckSettings) -> String {
+        "\(itemId)-\(settings.feeCalculation.country.region)-\(settings.currency.code.rawValue)"
+    }
+}

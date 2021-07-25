@@ -20,9 +20,11 @@ protocol DatabaseManager {
     var errorsPublisher: AnyPublisher<AppError, Never> { get }
 
     func getUser(withId id: String) -> AnyPublisher<User, AppError>
+    func getItem(withId id: String, settings: CopDeckSettings) -> AnyPublisher<Item, AppError>
     // write
     func add(inventoryItems: [InventoryItem])
     func add(exchangeRates: ExchangeRates)
+    func update(item: Item, settings: CopDeckSettings)
     func update(inventoryItem: InventoryItem)
     func delete(inventoryItem: InventoryItem)
     func updateSettings(settings: CopDeckSettings)

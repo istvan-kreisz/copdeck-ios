@@ -23,12 +23,12 @@ struct APIConfig: Codable {
         struct Goat: Codable {
             let commissionPercentage: Double
             let cashOutFee: Double
-            let taxes: Int
+            let taxes: Double
         }
 
         struct Stockx: Codable {
             let sellerLevel: Int
-            let taxes: Int
+            let taxes: Double
         }
     }
 }
