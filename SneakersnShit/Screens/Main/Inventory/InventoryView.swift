@@ -70,8 +70,6 @@ struct InventoryView: View {
                 .padding(.vertical, 6)
             }
         }
-        .edgesIgnoringSafeArea(.bottom)
-        .frame(maxWidth: UIScreen.main.bounds.width)
         .withFloatingButton(button: EditInventoryTray(didTapCancel: {
             isEditing = false
         }, didTapDelete: {

@@ -59,7 +59,7 @@ class DefaultDataController: DataController {
                         return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
                     }
                     if let updated = item.updated {
-                        if updated.isOlderThan(minutes: 10) {
+                        if updated.isOlderThan(minutes: 30) {
                             return self.refreshItem(for: item, itemId: itemId, forced: forced, settings: settings, exchangeRates: exchangeRates)
                         } else {
                             return Just(item).setFailureType(to: AppError.self).eraseToAnyPublisher()

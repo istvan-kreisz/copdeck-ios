@@ -74,7 +74,8 @@ struct AddToInventoryView: View {
                             TextFieldRounded(title: "styleid (optional)",
                                              placeHolder: "styleid",
                                              style: .white,
-                                             text: $styleId)
+                                             text: $styleId,
+                                             width: 100)
                         }
 
                         NewItemCard(inventoryItem: $inventoryItem1, item: self.item)

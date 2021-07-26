@@ -26,7 +26,7 @@ struct NewItemCard: View {
                 let purchasePrice = Binding<String>(get: { inventoryItem.purchasePrice.asString },
                                                     set: { new in inventoryItem.purchasePrice = Double(new) })
                 TextFieldRounded(title: "purchase price",
-                                 placeHolder: (item.retailPrice).asString,
+                                 placeHolder: item.retailPrice.asString,
                                  style: .gray,
                                  keyboardType: .numberPad,
                                  text: purchasePrice)
@@ -46,7 +46,7 @@ struct NewItemCard: View {
                         .padding(.leading, 5)
 
                     HStack(alignment: .top, spacing: 11) {
-                        ForEach(ALLSTORES) { store in
+                        ForEach(ALLSTORESWITHOTHER) { store in
                             let text =
                                 Binding<String>(get: {
                                                     (inventoryItem.listingPrices
@@ -54,11 +54,12 @@ struct NewItemCard: View {
                                                 },
                                                 set: { new in
                                                     if let index = inventoryItem.listingPrices.firstIndex(where: { $0.storeId == store.id }) {
-                                                        inventoryItem.listingPrices.remove(at: index)
+                                                        inventoryItem.listingPrices[index] = InventoryItem.ListingPrice(storeId: store.id, price: Int(new) ?? 0)
+                                                    } else {
+                                                        inventoryItem.listingPrices.append(.init(storeId: store.id, price: Int(new) ?? 0))
                                                     }
-                                                    inventoryItem.listingPrices.append(.init(storeId: store.id, price: Int(new) ?? 0))
                                                 })
-                            TextFieldRounded(title: store.id.rawValue.lowercased(),
+                            TextFieldRounded(title: store.id.lowercased(),
                                              placeHolder: "$0",
                                              style: .gray,
                                              keyboardType: .numberPad,
@@ -70,15 +71,10 @@ struct NewItemCard: View {
             } else if status == "SOLD" {
                 let text =
                     Binding<String>(get: { (inventoryItem.soldPrice?.price).asString },
-                                    set: { new in
-                                        inventoryItem.soldPrice = .init(storeId: inventoryItem.soldPrice?.storeId,
-                                                                        price: Double(new))
-                                    })
+                                    set: { inventoryItem.soldPrice = .init(storeId: inventoryItem.soldPrice?.storeId, price: Double($0)) })
                 let soldOn =
-                    Binding<String>(get: { inventoryItem.soldPrice?.storeId?.rawValue.uppercased() ?? "NONE" },
-                                    set: { new in
-                                        inventoryItem.soldPrice = .init(storeId: StoreId(rawValue: new), price: inventoryItem.soldPrice?.price)
-                                    })
+                    Binding<String>(get: { inventoryItem.soldPrice?.storeId?.uppercased() ?? "OTHER" },
+                                    set: { inventoryItem.soldPrice = .init(storeId: $0.lowercased(), price: inventoryItem.soldPrice?.price) })
 
                 VStack(alignment: .leading, spacing: 11) {
                     HStack {
@@ -91,7 +87,7 @@ struct NewItemCard: View {
                     }
                     ToggleButton(title: "sold on (optional)",
                                  selection: soldOn,
-                                 options: ["NONE"] + ALLSTORES.map { $0.id.rawValue.uppercased() })
+                                 options: ALLSTORESWITHOTHER.map { $0.id.uppercased() })
                 }
             }
         }

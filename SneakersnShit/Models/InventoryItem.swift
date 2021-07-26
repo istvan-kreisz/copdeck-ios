@@ -12,11 +12,11 @@ struct InventoryItem: Codable, Equatable, Identifiable {
         case new, used
     }
     struct ListingPrice: Codable, Equatable {
-        let storeId: StoreId
+        let storeId: String
         var price: Int
     }
     struct SoldPrice: Codable, Equatable {
-        let storeId: StoreId?
+        let storeId: String?
         var price: Double?
     }
 
@@ -34,7 +34,7 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     let updated: Double?
 
     enum CodingKeys: String, CodingKey {
-        case id, itemId, name, purchasePrice, imageURL, size, condition, notes, created, updated
+        case id, itemId, name, purchasePrice, imageURL, size, condition, listingPrices, soldPrice, notes, created, updated
     }
 }
 
@@ -49,7 +49,7 @@ extension InventoryItem {
                   condition: .new,
                   soldPrice: nil,
                   notes: nil,
-                  created: Date().timeIntervalSince1970,
-                  updated: Date().timeIntervalSince1970)
+                  created: Date().timeIntervalSince1970 * 1000,
+                  updated: Date().timeIntervalSince1970 * 1000)
     }
 }

@@ -17,6 +17,13 @@ enum StoreName: String, Codable, CaseIterable {
 
 let ALLSTORES = zip(StoreId.allCases, StoreName.allCases).map { Store(id: $0, name: $1) }
 
+let ALLSTORESWITHOTHER = ALLSTORES.map { GenericStore(id: $0.id.rawValue, name: $0.name.rawValue) } + [GenericStore(id: "other", name: "Other")]
+
+struct GenericStore: Codable, Equatable, Identifiable {
+    let id: String
+    let name: String
+}
+
 struct Store: Codable, Equatable, Identifiable {
     let id: StoreId
     let name: StoreName
