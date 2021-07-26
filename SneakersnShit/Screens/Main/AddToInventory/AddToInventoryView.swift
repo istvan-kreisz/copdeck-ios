@@ -53,7 +53,8 @@ struct AddToInventoryView: View {
                 ZStack {
                     ImageView(withURL: item.bestStoreInfo?.imageURL ?? "",
                               size: UIScreen.main.bounds.width - 80,
-                              aspectRatio: nil)
+                              aspectRatio: nil,
+                              showPlaceholder: false)
                     NavigationBar(title: nil, isBackButtonVisible: true, style: .dark)
                         .withDefaultPadding(padding: .horizontal)
                         .topAligned()
