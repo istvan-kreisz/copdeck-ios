@@ -71,6 +71,7 @@ struct InventoryView: View {
                 }
                 .withDefaultPadding(padding: .horizontal)
                 .padding(.vertical, 6)
+                Color.clear.padding(.bottom, 130)
             }
         }
         .withFloatingButton(button: EditInventoryTray(didTapCancel: {
@@ -78,7 +79,9 @@ struct InventoryView: View {
         }, didTapDelete: {
             deleteFromInventory(inventoryItems: selectedInventoryItems)
             isEditing = false
-        }).if(!isEditing) { $0.hidden() })
+        })
+            .padding(.bottom, UIApplication.shared.safeAreaInsets().bottom)
+            .if(!isEditing) { $0.hidden() })
         .onChange(of: searchText) { searchText in
             store.send(.main(action: .getInventorySearchResults(searchTerm: searchText)))
         }

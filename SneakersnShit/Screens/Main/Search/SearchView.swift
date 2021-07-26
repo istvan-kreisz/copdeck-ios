@@ -59,6 +59,8 @@ struct SearchView: View {
                 }
                 .withDefaultPadding(padding: .horizontal)
                 .padding(.vertical, 6)
+
+                Color.clear.padding(.bottom, 130)
             }
         }
         .onChange(of: searchText) { searchText in

@@ -83,20 +83,17 @@ struct InventoryItemDetailView: View {
                     .edgesIgnoringSafeArea(.all))
             }
         }
-        .onAppear {
-            store.send(.main(action: .setSelectedItem(item: nil)))
-            store.send(.main(action: .getItemDetails(item: nil, itemId: inventoryItem.id, forced: false)))
-        }
         .navigationbarHidden()
     }
 
     private func deleteInventoryItem() {
-        #warning("yo")
+        store.send(.main(action: .removeFromInventory(inventoryItems: [inventoryItem])))
+        isEditingInventoryItem = false
     }
 
     private func updateInventoryItem() {
-        #warning("yo")
-//        store.send(.main(action: .addToInventory(inventoryItems: inventoryItems)))
+        let updatedInventoryItem = inventoryItem.copy(withName: name, itemId: styleId, notes: notes)
+        store.send(.main(action: .addToInventory(inventoryItems: [updatedInventoryItem])))
         isEditingInventoryItem = false
     }
 }

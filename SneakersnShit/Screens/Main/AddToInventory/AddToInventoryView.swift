@@ -150,12 +150,8 @@ struct AddToInventoryView: View {
     private func addItems() {
         let inventoryItems = allInventoryItems
             .compactMap { $0 }
-            .map { i -> InventoryItem in
-                var copy = i
-                copy.name = name
-                copy.itemId = styleId
-                copy.notes = notes
-                return copy
+            .map { inventoryItem -> InventoryItem in
+                inventoryItem.copy(withName: name, itemId: styleId, notes: notes)
             }
         store.send(.main(action: .addToInventory(inventoryItems: inventoryItems)))
         addToInventory = false

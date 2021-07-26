@@ -15,8 +15,6 @@ struct NewItemCard: View {
     @Binding var inventoryItem: InventoryItem
     let purchasePrice: Double?
     let style: Style
-    @State var status = "NONE"
-    @State var soldOn = "NONE"
 
     var textFieldStyle: TextFieldRounded.Style {
         style == .card ? .gray : .white
@@ -34,6 +32,13 @@ struct NewItemCard: View {
         self._inventoryItem = inventoryItem ?? Binding.constant(InventoryItem.init(fromItem: .sample))
         self.purchasePrice = purchasePrice
         self.style = style
+//        if inventoryItem?.wrappedValue.soldPrice != nil {
+//            self._status = State(initialValue: inventoryItem?.wrappedValue.status)
+//        } else if inventoryItem?.wrappedValue.listingPrices.isEmpty == false {
+//            self._status = State(initialValue: "LISTED")
+//        } else {
+//            self._status = State(initialValue: "NONE")
+//        }
     }
 
     var body: some View {
@@ -57,11 +62,13 @@ struct NewItemCard: View {
                              options: InventoryItem.Condition.allCases.map { $0.rawValue },
                              style: dropdownStyle)
             }
+            let soldStatus = Binding<String>(get: { (inventoryItem.status ?? InventoryItem.SoldStatus.none).rawValue.uppercased() },
+                                             set: { inventoryItem.status = .init(rawValue: $0.lowercased()) ?? InventoryItem.SoldStatus.none })
             ToggleButton(title: "status",
-                         selection: $status,
+                         selection: soldStatus,
                          options: ["NONE", "LISTED", "SOLD"],
                          style: toggleButtonStyle)
-            if status == "LISTED" {
+            if inventoryItem.status == .listed {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("listing prices (optional)")
                         .font(.semiBold(size: 12))
@@ -91,7 +98,7 @@ struct NewItemCard: View {
                     }
                 }
                 .padding(.top, 5)
-            } else if status == "SOLD" {
+            } else if inventoryItem.status == .sold {
                 let text =
                     Binding<String>(get: { (inventoryItem.soldPrice?.price).asString },
                                     set: { inventoryItem.soldPrice = .init(storeId: inventoryItem.soldPrice?.storeId, price: Double($0)) })

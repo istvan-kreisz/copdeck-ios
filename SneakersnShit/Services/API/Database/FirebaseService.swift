@@ -207,7 +207,7 @@ class FirebaseService: DatabaseManager {
                 (try? inventoryItem.asDictionary()).map { (inventoryItem.id, $0) } ?? nil
             }
             .forEach { id, dict in
-                _ = (userInventoryRef?.document(id)).map { batch.setData(dict, forDocument: $0) }
+                _ = (userInventoryRef?.document(id)).map { batch.setData(dict, forDocument: $0, merge: true) }
             }
 
         batch.commit { [weak self] error in
