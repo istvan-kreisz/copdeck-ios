@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct RootView: View {
+    @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var store: AppStore
     @State var user: User?
 
@@ -40,6 +41,8 @@ struct RootView: View {
             if (state.user != nil && user == nil) {
                 user = state.user
                 UIApplication.shared.endEditing()
+            } else if state.user == nil {
+                UIApplication.shared.windows.first?.rootViewController?.dismiss(animated: true, completion: nil)
             }
         }
         .alert(isPresented: presentErrorAlert) {

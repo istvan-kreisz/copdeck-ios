@@ -28,4 +28,7 @@ struct Currency: Codable, Equatable {
     }
 }
 
-let ALLCURRENCIES = zip(Currency.CurrencyCode.allCases, Currency.CurrencySymbol.allCases).map { Currency(code: $0, symbol: $1) }
+let ALLSELECTABLECURRENCYCODES: [Currency.CurrencyCode] = [.eur, .usd, .gbp]
+let ALLSELECTABLECURRENCYSYMBOLS: [Currency.CurrencySymbol] = [.eur, .usd, .gbp]
+
+let ALLCURRENCIES = zip(ALLSELECTABLECURRENCYCODES, ALLSELECTABLECURRENCYSYMBOLS).map { Currency(code: $0, symbol: $1) }

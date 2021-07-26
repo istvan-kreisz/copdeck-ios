@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Country: String, Codable {
+enum Country: String, Codable, CaseIterable {
     case AT
     case BE
     case BG

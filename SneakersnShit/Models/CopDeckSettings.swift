@@ -9,44 +9,44 @@ import Foundation
 
 
 struct CopDeckSettings: Codable, Equatable {
-    let currency: Currency
-    let updateInterval: Double
-    let notificationFrequency: Double
-    let darkModeOn: Bool
+    var currency: Currency
+    var updateInterval: Double
+    var notificationFrequency: Double
+    var darkModeOn: Bool
     var feeCalculation: FeeCalculation
 
     struct FeeCalculation: Codable, Equatable {
-        let country: Country
+        var country: Country
         var stockx: StockX?
         var goat: Goat?
 
         struct StockX: Codable, Equatable {
-            enum SellerLevel: Int, Codable, Equatable {
+            enum SellerLevel: Int, Codable, Equatable, CaseIterable {
                 case level1 = 1
                 case level2 = 2
                 case level3 = 3
                 case level4 = 4
             }
 
-            let sellerLevel: SellerLevel
-            let taxes: Double
+            var sellerLevel: SellerLevel
+            var taxes: Double
         }
 
         struct Goat: Codable, Equatable {
-            enum CommissionPercentage: Double, Codable, Equatable {
+            enum CommissionPercentage: Double, Codable, Equatable, CaseIterable {
                 case low = 9.5
                 case mid = 15
                 case high = 20
             }
 
-            enum CashoutFee: Double, Codable, Equatable {
+            enum CashoutFee: Double, Codable, Equatable, CaseIterable {
                 case none = 0
                 case regular = 0.029
             }
 
-            let commissionPercentage: CommissionPercentage
-            let cashOutFee: CashoutFee
-            let taxes: Double
+            var commissionPercentage: CommissionPercentage
+            var cashOutFee: CashoutFee
+            var taxes: Double
         }
     }
 }

@@ -29,8 +29,8 @@ struct InventoryView: View {
         ForEach(store.state.inventoryItems) { inventoryItem in
             NavigationLink(destination: InventoryItemDetailView(inventoryItem: inventoryItem,
                                                                 isEditingInventoryItem: isEditingInventoryItem),
-                tag: inventoryItem.id,
-                selection: $selectedInventoryItemId) { EmptyView() }
+                           tag: inventoryItem.id,
+                           selection: $selectedInventoryItemId) { EmptyView() }
         }
         VStack(alignment: .leading, spacing: 19) {
             HStack {
@@ -107,7 +107,6 @@ struct InventoryView: View {
         }
         .sheet(isPresented: $settingsPresented) {
             SettingsView()
-                .environmentObject(store)
         }
     }
 
