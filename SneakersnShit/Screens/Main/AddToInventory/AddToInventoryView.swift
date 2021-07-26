@@ -87,25 +87,8 @@ struct AddToInventoryView: View {
                         NewItemCard(inventoryItem: item, purchasePrice: self.item.retailPrice)
                     }
                     if itemCount != allInventoryItems.count {
-                        RoundedButton(text: "Add More",
-                                      size: .init(width: 110, height: 30),
-                                      fontSize: 12,
-                                      color: .clear,
-                                      borderColor: Color.customBlue.opacity(0.4),
-                                      textColor: Color.customBlue,
-                                      padding: 10,
-                                      accessoryView: (AnyView(ZStack {
-                                          Circle()
-                                              .fill(Color.customBlue.opacity(0.2))
-                                              .frame(width: 18, height: 18)
-                                          Image(systemName: "plus")
-                                              .font(.bold(size: 7))
-                                              .foregroundColor(.customBlue)
-                                      }.frame(width: 18, height: 18)),
-                                      .left, 10, .none)) {
-                                addMore()
-                        }
-                        .leftAligned()
+                        AccessoryButton(title: "Add More", color: .customBlue, textColor: .customBlue, width: 110, tapped: addMore)
+                            .leftAligned()
                     }
 
                     TextFieldRounded(title: "notes (optional)",

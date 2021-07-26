@@ -16,6 +16,8 @@ struct InventoryItemDetailView: View {
     @State var styleId: String
     @State var notes: String
 
+    @State var showItemDetails = false
+
     init(inventoryItem: InventoryItem, isEditingInventoryItem: Binding<Bool>) {
         self._inventoryItem = State(initialValue: inventoryItem)
         self._isEditingInventoryItem = isEditingInventoryItem
@@ -26,6 +28,9 @@ struct InventoryItemDetailView: View {
     }
 
     var body: some View {
+        NavigationLink(
+            destination: ItemDetailView(item: Item.sample),
+            isActive: $showItemDetails) { EmptyView() }
         ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .center, spacing: 20) {
                 ItemImageViewWithNavBar(imageURL: inventoryItem.imageURL)
@@ -35,6 +40,13 @@ struct InventoryItemDetailView: View {
                         .font(.bold(size: 30))
                         .foregroundColor(.customText1)
                         .padding(.bottom, 8)
+
+                    AccessoryButton(title: "View Prices",
+                                    color: .customAccent1,
+                                    textColor: .customText1,
+                                    width: 125,
+                                    tapped: { showItemDetails = true })
+
                     HStack(spacing: 10) {
                         TextFieldRounded(title: "name",
                                          placeHolder: "name",
@@ -46,6 +58,7 @@ struct InventoryItemDetailView: View {
                                          text: $styleId,
                                          width: 100)
                     }
+                    .padding(.top, 15)
 
                     NewItemCard(inventoryItem: $inventoryItem, purchasePrice: inventoryItem.purchasePrice, style: .noBackground)
 

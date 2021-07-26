@@ -52,6 +52,7 @@
 		5D52E30B2613063B00FA02B8 /* Encodable+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D52E30A2613063B00FA02B8 /* Encodable+Extensions.swift */; };
 		5D52E30F26130E2100FA02B8 /* InventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D52E30E26130E2100FA02B8 /* InventoryView.swift */; };
 		5D52E31226130E7500FA02B8 /* InventoryItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D52E31126130E7500FA02B8 /* InventoryItemDetailView.swift */; };
+		5D53A1F226AF2A61001DAA8D /* AccessoryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D53A1F126AF2A61001DAA8D /* AccessoryButton.swift */; };
 		5D631220269330B900876D99 /* APIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D63121F269330B900876D99 /* APIConfig.swift */; };
 		5D6312222694797300876D99 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6312212694797300876D99 /* Item.swift */; };
 		5D6312242694D83100876D99 /* Decodable+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6312232694D83100876D99 /* Decodable+Extensions.swift */; };
@@ -161,6 +162,7 @@
 		5D52E30A2613063B00FA02B8 /* Encodable+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Encodable+Extensions.swift"; sourceTree = "<group>"; };
 		5D52E30E26130E2100FA02B8 /* InventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryView.swift; sourceTree = "<group>"; };
 		5D52E31126130E7500FA02B8 /* InventoryItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryItemDetailView.swift; sourceTree = "<group>"; };
+		5D53A1F126AF2A61001DAA8D /* AccessoryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessoryButton.swift; sourceTree = "<group>"; };
 		5D63121F269330B900876D99 /* APIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfig.swift; sourceTree = "<group>"; };
 		5D6312212694797300876D99 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		5D6312232694D83100876D99 /* Decodable+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Decodable+Extensions.swift"; sourceTree = "<group>"; };
@@ -358,6 +360,7 @@
 				5D9D51FF26AE211900AB1F30 /* ListItem.swift */,
 				5D9D520526AE361900AB1F30 /* PillView.swift */,
 				5D9D520926AF17C900AB1F30 /* ItemImageViewWithNavBar.swift */,
+				5D53A1F126AF2A61001DAA8D /* AccessoryButton.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -808,6 +811,7 @@
 				5D9D51F226AC0E8F00AB1F30 /* Optional+Extensions.swift in Sources */,
 				5D631253269668FE00876D99 /* JSNativeBridge.swift in Sources */,
 				5D9D520226AE29DB00AB1F30 /* InventoryListItem.swift in Sources */,
+				5D53A1F226AF2A61001DAA8D /* AccessoryButton.swift in Sources */,
 				5D9C8E3F269FAB8B008538D6 /* NextButton.swift in Sources */,
 				5D95570C269A60DA00CCC2E7 /* String+Extensions.swift in Sources */,
 				5D9C8E3D269F2F31008538D6 /* RoundedButton.swift in Sources */,
