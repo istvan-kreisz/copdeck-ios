@@ -16,6 +16,8 @@ struct InventoryView: View {
     @State private var isEditing = false
     @State private var selectedInventoryItems: [InventoryItem] = []
 
+    @Binding var shouldShowTabBar: Bool
+
     var inventoryItems: [InventoryItem] {
         searchText.isEmpty ? store.state.inventoryItems : (store.state.inventorySearchResults ?? [])
     }
@@ -44,10 +46,7 @@ struct InventoryView: View {
                                   size: .init(width: 80, height: 32),
                                   color: .customBlue,
                                   accessoryView: nil,
-                                  tapped: {
-                                      isEditing.toggle()
-                                  })
-//                        .padding(.top, 15)
+                                  tapped: { isEditing.toggle() })
                 }
                 .withDefaultPadding(padding: .horizontal)
 
@@ -75,22 +74,32 @@ struct InventoryView: View {
             }
             .edgesIgnoringSafeArea(.bottom)
             .frame(maxWidth: UIScreen.main.bounds.width)
+            .withFloatingButton(button: EditInventoryTray(didTapCancel: {
+                isEditing = false
+            }, didTapDelete: {
+                deleteFromInventory(inventoryItems: selectedInventoryItems)
+                isEditing = false
+            }))
         }
         .navigationbarHidden()
         .onChange(of: searchText) { searchText in
             store.send(.main(action: .getInventorySearchResults(searchTerm: searchText)))
         }
+        .onChange(of: isEditing) { editing in
+            shouldShowTabBar = !editing
+            selectedInventoryItems = []
+        }
     }
 
-//    func deleteFromInventory(inventoryItem: InventoryItem) {
-//        store.send(.removeFromInventory(inventoryItem: inventoryItem))
-//    }
+    func deleteFromInventory(inventoryItems: [InventoryItem]) {
+        store.send(.main(action: .removeFromInventory(inventoryItems: inventoryItems)))
+    }
 }
 
 struct InventoryView_Previews: PreviewProvider {
     static var previews: some View {
         return Group {
-            InventoryView()
+            InventoryView(shouldShowTabBar: .constant(true))
                 .environmentObject(AppStore.default)
         }
     }

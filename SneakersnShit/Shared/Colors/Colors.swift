@@ -27,6 +27,7 @@ extension Color {
     static var customAccent2 = Color(r: 143, g: 146, b: 161).opacity(0.2)
     static var customAccent3 = Color.black.opacity(0.1)
     static var customAccent4 = Color(r: 243, g: 246, b: 248)
+    static var customAccent5 = Color(r: 69, g: 69, b: 69)
     static var customTwitterBlue = Color("TwitterBlue") // #00ACEC
 
     static var allCustomColors = [customBackground,

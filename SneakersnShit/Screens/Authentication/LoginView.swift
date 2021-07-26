@@ -14,14 +14,10 @@ struct LoginView: View {
 
     @State var email = ""
     @State var password = ""
-
     @State var signUpTapped = false
-
     @State var resetPasswordPresented = false
 
     let color: Color = .customBlue
-
-    init() {}
 
     var body: some View {
         NavigationView {

@@ -12,20 +12,22 @@ struct MainView: View {
     @EnvironmentObject var store: AppStore
     @StateObject var viewRouter = ViewRouter()
 
+    @State var shouldShowTabBar = true
+
     var body: some View {
         ZStack {
             switch viewRouter.currentPage {
             case .home:
                 Text("Home")
-                    .modifier(WrappedMainView(viewRouter: viewRouter))
+                    .modifier(WrappedMainView(viewRouter: viewRouter, shouldShow: $shouldShowTabBar))
                     .environmentObject(store)
             case .search:
                 SearchView()
-                    .modifier(WrappedMainView(viewRouter: viewRouter))
+                    .modifier(WrappedMainView(viewRouter: viewRouter, shouldShow: $shouldShowTabBar))
                     .environmentObject(store)
             case .inventory:
-                InventoryView()
-                    .modifier(WrappedMainView(viewRouter: viewRouter))
+                InventoryView(shouldShowTabBar: $shouldShowTabBar)
+                    .modifier(WrappedMainView(viewRouter: viewRouter, shouldShow: $shouldShowTabBar))
                     .environmentObject(store)
             }
         }

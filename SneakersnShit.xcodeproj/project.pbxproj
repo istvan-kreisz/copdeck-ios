@@ -87,6 +87,7 @@
 		5D9D520226AE29DB00AB1F30 /* InventoryListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D520126AE29DB00AB1F30 /* InventoryListItem.swift */; };
 		5D9D520426AE359C00AB1F30 /* InventoryViewPills.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D520326AE359C00AB1F30 /* InventoryViewPills.swift */; };
 		5D9D520626AE361900AB1F30 /* PillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D520526AE361900AB1F30 /* PillView.swift */; };
+		5D9D520826AE4CF400AB1F30 /* EditInventoryTray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D520726AE4CF400AB1F30 /* EditInventoryTray.swift */; };
 		5D9E85F126931F4300477377 /* scraper.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = 5D9E85F026931F4200477377 /* scraper.bundle.js */; };
 		5DA5140426A614530067C4A2 /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140026A614530067C4A2 /* FirebaseService.swift */; };
 		5DA5140926A6149D0067C4A2 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140826A6149D0067C4A2 /* DatabaseManager.swift */; };
@@ -194,6 +195,7 @@
 		5D9D520126AE29DB00AB1F30 /* InventoryListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryListItem.swift; sourceTree = "<group>"; };
 		5D9D520326AE359C00AB1F30 /* InventoryViewPills.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryViewPills.swift; sourceTree = "<group>"; };
 		5D9D520526AE361900AB1F30 /* PillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillView.swift; sourceTree = "<group>"; };
+		5D9D520726AE4CF400AB1F30 /* EditInventoryTray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditInventoryTray.swift; sourceTree = "<group>"; };
 		5D9E85F026931F4200477377 /* scraper.bundle.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = scraper.bundle.js; sourceTree = "<group>"; };
 		5DA5140026A614530067C4A2 /* FirebaseService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
 		5DA5140826A6149D0067C4A2 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
@@ -243,6 +245,7 @@
 				5DCC466D26A8CEDE007671BC /* NewItemCard.swift */,
 				5D9D520126AE29DB00AB1F30 /* InventoryListItem.swift */,
 				5D9D520326AE359C00AB1F30 /* InventoryViewPills.swift */,
+				5D9D520726AE4CF400AB1F30 /* EditInventoryTray.swift */,
 			);
 			path = AddToInventory;
 			sourceTree = "<group>";
@@ -838,6 +841,7 @@
 				5D3769762611709C00F9ED72 /* Debouncer.swift in Sources */,
 				5D424D4B25C509D20008D6F4 /* PasswordResetView.swift in Sources */,
 				5D424D2025C505450008D6F4 /* TextFieldUnderlined.swift in Sources */,
+				5D9D520826AE4CF400AB1F30 /* EditInventoryTray.swift in Sources */,
 				5DC3538F26117C7F00294DF0 /* ItemDetailView.swift in Sources */,
 				5D424CD425C4FF2F0008D6F4 /* IAPManager.swift in Sources */,
 				5D3E872525C5D3FC00FC65FE /* Array+Extensions.swift in Sources */,

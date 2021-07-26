@@ -75,8 +75,8 @@ extension View {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 
-    func withFloatingButton<V: View>(button: V) -> some View {
-        ModifiedContent(content: self, modifier: WithFloatingButton(button: button))
+    func withFloatingButton<V: View>(button: V, shouldShow: Binding<Bool> = .constant(true)) -> some View {
+        ModifiedContent(content: self, modifier: WithFloatingButton(button: button, shouldShow: shouldShow))
     }
 
     func hideKeyboardOnScroll() -> some View {

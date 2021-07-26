@@ -16,7 +16,6 @@ enum AuthenticationAction {
     case signInWithFacebook
     case signOut
     case passwordReset(username: String)
-//    case setFBLoginButtonDelegate(delegate: LoginButtonDelegate)
 }
 
 extension AuthenticationAction: IdAble {

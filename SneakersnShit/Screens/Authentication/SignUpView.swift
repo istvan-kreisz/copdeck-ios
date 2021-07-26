@@ -17,7 +17,6 @@ struct SignUpView: View {
     @State var password2 = ""
 
     @State var errorMessage: String?
-
     @State var resetPasswordPresented = false
 
     let color: Color = .customBlue

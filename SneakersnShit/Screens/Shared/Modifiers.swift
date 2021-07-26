@@ -117,24 +117,29 @@ struct BottomAligned: ViewModifier {
 
 struct WrappedMainView: ViewModifier {
     @ObservedObject var viewRouter: ViewRouter
+    @Binding var shouldShow: Bool
 
-    init(viewRouter: ViewRouter) {
+    init(viewRouter: ViewRouter, shouldShow: Binding<Bool> = .constant(true)) {
         self.viewRouter = viewRouter
+        self._shouldShow = shouldShow
     }
 
     func body(content: Content) -> some View {
         NavigationView {
             content
-                .withFloatingButton(button: TabBar(viewRouter: viewRouter))
+                .withFloatingButton(button: TabBar(viewRouter: viewRouter), shouldShow: $shouldShow)
         }
     }
 }
 
 struct WithFloatingButton<V: View>: ViewModifier {
     var button: V
+    @Binding var shouldShow: Bool
 
-    init(button: V) {
+    init(button: V, shouldShow: Binding<Bool> = .constant(true)) {
         self.button = button
+        self._shouldShow = shouldShow
+
     }
 
     func body(content: Content) -> some View {
@@ -143,8 +148,10 @@ struct WithFloatingButton<V: View>: ViewModifier {
             VStack {
                 Spacer()
                     .layoutPriority(2)
-                button
-                    .layoutPriority(2)
+                if shouldShow {
+                    button
+                        .layoutPriority(2)
+                }
                 Spacer(minLength: 35)
             }
         }
