@@ -28,9 +28,11 @@ struct InventoryItemDetailView: View {
     }
 
     var body: some View {
-        NavigationLink(
-            destination: ItemDetailView(item: Item.sample),
-            isActive: $showItemDetails) { EmptyView() }
+        if let itemId = inventoryItem.itemId {
+            NavigationLink(destination: ItemDetailView(item: nil, itemId: itemId, showAddToInventoryButton: false),
+                           isActive: $showItemDetails) { EmptyView() }
+        }
+
         ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .center, spacing: 20) {
                 ItemImageViewWithNavBar(imageURL: inventoryItem.imageURL)
@@ -41,11 +43,13 @@ struct InventoryItemDetailView: View {
                         .foregroundColor(.customText1)
                         .padding(.bottom, 8)
 
-                    AccessoryButton(title: "View Prices",
-                                    color: .customAccent1,
-                                    textColor: .customText1,
-                                    width: 125,
-                                    tapped: { showItemDetails = true })
+                    if inventoryItem.itemId != nil {
+                        AccessoryButton(title: "View Prices",
+                                        color: .customAccent1,
+                                        textColor: .customText1,
+                                        width: 125,
+                                        tapped: { showItemDetails = true })
+                    }
 
                     HStack(spacing: 10) {
                         TextFieldRounded(title: "name",

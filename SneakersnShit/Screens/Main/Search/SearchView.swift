@@ -18,7 +18,7 @@ struct SearchView: View {
 
     var body: some View {
         ForEach(store.state.searchResults ?? []) { item in
-            NavigationLink(destination: ItemDetailView(item: item),
+            NavigationLink(destination: ItemDetailView(item: item, itemId: item.id, showAddToInventoryButton: true),
                            tag: item.id,
                            selection: $selectedItemId) { EmptyView() }
         }

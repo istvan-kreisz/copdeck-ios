@@ -10,12 +10,15 @@ import Combine
 
 struct ItemDetailView: View {
     @EnvironmentObject var store: AppStore
-    @State private var item: Item
+    @State private var item: Item?
     @State private var priceType: PriceType = .ask
     @State private var feeType: FeeType = .none
 
     @State private var addToInventory = false
     @State private var firstShow = true
+
+    private let itemId: String
+    private let showAddToInventoryButton: Bool
 
     enum BorderStyle {
         case red, green, regular
@@ -23,36 +26,40 @@ struct ItemDetailView: View {
 
     @StateObject private var loader = Loader()
 
-    init(item: Item) {
+    init(item: Item?, itemId: String, showAddToInventoryButton: Bool = true) {
         self._item = State(initialValue: item)
+        self.itemId = itemId
+        self.showAddToInventoryButton = showAddToInventoryButton
     }
 
     var body: some View {
         ZStack {
-            NavigationLink("",
-                           destination: AddToInventoryView(item: item, addToInventory: $addToInventory),
-                           isActive: $addToInventory)
+            if let item = item, showAddToInventoryButton {
+                NavigationLink("",
+                               destination: AddToInventoryView(item: item, addToInventory: $addToInventory),
+                               isActive: $addToInventory)
+            }
 
             ScrollView(.vertical, showsIndicators: false) {
                 ScrollViewReader { scrollViewProxy in
                     VStack(alignment: .center, spacing: 20) {
-                        ItemImageViewWithNavBar(imageURL: item.imageURL)
+                        ItemImageViewWithNavBar(imageURL: item?.imageURL)
                             .id(0)
 
                         ZStack {
                             Color.customBackground.edgesIgnoringSafeArea(.all)
                             VStack(alignment: .leading, spacing: 8) {
-                                Text(item.bestStoreInfo?.brand.uppercased() ?? "")
+                                Text((item?.bestStoreInfo?.brand.uppercased()) ?? "")
                                     .font(.bold(size: 12))
                                     .foregroundColor(.customText2)
-                                Text(item.bestStoreInfo?.name ?? "")
+                                Text((item?.bestStoreInfo?.name) ?? "")
                                     .font(.bold(size: 30))
                                     .foregroundColor(.customText1)
                                     .padding(.bottom, 8)
                                 HStack(spacing: 10) {
                                     Spacer()
                                     VStack(spacing: 2) {
-                                        Text(item.id)
+                                        Text(item?.id ?? "")
                                             .font(.bold(size: 20))
                                             .foregroundColor(.customText1)
                                         Text("Style")
@@ -61,7 +68,7 @@ struct ItemDetailView: View {
                                     }
                                     Spacer()
                                     VStack(spacing: 2) {
-                                        Text(item.bestStoreInfo?.retailPrice.map { "\(item.currency.symbol.rawValue)\($0.rounded(toPlaces: 1))" } ?? "")
+                                        Text(item?.bestStoreInfo?.retailPrice.map { "\(item?.currency.symbol.rawValue ?? "")\($0.rounded(toPlaces: 1))" } ?? "")
                                             .font(.bold(size: 20))
                                             .foregroundColor(.customText1)
                                         Text("Retail Price")
@@ -147,7 +154,7 @@ struct ItemDetailView: View {
                                             .foregroundColor(.customText1)
                                             .frame(maxWidth: .infinity)
                                             .onTapGesture {
-                                                if let link = item.storeInfo.first(where: { $0.store.id == store.id })?.url,
+                                                if let link = item?.storeInfo.first(where: { $0.store.id == store.id })?.url,
                                                    let url = URL(string: link) {
                                                     UIApplication.shared.open(url)
                                                 }
@@ -161,7 +168,7 @@ struct ItemDetailView: View {
                                         .padding(5)
                                 }
 
-                                ForEach(item.allPriceRows(priceType: priceType, feeType: feeType)) { row in
+                                ForEach((item?.allPriceRows(priceType: priceType, feeType: feeType)) ?? []) { (row: Item.PriceRow) in
                                     HStack(spacing: 10) {
                                         Text(row.size)
                                             .frame(height: 32)
@@ -209,13 +216,16 @@ struct ItemDetailView: View {
                     .onAppear { scrollViewProxy.scrollTo(0) }
                 }
             }
-            .withFloatingButton(button: NextButton(text: "Add to Inventory",
-                                                   size: .init(width: 260, height: 60),
-                                                   color: .customBlack,
-                                                   tapped: { addToInventory = true })
-                    .disabled(loader.isLoading)
-                    .centeredHorizontally()
-                    .padding(.top, 20))
+            .if(item != nil && showAddToInventoryButton) {
+                $0
+                    .withFloatingButton(button: NextButton(text: "Add to Inventory",
+                                                           size: .init(width: 260, height: 60),
+                                                           color: .customBlack,
+                                                           tapped: { addToInventory = true })
+                            .disabled(loader.isLoading)
+                            .centeredHorizontally()
+                            .padding(.top, 20))
+            }
             .navigationbarHidden()
             .onAppear {
                 store.send(.main(action: .setSelectedItem(item: nil)))
@@ -231,12 +241,18 @@ struct ItemDetailView: View {
     }
 
     private func refreshPrices(forced: Bool) {
-        store.send(.main(action: .getItemDetails(item: item, itemId: item.id, forced: forced)), completed: loader.getLoader())
+        store.send(.main(action: .getItemDetails(item: item, itemId: itemId, forced: forced)), completed: loader.getLoader())
     }
 
     private func updateItem(newItem: Item?) {
-        guard let newItem = newItem, newItem.id == self.item.id else { return }
-        self.item = newItem
+        guard let newItem = newItem else { return }
+        if let item = self.item {
+            if newItem.id == item.id {
+                self.item = newItem
+            }
+        } else {
+            self.item = newItem
+        }
     }
 }
 
@@ -262,6 +278,7 @@ struct ItemDetailView_Previews: PreviewProvider {
                                           updated: 0,
                                           name: "yolo",
                                           retailPrice: 12,
-                                          imageURL: nil))
+                                          imageURL: nil),
+                              itemId: "GHVDY45")
     }
 }

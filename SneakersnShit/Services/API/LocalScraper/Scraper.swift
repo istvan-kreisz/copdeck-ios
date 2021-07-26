@@ -72,6 +72,12 @@ extension LocalScraper: API {
     private func getItemDetails(forItemWithId id: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
         search(searchTerm: id, settings: settings, exchangeRates: exchangeRates)
             .compactMap { items in items.first(where: { $0.id == id }) }
+            .flatMap { [weak self] item -> AnyPublisher<Item, AppError> in
+                guard let self = self else {
+                    return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
+                }
+                return self.getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates).eraseToAnyPublisher()
+            }
             .eraseToAnyPublisher()
     }
 
