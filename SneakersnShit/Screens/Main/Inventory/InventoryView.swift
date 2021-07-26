@@ -17,6 +17,7 @@ struct InventoryView: View {
     @State private var selectedInventoryItems: [InventoryItem] = []
 
     @Binding var shouldShowTabBar: Bool
+    @State var settingsPresented = false
 
     var inventoryItems: [InventoryItem] {
         searchText.isEmpty ? store.state.inventoryItems : (store.state.inventorySearchResults ?? [])
@@ -32,11 +33,26 @@ struct InventoryView: View {
                 selection: $selectedInventoryItemId) { EmptyView() }
         }
         VStack(alignment: .leading, spacing: 19) {
-            Text("Inventory")
-                .font(.bold(size: 35))
-                .leftAligned()
-                .padding(.leading, 6)
-                .padding(.horizontal, 28)
+            HStack {
+                Text("Inventory")
+                    .font(.bold(size: 35))
+                    .leftAligned()
+                    .padding(.leading, 6)
+                Spacer()
+                Button(action: {
+                    settingsPresented = true
+                }, label: {
+                    ZStack {
+                        Circle().stroke(Color.customAccent1, lineWidth: 2)
+                            .frame(width: 38, height: 38)
+                        Image("cog")
+                            .renderingMode(.template)
+                            .frame(height: 17)
+                            .foregroundColor(.customBlack)
+                    }
+                })
+            }
+            .withDefaultPadding(padding: .horizontal)
 
             HStack(alignment: .center, spacing: 13) {
                 TextFieldRounded(title: nil,
@@ -88,6 +104,10 @@ struct InventoryView: View {
         .onChange(of: isEditing) { editing in
             shouldShowTabBar = !editing
             selectedInventoryItems = []
+        }
+        .sheet(isPresented: $settingsPresented) {
+            SettingsView()
+                .environmentObject(store)
         }
     }
 

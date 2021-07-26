@@ -55,13 +55,8 @@ struct LoginView: View {
                                      text: "Sign in with Facebook",
                                      imageColor: nil,
                                      backgroundColor: Color(r: 66, g: 103, b: 178),
-                                     action: {
-                                         store.send(.authentication(action: .signInWithFacebook))
-                                     },
-                                     initBlock: {
-                                         #warning("yo")
-//                                         store.send(action: .setFBLoginButtonDelegate(self.facebookButton.delegate))
-                                     })
+                                     action: { store.send(.authentication(action: .signInWithFacebook)) },
+                                     initBlock: {})
                         Spacer()
                     }
                     .padding(.top, 17)

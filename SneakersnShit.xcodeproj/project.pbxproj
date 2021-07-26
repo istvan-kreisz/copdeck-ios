@@ -53,6 +53,7 @@
 		5D52E30F26130E2100FA02B8 /* InventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D52E30E26130E2100FA02B8 /* InventoryView.swift */; };
 		5D52E31226130E7500FA02B8 /* InventoryItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D52E31126130E7500FA02B8 /* InventoryItemDetailView.swift */; };
 		5D53A1F226AF2A61001DAA8D /* AccessoryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D53A1F126AF2A61001DAA8D /* AccessoryButton.swift */; };
+		5D53A1F526AF5649001DAA8D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D53A1F426AF5649001DAA8D /* SettingsView.swift */; };
 		5D631220269330B900876D99 /* APIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D63121F269330B900876D99 /* APIConfig.swift */; };
 		5D6312222694797300876D99 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6312212694797300876D99 /* Item.swift */; };
 		5D6312242694D83100876D99 /* Decodable+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6312232694D83100876D99 /* Decodable+Extensions.swift */; };
@@ -163,6 +164,7 @@
 		5D52E30E26130E2100FA02B8 /* InventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryView.swift; sourceTree = "<group>"; };
 		5D52E31126130E7500FA02B8 /* InventoryItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryItemDetailView.swift; sourceTree = "<group>"; };
 		5D53A1F126AF2A61001DAA8D /* AccessoryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessoryButton.swift; sourceTree = "<group>"; };
+		5D53A1F426AF5649001DAA8D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		5D63121F269330B900876D99 /* APIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfig.swift; sourceTree = "<group>"; };
 		5D6312212694797300876D99 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		5D6312232694D83100876D99 /* Decodable+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Decodable+Extensions.swift"; sourceTree = "<group>"; };
@@ -408,10 +410,19 @@
 		5D52E30D26130E0700FA02B8 /* Inventory */ = {
 			isa = PBXGroup;
 			children = (
+				5D53A1F326AF563A001DAA8D /* Settings */,
 				5D52E30E26130E2100FA02B8 /* InventoryView.swift */,
 				5D52E31126130E7500FA02B8 /* InventoryItemDetailView.swift */,
 			);
 			path = Inventory;
+			sourceTree = "<group>";
+		};
+		5D53A1F326AF563A001DAA8D /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				5D53A1F426AF5649001DAA8D /* SettingsView.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		5D6312302695097900876D99 /* State */ = {
@@ -804,6 +815,7 @@
 				5D424D1D25C505450008D6F4 /* Modifiers.swift in Sources */,
 				5D63123A26950A5900876D99 /* Stores.swift in Sources */,
 				5DEBC088269B24BA000EEADC /* ViewRouter.swift in Sources */,
+				5D53A1F526AF5649001DAA8D /* SettingsView.swift in Sources */,
 				5D30BA42269C3EAD0062F6AB /* CustomSpinner.swift in Sources */,
 				5D488E8925C8D54E00624FEF /* AppError.swift in Sources */,
 				5D424D1C25C505450008D6F4 /* Spinner.swift in Sources */,
