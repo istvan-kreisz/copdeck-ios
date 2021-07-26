@@ -37,12 +37,22 @@ extension Color {
                                   customTwitterBlue,
                                   customYellow]
 
-    static func randomColor() -> Color {
+    static var pillColors = [customBlue,
+                             customGreen,
+                             customPurple,
+                             customRed,
+                             customYellow]
+
+    static var randomColor: Color {
         allCustomColors.randomElement()!
+    }
+
+    static var randomPillColor: Color {
+        pillColors.randomElement()!
     }
 }
 
-//extension UIColor {
+// extension UIColor {
 //    static var customBackground = UIColor(named: "Background")!
 //    static var customBlue = UIColor(named: "Blue")!
 //    static var customGreen = UIColor(named: "Green")!
@@ -53,4 +63,4 @@ extension Color {
 //    static var customRed = UIColor(named: "Red")!
 //    static var customTwitterBlue = UIColor(named: "TwitterBlue")!
 //    static var customYellow = UIColor(named: "Yellow")!
-//}
+// }

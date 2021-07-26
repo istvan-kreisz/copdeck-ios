@@ -35,7 +35,7 @@ struct SearchView: View {
                                  placeHolder: "Search sneakers",
                                  style: .white,
                                  text: $searchText)
-                    .padding(.horizontal, 22)
+                    .withDefaultPadding(padding: .horizontal)
 
                 ScrollView(.vertical, showsIndicators: false) {
                     if loader.isLoading {
@@ -51,12 +51,14 @@ struct SearchView: View {
                     }
 
                     ForEach(store.state.searchResults ?? []) { item in
-                        ListItem(title: (item.bestStoreInfo ?? item.storeInfo.first)?.name ?? "",
-                                 imageURL: item.bestStoreInfo?.imageURL ?? "") {
-                                selectedItemId = item.id
+                        ListItem<EmptyView>(title: (item.bestStoreInfo ?? item.storeInfo.first)?.name ?? "",
+                                            imageURL: item.bestStoreInfo?.imageURL ?? "",
+                                            isEditing: .constant(false),
+                                            isSelected: .constant(false)) {
+                            selectedItemId = item.id
                         }
                     }
-                    .padding(.horizontal, 22)
+                    .withDefaultPadding(padding: .horizontal)
                     .padding(.vertical, 6)
                 }
             }

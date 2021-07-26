@@ -7,39 +7,66 @@
 
 import SwiftUI
 
-struct ListItem: View {
+struct ListItem<V: View>: View {
     var title: String
     var imageURL: String?
-    var accessoryView: AnyView? = nil
+
+    @Binding var isEditing: Bool
+    @Binding var isSelected: Bool
+
+    var accessoryView: V? = nil
     var onTapped: () -> Void
 
     var body: some View {
-        HStack(alignment: .center, spacing: 10) {
-            ImageView(withURL: imageURL ?? "", size: 62, aspectRatio: nil)
-                .cornerRadius(8)
-            VStack {
-                Text(title)
-                    .font(.bold(size: 14))
-                    .leftAligned()
-                accessoryView
-                if accessoryView == nil {
-                    Spacer()
+        ZStack {
+            ZStack {
+                Circle()
+                    .fill(isSelected ? Color.customBlue : Color.customAccent2)
+                    .frame(width: 28, height: 28)
+                if isSelected {
+                    Image(systemName: "checkmark")
+                        .font(.bold(size: 13))
+                        .foregroundColor(.white)
                 }
             }
+            .rightAligned()
+            HStack(alignment: .center, spacing: 10) {
+                ImageView(withURL: imageURL ?? "", size: 62, aspectRatio: nil)
+                    .cornerRadius(8)
+                VStack(spacing: 3) {
+                    Text(title)
+                        .font(.bold(size: 14))
+                        .leftAligned()
+                        .layoutPriority(2)
+                    if let accessoryView = accessoryView {
+                        Spacer()
+                            .layoutPriority(0)
+                        accessoryView
+                            .layoutPriority(2)
+                    } else {
+                        Spacer()
+                            .layoutPriority(0)
+                    }
+                }
+            }
+            .padding(12)
+            .frame(height: 86)
+            .background(Color.white)
+            .cornerRadius(12)
+            .withDefaultShadow()
+            .onTapGesture(perform: onTapped)
+            .padding(.trailing, isEditing ? 48 : 0)
+            .animation(.spring())
         }
-        .padding(12)
-        .frame(height: 86)
-        .background(Color.white)
-        .cornerRadius(12)
-        .withDefaultShadow()
-        .onTapGesture(perform: onTapped)
     }
 }
 
 struct ListItem_Previews: PreviewProvider {
     static var previews: some View {
-        return ListItem(title: "yooo",
-                        imageURL: "https://images.stockx.com/images/Adidas-Yeezy-Boost-350-V2-Core-Black-Red-2017-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1606320792",
-                        onTapped: {})
+        return ListItem<EmptyView>(title: "yooo",
+                                   imageURL: "https://images.stockx.com/images/Adidas-Yeezy-Boost-350-V2-Core-Black-Red-2017-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1606320792",
+                                   isEditing: .constant(false),
+                                   isSelected: .constant(false),
+                                   onTapped: {})
     }
 }

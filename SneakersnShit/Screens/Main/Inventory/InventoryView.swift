@@ -13,6 +13,12 @@ struct InventoryView: View {
     @State private var selectedInventoryItemId: String?
 
     @State private var searchText = ""
+    @State private var isEditing = false
+    @State private var selectedInventoryItems: [InventoryItem] = []
+
+    var inventoryItems: [InventoryItem] {
+        searchText.isEmpty ? store.state.inventoryItems : (store.state.inventorySearchResults ?? [])
+    }
 
     var body: some View {
         ZStack {
@@ -29,28 +35,35 @@ struct InventoryView: View {
                     .padding(.leading, 6)
                     .padding(.horizontal, 28)
 
-                TextFieldRounded(title: nil,
-                                 placeHolder: "Search your inventory",
-                                 style: .white,
-                                 text: $searchText)
-                    .padding(.horizontal, 22)
+                HStack(alignment: .center, spacing: 13) {
+                    TextFieldRounded(title: nil,
+                                     placeHolder: "Search your inventory",
+                                     style: .white,
+                                     text: $searchText)
+                    RoundedButton(text: "Edit",
+                                  size: .init(width: 80, height: 32),
+                                  color: .customBlue,
+                                  accessoryView: nil,
+                                  tapped: {
+                                      isEditing.toggle()
+                                  })
+                        .padding(.top, 6)
+                }
+                .withDefaultPadding(padding: .horizontal)
 
                 ScrollView(.vertical, showsIndicators: false) {
-                    if let resultCount = store.state.inventorySearchResults?.count, !searchText.isEmpty {
-                        Text("\(resultCount) Results:")
-                            .font(.bold(size: 12))
-                            .leftAligned()
-                            .padding(.horizontal, 28)
-                    }
+                    Text("\(inventoryItems.count) \(searchText.isEmpty ? "Items:" : "Results:")")
+                        .font(.bold(size: 12))
+                        .leftAligned()
+                        .padding(.horizontal, 28)
 
-                    ForEach(searchText.isEmpty ? store.state.inventoryItems : (store.state.inventorySearchResults ?? [])) { inventoryItem in
-                        ListItem(title: inventoryItem.name,
-                                 imageURL: inventoryItem.imageURL ?? "",
-                                 accessoryView: nil) {
-                            selectedInventoryItemId = inventoryItem.id
-                        }
+                    ForEach(inventoryItems) { inventoryItem in
+                        InventoryListItem(inventoryItem: inventoryItem,
+                                          selectedInventoryItemId: $selectedInventoryItemId,
+                                          isEditing: $isEditing,
+                                          isSelected: .constant(false))
                     }
-                    .padding(.horizontal, 22)
+                    .withDefaultPadding(padding: .horizontal)
                     .padding(.vertical, 6)
                 }
             }

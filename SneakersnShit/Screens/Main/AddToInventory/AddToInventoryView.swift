@@ -163,7 +163,8 @@ struct AddToInventoryView: View {
     }
 
     private func addItems() {
-        allInventoryItems.compactMap { $0 }
+        let inventoryItems = allInventoryItems.compactMap { $0 }
+        store.send(.main(action: .addToInventory(inventoryItems: inventoryItems)))
     }
 }
 

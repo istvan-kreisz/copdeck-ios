@@ -22,7 +22,7 @@ struct AvatarView: View {
             ZStack {
                 Circle()
                     .frame(width: size, height: size)
-                    .foregroundColor(Color.randomColor())
+                    .foregroundColor(Color.randomColor)
                 ImageView(withURL: imageURL, size: size, aspectRatio: 1)
                     .cornerRadius(size / 2)
             }

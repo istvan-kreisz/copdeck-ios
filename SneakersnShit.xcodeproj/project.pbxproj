@@ -84,6 +84,9 @@
 		5D9D51FB26AE1BE500AB1F30 /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = 5D9D51FA26AE1BE500AB1F30 /* Nuke */; };
 		5D9D51FE26AE1C0B00AB1F30 /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 5D9D51FD26AE1C0B00AB1F30 /* NukeUI */; };
 		5D9D520026AE211900AB1F30 /* ListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D51FF26AE211900AB1F30 /* ListItem.swift */; };
+		5D9D520226AE29DB00AB1F30 /* InventoryListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D520126AE29DB00AB1F30 /* InventoryListItem.swift */; };
+		5D9D520426AE359C00AB1F30 /* InventoryViewPills.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D520326AE359C00AB1F30 /* InventoryViewPills.swift */; };
+		5D9D520626AE361900AB1F30 /* PillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D520526AE361900AB1F30 /* PillView.swift */; };
 		5D9E85F126931F4300477377 /* scraper.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = 5D9E85F026931F4200477377 /* scraper.bundle.js */; };
 		5DA5140426A614530067C4A2 /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140026A614530067C4A2 /* FirebaseService.swift */; };
 		5DA5140926A6149D0067C4A2 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140826A6149D0067C4A2 /* DatabaseManager.swift */; };
@@ -188,6 +191,9 @@
 		5D9D51F326AC161000AB1F30 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		5D9D51F726ADA07700AB1F30 /* Country.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Country.swift; sourceTree = "<group>"; };
 		5D9D51FF26AE211900AB1F30 /* ListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListItem.swift; sourceTree = "<group>"; };
+		5D9D520126AE29DB00AB1F30 /* InventoryListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryListItem.swift; sourceTree = "<group>"; };
+		5D9D520326AE359C00AB1F30 /* InventoryViewPills.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryViewPills.swift; sourceTree = "<group>"; };
+		5D9D520526AE361900AB1F30 /* PillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillView.swift; sourceTree = "<group>"; };
 		5D9E85F026931F4200477377 /* scraper.bundle.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = scraper.bundle.js; sourceTree = "<group>"; };
 		5DA5140026A614530067C4A2 /* FirebaseService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
 		5DA5140826A6149D0067C4A2 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
@@ -235,6 +241,8 @@
 			children = (
 				5D0E5A10269E4EDE006D7E9C /* AddToInventoryView.swift */,
 				5DCC466D26A8CEDE007671BC /* NewItemCard.swift */,
+				5D9D520126AE29DB00AB1F30 /* InventoryListItem.swift */,
+				5D9D520326AE359C00AB1F30 /* InventoryViewPills.swift */,
 			);
 			path = AddToInventory;
 			sourceTree = "<group>";
@@ -343,6 +351,7 @@
 				5DCC466F26A8D759007671BC /* DropDownMenu.swift */,
 				5DCC467126A8EBB9007671BC /* ToggleButton.swift */,
 				5D9D51FF26AE211900AB1F30 /* ListItem.swift */,
+				5D9D520526AE361900AB1F30 /* PillView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -792,6 +801,7 @@
 				5DCC466C26A88367007671BC /* InventoryItem.swift in Sources */,
 				5D9D51F226AC0E8F00AB1F30 /* Optional+Extensions.swift in Sources */,
 				5D631253269668FE00876D99 /* JSNativeBridge.swift in Sources */,
+				5D9D520226AE29DB00AB1F30 /* InventoryListItem.swift in Sources */,
 				5D9C8E3F269FAB8B008538D6 /* NextButton.swift in Sources */,
 				5D95570C269A60DA00CCC2E7 /* String+Extensions.swift in Sources */,
 				5D9C8E3D269F2F31008538D6 /* RoundedButton.swift in Sources */,
@@ -824,6 +834,7 @@
 				5DCC466526A7A5D5007671BC /* ShareReplay.swift in Sources */,
 				5D0E5A11269E4EDE006D7E9C /* AddToInventoryView.swift in Sources */,
 				5D6312242694D83100876D99 /* Decodable+Extensions.swift in Sources */,
+				5D9D520626AE361900AB1F30 /* PillView.swift in Sources */,
 				5D3769762611709C00F9ED72 /* Debouncer.swift in Sources */,
 				5D424D4B25C509D20008D6F4 /* PasswordResetView.swift in Sources */,
 				5D424D2025C505450008D6F4 /* TextFieldUnderlined.swift in Sources */,
@@ -848,6 +859,7 @@
 				5D376979261174E100F9ED72 /* IdAble.swift in Sources */,
 				5D52E31226130E7500FA02B8 /* InventoryItemDetailView.swift in Sources */,
 				5D6B112E26A46E3A00B6B67A /* NavigationBar.swift in Sources */,
+				5D9D520426AE359C00AB1F30 /* InventoryViewPills.swift in Sources */,
 				5D63124426950B2900876D99 /* AppAction.swift in Sources */,
 				5D631257269669A600876D99 /* DefaultAPI.swift in Sources */,
 				5D6960AD2587149A0058BABE /* ReduxStore.swift in Sources */,
