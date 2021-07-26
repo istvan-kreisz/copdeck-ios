@@ -88,6 +88,7 @@
 		5D9D520426AE359C00AB1F30 /* InventoryViewPills.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D520326AE359C00AB1F30 /* InventoryViewPills.swift */; };
 		5D9D520626AE361900AB1F30 /* PillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D520526AE361900AB1F30 /* PillView.swift */; };
 		5D9D520826AE4CF400AB1F30 /* EditInventoryTray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D520726AE4CF400AB1F30 /* EditInventoryTray.swift */; };
+		5D9D520A26AF17C900AB1F30 /* ItemImageViewWithNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D520926AF17C900AB1F30 /* ItemImageViewWithNavBar.swift */; };
 		5D9E85F126931F4300477377 /* scraper.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = 5D9E85F026931F4200477377 /* scraper.bundle.js */; };
 		5DA5140426A614530067C4A2 /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140026A614530067C4A2 /* FirebaseService.swift */; };
 		5DA5140926A6149D0067C4A2 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140826A6149D0067C4A2 /* DatabaseManager.swift */; };
@@ -196,6 +197,7 @@
 		5D9D520326AE359C00AB1F30 /* InventoryViewPills.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryViewPills.swift; sourceTree = "<group>"; };
 		5D9D520526AE361900AB1F30 /* PillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillView.swift; sourceTree = "<group>"; };
 		5D9D520726AE4CF400AB1F30 /* EditInventoryTray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditInventoryTray.swift; sourceTree = "<group>"; };
+		5D9D520926AF17C900AB1F30 /* ItemImageViewWithNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemImageViewWithNavBar.swift; sourceTree = "<group>"; };
 		5D9E85F026931F4200477377 /* scraper.bundle.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = scraper.bundle.js; sourceTree = "<group>"; };
 		5DA5140026A614530067C4A2 /* FirebaseService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
 		5DA5140826A6149D0067C4A2 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
@@ -355,6 +357,7 @@
 				5DCC467126A8EBB9007671BC /* ToggleButton.swift */,
 				5D9D51FF26AE211900AB1F30 /* ListItem.swift */,
 				5D9D520526AE361900AB1F30 /* PillView.swift */,
+				5D9D520926AF17C900AB1F30 /* ItemImageViewWithNavBar.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -867,6 +870,7 @@
 				5D63124426950B2900876D99 /* AppAction.swift in Sources */,
 				5D631257269669A600876D99 /* DefaultAPI.swift in Sources */,
 				5D6960AD2587149A0058BABE /* ReduxStore.swift in Sources */,
+				5D9D520A26AF17C900AB1F30 /* ItemImageViewWithNavBar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

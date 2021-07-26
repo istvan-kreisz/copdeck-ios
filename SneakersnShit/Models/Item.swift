@@ -19,6 +19,8 @@ let ALLSTORES = zip(StoreId.allCases, StoreName.allCases).map { Store(id: $0, na
 
 let ALLSTORESWITHOTHER = ALLSTORES.map { GenericStore(id: $0.id.rawValue, name: $0.name.rawValue) } + [GenericStore(id: "other", name: "Other")]
 
+let ALLSHOESIZES = (2...40).reversed().map { "US \((Double($0) * 0.5).rounded(toPlaces: $0 % 2 == 1 ? 1 : 0))" }
+
 struct GenericStore: Codable, Equatable, Identifiable {
     let id: String
     let name: String
@@ -39,6 +41,11 @@ enum FeeType: String, CaseIterable, Identifiable {
     case none, buy, sell
 
     var id: String { rawValue }
+}
+
+struct ImageURL: Codable, Equatable {
+    let url: String
+    let store: Store
 }
 
 struct Item: Codable, Equatable, Identifiable {
@@ -67,11 +74,6 @@ struct Item: Codable, Equatable, Identifiable {
         let productId: String?
 
         var id: String { name }
-    }
-
-    struct ImageURL: Codable, Equatable {
-        let url: String
-        let store: Store
     }
 
     struct StorePrice: Codable, Equatable {

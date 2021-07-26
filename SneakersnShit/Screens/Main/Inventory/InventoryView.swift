@@ -23,8 +23,11 @@ struct InventoryView: View {
     }
 
     var body: some View {
+        let isEditingInventoryItem = Binding<Bool>(get: { selectedInventoryItemId != nil },
+                                                   set: { selectedInventoryItemId = $0 ? selectedInventoryItemId : nil })
         ForEach(store.state.inventoryItems) { inventoryItem in
-            NavigationLink(destination: InventoryItemDetailView(inventoryItem: inventoryItem),
+            NavigationLink(destination: InventoryItemDetailView(inventoryItem: inventoryItem,
+                                                                isEditingInventoryItem: isEditingInventoryItem),
                            tag: inventoryItem.id,
                            selection: $selectedInventoryItemId) { EmptyView() }
         }

@@ -49,8 +49,9 @@ struct SearchView: View {
                 }
 
                 ForEach(store.state.searchResults ?? []) { item in
-                    ListItem<EmptyView>(title: (item.bestStoreInfo ?? item.storeInfo.first)?.name ?? "",
-                                        imageURL: item.bestStoreInfo?.imageURL ?? "",
+                    ListItem<EmptyView>(title: item.name ?? "",
+                                        imageURL: item.imageURL?.url ?? "",
+                                        flipImage: item.imageURL?.store.id == .klekt,
                                         isEditing: .constant(false),
                                         isSelected: false) {
                         selectedItemId = item.id

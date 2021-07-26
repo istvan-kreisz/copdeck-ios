@@ -12,6 +12,7 @@ struct AppState: Equatable {
     var firstLoadDone = false
     var searchResults: [Item]?
     var selectedItem: Item?
+    var editedItem: Item?
     var selectedInventoryItem: InventoryItem?
     var inventoryItems: [InventoryItem] = []
     var inventorySearchResults: [InventoryItem]?

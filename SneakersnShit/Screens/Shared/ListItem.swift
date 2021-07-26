@@ -10,6 +10,7 @@ import SwiftUI
 struct ListItem<V: View>: View {
     var title: String
     var imageURL: String?
+    var flipImage = false
 
     @Binding var isEditing: Bool
     var isSelected: Bool
@@ -35,8 +36,9 @@ struct ListItem<V: View>: View {
             .onTapGesture { onSelectorTapped?() }
 
             HStack(alignment: .center, spacing: 10) {
-                ImageView(withURL: imageURL ?? "", size: 62, aspectRatio: nil)
+                ImageView(withURL: imageURL ?? "", size: 62, aspectRatio: nil, flipImage: flipImage)
                     .cornerRadius(8)
+
                 VStack(spacing: 3) {
                     Text(title)
                         .font(.bold(size: 14))

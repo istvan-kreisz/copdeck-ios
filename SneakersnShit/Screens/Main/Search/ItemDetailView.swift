@@ -36,16 +36,8 @@ struct ItemDetailView: View {
             ScrollView(.vertical, showsIndicators: false) {
                 ScrollViewReader { scrollViewProxy in
                     VStack(alignment: .center, spacing: 20) {
-                        ZStack {
-                            ImageView(withURL: item.bestStoreInfo?.imageURL ?? "",
-                                      size: UIScreen.main.bounds.width - 80,
-                                      aspectRatio: nil,
-                                      showPlaceholder: false)
-                            NavigationBar(title: nil, isBackButtonVisible: true, style: .dark)
-                                .withDefaultPadding(padding: .horizontal)
-                                .topAligned()
-                        }
-                        .id(0)
+                        ItemImageViewWithNavBar(imageURL: item.imageURL)
+                            .id(0)
 
                         ZStack {
                             Color.customBackground.edgesIgnoringSafeArea(.all)
@@ -227,7 +219,7 @@ struct ItemDetailView: View {
                     .padding(.top, 20))
             .navigationbarHidden()
             .onAppear {
-                updateItem(newItem: store.state.selectedItem)
+                store.send(.main(action: .setSelectedItem(item: nil)))
                 if firstShow {
                     firstShow = false
                     refreshPrices(forced: false)

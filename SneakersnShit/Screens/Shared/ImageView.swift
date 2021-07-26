@@ -12,46 +12,41 @@ struct ImageView: View {
     let url: String
     let size: CGFloat
     let aspectRatio: CGFloat?
+    let flipImage: Bool
     let showPlaceholder: Bool
 
-    init(withURL url: String, size: CGFloat, aspectRatio: CGFloat?, showPlaceholder: Bool = true) {
+    init(withURL url: String, size: CGFloat, aspectRatio: CGFloat?, flipImage: Bool = false, showPlaceholder: Bool = true) {
         self.url = url
         self.size = size
         self.aspectRatio = aspectRatio
+        self.flipImage = flipImage
         self.showPlaceholder = showPlaceholder
     }
 
     var body: some View {
-        #if DEBUG
-            if url.isEmpty {
-                Image("logo")
-                    .resizable()
-                    .aspectRatio(aspectRatio, contentMode: .fit)
-                    .frame(width: size, height: size)
-            } else {
-                LazyImage(source: url) { state in
-                    if let image = state.image {
-                        image.resizingMode(.aspectFit)
-                    } else if showPlaceholder {
+        LazyImage(source: url) { state in
+            if let image = state.image {
+                image.resizingMode(.aspectFit)
+            } else if state.error != nil {
+                #if DEBUG
+                    Color.customRed
+                #else
+                    if showPlaceholder {
                         Color(.secondarySystemBackground)
                     } else {
                         Color.clear
                     }
-                }
-                .frame(width: size, height: size)
-            }
-        #else
-            LazyImage(source: url) { state in
-                if let image = state.image {
-                    image.resizingMode(.aspectFit)
-                } else if showPlaceholder {
+                #endif
+            } else {
+                if showPlaceholder {
                     Color(.secondarySystemBackground)
                 } else {
                     Color.clear
                 }
             }
-            .frame(width: size, height: size)
-        #endif
+        }
+        .frame(width: size, height: size)
+        .if(flipImage) { $0.scaleEffect(CGSize(width: -1.0, height: 1.0)) }
     }
 }
 

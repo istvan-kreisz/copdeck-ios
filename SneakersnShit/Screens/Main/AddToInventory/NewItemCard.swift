@@ -8,14 +8,32 @@
 import SwiftUI
 
 struct NewItemCard: View {
+    enum Style {
+        case card, noBackground
+    }
+
     @Binding var inventoryItem: InventoryItem
-    let item: Item
+    let purchasePrice: Double?
+    let style: Style
     @State var status = "NONE"
     @State var soldOn = "NONE"
 
-    init(inventoryItem: Binding<InventoryItem>?, item: Item) {
+    var textFieldStyle: TextFieldRounded.Style {
+        style == .card ? .gray : .white
+    }
+
+    var dropdownStyle: DropDownMenu.Style {
+        style == .card ? .gray : .white
+    }
+
+    var toggleButtonStyle: ToggleButton.Style {
+        style == .card ? .gray : .white
+    }
+
+    init(inventoryItem: Binding<InventoryItem>?, purchasePrice: Double?, style: Style = .card) {
         self._inventoryItem = inventoryItem ?? Binding.constant(InventoryItem.init(fromItem: .sample))
-        self.item = item
+        self.purchasePrice = purchasePrice
+        self.style = style
     }
 
     var body: some View {
@@ -26,18 +44,23 @@ struct NewItemCard: View {
                 let purchasePrice = Binding<String>(get: { inventoryItem.purchasePrice.asString },
                                                     set: { new in inventoryItem.purchasePrice = Double(new) })
                 TextFieldRounded(title: "purchase price",
-                                 placeHolder: item.retailPrice.asString,
-                                 style: .gray,
+                                 placeHolder: self.purchasePrice.asString,
+                                 style: textFieldStyle,
                                  keyboardType: .numberPad,
                                  text: purchasePrice)
                 DropDownMenu(title: "size",
                              selectedItem: $inventoryItem.size,
-                             options: item.sortedSizes)
+                             options: ALLSHOESIZES,
+                             style: dropdownStyle)
                 DropDownMenu(title: "condition",
                              selectedItem: condition,
-                             options: InventoryItem.Condition.allCases.map { $0.rawValue })
+                             options: InventoryItem.Condition.allCases.map { $0.rawValue },
+                             style: dropdownStyle)
             }
-            ToggleButton(title: "status", selection: $status, options: ["NONE", "LISTED", "SOLD"])
+            ToggleButton(title: "status",
+                         selection: $status,
+                         options: ["NONE", "LISTED", "SOLD"],
+                         style: toggleButtonStyle)
             if status == "LISTED" {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("listing prices (optional)")
@@ -61,7 +84,7 @@ struct NewItemCard: View {
                                                 })
                             TextFieldRounded(title: store.id.lowercased(),
                                              placeHolder: "$0",
-                                             style: .gray,
+                                             style: textFieldStyle,
                                              keyboardType: .numberPad,
                                              text: text)
                         }
@@ -80,26 +103,30 @@ struct NewItemCard: View {
                     HStack {
                         TextFieldRounded(title: "selling price (optional)",
                                          placeHolder: "$0",
-                                         style: .gray,
+                                         style: textFieldStyle,
                                          keyboardType: .numberPad,
                                          text: text)
                         Rectangle().fill(Color.clear).frame(height: 1)
                     }
                     ToggleButton(title: "sold on (optional)",
                                  selection: soldOn,
-                                 options: ALLSTORESWITHOTHER.map { $0.id.uppercased() })
+                                 options: ALLSTORESWITHOTHER.map { $0.id.uppercased() },
+                                 style: toggleButtonStyle)
                 }
             }
         }
-        .padding(10)
-        .background(Color.white)
-        .cornerRadius(12)
-        .withDefaultShadow()
+        .if(style == .card) {
+            $0
+                .padding(10)
+                .background(Color.white)
+                .cornerRadius(12)
+                .withDefaultShadow()
+        }
     }
 }
 
 struct NewItemCard_Previews: PreviewProvider {
     static var previews: some View {
-        NewItemCard(inventoryItem: .constant(InventoryItem.init(fromItem: Item.sample)), item: Item.sample)
+        NewItemCard(inventoryItem: .constant(InventoryItem.init(fromItem: Item.sample)), purchasePrice: Item.sample.retailPrice)
     }
 }

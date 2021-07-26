@@ -50,16 +50,7 @@ struct AddToInventoryView: View {
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .center, spacing: 20) {
-                ZStack {
-                    ImageView(withURL: item.bestStoreInfo?.imageURL ?? "",
-                              size: UIScreen.main.bounds.width - 80,
-                              aspectRatio: nil,
-                              showPlaceholder: false)
-                    NavigationBar(title: nil, isBackButtonVisible: true, style: .dark)
-                        .withDefaultPadding(padding: .horizontal)
-                        .topAligned()
-                }
-                .id(0)
+                ItemImageViewWithNavBar(imageURL: item.imageURL)
 
                 VStack(alignment: .center, spacing: 8) {
                     Text("Add To Inventory")
@@ -78,22 +69,22 @@ struct AddToInventoryView: View {
                                          width: 100)
                     }
 
-                    NewItemCard(inventoryItem: $inventoryItem1, item: self.item)
+                    NewItemCard(inventoryItem: $inventoryItem1, purchasePrice: item.retailPrice)
                     if let inventoryItem2 = inventoryItem2 {
                         let item = Binding<InventoryItem>(get: { inventoryItem2 }, set: { self.inventoryItem2 = $0 })
-                        NewItemCard(inventoryItem: item, item: self.item)
+                        NewItemCard(inventoryItem: item, purchasePrice: self.item.retailPrice)
                     }
                     if let inventoryItem3 = inventoryItem3 {
                         let item = Binding<InventoryItem>(get: { inventoryItem3 }, set: { self.inventoryItem3 = $0 })
-                        NewItemCard(inventoryItem: item, item: self.item)
+                        NewItemCard(inventoryItem: item, purchasePrice: self.item.retailPrice)
                     }
                     if let inventoryItem4 = inventoryItem4 {
                         let item = Binding<InventoryItem>(get: { inventoryItem4 }, set: { self.inventoryItem4 = $0 })
-                        NewItemCard(inventoryItem: item, item: self.item)
+                        NewItemCard(inventoryItem: item, purchasePrice: self.item.retailPrice)
                     }
                     if let inventoryItem5 = inventoryItem5 {
                         let item = Binding<InventoryItem>(get: { inventoryItem5 }, set: { self.inventoryItem5 = $0 })
-                        NewItemCard(inventoryItem: item, item: self.item)
+                        NewItemCard(inventoryItem: item, purchasePrice: self.item.retailPrice)
                     }
                     if itemCount != allInventoryItems.count {
                         RoundedButton(text: "Add More",
@@ -157,7 +148,15 @@ struct AddToInventoryView: View {
     }
 
     private func addItems() {
-        let inventoryItems = allInventoryItems.compactMap { $0 }
+        let inventoryItems = allInventoryItems
+            .compactMap { $0 }
+            .map { i -> InventoryItem in
+                var copy = i
+                copy.name = name
+                copy.itemId = styleId
+                copy.notes = notes
+                return copy
+            }
         store.send(.main(action: .addToInventory(inventoryItems: inventoryItems)))
         addToInventory = false
     }

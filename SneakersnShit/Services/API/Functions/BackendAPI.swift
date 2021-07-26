@@ -28,8 +28,6 @@ class BackendAPI: API {
         PassthroughSubject<ExchangeRates, AppError>().eraseToAnyPublisher()
     }
 
-    // todo: refactor shit
-
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
         struct Params: Encodable {
             let searchTerm: String
@@ -43,29 +41,6 @@ class BackendAPI: API {
         }
         return callFirebaseFunction(functionName: "getItemDetails", model: Params(item: item))
     }
-
-//    func addToInventory(userId: String, inventoryItem: InventoryItem) -> AnyPublisher<InventoryItem, AppError> {
-//        struct Params: Encodable {
-//            let userId: String
-//            let inventoryItem: InventoryItem
-//        }
-//        return callFirebaseFunction(functionName: "addInventoryItem", model: Params(userId: userId, inventoryItem: inventoryItem))
-//    }
-//
-//    func removeFromInventory(userId: String, inventoryItem: InventoryItem) -> AnyPublisher<Void, AppError> {
-//        struct Params: Encodable {
-//            let userId: String
-//            let inventoryItemId: String
-//        }
-//        return callFirebaseFunction(functionName: "removeInventoryItem", model: Params(userId: userId, inventoryItemId: inventoryItem.id))
-//    }
-//
-//    func getInventoryItems(userId: String) -> AnyPublisher<[InventoryItem], AppError> {
-//        struct Params: Encodable {
-//            let userId: String
-//        }
-//        return callFirebaseFunctionArray(functionName: "getInventoryItems", model: Params(userId: userId))
-//    }
 
     private let functions = Functions.functions(region: "europe-west1")
 

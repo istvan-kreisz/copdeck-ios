@@ -11,15 +11,20 @@ import SwiftUI
 #warning("fix tappable area")
 
 struct DropDownMenu: View {
+    enum Style {
+        case gray, white
+    }
+
     var title: String
     @Binding var selectedItem: String
     var options: [String]
+    var style: Style = .gray
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title)
                 .font(.regular(size: 12))
-                .foregroundColor(.customText2)
+                .foregroundColor(style == .white ? .customText1 : .customText2)
                 .padding(.leading, 5)
 
             ZStack(alignment: Alignment(horizontal: .leading, vertical: .center)) {
@@ -45,7 +50,7 @@ struct DropDownMenu: View {
                         .allowsHitTesting(false)
                 }
                 .frame(height: Styles.inputFieldHeight)
-                .background(Color.customAccent4)
+                .background(style == .gray ? Color.customAccent4 : Color.white)
                 .cornerRadius(Styles.cornerRadius)
             }
         }

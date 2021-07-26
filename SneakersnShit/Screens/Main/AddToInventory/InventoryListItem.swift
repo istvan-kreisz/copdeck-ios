@@ -17,7 +17,8 @@ struct InventoryListItem: View {
 
     var body: some View {
         ListItem(title: inventoryItem.name,
-                 imageURL: inventoryItem.imageURL ?? "",
+                 imageURL: inventoryItem.imageURL?.url ?? "",
+                 flipImage: inventoryItem.imageURL?.store.id == .klekt,
                  isEditing: $isEditing,
                  isSelected: isSelected,
                  accessoryView: InventoryViewPills(inventoryItem: inventoryItem).leftAligned()) {

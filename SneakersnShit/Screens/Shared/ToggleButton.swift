@@ -9,15 +9,20 @@ import Foundation
 import SwiftUI
 
 struct ToggleButton: View {
+    enum Style {
+        case white, gray
+    }
+
     var title: String
     @Binding var selection: String
     var options: [String]
+    var style: Style = .gray
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title)
                 .font(.regular(size: 12))
-                .foregroundColor(.customText2)
+                .foregroundColor(style == .white ? .customText1 : .customText2)
                 .padding(.leading, 5)
 
             HStack(spacing: 10) {

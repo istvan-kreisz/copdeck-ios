@@ -17,7 +17,7 @@ enum MainAction {
     case setSearchResults(searchResults: [Item])
     // item details
     case getItemDetails(item: Item?, itemId: String, forced: Bool)
-    case setSelectedItem(item: Item)
+    case setSelectedItem(item: Item?)
     // inventory
     case addToInventory(inventoryItems: [InventoryItem])
     case getInventorySearchResults(searchTerm: String)
