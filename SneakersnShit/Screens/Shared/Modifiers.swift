@@ -150,3 +150,15 @@ struct WithFloatingButton<V: View>: ViewModifier {
         }
     }
 }
+
+struct WithKeyboardHideOnScroll: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .simultaneousGesture(DragGesture()
+                .onChanged {
+                    if abs($0.translation.height) > 0 {
+                        UIApplication.shared.endEditing()
+                    }
+                })
+    }
+}

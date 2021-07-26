@@ -143,11 +143,6 @@ struct AddToInventoryView: View {
             }
         }
         .navigationbarHidden()
-        .simultaneousGesture(DragGesture().onChanged {
-            if abs($0.translation.height) > 0 {
-                UIApplication.shared.endEditing()
-            }
-        })
     }
 
     private func addMore() {

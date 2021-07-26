@@ -12,10 +12,12 @@ struct ListItem<V: View>: View {
     var imageURL: String?
 
     @Binding var isEditing: Bool
-    @Binding var isSelected: Bool
+    var isSelected: Bool
+    @State var animate = false
 
     var accessoryView: V? = nil
     var onTapped: () -> Void
+    var onSelectorTapped: (() -> Void)? = nil
 
     var body: some View {
         ZStack {
@@ -30,6 +32,8 @@ struct ListItem<V: View>: View {
                 }
             }
             .rightAligned()
+            .onTapGesture { onSelectorTapped?() }
+
             HStack(alignment: .center, spacing: 10) {
                 ImageView(withURL: imageURL ?? "", size: 62, aspectRatio: nil)
                     .cornerRadius(8)
@@ -55,8 +59,8 @@ struct ListItem<V: View>: View {
             .cornerRadius(12)
             .withDefaultShadow()
             .onTapGesture(perform: onTapped)
-            .padding(.trailing, isEditing ? 48 : 0)
-            .animation(.spring())
+            .offset(isEditing ? CGSize(width: -48, height: 0) : CGSize.zero)
+            .animation(.spring(), value: isEditing)
         }
     }
 }
@@ -66,7 +70,7 @@ struct ListItem_Previews: PreviewProvider {
         return ListItem<EmptyView>(title: "yooo",
                                    imageURL: "https://images.stockx.com/images/Adidas-Yeezy-Boost-350-V2-Core-Black-Red-2017-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1606320792",
                                    isEditing: .constant(false),
-                                   isSelected: .constant(false),
+                                   isSelected: false,
                                    onTapped: {})
     }
 }

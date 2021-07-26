@@ -47,7 +47,7 @@ struct InventoryView: View {
                                   tapped: {
                                       isEditing.toggle()
                                   })
-                        .padding(.top, 6)
+//                        .padding(.top, 15)
                 }
                 .withDefaultPadding(padding: .horizontal)
 
@@ -61,7 +61,13 @@ struct InventoryView: View {
                         InventoryListItem(inventoryItem: inventoryItem,
                                           selectedInventoryItemId: $selectedInventoryItemId,
                                           isEditing: $isEditing,
-                                          isSelected: .constant(false))
+                                          isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id })) {
+                                if selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }) {
+                                    selectedInventoryItems = selectedInventoryItems.filter { $0.id != inventoryItem.id }
+                                } else {
+                                    selectedInventoryItems.append(inventoryItem)
+                                }
+                        }
                     }
                     .withDefaultPadding(padding: .horizontal)
                     .padding(.vertical, 6)

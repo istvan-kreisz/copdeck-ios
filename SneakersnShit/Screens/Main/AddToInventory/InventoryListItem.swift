@@ -12,15 +12,18 @@ struct InventoryListItem: View {
     @Binding var selectedInventoryItemId: String?
 
     @Binding var isEditing: Bool
-    @Binding var isSelected: Bool
+    var isSelected: Bool
+    var onSelectorTapped: () -> Void
 
     var body: some View {
         ListItem(title: inventoryItem.name,
                  imageURL: inventoryItem.imageURL ?? "",
                  isEditing: $isEditing,
-                 isSelected: $isSelected,
+                 isSelected: isSelected,
                  accessoryView: InventoryViewPills(inventoryItem: inventoryItem).leftAligned()) {
                 selectedInventoryItemId = inventoryItem.id
+        } onSelectorTapped: {
+            onSelectorTapped()
         }
     }
 }
@@ -30,7 +33,7 @@ struct InventoryListItem_Previews: PreviewProvider {
         return ListItem<EmptyView>(title: "yooo",
                                    imageURL: "https://images.stockx.com/images/Adidas-Yeezy-Boost-350-V2-Core-Black-Red-2017-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1606320792",
                                    isEditing: .constant(false),
-                                   isSelected: .constant(false),
+                                   isSelected: false,
                                    onTapped: {})
     }
 }

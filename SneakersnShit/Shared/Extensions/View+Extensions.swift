@@ -78,4 +78,8 @@ extension View {
     func withFloatingButton<V: View>(button: V) -> some View {
         ModifiedContent(content: self, modifier: WithFloatingButton(button: button))
     }
+
+    func hideKeyboardOnScroll() -> some View {
+        ModifiedContent(content: self, modifier: WithKeyboardHideOnScroll())
+    }
 }

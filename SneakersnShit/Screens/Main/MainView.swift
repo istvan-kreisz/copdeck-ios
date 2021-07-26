@@ -29,6 +29,7 @@ struct MainView: View {
                     .environmentObject(store)
             }
         }
+        .hideKeyboardOnScroll()
     }
 }
 

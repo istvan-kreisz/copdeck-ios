@@ -54,7 +54,7 @@ struct SearchView: View {
                         ListItem<EmptyView>(title: (item.bestStoreInfo ?? item.storeInfo.first)?.name ?? "",
                                             imageURL: item.bestStoreInfo?.imageURL ?? "",
                                             isEditing: .constant(false),
-                                            isSelected: .constant(false)) {
+                                            isSelected: false) {
                             selectedItemId = item.id
                         }
                     }
