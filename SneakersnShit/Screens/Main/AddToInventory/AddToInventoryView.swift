@@ -160,6 +160,7 @@ struct AddToInventoryView: View {
     private func addItems() {
         let inventoryItems = allInventoryItems.compactMap { $0 }
         store.send(.main(action: .addToInventory(inventoryItems: inventoryItems)))
+        addToInventory = false
     }
 }
 

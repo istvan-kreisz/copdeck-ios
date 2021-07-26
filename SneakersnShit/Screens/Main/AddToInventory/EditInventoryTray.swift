@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct EditInventoryTray: View {
-    static let sectionWidth: CGFloat = 80
+    static let sectionWidth: CGFloat = 90
     static let height: CGFloat = 60
 
     var didTapCancel: () -> Void

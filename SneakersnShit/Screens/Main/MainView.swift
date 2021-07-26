@@ -19,16 +19,13 @@ struct MainView: View {
             switch viewRouter.currentPage {
             case .home:
                 Text("Home")
-                    .modifier(WrappedMainView(viewRouter: viewRouter, shouldShow: $shouldShowTabBar))
-                    .environmentObject(store)
+                    .withTabViewWrapper(viewRouter: viewRouter, store: store, shouldShow: $shouldShowTabBar)
             case .search:
                 SearchView()
-                    .modifier(WrappedMainView(viewRouter: viewRouter, shouldShow: $shouldShowTabBar))
-                    .environmentObject(store)
+                    .withTabViewWrapper(viewRouter: viewRouter, store: store, shouldShow: $shouldShowTabBar)
             case .inventory:
                 InventoryView(shouldShowTabBar: $shouldShowTabBar)
-                    .modifier(WrappedMainView(viewRouter: viewRouter, shouldShow: $shouldShowTabBar))
-                    .environmentObject(store)
+                    .withTabViewWrapper(viewRouter: viewRouter, store: store, shouldShow: $shouldShowTabBar)
             }
         }
         .hideKeyboardOnScroll()

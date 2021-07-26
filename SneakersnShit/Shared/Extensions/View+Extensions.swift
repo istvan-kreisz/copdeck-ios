@@ -82,4 +82,12 @@ extension View {
     func hideKeyboardOnScroll() -> some View {
         ModifiedContent(content: self, modifier: WithKeyboardHideOnScroll())
     }
+
+    func withBackgroundColor(_ color: Color = .customBackground, ignoringSafeArea edges: Edge.Set = .all) -> some View {
+        ModifiedContent(content: self, modifier: WithBackgroundColor(color, ignoringSafeArea: edges))
+    }
+
+    func withTabViewWrapper(viewRouter: ViewRouter, store: AppStore, shouldShow: Binding<Bool> = .constant(true)) -> some View {
+        ModifiedContent(content: self, modifier: WrappedTabView(viewRouter: viewRouter, store: store, shouldShow: shouldShow))
+    }
 }

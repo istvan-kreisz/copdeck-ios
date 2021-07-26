@@ -115,19 +115,27 @@ struct BottomAligned: ViewModifier {
     }
 }
 
-struct WrappedMainView: ViewModifier {
+struct WrappedTabView: ViewModifier {
     @ObservedObject var viewRouter: ViewRouter
+    let store: AppStore
     @Binding var shouldShow: Bool
 
-    init(viewRouter: ViewRouter, shouldShow: Binding<Bool> = .constant(true)) {
+    init(viewRouter: ViewRouter, store: AppStore, shouldShow: Binding<Bool> = .constant(true)) {
         self.viewRouter = viewRouter
+        self.store = store
         self._shouldShow = shouldShow
     }
 
     func body(content: Content) -> some View {
         NavigationView {
             content
+                .environmentObject(store)
+                .edgesIgnoringSafeArea(.bottom)
+                .frame(maxWidth: UIScreen.main.bounds.width)
+                .withDefaultPadding(padding: .top)
+                .withBackgroundColor()
                 .withFloatingButton(button: TabBar(viewRouter: viewRouter), shouldShow: $shouldShow)
+                .navigationbarHidden()
         }
     }
 }
@@ -139,7 +147,6 @@ struct WithFloatingButton<V: View>: ViewModifier {
     init(button: V, shouldShow: Binding<Bool> = .constant(true)) {
         self.button = button
         self._shouldShow = shouldShow
-
     }
 
     func body(content: Content) -> some View {
@@ -154,6 +161,21 @@ struct WithFloatingButton<V: View>: ViewModifier {
                 }
                 Spacer(minLength: 35)
             }
+        }
+    }
+}
+
+struct WithBackgroundColor: ViewModifier {
+    let color: Color
+
+    init(_ color: Color = .customBackground, ignoringSafeArea: Edge.Set = .all) {
+        self.color = color
+    }
+
+    func body(content: Content) -> some View {
+        ZStack {
+            color.edgesIgnoringSafeArea(.all)
+            content
         }
     }
 }

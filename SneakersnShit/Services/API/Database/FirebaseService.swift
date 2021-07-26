@@ -75,11 +75,24 @@ class FirebaseService: DatabaseManager {
 
     private func addInventoryListener() {
         inventoryListener = addCollectionListener(collectionRef: userInventoryRef,
-                                                  updated: { [weak self] (all: [InventoryItem],
-                                                                          added: [InventoryItem],
+                                                  updated: { [weak self] (added: [InventoryItem],
                                                                           removed: [InventoryItem],
                                                                           modified: [InventoryItem]) in
-                                                          self?.inventoryItemsSubject.send(all)
+                                                          guard let self = self else { return }
+                                                          var newInventoryItems = self.inventoryItemsSubject.value
+
+                                                          newInventoryItems = newInventoryItems
+                                                              .filter { element in
+                                                                  !removed.contains(where: { $0.id == element.id })
+                                                              }
+                                                          newInventoryItems.append(contentsOf: added)
+                                                          modified.forEach { item in
+                                                              if let index = newInventoryItems.firstIndex(where: { $0.id == item.id }) {
+                                                                  newInventoryItems[index] = item
+                                                              }
+                                                          }
+
+                                                          self.inventoryItemsSubject.send(newInventoryItems)
                                                   })
     }
 
@@ -88,7 +101,7 @@ class FirebaseService: DatabaseManager {
     }
 
     private func addCollectionListener<T: Codable>(collectionRef: CollectionReference?,
-                                                   updated: @escaping (_ all: [T], _ added: [T], _ removed: [T], _ modified: [T]) -> Void)
+                                                   updated: @escaping (_ added: [T], _ removed: [T], _ modified: [T]) -> Void)
         -> ListenerRegistration? {
         collectionRef?
             .addSnapshotListener { snapshot, error in
@@ -96,7 +109,6 @@ class FirebaseService: DatabaseManager {
                     print("Error fetching documents: \(error)")
                     return
                 }
-                var all: [T] = []
                 var added: [T] = []
                 var modified: [T] = []
                 var removed: [T] = []
@@ -105,16 +117,14 @@ class FirebaseService: DatabaseManager {
                     guard let element = T(from: dict) else { return }
                     switch diff.type {
                     case .added:
-                        all.append(element)
                         added.append(element)
                     case .modified:
-                        all.append(element)
                         modified.append(element)
                     case .removed:
                         removed.append(element)
                     }
                 }
-                updated(all, added, removed, modified)
+                updated(added, removed, modified)
             }
     }
 
