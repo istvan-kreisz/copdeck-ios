@@ -12,11 +12,16 @@ struct ItemImageViewWithNavBar: View {
 
     var body: some View {
         ZStack {
-            ImageView(withURL: imageURL?.url ?? "",
-                      size: UIScreen.main.bounds.width - 80,
-                      aspectRatio: nil,
-                      flipImage: imageURL?.store.id == .klekt,
-                      showPlaceholder: false)
+            if let imageURL = self.imageURL {
+                ImageView(withURL: imageURL.url,
+                          size: UIScreen.main.bounds.width - 80,
+                          aspectRatio: nil,
+                          flipImage: imageURL.store.id == .klekt,
+                          showPlaceholder: false)
+            } else {
+                Color.clear
+                    .frame(width: UIScreen.main.bounds.width - 80, height: UIScreen.main.bounds.width - 80)
+            }
             NavigationBar(title: nil, isBackButtonVisible: true, style: .dark)
                 .withDefaultPadding(padding: .horizontal)
                 .topAligned()

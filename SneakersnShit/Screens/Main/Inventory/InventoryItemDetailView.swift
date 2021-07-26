@@ -29,7 +29,7 @@ struct InventoryItemDetailView: View {
 
     var body: some View {
         if let itemId = inventoryItem.itemId {
-            NavigationLink(destination: ItemDetailView(item: nil, itemId: itemId, showAddToInventoryButton: false),
+            NavigationLink(destination: ItemDetailView(item: nil, itemId: itemId, showAddToInventoryButton: true),
                            isActive: $showItemDetails) { EmptyView() }
         }
 
