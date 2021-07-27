@@ -252,11 +252,11 @@ extension Item {
 
 extension Item {
     func databaseId(settings: CopDeckSettings) -> String {
-        "\(id)-\(settings.feeCalculation.country.region)-\(settings.currency.code.rawValue)"
+        Item.databaseId(itemId: id, settings: settings)
     }
 
     static func databaseId(itemId: String, settings: CopDeckSettings) -> String {
-        "\(itemId)-\(settings.feeCalculation.country.region)-\(settings.currency.code.rawValue)"
+        "\(itemId.replacingOccurrences(of: "/", with: "."))-\(settings.feeCalculation.country.region)-\(settings.currency.code.rawValue)"
     }
 }
 
