@@ -28,9 +28,13 @@ struct RootView: View {
                         .environmentObject(store)
                         .zIndex(1)
                 } else {
-                    MainView()
-                        .environmentObject(store)
-                        .zIndex(0)
+                    if user?.inited != true {
+                        CountrySelector(settings: store.state.settings)
+                    } else {
+                        MainView()
+                            .environmentObject(store)
+                            .zIndex(0)
+                    }
                 }
             } else {
                 Text("splashscreen")
@@ -39,11 +43,11 @@ struct RootView: View {
         .onReceive(store.$state) { state in
             // user just logged in
             if (state.user != nil && user == nil) {
-                user = state.user
                 UIApplication.shared.endEditing()
             } else if state.user == nil {
                 UIApplication.shared.windows.first?.rootViewController?.dismiss(animated: true, completion: nil)
             }
+            user = state.user
         }
         .alert(isPresented: presentErrorAlert) {
             Alert(title: Text((store.state.error?.title) ?? "Ooops"),

@@ -23,19 +23,27 @@ extension AppStore {
 
     func setupObservers() {
         environment.dataController.errorsPublisher
-            .sink { [weak self] in self?.state.error = $0 }
+            .sink { [weak self] in
+                self?.state.error = $0
+            }
             .store(in: &effectCancellables)
 
         environment.dataController.userPublisher
-            .sink { [weak self] newUser in self?.state.user = newUser }
+            .sink { [weak self] newUser in
+                self?.state.user = newUser
+            }
             .store(in: &effectCancellables)
 
         environment.dataController.inventoryItemsPublisher
-            .sink { [weak self] in self?.state.inventoryItems = $0 }
+            .sink { [weak self] in
+                self?.state.inventoryItems = $0
+            }
             .store(in: &effectCancellables)
 
         environment.dataController.exchangeRatesPublisher
-            .sink { [weak self] in self?.state.exchangeRates = $0 }
+            .sink { [weak self] in
+                self?.state.exchangeRates = $0
+            }
             .store(in: &effectCancellables)
     }
 

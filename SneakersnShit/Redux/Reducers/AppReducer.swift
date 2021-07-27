@@ -33,6 +33,7 @@ func appReducer(state: inout AppState,
         case let .updateSettings(settings):
             if var updatedUser = state.user {
                 updatedUser.settings = settings
+                updatedUser.inited = true
                 environment.dataController.updateUser(user: updatedUser)
             }
             return Empty(completeImmediately: true).eraseToAnyPublisher()
