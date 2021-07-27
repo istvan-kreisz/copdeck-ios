@@ -29,7 +29,7 @@ struct ListItem<V: View>: View {
                 if isSelected {
                     Image(systemName: "checkmark")
                         .font(.bold(size: 13))
-                        .foregroundColor(.white)
+                        .foregroundColor(.customWhite)
                 }
             }
             .rightAligned()
@@ -41,6 +41,7 @@ struct ListItem<V: View>: View {
 
                 VStack(spacing: 3) {
                     Text(title)
+                        .foregroundColor(.customText1)
                         .font(.bold(size: 14))
                         .leftAligned()
                         .layoutPriority(2)
@@ -57,7 +58,7 @@ struct ListItem<V: View>: View {
             }
             .padding(12)
             .frame(height: 86)
-            .background(Color.white)
+            .background(Color.customWhite)
             .cornerRadius(12)
             .withDefaultShadow()
             .onTapGesture(perform: onTapped)

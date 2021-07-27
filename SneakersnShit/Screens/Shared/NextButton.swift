@@ -17,11 +17,11 @@ struct NextButton: View {
     func iconView() -> AnyView {
         return AnyView(ZStack {
             Circle()
-                .fill(Color.white.opacity(0.2))
+                .fill(Color.customWhite.opacity(0.2))
                 .frame(width: 30, height: 30, alignment: .center)
             Image(systemName: "chevron.right")
                 .font(.bold(size: 14))
-                .foregroundColor(.white)
+                .foregroundColor(.customWhite)
         })
     }
 

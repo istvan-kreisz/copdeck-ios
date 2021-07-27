@@ -35,6 +35,7 @@ struct InventoryView: View {
         VStack(alignment: .leading, spacing: 19) {
             HStack {
                 Text("Inventory")
+                    .foregroundColor(.customText1)
                     .font(.bold(size: 35))
                     .leftAligned()
                     .padding(.leading, 6)
@@ -69,6 +70,7 @@ struct InventoryView: View {
 
             ScrollView(.vertical, showsIndicators: false) {
                 Text("\(inventoryItems.count) \(searchText.isEmpty ? "Items:" : "Results:")")
+                    .foregroundColor(.customText1)
                     .font(.bold(size: 12))
                     .leftAligned()
                     .padding(.horizontal, 28)

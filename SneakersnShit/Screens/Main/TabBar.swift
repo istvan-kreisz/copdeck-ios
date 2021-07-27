@@ -44,7 +44,7 @@ struct TabBar: View {
             .frame(width: 82)
         }
         .frame(width: 246, height: 60)
-        .background(Color.white)
+        .background(Color.customWhite)
         .cornerRadius(30)
         .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 0)
     }

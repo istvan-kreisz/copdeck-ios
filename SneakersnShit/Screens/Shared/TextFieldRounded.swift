@@ -39,7 +39,7 @@ struct TextFieldRounded: View {
                     .foregroundColor(.customText2)
                     .frame(width: width, height: Styles.inputFieldHeight)
                     .padding(.horizontal, 17)
-                    .background(style == .white ? Color.white : Color.customAccent4)
+                    .background(style == .white ? Color.customWhite : Color.customAccent4)
                     .cornerRadius(Styles.cornerRadius)
                     .if(style == .white) { $0.withDefaultShadow() }
                     .ignoresSafeArea(.keyboard, edges: .bottom)
@@ -50,7 +50,7 @@ struct TextFieldRounded: View {
                     .ignoresSafeArea(.keyboard, edges: .bottom)
                     .frame(width: width, height: Styles.inputFieldHeightLarge)
                     .padding(.horizontal, 17)
-                    .background(style == .white ? Color.white : Color.customAccent4)
+                    .background(style == .white ? Color.customWhite : Color.customAccent4)
                     .cornerRadius(Styles.cornerRadius)
                     .if(style == .white) { $0.withDefaultShadow() }
             }

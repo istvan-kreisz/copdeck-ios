@@ -39,12 +39,13 @@ struct ImageView: View {
                 #endif
             } else {
                 if showPlaceholder {
-                    Color(.secondarySystemBackground)
+                    Color.customAccent2
                 } else {
                     Color.clear
                 }
             }
         }
+        .background(Color.customWhite)
         .frame(width: size, height: size)
         .if(flipImage) { $0.scaleEffect(CGSize(width: -1.0, height: 1.0)) }
     }

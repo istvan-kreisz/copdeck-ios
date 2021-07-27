@@ -50,7 +50,7 @@ struct DropDownMenu: View {
                         .allowsHitTesting(false)
                 }
                 .frame(height: Styles.inputFieldHeight)
-                .background(style == .gray ? Color.customAccent4 : Color.white)
+                .background(style == .gray ? Color.customAccent4 : Color.customWhite)
                 .cornerRadius(Styles.cornerRadius)
             }
         }

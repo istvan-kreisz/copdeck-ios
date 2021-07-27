@@ -24,6 +24,7 @@ struct SearchView: View {
         }
         VStack(alignment: .leading, spacing: 19) {
             Text("Search")
+                .foregroundColor(.customText1)
                 .font(.bold(size: 35))
                 .leftAligned()
                 .padding(.leading, 6)

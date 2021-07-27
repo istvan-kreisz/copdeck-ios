@@ -16,7 +16,7 @@ struct PillView: View {
             .padding(.horizontal, 9)
             .font(.semiBold(size: 14))
             .frame(height: 22)
-            .foregroundColor(Color.white)
+            .foregroundColor(Color.customWhite)
             .background(Capsule().fill(color))
     }
 }

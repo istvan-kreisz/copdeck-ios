@@ -125,7 +125,7 @@ struct NewItemCard: View {
         .if(style == .card) {
             $0
                 .padding(10)
-                .background(Color.white)
+                .background(Color.customWhite)
                 .cornerRadius(12)
                 .withDefaultShadow()
         }

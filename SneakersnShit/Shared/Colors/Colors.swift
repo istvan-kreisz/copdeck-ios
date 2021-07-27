@@ -15,6 +15,7 @@ extension Color {
 
     static var customBackground = Color("Background")
     static var customBlack = Color(r: 23, g: 23, b: 23)
+    static var customWhite = Color(r: 255, g: 255, b: 255)
     static var customBlue = Color(r: 0, g: 2, b: 252)
     static var customGreen = Color(r: 2, g: 198, b: 151)
     static var customYellow = Color(r: 253, g: 206, b: 63)

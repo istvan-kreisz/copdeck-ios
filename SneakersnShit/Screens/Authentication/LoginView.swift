@@ -41,14 +41,14 @@ struct LoginView: View {
                     HStack(spacing: 10) {
                         SignInButton(imageName: "apple",
                                      text: "Sign in with Apple",
-                                     imageColor: .white,
+                                     imageColor: .customWhite,
                                      backgroundColor: .customBlack,
                                      action: { store.send(.authentication(action: .signInWithApple)) },
                                      initBlock: {})
                         SignInButton(imageName: "google",
                                      text: "Sign in with Google",
                                      imageColor: nil,
-                                     backgroundColor: .white,
+                                     backgroundColor: .customWhite,
                                      action: { store.send(.authentication(action: .signInWithGoogle)) },
                                      initBlock: {})
                         SignInButton(imageName: "facebook",

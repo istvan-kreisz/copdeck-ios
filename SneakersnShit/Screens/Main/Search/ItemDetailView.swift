@@ -34,6 +34,7 @@ struct ItemDetailView: View {
 
     var body: some View {
         ZStack {
+            Color.customWhite.edgesIgnoringSafeArea(.all)
             if let item = item, showAddToInventoryButton {
                 NavigationLink("",
                                destination: AddToInventoryView(item: item, addToInventory: $addToInventory),
@@ -97,7 +98,7 @@ struct ItemDetailView: View {
                                             .frame(width: 60, height: 31)
                                             .if(priceType == self.priceType) {
                                                 $0
-                                                    .foregroundColor(Color.white)
+                                                    .foregroundColor(Color.customWhite)
                                                     .background(Capsule().fill(Color.customBlue))
                                             } else: {
                                                 $0
@@ -115,7 +116,7 @@ struct ItemDetailView: View {
                                             .frame(width: 60, height: 31)
                                             .if(feeType == self.feeType) {
                                                 $0
-                                                    .foregroundColor(Color.white)
+                                                    .foregroundColor(Color.customWhite)
                                                     .background(Capsule().fill(Color.customPurple))
                                             } else: {
                                                 $0

@@ -21,7 +21,7 @@ struct EditInventoryTray: View {
             }) {
                 Text("CANCEL")
                     .font(.bold(size: 14))
-                    .foregroundColor(.white)
+                    .foregroundColor(.customWhite)
             }
             .frame(width: Self.sectionWidth, height: Self.height)
             .background(Color.customAccent5)
@@ -30,7 +30,7 @@ struct EditInventoryTray: View {
             }) {
                 Text("DELETE")
                     .font(.bold(size: 14))
-                    .foregroundColor(.white)
+                    .foregroundColor(.customWhite)
             }
             .frame(width: Self.sectionWidth, height: Self.height)
         }

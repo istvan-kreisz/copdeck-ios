@@ -29,7 +29,7 @@ struct RoundedButton: View {
          fontSize: CGFloat = 16,
          color: Color = .customBlack,
          borderColor: Color = .clear,
-         textColor: Color = .white,
+         textColor: Color = .customWhite,
          padding: CGFloat = 20,
          accessoryView: (AnyView, Position, CGFloat?, Position)?,
          tapped: @escaping () -> Void) {

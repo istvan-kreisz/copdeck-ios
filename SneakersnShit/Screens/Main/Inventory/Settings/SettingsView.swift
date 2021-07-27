@@ -142,6 +142,7 @@ struct SettingsView: View {
                 store.send(.main(action: .updateSettings(settings: value)))
             }
         }
+        .preferredColorScheme(.light)
     }
 }
 

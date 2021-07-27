@@ -32,7 +32,7 @@ struct ToggleButton: View {
                         .frame(width: 71, height: 31)
                         .if(option == selection) {
                             $0
-                                .foregroundColor(Color.white)
+                                .foregroundColor(Color.customWhite)
                                 .background(Capsule().fill(Color.customBlue))
                         } else: {
                             $0

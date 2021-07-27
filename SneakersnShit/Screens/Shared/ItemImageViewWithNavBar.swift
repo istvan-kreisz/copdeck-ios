@@ -12,6 +12,7 @@ struct ItemImageViewWithNavBar: View {
 
     var body: some View {
         ZStack {
+            Color.customWhite.edgesIgnoringSafeArea(.all)
             if let imageURL = self.imageURL {
                 ImageView(withURL: imageURL.url,
                           size: UIScreen.main.bounds.width - 80,

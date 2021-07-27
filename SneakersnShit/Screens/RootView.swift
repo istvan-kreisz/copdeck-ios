@@ -56,6 +56,7 @@ struct RootView: View {
                 store.send(.authentication(action: .restoreState))
             }
         }
+        .preferredColorScheme(.light)
     }
 }
 
