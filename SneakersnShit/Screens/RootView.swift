@@ -18,9 +18,12 @@ struct RootView: View {
 
     var viewState = ViewState()
 
-
     var body: some View {
-        let presentErrorAlert = Binding<Bool>(get: { store.state.error != nil }, set: { _ in })
+        let presentErrorAlert = Binding<Bool>(get: { store.state.error != nil
+                                                  && (store.state.error?.title.isEmpty == false ||
+                                                      store.state.error?.message.isEmpty == false)
+                                              },
+                                              set: { _ in })
         ZStack {
             if store.state.firstLoadDone {
                 if store.state.user?.id.isEmpty ?? true {
@@ -42,7 +45,7 @@ struct RootView: View {
         }
         .onReceive(store.$state) { state in
             // user just logged in
-            if (state.user != nil && user == nil) {
+            if state.user != nil && user == nil {
                 UIApplication.shared.endEditing()
             } else if state.user == nil {
                 UIApplication.shared.windows.first?.rootViewController?.dismiss(animated: true, completion: nil)
