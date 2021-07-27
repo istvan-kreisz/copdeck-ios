@@ -33,7 +33,7 @@ struct TextFieldUnderlined: View {
                     }
                 }
             }
-            .ignoresSafeArea(.keyboard, edges: .bottom)
+//            .ignoresSafeArea(.keyboard, edges: .bottom)
             .keyboardType(keyboardType)
             .background(Color.clear)
             .foregroundColor(color)
