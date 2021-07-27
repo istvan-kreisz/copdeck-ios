@@ -13,7 +13,8 @@ struct NewItemCard: View {
     }
 
     @Binding var inventoryItem: InventoryItem
-    let purchasePrice: Double?
+    let purchasePrice: PriceWithCurrency?
+    let currency: Currency
     let style: Style
 
     var textFieldStyle: TextFieldRounded.Style {
@@ -28,17 +29,11 @@ struct NewItemCard: View {
         style == .card ? .gray : .white
     }
 
-    init(inventoryItem: Binding<InventoryItem>?, purchasePrice: Double?, style: Style = .card) {
+    init(inventoryItem: Binding<InventoryItem>?, purchasePrice: PriceWithCurrency?, currency: Currency, style: Style = .card) {
         self._inventoryItem = inventoryItem ?? Binding.constant(InventoryItem.init(fromItem: .sample))
         self.purchasePrice = purchasePrice
+        self.currency = currency
         self.style = style
-//        if inventoryItem?.wrappedValue.soldPrice != nil {
-//            self._status = State(initialValue: inventoryItem?.wrappedValue.status)
-//        } else if inventoryItem?.wrappedValue.listingPrices.isEmpty == false {
-//            self._status = State(initialValue: "LISTED")
-//        } else {
-//            self._status = State(initialValue: "NONE")
-//        }
     }
 
     var body: some View {
@@ -46,10 +41,10 @@ struct NewItemCard: View {
             HStack(alignment: .top, spacing: 11) {
                 let condition = Binding<String>(get: { inventoryItem.condition.rawValue },
                                                 set: { inventoryItem.condition = .init(rawValue: $0) ?? .new })
-                let purchasePrice = Binding<String>(get: { inventoryItem.purchasePrice.asString },
-                                                    set: { new in inventoryItem.purchasePrice = Double(new) })
+                let purchasePrice = Binding<String>(get: { (inventoryItem.purchasePrice?.price).asString },
+                                                    set: { new in inventoryItem.purchasePrice = Double(new).map { PriceWithCurrency(price: $0, currency: currency.symbol) } })
                 TextFieldRounded(title: "purchase price",
-                                 placeHolder: self.purchasePrice.asString,
+                                 placeHolder: (self.purchasePrice?.price).asString,
                                  style: textFieldStyle,
                                  keyboardType: .numberPad,
                                  text: purchasePrice)
@@ -134,6 +129,7 @@ struct NewItemCard: View {
 
 struct NewItemCard_Previews: PreviewProvider {
     static var previews: some View {
-        NewItemCard(inventoryItem: .constant(InventoryItem.init(fromItem: Item.sample)), purchasePrice: Item.sample.retailPrice)
+        NewItemCard(inventoryItem: .constant(InventoryItem.init(fromItem: Item.sample)),
+                    purchasePrice: Item.sample.retailPrice.map { PriceWithCurrency(price: $0, currency: .usd) }, currency: Currency(code: .usd, symbol: .usd))
     }
 }

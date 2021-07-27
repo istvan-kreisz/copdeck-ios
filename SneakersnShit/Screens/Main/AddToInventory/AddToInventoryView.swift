@@ -22,7 +22,6 @@ struct AddToInventoryView: View {
     @State var inventoryItem4: InventoryItem?
     @State var inventoryItem5: InventoryItem?
 
-
     var allInventoryItems: [InventoryItem?] { [inventoryItem1,
                                                inventoryItem2,
                                                inventoryItem3,
@@ -48,6 +47,10 @@ struct AddToInventoryView: View {
         self._inventoryItem5 = State(initialValue: nil)
     }
 
+    var priceWithCurrency: PriceWithCurrency? {
+        item.retailPrice.map { .init(price: $0, currency: store.state.settings.currency.symbol) }
+    }
+
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .center, spacing: 20) {
@@ -70,22 +73,22 @@ struct AddToInventoryView: View {
                                          width: 100)
                     }
 
-                    NewItemCard(inventoryItem: $inventoryItem1, purchasePrice: item.retailPrice)
+                    NewItemCard(inventoryItem: $inventoryItem1, purchasePrice: priceWithCurrency, currency: store.state.currency)
                     if let inventoryItem2 = inventoryItem2 {
                         let item = Binding<InventoryItem>(get: { inventoryItem2 }, set: { self.inventoryItem2 = $0 })
-                        NewItemCard(inventoryItem: item, purchasePrice: self.item.retailPrice)
+                        NewItemCard(inventoryItem: item, purchasePrice: priceWithCurrency, currency: store.state.currency)
                     }
                     if let inventoryItem3 = inventoryItem3 {
                         let item = Binding<InventoryItem>(get: { inventoryItem3 }, set: { self.inventoryItem3 = $0 })
-                        NewItemCard(inventoryItem: item, purchasePrice: self.item.retailPrice)
+                        NewItemCard(inventoryItem: item, purchasePrice: priceWithCurrency, currency: store.state.currency)
                     }
                     if let inventoryItem4 = inventoryItem4 {
                         let item = Binding<InventoryItem>(get: { inventoryItem4 }, set: { self.inventoryItem4 = $0 })
-                        NewItemCard(inventoryItem: item, purchasePrice: self.item.retailPrice)
+                        NewItemCard(inventoryItem: item, purchasePrice: priceWithCurrency, currency: store.state.currency)
                     }
                     if let inventoryItem5 = inventoryItem5 {
                         let item = Binding<InventoryItem>(get: { inventoryItem5 }, set: { self.inventoryItem5 = $0 })
-                        NewItemCard(inventoryItem: item, purchasePrice: self.item.retailPrice)
+                        NewItemCard(inventoryItem: item, purchasePrice: priceWithCurrency, currency: store.state.currency)
                     }
                     if itemCount != allInventoryItems.count {
                         AccessoryButton(title: "Add More",

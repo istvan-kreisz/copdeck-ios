@@ -23,6 +23,10 @@ struct AppState: Equatable {
         user?.settings ?? .default
     }
 
+    var currency: Currency {
+        settings.currency
+    }
+
     var rates: ExchangeRates {
         exchangeRates ?? .default
     }

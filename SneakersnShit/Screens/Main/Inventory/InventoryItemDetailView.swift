@@ -66,7 +66,7 @@ struct InventoryItemDetailView: View {
                     }
                     .padding(.top, 15)
 
-                    NewItemCard(inventoryItem: $inventoryItem, purchasePrice: inventoryItem.purchasePrice, style: .noBackground)
+                    NewItemCard(inventoryItem: $inventoryItem, purchasePrice: inventoryItem.purchasePrice, currency: store.state.currency, style: .noBackground)
 
                     TextFieldRounded(title: "notes (optional)",
                                      placeHolder: "add any notes here",
