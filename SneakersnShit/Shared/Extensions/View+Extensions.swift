@@ -90,4 +90,8 @@ extension View {
     func withTabViewWrapper(viewRouter: ViewRouter, store: AppStore, shouldShow: Binding<Bool> = .constant(true)) -> some View {
         ModifiedContent(content: self, modifier: WrappedTabView(viewRouter: viewRouter, store: store, shouldShow: shouldShow))
     }
+
+    func withSnackBar(text: String, shouldShow: Binding<Bool>, actionText: String? = nil, action: (() -> Void)? = nil) -> some View {
+        ModifiedContent(content: self, modifier: WithSnackbar(text: text, shouldShow: shouldShow, actionText: actionText, action: action))
+    }
 }

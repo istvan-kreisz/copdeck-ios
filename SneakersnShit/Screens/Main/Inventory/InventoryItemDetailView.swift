@@ -48,6 +48,8 @@ struct InventoryItemDetailView: View {
                                         color: .customAccent1,
                                         textColor: .customText1,
                                         width: 125,
+                                        imageName: "chevron.right",
+                                        buttonPosition: .right,
                                         tapped: { showItemDetails = true })
                     }
 

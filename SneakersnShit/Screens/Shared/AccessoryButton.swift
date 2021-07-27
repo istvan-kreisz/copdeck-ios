@@ -12,6 +12,8 @@ struct AccessoryButton: View {
     let color: Color
     let textColor: Color
     let width: CGFloat
+    let imageName: String
+    var buttonPosition: RoundedButton.Position = .left
     let tapped: () -> Void
 
     var body: some View {
@@ -26,11 +28,11 @@ struct AccessoryButton: View {
                           Circle()
                               .fill(color.opacity(0.2))
                               .frame(width: 18, height: 18)
-                          Image(systemName: "plus")
+                          Image(systemName: imageName)
                               .font(.bold(size: 7))
                               .foregroundColor(color)
                       }.frame(width: 18, height: 18)),
-                      .left, 10, .none)) {
+                      buttonPosition, 10, .none)) {
                 tapped()
         }
     }
@@ -38,6 +40,6 @@ struct AccessoryButton: View {
 
 struct AccessoryButton_Previews: PreviewProvider {
     static var previews: some View {
-        AccessoryButton(title: "title", color: .customBlue, textColor: .customBlue, width: 110, tapped: {})
+        AccessoryButton(title: "title", color: .customBlue, textColor: .customBlue, width: 110, imageName: "plus", tapped: {})
     }
 }

@@ -5,7 +5,6 @@
 //  Created by István Kreisz on 7/22/21.
 //
 
-import Foundation
 import SwiftUI
 
 struct ToggleButton: View {

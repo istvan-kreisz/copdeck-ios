@@ -87,7 +87,12 @@ struct AddToInventoryView: View {
                         NewItemCard(inventoryItem: item, purchasePrice: self.item.retailPrice)
                     }
                     if itemCount != allInventoryItems.count {
-                        AccessoryButton(title: "Add More", color: .customBlue, textColor: .customBlue, width: 110, tapped: addMore)
+                        AccessoryButton(title: "Add More",
+                                        color: .customBlue,
+                                        textColor: .customBlue,
+                                        width: 110,
+                                        imageName: "plus",
+                                        tapped: addMore)
                             .leftAligned()
                     }
 

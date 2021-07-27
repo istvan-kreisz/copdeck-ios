@@ -42,6 +42,20 @@ class DefaultDataController: DataController {
             .handleEvents(receiveOutput: { [weak self] item in
                 self?.databaseManager.update(item: item, settings: settings)
             })
+            .map { refreshedItem in
+                if let item = item {
+                    return refreshedItem.storePrices.isEmpty ? item : refreshedItem
+                } else {
+                    return refreshedItem
+                }
+            }
+            .tryCatch { error -> AnyPublisher<Item, AppError> in
+                guard let item = item else {
+                    return Fail<Item, AppError>(error: error).eraseToAnyPublisher()
+                }
+                return Just(item).setFailureType(to: AppError.self).eraseToAnyPublisher()
+            }
+            .mapError { error in (error as? AppError) ?? AppError(error: error) }
             .eraseToAnyPublisher()
     }
 

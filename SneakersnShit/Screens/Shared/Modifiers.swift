@@ -191,3 +191,24 @@ struct WithKeyboardHideOnScroll: ViewModifier {
                 })
     }
 }
+
+struct WithSnackbar: ViewModifier {
+    @Binding var shouldShow: Bool
+    let text: String
+    let actionText: String?
+    let action: (() -> Void)?
+
+    init(text: String, shouldShow: Binding<Bool>, actionText: String? = nil, action: (() -> Void)? = nil) {
+        self._shouldShow = shouldShow
+        self.text = text
+        self.actionText = actionText
+        self.action = action
+    }
+
+    func body(content: Content) -> some View {
+        ZStack {
+            content
+            Snackbar(isShowing: $shouldShow, text: text, actionText: actionText, action: action)
+        }
+    }
+}
