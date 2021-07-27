@@ -228,9 +228,7 @@ struct ItemDetailView: View {
                             .centeredHorizontally()
                             .padding(.top, 20))
             }
-            .withSnackBar(text: "Added to inventory", shouldShow: $showSnackBar, actionText: "View") {
-                
-            }
+            .withSnackBar(text: "Added to inventory", shouldShow: $showSnackBar)
             .navigationbarHidden()
             .onAppear {
                 store.send(.main(action: .setSelectedItem(item: nil)))

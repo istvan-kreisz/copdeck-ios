@@ -29,8 +29,12 @@ struct Snackbar: View {
             if isShowing {
                 HStack {
                     Text(text)
+                        .font(.semiBold(size: 18))
                         .foregroundColor(.customWhite)
                     Spacer()
+                    Image(systemName: "checkmark")
+                        .font(.semiBold(size: 17))
+                        .foregroundColor(.customWhite)
                     if let actionText = actionText, let action = action {
                         Text(actionText)
                             .font(.bold(size: 16))
@@ -44,7 +48,7 @@ struct Snackbar: View {
                     }
                 }
                 .padding()
-                .frame(width: UIScreen.screenSize.width - 80, height: 60)
+                .frame(width: UIScreen.screenSize.width - 80, height: 50)
                 .background(Color.customGreen)
                 .cornerRadius(Styles.cornerRadius)
                 .withDefaultShadow()
@@ -53,6 +57,17 @@ struct Snackbar: View {
                 .animation(Animation.spring())
             }
         }
+        .onTapGesture {
+            withAnimation {
+                isShowing = false
+            }
+        }
+        .simultaneousGesture(DragGesture()
+            .onChanged { _ in
+                withAnimation {
+                    isShowing = false
+                }
+            })
         .onChange(of: isShowing) { showing in
             guard showing else { return }
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
