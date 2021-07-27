@@ -13,7 +13,6 @@ struct SearchView: View {
 
     @State private var searchText = ""
     @State private var selectedItemId: String?
-    @State private var showSnackBar = false
 
     @StateObject private var loader = Loader()
 
@@ -67,9 +66,6 @@ struct SearchView: View {
         }
         .onChange(of: searchText) { searchText in
             store.send(.main(action: .getSearchResults(searchTerm: searchText)), completed: loader.getLoader())
-        }
-        .onTapGesture {
-            showSnackBar = true
         }
     }
 }

@@ -16,6 +16,7 @@ struct ItemDetailView: View {
 
     @State private var addToInventory = false
     @State private var firstShow = true
+    @State var showSnackBar = false
 
     private let itemId: String
     private let showAddToInventoryButton: Bool
@@ -227,6 +228,9 @@ struct ItemDetailView: View {
                             .centeredHorizontally()
                             .padding(.top, 20))
             }
+            .withSnackBar(text: "Added to inventory", shouldShow: $showSnackBar, actionText: "View") {
+                
+            }
             .navigationbarHidden()
             .onAppear {
                 store.send(.main(action: .setSelectedItem(item: nil)))
@@ -237,6 +241,11 @@ struct ItemDetailView: View {
             }
             .onChange(of: store.state.selectedItem) { item in
                 updateItem(newItem: item)
+            }
+            .onChange(of: addToInventory) { new in
+                if !new {
+                    showSnackBar = true
+                }
             }
         }
     }

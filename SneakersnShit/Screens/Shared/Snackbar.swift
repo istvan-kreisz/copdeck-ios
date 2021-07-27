@@ -44,12 +44,12 @@ struct Snackbar: View {
                     }
                 }
                 .padding()
-                .frame(width: UIScreen.screenSize.width - 80, height: 50)
+                .frame(width: UIScreen.screenSize.width - 80, height: 60)
                 .background(Color.customGreen)
                 .cornerRadius(Styles.cornerRadius)
                 .withDefaultShadow()
                 .padding(.bottom, UIApplication.shared.safeAreaInsets().bottom)
-                .transition(.move(edge: .bottom))
+                .transition(.move(edge: .bottom).combined(with: .opacity))
                 .animation(Animation.spring())
             }
         }

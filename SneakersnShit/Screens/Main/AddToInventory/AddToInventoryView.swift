@@ -22,6 +22,7 @@ struct AddToInventoryView: View {
     @State var inventoryItem4: InventoryItem?
     @State var inventoryItem5: InventoryItem?
 
+
     var allInventoryItems: [InventoryItem?] { [inventoryItem1,
                                                inventoryItem2,
                                                inventoryItem3,
