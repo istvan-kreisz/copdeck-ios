@@ -111,8 +111,8 @@ class DefaultDataController: DataController {
         databaseManager.delete(inventoryItems: inventoryItems)
     }
 
-    func updateSettings(settings: CopDeckSettings) {
-        databaseManager.updateSettings(settings: settings)
+    func updateUser(user: User) {
+        databaseManager.updateUser(user: user)
     }
 
     func stopListening() {

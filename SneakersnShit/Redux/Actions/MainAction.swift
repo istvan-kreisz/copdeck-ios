@@ -10,6 +10,8 @@ import Foundation
 enum MainAction {
     case signOut
     case setUser(user: User)
+    // settings
+    case updateSettings(settings: CopDeckSettings)
     // exchange rates
     case getExchangeRates
     // search
@@ -31,6 +33,8 @@ extension MainAction: IdAble {
             return "signOut"
         case .setUser:
             return "setUser"
+        case .updateSettings:
+            return "updateSettings"
         case .getExchangeRates:
             return "getExchangeRates"
         case .getSearchResults:

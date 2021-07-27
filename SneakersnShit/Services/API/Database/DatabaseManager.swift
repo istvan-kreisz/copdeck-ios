@@ -27,5 +27,5 @@ protocol DatabaseManager {
     func update(item: Item, settings: CopDeckSettings)
     func update(inventoryItem: InventoryItem)
     func delete(inventoryItems: [InventoryItem])
-    func updateSettings(settings: CopDeckSettings)
+    func updateUser(user: User)
 }

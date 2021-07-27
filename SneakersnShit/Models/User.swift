@@ -13,11 +13,10 @@ struct User: Codable, Equatable {
     let created: Double?
     let updated: Double?
     var settings: CopDeckSettings?
-    var noSetup: Bool?
 }
 
 extension User {
     init(id: String) {
-        self.init(id: id, name: nil, created: nil, updated: nil, settings: nil, noSetup: nil)
+        self.init(id: id, name: nil, created: nil, updated: nil, settings: nil)
     }
 }

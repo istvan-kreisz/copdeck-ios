@@ -157,7 +157,6 @@ class FirebaseService: DatabaseManager {
                 } else {
                     var user = User(id: id)
                     user.settings = user.settings ?? CopDeckSettings.default
-                    user.noSetup = true
                     promise(.success(user))
                 }
             }
@@ -241,9 +240,9 @@ class FirebaseService: DatabaseManager {
         }
     }
 
-    func updateSettings(settings: CopDeckSettings) {
-        if let dict = try? settings.asDictionary() {
-            userSettingsRef?
+    func updateUser(user: User) {
+        if let dict = try? user.asDictionary() {
+            userRef?
                 .setData(dict, merge: true) { [weak self] error in
                     if let error = error {
                         self?.errorsSubject.send(AppError(error: error))

@@ -30,6 +30,12 @@ func appReducer(state: inout AppState,
             }
             state.user = user
             return Empty(completeImmediately: true).eraseToAnyPublisher()
+        case let .updateSettings(settings):
+            if var updatedUser = state.user {
+                updatedUser.settings = settings
+                environment.dataController.updateUser(user: updatedUser)
+            }
+            return Empty(completeImmediately: true).eraseToAnyPublisher()
         case let .getSearchResults(searchTerm: searchTerm):
             if searchTerm.isEmpty {
                 state.searchResults = []
