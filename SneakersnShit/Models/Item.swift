@@ -186,12 +186,13 @@ extension Item {
             askPrice = feeType == .buy ? prices?.lowestAskWithBuyerFees : prices?.lowestAskWithSellerFees
             bidPrice = feeType == .buy ? prices?.highestBidWithBuyerFees : prices?.highestBidWithSellerFees
         }
-        let askInfo: PriceItem.PriceInfo = askPrice.map {
-            PriceItem.PriceInfo(text: currency.symbol.rawValue + " \($0)", num: $0)
-        } ?? PriceItem.PriceInfo(text: "-", num: 0)
-        let bidInfo: PriceItem.PriceInfo = bidPrice.map {
-            PriceItem.PriceInfo(text: currency.symbol.rawValue + " \($0)", num: $0)
-        } ?? PriceItem.PriceInfo(text: "-", num: 0)
+        let priceMissing = PriceItem.PriceInfo(text: "-", num: 0)
+        let askInfo: PriceItem.PriceInfo = askPrice.map { price in
+            price == 0 ? priceMissing : PriceItem.PriceInfo(text: currency.symbol.rawValue + " \(price.rounded(toPlaces: 0))", num: price)
+        } ?? priceMissing
+        let bidInfo: PriceItem.PriceInfo = bidPrice.map { price in
+            price == 0 ? priceMissing : PriceItem.PriceInfo(text: currency.symbol.rawValue + " \(price.rounded(toPlaces: 0))", num: price)
+        } ?? priceMissing
 
         var sizeQuery = ""
         if let sizeNum = size.number {
