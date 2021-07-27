@@ -33,33 +33,37 @@ struct LoginView: View {
                         .font(.bold(size: 22))
                         .foregroundColor(.customText1)
                         .leftAligned()
-                    Text("Sign up  with socials or fill the form to continue.")
+                    Text("Sign in to continue.")
                         .font(.regular(size: 16))
                         .foregroundColor(.customText2)
                         .leftAligned()
+//                    Text("Sign up  with socials or fill the form to continue.")
+//                        .font(.regular(size: 16))
+//                        .foregroundColor(.customText2)
+//                        .leftAligned()
 
-                    HStack(spacing: 10) {
-                        SignInButton(imageName: "apple",
-                                     text: "Sign in with Apple",
-                                     imageColor: .customWhite,
-                                     backgroundColor: .customBlack,
-                                     action: { store.send(.authentication(action: .signInWithApple)) },
-                                     initBlock: {})
-                        SignInButton(imageName: "google",
-                                     text: "Sign in with Google",
-                                     imageColor: nil,
-                                     backgroundColor: .customWhite,
-                                     action: { store.send(.authentication(action: .signInWithGoogle)) },
-                                     initBlock: {})
-                        SignInButton(imageName: "facebook",
-                                     text: "Sign in with Facebook",
-                                     imageColor: nil,
-                                     backgroundColor: Color(r: 66, g: 103, b: 178),
-                                     action: { store.send(.authentication(action: .signInWithFacebook)) },
-                                     initBlock: {})
-                        Spacer()
-                    }
-                    .padding(.top, 17)
+//                    HStack(spacing: 10) {
+//                        SignInButton(imageName: "apple",
+//                                     text: "Sign in with Apple",
+//                                     imageColor: .customWhite,
+//                                     backgroundColor: .customBlack,
+//                                     action: { store.send(.authentication(action: .signInWithApple)) },
+//                                     initBlock: {})
+//                        SignInButton(imageName: "google",
+//                                     text: "Sign in with Google",
+//                                     imageColor: nil,
+//                                     backgroundColor: .customWhite,
+//                                     action: { store.send(.authentication(action: .signInWithGoogle)) },
+//                                     initBlock: {})
+//                        SignInButton(imageName: "facebook",
+//                                     text: "Sign in with Facebook",
+//                                     imageColor: nil,
+//                                     backgroundColor: Color(r: 66, g: 103, b: 178),
+//                                     action: { store.send(.authentication(action: .signInWithFacebook)) },
+//                                     initBlock: {})
+//                        Spacer()
+//                    }
+//                    .padding(.top, 17)
 
                     Spacer()
                     TextFieldUnderlined(text: $email,
