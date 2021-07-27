@@ -28,7 +28,7 @@ struct AccessoryButton: View {
                               .frame(width: 18, height: 18)
                           Image(systemName: "plus")
                               .font(.bold(size: 7))
-                              .foregroundColor(.customBlue)
+                              .foregroundColor(color)
                       }.frame(width: 18, height: 18)),
                       .left, 10, .none)) {
                 tapped()

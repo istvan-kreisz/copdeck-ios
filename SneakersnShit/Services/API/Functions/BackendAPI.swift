@@ -42,6 +42,10 @@ class BackendAPI: API {
         return callFirebaseFunction(functionName: "getItemDetails", model: Params(item: item))
     }
 
+    func getCalculatedPrices(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
+        PassthroughSubject<Item, AppError>().eraseToAnyPublisher()
+    }
+
     private let functions = Functions.functions(region: "europe-west1")
 
     init() {

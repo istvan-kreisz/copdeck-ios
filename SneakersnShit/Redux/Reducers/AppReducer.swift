@@ -18,11 +18,12 @@ func appReducer(state: inout AppState,
     case let .main(action: action):
         switch action {
         case .signOut:
-            state.user = nil
+            state.reset()
             if !state.firstLoadDone {
                 state.firstLoadDone = true
             }
             environment.dataController.stopListening()
+
             return Empty(completeImmediately: true).eraseToAnyPublisher()
         case let .setUser(user):
             if !state.firstLoadDone {

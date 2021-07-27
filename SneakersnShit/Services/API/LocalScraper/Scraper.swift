@@ -13,6 +13,7 @@ class LocalScraper {
     private var exchangeRatesSubject = PassthroughSubject<ExchangeRates, AppError>()
     private var itemsSubject = PassthroughSubject<[Item], AppError>()
     private var itemSubject = PassthroughSubject<Item, AppError>()
+    private var itemWithCalculatedPricesSubject = PassthroughSubject<Item, AppError>()
 
     private var native: JSNativeBridge!
     private lazy var interpreter: JavascriptInterpreter = {
@@ -33,7 +34,7 @@ class LocalScraper {
                                                                   taxes: (settings.feeCalculation.goat?.taxes) ?? 0))
         var showLogs = false
         #if DEBUG
-        showLogs = true && DebugSettings.shared.showScraperLogs
+            showLogs = true && DebugSettings.shared.showScraperLogs
         #endif
         return APIConfig(currency: settings.currency,
                          isLoggingEnabled: showLogs,
@@ -58,7 +59,11 @@ class LocalScraper {
 }
 
 extension LocalScraper: API {
-    func getItemDetails(for item: Item?, itemId: String, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
+    func getItemDetails(for item: Item?,
+                        itemId: String,
+                        forced: Bool,
+                        settings: CopDeckSettings,
+                        exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
         if DebugSettings.shared.showScraperLogs {
             print("scraping...")
         }
@@ -88,17 +93,20 @@ extension LocalScraper: API {
             return Fail(outputType: Item.self, failure: AppError(title: "Error", message: "Invalid Item object", error: nil)).eraseToAnyPublisher()
         }
 
-        interpreter.call(object: nil, functionName: "scraper.api.getItemPrices", arguments: [itemJSON, config(from: settings, exchangeRates: exchangeRates)],
-                         completion: { result in })
+        interpreter.call(object: nil,
+                         functionName: "scraper.api.getItemPrices",
+                         arguments: [itemJSON, config(from: settings, exchangeRates: exchangeRates)],
+                         completion: { _ in })
         return itemSubject.first().eraseToAnyPublisher()
     }
 
     func getExchangeRates(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<ExchangeRates, AppError> {
         exchangeRatesSubject.send(completion: .finished)
         exchangeRatesSubject = PassthroughSubject<ExchangeRates, AppError>()
-        interpreter.call(object: nil, functionName: "scraper.api.getExchangeRates", arguments: [config(from: settings, exchangeRates: exchangeRates)],
-                         completion: { result in })
-
+        interpreter.call(object: nil,
+                         functionName: "scraper.api.getExchangeRates",
+                         arguments: [config(from: settings, exchangeRates: exchangeRates)],
+                         completion: { _ in })
         return exchangeRatesSubject.first().eraseToAnyPublisher()
     }
 
@@ -106,9 +114,25 @@ extension LocalScraper: API {
         itemsSubject.send(completion: .finished)
         itemsSubject = PassthroughSubject<[Item], AppError>()
 
-        interpreter.call(object: nil, functionName: "scraper.api.searchItems", arguments: [searchTerm, config(from: settings, exchangeRates: exchangeRates)],
-                         completion: { result in })
+        interpreter.call(object: nil,
+                         functionName: "scraper.api.searchItems",
+                         arguments: [searchTerm, config(from: settings, exchangeRates: exchangeRates)],
+                         completion: { _ in })
         return itemsSubject.first().eraseToAnyPublisher()
+    }
+
+    func getCalculatedPrices(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
+        itemWithCalculatedPricesSubject.send(completion: .finished)
+        itemWithCalculatedPricesSubject = PassthroughSubject<Item, AppError>()
+        guard let itemJSON = item.asJSON else {
+            return Fail(outputType: Item.self, failure: AppError(title: "Error", message: "Invalid Item object", error: nil)).eraseToAnyPublisher()
+        }
+
+        interpreter.call(object: nil,
+                         functionName: "scraper.api.calculatePrices",
+                         arguments: [itemJSON, config(from: settings, exchangeRates: exchangeRates)],
+                         completion: { _ in })
+        return itemWithCalculatedPricesSubject.first().eraseToAnyPublisher()
     }
 }
 
@@ -123,5 +147,9 @@ extension LocalScraper: JSNativeBridgeDelegate {
 
     func setItem(_ item: Item) {
         itemSubject.send(item)
+    }
+
+    func setItemWithCalculatedPrices(_ item: Item) {
+        itemWithCalculatedPricesSubject.send(item)
     }
 }

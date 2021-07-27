@@ -26,4 +26,15 @@ struct AppState: Equatable {
     var rates: ExchangeRates {
         exchangeRates ?? .default
     }
+
+    mutating func reset() {
+        user = nil
+        searchResults = nil
+        selectedItem = nil
+        editedItem = nil
+        selectedInventoryItem = nil
+        inventoryItems = []
+        inventorySearchResults = nil
+        error = nil
+    }
 }

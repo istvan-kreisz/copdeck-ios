@@ -19,7 +19,7 @@ let ALLSTORES = zip(StoreId.allCases, StoreName.allCases).map { Store(id: $0, na
 
 let ALLSTORESWITHOTHER = ALLSTORES.map { GenericStore(id: $0.id.rawValue, name: $0.name.rawValue) } + [GenericStore(id: "other", name: "Other")]
 
-let ALLSHOESIZES = (2...40).reversed().map { "US \((Double($0) * 0.5).rounded(toPlaces: $0 % 2 == 1 ? 1 : 0))" }
+let ALLSHOESIZES = (2 ... 40).reversed().map { "US \((Double($0) * 0.5).rounded(toPlaces: $0 % 2 == 1 ? 1 : 0))" }
 
 struct GenericStore: Codable, Equatable, Identifiable {
     let id: String
@@ -79,16 +79,20 @@ struct Item: Codable, Equatable, Identifiable {
     struct StorePrice: Codable, Equatable {
         let retailPrice: Double?
         let store: Store
-        let inventory: [InventoryItem]
+        let inventory: [StoreInventoryItem]
+        let currencyCode: Currency.CurrencyCode?
 
-        struct InventoryItem: Codable, Equatable, Identifiable {
+        struct StoreInventoryItem: Codable, Equatable, Identifiable {
             let size: String
-            let currencyCode: Currency.CurrencyCode
-            let lowestAsk: Price?
-            let highestBid: Price?
+            let lowestAsk: Double?
+            let lowestAskWithSellerFees: Double?
+            let lowestAskWithBuyerFees: Double?
+            let highestBid: Double?
+            let highestBidWithSellerFees: Double?
+            let highestBidWithBuyerFees: Double?
+
             let shoeCondition: String?
             let boxCondition: String?
-            let tags: [String]
 
             var id: String { size }
 
@@ -140,9 +144,7 @@ extension Item {
     }
 
     var currency: Currency {
-        ALLCURRENCIES.first {
-            $0.code == storePrices.first?.inventory.first?.currencyCode
-        } ?? Currency(code: .usd, symbol: .usd)
+        ALLCURRENCIES.first { $0.code == storePrices.first?.currencyCode } ?? Currency(code: .usd, symbol: .usd)
     }
 
     private func storeInfo(for storeId: StoreId) -> StoreInfo? {
@@ -177,13 +179,12 @@ extension Item {
     private func price(size: String, storeId: StoreId, feeType: FeeType, currency: Currency) -> PriceItem {
         let prices = allStorePrices.first(where: { $0.store.id == storeId })?.inventory.first(where: { $0.size == size })
         let storeInfo = storeInfo.first(where: { $0.store.id == storeId })
-        let ask = prices?.lowestAsk
-        let bid = prices?.highestBid
-        var askPrice = ask?.noFees
-        var bidPrice = bid?.noFees
+
+        var askPrice = prices?.lowestAsk
+        var bidPrice = prices?.highestBid
         if feeType != .none {
-            askPrice = feeType == .buy ? ask?.withBuyerFees : ask?.withSellerFees
-            bidPrice = feeType == .buy ? bid?.withBuyerFees : bid?.withSellerFees
+            askPrice = feeType == .buy ? prices?.lowestAskWithBuyerFees : prices?.lowestAskWithSellerFees
+            bidPrice = feeType == .buy ? prices?.highestBidWithBuyerFees : prices?.highestBidWithSellerFees
         }
         let askInfo: PriceItem.PriceInfo = askPrice.map {
             PriceItem.PriceInfo(text: currency.symbol.rawValue + " \($0)", num: $0)
@@ -255,5 +256,41 @@ extension Item {
 
     static func databaseId(itemId: String, settings: CopDeckSettings) -> String {
         "\(itemId)-\(settings.feeCalculation.country.region)-\(settings.currency.code.rawValue)"
+    }
+}
+
+extension Item.StorePrice.StoreInventoryItem {
+    enum CodingKeys: String, CodingKey {
+        case size
+        case lowestAsk
+        case lowestAskWithSellerFees
+        case lowestAskWithBuyerFees
+        case highestBid
+        case highestBidWithSellerFees
+        case highestBidWithBuyerFees
+        case shoeCondition
+        case boxCondition
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        size = try container.decode(String.self, forKey: .size)
+        lowestAsk = try container.decodeIfPresent(Double.self, forKey: .lowestAsk)
+        lowestAskWithSellerFees = try container.decodeIfPresent(Double.self, forKey: .lowestAskWithSellerFees)
+        lowestAskWithBuyerFees = try container.decodeIfPresent(Double.self, forKey: .lowestAskWithBuyerFees)
+        highestBid = try container.decodeIfPresent(Double.self, forKey: .highestBid)
+        highestBidWithSellerFees = try container.decodeIfPresent(Double.self, forKey: .highestBidWithSellerFees)
+        highestBidWithBuyerFees = try container.decodeIfPresent(Double.self, forKey: .highestBidWithBuyerFees)
+        shoeCondition = try container.decodeIfPresent(String.self, forKey: .shoeCondition)
+        boxCondition = try container.decodeIfPresent(String.self, forKey: .boxCondition)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(size, forKey: .size)
+        try container.encode(lowestAsk, forKey: .lowestAsk)
+        try container.encode(highestBid, forKey: .highestBid)
+        try container.encode(shoeCondition, forKey: .shoeCondition)
+        try container.encode(boxCondition, forKey: .boxCondition)
     }
 }

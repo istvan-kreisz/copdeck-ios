@@ -13,12 +13,14 @@ protocol JSNativeBridgeDelegate: AnyObject {
     func setExchangeRates(_ exchangeRates: ExchangeRates)
     func setItems(_ items: [Item])
     func setItem(_ item: Item)
+    func setItemWithCalculatedPrices(_ item: Item)
 }
 
 @objc protocol NativeProtocol: JSExport {
     func setExchangeRates(_ exchangeRates: Any)
     func setItems(_ items: Any)
     func setItem(_ item: Any)
+    func setItemWithCalculatedPrices(_ item: Any)
 }
 
 @objc class JSNativeBridge: NSObject, NativeProtocol {
@@ -43,6 +45,13 @@ protocol JSNativeBridgeDelegate: AnyObject {
         guard let item = Item(from: item) else { return }
         DispatchQueue.main.async { [weak self] in
             self?.delegate?.setItem(item)
+        }
+    }
+
+    func setItemWithCalculatedPrices(_ item: Any) {
+        guard let item = Item(from: item) else { return }
+        DispatchQueue.main.async { [weak self] in
+            self?.delegate?.setItemWithCalculatedPrices(item)
         }
     }
 }

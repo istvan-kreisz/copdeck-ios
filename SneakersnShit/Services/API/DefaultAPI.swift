@@ -50,10 +50,11 @@ class DefaultDataController: DataController {
                         forced: Bool,
                         settings: CopDeckSettings,
                         exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
+        let returnValue: AnyPublisher<Item, AppError>
         if forced {
-            return refreshItem(for: item, itemId: itemId, forced: forced, settings: settings, exchangeRates: exchangeRates)
+            returnValue = refreshItem(for: item, itemId: itemId, forced: forced, settings: settings, exchangeRates: exchangeRates)
         } else {
-            return databaseManager.getItem(withId: itemId, settings: settings)
+            returnValue = databaseManager.getItem(withId: itemId, settings: settings)
                 .flatMap { [weak self] item -> AnyPublisher<Item, AppError> in
                     guard let self = self else {
                         return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
@@ -77,6 +78,18 @@ class DefaultDataController: DataController {
                 .mapError { error in (error as? AppError) ?? AppError(error: error) }
                 .eraseToAnyPublisher()
         }
+        return returnValue
+            .flatMap { [weak self] item -> AnyPublisher<Item, AppError> in
+                guard let self = self else {
+                    return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
+                }
+                return self.localScraper.getCalculatedPrices(for: item, settings: settings, exchangeRates: exchangeRates)
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func getCalculatedPrices(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
+        localScraper.getCalculatedPrices(for: item, settings: settings, exchangeRates: exchangeRates)
     }
 
     func getUser(withId id: String) -> AnyPublisher<User, AppError> {
