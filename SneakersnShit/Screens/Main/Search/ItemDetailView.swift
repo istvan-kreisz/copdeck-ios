@@ -15,6 +15,7 @@ struct ItemDetailView: View {
     @State private var feeType: FeeType = .none
 
     @State private var addToInventory = false
+    @State private var addedInventoryItem = false
     @State private var firstShow = true
     @State var showSnackBar = false
 
@@ -38,7 +39,7 @@ struct ItemDetailView: View {
             Color.customWhite.edgesIgnoringSafeArea(.all)
             if let item = item, showAddToInventoryButton {
                 NavigationLink("",
-                               destination: AddToInventoryView(item: item, addToInventory: $addToInventory),
+                               destination: AddToInventoryView(item: item, presented: $addToInventory, addedInvantoryItem: $addedInventoryItem),
                                isActive: $addToInventory)
             }
 
@@ -223,7 +224,10 @@ struct ItemDetailView: View {
                     .withFloatingButton(button: NextButton(text: "Add to Inventory",
                                                            size: .init(width: 260, height: 60),
                                                            color: .customBlack,
-                                                           tapped: { addToInventory = true })
+                                                           tapped: {
+                                                               addToInventory = true
+                                                               addedInventoryItem = false
+                                                           })
                             .disabled(loader.isLoading)
                             .centeredHorizontally()
                             .padding(.top, 20))
@@ -240,8 +244,8 @@ struct ItemDetailView: View {
             .onChange(of: store.state.selectedItem) { item in
                 updateItem(newItem: item)
             }
-            .onChange(of: addToInventory) { new in
-                if !new {
+            .onChange(of: addedInventoryItem) { new in
+                if new {
                     showSnackBar = true
                 }
             }

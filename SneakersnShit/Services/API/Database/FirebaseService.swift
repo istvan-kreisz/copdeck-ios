@@ -52,8 +52,6 @@ class FirebaseService: DatabaseManager {
     init() {
         itemsRef = firestore.collection("items")
         exchangeRatesRef = firestore.collection("info").document("exchangerates")
-
-        addExchangeRatesListener()
     }
 
     func setup(userId: String) {
@@ -67,6 +65,7 @@ class FirebaseService: DatabaseManager {
         stopListening()
         addUserListener()
         addInventoryListener()
+        addExchangeRatesListener()
     }
 
     private func addUserListener() {

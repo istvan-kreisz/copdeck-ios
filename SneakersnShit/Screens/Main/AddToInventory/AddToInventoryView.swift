@@ -10,7 +10,8 @@ import SwiftUI
 struct AddToInventoryView: View {
     @EnvironmentObject var store: AppStore
     @State var item: Item
-    @Binding var addToInventory: Bool
+    @Binding var presented: Bool
+    @Binding var addedInvantoryItem: Bool
 
     @State var name: String
     @State var styleId: String
@@ -32,9 +33,10 @@ struct AddToInventoryView: View {
         allInventoryItems.compactMap { $0 }.count
     }
 
-    init(item: Item, addToInventory: Binding<Bool>) {
+    init(item: Item, presented: Binding<Bool>, addedInvantoryItem: Binding<Bool>) {
         self._item = State(initialValue: item)
-        self._addToInventory = addToInventory
+        self._presented = presented
+        self._addedInvantoryItem = addedInvantoryItem
 
         self._name = State(initialValue: item.name ?? "")
         self._styleId = State(initialValue: item.bestStoreInfo?.sku ?? "")
@@ -146,12 +148,13 @@ struct AddToInventoryView: View {
                 inventoryItem.copy(withName: name, itemId: styleId, notes: notes)
             }
         store.send(.main(action: .addToInventory(inventoryItems: inventoryItems)))
-        addToInventory = false
+        presented = false
+        addedInvantoryItem = true
     }
 }
 
 struct AddToInventoryView_Previews: PreviewProvider {
     static var previews: some View {
-        return AddToInventoryView(item: Item.sample, addToInventory: .constant(true))
+        return AddToInventoryView(item: Item.sample, presented: .constant(true), addedInvantoryItem: .constant(false))
     }
 }

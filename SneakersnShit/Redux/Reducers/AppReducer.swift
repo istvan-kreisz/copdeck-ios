@@ -97,6 +97,9 @@ func appReducer(state: inout AppState,
                         .eraseToAnyPublisher()
                 }
             }
+            .tryCatch {
+                Just(AppAction.error(action: .setError(error: AppError(error: $0))))
+            }
             .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
             .eraseToAnyPublisher()
     case let .error(action: action):

@@ -22,7 +22,7 @@ struct AppError: Identifiable, Error, Equatable {
 
 extension AppError {
     init(error: Error) {
-        self.init(title: "", message: "", error: error)
+        self.init(title: "Error", message: error.localizedDescription, error: error)
     }
 
     static var unknown: Self = .init(title: "", message: "")

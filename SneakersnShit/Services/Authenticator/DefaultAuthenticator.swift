@@ -56,11 +56,11 @@ class DefaultAuthenticator: NSObject, Authenticator {
     #warning("refactor")
     private func restoreState() {
         if GIDSignIn.sharedInstance.hasPreviousSignIn() {
-            GIDSignIn.sharedInstance.restorePreviousSignIn { [weak self] user, error in
-                self?.handleGoogleSignInResult(user: user, error: error, isRestore: true)
-            }
+//            GIDSignIn.sharedInstance.restorePreviousSignIn { [weak self] user, error in
+//                self?.handleGoogleSignInResult(user: user, error: error, isRestore: true)
+//            }
         } else if let fbAccessToken = AccessToken.current?.tokenString {
-            handleFacebookSignInResult(accessToken: fbAccessToken)
+//            handleFacebookSignInResult(accessToken: fbAccessToken)
         } else if let user = Self.auth.currentUser {
             sendResultWithDelay(user.uid)
         } else {
