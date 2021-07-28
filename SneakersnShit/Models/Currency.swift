@@ -26,6 +26,21 @@ struct Currency: Codable, Equatable {
         case nok = "NOK"
         case chf = "CHF"
     }
+
+    static func symbol(for code: CurrencyCode) -> CurrencySymbol {
+        switch code {
+        case .gbp:
+            return .gbp
+        case .usd:
+            return .usd
+        case .eur:
+            return .eur
+        case .nok:
+            return .nok
+        case .chf:
+            return .chf
+        }
+    }
 }
 
 let ALLSELECTABLECURRENCYCODES: [Currency.CurrencyCode] = [.eur, .usd, .gbp]

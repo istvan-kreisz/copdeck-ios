@@ -11,9 +11,11 @@ import Combine
 struct SettingsView: View {
     @EnvironmentObject var store: AppStore
     @State private var settings: CopDeckSettings
+    @Binding private var isPresented: Bool
 
-    init(settings: CopDeckSettings) {
+    init(settings: CopDeckSettings, isPresented: Binding<Bool>) {
         self._settings = State(initialValue: settings)
+        self._isPresented = isPresented
     }
 
     var body: some View {
@@ -135,9 +137,15 @@ struct SettingsView: View {
                         .font(.bold(size: 18))
                         .foregroundColor(.customRed)
                 })
-                .centeredHorizontally()
+                    .centeredHorizontally()
             }
             .navigationBarTitle(Text("Settings"))
+            .navigationBarItems(trailing:
+                Button(action: {
+                    isPresented = false
+                }) {
+                    Text("Done")
+                })
             .onChange(of: settings) { value in
                 store.send(.main(action: .updateSettings(settings: value)))
             }
@@ -149,7 +157,7 @@ struct SettingsView: View {
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         return Group {
-            SettingsView(settings: .default)
+            SettingsView(settings: .default, isPresented: .constant(true))
                 .environmentObject(AppStore.default)
         }
     }

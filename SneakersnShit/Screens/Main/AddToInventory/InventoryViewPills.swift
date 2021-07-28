@@ -31,7 +31,7 @@ struct InventoryViewPills: View {
     var details: [(String, Int)] {
         [inventoryItem.condition.rawValue,
          inventoryItem.size,
-         inventoryItem.purchasePrice.map { "\($0.currency.rawValue)\($0.price.rounded(toPlaces: 0))" },
+         inventoryItem.purchasePrice.map { "\($0.currencySymbol.rawValue)\($0.price.rounded(toPlaces: 0))" },
          statusText].enumerated()
             .compactMap { item in item.element.map { ($0, item.offset) } ?? nil }
     }

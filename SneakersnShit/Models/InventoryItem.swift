@@ -9,21 +9,28 @@ import Foundation
 
 struct PriceWithCurrency: Codable, Equatable {
     let price: Double
-    let currency: Currency.CurrencySymbol
+    let currencyCode: Currency.CurrencyCode
+
+    var currencySymbol: Currency.CurrencySymbol {
+        Currency.symbol(for: currencyCode)
+    }
 }
 
 struct InventoryItem: Codable, Equatable, Identifiable {
     enum Condition: String, Codable, CaseIterable {
         case new, used
     }
+
     struct ListingPrice: Codable, Equatable {
         let storeId: String
-        var price: Int
+        var price: PriceWithCurrency
     }
+
     struct SoldPrice: Codable, Equatable {
         let storeId: String?
-        var price: Double?
+        var price: PriceWithCurrency?
     }
+
     enum SoldStatus: String, Codable, Equatable {
         case none, listed, sold
     }
@@ -52,7 +59,7 @@ extension InventoryItem {
         self.init(id: UUID().uuidString,
                   itemId: item.id,
                   name: item.name ?? "",
-                  purchasePrice: nil,
+                  purchasePrice: item.retailPrice.asPriceWithCurrency(currency: item.currency),
                   imageURL: item.imageURL,
                   size: item.sortedSizes.first ?? "",
                   condition: .new,

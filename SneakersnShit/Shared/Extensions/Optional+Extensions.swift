@@ -11,6 +11,10 @@ extension Optional where Wrapped == Double {
     var asString: String {
         map { String(Int($0)) } ?? ""
     }
+
+    func asPriceWithCurrency(currency: Currency) -> PriceWithCurrency? {
+        map { $0.asPriceWithCurrency(currency: currency) }
+    }
 }
 
 extension Optional where Wrapped == Int {

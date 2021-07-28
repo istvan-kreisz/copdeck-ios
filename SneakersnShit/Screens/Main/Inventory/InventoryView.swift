@@ -108,7 +108,7 @@ struct InventoryView: View {
             selectedInventoryItems = []
         }
         .sheet(isPresented: $settingsPresented) {
-            SettingsView(settings: store.state.settings)
+            SettingsView(settings: store.state.settings, isPresented: $settingsPresented)
         }
     }
 

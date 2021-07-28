@@ -15,4 +15,8 @@ extension Double {
     func isOlderThan(minutes: Double) -> Bool {
         (Date().timeIntervalSince1970 - self / 1000) / 60 > minutes
     }
+
+    func asPriceWithCurrency(currency: Currency) -> PriceWithCurrency {
+        PriceWithCurrency(price: self, currencyCode: currency.code)
+    }
 }

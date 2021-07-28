@@ -42,7 +42,9 @@ struct NewItemCard: View {
                 let condition = Binding<String>(get: { inventoryItem.condition.rawValue },
                                                 set: { inventoryItem.condition = .init(rawValue: $0) ?? .new })
                 let purchasePrice = Binding<String>(get: { (inventoryItem.purchasePrice?.price).asString },
-                                                    set: { new in inventoryItem.purchasePrice = Double(new).map { PriceWithCurrency(price: $0, currency: currency.symbol) } })
+                                                    set: { new in
+                                                        inventoryItem.purchasePrice = PriceWithCurrency(price: Double(new) ?? 0, currencyCode: currency.code)
+                                                    })
                 TextFieldRounded(title: "purchase price",
                                  placeHolder: (self.purchasePrice?.price).asString,
                                  style: textFieldStyle,
@@ -75,17 +77,20 @@ struct NewItemCard: View {
                             let text =
                                 Binding<String>(get: {
                                                     (inventoryItem.listingPrices
-                                                        .first(where: { $0.storeId == store.id })?.price).asString
+                                                        .first(where: { $0.storeId == store.id })?.price.price).asString
                                                 },
                                                 set: { new in
                                                     if let index = inventoryItem.listingPrices.firstIndex(where: { $0.storeId == store.id }) {
-                                                        inventoryItem.listingPrices[index] = InventoryItem.ListingPrice(storeId: store.id, price: Int(new) ?? 0)
+                                                        inventoryItem.listingPrices[index] = InventoryItem
+                                                            .ListingPrice(storeId: store.id, price: .init(price: Double(new) ?? 0, currencyCode: currency.code))
                                                     } else {
-                                                        inventoryItem.listingPrices.append(.init(storeId: store.id, price: Int(new) ?? 0))
+                                                        inventoryItem.listingPrices
+                                                            .append(.init(storeId: store.id,
+                                                                          price: .init(price: Double(new) ?? 0, currencyCode: currency.code)))
                                                     }
                                                 })
                             TextFieldRounded(title: store.id.lowercased(),
-                                             placeHolder: "$0",
+                                             placeHolder: "\(currency.symbol)0",
                                              style: textFieldStyle,
                                              keyboardType: .numberPad,
                                              text: text)
@@ -93,10 +98,11 @@ struct NewItemCard: View {
                     }
                 }
                 .padding(.top, 5)
-            } else if inventoryItem.status == .sold {
+            }
+            else if inventoryItem.status == .sold {
                 let text =
-                    Binding<String>(get: { (inventoryItem.soldPrice?.price).asString },
-                                    set: { inventoryItem.soldPrice = .init(storeId: inventoryItem.soldPrice?.storeId, price: Double($0)) })
+                    Binding<String>(get: { (inventoryItem.soldPrice?.price?.price).asString },
+                                    set: { inventoryItem.soldPrice = .init(storeId: inventoryItem.soldPrice?.storeId, price: Double($0).asPriceWithCurrency(currency: currency)) })
                 let soldOn =
                     Binding<String>(get: { inventoryItem.soldPrice?.storeId?.uppercased() ?? "OTHER" },
                                     set: { inventoryItem.soldPrice = .init(storeId: $0.lowercased(), price: inventoryItem.soldPrice?.price) })
@@ -104,7 +110,7 @@ struct NewItemCard: View {
                 VStack(alignment: .leading, spacing: 11) {
                     HStack {
                         TextFieldRounded(title: "selling price (optional)",
-                                         placeHolder: "$0",
+                                         placeHolder: "\(currency.symbol)0",
                                          style: textFieldStyle,
                                          keyboardType: .numberPad,
                                          text: text)
@@ -130,6 +136,6 @@ struct NewItemCard: View {
 struct NewItemCard_Previews: PreviewProvider {
     static var previews: some View {
         NewItemCard(inventoryItem: .constant(InventoryItem.init(fromItem: Item.sample)),
-                    purchasePrice: Item.sample.retailPrice.map { PriceWithCurrency(price: $0, currency: .usd) }, currency: Currency(code: .usd, symbol: .usd))
+                    purchasePrice: Item.sample.retailPrice.map { PriceWithCurrency(price: $0, currencyCode: .usd) }, currency: Currency(code: .usd, symbol: .usd))
     }
 }

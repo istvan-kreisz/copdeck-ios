@@ -50,7 +50,7 @@ struct AddToInventoryView: View {
     }
 
     var priceWithCurrency: PriceWithCurrency? {
-        item.retailPrice.map { .init(price: $0, currency: store.state.settings.currency.symbol) }
+        item.retailPrice.asPriceWithCurrency(currency: store.state.settings.currency)
     }
 
     var body: some View {
