@@ -28,6 +28,10 @@ class BackendAPI: API {
         PassthroughSubject<ExchangeRates, AppError>().eraseToAnyPublisher()
     }
 
+    func getCookies() -> AnyPublisher<[Cookie], AppError> {
+        PassthroughSubject<[Cookie], AppError>().eraseToAnyPublisher()
+    }
+
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
         struct Params: Encodable {
             let searchTerm: String

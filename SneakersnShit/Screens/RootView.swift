@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct RootView: View {
-    @Environment(\.presentationMode) var presentationMode
     @EnvironmentObject var store: AppStore
     @State var user: User?
 
@@ -40,7 +39,13 @@ struct RootView: View {
                     }
                 }
             } else {
-                Text("splashscreen")
+                Image("logo")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 130)
+                    .centeredVertically()
+                    .centeredHorizontally()
+                    .edgesIgnoringSafeArea(.all)
             }
         }
         .onReceive(store.$state) { state in

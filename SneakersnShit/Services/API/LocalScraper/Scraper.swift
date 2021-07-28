@@ -14,6 +14,7 @@ class LocalScraper {
     private var itemsSubject = PassthroughSubject<[Item], AppError>()
     private var itemSubject = PassthroughSubject<Item, AppError>()
     private var itemWithCalculatedPricesSubject = PassthroughSubject<Item, AppError>()
+    private var cookiesSubject = PassthroughSubject<[Cookie], AppError>()
 
     private var native: JSNativeBridge!
     private lazy var interpreter: JavascriptInterpreter = {
@@ -134,6 +135,18 @@ extension LocalScraper: API {
                          completion: { _ in })
         return itemWithCalculatedPricesSubject.first().eraseToAnyPublisher()
     }
+
+    func getCookies() -> AnyPublisher<[Cookie], AppError> {
+        cookiesSubject.send(completion: .finished)
+        cookiesSubject = PassthroughSubject<[Cookie], AppError>()
+
+        interpreter.call(object: nil,
+                         functionName: "scraper.api.getCookies",
+                         arguments: [],
+                         completion: { _ in })
+        return cookiesSubject.first().eraseToAnyPublisher()
+    }
+
 }
 
 extension LocalScraper: JSNativeBridgeDelegate {
@@ -151,5 +164,9 @@ extension LocalScraper: JSNativeBridgeDelegate {
 
     func setItemWithCalculatedPrices(_ item: Item) {
         itemWithCalculatedPricesSubject.send(item)
+    }
+
+    func setCookies(_ cookies: [Cookie]) {
+        cookiesSubject.send(cookies)
     }
 }

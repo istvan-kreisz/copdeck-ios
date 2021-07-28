@@ -14,6 +14,7 @@ protocol JSNativeBridgeDelegate: AnyObject {
     func setItems(_ items: [Item])
     func setItem(_ item: Item)
     func setItemWithCalculatedPrices(_ item: Item)
+    func setCookies(_ cookies: [Cookie])
 }
 
 @objc protocol NativeProtocol: JSExport {
@@ -21,6 +22,7 @@ protocol JSNativeBridgeDelegate: AnyObject {
     func setItems(_ items: Any)
     func setItem(_ item: Any)
     func setItemWithCalculatedPrices(_ item: Any)
+    func setCookies(_ cookies: Any)
 }
 
 @objc class JSNativeBridge: NSObject, NativeProtocol {
@@ -52,6 +54,14 @@ protocol JSNativeBridgeDelegate: AnyObject {
         guard let item = Item(from: item) else { return }
         DispatchQueue.main.async { [weak self] in
             self?.delegate?.setItemWithCalculatedPrices(item)
+        }
+    }
+
+    func setCookies(_ cookies: Any) {
+        guard let cookiesArray = cookies as? [Any] else { return }
+        let cookies = cookiesArray.compactMap { Cookie(from: $0) }
+        DispatchQueue.main.async { [weak self] in
+            self?.delegate?.setCookies(cookies)
         }
     }
 }

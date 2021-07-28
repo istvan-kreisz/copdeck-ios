@@ -13,4 +13,5 @@ protocol API {
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError>
     func getItemDetails(for item: Item?, itemId: String, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError>
     func getCalculatedPrices(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError>
+    func getCookies() -> AnyPublisher<[Cookie], AppError>
 }
