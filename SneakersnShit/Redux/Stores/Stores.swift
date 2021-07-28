@@ -49,9 +49,6 @@ extension AppStore {
         environment.dataController.cookiesPublisher
             .removeDuplicates()
             .sink(receiveValue: { [weak self] in
-                print("------------------")
-                print($0)
-                print("------------------")
                 self?.state.cookies = $0
             })
             .store(in: &effectCancellables)
