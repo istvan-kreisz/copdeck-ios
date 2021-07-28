@@ -12,14 +12,33 @@ struct FeedView: View {
     @EnvironmentObject var store: AppStore
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 19) {
-            Text("Feed")
-                .foregroundColor(.customText1)
-                .font(.bold(size: 35))
-                .leftAligned()
-                .padding(.leading, 6)
-                .padding(.horizontal, 28)
-            Spacer()
+        ZStack {
+            VStack(alignment: .leading, spacing: 19) {
+                Text("Feed")
+                    .foregroundColor(.customText1)
+                    .font(.bold(size: 35))
+                    .leftAligned()
+                    .padding(.leading, 6)
+                    .padding(.horizontal, 28)
+                Spacer()
+            }
+            VStack(spacing: 20) {
+                Text("Coming soon...")
+                    .foregroundColor(.customText1)
+                    .font(.regular(size: 20))
+
+                Button {
+                    guard let url = URL(string: "https://copdeck.com/") else { return }
+                    UIApplication.shared.open(url)
+                } label: {
+                    Text("Visit our website to learn more")
+                        .font(.bold(size: 15))
+                        .foregroundColor(.customBlue)
+                        .underline()
+                }
+            }
+            .centeredVertically()
+            .centeredHorizontally()
         }
     }
 }
