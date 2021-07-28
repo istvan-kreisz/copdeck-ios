@@ -12,15 +12,30 @@ struct SearchView: View {
     @EnvironmentObject var store: AppStore
 
     @State private var searchText = ""
-    @State private var selectedItemId: String?
+    @State private var selectedItem: Item?
 
     @StateObject private var loader = Loader()
 
+    var searchResultsPlusSelectedItem: [Item] {
+        let searchResults =  store.state.searchResults ?? []
+        if let selectedItem = selectedItem {
+            if searchResults.contains(where: { $0.id == selectedItem.id }) {
+                return searchResults
+            } else {
+                return searchResults + [selectedItem]
+            }
+        } else {
+            return searchResults
+        }
+    }
+
     var body: some View {
-        ForEach(store.state.searchResults ?? []) { item in
+        let selectedItemId = Binding<String?>(get: { selectedItem?.id },
+                                              set: { selectedItem = $0 == nil ? nil : selectedItem })
+        ForEach(searchResultsPlusSelectedItem) { item in
             NavigationLink(destination: ItemDetailView(item: item, itemId: item.id, showAddToInventoryButton: true),
                            tag: item.id,
-                           selection: $selectedItemId) { EmptyView() }
+                           selection: selectedItemId) { EmptyView() }
         }
         VStack(alignment: .leading, spacing: 19) {
             Text("Search")
@@ -55,9 +70,7 @@ struct SearchView: View {
                                         flipImage: item.imageURL?.store.id == .klekt,
                                         requestInfo: store.state.requestInfo,
                                         isEditing: .constant(false),
-                                        isSelected: false) {
-                        selectedItemId = item.id
-                    }
+                                        isSelected: false) { selectedItem = item }
                 }
                 .withDefaultPadding(padding: .horizontal)
                 .padding(.vertical, 6)

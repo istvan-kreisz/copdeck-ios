@@ -82,6 +82,7 @@
 		5D8ABBBA26B0B51200AFD8CF /* Snackbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ABBB926B0B51200AFD8CF /* Snackbar.swift */; };
 		5D8ABBBF26B1C82500AFD8CF /* ScraperRequestInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ABBBE26B1C82500AFD8CF /* ScraperRequestInfo.swift */; };
 		5D8ABBC126B1D2E100AFD8CF /* ItemImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ABBC026B1D2E100AFD8CF /* ItemImageView.swift */; };
+		5D8ABBC426B205CD00AFD8CF /* FeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ABBC326B205CD00AFD8CF /* FeedView.swift */; };
 		5D95570C269A60DA00CCC2E7 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D95570B269A60DA00CCC2E7 /* String+Extensions.swift */; };
 		5D9C8E3D269F2F31008538D6 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C8E3C269F2F31008538D6 /* RoundedButton.swift */; };
 		5D9C8E3F269FAB8B008538D6 /* NextButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C8E3E269FAB8B008538D6 /* NextButton.swift */; };
@@ -200,6 +201,7 @@
 		5D8ABBBB26B0DF4900AFD8CF /* SneakersnShit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SneakersnShit.entitlements; sourceTree = "<group>"; };
 		5D8ABBBE26B1C82500AFD8CF /* ScraperRequestInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScraperRequestInfo.swift; sourceTree = "<group>"; };
 		5D8ABBC026B1D2E100AFD8CF /* ItemImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemImageView.swift; sourceTree = "<group>"; };
+		5D8ABBC326B205CD00AFD8CF /* FeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedView.swift; sourceTree = "<group>"; };
 		5D95570B269A60DA00CCC2E7 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		5D9C8E3C269F2F31008538D6 /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
 		5D9C8E3E269FAB8B008538D6 /* NextButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextButton.swift; sourceTree = "<group>"; };
@@ -392,6 +394,7 @@
 		5D424D2925C505E90008D6F4 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				5D8ABBC226B205BE00AFD8CF /* Feed */,
 				5D83156A25C397C4008AB948 /* MainView.swift */,
 				5D36AA0A269E46300049640A /* TabBar.swift */,
 				5D53A1F326AF563A001DAA8D /* Settings */,
@@ -594,6 +597,14 @@
 				5D424D0B25C505450008D6F4 /* Shared */,
 			);
 			path = Screens;
+			sourceTree = "<group>";
+		};
+		5D8ABBC226B205BE00AFD8CF /* Feed */ = {
+			isa = PBXGroup;
+			children = (
+				5D8ABBC326B205CD00AFD8CF /* FeedView.swift */,
+			);
+			path = Feed;
 			sourceTree = "<group>";
 		};
 		5D91DD7C268B6233004558E7 /* dist */ = {
@@ -850,6 +861,7 @@
 				5D3E872125C5CCD700FC65FE /* SearchView.swift in Sources */,
 				5D3DE37426AFA96D009E4D52 /* UINavigationController+Extensions.swift in Sources */,
 				5DA5140D26A650CA0067C4A2 /* SettingsAction.swift in Sources */,
+				5D8ABBC426B205CD00AFD8CF /* FeedView.swift in Sources */,
 				5D52E30F26130E2100FA02B8 /* InventoryView.swift in Sources */,
 				5DF03CA725DA1BBF001856B5 /* AvatarView.swift in Sources */,
 				5D19B0D426A6F0DC00A31F4E /* CopDeckApp.swift in Sources */,

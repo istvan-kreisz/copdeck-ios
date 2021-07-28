@@ -18,7 +18,7 @@ struct MainView: View {
         ZStack {
             switch viewRouter.currentPage {
             case .home:
-                Text("Home")
+                FeedView()
                     .withTabViewWrapper(viewRouter: viewRouter, store: store, shouldShow: $shouldShowTabBar)
             case .search:
                 SearchView()
