@@ -90,7 +90,7 @@ struct NewItemCard: View {
                                                     }
                                                 })
                             TextFieldRounded(title: store.id.lowercased(),
-                                             placeHolder: "\(currency.symbol)0",
+                                             placeHolder: "\(currency.symbol.rawValue)0",
                                              style: textFieldStyle,
                                              keyboardType: .numberPad,
                                              text: text)
@@ -110,7 +110,7 @@ struct NewItemCard: View {
                 VStack(alignment: .leading, spacing: 11) {
                     HStack {
                         TextFieldRounded(title: "selling price (optional)",
-                                         placeHolder: "\(currency.symbol)0",
+                                         placeHolder: "\(currency.symbol.rawValue)0",
                                          style: textFieldStyle,
                                          keyboardType: .numberPad,
                                          text: text)
