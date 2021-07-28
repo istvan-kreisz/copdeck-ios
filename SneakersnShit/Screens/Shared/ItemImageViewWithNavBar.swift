@@ -9,16 +9,18 @@ import SwiftUI
 
 struct ItemImageViewWithNavBar: View {
     let imageURL: ImageURL?
+    let requestInfo: [ScraperRequestInfo]
 
     var body: some View {
         ZStack {
             Color.customWhite.edgesIgnoringSafeArea(.all)
             if let imageURL = self.imageURL {
-                ImageView(withURL: imageURL.url,
-                          size: UIScreen.main.bounds.width - 80,
-                          aspectRatio: nil,
-                          flipImage: imageURL.store.id == .klekt,
-                          showPlaceholder: false)
+                ItemImageView(withImageURL: imageURL,
+                              requestInfo: requestInfo,
+                              size: UIScreen.main.bounds.width - 80,
+                              aspectRatio: nil,
+                              flipImage: imageURL.store.id == .klekt,
+                              showPlaceholder: false)
             } else {
                 Color.clear
                     .frame(width: UIScreen.main.bounds.width - 80, height: UIScreen.main.bounds.width - 80)
@@ -32,6 +34,6 @@ struct ItemImageViewWithNavBar: View {
 
 struct ItemImageViewWithNavBar_Previews: PreviewProvider {
     static var previews: some View {
-        return ItemImageViewWithNavBar(imageURL: nil)
+        return ItemImageViewWithNavBar(imageURL: nil, requestInfo: [])
     }
 }

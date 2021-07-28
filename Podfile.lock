@@ -360,6 +360,7 @@ PODS:
   - nanopb/encode (1.30906.0)
   - OasisJSBridge (0.3.14)
   - PromisesObjC (1.2.12)
+  - Wormholy (1.6.4)
 
 DEPENDENCIES:
   - Firebase/Analytics
@@ -370,6 +371,7 @@ DEPENDENCIES:
   - FirebaseFirestoreSwift
   - GoogleSignIn
   - OasisJSBridge
+  - Wormholy
 
 SPEC REPOS:
   trunk:
@@ -398,6 +400,7 @@ SPEC REPOS:
     - nanopb
     - OasisJSBridge
     - PromisesObjC
+    - Wormholy
 
 SPEC CHECKSUMS:
   abseil: 6c8eb7892aefa08d929b39f9bb108e5367e3228f
@@ -425,7 +428,8 @@ SPEC CHECKSUMS:
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
   OasisJSBridge: c7fcf62b65c1493190d69b235d6f54c24f464c58
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
+  Wormholy: 2e70f64227e010d363f8d33268369f77faf12471
 
-PODFILE CHECKSUM: 9b9f45f43b73f7a298f89783d8758518c2b31fdb
+PODFILE CHECKSUM: bd15eb59149742ffba2999ad4015939fd6dacbb3
 
 COCOAPODS: 1.10.1

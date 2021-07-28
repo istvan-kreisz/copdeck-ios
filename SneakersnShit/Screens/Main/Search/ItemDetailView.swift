@@ -46,7 +46,7 @@ struct ItemDetailView: View {
             ScrollView(.vertical, showsIndicators: false) {
                 ScrollViewReader { scrollViewProxy in
                     VStack(alignment: .center, spacing: 20) {
-                        ItemImageViewWithNavBar(imageURL: item?.imageURL)
+                        ItemImageViewWithNavBar(imageURL: item?.imageURL, requestInfo: store.state.requestInfo)
                             .id(0)
 
                         ZStack {
@@ -235,6 +235,9 @@ struct ItemDetailView: View {
             .withSnackBar(text: "Added to inventory", shouldShow: $showSnackBar)
             .navigationbarHidden()
             .onAppear {
+                print("------------------")
+                print(store.state.requestInfo)
+                print("------------------")
                 store.send(.main(action: .setSelectedItem(item: nil)))
                 if firstShow {
                     firstShow = false

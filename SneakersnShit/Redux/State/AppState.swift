@@ -18,7 +18,7 @@ struct AppState: Equatable {
     var inventorySearchResults: [InventoryItem]?
     var error: AppError?
     var exchangeRates: ExchangeRates?
-    var cookies: [Cookie] = []
+    var requestInfo: [ScraperRequestInfo] = []
 
     var settings: CopDeckSettings {
         user?.settings ?? .default
@@ -32,6 +32,10 @@ struct AppState: Equatable {
         exchangeRates ?? .default
     }
 
+    func requestInfo(for storeId: StoreId) -> ScraperRequestInfo? {
+        requestInfo.first(where: { $0.storeId == storeId })
+    }
+
     mutating func reset() {
         user = nil
         searchResults = nil
@@ -41,6 +45,6 @@ struct AppState: Equatable {
         inventoryItems = []
         inventorySearchResults = nil
         error = nil
-        cookies = []
+        requestInfo = []
     }
 }

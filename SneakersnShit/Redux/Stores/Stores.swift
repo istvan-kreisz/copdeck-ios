@@ -46,10 +46,16 @@ extension AppStore {
             }
             .store(in: &effectCancellables)
 
-        environment.dataController.cookiesPublisher
-            .removeDuplicates()
+        environment.dataController.cookiesPublisher.removeDuplicates()
+            .combineLatest(environment.dataController.imageDownloadHeadersPublisher.removeDuplicates()) { cookies, headers in
+                cookies.map { cookie -> ScraperRequestInfo in
+                    ScraperRequestInfo(storeId: cookie.store,
+                                       cookie: cookie.cookie,
+                                       imageDownloadHeaders: headers.first(where: { $0.storeId == cookie.store })?.headers ?? [:])
+                }
+            }
             .sink(receiveValue: { [weak self] in
-                self?.state.cookies = $0
+                self?.state.requestInfo = $0
             })
             .store(in: &effectCancellables)
     }

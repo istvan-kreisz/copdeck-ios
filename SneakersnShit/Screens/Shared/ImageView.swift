@@ -7,16 +7,21 @@
 
 import SwiftUI
 import NukeUI
+import Nuke
 
 struct ImageView: View {
-    let url: String
+    let request: ImageRequestConvertible
     let size: CGFloat
     let aspectRatio: CGFloat?
     let flipImage: Bool
     let showPlaceholder: Bool
 
-    init(withURL url: String, size: CGFloat, aspectRatio: CGFloat?, flipImage: Bool = false, showPlaceholder: Bool = true) {
-        self.url = url
+    init(withRequest request: ImageRequestConvertible,
+         size: CGFloat,
+         aspectRatio: CGFloat?,
+         flipImage: Bool = false,
+         showPlaceholder: Bool = true) {
+        self.request = request
         self.size = size
         self.aspectRatio = aspectRatio
         self.flipImage = flipImage
@@ -24,7 +29,7 @@ struct ImageView: View {
     }
 
     var body: some View {
-        LazyImage(source: url) { state in
+        LazyImage(source: request) { state in
             if let image = state.image {
                 image.resizingMode(.aspectFit)
             } else if state.error != nil {
@@ -53,6 +58,6 @@ struct ImageView: View {
 
 struct ImageView_Previews: PreviewProvider {
     static var previews: some View {
-        ImageView(withURL: "", size: 80, aspectRatio: 1)
+        ImageView(withRequest: "", size: 80, aspectRatio: 1)
     }
 }

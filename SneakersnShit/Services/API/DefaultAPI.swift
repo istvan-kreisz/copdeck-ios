@@ -13,11 +13,12 @@ class DefaultDataController: DataController {
     let localScraper: API
     let databaseManager: DatabaseManager
 
-    lazy var inventoryItemsPublisher: AnyPublisher<[InventoryItem], Never> = databaseManager.inventoryItemsPublisher
-    lazy var userPublisher: AnyPublisher<User, Never> = databaseManager.userPublisher
-    lazy var exchangeRatesPublisher: AnyPublisher<ExchangeRates, Never> = databaseManager.exchangeRatesPublisher
-    lazy var errorsPublisher: AnyPublisher<AppError, Never> = databaseManager.errorsPublisher
-    lazy var cookiesPublisher: AnyPublisher<[Cookie], Never> = localScraper.cookiesPublisher
+    lazy var inventoryItemsPublisher = databaseManager.inventoryItemsPublisher
+    lazy var userPublisher = databaseManager.userPublisher
+    lazy var exchangeRatesPublisher = databaseManager.exchangeRatesPublisher
+    lazy var errorsPublisher = databaseManager.errorsPublisher
+    lazy var cookiesPublisher = localScraper.cookiesPublisher
+    lazy var imageDownloadHeadersPublisher = localScraper.imageDownloadHeadersPublisher
 
     init(backendAPI: API, localScraper: API, databaseManager: DatabaseManager) {
         self.backendAPI = backendAPI
@@ -105,10 +106,6 @@ class DefaultDataController: DataController {
 
     func getCalculatedPrices(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
         localScraper.getCalculatedPrices(for: item, settings: settings, exchangeRates: exchangeRates)
-    }
-
-    func getCookies() {
-        localScraper.getCookies()
     }
 
     func getUser(withId id: String) -> AnyPublisher<User, AppError> {

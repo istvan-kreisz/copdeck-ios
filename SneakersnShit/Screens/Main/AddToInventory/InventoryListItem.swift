@@ -10,15 +10,17 @@ import SwiftUI
 struct InventoryListItem: View {
     var inventoryItem: InventoryItem
     @Binding var selectedInventoryItemId: String?
+    var isSelected: Bool
 
     @Binding var isEditing: Bool
-    var isSelected: Bool
+    var requestInfo: [ScraperRequestInfo]
     var onSelectorTapped: () -> Void
 
     var body: some View {
         ListItem(title: inventoryItem.name,
-                 imageURL: inventoryItem.imageURL?.url ?? "",
+                 imageURL: inventoryItem.imageURL,
                  flipImage: inventoryItem.imageURL?.store.id == .klekt,
+                 requestInfo: requestInfo,
                  isEditing: $isEditing,
                  isSelected: isSelected,
                  accessoryView: InventoryViewPills(inventoryItem: inventoryItem).leftAligned()) {
@@ -32,7 +34,8 @@ struct InventoryListItem: View {
 struct InventoryListItem_Previews: PreviewProvider {
     static var previews: some View {
         return ListItem<EmptyView>(title: "yooo",
-                                   imageURL: "https://images.stockx.com/images/Adidas-Yeezy-Boost-350-V2-Core-Black-Red-2017-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1606320792",
+                                   imageURL: nil,
+                                   requestInfo: [],
                                    isEditing: .constant(false),
                                    isSelected: false,
                                    onTapped: {})

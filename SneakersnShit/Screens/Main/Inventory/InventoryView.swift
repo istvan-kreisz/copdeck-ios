@@ -78,8 +78,8 @@ struct InventoryView: View {
                 ForEach(inventoryItems) { inventoryItem in
                     InventoryListItem(inventoryItem: inventoryItem,
                                       selectedInventoryItemId: $selectedInventoryItemId,
-                                      isEditing: $isEditing,
-                                      isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id })) {
+                                      isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }), isEditing: $isEditing,
+                                      requestInfo: store.state.requestInfo) {
                             if selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }) {
                                 selectedInventoryItems = selectedInventoryItems.filter { $0.id != inventoryItem.id }
                             } else {

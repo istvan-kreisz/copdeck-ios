@@ -18,6 +18,14 @@ struct InventoryItemDetailView: View {
 
     @State var showItemDetails = false
 
+    var imageDownloadHeaders: [String: String] {
+        if let imageURLStoreId = inventoryItem.imageURL?.store.id, let requestInfo = store.state.requestInfo(for: imageURLStoreId) {
+            return requestInfo.imageDownloadHeaders
+        } else {
+            return [:]
+        }
+    }
+
     init(inventoryItem: InventoryItem, isEditingInventoryItem: Binding<Bool>) {
         self._inventoryItem = State(initialValue: inventoryItem)
         self._isEditingInventoryItem = isEditingInventoryItem
@@ -35,7 +43,7 @@ struct InventoryItemDetailView: View {
 
         ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .center, spacing: 20) {
-                ItemImageViewWithNavBar(imageURL: inventoryItem.imageURL)
+                ItemImageViewWithNavBar(imageURL: inventoryItem.imageURL, requestInfo: store.state.requestInfo)
 
                 VStack(alignment: .center, spacing: 8) {
                     Text("Edit Item")

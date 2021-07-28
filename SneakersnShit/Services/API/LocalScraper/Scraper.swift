@@ -15,9 +15,13 @@ class LocalScraper {
     private var itemSubject = PassthroughSubject<Item, AppError>()
     private var itemWithCalculatedPricesSubject = PassthroughSubject<Item, AppError>()
     private let cookiesSubject = PassthroughSubject<[Cookie], Never>()
+    private let imageDownloadHeaders = PassthroughSubject<[HeadersWithStoreId], Never>()
 
     var cookiesPublisher: AnyPublisher<[Cookie], Never> {
         cookiesSubject.eraseToAnyPublisher()
+    }
+    var imageDownloadHeadersPublisher: AnyPublisher<[HeadersWithStoreId], Never> {
+        imageDownloadHeaders.eraseToAnyPublisher()
     }
 
     private var native: JSNativeBridge!
@@ -74,10 +78,10 @@ extension LocalScraper: API {
         }
         if let item = item {
             return getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates)
-                .handleEvents(receiveOutput: { [weak self] _ in self?.getCookies() }).eraseToAnyPublisher()
+                .handleEvents(receiveOutput: { [weak self] _ in self?.refreshHeadersAndCookie() }).eraseToAnyPublisher()
         } else {
             return getItemDetails(forItemWithId: itemId, settings: settings, exchangeRates: exchangeRates)
-                .handleEvents(receiveOutput: { [weak self] _ in self?.getCookies() }).eraseToAnyPublisher()
+                .handleEvents(receiveOutput: { [weak self] _ in self?.refreshHeadersAndCookie() }).eraseToAnyPublisher()
         }
     }
 
@@ -127,7 +131,7 @@ extension LocalScraper: API {
                          completion: { _ in })
         return itemsSubject
             .first()
-            .handleEvents(receiveOutput: { [weak self] _ in self?.getCookies() })
+            .handleEvents(receiveOutput: { [weak self] _ in self?.refreshHeadersAndCookie() })
             .eraseToAnyPublisher()
     }
 
@@ -145,15 +149,28 @@ extension LocalScraper: API {
         return itemWithCalculatedPricesSubject.first().eraseToAnyPublisher()
     }
 
-    func getCookies() {
+    private func refreshHeadersAndCookie() {
+        getCookies()
+        getImageDownloadHeaders()
+    }
+
+    private func getCookies() {
         interpreter.call(object: nil,
                          functionName: "scraper.api.getCookies",
+                         arguments: [],
+                         completion: { _ in })
+    }
+
+    private func getImageDownloadHeaders() {
+        interpreter.call(object: nil,
+                         functionName: "scraper.api.getImageDownloadHeaders",
                          arguments: [],
                          completion: { _ in })
     }
 }
 
 extension LocalScraper: JSNativeBridgeDelegate {
+
     func setExchangeRates(_ exchangeRates: ExchangeRates) {
         exchangeRatesSubject.send(exchangeRates)
     }
@@ -173,6 +190,12 @@ extension LocalScraper: JSNativeBridgeDelegate {
     func setCookies(_ cookies: [Cookie]) {
         if !cookies.isEmpty {
             cookiesSubject.send(cookies)
+        }
+    }
+
+    func setImageDownloadHeaders(_ headers: [HeadersWithStoreId]) {
+        if !headers.isEmpty {
+            imageDownloadHeaders.send(headers)
         }
     }
 }

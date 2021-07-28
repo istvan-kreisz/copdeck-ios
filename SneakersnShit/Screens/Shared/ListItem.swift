@@ -9,8 +9,9 @@ import SwiftUI
 
 struct ListItem<V: View>: View {
     var title: String
-    var imageURL: String?
+    var imageURL: ImageURL?
     var flipImage = false
+    var requestInfo: [ScraperRequestInfo]
 
     @Binding var isEditing: Bool
     var isSelected: Bool
@@ -36,7 +37,11 @@ struct ListItem<V: View>: View {
             .onTapGesture { onSelectorTapped?() }
 
             HStack(alignment: .center, spacing: 10) {
-                ImageView(withURL: imageURL ?? "", size: 62, aspectRatio: nil, flipImage: flipImage)
+                ItemImageView(withImageURL: imageURL,
+                              requestInfo: requestInfo,
+                              size: 62,
+                              aspectRatio: nil,
+                              flipImage: flipImage)
                     .cornerRadius(8)
 
                 VStack(spacing: 3) {
@@ -71,7 +76,8 @@ struct ListItem<V: View>: View {
 struct ListItem_Previews: PreviewProvider {
     static var previews: some View {
         return ListItem<EmptyView>(title: "yooo",
-                                   imageURL: "https://images.stockx.com/images/Adidas-Yeezy-Boost-350-V2-Core-Black-Red-2017-Product.jpg?fit=fill&bg=FFFFFF&w=700&h=500&auto=format,compress&trim=color&q=90&dpr=2&updated_at=1606320792",
+                                   imageURL: nil,
+                                   requestInfo: AppStore.default.state.requestInfo,
                                    isEditing: .constant(false),
                                    isSelected: false,
                                    onTapped: {})
