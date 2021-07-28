@@ -17,6 +17,7 @@ class DefaultDataController: DataController {
     lazy var userPublisher: AnyPublisher<User, Never> = databaseManager.userPublisher
     lazy var exchangeRatesPublisher: AnyPublisher<ExchangeRates, Never> = databaseManager.exchangeRatesPublisher
     lazy var errorsPublisher: AnyPublisher<AppError, Never> = databaseManager.errorsPublisher
+    lazy var cookiesPublisher: AnyPublisher<[Cookie], Never> = localScraper.cookiesPublisher
 
     init(backendAPI: API, localScraper: API, databaseManager: DatabaseManager) {
         self.backendAPI = backendAPI

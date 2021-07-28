@@ -10,6 +10,11 @@ import Combine
 import FirebaseFunctions
 
 class BackendAPI: API {
+
+    var cookiesPublisher: AnyPublisher<[Cookie], Never> {
+        PassthroughSubject<[Cookie], Never>().eraseToAnyPublisher()
+    }
+
     func getItemDetails(for item: Item?, itemId: String, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
         if let item = item {
             return getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates)
@@ -28,9 +33,7 @@ class BackendAPI: API {
         PassthroughSubject<ExchangeRates, AppError>().eraseToAnyPublisher()
     }
 
-    func getCookies() -> AnyPublisher<[Cookie], AppError> {
-        PassthroughSubject<[Cookie], AppError>().eraseToAnyPublisher()
-    }
+    func getCookies() {}
 
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
         struct Params: Encodable {

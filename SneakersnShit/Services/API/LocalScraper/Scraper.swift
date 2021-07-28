@@ -14,7 +14,11 @@ class LocalScraper {
     private var itemsSubject = PassthroughSubject<[Item], AppError>()
     private var itemSubject = PassthroughSubject<Item, AppError>()
     private var itemWithCalculatedPricesSubject = PassthroughSubject<Item, AppError>()
-    private var cookiesSubject = PassthroughSubject<[Cookie], AppError>()
+    private let cookiesSubject = PassthroughSubject<[Cookie], Never>()
+
+    var cookiesPublisher: AnyPublisher<[Cookie], Never> {
+        cookiesSubject.eraseToAnyPublisher()
+    }
 
     private var native: JSNativeBridge!
     private lazy var interpreter: JavascriptInterpreter = {
@@ -70,8 +74,10 @@ extension LocalScraper: API {
         }
         if let item = item {
             return getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates)
+                .handleEvents(receiveOutput: { [weak self] _ in self?.getCookies() }).eraseToAnyPublisher()
         } else {
             return getItemDetails(forItemWithId: itemId, settings: settings, exchangeRates: exchangeRates)
+                .handleEvents(receiveOutput: { [weak self] _ in self?.getCookies() }).eraseToAnyPublisher()
         }
     }
 
@@ -119,7 +125,10 @@ extension LocalScraper: API {
                          functionName: "scraper.api.searchItems",
                          arguments: [searchTerm, config(from: settings, exchangeRates: exchangeRates)],
                          completion: { _ in })
-        return itemsSubject.first().eraseToAnyPublisher()
+        return itemsSubject
+            .first()
+            .handleEvents(receiveOutput: { [weak self] _ in self?.getCookies() })
+            .eraseToAnyPublisher()
     }
 
     func getCalculatedPrices(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
@@ -136,17 +145,12 @@ extension LocalScraper: API {
         return itemWithCalculatedPricesSubject.first().eraseToAnyPublisher()
     }
 
-    func getCookies() -> AnyPublisher<[Cookie], AppError> {
-        cookiesSubject.send(completion: .finished)
-        cookiesSubject = PassthroughSubject<[Cookie], AppError>()
-
+    func getCookies() {
         interpreter.call(object: nil,
                          functionName: "scraper.api.getCookies",
                          arguments: [],
                          completion: { _ in })
-        return cookiesSubject.first().eraseToAnyPublisher()
     }
-
 }
 
 extension LocalScraper: JSNativeBridgeDelegate {
@@ -167,6 +171,8 @@ extension LocalScraper: JSNativeBridgeDelegate {
     }
 
     func setCookies(_ cookies: [Cookie]) {
-        cookiesSubject.send(cookies)
+        if !cookies.isEmpty {
+            cookiesSubject.send(cookies)
+        }
     }
 }

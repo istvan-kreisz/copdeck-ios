@@ -18,6 +18,7 @@ struct AppState: Equatable {
     var inventorySearchResults: [InventoryItem]?
     var error: AppError?
     var exchangeRates: ExchangeRates?
+    var cookies: [Cookie] = []
 
     var settings: CopDeckSettings {
         user?.settings ?? .default
@@ -40,5 +41,6 @@ struct AppState: Equatable {
         inventoryItems = []
         inventorySearchResults = nil
         error = nil
+        cookies = []
     }
 }

@@ -45,6 +45,12 @@ extension AppStore {
                 self?.state.exchangeRates = $0
             }
             .store(in: &effectCancellables)
+
+        environment.dataController.cookiesPublisher
+            .sink { [weak self] in
+                self?.state.cookies = $0
+            }
+            .store(in: &effectCancellables)
     }
 
     func setupTimers() {
