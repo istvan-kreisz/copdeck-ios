@@ -107,7 +107,7 @@ class DefaultDataController: DataController {
         localScraper.getCalculatedPrices(for: item, settings: settings, exchangeRates: exchangeRates)
     }
 
-    func getCookies() -> AnyPublisher<[Cookie], AppError> {
+    func getCookies() {
         localScraper.getCookies()
     }
 
