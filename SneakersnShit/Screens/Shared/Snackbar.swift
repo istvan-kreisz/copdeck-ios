@@ -52,7 +52,7 @@ struct Snackbar: View {
                 .background(Color.customGreen)
                 .cornerRadius(Styles.cornerRadius)
                 .withDefaultShadow()
-                .padding(.bottom, UIApplication.shared.safeAreaInsets().bottom)
+                .padding(.bottom, UIApplication.shared.safeAreaInsets().bottom + 15)
                 .transition(.move(edge: .bottom).combined(with: .opacity))
                 .animation(Animation.spring())
             }

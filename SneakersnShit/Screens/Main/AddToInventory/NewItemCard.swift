@@ -29,7 +29,10 @@ struct NewItemCard: View {
         style == .card ? .gray : .white
     }
 
-    init(inventoryItem: Binding<InventoryItem>?, purchasePrice: PriceWithCurrency?, currency: Currency, style: Style = .card) {
+    init(inventoryItem: Binding<InventoryItem>?,
+         purchasePrice: PriceWithCurrency?,
+         currency: Currency,
+         style: Style = .card) {
         self._inventoryItem = inventoryItem ?? Binding.constant(InventoryItem.init(fromItem: .sample))
         self.purchasePrice = purchasePrice
         self.currency = currency

@@ -30,8 +30,10 @@ class FirebaseService: DatabaseManager {
         exchangeRatesSubject.eraseToAnyPublisher()
     }
 
+    #warning("yo")
     var errorsPublisher: AnyPublisher<AppError, Never> {
-        errorsSubject.eraseToAnyPublisher()
+        PassthroughSubject<AppError, Never>().eraseToAnyPublisher()
+//        errorsSubject.eraseToAnyPublisher()
     }
 
     private var userRef: DocumentReference?

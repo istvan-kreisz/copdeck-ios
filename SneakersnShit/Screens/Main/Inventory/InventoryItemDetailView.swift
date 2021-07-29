@@ -37,7 +37,9 @@ struct InventoryItemDetailView: View {
 
     var body: some View {
         if let itemId = inventoryItem.itemId {
-            NavigationLink(destination: ItemDetailView(item: nil, itemId: itemId, showAddToInventoryButton: true),
+            NavigationLink(destination: ItemDetailView(item: nil,
+                                                       itemId: itemId,
+                                                       showAddToInventoryButton: true),
                            isActive: $showItemDetails) { EmptyView() }
         }
 
@@ -86,7 +88,8 @@ struct InventoryItemDetailView: View {
                     HStack(spacing: 10) {
                         RoundedButton(text: "Delete item",
                                       size: .init(width: 180, height: 60),
-                                      maxSize: nil,
+                                      maxSize: CGSize(width: (UIScreen.screenWidth - Styles.horizontalPadding * 2 - 10) / 2, height: UIScreen.isSmallScreen ? 50 : 60),
+                                      fontSize: UIScreen.isSmallScreen ? 14 : 16,
                                       color: .clear,
                                       borderColor: .customRed,
                                       textColor: .customRed,
@@ -95,14 +98,15 @@ struct InventoryItemDetailView: View {
 
                         RoundedButton(text: "Save changes",
                                       size: .init(width: 180, height: 60),
-                                      maxSize: nil,
+                                      maxSize: CGSize(width: (UIScreen.screenWidth - Styles.horizontalPadding * 2 - 10) / 2, height: UIScreen.isSmallScreen ? 50 : 60),
+                                      fontSize: UIScreen.isSmallScreen ? 14 : 16,
                                       color: .customBlack,
                                       accessoryView: nil,
                                       tapped: { updateInventoryItem() })
                     }
                     .padding(.top, 40)
                 }
-                .padding(.horizontal, 28)
+                .padding(.horizontal, Styles.horizontalPadding)
                 .padding(.top, 14)
                 .padding(.bottom, 20)
                 .background(Color.customBackground
