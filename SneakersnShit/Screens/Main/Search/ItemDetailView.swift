@@ -235,9 +235,6 @@ struct ItemDetailView: View {
             .withSnackBar(text: "Added to inventory", shouldShow: $showSnackBar)
             .navigationbarHidden()
             .onAppear {
-                print("------------------")
-                print(store.state.requestInfo)
-                print("------------------")
                 store.send(.main(action: .setSelectedItem(item: nil)))
                 if firstShow {
                     firstShow = false
