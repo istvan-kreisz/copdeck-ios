@@ -70,16 +70,42 @@ struct SettingsView: View {
                     }
                     .pickerStyle(SegmentedPickerStyle())
                 }
+                if settings.feeCalculation.stockx?.sellerLevel == .level4 || settings.feeCalculation.stockx?.sellerLevel == .level5 {
+                    Section(header: Text("StockX successful ship bonus (-1%)")) {
+                        let shipBonus = Binding<String>(get: { (settings.feeCalculation.stockx?.successfulShipBonus == true) ? "Include" : "Don't include" },
+                                                        set: { new in settings.feeCalculation.stockx?.successfulShipBonus = new == "Include" })
 
-                Section(header: Text("StockX additional fees (%)")) {
-                    let taxes = Binding<String>(get: { (settings.feeCalculation.stockx?.taxes).asString },
-                                                set: { new in
-                                                    if let taxes = Double(new) {
-                                                        settings.feeCalculation.stockx?.taxes = taxes
-                                                    }
-                                                })
-                    TextField("0%", text: taxes)
-                        .keyboardType(.numberPad)
+                        Picker(selection: shipBonus, label: Text("StockX successful ship bonus (-1%)")) {
+                            ForEach(["Include", "Don't include"], id: \.self) {
+                                Text($0)
+                            }
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                    }
+                    Section(header: Text("StockX quick ship bonus (-1%)")) {
+                        let shipBonus = Binding<String>(get: { (settings.feeCalculation.stockx?.quickShipBonus == true) ? "Include" : "Don't include" },
+                                                        set: { new in settings.feeCalculation.stockx?.quickShipBonus = new == "Include" })
+
+                        Picker(selection: shipBonus, label: Text("StockX quick ship bonus (-1%)")) {
+                            ForEach(["Include", "Don't include"], id: \.self) {
+                                Text($0)
+                            }
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                    }
+                }
+
+                if settings.feeCalculation.country == .US || settings.feeCalculation.country == .USE {
+                    Section(header: Text("StockX buyer's taxes (%)")) {
+                        let taxes = Binding<String>(get: { (settings.feeCalculation.stockx?.taxes).asString },
+                                                    set: { new in
+                                                        if let taxes = Double(new) {
+                                                            settings.feeCalculation.stockx?.taxes = taxes
+                                                        }
+                                                    })
+                        TextField("0%", text: taxes)
+                            .keyboardType(.numberPad)
+                    }
                 }
 
                 Section(header: Text("GOAT commission fees")) {
@@ -103,14 +129,7 @@ struct SettingsView: View {
 
                 Section(header: Text("GOAT include cash-out fee (2.9%)")) {
                     let cashoutFee = Binding<String>(get: { settings.feeCalculation.goat?.cashOutFee == .regular ? "Include" : "Don't include" },
-                                                     set: { new in
-                                                         if new == "Include" {
-                                                             settings.feeCalculation.goat?.cashOutFee = .regular
-                                                         } else {
-                                                             settings.feeCalculation.goat?.cashOutFee = CopDeckSettings.FeeCalculation.Goat.CashoutFee.none
-                                                         }
-                                                     })
-
+                                                     set: { new in settings.feeCalculation.goat?.cashOutFee = new == "Include" ? .regular : .none })
                     Picker(selection: cashoutFee, label: Text("GOAT include cash-out fee (2.9%)")) {
                         ForEach(["Include", "Don't include"], id: \.self) {
                             Text($0)
@@ -144,7 +163,7 @@ struct SettingsView: View {
                 Button(action: {
                     isPresented = false
                 }) {
-                    Text("Done")
+                        Text("Done")
                 })
             .onChange(of: settings) { value in
                 store.send(.main(action: .updateSettings(settings: value)))

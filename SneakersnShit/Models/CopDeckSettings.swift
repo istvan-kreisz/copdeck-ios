@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 struct CopDeckSettings: Codable, Equatable {
     var currency: Currency
     var updateInterval: Double
@@ -26,10 +25,13 @@ struct CopDeckSettings: Codable, Equatable {
                 case level2 = 2
                 case level3 = 3
                 case level4 = 4
+                case level5 = 5
             }
 
             var sellerLevel: SellerLevel
             var taxes: Double
+            var successfulShipBonus: Bool
+            var quickShipBonus: Bool
         }
 
         struct Goat: Codable, Equatable {
@@ -57,6 +59,11 @@ extension CopDeckSettings {
                                            notificationFrequency: 24,
                                            darkModeOn: false,
                                            feeCalculation: .init(country: .US,
-                                                                 stockx: .init(sellerLevel: .level1, taxes: 0),
-                                                                 goat: .init(commissionPercentage: .low, cashOutFee: .none, taxes: 0)))
+                                                                 stockx: .init(sellerLevel: .level1,
+                                                                               taxes: 0,
+                                                                               successfulShipBonus: false,
+                                                                               quickShipBonus: false),
+                                                                 goat: .init(commissionPercentage: .low,
+                                                                             cashOutFee: .none,
+                                                                             taxes: 0)))
 }

@@ -17,7 +17,7 @@ struct InventoryView: View {
     @State private var selectedInventoryItems: [InventoryItem] = []
 
     @Binding var shouldShowTabBar: Bool
-    @State var settingsPresented = false
+    @Binding var settingsPresented: Bool
 
     var inventoryItems: [InventoryItem] {
         searchText.isEmpty ? store.state.inventoryItems : (store.state.inventorySearchResults ?? [])
@@ -120,7 +120,7 @@ struct InventoryView: View {
 struct InventoryView_Previews: PreviewProvider {
     static var previews: some View {
         return Group {
-            InventoryView(shouldShowTabBar: .constant(true))
+            InventoryView(shouldShowTabBar: .constant(true), settingsPresented: .constant(false))
                 .environmentObject(AppStore.default)
         }
     }

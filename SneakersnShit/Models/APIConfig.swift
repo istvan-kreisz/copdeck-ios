@@ -29,6 +29,8 @@ struct APIConfig: Codable {
         struct Stockx: Codable {
             let sellerLevel: Int
             let taxes: Double
+            let successfulShipBonus: Bool
+            let quickShipBonus: Bool
         }
     }
 }

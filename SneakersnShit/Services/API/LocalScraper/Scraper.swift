@@ -20,6 +20,7 @@ class LocalScraper {
     var cookiesPublisher: AnyPublisher<[Cookie], Never> {
         cookiesSubject.eraseToAnyPublisher()
     }
+
     var imageDownloadHeadersPublisher: AnyPublisher<[HeadersWithStoreId], Never> {
         imageDownloadHeaders.eraseToAnyPublisher()
     }
@@ -35,9 +36,12 @@ class LocalScraper {
     }()
 
     func config(from settings: CopDeckSettings, exchangeRates: ExchangeRates) -> Any {
+        let stockXLevelIsAtLeast4 = settings.feeCalculation.stockx?.sellerLevel == .level4 || settings.feeCalculation.stockx?.sellerLevel == .level5
         let feeCalculation = APIConfig.FeeCalculation(countryName: settings.feeCalculation.country.name,
                                                       stockx: .init(sellerLevel: (settings.feeCalculation.stockx?.sellerLevel.rawValue) ?? 1,
-                                                                    taxes: (settings.feeCalculation.stockx?.taxes) ?? 0),
+                                                                    taxes: (settings.feeCalculation.stockx?.taxes) ?? 0,
+                                                                    successfulShipBonus: (settings.feeCalculation.stockx?.successfulShipBonus ?? false) && stockXLevelIsAtLeast4,
+                                                                    quickShipBonus: (settings.feeCalculation.stockx?.quickShipBonus ?? false) && stockXLevelIsAtLeast4),
                                                       goat: .init(commissionPercentage: (settings.feeCalculation.goat?.commissionPercentage.rawValue) ?? 0,
                                                                   cashOutFee: (settings.feeCalculation.goat?.cashOutFee.rawValue) ?? 0.0,
                                                                   taxes: (settings.feeCalculation.goat?.taxes) ?? 0))
@@ -170,7 +174,6 @@ extension LocalScraper: API {
 }
 
 extension LocalScraper: JSNativeBridgeDelegate {
-
     func setExchangeRates(_ exchangeRates: ExchangeRates) {
         exchangeRatesSubject.send(exchangeRates)
     }
