@@ -56,6 +56,7 @@
 		5D52E31226130E7500FA02B8 /* InventoryItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D52E31126130E7500FA02B8 /* InventoryItemDetailView.swift */; };
 		5D53A1F226AF2A61001DAA8D /* AccessoryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D53A1F126AF2A61001DAA8D /* AccessoryButton.swift */; };
 		5D53A1F526AF5649001DAA8D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D53A1F426AF5649001DAA8D /* SettingsView.swift */; };
+		5D54FE2626C2C84F008CD05F /* HorizontalListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D54FE2526C2C84F008CD05F /* HorizontalListItem.swift */; };
 		5D631220269330B900876D99 /* APIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D63121F269330B900876D99 /* APIConfig.swift */; };
 		5D6312222694797300876D99 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6312212694797300876D99 /* Item.swift */; };
 		5D6312242694D83100876D99 /* Decodable+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6312232694D83100876D99 /* Decodable+Extensions.swift */; };
@@ -172,6 +173,7 @@
 		5D52E31126130E7500FA02B8 /* InventoryItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryItemDetailView.swift; sourceTree = "<group>"; };
 		5D53A1F126AF2A61001DAA8D /* AccessoryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessoryButton.swift; sourceTree = "<group>"; };
 		5D53A1F426AF5649001DAA8D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		5D54FE2526C2C84F008CD05F /* HorizontalListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalListItem.swift; sourceTree = "<group>"; };
 		5D63121F269330B900876D99 /* APIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfig.swift; sourceTree = "<group>"; };
 		5D6312212694797300876D99 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		5D6312232694D83100876D99 /* Decodable+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Decodable+Extensions.swift"; sourceTree = "<group>"; };
@@ -376,6 +378,7 @@
 				5D53A1F126AF2A61001DAA8D /* AccessoryButton.swift */,
 				5D8ABBB926B0B51200AFD8CF /* Snackbar.swift */,
 				5D8ABBC026B1D2E100AFD8CF /* ItemImageView.swift */,
+				5D54FE2526C2C84F008CD05F /* HorizontalListItem.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -896,6 +899,7 @@
 				5D8ABBBA26B0B51200AFD8CF /* Snackbar.swift in Sources */,
 				5D19B0AB26A6D76600A31F4E /* MainAction.swift in Sources */,
 				5D6960BA258717430058BABE /* World.swift in Sources */,
+				5D54FE2626C2C84F008CD05F /* HorizontalListItem.swift in Sources */,
 				5D8ABBBF26B1C82500AFD8CF /* ScraperRequestInfo.swift in Sources */,
 				5D9D51F826ADA07700AB1F30 /* Country.swift in Sources */,
 				5DCC467226A8EBB9007671BC /* ToggleButton.swift in Sources */,

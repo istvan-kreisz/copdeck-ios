@@ -12,3 +12,9 @@ extension Array where Element: Numeric {
         reduce(0, +)
     }
 }
+
+extension Array {
+    func first(n: Int) -> [Element] {
+        Array(prefix(n))
+    }
+}
