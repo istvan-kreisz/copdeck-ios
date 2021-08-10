@@ -16,6 +16,7 @@ class LocalScraper {
     private var itemWithCalculatedPricesSubject = PassthroughSubject<Item, AppError>()
     private let cookiesSubject = PassthroughSubject<[Cookie], Never>()
     private let imageDownloadHeaders = PassthroughSubject<[HeadersWithStoreId], Never>()
+    private var popularItemsSubject = PassthroughSubject<[Item], AppError>()
 
     var cookiesPublisher: AnyPublisher<[Cookie], Never> {
         cookiesSubject.eraseToAnyPublisher()
@@ -153,6 +154,17 @@ extension LocalScraper: API {
         return itemWithCalculatedPricesSubject.first().eraseToAnyPublisher()
     }
 
+    func getPopularItems(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
+        popularItemsSubject.send(completion: .finished)
+        popularItemsSubject = PassthroughSubject<[Item], AppError>()
+        interpreter.call(object: nil,
+                         functionName: "scraper.api.getPopularItems",
+                         arguments: [config(from: settings, exchangeRates: exchangeRates)],
+                         completion: { _ in })
+
+        return popularItemsSubject.first().eraseToAnyPublisher()
+    }
+
     private func refreshHeadersAndCookie() {
         getCookies()
         getImageDownloadHeaders()
@@ -200,5 +212,9 @@ extension LocalScraper: JSNativeBridgeDelegate {
         if !headers.isEmpty {
             imageDownloadHeaders.send(headers)
         }
+    }
+
+    func setPopularItems(_ items: [Item]) {
+        popularItemsSubject.send(items)
     }
 }

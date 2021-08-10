@@ -16,6 +16,7 @@ protocol JSNativeBridgeDelegate: AnyObject {
     func setItemWithCalculatedPrices(_ item: Item)
     func setCookies(_ cookies: [Cookie])
     func setImageDownloadHeaders(_ headers: [HeadersWithStoreId])
+    func setPopularItems(_ items: [Item])
 }
 
 @objc protocol NativeProtocol: JSExport {
@@ -25,6 +26,7 @@ protocol JSNativeBridgeDelegate: AnyObject {
     func setItemWithCalculatedPrices(_ item: Any)
     func setCookies(_ cookies: Any)
     func setImageDownloadHeaders(_ headers: Any)
+    func setPopularItems(_ items: Any)
 }
 
 @objc class JSNativeBridge: NSObject, NativeProtocol {
@@ -72,6 +74,13 @@ protocol JSNativeBridgeDelegate: AnyObject {
         let headers = headersArray.compactMap { HeadersWithStoreId(from: $0) }
         DispatchQueue.main.async { [weak self] in
             self?.delegate?.setImageDownloadHeaders(headers)
+        }
+    }
+
+    func setPopularItems(_ items: Any) {
+        guard let items = [Item](from: items) else { return }
+        DispatchQueue.main.async { [weak self] in
+            self?.delegate?.setPopularItems(items)
         }
     }
 }

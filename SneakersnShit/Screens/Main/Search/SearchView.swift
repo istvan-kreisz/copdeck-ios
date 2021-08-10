@@ -75,11 +75,26 @@ struct SearchView: View {
                 .withDefaultPadding(padding: .horizontal)
                 .padding(.vertical, 6)
 
+                ForEach(store.state.popularItems ?? []) { item in
+                    ListItem<EmptyView>(title: item.name ?? "",
+                                        imageURL: item.imageURL,
+                                        flipImage: item.imageURL?.store.id == .klekt,
+                                        requestInfo: store.state.requestInfo,
+                                        isEditing: .constant(false),
+                                        isSelected: false) { selectedItem = item }
+                }
+                .withDefaultPadding(padding: .horizontal)
+                .padding(.vertical, 6)
+
+
                 Color.clear.padding(.bottom, 130)
             }
         }
         .onChange(of: searchText) { searchText in
             store.send(.main(action: .getSearchResults(searchTerm: searchText)), completed: loader.getLoader())
+        }
+        .onAppear {
+            store.send(.main(action: .getPopularItems))
         }
     }
 }

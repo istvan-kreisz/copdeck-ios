@@ -17,6 +17,8 @@ enum MainAction {
     // search
     case getSearchResults(searchTerm: String)
     case setSearchResults(searchResults: [Item])
+    case getPopularItems
+    case setPopularItems(items: [Item])
     // item details
     case getItemDetails(item: Item?, itemId: String, forced: Bool)
     case setSelectedItem(item: Item?)
@@ -41,6 +43,10 @@ extension MainAction: IdAble {
             return "getSearchResults"
         case .setSearchResults:
             return "setSearchResults"
+        case .getPopularItems:
+            return "getPopularItems"
+        case .setPopularItems:
+            return "setPopularItems"
         case .getItemDetails:
             return "getItemDetails"
         case .setSelectedItem:

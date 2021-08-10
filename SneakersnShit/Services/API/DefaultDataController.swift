@@ -1,5 +1,5 @@
 //
-//  DefaultAPI.swift
+//  DefaultDataController.swift
 //  CopDeck
 //
 //  Created by István Kreisz on 7/8/21.
@@ -146,5 +146,9 @@ class DefaultDataController: DataController {
 
     func stopListening() {
         databaseManager.stopListening()
+    }
+
+    func getPopularItems(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
+        localScraper.getPopularItems(settings: settings, exchangeRates: exchangeRates)
     }
 }

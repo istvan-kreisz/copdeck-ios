@@ -11,6 +11,7 @@ struct AppState: Equatable {
     var user: User?
     var firstLoadDone = false
     var searchResults: [Item]?
+    var popularItems: [Item]?
     var selectedItem: Item?
     var editedItem: Item?
     var selectedInventoryItem: InventoryItem?

@@ -67,7 +67,7 @@
 		5D63125026950CB400876D99 /* AppReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D63124F26950CB400876D99 /* AppReducer.swift */; };
 		5D631253269668FE00876D99 /* JSNativeBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D631252269668FE00876D99 /* JSNativeBridge.swift */; };
 		5D6312552696696500876D99 /* JSLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6312542696696500876D99 /* JSLogger.swift */; };
-		5D631257269669A600876D99 /* DefaultAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D631256269669A600876D99 /* DefaultAPI.swift */; };
+		5D631257269669A600876D99 /* DefaultDataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D631256269669A600876D99 /* DefaultDataController.swift */; };
 		5D696097258713760058BABE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D696096258713760058BABE /* AppDelegate.swift */; };
 		5D69609B258713760058BABE /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D69609A258713760058BABE /* LoginView.swift */; };
 		5D69609D258713770058BABE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D69609C258713770058BABE /* Assets.xcassets */; };
@@ -183,7 +183,7 @@
 		5D63124F26950CB400876D99 /* AppReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReducer.swift; sourceTree = "<group>"; };
 		5D631252269668FE00876D99 /* JSNativeBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSNativeBridge.swift; sourceTree = "<group>"; };
 		5D6312542696696500876D99 /* JSLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSLogger.swift; sourceTree = "<group>"; };
-		5D631256269669A600876D99 /* DefaultAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAPI.swift; sourceTree = "<group>"; };
+		5D631256269669A600876D99 /* DefaultDataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultDataController.swift; sourceTree = "<group>"; };
 		5D696093258713760058BABE /* SneakersnShit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SneakersnShit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D696096258713760058BABE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5D69609A258713760058BABE /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
@@ -482,7 +482,7 @@
 			children = (
 				5DA513FF26A6143A0067C4A2 /* Database */,
 				5D2D5A9F25C529E3009598AA /* API.swift */,
-				5D631256269669A600876D99 /* DefaultAPI.swift */,
+				5D631256269669A600876D99 /* DefaultDataController.swift */,
 				5D9D51F326AC161000AB1F30 /* DataController.swift */,
 				5D2D5A9E25C529CA009598AA /* Functions */,
 				5D7B17CA26868C970065D01C /* LocalScraper */,
@@ -914,7 +914,7 @@
 				5D6B112E26A46E3A00B6B67A /* NavigationBar.swift in Sources */,
 				5D9D520426AE359C00AB1F30 /* InventoryViewPills.swift in Sources */,
 				5D63124426950B2900876D99 /* AppAction.swift in Sources */,
-				5D631257269669A600876D99 /* DefaultAPI.swift in Sources */,
+				5D631257269669A600876D99 /* DefaultDataController.swift in Sources */,
 				5D6960AD2587149A0058BABE /* ReduxStore.swift in Sources */,
 				5D9D520A26AF17C900AB1F30 /* ItemImageViewWithNavBar.swift in Sources */,
 			);

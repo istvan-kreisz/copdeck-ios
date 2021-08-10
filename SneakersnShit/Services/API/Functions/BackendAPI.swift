@@ -55,6 +55,10 @@ class BackendAPI: API {
         PassthroughSubject<Item, AppError>().eraseToAnyPublisher()
     }
 
+    func getPopularItems(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
+        PassthroughSubject<[Item], AppError>().eraseToAnyPublisher()
+    }
+
     private let functions = Functions.functions(region: "europe-west1")
 
     init() {

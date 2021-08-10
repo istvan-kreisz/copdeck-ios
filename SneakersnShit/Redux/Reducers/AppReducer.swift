@@ -51,6 +51,14 @@ func appReducer(state: inout AppState,
         case let .setSearchResults(searchResults):
             state.searchResults = searchResults
             return Empty(completeImmediately: true).eraseToAnyPublisher()
+        case .getPopularItems:
+            return environment.dataController.getPopularItems(settings: state.settings, exchangeRates: state.rates)
+                .map { AppAction.main(action: .setPopularItems(items: $0)) }
+                .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
+                .eraseToAnyPublisher()
+        case let .setPopularItems(items):
+            state.popularItems = items
+            return Empty(completeImmediately: true).eraseToAnyPublisher()
         case let .getItemDetails(item, itemId, forced):
             return environment.dataController.getItemDetails(for: item, itemId: itemId, forced: forced, settings: state.settings, exchangeRates: state.rates)
                 .map { AppAction.main(action: .setSelectedItem(item: $0)) }
