@@ -8,7 +8,7 @@
 import SwiftUI
 import FirebaseFunctions
 
-struct MainView: View {
+struct MainContainerView: View {
     @EnvironmentObject var store: AppStore
     @StateObject var viewRouter = ViewRouter()
 
@@ -53,7 +53,7 @@ struct MainView: View {
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         return
-            MainView()
+            MainContainerView()
                 .environmentObject(AppStore.default)
     }
 }

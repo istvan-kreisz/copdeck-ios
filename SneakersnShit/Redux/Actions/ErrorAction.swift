@@ -11,7 +11,7 @@ enum ErrorAction {
     case setError(error: AppError?)
 }
 
-extension ErrorAction: IdAble {
+extension ErrorAction: Identifiable {
     var id: String {
         switch self {
         case .setError:

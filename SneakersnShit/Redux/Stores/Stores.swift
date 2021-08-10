@@ -76,8 +76,4 @@ extension AppStore {
             send(.main(action: .getExchangeRates))
         }
     }
-
-    func randomDelay(min: Double = 0.0, max: Double = 0.5) -> Double {
-        Double.random(in: min ..< max)
-    }
 }

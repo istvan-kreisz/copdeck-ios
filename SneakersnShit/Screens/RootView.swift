@@ -33,7 +33,7 @@ struct RootView: View {
                     if user?.inited != true {
                         CountrySelector(settings: store.state.settings)
                     } else {
-                        MainView()
+                        MainContainerView()
                             .environmentObject(store)
                             .zIndex(0)
                     }

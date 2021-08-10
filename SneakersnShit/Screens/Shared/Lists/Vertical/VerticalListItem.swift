@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ListItem<V: View>: View {
+struct VerticalListItem<V: View>: View {
     var title: String
     var imageURL: ImageURL?
     var flipImage = false
@@ -75,7 +75,7 @@ struct ListItem<V: View>: View {
 
 struct ListItem_Previews: PreviewProvider {
     static var previews: some View {
-        return ListItem<EmptyView>(title: "yooo",
+        return VerticalListItem<EmptyView>(title: "yooo",
                                    imageURL: nil,
                                    requestInfo: AppStore.default.state.requestInfo,
                                    isEditing: .constant(false),

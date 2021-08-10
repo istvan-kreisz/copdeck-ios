@@ -18,7 +18,7 @@ enum AuthenticationAction {
     case passwordReset(username: String)
 }
 
-extension AuthenticationAction: IdAble {
+extension AuthenticationAction: Identifiable {
     var id: String {
         switch self {
         case .restoreState:

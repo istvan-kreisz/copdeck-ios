@@ -28,7 +28,7 @@ enum MainAction {
     case removeFromInventory(inventoryItems: [InventoryItem])
 }
 
-extension MainAction: IdAble {
+extension MainAction: Identifiable {
     var id: String {
         switch self {
         case .signOut:

@@ -13,7 +13,7 @@ import Combine
 typealias Reducer<State, Action, Environment> =
     (inout State, Action, Environment, ((Result<Void, AppError>) -> Void)?) -> AnyPublisher<Action, Never>
 
-final class ReduxStore<State, Action: IdAble, Environment>: ObservableObject {
+final class ReduxStore<State, Action: Identifiable, Environment>: ObservableObject where Action.ID == String {
     @Published var state: State
 
     let environment: Environment

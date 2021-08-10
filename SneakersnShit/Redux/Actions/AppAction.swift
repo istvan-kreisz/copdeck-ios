@@ -14,7 +14,7 @@ enum AppAction {
     case authentication(action: AuthenticationAction)
 }
 
-extension AppAction: IdAble {
+extension AppAction: Identifiable {
     var id: String {
         var actionName = "AppAction."
         switch self {

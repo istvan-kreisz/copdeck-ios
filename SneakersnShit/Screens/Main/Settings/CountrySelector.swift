@@ -66,7 +66,7 @@ struct CountrySelector: View {
 struct CountrySelector_Previews: PreviewProvider {
     static var previews: some View {
         return
-            MainView()
+            MainContainerView()
                 .environmentObject(AppStore.default)
     }
 }
