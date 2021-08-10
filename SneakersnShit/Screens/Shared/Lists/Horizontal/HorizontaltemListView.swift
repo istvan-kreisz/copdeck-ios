@@ -19,30 +19,34 @@ struct HorizontaltemListView: View {
     let title: String?
     var requestInfo: [ScraperRequestInfo]
 
-    var allItems: [Item] { items ?? [] }
+    var itemsToShow: [Item] {
+        items?.first(n: Self.maxHorizontalItemCount) ?? []
+    }
 
     var body: some View {
-        if !allItems.isEmpty {
+        if !itemsToShow.isEmpty {
             VStack(alignment: .leading, spacing: 15) {
-                Text("Trending now")
-                    .foregroundColor(.customText1)
-                    .font(.bold(size: 22))
-                    .leftAligned()
-                    .withDefaultPadding(padding: .horizontal)
+                if let title = title {
+                    Text(title)
+                        .foregroundColor(.customText1)
+                        .font(.bold(size: 22))
+                        .leftAligned()
+                        .withDefaultPadding(padding: .horizontal)
+                }
 
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 24) {
                         Color.clear
                             .frame(width: 0, height: 0)
                             .padding(.leading, Styles.horizontalPadding - 24)
-                        ForEach(allItems) { item in
+                        ForEach(itemsToShow) { item in
                             HorizontalListItem(title: item.name ?? "",
                                                imageURL: item.imageURL,
                                                flipImage: item.imageURL?.store.id == .klekt,
                                                requestInfo: requestInfo,
-                                               index: allItems.firstIndex(where: { $0.id == item.id }) ?? 0) { selectedItem = item }
+                                               index: itemsToShow.firstIndex(where: { $0.id == item.id }) ?? 0) { selectedItem = item }
                         }
-                        if allItems.count > Self.maxHorizontalItemCount {
+                        if (items?.count ?? 0) > Self.maxHorizontalItemCount {
                             Button(action: {
                                 showPopularItems = true
                             }, label: {

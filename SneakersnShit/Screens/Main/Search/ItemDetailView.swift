@@ -19,6 +19,8 @@ struct ItemDetailView: View {
     @State private var firstShow = true
     @State var showSnackBar = false
 
+    @Binding var showView: Bool
+
     private let itemId: String
     private let showAddToInventoryButton: Bool
 
@@ -28,8 +30,9 @@ struct ItemDetailView: View {
 
     @StateObject private var loader = Loader()
 
-    init(item: Item?, itemId: String, showAddToInventoryButton: Bool = true) {
+    init(item: Item?, showView: Binding<Bool>, itemId: String, showAddToInventoryButton: Bool = true) {
         self._item = State(initialValue: item)
+        self._showView = showView
         self.itemId = itemId
         self.showAddToInventoryButton = showAddToInventoryButton
     }
@@ -46,7 +49,9 @@ struct ItemDetailView: View {
             ScrollView(.vertical, showsIndicators: false) {
                 ScrollViewReader { scrollViewProxy in
                     VStack(alignment: .center, spacing: 20) {
-                        ItemImageViewWithNavBar(imageURL: item?.imageURL, requestInfo: store.state.requestInfo)
+                        ItemImageViewWithNavBar(showView: $showView,
+                                                imageURL: item?.imageURL,
+                                                requestInfo: store.state.requestInfo)
                             .id(0)
 
                         ZStack {
@@ -291,6 +296,7 @@ struct ItemDetailView_Previews: PreviewProvider {
                                           name: "yolo",
                                           retailPrice: 12,
                                           imageURL: nil),
+                              showView: .constant(false),
                               itemId: "GHVDY45")
     }
 }

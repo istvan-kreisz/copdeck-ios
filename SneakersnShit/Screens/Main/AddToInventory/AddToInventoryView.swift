@@ -56,7 +56,9 @@ struct AddToInventoryView: View {
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .center, spacing: 20) {
-                ItemImageViewWithNavBar(imageURL: item.imageURL, requestInfo: store.state.requestInfo)
+                ItemImageViewWithNavBar(showView: $presented,
+                                        imageURL: item.imageURL,
+                                        requestInfo: store.state.requestInfo)
 
                 VStack(alignment: .center, spacing: 8) {
                     Text("Add To Inventory")

@@ -38,6 +38,7 @@ struct InventoryItemDetailView: View {
     var body: some View {
         if let itemId = inventoryItem.itemId {
             NavigationLink(destination: ItemDetailView(item: nil,
+                                                       showView: $showItemDetails,
                                                        itemId: itemId,
                                                        showAddToInventoryButton: true),
                            isActive: $showItemDetails) { EmptyView() }
@@ -45,7 +46,7 @@ struct InventoryItemDetailView: View {
 
         ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .center, spacing: 20) {
-                ItemImageViewWithNavBar(imageURL: inventoryItem.imageURL, requestInfo: store.state.requestInfo)
+                ItemImageViewWithNavBar(showView: $isEditingInventoryItem, imageURL: inventoryItem.imageURL, requestInfo: store.state.requestInfo)
 
                 VStack(alignment: .center, spacing: 8) {
                     Text("Edit Item")

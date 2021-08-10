@@ -19,13 +19,15 @@ struct SignUpView: View {
     @State var errorMessage: String?
     @State var resetPasswordPresented = false
 
+    @Binding var showView: Bool
+
     let color: Color = .customBlue
 
     var body: some View {
         ZStack {
             Color.customBackground.edgesIgnoringSafeArea(.all)
             VStack(alignment: .center, spacing: 8) {
-                NavigationBar(title: nil, isBackButtonVisible: true, style: .light)
+                NavigationBar(showView: $showView, title: nil, isBackButtonVisible: true, style: .light)
 
                 Text("Sign up")
                     .font(.bold(size: 22))
@@ -123,7 +125,7 @@ extension SignUpView: EmailValidator {}
 
 struct SignupView_Previews: PreviewProvider {
     static var previews: some View {
-        SignUpView()
+        SignUpView(showView: .constant(false))
             .previewDevice("iPhone 8")
             .environmentObject(AppStore.default)
     }

@@ -12,8 +12,7 @@ struct NavigationBar: View {
         case light, dark, clear
     }
 
-    @Environment(\.presentationMode) var presentationMode
-
+    @Binding var showView: Bool
     let title: String?
     let isBackButtonVisible: Bool
     let style: Style
@@ -48,7 +47,7 @@ struct NavigationBar: View {
             if isBackButtonVisible {
                 Button(action: {
                     if style != .clear {
-                        presentationMode.wrappedValue.dismiss()
+                        showView = false
                     }
                 }) {
                         ZStack {
@@ -81,11 +80,11 @@ struct NavigationBar: View {
         .padding(.bottom, 20)
     }
 
-    static let placeHolder = NavigationBar(title: nil, isBackButtonVisible: true, style: .clear)
+    static let placeHolder = NavigationBar(showView: .constant(false), title: nil, isBackButtonVisible: true, style: .clear)
 }
 
 struct NavigationBar_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationBar(title: "yo", isBackButtonVisible: true, style: .light)
+        NavigationBar(showView: .constant(false), title: "yo", isBackButtonVisible: true, style: .light)
     }
 }

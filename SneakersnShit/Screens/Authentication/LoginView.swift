@@ -24,7 +24,7 @@ struct LoginView: View {
             ZStack {
                 Color.customBackground.edgesIgnoringSafeArea(.all)
                 NavigationLink("",
-                               destination: SignUpView(),
+                               destination: SignUpView(showView: $signUpTapped),
                                isActive: $signUpTapped)
                 VStack(alignment: .center, spacing: 8) {
                     NavigationBar.placeHolder
