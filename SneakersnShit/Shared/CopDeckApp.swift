@@ -13,10 +13,15 @@ struct CopDeckApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @Environment(\.scenePhase) private var scenePhase
 
+    @State var selectedIndex = 0
+    let titles = ["First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth"]
+
     var body: some Scene {
         WindowGroup {
-            RootView()
-                .environmentObject(AppStore.default)
+            HorizontalPagingViewWithSegmentedControl()
+
+//            RootView()
+//                .environmentObject(AppStore.default)
         }
         .onChange(of: scenePhase) { phase in
             switch phase {

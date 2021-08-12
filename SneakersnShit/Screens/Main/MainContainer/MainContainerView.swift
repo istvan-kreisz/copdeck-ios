@@ -38,6 +38,8 @@ struct MainContainerView: View {
             }
         }
         .hideKeyboardOnScroll()
+
+
 //        .alert(isPresented: presentStockXFeeUpdateAlert) {
 //            Alert(title: Text("Update your seller / buyer stats"),
 //                  message: Text("In order to get accurate results for buyer & seller price calculation, you must update your StockX / GOAT / Klekt seller & buyer stats"),
