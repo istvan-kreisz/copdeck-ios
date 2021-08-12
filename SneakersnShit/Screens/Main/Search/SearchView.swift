@@ -28,14 +28,14 @@ struct SearchView: View {
                                                        itemId: selectedItem.id,
                                                        showAddToInventoryButton: true),
                            isActive: showSelectedItem) { EmptyView() }
-                .isDetailLink(false)
+//                .isDetailLink(false)
         }
-        NavigationLink(destination:
-            PopularItemsListView(showView: $showPopularItems,
-                                 items: $store.state.popularItems,
-                                 requestInfo: store.state.requestInfo),
-            isActive: $showPopularItems) { EmptyView() }
-            .isDetailLink(false)
+//        NavigationLink(destination:
+//            PopularItemsListView(showView: $showPopularItems,
+//                                 items: $store.state.popularItems,
+//                                 requestInfo: store.state.requestInfo),
+//            isActive: $showPopularItems) { EmptyView() }
+//            .isDetailLink(false)
 
         VStack(alignment: .leading, spacing: 19) {
             Text("Search")
