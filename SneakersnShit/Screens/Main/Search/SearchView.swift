@@ -51,12 +51,12 @@ struct SearchView: View {
                              text: $searchText)
                 .withDefaultPadding(padding: .horizontal)
 
-            HorizontaltemListView(items: $store.state.popularItems,
-                                  selectedItem: $selectedItem,
-                                  showPopularItems: $showPopularItems,
-                                  loader: popularItemsLoader,
-                                  title: "Trending now",
-                                  requestInfo: store.state.requestInfo)
+//            HorizontaltemListView(items: $store.state.popularItems,
+//                                  selectedItem: $selectedItem,
+//                                  showPopularItems: $showPopularItems,
+//                                  loader: popularItemsLoader,
+//                                  title: "Trending now",
+//                                  requestInfo: store.state.requestInfo)
 
             VerticalItemListView(items: $store.state.searchResults,
                                  selectedItem: $selectedItem,
@@ -70,7 +70,7 @@ struct SearchView: View {
             store.send(.main(action: .getSearchResults(searchTerm: searchText)), completed: searchResultsLoader.getLoader())
         }
         .onAppear {
-            store.send(.main(action: .getPopularItems))
+//            store.send(.main(action: .getPopularItems))
         }
     }
 }
