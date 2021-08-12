@@ -41,13 +41,8 @@ struct CopDeckSettings: Codable, Equatable {
                 case high = 20
             }
 
-            enum CashoutFee: Double, Codable, Equatable, CaseIterable {
-                case none = 0
-                case regular = 0.029
-            }
-
             var commissionPercentage: CommissionPercentage
-            var cashOutFee: CashoutFee
+            var cashOutFee: Bool
             var taxes: Double
         }
     }
@@ -64,6 +59,6 @@ extension CopDeckSettings {
                                                                                successfulShipBonus: false,
                                                                                quickShipBonus: false),
                                                                  goat: .init(commissionPercentage: .low,
-                                                                             cashOutFee: .none,
+                                                                             cashOutFee: false,
                                                                              taxes: 0)))
 }

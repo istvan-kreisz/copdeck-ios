@@ -128,8 +128,8 @@ struct SettingsView: View {
                 }
 
                 Section(header: Text("GOAT include cash-out fee (2.9%)")) {
-                    let cashoutFee = Binding<String>(get: { settings.feeCalculation.goat?.cashOutFee == .regular ? "Include" : "Don't include" },
-                                                     set: { new in settings.feeCalculation.goat?.cashOutFee = new == "Include" ? .regular : .none })
+                    let cashoutFee = Binding<String>(get: { settings.feeCalculation.goat?.cashOutFee == true ? "Include" : "Don't include" },
+                                                     set: { new in settings.feeCalculation.goat?.cashOutFee = new == "Include" ? true : false })
                     Picker(selection: cashoutFee, label: Text("GOAT include cash-out fee (2.9%)")) {
                         ForEach(["Include", "Don't include"], id: \.self) {
                             Text($0)

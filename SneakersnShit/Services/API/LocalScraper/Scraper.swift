@@ -44,7 +44,7 @@ class LocalScraper {
                                                                     successfulShipBonus: (settings.feeCalculation.stockx?.successfulShipBonus ?? false) && stockXLevelIsAtLeast4,
                                                                     quickShipBonus: (settings.feeCalculation.stockx?.quickShipBonus ?? false) && stockXLevelIsAtLeast4),
                                                       goat: .init(commissionPercentage: (settings.feeCalculation.goat?.commissionPercentage.rawValue) ?? 0,
-                                                                  cashOutFee: (settings.feeCalculation.goat?.cashOutFee.rawValue) ?? 0.0,
+                                                                  cashOutFee: (settings.feeCalculation.goat?.cashOutFee == true) ? 0.029 : 0,
                                                                   taxes: (settings.feeCalculation.goat?.taxes) ?? 0))
         var showLogs = false
         #if DEBUG
