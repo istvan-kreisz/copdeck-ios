@@ -21,18 +21,22 @@ struct SearchView: View {
 
     var body: some View {
         let showSelectedItem = Binding<Bool>(get: { selectedItem?.id != nil },
-                                             set: {
-                                                selectedItem = $0 ? selectedItem : nil
-                                             })
+                                             set: { selectedItem = $0 ? selectedItem : nil })
         if let selectedItem = selectedItem {
             NavigationLink(destination: ItemDetailView(item: selectedItem,
                                                        showView: showSelectedItem,
                                                        itemId: selectedItem.id,
                                                        showAddToInventoryButton: true),
                            isActive: showSelectedItem) { EmptyView() }
+                .isDetailLink(false)
         }
-        NavigationLink(destination: FeedView(),
-                       isActive: $showPopularItems) { EmptyView() }
+        NavigationLink(destination:
+            PopularItemsListView(showView: $showPopularItems,
+                                 items: $store.state.popularItems,
+                                 requestInfo: store.state.requestInfo),
+            isActive: $showPopularItems) { EmptyView() }
+            .isDetailLink(false)
+
         VStack(alignment: .leading, spacing: 19) {
             Text("Search")
                 .foregroundColor(.customText1)
