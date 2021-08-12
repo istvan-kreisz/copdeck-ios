@@ -18,7 +18,10 @@ struct CopDeckApp: App {
 
     var body: some Scene {
         WindowGroup {
-            HorizontalPagingViewWithSegmentedControl()
+            HorizontalPagingViewWithSegmentedControl(titles: .constant(titles)) { index in
+                Text(titles[index])
+            }
+
 
 //            RootView()
 //                .environmentObject(AppStore.default)

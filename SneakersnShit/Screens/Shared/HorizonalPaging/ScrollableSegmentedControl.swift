@@ -9,51 +9,59 @@ import SwiftUI
 
 struct ScrollableSegmentedControl: View {
     @Binding private var selectedIndex: Int
+    @Binding private var titles: [String]
 
     @State private var frames: [CGRect]
     @State private var backgroundFrame = CGRect.zero
     @State private var isScrollable = true
 
-    private let titles: [String]
-
-    init(selectedIndex: Binding<Int>, titles: [String]) {
+    init(selectedIndex: Binding<Int>, titles: Binding<[String]>) {
         self._selectedIndex = selectedIndex
-        self.titles = titles
-        frames = [CGRect](repeating: .zero, count: titles.count)
+        self._titles = titles
+        #warning("fix")
+        frames = [CGRect](repeating: .zero, count: titles.wrappedValue.count)
     }
 
     var body: some View {
         VStack {
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 0) {
-                    ForEach(titles.indices, id: \.self) { index in
-                        Button {
-                            selectedIndex = index
-                        } label: {
-                            HStack {
-                                Text(titles[index])
-                                    .font(.bold(size: 22))
-                                    .foregroundColor(selectedIndex == index ? .customBlack : .customText2)
-                                    .frame(height: 42)
-                            }
-                        }
-                        .buttonStyle(CustomSegmentButtonStyle())
-                        .background(GeometryReader { geoReader in
-                            Color.clear.preference(key: RectPreferenceKey.self, value: geoReader.frame(in: .global))
-                                .onPreferenceChange(RectPreferenceKey.self) {
-                                    setFrame(index: index, frame: $0)
+                ScrollViewReader { sp in
+                    HStack(spacing: 0) {
+                        ForEach(titles.indices, id: \.self) { index in
+                            Button {
+                                selectedIndex = index
+                            } label: {
+                                HStack {
+                                    Text(titles[index])
+                                        .font(.bold(size: 22))
+                                        .foregroundColor(selectedIndex == index ? .customBlack : .customText2)
+                                        .frame(height: 42)
                                 }
-                        })
+                            }
+                            .buttonStyle(CustomSegmentButtonStyle())
+                            .background(GeometryReader { geoReader in
+                                Color.clear.preference(key: RectPreferenceKey.self, value: geoReader.frame(in: .global))
+                                    .onPreferenceChange(RectPreferenceKey.self) {
+                                        setFrame(index: index, frame: $0)
+                                    }
+                            })
+                            .id(index)
+                        }
+                    }
+                    .background(Rectangle()
+                        .fill(Color.customBlack)
+                        .frame(width: frames[selectedIndex].width, height: 2)
+                        .offset(x: frames[selectedIndex].minX - frames[0].minX), alignment: .bottomLeading)
+                    .background(Rectangle()
+                        .fill(Color.gray)
+                        .frame(height: 1), alignment: .bottomLeading)
+                    .animation(.default)
+                    .onChange(of: selectedIndex) { value in
+                        withAnimation {
+                            sp.scrollTo(value, anchor: .center)
+                        }
                     }
                 }
-                .background(Rectangle()
-                    .fill(Color.customBlack)
-                    .frame(width: frames[selectedIndex].width, height: 2)
-                    .offset(x: frames[selectedIndex].minX - frames[0].minX), alignment: .bottomLeading)
-                .background(Rectangle()
-                    .fill(Color.gray)
-                    .frame(height: 1), alignment: .bottomLeading)
-                .animation(.default)
             }
         }
     }
@@ -68,7 +76,7 @@ struct ScrollableSegmentedControl_Previews: PreviewProvider {
 
     static var previews: some View {
         let titles = ["First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth"]
-        ScrollableSegmentedControl(selectedIndex: $selectedIndex, titles: titles)
+        ScrollableSegmentedControl(selectedIndex: $selectedIndex, titles: .constant(titles))
     }
 }
 
