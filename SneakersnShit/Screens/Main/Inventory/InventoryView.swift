@@ -15,6 +15,7 @@ struct InventoryView: View {
     @State private var searchText = ""
     @State private var isEditing = false
     @State private var selectedInventoryItems: [InventoryItem] = []
+    @State private var selectedStackIndex = 0
 
     @Binding var shouldShowTabBar: Bool
     @Binding var settingsPresented: Bool
@@ -23,7 +24,10 @@ struct InventoryView: View {
         searchText.isEmpty ? store.state.inventoryItems : (store.state.inventorySearchResults ?? [])
     }
 
+    @State var titles = ["First", "Second", "Third"]
+
     var body: some View {
+        let pageCount = Binding<Int>(get: { titles.count }, set: { _ in })
         let isEditingInventoryItem = Binding<Bool>(get: { selectedInventoryItemId != nil },
                                                    set: { selectedInventoryItemId = $0 ? selectedInventoryItemId : nil })
         ForEach(store.state.inventoryItems) { inventoryItem in
@@ -68,28 +72,14 @@ struct InventoryView: View {
             }
             .withDefaultPadding(padding: .horizontal)
 
-            ScrollView(.vertical, showsIndicators: false) {
-                Text("\(inventoryItems.count) \(searchText.isEmpty ? "Items:" : "Results:")")
-                    .foregroundColor(.customText1)
-                    .font(.bold(size: 12))
-                    .leftAligned()
-                    .padding(.horizontal, 28)
-
-                ForEach(inventoryItems) { inventoryItem in
-                    InventoryListItem(inventoryItem: inventoryItem,
-                                      selectedInventoryItemId: $selectedInventoryItemId,
-                                      isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }), isEditing: $isEditing,
-                                      requestInfo: store.state.requestInfo) {
-                            if selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }) {
-                                selectedInventoryItems = selectedInventoryItems.filter { $0.id != inventoryItem.id }
-                            } else {
-                                selectedInventoryItems.append(inventoryItem)
-                            }
-                    }
-                }
+            ScrollableSegmentedControl(selectedIndex: $selectedStackIndex, titles: $titles)
                 .withDefaultPadding(padding: .horizontal)
-                .padding(.vertical, 6)
-                Color.clear.padding(.bottom, 130)
+            PagerView(pageCount: pageCount, currentIndex: $selectedStackIndex) {
+                ForEach(store.state.stacks) { stack in
+                    StackView(searchText: $searchText,
+                              inventoryItems: stack.inventoryItems(allInventoryItems: store.state.inventoryItems),
+                              selectedInventoryItemId: $selectedInventoryItemId)
+                }
             }
         }
         .withFloatingButton(button: EditInventoryTray(didTapCancel: {

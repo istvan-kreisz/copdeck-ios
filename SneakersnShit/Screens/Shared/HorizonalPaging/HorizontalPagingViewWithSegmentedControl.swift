@@ -10,14 +10,16 @@ import SwiftUI
 struct HorizontalPagingViewWithSegmentedControl<V: View>: View {
     @Binding var titles: [String]
     var viewAtIndex: (Int) -> V
-    
+
     @State var selectedIndex = 0
 
     var body: some View {
         let viewCount = Binding<Int>(get: { titles.count }, set: { _ in })
         VStack {
             ScrollableSegmentedControl(selectedIndex: $selectedIndex, titles: $titles)
-            HorizonalPagingView(selectedIndex: $selectedIndex, viewCount: viewCount, viewAtIndex: viewAtIndex)
+                .withDefaultPadding(padding: .horizontal)
+//            HorizonalPagingView(selectedIndex: $selectedIndex, viewCount: viewCount, viewAtIndex: viewAtIndex)
+//                .withDefaultPadding(padding: .horizontal)
         }
     }
 }

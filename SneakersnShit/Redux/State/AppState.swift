@@ -16,6 +16,7 @@ struct AppState: Equatable {
     var editedItem: Item?
     var selectedInventoryItem: InventoryItem?
     var inventoryItems: [InventoryItem] = []
+    var stacks: [Stack] = []
     var inventorySearchResults: [InventoryItem]?
     var error: AppError?
     var exchangeRates: ExchangeRates?
@@ -44,6 +45,7 @@ struct AppState: Equatable {
         editedItem = nil
         selectedInventoryItem = nil
         inventoryItems = []
+        stacks = []
         inventorySearchResults = nil
         error = nil
         requestInfo = []

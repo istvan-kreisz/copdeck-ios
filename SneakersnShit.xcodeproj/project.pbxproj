@@ -103,7 +103,6 @@
 		5DA5140426A614530067C4A2 /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140026A614530067C4A2 /* FirebaseService.swift */; };
 		5DA5140926A6149D0067C4A2 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140826A6149D0067C4A2 /* DatabaseManager.swift */; };
 		5DA5140B26A6161A0067C4A2 /* CopDeckSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140A26A6161A0067C4A2 /* CopDeckSettings.swift */; };
-		5DB590E626C54F44006ECEBD /* HorizonalPagingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB590E526C54F44006ECEBD /* HorizonalPagingView.swift */; };
 		5DB590E826C556ED006ECEBD /* ScrollableSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB590E726C556ED006ECEBD /* ScrollableSegmentedControl.swift */; };
 		5DB590EA26C56346006ECEBD /* HorizontalPagingViewWithSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB590E926C56346006ECEBD /* HorizontalPagingViewWithSegmentedControl.swift */; };
 		5DBCB6DD25C90A510025BC23 /* StoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DBCB6DC25C90A510025BC23 /* StoreReviewHelper.swift */; };
@@ -118,6 +117,9 @@
 		5DCC466E26A8CEDE007671BC /* NewItemCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCC466D26A8CEDE007671BC /* NewItemCard.swift */; };
 		5DCC467026A8D759007671BC /* DropDownMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCC466F26A8D759007671BC /* DropDownMenu.swift */; };
 		5DCC467226A8EBB9007671BC /* ToggleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCC467126A8EBB9007671BC /* ToggleButton.swift */; };
+		5DE596E626C876790024F7D5 /* PagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE596E526C876790024F7D5 /* PagerView.swift */; };
+		5DE596E826C877120024F7D5 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE596E726C877120024F7D5 /* Stack.swift */; };
+		5DE596EA26C878280024F7D5 /* StackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE596E926C878280024F7D5 /* StackView.swift */; };
 		5DEBC088269B24BA000EEADC /* ViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEBC087269B24BA000EEADC /* ViewRouter.swift */; };
 		5DEBC08A269B3DE8000EEADC /* Double+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEBC089269B3DE8000EEADC /* Double+Extensions.swift */; };
 		5DF03CAB25DA1CE7001856B5 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03CAA25DA1CE7001856B5 /* ImageView.swift */; };
@@ -223,7 +225,6 @@
 		5DA5140026A614530067C4A2 /* FirebaseService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
 		5DA5140826A6149D0067C4A2 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		5DA5140A26A6161A0067C4A2 /* CopDeckSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopDeckSettings.swift; sourceTree = "<group>"; };
-		5DB590E526C54F44006ECEBD /* HorizonalPagingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizonalPagingView.swift; sourceTree = "<group>"; };
 		5DB590E726C556ED006ECEBD /* ScrollableSegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableSegmentedControl.swift; sourceTree = "<group>"; };
 		5DB590E926C56346006ECEBD /* HorizontalPagingViewWithSegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalPagingViewWithSegmentedControl.swift; sourceTree = "<group>"; };
 		5DBCB6DC25C90A510025BC23 /* StoreReviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreReviewHelper.swift; sourceTree = "<group>"; };
@@ -236,6 +237,9 @@
 		5DCC466D26A8CEDE007671BC /* NewItemCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewItemCard.swift; sourceTree = "<group>"; };
 		5DCC466F26A8D759007671BC /* DropDownMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownMenu.swift; sourceTree = "<group>"; };
 		5DCC467126A8EBB9007671BC /* ToggleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleButton.swift; sourceTree = "<group>"; };
+		5DE596E526C876790024F7D5 /* PagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerView.swift; sourceTree = "<group>"; };
+		5DE596E726C877120024F7D5 /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
+		5DE596E926C878280024F7D5 /* StackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackView.swift; sourceTree = "<group>"; };
 		5DEBC087269B24BA000EEADC /* ViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewRouter.swift; sourceTree = "<group>"; };
 		5DEBC089269B3DE8000EEADC /* Double+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extensions.swift"; sourceTree = "<group>"; };
 		5DF03CAA25DA1CE7001856B5 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
@@ -413,6 +417,7 @@
 			children = (
 				5D52E30E26130E2100FA02B8 /* InventoryView.swift */,
 				5D52E31126130E7500FA02B8 /* InventoryItemDetailView.swift */,
+				5DE596E926C878280024F7D5 /* StackView.swift */,
 			);
 			path = Inventory;
 			sourceTree = "<group>";
@@ -650,6 +655,7 @@
 				5DCC466B26A88367007671BC /* InventoryItem.swift */,
 				5D9D51F726ADA07700AB1F30 /* Country.swift */,
 				5D8ABBBE26B1C82500AFD8CF /* ScraperRequestInfo.swift */,
+				5DE596E726C877120024F7D5 /* Stack.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -713,8 +719,8 @@
 			isa = PBXGroup;
 			children = (
 				5DB590E926C56346006ECEBD /* HorizontalPagingViewWithSegmentedControl.swift */,
-				5DB590E526C54F44006ECEBD /* HorizonalPagingView.swift */,
 				5DB590E726C556ED006ECEBD /* ScrollableSegmentedControl.swift */,
+				5DE596E526C876790024F7D5 /* PagerView.swift */,
 			);
 			path = HorizonalPaging;
 			sourceTree = "<group>";
@@ -943,6 +949,7 @@
 				5D30BA42269C3EAD0062F6AB /* CustomSpinner.swift in Sources */,
 				5D488E8925C8D54E00624FEF /* AppError.swift in Sources */,
 				5DCC466C26A88367007671BC /* InventoryItem.swift in Sources */,
+				5DE596EA26C878280024F7D5 /* StackView.swift in Sources */,
 				5D9D51F226AC0E8F00AB1F30 /* Optional+Extensions.swift in Sources */,
 				5D631253269668FE00876D99 /* JSNativeBridge.swift in Sources */,
 				5D9D520226AE29DB00AB1F30 /* InventoryListItem.swift in Sources */,
@@ -976,7 +983,9 @@
 				5D0E5A13269E60DB006D7E9C /* TextFieldRounded.swift in Sources */,
 				5D9D520026AE211900AB1F30 /* VerticalListItem.swift in Sources */,
 				5DB590E826C556ED006ECEBD /* ScrollableSegmentedControl.swift in Sources */,
+				5DE596E626C876790024F7D5 /* PagerView.swift in Sources */,
 				5D424CFB25C503F00008D6F4 /* UIApplication+Extensions.swift in Sources */,
+				5DE596E826C877120024F7D5 /* Stack.swift in Sources */,
 				5D63122B2695066500876D99 /* ExchangeRates.swift in Sources */,
 				5D63122D2695068300876D99 /* Currency.swift in Sources */,
 				5D0E5A11269E4EDE006D7E9C /* AddToInventoryView.swift in Sources */,
@@ -995,7 +1004,6 @@
 				5D19B0AB26A6D76600A31F4E /* MainAction.swift in Sources */,
 				5D6960BA258717430058BABE /* World.swift in Sources */,
 				5D54FE2626C2C84F008CD05F /* HorizontalListItem.swift in Sources */,
-				5DB590E626C54F44006ECEBD /* HorizonalPagingView.swift in Sources */,
 				5D8ABBBF26B1C82500AFD8CF /* ScraperRequestInfo.swift in Sources */,
 				5D9D51F826ADA07700AB1F30 /* Country.swift in Sources */,
 				5DCC467226A8EBB9007671BC /* ToggleButton.swift in Sources */,

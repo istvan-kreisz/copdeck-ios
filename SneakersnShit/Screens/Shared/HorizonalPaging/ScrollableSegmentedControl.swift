@@ -23,43 +23,41 @@ struct ScrollableSegmentedControl: View {
     }
 
     var body: some View {
-        VStack {
-            ScrollView(.horizontal, showsIndicators: false) {
-                ScrollViewReader { sp in
-                    HStack(spacing: 0) {
-                        ForEach(titles.indices, id: \.self) { index in
-                            Button {
-                                selectedIndex = index
-                            } label: {
-                                HStack {
-                                    Text(titles[index])
-                                        .font(.bold(size: 22))
-                                        .foregroundColor(selectedIndex == index ? .customBlack : .customText2)
-                                        .frame(height: 42)
-                                }
+        ScrollView(.horizontal, showsIndicators: false) {
+            ScrollViewReader { sp in
+                HStack(spacing: 0) {
+                    ForEach(titles.indices, id: \.self) { index in
+                        Button {
+                            selectedIndex = index
+                        } label: {
+                            HStack {
+                                Text(titles[index])
+                                    .font(.bold(size: 22))
+                                    .foregroundColor(selectedIndex == index ? .customBlack : .customText2)
+                                    .frame(height: 42)
                             }
-                            .buttonStyle(CustomSegmentButtonStyle())
-                            .background(GeometryReader { geoReader in
-                                Color.clear.preference(key: RectPreferenceKey.self, value: geoReader.frame(in: .global))
-                                    .onPreferenceChange(RectPreferenceKey.self) {
-                                        setFrame(index: index, frame: $0)
-                                    }
-                            })
-                            .id(index)
                         }
+                        .buttonStyle(CustomSegmentButtonStyle())
+                        .background(GeometryReader { geoReader in
+                            Color.clear.preference(key: RectPreferenceKey.self, value: geoReader.frame(in: .global))
+                                .onPreferenceChange(RectPreferenceKey.self) {
+                                    setFrame(index: index, frame: $0)
+                                }
+                        })
+                        .id(index)
                     }
-                    .background(Rectangle()
-                        .fill(Color.customBlack)
-                        .frame(width: frames[selectedIndex].width, height: 2)
-                        .offset(x: frames[selectedIndex].minX - frames[0].minX), alignment: .bottomLeading)
-                    .background(Rectangle()
-                        .fill(Color.gray)
-                        .frame(height: 1), alignment: .bottomLeading)
-                    .animation(.default)
-                    .onChange(of: selectedIndex) { value in
-                        withAnimation {
-                            sp.scrollTo(value, anchor: .center)
-                        }
+                }
+                .background(Rectangle()
+                    .fill(Color.customBlack)
+                    .frame(width: frames[selectedIndex].width, height: 2)
+                    .offset(x: frames[selectedIndex].minX - frames[0].minX), alignment: .bottomLeading)
+                .background(Rectangle()
+                    .fill(Color.gray)
+                    .frame(height: 1), alignment: .bottomLeading)
+                .animation(.default)
+                .onChange(of: selectedIndex) { value in
+                    withAnimation {
+                        sp.scrollTo(value, anchor: .center)
                     }
                 }
             }

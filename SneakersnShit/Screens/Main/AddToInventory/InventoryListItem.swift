@@ -17,14 +17,14 @@ struct InventoryListItem: View {
     var onSelectorTapped: () -> Void
 
     var body: some View {
-        VerticalListItem(title: inventoryItem.name,
-                 imageURL: inventoryItem.imageURL,
-                 flipImage: inventoryItem.imageURL?.store.id == .klekt,
-                 requestInfo: requestInfo,
-                 isEditing: $isEditing,
-                 isSelected: isSelected,
-                 accessoryView: InventoryViewPills(inventoryItem: inventoryItem).leftAligned()) {
-                selectedInventoryItemId = inventoryItem.id
+        VerticalListItem<EmptyView>(title: inventoryItem.name,
+                                    imageURL: inventoryItem.imageURL,
+                                    flipImage: inventoryItem.imageURL?.store.id == .klekt,
+                                    requestInfo: requestInfo,
+                                    isEditing: $isEditing,
+                                    isSelected: isSelected,
+                                    accessoryView: nil) {
+            selectedInventoryItemId = inventoryItem.id
         } onSelectorTapped: {
             onSelectorTapped()
         }
@@ -34,10 +34,10 @@ struct InventoryListItem: View {
 struct InventoryListItem_Previews: PreviewProvider {
     static var previews: some View {
         return VerticalListItem<EmptyView>(title: "yooo",
-                                   imageURL: nil,
-                                   requestInfo: [],
-                                   isEditing: .constant(false),
-                                   isSelected: false,
-                                   onTapped: {})
+                                           imageURL: nil,
+                                           requestInfo: [],
+                                           isEditing: .constant(false),
+                                           isSelected: false,
+                                           onTapped: {})
     }
 }
