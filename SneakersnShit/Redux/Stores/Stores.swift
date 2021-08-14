@@ -40,6 +40,12 @@ extension AppStore {
             }
             .store(in: &effectCancellables)
 
+        environment.dataController.stacksPublisher
+            .sink { [weak self] in
+                self?.state.stacks = $0
+            }
+            .store(in: &effectCancellables)
+
         environment.dataController.exchangeRatesPublisher
             .sink { [weak self] in
                 self?.state.exchangeRates = $0

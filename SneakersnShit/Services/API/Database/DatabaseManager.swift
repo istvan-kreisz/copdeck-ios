@@ -15,6 +15,7 @@ protocol DatabaseManager {
     func stopListening()
     // read
     var inventoryItemsPublisher: AnyPublisher<[InventoryItem], Never> { get }
+    var stacksPublisher: AnyPublisher<[Stack], Never> { get }
     var userPublisher: AnyPublisher<User, Never> { get }
     var exchangeRatesPublisher: AnyPublisher<ExchangeRates, Never> { get }
     var errorsPublisher: AnyPublisher<AppError, Never> { get }

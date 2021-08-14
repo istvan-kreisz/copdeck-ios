@@ -14,12 +14,17 @@ class FirebaseService: DatabaseManager {
     private let firestore = Firestore.firestore()
 
     private let inventoryItemsSubject = CurrentValueSubject<[InventoryItem], Never>([])
+    private let stacksSubject = CurrentValueSubject<[Stack], Never>([])
     private let userSubject = CurrentValueSubject<User?, Never>(nil)
     private let exchangeRatesSubject = PassthroughSubject<ExchangeRates, Never>()
     private let errorsSubject = PassthroughSubject<AppError, Never>()
 
     var inventoryItemsPublisher: AnyPublisher<[InventoryItem], Never> {
         inventoryItemsSubject.eraseToAnyPublisher()
+    }
+
+    var stacksPublisher: AnyPublisher<[Stack], Never> {
+        stacksSubject.eraseToAnyPublisher()
     }
 
     var userPublisher: AnyPublisher<User, Never> {
@@ -42,8 +47,10 @@ class FirebaseService: DatabaseManager {
 
     private var itemsRef: CollectionReference?
     private var userInventoryRef: CollectionReference?
+    private var userStacksRef: CollectionReference?
 
     private var inventoryListener: ListenerRegistration?
+    private var stacksListener: ListenerRegistration?
     private var userListener: ListenerRegistration?
     private var exchangeRatesListener: ListenerRegistration?
 
@@ -67,6 +74,7 @@ class FirebaseService: DatabaseManager {
         stopListening()
         addUserListener()
         addInventoryListener()
+        addStacksListener()
         addExchangeRatesListener()
     }
 
@@ -75,34 +83,23 @@ class FirebaseService: DatabaseManager {
     }
 
     private func addInventoryListener() {
-        inventoryListener = addCollectionListener(collectionRef: userInventoryRef,
-                                                  updated: { [weak self] (added: [InventoryItem],
-                                                                          removed: [InventoryItem],
-                                                                          modified: [InventoryItem]) in
-                                                          guard let self = self else { return }
-                                                          var newInventoryItems = self.inventoryItemsSubject.value
+        inventoryListener = addCollectionListener(collectionRef: userInventoryRef) { [weak self] in
+            self?.inventoryItemsSubject.send($0)
+        }
+    }
 
-                                                          newInventoryItems = newInventoryItems
-                                                              .filter { element in
-                                                                  !removed.contains(where: { $0.id == element.id })
-                                                              }
-                                                          newInventoryItems.append(contentsOf: added)
-                                                          modified.forEach { item in
-                                                              if let index = newInventoryItems.firstIndex(where: { $0.id == item.id }) {
-                                                                  newInventoryItems[index] = item
-                                                              }
-                                                          }
-
-                                                          self.inventoryItemsSubject.send(newInventoryItems)
-                                                  })
+    private func addStacksListener() {
+        stacksListener = addCollectionListener(collectionRef: userStacksRef) { [weak self] in
+            self?.stacksSubject.send($0)
+        }
     }
 
     private func addExchangeRatesListener() {
         exchangeRatesListener = addDocumentListener(documentRef: exchangeRatesRef, updated: { [weak self] in self?.exchangeRatesSubject.send($0) })
     }
 
-    private func addCollectionListener<T: Codable>(collectionRef: CollectionReference?,
-                                                   updated: @escaping (_ added: [T], _ removed: [T], _ modified: [T]) -> Void)
+    private func addCollectionUpdatesListener<T: Codable>(collectionRef: CollectionReference?,
+                                                          updated: @escaping (_ added: [T], _ removed: [T], _ modified: [T]) -> Void)
         -> ListenerRegistration? {
         collectionRef?
             .addSnapshotListener { snapshot, error in
@@ -129,6 +126,18 @@ class FirebaseService: DatabaseManager {
             }
     }
 
+    private func addCollectionListener<T: Codable>(collectionRef: CollectionReference?, updated: @escaping (_ items: [T]) -> Void)
+        -> ListenerRegistration? {
+        collectionRef?
+            .addSnapshotListener { snapshot, error in
+                if let error = error {
+                    print("Error fetching documents: \(error)")
+                    return
+                }
+                updated(snapshot?.documents.compactMap { T(from: $0.data()) } ?? [])
+            }
+    }
+
     private func addDocumentListener<T: Codable>(documentRef: DocumentReference?, updated: @escaping (T) -> Void) -> ListenerRegistration? {
         documentRef?
             .addSnapshotListener { [weak self] snapshot, error in
@@ -144,6 +153,7 @@ class FirebaseService: DatabaseManager {
 
     func stopListening() {
         inventoryListener?.remove()
+        stacksListener?.remove()
         userListener?.remove()
     }
 
