@@ -17,7 +17,11 @@ struct EditInventoryTray: View {
     static let height: CGFloat = 60
 
     var sectionWidth: CGFloat {
-        min(Self.defaultSectionWidth, (UIScreen.screenWidth - Styles.horizontalPadding * 2) / CGFloat(actions.count))
+        if actions.count == 1 {
+            return 140
+        } else {
+            return min(Self.defaultSectionWidth, (UIScreen.screenWidth - Styles.horizontalPadding * 2) / CGFloat(actions.count))
+        }
     }
 
     @Binding var actions: [ActionConfig]
@@ -30,6 +34,7 @@ struct EditInventoryTray: View {
                         action.tapped()
                     }) {
                         Text(action.name.uppercased())
+                            .multilineTextAlignment(.center)
                             .font(.bold(size: 14))
                             .foregroundColor(.customWhite)
                     }

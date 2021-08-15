@@ -91,6 +91,11 @@ struct ScrollableSegmentedControl: View {
                         sp.scrollTo(value, anchor: .center)
                     }
                 }
+                .onChange(of: titles) { newTitles in
+                    if selectedIndex >= newTitles.count {
+                        selectedIndex = newTitles.count - 1
+                    }
+                }
             }
         }
     }
@@ -102,6 +107,11 @@ struct ScrollableSegmentedControl: View {
             frames[index] = frame
         }
     }
+
+    private func removeFrame(atIndex index: Int) {
+        frames.remove(at: index)
+    }
+
 }
 
 struct ScrollableSegmentedControl_Previews: PreviewProvider {

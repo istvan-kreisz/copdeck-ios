@@ -26,7 +26,7 @@ struct InventoryView: View {
     }
 
     var supportedTrayActions: [TrayAction] {
-        ((selectedStackIndex == 0) ? [.cancel, .delete] : [.cancel, .delete, .editStack, .unstack])
+        ((selectedStackIndex == 0) ? [.deleteItems] : [.deleteItems, .deleteStack, .unstackItems])
     }
 
     var body: some View {
@@ -100,7 +100,9 @@ struct InventoryView: View {
                               inventoryItems: stack.inventoryItems(allInventoryItems: store.state.inventoryItems),
                               selectedInventoryItemId: $selectedInventoryItemId,
                               isEditing: $isEditing,
-                              selectedInventoryItems: $selectedInventoryItems)
+                              selectedInventoryItems: $selectedInventoryItems) {
+                        editedStack = stack
+                    }
                 }
             }
         }
@@ -125,14 +127,12 @@ struct InventoryView: View {
 
     func didTapActionsTray(action: TrayAction) {
         switch action {
-        case .cancel:
-            break
-        case .delete:
+        case .deleteItems:
             store.send(.main(action: .removeFromInventory(inventoryItems: selectedInventoryItems)))
-        case .editStack:
-            editedStack = selectedStack
-        case .unstack:
-            break
+        case .unstackItems:
+            selectedStack.map { store.send(.main(action: .unstack(inventoryItems: selectedInventoryItems, stack: $0))) }
+        case .deleteStack:
+            selectedStack.map { store.send(.main(action: .deleteStack(stack: $0))) }
         }
         isEditing = false
     }
@@ -153,17 +153,18 @@ struct InventoryView_Previews: PreviewProvider {
 
 extension InventoryView {
     enum TrayAction: String {
-        case cancel
-        case delete
-        case editStack
-        case unstack
+        case deleteItems
+        case unstackItems
+        case deleteStack
 
         var name: String {
             switch self {
-            case .cancel, .delete, .unstack:
-                return rawValue
-            case .editStack:
-                return "edit stack"
+            case .deleteItems:
+                return "delete items"
+            case .unstackItems:
+                return "unstack items"
+            case .deleteStack:
+                return "delete stack"
             }
         }
     }
