@@ -111,12 +111,12 @@ struct AddToInventoryView: View {
                                      text: $notes)
                         .padding(.top, 15)
 
-                    RoundedButton(text: "Add \(itemCount) item\(itemCount == 1 ? "" : "s")",
-                                  size: .init(width: 145, height: 60),
-                                  maxSize: nil,
-                                  color: .customBlack,
-                                  accessoryView: nil,
-                                  tapped: { addItems() })
+                    RoundedButton<EmptyView>(text: "Add \(itemCount) item\(itemCount == 1 ? "" : "s")",
+                                             size: .init(width: 145, height: 60),
+                                             maxSize: nil,
+                                             color: .customBlack,
+                                             accessoryView: nil,
+                                             tapped: { addItems() })
                         .centeredHorizontally()
                         .padding(.top, 15)
                 }

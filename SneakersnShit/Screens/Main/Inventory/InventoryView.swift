@@ -17,6 +17,7 @@ struct InventoryView: View {
     @State private var selectedInventoryItems: [InventoryItem] = []
     @State private var selectedStackIndex = 0
     @State private var editedStack: Stack?
+    @State private var showAddNewStackAlert = false
 
     @Binding var shouldShowTabBar: Bool
     @Binding var settingsPresented: Bool
@@ -91,15 +92,17 @@ struct InventoryView: View {
                                  placeHolder: "Search your inventory",
                                  style: .white,
                                  text: $searchText)
-                RoundedButton(text: "Edit",
-                              size: .init(width: 80, height: 32),
-                              color: .customBlue,
-                              accessoryView: nil,
-                              tapped: { isEditing.toggle() })
+                RoundedButton<EmptyView>(text: "Edit",
+                                         size: .init(width: 80, height: 32),
+                                         color: .customBlue,
+                                         accessoryView: nil,
+                                         tapped: { isEditing.toggle() })
             }
             .withDefaultPadding(padding: .horizontal)
 
-            ScrollableSegmentedControl(selectedIndex: $selectedStackIndex, titles: stackTitles, button: .init(title: "New Stack", tapped: addNewStack))
+            ScrollableSegmentedControl(selectedIndex: $selectedStackIndex,
+                                       titles: stackTitles,
+                                       button: .init(title: "New Stack", tapped: { showAddNewStackAlert = true }))
                 .withDefaultPadding(padding: .horizontal)
             PagerView(pageCount: pageCount, currentIndex: $selectedStackIndex) {
                 ForEach(store.state.stacks) { stack in
@@ -131,6 +134,9 @@ struct InventoryView: View {
         .sheet(isPresented: $settingsPresented) {
             SettingsView(settings: store.state.settings, isPresented: $settingsPresented)
         }
+//        .withTextFieldAlert(isShowing: $showAddNewStackAlert, text: .constant(""), title: "Create new stack") { stackName in
+//            addNewStack(withName: stackName)
+//        }
     }
 
     func didTapActionsTray(action: TrayAction) {
@@ -145,8 +151,8 @@ struct InventoryView: View {
         isEditing = false
     }
 
-    func addNewStack() {
-        store.send(.main(action: .addStack(stack: .init(id: UUID().uuidString, name: "new", isPublished: false, items: []))))
+    func addNewStack(withName name: String) {
+        store.send(.main(action: .addStack(stack: .init(id: UUID().uuidString, name: name, isPublished: false, items: []))))
     }
 }
 

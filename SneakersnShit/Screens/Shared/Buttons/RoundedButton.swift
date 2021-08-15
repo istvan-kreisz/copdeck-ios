@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct RoundedButton: View {
-    enum Position {
-        case left, right, middle, none
-    }
+enum RoundedButtonPosition {
+    case left, right, middle, none
+}
 
+struct RoundedButton<V: View>: View {
     let text: String
     let size: CGSize
     let maxSize: CGSize?
@@ -20,7 +20,7 @@ struct RoundedButton: View {
     let borderColor: Color
     let textColor: Color
     let padding: CGFloat
-    let accessoryView: (AnyView, Position, CGFloat?, Position)?
+    let accessoryView: (V, RoundedButtonPosition, CGFloat?, RoundedButtonPosition)?
     let tapped: () -> Void
 
     init(text: String,
@@ -31,7 +31,7 @@ struct RoundedButton: View {
          borderColor: Color = .clear,
          textColor: Color = .customWhite,
          padding: CGFloat = 20,
-         accessoryView: (AnyView, Position, CGFloat?, Position)?,
+         accessoryView: (V, RoundedButtonPosition, CGFloat?, RoundedButtonPosition)?,
          tapped: @escaping () -> Void) {
         self.text = text
         self.size = size
@@ -89,10 +89,10 @@ struct RoundedButton: View {
 
 struct RoundedButton_Previews: PreviewProvider {
     static var previews: some View {
-        RoundedButton(text: "Button",
-                      size: .init(width: 300, height: 50),
-                      color: .customBlack,
-                      accessoryView: nil,
-                      tapped: {})
+        RoundedButton<EmptyView>(text: "Button",
+                                 size: .init(width: 300, height: 50),
+                                 color: .customBlack,
+                                 accessoryView: nil,
+                                 tapped: {})
     }
 }

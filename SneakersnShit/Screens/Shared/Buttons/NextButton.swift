@@ -14,15 +14,15 @@ struct NextButton: View {
     let color: Color
     let tapped: () -> Void
 
-    func iconView() -> AnyView {
-        return AnyView(ZStack {
+    @ViewBuilder func iconView() -> some View {
+        ZStack {
             Circle()
                 .fill(Color.customWhite.opacity(0.2))
                 .frame(width: 30, height: 30, alignment: .center)
             Image(systemName: "chevron.right")
                 .font(.bold(size: 14))
                 .foregroundColor(.customWhite)
-        })
+        }
     }
 
     init(text: String,

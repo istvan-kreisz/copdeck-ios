@@ -94,4 +94,8 @@ extension View {
     func withSnackBar(text: String, shouldShow: Binding<Bool>, actionText: String? = nil, action: (() -> Void)? = nil) -> some View {
         ModifiedContent(content: self, modifier: WithSnackbar(text: text, shouldShow: shouldShow, actionText: actionText, action: action))
     }
+
+//    func withTextFieldAlert(isShowing: Binding<Bool>, text: Binding<String>, title: String, didTapOkay: @escaping (String) -> Void) -> some View {
+//        TextFieldAlert(isShowing: isShowing, text: text, presenting: self, title: title, didTapOkay: didTapOkay)
+//    }
 }
