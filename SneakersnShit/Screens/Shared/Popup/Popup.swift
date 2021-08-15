@@ -47,7 +47,7 @@ struct Popup<Content: View>: View {
 
     var body: some View {
         ZStack {
-            Color(r: 38, g: 38, b: 38)
+            Color(r: 38, g: 38, b: 38, opacity: 0.62)
                 .edgesIgnoringSafeArea(.all)
                 .onTapGesture { isShowing = false }
             VStack(alignment: .center, spacing: 9) {

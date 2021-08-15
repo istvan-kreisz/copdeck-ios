@@ -9,8 +9,8 @@ import UIKit
 import SwiftUI
 
 extension Color {
-    init(r: Int, g: Int, b: Int) {
-        self.init(red: Double(r) / 255, green: Double(g) / 255, blue: Double(b) / 255)
+    init(r: Int, g: Int, b: Int, opacity: Double = 1) {
+        self.init(red: Double(r) / 255, green: Double(g) / 255, blue: Double(b) / 255, opacity: opacity)
     }
 
     static var customBackground = Color("Background")
