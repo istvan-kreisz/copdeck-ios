@@ -34,6 +34,14 @@ struct AppState: Equatable {
         exchangeRates ?? .default
     }
 
+    var allStackIndex: Int? {
+        stacks.firstIndex(where: { $0.id == "all" })
+    }
+
+    var allStack: Stack? {
+        allStackIndex.map { stacks[$0] }
+    }
+
     func requestInfo(for storeId: StoreId) -> ScraperRequestInfo? {
         requestInfo.first(where: { $0.storeId == storeId })
     }

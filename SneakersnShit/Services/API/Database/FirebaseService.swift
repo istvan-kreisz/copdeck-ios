@@ -66,6 +66,7 @@ class FirebaseService: DatabaseManager {
     func setup(userId: String) {
         userRef = firestore.collection("users").document(userId)
         userInventoryRef = userRef?.collection("inventory")
+        userStacksRef = userRef?.collection("stacks")
 
         listenToChanges()
     }
@@ -188,9 +189,36 @@ class FirebaseService: DatabaseManager {
 
     func delete(inventoryItems: [InventoryItem]) {
         let batch = firestore.batch()
+        // update inventory items
         inventoryItems
             .forEach { inventoryItem in
                 _ = (userInventoryRef?.document(inventoryItem.id)).map { batch.deleteDocument($0) }
+            }
+        // update stacks
+        stacksSubject
+            .value
+            .filter { stack in
+                stack.items
+                    .map(\.inventoryItemId)
+                    .contains(where: { id in
+                        inventoryItems.map(\.id).contains(id)
+                    })
+            }
+            .map { stack -> Stack in
+                var updatedStack = stack
+                updatedStack.items = updatedStack.items
+                    .filter { item in
+                        !inventoryItems.map(\.id).contains(item.inventoryItemId)
+                    }
+                return updatedStack
+            }
+            .forEach { stack in
+                _ = (userStacksRef?.document(stack.id))
+                    .map { ref in
+                        if let data = try? stack.asDictionary() {
+                            batch.updateData(data, forDocument: ref)
+                        }
+                    }
             }
 
         batch.commit { [weak self] error in
@@ -208,6 +236,26 @@ class FirebaseService: DatabaseManager {
                 }
             }
         }
+    }
+
+    func update(stack: Stack) {
+        if let dict = try? stack.asDictionary() {
+            userStacksRef?
+                .document(stack.id)
+                .setData(dict, merge: true) { [weak self] error in
+                    if let error = error {
+                        self?.errorsSubject.send(AppError(error: error))
+                    }
+                }
+        }
+    }
+
+    func delete(stack: Stack) {
+        userStacksRef?
+            .document(stack.id)
+            .delete { [weak self] error in
+                error.map { self?.errorsSubject.send(AppError(error: $0)) }
+            }
     }
 
     func add(inventoryItems: [InventoryItem]) {
@@ -249,6 +297,14 @@ class FirebaseService: DatabaseManager {
                     }
                 }
         }
+    }
+
+    func stack(inventoryItems: [InventoryItem], stack: Stack) {
+        #warning("remove")
+    }
+
+    func unstack(inventoryItems: [InventoryItem], stack: Stack) {
+        #warning("remove")
     }
 
     func updateUser(user: User) {

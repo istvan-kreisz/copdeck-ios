@@ -14,7 +14,7 @@ func appReducer(state: inout AppState,
                 completed: ((Result<Void, AppError>) -> Void)?) -> AnyPublisher<AppAction, Never> {
     switch action {
     case .none:
-        return Empty(completeImmediately: true).eraseToAnyPublisher()
+        break
     case let .main(action: action):
         switch action {
         case .signOut:
@@ -23,25 +23,20 @@ func appReducer(state: inout AppState,
                 state.firstLoadDone = true
             }
             environment.dataController.stopListening()
-
-            return Empty(completeImmediately: true).eraseToAnyPublisher()
         case let .setUser(user):
             if !state.firstLoadDone {
                 state.firstLoadDone = true
             }
             state.user = user
-            return Empty(completeImmediately: true).eraseToAnyPublisher()
         case let .updateSettings(settings):
             if var updatedUser = state.user {
                 updatedUser.settings = settings
                 updatedUser.inited = true
                 environment.dataController.updateUser(user: updatedUser)
             }
-            return Empty(completeImmediately: true).eraseToAnyPublisher()
         case let .getSearchResults(searchTerm: searchTerm):
             if searchTerm.isEmpty {
                 state.searchResults = []
-                return Empty(completeImmediately: true).eraseToAnyPublisher()
             } else {
                 return environment.dataController.search(searchTerm: searchTerm, settings: state.settings, exchangeRates: state.rates)
                     .map { AppAction.main(action: .setSearchResults(searchResults: $0)) }
@@ -50,7 +45,6 @@ func appReducer(state: inout AppState,
             }
         case let .setSearchResults(searchResults):
             state.searchResults = searchResults
-            return Empty(completeImmediately: true).eraseToAnyPublisher()
         case .getPopularItems:
             return environment.dataController.getPopularItems(settings: state.settings, exchangeRates: state.rates)
                 .map { AppAction.main(action: .setPopularItems(items: $0)) }
@@ -58,28 +52,33 @@ func appReducer(state: inout AppState,
                 .eraseToAnyPublisher()
         case let .setPopularItems(items):
             state.popularItems = items
-            return Empty(completeImmediately: true).eraseToAnyPublisher()
         case let .getItemDetails(item, itemId, forced):
             return environment.dataController.getItemDetails(for: item, itemId: itemId, forced: forced, settings: state.settings, exchangeRates: state.rates)
                 .map { AppAction.main(action: .setSelectedItem(item: $0)) }
                 .catchErrors()
         case .setSelectedItem(let item):
             state.selectedItem = item
-            return Empty(completeImmediately: true).eraseToAnyPublisher()
+        case let .addStack(stack):
+            environment.dataController.update(stack: stack)
+        case let .deleteStack(stack):
+            environment.dataController.delete(stack: stack)
+        case let .updateStack(stack):
+            environment.dataController.update(stack: stack)
         case let .addToInventory(inventoryItems):
             environment.dataController.add(inventoryItems: inventoryItems)
-            return Empty(completeImmediately: true).eraseToAnyPublisher()
-        case let .getInventorySearchResults(searchTerm):
+        case let .getInventorySearchResults(searchTerm, stack):
+            let stackItems = stack.inventoryItems(allInventoryItems: state.inventoryItems)
             if searchTerm.isEmpty {
-                state.inventorySearchResults = state.inventoryItems
-                return Empty(completeImmediately: true).eraseToAnyPublisher()
+                state.inventorySearchResults = stackItems
             } else {
-                state.inventorySearchResults = state.inventoryItems.filter { $0.name.lowercased().fuzzyMatch(searchTerm.lowercased()) }
-                return Empty(completeImmediately: true).eraseToAnyPublisher()
+                state.inventorySearchResults = stackItems.filter { $0.name.lowercased().fuzzyMatch(searchTerm.lowercased()) }
             }
         case let .removeFromInventory(inventoryItems):
             environment.dataController.delete(inventoryItems: inventoryItems)
-            return Empty(completeImmediately: true).eraseToAnyPublisher()
+        case let .stack(inventoryItems, stack):
+            environment.dataController.stack(inventoryItems: inventoryItems, stack: stack)
+        case let .unstack(inventoryItems, stack):
+            environment.dataController.unstack(inventoryItems: inventoryItems, stack: stack)
         case .getExchangeRates:
             return environment.dataController.getExchangeRates(settings: state.settings, exchangeRates: state.rates)
                 .map {
@@ -115,6 +114,6 @@ func appReducer(state: inout AppState,
         case let .setError(error: error):
             state.error = error
         }
-        return Empty(completeImmediately: true).eraseToAnyPublisher()
     }
+    return Empty(completeImmediately: true).eraseToAnyPublisher()
 }

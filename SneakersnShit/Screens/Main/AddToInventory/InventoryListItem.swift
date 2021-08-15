@@ -17,14 +17,14 @@ struct InventoryListItem: View {
     var onSelectorTapped: () -> Void
 
     var body: some View {
-        VerticalListItem<EmptyView>(title: inventoryItem.name,
-                                    imageURL: inventoryItem.imageURL,
-                                    flipImage: inventoryItem.imageURL?.store.id == .klekt,
-                                    requestInfo: requestInfo,
-                                    isEditing: $isEditing,
-                                    isSelected: isSelected,
-                                    accessoryView: nil) {
-            selectedInventoryItemId = inventoryItem.id
+        VerticalListItem(title: inventoryItem.name,
+                         imageURL: inventoryItem.imageURL,
+                         flipImage: inventoryItem.imageURL?.store.id == .klekt,
+                         requestInfo: requestInfo,
+                         isEditing: $isEditing,
+                         isSelected: isSelected,
+                         accessoryView: InventoryViewPills(inventoryItem: inventoryItem).leftAligned()) {
+                selectedInventoryItemId = inventoryItem.id
         } onSelectorTapped: {
             onSelectorTapped()
         }

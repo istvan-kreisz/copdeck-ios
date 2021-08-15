@@ -104,7 +104,6 @@
 		5DA5140926A6149D0067C4A2 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140826A6149D0067C4A2 /* DatabaseManager.swift */; };
 		5DA5140B26A6161A0067C4A2 /* CopDeckSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140A26A6161A0067C4A2 /* CopDeckSettings.swift */; };
 		5DB590E826C556ED006ECEBD /* ScrollableSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB590E726C556ED006ECEBD /* ScrollableSegmentedControl.swift */; };
-		5DB590EA26C56346006ECEBD /* HorizontalPagingViewWithSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB590E926C56346006ECEBD /* HorizontalPagingViewWithSegmentedControl.swift */; };
 		5DBCB6DD25C90A510025BC23 /* StoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DBCB6DC25C90A510025BC23 /* StoreReviewHelper.swift */; };
 		5DC00EAB25C3A331009A3AB9 /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC00EAA25C3A331009A3AB9 /* Authenticator.swift */; };
 		5DC00EAF25C3A387009A3AB9 /* DefaultAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC00EAE25C3A387009A3AB9 /* DefaultAuthenticator.swift */; };
@@ -120,6 +119,7 @@
 		5DE596E626C876790024F7D5 /* PagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE596E526C876790024F7D5 /* PagerView.swift */; };
 		5DE596E826C877120024F7D5 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE596E726C877120024F7D5 /* Stack.swift */; };
 		5DE596EA26C878280024F7D5 /* StackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE596E926C878280024F7D5 /* StackView.swift */; };
+		5DE596EC26C89B800024F7D5 /* Collection+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE596EB26C89B800024F7D5 /* Collection+Extensions.swift */; };
 		5DEBC088269B24BA000EEADC /* ViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEBC087269B24BA000EEADC /* ViewRouter.swift */; };
 		5DEBC08A269B3DE8000EEADC /* Double+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEBC089269B3DE8000EEADC /* Double+Extensions.swift */; };
 		5DF03CAB25DA1CE7001856B5 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03CAA25DA1CE7001856B5 /* ImageView.swift */; };
@@ -226,7 +226,6 @@
 		5DA5140826A6149D0067C4A2 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		5DA5140A26A6161A0067C4A2 /* CopDeckSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopDeckSettings.swift; sourceTree = "<group>"; };
 		5DB590E726C556ED006ECEBD /* ScrollableSegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableSegmentedControl.swift; sourceTree = "<group>"; };
-		5DB590E926C56346006ECEBD /* HorizontalPagingViewWithSegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalPagingViewWithSegmentedControl.swift; sourceTree = "<group>"; };
 		5DBCB6DC25C90A510025BC23 /* StoreReviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreReviewHelper.swift; sourceTree = "<group>"; };
 		5DC00EAA25C3A331009A3AB9 /* Authenticator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Authenticator.swift; sourceTree = "<group>"; };
 		5DC00EAE25C3A387009A3AB9 /* DefaultAuthenticator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAuthenticator.swift; sourceTree = "<group>"; };
@@ -240,6 +239,7 @@
 		5DE596E526C876790024F7D5 /* PagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerView.swift; sourceTree = "<group>"; };
 		5DE596E726C877120024F7D5 /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		5DE596E926C878280024F7D5 /* StackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackView.swift; sourceTree = "<group>"; };
+		5DE596EB26C89B800024F7D5 /* Collection+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Extensions.swift"; sourceTree = "<group>"; };
 		5DEBC087269B24BA000EEADC /* ViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewRouter.swift; sourceTree = "<group>"; };
 		5DEBC089269B3DE8000EEADC /* Double+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extensions.swift"; sourceTree = "<group>"; };
 		5DF03CAA25DA1CE7001856B5 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
@@ -340,6 +340,7 @@
 				5DC2C104269E2BD800674756 /* View+Extensions.swift */,
 				5D9D51F126AC0E8F00AB1F30 /* Optional+Extensions.swift */,
 				5D3DE37326AFA96D009E4D52 /* UINavigationController+Extensions.swift */,
+				5DE596EB26C89B800024F7D5 /* Collection+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -718,7 +719,6 @@
 		5DB590E426C54DAA006ECEBD /* HorizonalPaging */ = {
 			isa = PBXGroup;
 			children = (
-				5DB590E926C56346006ECEBD /* HorizontalPagingViewWithSegmentedControl.swift */,
 				5DB590E726C556ED006ECEBD /* ScrollableSegmentedControl.swift */,
 				5DE596E526C876790024F7D5 /* PagerView.swift */,
 			);
@@ -941,7 +941,6 @@
 				5DCC466E26A8CEDE007671BC /* NewItemCard.swift in Sources */,
 				5D19B0AE26A6D7CA00A31F4E /* AuthenticationAction.swift in Sources */,
 				5D63125026950CB400876D99 /* AppReducer.swift in Sources */,
-				5DB590EA26C56346006ECEBD /* HorizontalPagingViewWithSegmentedControl.swift in Sources */,
 				5D424D1D25C505450008D6F4 /* Modifiers.swift in Sources */,
 				5D63123A26950A5900876D99 /* Stores.swift in Sources */,
 				5DEBC088269B24BA000EEADC /* ViewRouter.swift in Sources */,
@@ -1007,6 +1006,7 @@
 				5D8ABBBF26B1C82500AFD8CF /* ScraperRequestInfo.swift in Sources */,
 				5D9D51F826ADA07700AB1F30 /* Country.swift in Sources */,
 				5DCC467226A8EBB9007671BC /* ToggleButton.swift in Sources */,
+				5DE596EC26C89B800024F7D5 /* Collection+Extensions.swift in Sources */,
 				5DBCB6DD25C90A510025BC23 /* StoreReviewHelper.swift in Sources */,
 				5D424D4725C509AD0008D6F4 /* SignUpView.swift in Sources */,
 				5D54FE2A26C312BF008CD05F /* HorizontaltemListView.swift in Sources */,

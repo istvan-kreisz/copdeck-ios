@@ -125,6 +125,14 @@ class DefaultDataController: DataController {
         databaseManager.setup(userId: userId)
     }
 
+    func delete(stack: Stack) {
+        databaseManager.delete(stack: stack)
+    }
+
+    func update(stack: Stack) {
+        databaseManager.update(stack: stack)
+    }
+
     func add(inventoryItems: [InventoryItem]) {
         databaseManager.add(inventoryItems: inventoryItems)
     }
@@ -139,6 +147,23 @@ class DefaultDataController: DataController {
 
     func delete(inventoryItems: [InventoryItem]) {
         databaseManager.delete(inventoryItems: inventoryItems)
+    }
+
+    func stack(inventoryItems: [InventoryItem], stack: Stack) {
+        var updatedStack = stack
+        updatedStack.items += inventoryItems
+            .filter { inventoryItem in
+                !updatedStack.items.contains(where: { $0.inventoryItemId == inventoryItem.id })
+            }
+            .map { .init(inventoryItemId: $0.id) }
+        databaseManager.update(stack: updatedStack)
+    }
+
+    func unstack(inventoryItems: [InventoryItem], stack: Stack) {
+        let inventoryItemIds = inventoryItems.map(\.id)
+        var updatedStack = stack
+        updatedStack.items = updatedStack.items.filter { !inventoryItemIds.contains($0.inventoryItemId) }
+        databaseManager.update(stack: updatedStack)
     }
 
     func updateUser(user: User) {

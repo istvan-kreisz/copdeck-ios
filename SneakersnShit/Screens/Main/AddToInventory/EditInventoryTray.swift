@@ -8,33 +8,37 @@
 import SwiftUI
 
 struct EditInventoryTray: View {
-    static let sectionWidth: CGFloat = 90
+    struct ActionConfig {
+        let name: String
+        let tapped: () -> Void
+    }
+
+    static let defaultSectionWidth: CGFloat = 90
     static let height: CGFloat = 60
 
-    var didTapCancel: () -> Void
-    var didTapDelete: () -> Void
+    var sectionWidth: CGFloat {
+        min(Self.defaultSectionWidth, (UIScreen.screenWidth - Styles.horizontalPadding * 2) / CGFloat(actions.count))
+    }
+
+    @Binding var actions: [ActionConfig]
 
     var body: some View {
         HStack(alignment: .center, spacing: 0) {
-            Button(action: {
-                didTapCancel()
-            }) {
-                Text("CANCEL")
-                    .font(.bold(size: 14))
-                    .foregroundColor(.customWhite)
+            ForEach(actions.indices) { index in
+                if let action = actions[safe: index] {
+                    Button(action: {
+                        action.tapped()
+                    }) {
+                        Text(action.name.uppercased())
+                            .font(.bold(size: 14))
+                            .foregroundColor(.customWhite)
+                    }
+                    .frame(width: sectionWidth, height: Self.height)
+                    .background(index % 2 == 0 ? Color.customAccent5 : Color.clear)
+                }
             }
-            .frame(width: Self.sectionWidth, height: Self.height)
-            .background(Color.customAccent5)
-            Button(action: {
-                didTapDelete()
-            }) {
-                Text("DELETE")
-                    .font(.bold(size: 14))
-                    .foregroundColor(.customWhite)
-            }
-            .frame(width: Self.sectionWidth, height: Self.height)
         }
-        .frame(width: Self.sectionWidth * 2, height: Self.height)
+        .frame(width: sectionWidth * CGFloat(actions.count), height: Self.height)
         .background(Color.customBlack)
         .cornerRadius(Self.height / 2)
         .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 0)
@@ -43,6 +47,6 @@ struct EditInventoryTray: View {
 
 struct EditInventoryTray_Previews: PreviewProvider {
     static var previews: some View {
-        EditInventoryTray(didTapCancel: {}, didTapDelete: {})
+        EditInventoryTray(actions: .constant([]))
     }
 }

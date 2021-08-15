@@ -14,8 +14,8 @@ struct StackView: View {
     @Binding var searchText: String
     var inventoryItems: [InventoryItem]
     @Binding var selectedInventoryItemId: String?
-    @State private var isEditing = false
-    @State private var selectedInventoryItems: [InventoryItem] = []
+    @Binding var isEditing: Bool
+    @Binding var selectedInventoryItems: [InventoryItem]
 
     var body: some View {
         VStack {
@@ -29,7 +29,8 @@ struct StackView: View {
                     ForEach(inventoryItems) { inventoryItem in
                         InventoryListItem(inventoryItem: inventoryItem,
                                           selectedInventoryItemId: $selectedInventoryItemId,
-                                          isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }), isEditing: $isEditing,
+                                          isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }),
+                                          isEditing: $isEditing,
                                           requestInfo: store.state.requestInfo) {
                                 if selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }) {
                                     selectedInventoryItems = selectedInventoryItems.filter { $0.id != inventoryItem.id }

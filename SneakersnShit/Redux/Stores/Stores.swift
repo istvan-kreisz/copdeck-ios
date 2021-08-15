@@ -37,12 +37,13 @@ extension AppStore {
         environment.dataController.inventoryItemsPublisher
             .sink { [weak self] in
                 self?.state.inventoryItems = $0
+                self?.updateAllStack(withInventoryItems: $0)
             }
             .store(in: &effectCancellables)
 
         environment.dataController.stacksPublisher
-            .sink { [weak self] in
-                self?.state.stacks = $0
+            .sink { [weak self] stacks in
+                self?.state.stacks = (self?.state.allStack.map { [$0] } ?? []) + stacks
             }
             .store(in: &effectCancellables)
 
@@ -64,6 +65,14 @@ extension AppStore {
                 self?.state.requestInfo = $0
             })
             .store(in: &effectCancellables)
+    }
+
+    func updateAllStack(withInventoryItems inventoryItems: [InventoryItem]) {
+        if state.stacks.isEmpty {
+            state.stacks = [.allStack(inventoryItems: inventoryItems)]
+        } else if let allStackIndex = state.allStackIndex {
+            state.stacks[allStackIndex].items = inventoryItems.map { .init(inventoryItemId: $0.id) }
+        }
     }
 
     func setupTimers() {

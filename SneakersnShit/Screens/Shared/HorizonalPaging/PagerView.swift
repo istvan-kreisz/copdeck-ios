@@ -27,7 +27,7 @@ struct PagerView<Content: View>: View {
             }
             .frame(width: geometry.size.width, alignment: .leading)
             .offset(x: -CGFloat(currentIndex) * geometry.size.width)
-            .offset(x: translation)
+            .offset(x: pageCount == 1 ? 0 : translation)
             .animation(.interactiveSpring(), value: currentIndex)
             .animation(.interactiveSpring(), value: translation)
             .simultaneousGesture(DragGesture().updating($translation) { value, state, _ in

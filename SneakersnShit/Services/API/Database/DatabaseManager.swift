@@ -23,10 +23,14 @@ protocol DatabaseManager {
     func getUser(withId id: String) -> AnyPublisher<User, AppError>
     func getItem(withId id: String, settings: CopDeckSettings) -> AnyPublisher<Item, AppError>
     // write
+    func update(stack: Stack)
+    func delete(stack: Stack)
     func add(inventoryItems: [InventoryItem])
     func add(exchangeRates: ExchangeRates)
     func update(item: Item, settings: CopDeckSettings)
     func update(inventoryItem: InventoryItem)
     func delete(inventoryItems: [InventoryItem])
+    func stack(inventoryItems: [InventoryItem], stack: Stack)
+    func unstack(inventoryItems: [InventoryItem], stack: Stack)
     func updateUser(user: User)
 }

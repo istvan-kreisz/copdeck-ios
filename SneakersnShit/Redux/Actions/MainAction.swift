@@ -23,9 +23,14 @@ enum MainAction {
     case getItemDetails(item: Item?, itemId: String, forced: Bool)
     case setSelectedItem(item: Item?)
     // inventory
+    case addStack(stack: Stack)
+    case deleteStack(stack: Stack)
+    case updateStack(stack: Stack)
     case addToInventory(inventoryItems: [InventoryItem])
-    case getInventorySearchResults(searchTerm: String)
+    case getInventorySearchResults(searchTerm: String, stack: Stack)
     case removeFromInventory(inventoryItems: [InventoryItem])
+    case stack(inventoryItems: [InventoryItem], stack: Stack)
+    case unstack(inventoryItems: [InventoryItem], stack: Stack)
 }
 
 extension MainAction: Identifiable {
@@ -51,12 +56,22 @@ extension MainAction: Identifiable {
             return "getItemDetails"
         case .setSelectedItem:
             return "setSelectedItem"
+        case .addStack:
+            return "addStack"
+        case .deleteStack:
+            return "deleteStack"
+        case .updateStack:
+            return "updateStack"
         case .addToInventory:
             return "addToInventory"
         case .getInventorySearchResults:
             return "getInventorySearchResults"
         case .removeFromInventory:
             return "removeFromInventory"
+        case .stack:
+            return "stack"
+        case .unstack:
+            return "unstack"
         }
     }
 }

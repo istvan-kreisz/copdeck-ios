@@ -16,26 +16,46 @@ struct InventoryView: View {
     @State private var isEditing = false
     @State private var selectedInventoryItems: [InventoryItem] = []
     @State private var selectedStackIndex = 0
+    @State private var editedStack: Stack?
 
     @Binding var shouldShowTabBar: Bool
     @Binding var settingsPresented: Bool
 
-    var inventoryItems: [InventoryItem] {
-        searchText.isEmpty ? store.state.inventoryItems : (store.state.inventorySearchResults ?? [])
+    var selectedStack: Stack? {
+        store.state.stacks[safe: selectedStackIndex]
     }
 
-    @State var titles = ["First", "Second", "Third"]
+    var supportedTrayActions: [TrayAction] {
+        ((selectedStackIndex == 0) ? [.cancel, .delete] : [.cancel, .delete, .editStack, .unstack])
+    }
 
     var body: some View {
-        let pageCount = Binding<Int>(get: { titles.count }, set: { _ in })
+        let pageCount = Binding<Int>(get: { store.state.stacks.count }, set: { _ in })
+        let stackTitles = Binding<[String]>(get: { store.state.stacks.map { $0.name } }, set: { _ in })
         let isEditingInventoryItem = Binding<Bool>(get: { selectedInventoryItemId != nil },
                                                    set: { selectedInventoryItemId = $0 ? selectedInventoryItemId : nil })
+        let actionsTrayActions = Binding<[EditInventoryTray.ActionConfig]>(get: {
+                                                                               supportedTrayActions
+                                                                                   .map { action in
+                                                                                       .init(name: action.name) { didTapActionsTray(action: action) }
+                                                                                   }
+                                                                           },
+                                                                           set: { _ in })
+        let showEditedStack = Binding<Bool>(get: { editedStack?.id != nil },
+                                            set: { editedStack = $0 ? editedStack : nil })
+
         ForEach(store.state.inventoryItems) { inventoryItem in
             NavigationLink(destination: InventoryItemDetailView(inventoryItem: inventoryItem,
                                                                 isEditingInventoryItem: isEditingInventoryItem),
                            tag: inventoryItem.id,
                            selection: $selectedInventoryItemId) { EmptyView() }
         }
+        if let editedStack = editedStack {
+            NavigationLink(destination: EmptyView(),
+                           isActive: showEditedStack) { EmptyView() }
+                .isDetailLink(false)
+        }
+
         VStack(alignment: .leading, spacing: 19) {
             HStack {
                 Text("Inventory")
@@ -72,38 +92,53 @@ struct InventoryView: View {
             }
             .withDefaultPadding(padding: .horizontal)
 
-            ScrollableSegmentedControl(selectedIndex: $selectedStackIndex, titles: $titles)
+            ScrollableSegmentedControl(selectedIndex: $selectedStackIndex, titles: stackTitles, button: .init(title: "New Stack", tapped: addNewStack))
                 .withDefaultPadding(padding: .horizontal)
             PagerView(pageCount: pageCount, currentIndex: $selectedStackIndex) {
                 ForEach(store.state.stacks) { stack in
                     StackView(searchText: $searchText,
                               inventoryItems: stack.inventoryItems(allInventoryItems: store.state.inventoryItems),
-                              selectedInventoryItemId: $selectedInventoryItemId)
+                              selectedInventoryItemId: $selectedInventoryItemId,
+                              isEditing: $isEditing,
+                              selectedInventoryItems: $selectedInventoryItems)
                 }
             }
         }
-        .withFloatingButton(button: EditInventoryTray(didTapCancel: {
-            isEditing = false
-        }, didTapDelete: {
-            deleteFromInventory(inventoryItems: selectedInventoryItems)
-            isEditing = false
-        })
+        .withFloatingButton(button: EditInventoryTray(actions: actionsTrayActions)
             .padding(.bottom, UIApplication.shared.safeAreaInsets().bottom)
             .if(!isEditing) { $0.hidden() })
         .onChange(of: searchText) { searchText in
-            store.send(.main(action: .getInventorySearchResults(searchTerm: searchText)))
+            guard let stack = selectedStack else { return }
+            store.send(.main(action: .getInventorySearchResults(searchTerm: searchText, stack: stack)))
         }
         .onChange(of: isEditing) { editing in
             shouldShowTabBar = !editing
             selectedInventoryItems = []
+        }
+        .onChange(of: selectedStackIndex) { stackIndex in
+            isEditing = false
         }
         .sheet(isPresented: $settingsPresented) {
             SettingsView(settings: store.state.settings, isPresented: $settingsPresented)
         }
     }
 
-    func deleteFromInventory(inventoryItems: [InventoryItem]) {
-        store.send(.main(action: .removeFromInventory(inventoryItems: inventoryItems)))
+    func didTapActionsTray(action: TrayAction) {
+        switch action {
+        case .cancel:
+            break
+        case .delete:
+            store.send(.main(action: .removeFromInventory(inventoryItems: selectedInventoryItems)))
+        case .editStack:
+            editedStack = selectedStack
+        case .unstack:
+            break
+        }
+        isEditing = false
+    }
+
+    func addNewStack() {
+        store.send(.main(action: .addStack(stack: .init(id: UUID().uuidString, name: "new", isPublished: false, items: []))))
     }
 }
 
@@ -112,6 +147,24 @@ struct InventoryView_Previews: PreviewProvider {
         return Group {
             InventoryView(shouldShowTabBar: .constant(true), settingsPresented: .constant(false))
                 .environmentObject(AppStore.default)
+        }
+    }
+}
+
+extension InventoryView {
+    enum TrayAction: String {
+        case cancel
+        case delete
+        case editStack
+        case unstack
+
+        var name: String {
+            switch self {
+            case .cancel, .delete, .unstack:
+                return rawValue
+            case .editStack:
+                return "edit stack"
+            }
         }
     }
 }
