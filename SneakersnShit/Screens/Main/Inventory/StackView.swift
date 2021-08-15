@@ -42,10 +42,10 @@ struct StackView: View {
                         .withDefaultPadding(padding: .horizontal)
                     }
                     .padding(.vertical, 6)
-                    AccessoryButton(title: "Add / Delete Stack Items",
+                    AccessoryButton(title: "Add / Delete Items",
                                     color: .customBlue,
                                     textColor: .customBlue,
-                                    width: 140,
+                                    width: 170,
                                     imageName: "plus",
                                     tapped: didTapEditStack)
                         .leftAligned()

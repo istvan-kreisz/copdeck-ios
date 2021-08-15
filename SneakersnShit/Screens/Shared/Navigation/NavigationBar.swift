@@ -18,6 +18,7 @@ struct NavigationBar: View {
     let style: Style
 
     static let lightBackgroundColor = Color(r: 233, g: 233, b: 236)
+    static let titlePadding: CGFloat = 15
 
     private var backgroundColor: Color {
         switch style {
@@ -66,13 +67,14 @@ struct NavigationBar: View {
                     .font(.bold(size: 12))
                     .foregroundColor(backgroundColor)
                     .padding(.leading, isBackButtonVisible ? -38 : 0)
-                    .frame(maxWidth: UIScreen.screenWidth - 180 + (isBackButtonVisible ? 0 : 130))
+                    .frame(maxWidth: UIScreen.screenWidth - 180 - Self.titlePadding * 2 + (isBackButtonVisible ? 0 : 130))
                     .lineLimit(1)
+                    .fixedSize()
+                    .padding(.horizontal, Self.titlePadding)
                     .background(Capsule()
                         .fill(foregroundColor)
                         .frame(height: 38)
                         .padding(.leading, isBackButtonVisible ? -38 : 0))
-
                 Spacer()
             }
         }
