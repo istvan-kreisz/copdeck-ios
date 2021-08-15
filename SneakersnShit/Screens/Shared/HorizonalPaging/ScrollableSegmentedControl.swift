@@ -25,8 +25,7 @@ struct ScrollableSegmentedControl: View {
         self._selectedIndex = selectedIndex
         self._titles = titles
         self.button = button
-        #warning("fix")
-        frames = [CGRect](repeating: .zero, count: titles.wrappedValue.count)
+        self._frames = State<[CGRect]>(initialValue: [CGRect](repeating: .zero, count: titles.wrappedValue.count))
     }
 
     var body: some View {
@@ -103,15 +102,16 @@ struct ScrollableSegmentedControl: View {
     private func setFrame(index: Int, frame: CGRect) {
         if index >= frames.count {
             frames.append(frame)
-        } else {
+        } else if frames[safe: index] != nil {
             frames[index] = frame
         }
     }
 
     private func removeFrame(atIndex index: Int) {
-        frames.remove(at: index)
+        if frames[safe: index] != nil {
+            frames.remove(at: index)
+        }
     }
-
 }
 
 struct ScrollableSegmentedControl_Previews: PreviewProvider {
