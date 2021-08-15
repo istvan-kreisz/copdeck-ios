@@ -212,3 +212,27 @@ struct WithSnackbar: ViewModifier {
         }
     }
 }
+
+struct WithTextFieldPopup: ViewModifier {
+    @Binding var isShowing: Bool
+    let title: String
+    let subtitle: String?
+    let placeHolder: String
+    let actionTitle: String
+    let action: (String) -> Void
+
+    func body(content: Content) -> some View {
+        ZStack {
+            content
+            TextFieldPopup(isShowing: $isShowing,
+                           title: title,
+                           subtitle: subtitle,
+                           placeholder: placeHolder,
+                           actionTitle: actionTitle) {
+                action($0)
+                isShowing = false
+            }
+        }
+    }
+}
+

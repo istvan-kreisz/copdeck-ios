@@ -33,8 +33,9 @@ struct MainContainerView: View {
                 SearchView()
                     .withTabViewWrapper(viewRouter: viewRouter, store: store, shouldShow: $shouldShowTabBar)
             case .inventory:
-                InventoryView(shouldShowTabBar: $shouldShowTabBar, settingsPresented: $settingsPresented)
-                    .withTabViewWrapper(viewRouter: viewRouter, store: store, shouldShow: $shouldShowTabBar)
+                InventoryView(shouldShowTabBar: $shouldShowTabBar, settingsPresented: $settingsPresented, viewRouter: viewRouter)
+//                    .withTabViewWrapper(viewRouter: viewRouter, store: store, shouldShow: $shouldShowTabBar)
+//                    .environmentObject(store)
             }
         }
         .hideKeyboardOnScroll()

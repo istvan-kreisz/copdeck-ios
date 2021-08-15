@@ -95,7 +95,17 @@ extension View {
         ModifiedContent(content: self, modifier: WithSnackbar(text: text, shouldShow: shouldShow, actionText: actionText, action: action))
     }
 
-//    func withTextFieldAlert(isShowing: Binding<Bool>, text: Binding<String>, title: String, didTapOkay: @escaping (String) -> Void) -> some View {
-//        TextFieldAlert(isShowing: isShowing, text: text, presenting: self, title: title, didTapOkay: didTapOkay)
-//    }
+    func withTextFieldPopup(isShowing: Binding<Bool>,
+                            title: String,
+                            subtitle: String?,
+                            placeholder: String,
+                            actionTitle: String,
+                            action: @escaping (String) -> Void) -> some View {
+        ModifiedContent(content: self, modifier: WithTextFieldPopup(isShowing: isShowing,
+                                                                    title: title,
+                                                                    subtitle: subtitle,
+                                                                    placeHolder: placeholder,
+                                                                    actionTitle: actionTitle,
+                                                                    action: action))
+    }
 }

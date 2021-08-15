@@ -47,6 +47,7 @@
 		5D424D4725C509AD0008D6F4 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424D4625C509AD0008D6F4 /* SignUpView.swift */; };
 		5D424D4B25C509D20008D6F4 /* PasswordResetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424D4A25C509D20008D6F4 /* PasswordResetView.swift */; };
 		5D488E8925C8D54E00624FEF /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D488E8825C8D54E00624FEF /* AppError.swift */; };
+		5D4E19BC26C9404E00FCF780 /* TextFieldPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D4E19BB26C9404E00FCF780 /* TextFieldPopup.swift */; };
 		5D52E307261303AF00FA02B8 /* Publishers+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D52E306261303AF00FA02B8 /* Publishers+Extensions.swift */; };
 		5D52E30B2613063B00FA02B8 /* Encodable+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D52E30A2613063B00FA02B8 /* Encodable+Extensions.swift */; };
 		5D52E30F26130E2100FA02B8 /* InventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D52E30E26130E2100FA02B8 /* InventoryView.swift */; };
@@ -171,6 +172,7 @@
 		5D424D4625C509AD0008D6F4 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		5D424D4A25C509D20008D6F4 /* PasswordResetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetView.swift; sourceTree = "<group>"; };
 		5D488E8825C8D54E00624FEF /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
+		5D4E19BB26C9404E00FCF780 /* TextFieldPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldPopup.swift; sourceTree = "<group>"; };
 		5D52E306261303AF00FA02B8 /* Publishers+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publishers+Extensions.swift"; sourceTree = "<group>"; };
 		5D52E30A2613063B00FA02B8 /* Encodable+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Encodable+Extensions.swift"; sourceTree = "<group>"; };
 		5D52E30E26130E2100FA02B8 /* InventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryView.swift; sourceTree = "<group>"; };
@@ -445,6 +447,7 @@
 				5D424D1625C505450008D6F4 /* DimView.swift */,
 				5DE596F326C8D64F0024F7D5 /* Popup.swift */,
 				5DE596F526C9355C0024F7D5 /* ActionConfig.swift */,
+				5D4E19BB26C9404E00FCF780 /* TextFieldPopup.swift */,
 			);
 			path = Popup;
 			sourceTree = "<group>";
@@ -1014,6 +1017,7 @@
 				5D424D4B25C509D20008D6F4 /* PasswordResetView.swift in Sources */,
 				5D424D2025C505450008D6F4 /* TextFieldUnderlined.swift in Sources */,
 				5D9D520826AE4CF400AB1F30 /* EditInventoryTray.swift in Sources */,
+				5D4E19BC26C9404E00FCF780 /* TextFieldPopup.swift in Sources */,
 				5DC3538F26117C7F00294DF0 /* ItemDetailView.swift in Sources */,
 				5D424CD425C4FF2F0008D6F4 /* IAPManager.swift in Sources */,
 				5D3E872525C5D3FC00FC65FE /* Array+Extensions.swift in Sources */,
