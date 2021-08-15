@@ -28,7 +28,6 @@ struct SearchView: View {
                                                        itemId: selectedItem.id,
                                                        showAddToInventoryButton: true),
                            isActive: showSelectedItem) { EmptyView() }
-                .isDetailLink(false)
         }
         NavigationLink(destination:
             PopularItemsListView(showView: $showPopularItems,

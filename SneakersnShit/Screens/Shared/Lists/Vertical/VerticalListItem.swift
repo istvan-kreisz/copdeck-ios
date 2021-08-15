@@ -8,6 +8,11 @@
 import SwiftUI
 
 struct VerticalListItem<V: View>: View {
+    enum SelectionStyle {
+        case checkmark
+        case highlight
+    }
+
     var title: String
     var imageURL: ImageURL?
     var flipImage = false
@@ -15,26 +20,31 @@ struct VerticalListItem<V: View>: View {
 
     @Binding var isEditing: Bool
     var isSelected: Bool
+    var selectionStyle: SelectionStyle = .checkmark
     @State var animate = false
 
     var accessoryView: V? = nil
     var onTapped: () -> Void
     var onSelectorTapped: (() -> Void)? = nil
 
+    static var cornerRadius: CGFloat { 12 }
+
     var body: some View {
         ZStack {
-            ZStack {
-                Circle()
-                    .fill(isSelected ? Color.customBlue : Color.customAccent2)
-                    .frame(width: 28, height: 28)
-                if isSelected {
-                    Image(systemName: "checkmark")
-                        .font(.bold(size: 13))
-                        .foregroundColor(.customWhite)
+            if selectionStyle == .checkmark {
+                ZStack {
+                    Circle()
+                        .fill(isSelected ? Color.customBlue : Color.customAccent2)
+                        .frame(width: 28, height: 28)
+                    if isSelected {
+                        Image(systemName: "checkmark")
+                            .font(.bold(size: 13))
+                            .foregroundColor(.customWhite)
+                    }
                 }
+                .rightAligned()
+                .onTapGesture { onSelectorTapped?() }
             }
-            .rightAligned()
-            .onTapGesture { onSelectorTapped?() }
 
             HStack(alignment: .center, spacing: 10) {
                 ItemImageView(withImageURL: imageURL,
@@ -63,8 +73,11 @@ struct VerticalListItem<V: View>: View {
             }
             .padding(12)
             .frame(height: 86)
-            .background(Color.customWhite)
-            .cornerRadius(12)
+            .background(selectionStyle == .checkmark || !isSelected ? Color.customWhite : Color.customBlue.opacity(0.07))
+            .cornerRadius(Self.cornerRadius)
+            .if(selectionStyle == .highlight && isSelected) {
+                $0.overlay(RoundedRectangle(cornerRadius: Self.cornerRadius).stroke(Color.customBlue, lineWidth: 2))
+            }
             .withDefaultShadow()
             .onTapGesture(perform: onTapped)
             .offset(isEditing ? CGSize(width: -48, height: 0) : CGSize.zero)
@@ -76,10 +89,10 @@ struct VerticalListItem<V: View>: View {
 struct ListItem_Previews: PreviewProvider {
     static var previews: some View {
         return VerticalListItem<EmptyView>(title: "yooo",
-                                   imageURL: nil,
-                                   requestInfo: AppStore.default.state.requestInfo,
-                                   isEditing: .constant(false),
-                                   isSelected: false,
-                                   onTapped: {})
+                                           imageURL: nil,
+                                           requestInfo: AppStore.default.state.requestInfo,
+                                           isEditing: .constant(false),
+                                           isSelected: false,
+                                           onTapped: {})
     }
 }

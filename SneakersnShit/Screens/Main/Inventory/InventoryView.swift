@@ -51,9 +51,16 @@ struct InventoryView: View {
                            selection: $selectedInventoryItemId) { EmptyView() }
         }
         if let editedStack = editedStack {
-            NavigationLink(destination: EmptyView(),
+            NavigationLink(destination: SelectStackItemsView(showView: showEditedStack,
+                                                             stack: editedStack,
+                                                             inventoryItems: store.state.inventoryItems,
+                                                             requestInfo: store.state.requestInfo,
+                                                             saveChanges: { updatedStackItems in
+                                                                 var updatedStack = editedStack
+                                                                 updatedStack.items = updatedStackItems
+                                                                 store.send(.main(action: .updateStack(stack: updatedStack)))
+                                                             }),
                            isActive: showEditedStack) { EmptyView() }
-                .isDetailLink(false)
         }
 
         VStack(alignment: .leading, spacing: 19) {
@@ -100,9 +107,10 @@ struct InventoryView: View {
                               inventoryItems: stack.inventoryItems(allInventoryItems: store.state.inventoryItems),
                               selectedInventoryItemId: $selectedInventoryItemId,
                               isEditing: $isEditing,
-                              selectedInventoryItems: $selectedInventoryItems) {
-                        editedStack = stack
-                    }
+                              selectedInventoryItems: $selectedInventoryItems,
+                              didTapEditStack: stack.id == "all" ? nil : {
+                                  editedStack = stack
+                              })
                 }
             }
         }

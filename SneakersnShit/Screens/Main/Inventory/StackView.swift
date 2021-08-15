@@ -16,7 +16,7 @@ struct StackView: View {
     @Binding var selectedInventoryItemId: String?
     @Binding var isEditing: Bool
     @Binding var selectedInventoryItems: [InventoryItem]
-    var didTapEditStack: () -> Void
+    var didTapEditStack: (() -> Void)?
 
     var body: some View {
         VStack {
@@ -42,15 +42,17 @@ struct StackView: View {
                         .withDefaultPadding(padding: .horizontal)
                     }
                     .padding(.vertical, 6)
-                    AccessoryButton(title: "Add / Delete Items",
-                                    color: .customBlue,
-                                    textColor: .customBlue,
-                                    width: 170,
-                                    imageName: "plus",
-                                    tapped: didTapEditStack)
-                        .leftAligned()
-                        .withDefaultPadding(padding: .horizontal)
-                        .padding(.top, 3)
+                    if let didTapEditStack = didTapEditStack {
+                        AccessoryButton(title: "Add / Delete Items",
+                                        color: .customBlue,
+                                        textColor: .customBlue,
+                                        width: 170,
+                                        imageName: "plus",
+                                        tapped: didTapEditStack)
+                            .leftAligned()
+                            .withDefaultPadding(padding: .horizontal)
+                            .padding(.top, 3)
+                    }
 
                     Color.clear.padding(.bottom, 130)
                 }

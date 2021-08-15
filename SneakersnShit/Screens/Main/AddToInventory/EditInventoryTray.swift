@@ -33,13 +33,13 @@ struct EditInventoryTray: View {
                     Button(action: {
                         action.tapped()
                     }) {
-                        Text(action.name.uppercased())
-                            .multilineTextAlignment(.center)
-                            .font(.bold(size: 14))
-                            .foregroundColor(.customWhite)
+                            Text(action.name.uppercased())
+                                .multilineTextAlignment(.center)
+                                .font(.bold(size: 14))
+                                .foregroundColor(.customWhite)
                     }
                     .frame(width: sectionWidth, height: Self.height)
-                    .background(index % 2 == 0 ? Color.customAccent5 : Color.clear)
+                    .background((index % 2 == 0 && actions.count != 1) ? Color.customAccent5 : Color.clear)
                 }
             }
         }
