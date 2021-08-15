@@ -18,7 +18,8 @@ struct AccessoryButton: View {
 
     var body: some View {
         RoundedButton(text: title,
-                      size: .init(width: width, height: 27),
+                      width: width,
+                      height: 27,
                       fontSize: 12,
                       color: .clear,
                       borderColor: color.opacity(0.4),

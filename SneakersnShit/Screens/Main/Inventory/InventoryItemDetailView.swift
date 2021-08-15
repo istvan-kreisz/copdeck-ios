@@ -88,7 +88,8 @@ struct InventoryItemDetailView: View {
 
                     HStack(spacing: 10) {
                         RoundedButton<EmptyView>(text: "Delete item",
-                                                 size: .init(width: 180, height: 60),
+                                                 width: 180,
+                                                 height: 60,
                                                  maxSize: CGSize(width: (UIScreen.screenWidth - Styles.horizontalPadding * 2 - 10) / 2,
                                                                  height: UIScreen.isSmallScreen ? 50 : 60),
                                                  fontSize: UIScreen.isSmallScreen ? 14 : 16,
@@ -99,7 +100,8 @@ struct InventoryItemDetailView: View {
                                                  tapped: { deleteInventoryItem() })
 
                         RoundedButton<EmptyView>(text: "Save changes",
-                                                 size: .init(width: 180, height: 60),
+                                                 width: 180,
+                                                 height: 60,
                                                  maxSize: CGSize(width: (UIScreen.screenWidth - Styles.horizontalPadding * 2 - 10) / 2,
                                                                  height: UIScreen.isSmallScreen ? 50 : 60),
                                                  fontSize: UIScreen.isSmallScreen ? 14 : 16,

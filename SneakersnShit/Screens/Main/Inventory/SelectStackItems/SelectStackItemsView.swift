@@ -64,7 +64,8 @@ struct SelectStackItemsView: View {
         .withDefaultPadding(padding: .top)
         .withBackgroundColor()
         .withFloatingButton(button: RoundedButton<EmptyView>(text: "Save Changes",
-                                                             size: .init(width: 200, height: 60),
+                                                             width: 200,
+                                                             height: 60,
                                                              color: .customBlack,
                                                              accessoryView: nil) {
                 saveChanges(selectedStackItems)

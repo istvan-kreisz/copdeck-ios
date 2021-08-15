@@ -8,11 +8,6 @@
 import SwiftUI
 
 struct EditInventoryTray: View {
-    struct ActionConfig {
-        let name: String
-        let tapped: () -> Void
-    }
-
     static let defaultSectionWidth: CGFloat = 90
     static let height: CGFloat = 60
 

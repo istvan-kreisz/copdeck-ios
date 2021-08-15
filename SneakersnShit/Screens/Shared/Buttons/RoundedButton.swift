@@ -13,7 +13,8 @@ enum RoundedButtonPosition {
 
 struct RoundedButton<V: View>: View {
     let text: String
-    let size: CGSize
+    let width: CGFloat?
+    let height: CGFloat?
     let maxSize: CGSize?
     let fontSize: CGFloat
     let color: Color
@@ -23,8 +24,33 @@ struct RoundedButton<V: View>: View {
     let accessoryView: (V, RoundedButtonPosition, CGFloat?, RoundedButtonPosition)?
     let tapped: () -> Void
 
+    var buttonWidth: CGFloat? {
+        if let width = width {
+            if let maxWidth = maxSize?.width {
+                return min(maxWidth, width)
+            } else {
+                return width
+            }
+        } else {
+            return nil
+        }
+    }
+
+    var buttonHeight: CGFloat? {
+        if let height = height {
+            if let maxHeight = maxSize?.height {
+                return min(maxHeight, height)
+            } else {
+                return height
+            }
+        } else {
+            return nil
+        }
+    }
+
     init(text: String,
-         size: CGSize,
+         width: CGFloat?,
+         height: CGFloat?,
          maxSize: CGSize? = nil,
          fontSize: CGFloat = 16,
          color: Color = .customBlack,
@@ -34,7 +60,8 @@ struct RoundedButton<V: View>: View {
          accessoryView: (V, RoundedButtonPosition, CGFloat?, RoundedButtonPosition)?,
          tapped: @escaping () -> Void) {
         self.text = text
-        self.size = size
+        self.width = width
+        self.height = height
         self.maxSize = maxSize
         self.fontSize = fontSize
         self.color = color
@@ -75,8 +102,7 @@ struct RoundedButton<V: View>: View {
                 }
             }
             .padding(.horizontal, accessoryView?.2 ?? padding)
-            .frame(width: maxSize.map { min($0.width, size.width) } ?? size.width,
-                   height: maxSize.map { min($0.height, size.height) } ?? size.height)
+            .frame(width: buttonWidth, height: buttonHeight)
             .if(color != .clear) {
                 $0.background(Capsule().fill(color))
             }
@@ -90,7 +116,8 @@ struct RoundedButton<V: View>: View {
 struct RoundedButton_Previews: PreviewProvider {
     static var previews: some View {
         RoundedButton<EmptyView>(text: "Button",
-                                 size: .init(width: 300, height: 50),
+                                 width: 300,
+                                 height: 50,
                                  color: .customBlack,
                                  accessoryView: nil,
                                  tapped: {})

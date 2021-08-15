@@ -35,13 +35,13 @@ struct InventoryView: View {
         let stackTitles = Binding<[String]>(get: { store.state.stacks.map { $0.name } }, set: { _ in })
         let isEditingInventoryItem = Binding<Bool>(get: { selectedInventoryItemId != nil },
                                                    set: { selectedInventoryItemId = $0 ? selectedInventoryItemId : nil })
-        let actionsTrayActions = Binding<[EditInventoryTray.ActionConfig]>(get: {
-                                                                               supportedTrayActions
-                                                                                   .map { action in
-                                                                                       .init(name: action.name) { didTapActionsTray(action: action) }
-                                                                                   }
-                                                                           },
-                                                                           set: { _ in })
+        let actionsTrayActions = Binding<[ActionConfig]>(get: {
+                                                             supportedTrayActions
+                                                                 .map { action in
+                                                                     .init(name: action.name) { didTapActionsTray(action: action) }
+                                                                 }
+                                                         },
+                                                         set: { _ in })
         let showEditedStack = Binding<Bool>(get: { editedStack?.id != nil },
                                             set: { editedStack = $0 ? editedStack : nil })
 
@@ -93,7 +93,8 @@ struct InventoryView: View {
                                  style: .white,
                                  text: $searchText)
                 RoundedButton<EmptyView>(text: "Edit",
-                                         size: .init(width: 80, height: 32),
+                                         width: 80,
+                                         height: 32,
                                          color: .customBlue,
                                          accessoryView: nil,
                                          tapped: { isEditing.toggle() })

@@ -112,7 +112,8 @@ struct AddToInventoryView: View {
                         .padding(.top, 15)
 
                     RoundedButton<EmptyView>(text: "Add \(itemCount) item\(itemCount == 1 ? "" : "s")",
-                                             size: .init(width: 145, height: 60),
+                                             width: 145,
+                                             height: 60,
                                              maxSize: nil,
                                              color: .customBlack,
                                              accessoryView: nil,
