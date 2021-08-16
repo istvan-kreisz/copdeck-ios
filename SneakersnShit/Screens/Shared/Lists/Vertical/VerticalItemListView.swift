@@ -20,7 +20,7 @@ struct VerticalItemListView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            VStack(alignment: .leading, spacing: 19) {
+            VStack(alignment: .leading, spacing: 19) { [weak loader] in
                 if let title = title {
                     Text(title)
                         .foregroundColor(.customText1)
@@ -29,7 +29,7 @@ struct VerticalItemListView: View {
                         .padding(.leading, 6)
                         .withDefaultPadding(padding: .horizontal)
                 }
-                if loader.isLoading == true {
+                if loader?.isLoading == true {
                     CustomSpinner(text: "Loading...", animate: true)
                         .padding(.horizontal, 22)
                         .padding(.top, 5)
@@ -42,21 +42,19 @@ struct VerticalItemListView: View {
                 }
             }
 
-            ScrollView(.vertical, showsIndicators: false) {
-                LazyVStack {
-                    ForEach(items ?? []) { item in
-                        VerticalListItem<EmptyView>(title: item.name ?? "",
-                                                    imageURL: item.imageURL,
-                                                    flipImage: item.imageURL?.store.id == .klekt,
-                                                    requestInfo: requestInfo,
-                                                    isEditing: .constant(false),
-                                                    isSelected: false) { selectedItem = item }
-                    }
-                    .withDefaultPadding(padding: .horizontal)
-                    .padding(.top, 5)
-
-                    Color.clear.padding(.bottom, bottomPadding)
+            List {
+                ForEach(items ?? []) { item in
+                    VerticalListItem<EmptyView>(title: item.name ?? "",
+                                                imageURL: item.imageURL,
+                                                flipImage: item.imageURL?.store.id == .klekt,
+                                                requestInfo: requestInfo,
+                                                isEditing: .constant(false),
+                                                isSelected: false) { selectedItem = item }
                 }
+                .withDefaultPadding(padding: .horizontal)
+                .padding(.top, 5)
+
+                Color.clear.padding(.bottom, bottomPadding)
             }
             .padding(.top, 5)
         }

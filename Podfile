@@ -14,8 +14,6 @@ target 'SneakersnShit' do
   pod 'GoogleSignIn'
   # pod 'FBSDKLoginKit'
   pod 'OasisJSBridge'
-  pod 'Wormholy', :configurations => ['Debug']
-
 end
 
 

@@ -26,32 +26,20 @@ struct SearchView: View {
     var body: some View {
         let showSelectedItem = Binding<Bool>(get: { selectedItem?.id != nil },
                                              set: { selectedItem = $0 ? selectedItem : nil })
-        let selectedItemId = Binding<String?>(get: { selectedItem?.id },
-                                              set: { selectedItem = $0 == nil ? nil : selectedItem })
+        NavigationLink(destination: selectedItem.map { item in ItemDetailView(item: item,
+                                                                              showView: showSelectedItem,
+                                                                              itemId: item.id,
+                                                                              showAddToInventoryButton: true) },
+        isActive: showSelectedItem) { EmptyView() }
 
-        ForEach(allItems) { item in
-            NavigationLink(destination: ItemDetailView(item: item,
-                                                       showView: showSelectedItem,
-                                                       itemId: item.id,
-                                                       showAddToInventoryButton: true),
-                           tag: item.id,
-                           selection: selectedItemId) { EmptyView() }
-        }
-//        if let selectedItem = selectedItem {
-//            NavigationLink(destination: ItemDetailView(item: selectedItem,
-//                                                       showView: showSelectedItem,
-//                                                       itemId: selectedItem.id,
-//                                                       showAddToInventoryButton: true),
-//                           isActive: showSelectedItem) { EmptyView() }
-//        }
         NavigationLink(destination:
             PopularItemsListView(showView: $showPopularItems,
                                  items: $store.state.popularItems,
                                  requestInfo: store.state.requestInfo),
             isActive: $showPopularItems) { EmptyView() }
-            .isDetailLink(false)
+//            .isDetailLink(false)
 
-        VStack(alignment: .leading, spacing: 19) {
+        VStack(alignment: .leading, spacing: 19) { [weak searchResultsLoader, weak popularItemsLoader] in
             Text("Search")
                 .foregroundColor(.customText1)
                 .font(.bold(size: 35))
@@ -65,20 +53,24 @@ struct SearchView: View {
                              text: $searchText)
                 .withDefaultPadding(padding: .horizontal)
 
-            HorizontaltemListView(items: $store.state.popularItems,
-                                  selectedItem: $selectedItem,
-                                  showPopularItems: $showPopularItems,
-                                  loader: popularItemsLoader,
-                                  title: "Trending now",
-                                  requestInfo: store.state.requestInfo)
+            if let popularItemsLoader = popularItemsLoader {
+                HorizontaltemListView(items: $store.state.popularItems,
+                                      selectedItem: $selectedItem,
+                                      showPopularItems: $showPopularItems,
+                                      loader: popularItemsLoader,
+                                      title: "Trending now",
+                                      requestInfo: store.state.requestInfo)
+            }
 
-            VerticalItemListView(items: $store.state.searchResults,
-                                 selectedItem: $selectedItem,
-                                 loader: searchResultsLoader,
-                                 title: nil,
-                                 resultsLabelText: "Search results:",
-                                 bottomPadding: 130,
-                                 requestInfo: store.state.requestInfo)
+            if let searchResultsLoader = searchResultsLoader {
+                VerticalItemListView(items: $store.state.searchResults,
+                                     selectedItem: $selectedItem,
+                                     loader: searchResultsLoader,
+                                     title: nil,
+                                     resultsLabelText: "Search results:",
+                                     bottomPadding: 130,
+                                     requestInfo: store.state.requestInfo)
+            }
         }
         .onChange(of: searchText) { searchText in
             store.send(.main(action: .getSearchResults(searchTerm: searchText)), completed: searchResultsLoader.getLoader())

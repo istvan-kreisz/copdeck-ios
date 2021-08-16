@@ -10,17 +10,17 @@ import SwiftUI
 struct RootView: View {
     @EnvironmentObject var store: AppStore
     @State var user: User?
+    @StateObject var viewState = ViewState()
 
-    class ViewState {
-        var firstShow = true
+    class ViewState: ObservableObject {
+        @Published var firstShow = true
     }
 
-    var viewState = ViewState()
-
     var body: some View {
-        let presentErrorAlert = Binding<Bool>(get: { store.state.error != nil
-                                                  && (store.state.error?.title.isEmpty == false ||
-                                                      store.state.error?.message.isEmpty == false)
+        let presentErrorAlert = Binding<Bool>(get: {
+                                                  store.state.error != nil
+                                                      && (store.state.error?.title.isEmpty == false ||
+                                                          store.state.error?.message.isEmpty == false)
                                               },
                                               set: { _ in })
         ZStack {
@@ -62,7 +62,8 @@ struct RootView: View {
                   message: Text((store.state.error?.message) ?? "Unknown Error"),
                   dismissButton: .default(Text("OK")))
         }
-        .onAppear {
+        .onAppear { [weak viewState] in
+            guard let viewState = viewState else { return }
             if viewState.firstShow {
                 viewState.firstShow = false
                 store.send(.authentication(action: .restoreState))

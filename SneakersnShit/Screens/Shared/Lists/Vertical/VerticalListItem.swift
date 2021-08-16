@@ -83,6 +83,7 @@ struct VerticalListItem<V: View>: View {
             .offset(isEditing ? CGSize(width: -48, height: 0) : CGSize.zero)
             .animation(.spring(), value: isEditing)
         }
+        .frame(height: 86)
     }
 }
 

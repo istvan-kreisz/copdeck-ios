@@ -12,9 +12,9 @@ struct TabBar: View {
 
     var body: some View {
         HStack(alignment: .center, spacing: 10) {
-            Button(action: {
-                viewRouter.currentPage = .home
-            }) {
+            Button(action: { [weak viewRouter] in
+                viewRouter?.currentPage = .home
+            }) { [viewRouter] in
                     Image("home")
                         .renderingMode(.template)
                         .frame(height: 24)
@@ -22,9 +22,9 @@ struct TabBar: View {
                         .centeredHorizontally()
             }
             .frame(width: 82)
-            Button(action: {
-                viewRouter.currentPage = .search
-            }) {
+            Button(action: { [weak viewRouter] in
+                viewRouter?.currentPage = .search
+            }) { [viewRouter] in
                     Image("search")
                         .renderingMode(.template)
                         .frame(height: 24)
@@ -32,9 +32,9 @@ struct TabBar: View {
                         .centeredHorizontally()
             }
             .frame(width: 82)
-            Button(action: {
-                viewRouter.currentPage = .inventory
-            }) {
+            Button(action: { [weak viewRouter] in
+                viewRouter?.currentPage = .inventory
+            }) { [viewRouter] in
                     Image("inventory")
                         .renderingMode(.template)
                         .frame(height: 24)

@@ -137,6 +137,7 @@ struct WrappedTabView: ViewModifier {
                 .withFloatingButton(button: TabBar(viewRouter: viewRouter), shouldShow: $shouldShow)
                 .navigationbarHidden()
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 
