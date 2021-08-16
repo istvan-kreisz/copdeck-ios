@@ -24,7 +24,7 @@ struct Popup<Content: View>: View {
     }
 
     var frameWidth: CGFloat {
-        min(375, UIScreen.screenWidth - 16 * 2)
+        min(330, UIScreen.screenWidth - 16 * 2)
     }
 
     var buttonWidth: CGFloat {

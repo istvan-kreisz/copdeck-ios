@@ -224,6 +224,14 @@ extension Item {
     func allPriceRows(priceType: PriceType, feeType: FeeType) -> [PriceRow] {
         sortedSizes.map { prices(size: $0, priceType: priceType, feeType: feeType) }
     }
+
+    func bestPrice(for size: String, feeType: FeeType, priceType: PriceType) -> PriceWithCurrency? {
+        if let bestPrice = prices(size: size, priceType: priceType, feeType: feeType).prices.map(\.price).max() {
+            return .init(price: bestPrice, currencyCode: currency.code)
+        } else {
+            return nil
+        }
+    }
 }
 
 extension Item {

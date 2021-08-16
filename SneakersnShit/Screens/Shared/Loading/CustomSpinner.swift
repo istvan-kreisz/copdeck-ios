@@ -33,7 +33,7 @@ struct CustomSpinner: View {
             }
         }
         .onAppear {
-            self.animate.toggle()
+            animate.toggle()
         }
     }
 }

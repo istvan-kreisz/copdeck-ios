@@ -19,16 +19,31 @@ struct SearchView: View {
 
     @State private var showPopularItems = false
 
+    var allItems: [Item] {
+        (store.state.searchResults ?? []) + (store.state.popularItems ?? []) + (selectedItem.map { [$0] } ?? [])
+    }
+
     var body: some View {
         let showSelectedItem = Binding<Bool>(get: { selectedItem?.id != nil },
                                              set: { selectedItem = $0 ? selectedItem : nil })
-        if let selectedItem = selectedItem {
-            NavigationLink(destination: ItemDetailView(item: selectedItem,
+        let selectedItemId = Binding<String?>(get: { selectedItem?.id },
+                                              set: { selectedItem = $0 == nil ? nil : selectedItem })
+
+        ForEach(allItems) { item in
+            NavigationLink(destination: ItemDetailView(item: item,
                                                        showView: showSelectedItem,
-                                                       itemId: selectedItem.id,
+                                                       itemId: item.id,
                                                        showAddToInventoryButton: true),
-                           isActive: showSelectedItem) { EmptyView() }
+                           tag: item.id,
+                           selection: selectedItemId) { EmptyView() }
         }
+//        if let selectedItem = selectedItem {
+//            NavigationLink(destination: ItemDetailView(item: selectedItem,
+//                                                       showView: showSelectedItem,
+//                                                       itemId: selectedItem.id,
+//                                                       showAddToInventoryButton: true),
+//                           isActive: showSelectedItem) { EmptyView() }
+//        }
         NavigationLink(destination:
             PopularItemsListView(showView: $showPopularItems,
                                  items: $store.state.popularItems,
@@ -69,7 +84,9 @@ struct SearchView: View {
             store.send(.main(action: .getSearchResults(searchTerm: searchText)), completed: searchResultsLoader.getLoader())
         }
         .onAppear {
-            store.send(.main(action: .getPopularItems))
+            if store.state.popularItems?.isEmpty != false {
+                store.send(.main(action: .getPopularItems))
+            }
         }
     }
 }

@@ -27,13 +27,15 @@ struct MainContainerView: View {
         ZStack {
             switch viewRouter.currentPage {
             case .home:
-                FeedView()
-                    .withTabViewWrapper(viewRouter: viewRouter, store: store, shouldShow: $shouldShowTabBar)
+                EmptyView()
+//                FeedView()
+//                    .withTabViewWrapper(viewRouter: viewRouter, store: store, shouldShow: $shouldShowTabBar)
             case .search:
                 SearchView()
                     .withTabViewWrapper(viewRouter: viewRouter, store: store, shouldShow: $shouldShowTabBar)
             case .inventory:
-                InventoryView(shouldShowTabBar: $shouldShowTabBar, settingsPresented: $settingsPresented, viewRouter: viewRouter)
+                EmptyView()
+//                InventoryView(shouldShowTabBar: $shouldShowTabBar, settingsPresented: $settingsPresented, viewRouter: viewRouter)
 //                    .withTabViewWrapper(viewRouter: viewRouter, store: store, shouldShow: $shouldShowTabBar)
 //                    .environmentObject(store)
             }

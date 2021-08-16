@@ -25,7 +25,6 @@ struct PopularItemsListView: View {
                                                        showView: showSelectedItem,
                                                        itemId: item.id,
                                                        showAddToInventoryButton: true),
-
                            tag: item.id,
                            selection: selectedItemId) { EmptyView() }
         }
