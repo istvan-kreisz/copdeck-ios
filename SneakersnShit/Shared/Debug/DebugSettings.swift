@@ -7,8 +7,23 @@
 
 import Foundation
 
+func log(_ value: Any) {
+    if DebugSettings.shared.isInDebugMode {
+        print("------------------")
+        print(value)
+    }
+}
+
 struct DebugSettings {
-    private init() {}
+    let isInDebugMode: Bool
+
+    private init() {
+        #if DEBUG
+            isInDebugMode = true
+        #else
+            isInDebugMode = false
+        #endif
+    }
 
     static let shared = DebugSettings()
 

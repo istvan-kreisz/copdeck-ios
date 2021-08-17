@@ -40,7 +40,8 @@ class DefaultDataController: DataController {
                              forced: Bool,
                              settings: CopDeckSettings,
                              exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
-        localScraper
+        log("refreshing item")
+        return localScraper
             .getItemDetails(for: item, itemId: itemId, forced: forced, settings: settings, exchangeRates: exchangeRates)
             .handleEvents(receiveOutput: { [weak self] item in
                 ItemCache.default.insert(item, forKey: item.id)
@@ -70,6 +71,7 @@ class DefaultDataController: DataController {
                         exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
         let returnValue: AnyPublisher<Item, AppError>
         let databaseId = Item.databaseId(itemId: itemId, settings: settings)
+
         if forced {
             returnValue = refreshItem(for: item, itemId: itemId, forced: forced, settings: settings, exchangeRates: exchangeRates)
         } else {
@@ -79,7 +81,8 @@ class DefaultDataController: DataController {
                         guard let self = self else {
                             return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
                         }
-                        if item.isUptodate {
+                        if let item = item, item.isUptodate {
+                            log("using item from cache")
                             return Just(item).setFailureType(to: AppError.self).eraseToAnyPublisher()
                         } else {
                             return self.databaseManager.getItem(withId: itemId, settings: settings).eraseToAnyPublisher()
@@ -90,6 +93,7 @@ class DefaultDataController: DataController {
                             return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
                         }
                         if item.isUptodate {
+                            log("using item from database")
                             ItemCache.default.insert(item, forKey: item.id)
                             return Just(item).setFailureType(to: AppError.self).eraseToAnyPublisher()
                         } else {

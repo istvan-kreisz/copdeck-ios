@@ -55,12 +55,12 @@ extension MainAction: Identifiable {
             return "setPopularItems"
         case .getItemDetails:
             return "getItemDetails"
-        case .refreshItemIfNeeded:
-            return "refreshItemIfNeeded"
+        case let .refreshItemIfNeeded(itemId):
+            return "refreshItemIfNeeded \(itemId)"
         case .setSelectedItem:
             return "setSelectedItem"
-        case .addItemToCache:
-            return "addItemToCache"
+        case let .addItemToCache(item):
+            return "addItemToCache \(item.id)"
         case .addStack:
             return "addStack"
         case .deleteStack:

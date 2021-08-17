@@ -37,13 +37,9 @@ final class Cache<Key: Hashable, Value> {
         return entry.value
     }
 
-    func valuePublisher(forKey key: Key) -> AnyPublisher<Value, AppError> {
+    func valuePublisher(forKey key: Key) -> AnyPublisher<Value?, Never> {
         Future { [weak self] promise in
-            if let value = self?.value(forKey: key) {
-                promise(.success(value))
-            } else {
-                promise(.failure(AppError.unknown))
-            }
+            promise(.success(self?.value(forKey: key)))
         }.eraseToAnyPublisher()
     }
 

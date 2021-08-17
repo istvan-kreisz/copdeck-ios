@@ -41,7 +41,7 @@ extension AppStore {
             .sink { [weak self] in
                 self?.state.inventoryItems = $0
                 self?.updateAllStack(withInventoryItems: $0)
-                if self?.state.didFetchItemPrices == false {
+                if !$0.isEmpty && self?.state.didFetchItemPrices == false {
                     self?.state.didFetchItemPrices = true
                     self?.refreshItemPricesIfNeeded()
                 }
@@ -103,14 +103,26 @@ extension AppStore {
     }
 
     func refreshItemPricesIfNeeded() {
-        let allItemIds = Array(Set(state.inventoryItems.map { $0.itemId }))
-//        if let lastUpdated = state.exchangeRates?.updated {
-//            if lastUpdated.isOlderThan(minutes: 60) {
-//                send(.main(action: .getExchangeRates))
-//            }
-//        } else {
-//            send(.main(action: .getExchangeRates))
-//        }
-    }
+        let idsToRefresh = Set(state.inventoryItems.compactMap { $0.itemId }).filter { id in
+            if let item = ItemCache.default.value(forKey: id) {
+                return !item.isUptodate
+            } else {
+                return true
+            }
+        }
+        var idsWithDelay = idsToRefresh
+            .map { ($0, Double.random(in: 0.2 ... 0.45)) }
 
+        idsWithDelay = idsWithDelay
+            .enumerated()
+            .map { offset, idWithDelay in
+                (idWithDelay.0, idWithDelay.1 + (idsWithDelay[safe: offset - 1]?.1 ?? 0))
+            }
+        idsWithDelay
+            .forEach { id, delay in
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+                    self?.send(.main(action: .refreshItemIfNeeded(itemId: id)))
+                }
+            }
+    }
 }
