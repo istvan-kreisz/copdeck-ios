@@ -8,7 +8,7 @@
 import Foundation
 
 class ViewRouter: ObservableObject {
-    @Published var currentPage: Page = .search
+    @Published var currentPage = 0
 }
 
 enum Page {

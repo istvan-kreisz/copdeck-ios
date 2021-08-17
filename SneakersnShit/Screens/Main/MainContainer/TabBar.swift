@@ -13,32 +13,32 @@ struct TabBar: View {
     var body: some View {
         HStack(alignment: .center, spacing: 10) {
             Button(action: { [weak viewRouter] in
-                viewRouter?.currentPage = .home
+                viewRouter?.currentPage = 0
             }) { [viewRouter] in
                     Image("home")
                         .renderingMode(.template)
                         .frame(height: 24)
-                        .foregroundColor(viewRouter.currentPage == .home ? .customText1 : .customAccent1)
+                        .foregroundColor(viewRouter.currentPage == 0 ? .customText1 : .customAccent1)
                         .centeredHorizontally()
             }
             .frame(width: 82)
             Button(action: { [weak viewRouter] in
-                viewRouter?.currentPage = .search
+                viewRouter?.currentPage = 1
             }) { [viewRouter] in
                     Image("search")
                         .renderingMode(.template)
                         .frame(height: 24)
-                        .foregroundColor(viewRouter.currentPage == .search ? .customText1 : .customAccent1)
+                        .foregroundColor(viewRouter.currentPage == 1 ? .customText1 : .customAccent1)
                         .centeredHorizontally()
             }
             .frame(width: 82)
             Button(action: { [weak viewRouter] in
-                viewRouter?.currentPage = .inventory
+                viewRouter?.currentPage = 2
             }) { [viewRouter] in
                     Image("inventory")
                         .renderingMode(.template)
                         .frame(height: 24)
-                        .foregroundColor(viewRouter.currentPage == .inventory ? .customText1 : .customAccent1)
+                        .foregroundColor(viewRouter.currentPage == 2 ? .customText1 : .customAccent1)
                         .centeredHorizontally()
             }
             .frame(width: 82)

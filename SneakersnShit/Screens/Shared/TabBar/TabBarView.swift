@@ -8,16 +8,30 @@
 import SwiftUI
 import UIKit
 
+struct TabBarElementItem {
+    var title: String
+    var systemImageName: String
+}
+
+protocol TabBarElementView: View {
+    associatedtype Content
+    var content: Content { get set }
+    var tabBarElementItem: TabBarElementItem { get set }
+}
+
 fileprivate struct UITabBarControllerWrapper: UIViewControllerRepresentable {
     var viewControllers: [UIViewController]
+    @Binding var selectedIndex: Int
 
     func makeUIViewController(context: UIViewControllerRepresentableContext<UITabBarControllerWrapper>) -> UITabBarController {
-        let tabBar = UITabBarController()
-        return tabBar
+        let tabBarController = UITabBarController()
+        tabBarController.tabBar.isHidden = true
+        tabBarController.viewControllers = viewControllers
+        return tabBarController
     }
 
     func updateUIViewController(_ uiViewController: UITabBarController, context: UIViewControllerRepresentableContext<UITabBarControllerWrapper>) {
-        uiViewController.setViewControllers(viewControllers, animated: true)
+        uiViewController.selectedIndex = selectedIndex
     }
 
     func makeCoordinator() -> Coordinator {
@@ -33,61 +47,54 @@ fileprivate struct UITabBarControllerWrapper: UIViewControllerRepresentable {
     }
 }
 
-struct TabBarElementItem {
-    var title: String
-    var systemImageName: String
-}
-
-protocol TabBarElementView: View {
-    associatedtype Content
-    var content: Content { get set }
-    var tabBarElementItem: TabBarElementItem { get set }
-}
-
-struct TabBarElement: TabBarElementView {
-    var content: AnyView
+struct TabBarElement<Content: View>: TabBarElementView {
+    var content: Content
 
     var tabBarElementItem: TabBarElementItem
 
-    init<Content: View>(tabBarElementItem: TabBarElementItem, @ViewBuilder _ content: () -> Content) {
+    init(tabBarElementItem: TabBarElementItem, @ViewBuilder _ content: () -> Content) {
         self.tabBarElementItem = tabBarElementItem
-        self.content = AnyView(content())
+        self.content = content()
     }
 
     var body: some View { content }
 }
 
-struct TabBarElement_Previews: PreviewProvider {
-    static var previews: some View {
-        TabBarElement(tabBarElementItem: .init(title: "Test", systemImageName: "house.fill")) {
-            Text("Hello, world!")
-        }
-    }
-}
+struct UITabBarWrapper<Tab1: View, Tab2: View, Tab3: View>: View {
+    let controller1: UIHostingController<TabBarElement<Tab1>>
+    let controller2: UIHostingController<TabBarElement<Tab2>>
+    let controller3: UIHostingController<TabBarElement<Tab3>>
+    @Binding var selectedIndex: Int
 
-struct UITabBarWrapper: View {
-    var controllers: [UIHostingController<TabBarElement>]
+    init(selectedIndex: Binding<Int>,
+         _ tabs: () -> (tab1: TabBarElement<Tab1>, tab2: TabBarElement<Tab2>, tab3: TabBarElement<Tab3>)) {
+        self._selectedIndex = selectedIndex
+        let tabs = tabs()
+        controller1 = UIHostingController(rootView: tabs.tab1)
+        controller1.tabBarItem = UITabBarItem(title: tabs.tab1.tabBarElementItem.title,
+                                              image: UIImage(systemName: tabs.tab1.tabBarElementItem.systemImageName),
+                                              tag: 0)
 
-    init(_ elements: [TabBarElement]) {
-        controllers = elements.enumerated().map {
-            let hostingController = UIHostingController(rootView: $1)
-            hostingController.tabBarItem = UITabBarItem(title: $1.tabBarElementItem.title,
-                                                        image: UIImage.init(systemName: $1.tabBarElementItem.systemImageName),
-                                                        tag: $0)
-            return hostingController
-        }
+        controller2 = UIHostingController(rootView: tabs.tab2)
+        controller2.tabBarItem = UITabBarItem(title: tabs.tab2.tabBarElementItem.title,
+                                              image: UIImage(systemName: tabs.tab2.tabBarElementItem.systemImageName),
+                                              tag: 0)
+
+        controller3 = UIHostingController(rootView: tabs.tab3)
+        controller3.tabBarItem = UITabBarItem(title: tabs.tab3.tabBarElementItem.title,
+                                              image: UIImage(systemName: tabs.tab3.tabBarElementItem.systemImageName),
+                                              tag: 0)
     }
 
     var body: some View {
-        UITabBarControllerWrapper(viewControllers: controllers)
+        UITabBarControllerWrapper(viewControllers: [controller1, controller2, controller3], selectedIndex: $selectedIndex)
     }
 }
 
-struct UITabBarWrapper_Previews: PreviewProvider {
-    static var previews: some View {
-        UITabBarWrapper([TabBarElement(tabBarElementItem:
-            TabBarElementItem(title: "Test 1", systemImageName: "house.fill")) {
-                Text("Test 1 Text")
-        }])
-    }
-}
+// @resultBuilder
+// enum TabBuilder {
+//    static func buildBlock<C0, C1, C2>(_ c0: C0, _ c1: C1, _ c2: C2) -> TupleView<(C0, C1, C2)> where C0: View, C1: View, C2: View {
+//        TupleView((c0, c1, c2))
+//    }
+// }
+
