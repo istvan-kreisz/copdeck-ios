@@ -124,16 +124,15 @@ struct InventoryView: View {
             .withFloatingButton(button: EditInventoryTray(actions: actionsTrayActions)
                 .padding(.bottom, UIApplication.shared.safeAreaInsets().bottom)
                 .if(!isEditing) { $0.hidden() })
-            .onChange(of: searchText) { searchText in
-                guard let stack = selectedStack else { return }
-                store.send(.main(action: .getInventorySearchResults(searchTerm: searchText, stack: stack)))
-            }
             .onChange(of: isEditing) { editing in
                 shouldShowTabBar = !editing
                 selectedInventoryItems = []
             }
             .onChange(of: selectedStackIndex) { stackIndex in
                 isEditing = false
+            }
+            .onChange(of: editedStack) { stack in
+                shouldShowTabBar = stack == nil
             }
             .sheet(isPresented: $settingsPresented) {
                 SettingsView(settings: store.state.settings, isPresented: $settingsPresented)

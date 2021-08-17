@@ -10,6 +10,9 @@ import Foundation
 typealias AppStore = ReduxStore<AppState, AppAction, World>
 
 extension AppStore {
+    static let exchangeRatesRefreshRateMin: TimeInterval = 1
+    static let pricesRefreshRateMin: TimeInterval = 30
+
     static let `default`: AppStore = {
         let appStore = AppStore(state: .init(), reducer: appReducer, environment: World())
         appStore.setup()
@@ -38,6 +41,10 @@ extension AppStore {
             .sink { [weak self] in
                 self?.state.inventoryItems = $0
                 self?.updateAllStack(withInventoryItems: $0)
+                if self?.state.didFetchItemPrices == false {
+                    self?.state.didFetchItemPrices = true
+                    self?.refreshItemPricesIfNeeded()
+                }
             }
             .store(in: &effectCancellables)
 
@@ -77,8 +84,11 @@ extension AppStore {
 
     func setupTimers() {
         refreshExchangeRatesIfNeeded()
-        Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
+        Timer.scheduledTimer(withTimeInterval: 60 * Self.exchangeRatesRefreshRateMin, repeats: true) { [weak self] _ in
             self?.refreshExchangeRatesIfNeeded()
+        }
+        Timer.scheduledTimer(withTimeInterval: 60 * Self.pricesRefreshRateMin, repeats: true) { [weak self] _ in
+            self?.refreshItemPricesIfNeeded()
         }
     }
 
@@ -91,4 +101,16 @@ extension AppStore {
             send(.main(action: .getExchangeRates))
         }
     }
+
+    func refreshItemPricesIfNeeded() {
+        let allItemIds = Array(Set(state.inventoryItems.map { $0.itemId }))
+//        if let lastUpdated = state.exchangeRates?.updated {
+//            if lastUpdated.isOlderThan(minutes: 60) {
+//                send(.main(action: .getExchangeRates))
+//            }
+//        } else {
+//            send(.main(action: .getExchangeRates))
+//        }
+    }
+
 }

@@ -56,8 +56,17 @@ func appReducer(state: inout AppState,
             return environment.dataController.getItemDetails(for: item, itemId: itemId, forced: forced, settings: state.settings, exchangeRates: state.rates)
                 .map { AppAction.main(action: .setSelectedItem(item: $0)) }
                 .catchErrors()
+        case let .refreshItemIfNeeded(itemId):
+            return environment.dataController.getItemDetails(for: nil, itemId: itemId, forced: false, settings: state.settings, exchangeRates: state.rates)
+                .map { AppAction.main(action: .addItemToCache(item: $0)) }
+                .catchErrors()
         case .setSelectedItem(let item):
             state.selectedItem = item
+            if let item = item {
+                ItemCache.default.insert(item, forKey: item.id)
+            }
+        case let .addItemToCache(item):
+            ItemCache.default.insert(item, forKey: item.id)
         case let .addStack(stack):
             environment.dataController.update(stack: stack)
         case let .deleteStack(stack):
@@ -66,13 +75,6 @@ func appReducer(state: inout AppState,
             environment.dataController.update(stack: stack)
         case let .addToInventory(inventoryItems):
             environment.dataController.add(inventoryItems: inventoryItems)
-        case let .getInventorySearchResults(searchTerm, stack):
-            let stackItems = stack.inventoryItems(allInventoryItems: state.inventoryItems)
-            if searchTerm.isEmpty {
-                state.inventorySearchResults = stackItems
-            } else {
-                state.inventorySearchResults = stackItems.filter { $0.name.lowercased().fuzzyMatch(searchTerm.lowercased()) }
-            }
         case let .removeFromInventory(inventoryItems):
             environment.dataController.delete(inventoryItems: inventoryItems)
         case let .stack(inventoryItems, stack):

@@ -7,11 +7,11 @@
 
 import Foundation
 
-enum StoreId: String, Codable, CaseIterable {
+enum StoreId: String, Codable, CaseIterable, Hashable {
     case stockx, klekt, goat
 }
 
-enum StoreName: String, Codable, CaseIterable {
+enum StoreName: String, Codable, CaseIterable, Hashable {
     case StockX, Klekt, GOAT
 }
 
@@ -26,7 +26,7 @@ struct GenericStore: Codable, Equatable, Identifiable {
     let name: String
 }
 
-struct Store: Codable, Equatable, Identifiable {
+struct Store: Codable, Equatable, Identifiable, Hashable {
     let id: StoreId
     let name: StoreName
 }
@@ -43,12 +43,12 @@ enum FeeType: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
-struct ImageURL: Codable, Equatable {
+struct ImageURL: Codable, Equatable, Hashable {
     let url: String
     let store: Store
 }
 
-struct Item: Codable, Equatable, Identifiable {
+struct Item: Codable, Equatable, Identifiable, Hashable {
     let id: String
     let storeInfo: [StoreInfo]
     let storePrices: [StorePrice]
@@ -60,7 +60,7 @@ struct Item: Codable, Equatable, Identifiable {
     let retailPrice: Double?
     let imageURL: ImageURL?
 
-    struct StoreInfo: Codable, Equatable, Identifiable {
+    struct StoreInfo: Codable, Equatable, Identifiable, Hashable {
         let name: String
         let sku: String
         let slug: String
@@ -76,13 +76,13 @@ struct Item: Codable, Equatable, Identifiable {
         var id: String { name }
     }
 
-    struct StorePrice: Codable, Equatable {
+    struct StorePrice: Codable, Equatable, Hashable {
         let retailPrice: Double?
         let store: Store
         let inventory: [StoreInventoryItem]
         let currencyCode: Currency.CurrencyCode?
 
-        struct StoreInventoryItem: Codable, Equatable, Identifiable {
+        struct StoreInventoryItem: Codable, Equatable, Identifiable, Hashable {
             let size: String
             let lowestAsk: Double?
             let lowestAskWithSellerFees: Double?
@@ -265,6 +265,13 @@ extension Item {
 
     static func databaseId(itemId: String, settings: CopDeckSettings) -> String {
         "\(itemId.replacingOccurrences(of: "/", with: "."))-\(settings.feeCalculation.country.region)-\(settings.currency.code.rawValue)"
+    }
+
+    var isUptodate: Bool {
+        guard let updated = updated, !updated.isOlderThan(minutes: AppStore.pricesRefreshRateMin) else {
+            return false
+        }
+        return true
     }
 }
 

@@ -10,14 +10,13 @@ import Foundation
 struct AppState: Equatable {
     var user: User?
     var firstLoadDone = false
+    var didFetchItemPrices = false
     var searchResults: [Item]?
     var popularItems: [Item]?
     var selectedItem: Item?
-    var editedItem: Item?
     var selectedInventoryItem: InventoryItem?
     var inventoryItems: [InventoryItem] = []
     var stacks: [Stack] = []
-    var inventorySearchResults: [InventoryItem]?
     var error: AppError?
     var exchangeRates: ExchangeRates?
     var requestInfo: [ScraperRequestInfo] = []
@@ -48,13 +47,12 @@ struct AppState: Equatable {
 
     mutating func reset() {
         user = nil
+        didFetchItemPrices = false
         searchResults = nil
         selectedItem = nil
-        editedItem = nil
         selectedInventoryItem = nil
         inventoryItems = []
         stacks = []
-        inventorySearchResults = nil
         error = nil
         requestInfo = []
     }

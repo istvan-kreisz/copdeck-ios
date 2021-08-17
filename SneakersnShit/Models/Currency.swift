@@ -11,7 +11,7 @@ struct Currency: Codable, Equatable {
     let code: CurrencyCode
     let symbol: CurrencySymbol
 
-    enum CurrencyCode: String, Codable, Equatable, CaseIterable {
+    enum CurrencyCode: String, Codable, Equatable, CaseIterable, Hashable {
         case gbp = "GBP"
         case usd = "USD"
         case eur = "EUR"
@@ -19,7 +19,7 @@ struct Currency: Codable, Equatable {
         case chf = "CHF"
     }
 
-    enum CurrencySymbol: String, Codable, Equatable, CaseIterable {
+    enum CurrencySymbol: String, Codable, Equatable, CaseIterable, Hashable {
         case gbp = "£"
         case usd = "$"
         case eur = "€"

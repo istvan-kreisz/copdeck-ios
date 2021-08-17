@@ -43,6 +43,7 @@ class DefaultDataController: DataController {
         localScraper
             .getItemDetails(for: item, itemId: itemId, forced: forced, settings: settings, exchangeRates: exchangeRates)
             .handleEvents(receiveOutput: { [weak self] item in
+                ItemCache.default.insert(item, forKey: item.id)
                 self?.databaseManager.update(item: item, settings: settings)
             })
             .map { refreshedItem in
@@ -68,32 +69,41 @@ class DefaultDataController: DataController {
                         settings: CopDeckSettings,
                         exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
         let returnValue: AnyPublisher<Item, AppError>
+        let databaseId = Item.databaseId(itemId: itemId, settings: settings)
         if forced {
             returnValue = refreshItem(for: item, itemId: itemId, forced: forced, settings: settings, exchangeRates: exchangeRates)
         } else {
-            returnValue = databaseManager.getItem(withId: itemId, settings: settings)
-                .flatMap { [weak self] item -> AnyPublisher<Item, AppError> in
-                    guard let self = self else {
-                        return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
-                    }
-                    if let updated = item.updated {
-                        if updated.isOlderThan(minutes: 30) {
-                            return self.refreshItem(for: item, itemId: itemId, forced: forced, settings: settings, exchangeRates: exchangeRates)
-                        } else {
-                            return Just(item).setFailureType(to: AppError.self).eraseToAnyPublisher()
+            returnValue =
+                ItemCache.default.valuePublisher(forKey: databaseId)
+                    .flatMap { [weak self] item -> AnyPublisher<Item, AppError> in
+                        guard let self = self else {
+                            return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
                         }
-                    } else {
+                        if item.isUptodate {
+                            return Just(item).setFailureType(to: AppError.self).eraseToAnyPublisher()
+                        } else {
+                            return self.databaseManager.getItem(withId: itemId, settings: settings).eraseToAnyPublisher()
+                        }
+                    }
+                    .flatMap { [weak self] item -> AnyPublisher<Item, AppError> in
+                        guard let self = self else {
+                            return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
+                        }
+                        if item.isUptodate {
+                            ItemCache.default.insert(item, forKey: item.id)
+                            return Just(item).setFailureType(to: AppError.self).eraseToAnyPublisher()
+                        } else {
+                            return self.refreshItem(for: item, itemId: itemId, forced: forced, settings: settings, exchangeRates: exchangeRates)
+                        }
+                    }
+                    .tryCatch { [weak self] error -> AnyPublisher<Item, AppError> in
+                        guard let self = self else {
+                            return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
+                        }
                         return self.refreshItem(for: item, itemId: itemId, forced: forced, settings: settings, exchangeRates: exchangeRates)
                     }
-                }
-                .tryCatch { [weak self] error -> AnyPublisher<Item, AppError> in
-                    guard let self = self else {
-                        return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
-                    }
-                    return self.refreshItem(for: item, itemId: itemId, forced: forced, settings: settings, exchangeRates: exchangeRates)
-                }
-                .mapError { error in (error as? AppError) ?? AppError(error: error) }
-                .eraseToAnyPublisher()
+                    .mapError { error in (error as? AppError) ?? AppError(error: error) }
+                    .eraseToAnyPublisher()
         }
         return returnValue
             .flatMap { [weak self] item -> AnyPublisher<Item, AppError> in

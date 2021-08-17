@@ -18,6 +18,10 @@ struct StackView: View {
     @Binding var selectedInventoryItems: [InventoryItem]
     var didTapEditStack: (() -> Void)?
 
+    var allItems: [InventoryItem] {
+        inventoryItems.filter { $0.name.lowercased().fuzzyMatch(searchText.lowercased()) }
+    }
+
     var body: some View {
         VStack {
             Text("\(inventoryItems.count) \(searchText.isEmpty ? "Items:" : "Results:")")
@@ -26,7 +30,7 @@ struct StackView: View {
                 .leftAligned()
                 .padding(.horizontal, 28)
             VerticalListView(bottomPadding: 130) {
-                ForEach(inventoryItems) { inventoryItem in
+                ForEach(allItems) { inventoryItem in
                     InventoryListItem(inventoryItem: inventoryItem,
                                       selectedInventoryItemId: $selectedInventoryItemId,
                                       isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }),
