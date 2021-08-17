@@ -14,6 +14,9 @@
 		5D19B0AE26A6D7CA00A31F4E /* AuthenticationAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D19B0AD26A6D7CA00A31F4E /* AuthenticationAction.swift */; };
 		5D19B0D426A6F0DC00A31F4E /* CopDeckApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D19B0D326A6F0DC00A31F4E /* CopDeckApp.swift */; };
 		5D2119E125DB0EFA001FE5E5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5D2119E025DB0EFA001FE5E5 /* GoogleService-Info.plist */; };
+		5D2726C826CAF3AF00887449 /* List+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2726C726CAF3AF00887449 /* List+Extensions.swift */; };
+		5D2726CA26CB2CE400887449 /* VerticalListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2726C926CB2CE400887449 /* VerticalListView.swift */; };
+		5D2726CD26CB3CB800887449 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2726CC26CB3CB800887449 /* TabBarView.swift */; };
 		5D2D5AA025C529E3009598AA /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5A9F25C529E3009598AA /* API.swift */; };
 		5D2D5AA325C52E9B009598AA /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5AA225C52E9B009598AA /* AppState.swift */; };
 		5D2D5AAF25C552B0009598AA /* BackendAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5AAE25C552B0009598AA /* BackendAPI.swift */; };
@@ -139,6 +142,9 @@
 		5D19B0AD26A6D7CA00A31F4E /* AuthenticationAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationAction.swift; sourceTree = "<group>"; };
 		5D19B0D326A6F0DC00A31F4E /* CopDeckApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopDeckApp.swift; sourceTree = "<group>"; };
 		5D2119E025DB0EFA001FE5E5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		5D2726C726CAF3AF00887449 /* List+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "List+Extensions.swift"; sourceTree = "<group>"; };
+		5D2726C926CB2CE400887449 /* VerticalListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalListView.swift; sourceTree = "<group>"; };
+		5D2726CC26CB3CB800887449 /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
 		5D2D5A9F25C529E3009598AA /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		5D2D5AA225C52E9B009598AA /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		5D2D5AAE25C552B0009598AA /* BackendAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendAPI.swift; sourceTree = "<group>"; };
@@ -285,6 +291,14 @@
 			path = AddToInventory;
 			sourceTree = "<group>";
 		};
+		5D2726CB26CB3CA600887449 /* TabBar */ = {
+			isa = PBXGroup;
+			children = (
+				5D2726CC26CB3CB800887449 /* TabBarView.swift */,
+			);
+			path = TabBar;
+			sourceTree = "<group>";
+		};
 		5D2D5A9E25C529CA009598AA /* Functions */ = {
 			isa = PBXGroup;
 			children = (
@@ -349,6 +363,7 @@
 				5D9D51F126AC0E8F00AB1F30 /* Optional+Extensions.swift */,
 				5D3DE37326AFA96D009E4D52 /* UINavigationController+Extensions.swift */,
 				5DE596EB26C89B800024F7D5 /* Collection+Extensions.swift */,
+				5D2726C726CAF3AF00887449 /* List+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -373,6 +388,7 @@
 		5D424D0B25C505450008D6F4 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				5D2726CB26CB3CA600887449 /* TabBar */,
 				5DB590E426C54DAA006ECEBD /* HorizonalPaging */,
 				5D54FE3426C3141C008CD05F /* Image */,
 				5D54FE3326C313F4008CD05F /* Navigation */,
@@ -503,6 +519,7 @@
 			children = (
 				5D9D51FF26AE211900AB1F30 /* VerticalListItem.swift */,
 				5D54FE2726C30931008CD05F /* VerticalItemListView.swift */,
+				5D2726C926CB2CE400887449 /* VerticalListView.swift */,
 			);
 			path = Vertical;
 			sourceTree = "<group>";
@@ -996,6 +1013,7 @@
 				5DA5140426A614530067C4A2 /* FirebaseService.swift in Sources */,
 				5D6312222694797300876D99 /* Item.swift in Sources */,
 				5D424D2125C505450008D6F4 /* DimView.swift in Sources */,
+				5D2726CD26CB3CB800887449 /* TabBarView.swift in Sources */,
 				5D52E30B2613063B00FA02B8 /* Encodable+Extensions.swift in Sources */,
 				5DCC467026A8D759007671BC /* DropDownMenu.swift in Sources */,
 				5D424D0825C504AF0008D6F4 /* RootView.swift in Sources */,
@@ -1009,6 +1027,7 @@
 				5D424CFB25C503F00008D6F4 /* UIApplication+Extensions.swift in Sources */,
 				5DE596E826C877120024F7D5 /* Stack.swift in Sources */,
 				5D63122B2695066500876D99 /* ExchangeRates.swift in Sources */,
+				5D2726C826CAF3AF00887449 /* List+Extensions.swift in Sources */,
 				5D63122D2695068300876D99 /* Currency.swift in Sources */,
 				5D0E5A11269E4EDE006D7E9C /* AddToInventoryView.swift in Sources */,
 				5D6312242694D83100876D99 /* Decodable+Extensions.swift in Sources */,
@@ -1028,6 +1047,7 @@
 				5D6960BA258717430058BABE /* World.swift in Sources */,
 				5D54FE2626C2C84F008CD05F /* HorizontalListItem.swift in Sources */,
 				5D8ABBBF26B1C82500AFD8CF /* ScraperRequestInfo.swift in Sources */,
+				5D2726CA26CB2CE400887449 /* VerticalListView.swift in Sources */,
 				5D9D51F826ADA07700AB1F30 /* Country.swift in Sources */,
 				5DCC467226A8EBB9007671BC /* ToggleButton.swift in Sources */,
 				5DE596EC26C89B800024F7D5 /* Collection+Extensions.swift in Sources */,

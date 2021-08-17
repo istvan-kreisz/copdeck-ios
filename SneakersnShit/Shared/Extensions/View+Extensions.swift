@@ -108,4 +108,11 @@ extension View {
                                                                     actionTitle: actionTitle,
                                                                     action: action))
     }
+
+    func listRow(backgroundColor: Color = .customBackground) -> some View {
+        listRowBackground(backgroundColor)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+            .listRowInsets(EdgeInsets(top: -2, leading: -1, bottom: -2, trailing: -1))
+            .background(backgroundColor)
+    }
 }

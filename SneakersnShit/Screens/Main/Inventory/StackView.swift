@@ -25,36 +25,31 @@ struct StackView: View {
                 .font(.bold(size: 12))
                 .leftAligned()
                 .padding(.horizontal, 28)
-            ScrollView(.vertical, showsIndicators: false) {
-                LazyVStack {
-                    ForEach(inventoryItems) { inventoryItem in
-                        InventoryListItem(inventoryItem: inventoryItem,
-                                          selectedInventoryItemId: $selectedInventoryItemId,
-                                          isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }),
-                                          isEditing: $isEditing,
-                                          requestInfo: store.state.requestInfo) {
-                                if selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }) {
-                                    selectedInventoryItems = selectedInventoryItems.filter { $0.id != inventoryItem.id }
-                                } else {
-                                    selectedInventoryItems.append(inventoryItem)
-                                }
-                        }
-                        .withDefaultPadding(padding: .horizontal)
+            VerticalListView(bottomPadding: 130) {
+                ForEach(inventoryItems) { inventoryItem in
+                    InventoryListItem(inventoryItem: inventoryItem,
+                                      selectedInventoryItemId: $selectedInventoryItemId,
+                                      isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }),
+                                      isEditing: $isEditing,
+                                      requestInfo: store.state.requestInfo) {
+                            if selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }) {
+                                selectedInventoryItems = selectedInventoryItems.filter { $0.id != inventoryItem.id }
+                            } else {
+                                selectedInventoryItems.append(inventoryItem)
+                            }
                     }
-                    .padding(.vertical, 6)
-                    if let didTapEditStack = didTapEditStack {
-                        AccessoryButton(title: "Add / Delete Items",
-                                        color: .customBlue,
-                                        textColor: .customBlue,
-                                        width: 170,
-                                        imageName: "plus",
-                                        tapped: didTapEditStack)
-                            .leftAligned()
-                            .withDefaultPadding(padding: .horizontal)
-                            .padding(.top, 3)
-                    }
+                }
+                .padding(.vertical, 6)
 
-                    Color.clear.padding(.bottom, 130)
+                if let didTapEditStack = didTapEditStack {
+                    AccessoryButton(title: "Add / Delete Items",
+                                    color: .customBlue,
+                                    textColor: .customBlue,
+                                    width: 170,
+                                    imageName: "plus",
+                                    tapped: didTapEditStack)
+                        .leftAligned()
+                        .padding(.top, 3)
                 }
             }
         }

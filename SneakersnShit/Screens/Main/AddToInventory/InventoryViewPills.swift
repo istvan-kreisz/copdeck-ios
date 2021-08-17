@@ -56,7 +56,7 @@ struct TagCloudView: View {
     var tags: [String]
 
     @State private var totalHeight
-          = CGFloat.zero       // << variant for ScrollView/List
+        = CGFloat.zero // << variant for ScrollView/List
 //        = CGFloat.infinity // << variant for VStack
 
     var body: some View {
@@ -74,8 +74,8 @@ struct TagCloudView: View {
         var height = CGFloat.zero
 
         return ZStack(alignment: .topLeading) {
-            ForEach(self.tags, id: \.self) { tag in
-                self.item(for: tag)
+            ForEach(tags, id: \.self) { tag in
+                item(for: tag)
                     .padding([.horizontal, .vertical], 4)
                     .alignmentGuide(.leading, computeValue: { d in
                         if abs(width - d.width) > g.size.width {

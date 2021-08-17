@@ -35,27 +35,23 @@ struct SelectStackItemsView: View {
             NavigationBar(showView: $showView, title: title, isBackButtonVisible: true, style: .dark)
                 .withDefaultPadding(padding: .horizontal)
 
-            ScrollView(.vertical, showsIndicators: false) {
-                LazyVStack {
-                    ForEach(inventoryItems) { inventoryItem in
-                        let isSelected = Binding<Bool>(get: { selectedStackItems.map(\.inventoryItemId).contains(inventoryItem.id) },
-                                                       set: { selected in
-                                                           if selected {
-                                                               if !selectedStackItems.map(\.inventoryItemId).contains(inventoryItem.id) {
-                                                                   selectedStackItems.append(.init(inventoryItemId: inventoryItem.id))
-                                                               }
-                                                           } else {
-                                                               selectedStackItems.removeAll(where: { $0.inventoryItemId == inventoryItem.id })
+            VerticalListView(bottomPadding: 130) {
+                ForEach(inventoryItems) { inventoryItem in
+                    let isSelected = Binding<Bool>(get: { selectedStackItems.map(\.inventoryItemId).contains(inventoryItem.id) },
+                                                   set: { selected in
+                                                       if selected {
+                                                           if !selectedStackItems.map(\.inventoryItemId).contains(inventoryItem.id) {
+                                                               selectedStackItems.append(.init(inventoryItemId: inventoryItem.id))
                                                            }
-                                                       })
-                        SelectStackItemsListItem(inventoryItem: inventoryItem,
-                                                 isSelected: isSelected,
-                                                 requestInfo: requestInfo)
-                            .withDefaultPadding(padding: .horizontal)
-                    }
-                    .padding(.vertical, 6)
-                    Color.clear.padding(.bottom, 130)
+                                                       } else {
+                                                           selectedStackItems.removeAll(where: { $0.inventoryItemId == inventoryItem.id })
+                                                       }
+                                                   })
+                    SelectStackItemsListItem(inventoryItem: inventoryItem,
+                                             isSelected: isSelected,
+                                             requestInfo: requestInfo)
                 }
+                .padding(.vertical, 6)
             }
             Spacer()
         }

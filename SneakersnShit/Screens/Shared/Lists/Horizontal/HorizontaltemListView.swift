@@ -35,7 +35,7 @@ struct HorizontaltemListView: View {
                 }
 
                 ScrollView(.horizontal, showsIndicators: false) {
-                    LazyHStack(spacing: 24) {
+                    HStack(spacing: 24) {
                         Color.clear
                             .frame(width: 0, height: 0)
                             .padding(.leading, Styles.horizontalPadding - 24)

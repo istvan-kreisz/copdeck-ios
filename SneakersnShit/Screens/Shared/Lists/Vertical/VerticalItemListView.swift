@@ -42,7 +42,7 @@ struct VerticalItemListView: View {
                 }
             }
 
-            List {
+            VerticalListView(bottomPadding: bottomPadding) {
                 ForEach(items ?? []) { item in
                     VerticalListItem<EmptyView>(title: item.name ?? "",
                                                 imageURL: item.imageURL,
@@ -51,10 +51,6 @@ struct VerticalItemListView: View {
                                                 isEditing: .constant(false),
                                                 isSelected: false) { selectedItem = item }
                 }
-                .withDefaultPadding(padding: .horizontal)
-                .padding(.top, 5)
-
-                Color.clear.padding(.bottom, bottomPadding)
             }
             .padding(.top, 5)
         }
