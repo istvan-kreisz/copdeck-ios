@@ -185,6 +185,34 @@ class FirebaseService: DatabaseManager {
                 }
             }
         }.eraseToAnyPublisher()
+
+//        Future { [weak self] promise in
+//            self?.itemsRef?.getDocuments(source: .cache) { snapshot, error in
+//                var cachedItem: Item?
+//                if let dict = snapshot?.documents.first?.data(), let item = Item(from: dict) {
+//                    cachedItem = item
+//                    if item.isUptodate, !item.storePrices.isEmpty {
+//                        log("fb cache")
+//                        promise(.success(item))
+//                        return
+//                    }
+//                }
+//
+//                self?.itemsRef?.getDocuments(source: .server) { snapshot, error in
+//                    if let dict = snapshot?.documents.first?.data(), let item = Item(from: dict) {
+//                        log("fb server")
+//                        promise(.success(item))
+//                    } else {
+//                        if let cachedItem = cachedItem {
+//                            log("fallback fb cache")
+//                            promise(.success(cachedItem))
+//                        } else {
+//                            promise(.failure(error.map { AppError(error: $0) } ?? AppError.unknown))
+//                        }
+//                    }
+//                }
+//            }
+//        }.eraseToAnyPublisher()
     }
 
     func delete(inventoryItems: [InventoryItem]) {

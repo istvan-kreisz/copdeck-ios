@@ -31,13 +31,13 @@ struct Store: Codable, Equatable, Identifiable, Hashable {
     let name: StoreName
 }
 
-enum PriceType: String, CaseIterable, Identifiable {
+enum PriceType: String, CaseIterable, Identifiable, Codable {
     case ask, bid
 
     var id: String { rawValue }
 }
 
-enum FeeType: String, CaseIterable, Identifiable {
+enum FeeType: String, CaseIterable, Identifiable, Codable {
     case none, buy, sell
 
     var id: String { rawValue }

@@ -81,7 +81,7 @@ class DefaultDataController: DataController {
                             return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
                         }
                         if let item = item, item.isUptodate {
-                            log("using item from cache")
+                            log("cache")
                             return Just(item).setFailureType(to: AppError.self).eraseToAnyPublisher()
                         } else {
                             return self.databaseManager.getItem(withId: itemId, settings: settings).eraseToAnyPublisher()
@@ -90,7 +90,6 @@ class DefaultDataController: DataController {
                                         return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
                                     }
                                     if item.isUptodate {
-                                        log("using item from database")
                                         ItemCache.default.insert(item: item, settings: settings)
                                         return Just(item).setFailureType(to: AppError.self).eraseToAnyPublisher()
                                     } else {
