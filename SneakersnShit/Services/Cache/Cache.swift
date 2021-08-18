@@ -13,6 +13,9 @@ final class Cache<Key: Hashable, Value> {
     private let dateProvider: () -> Date
     private let entryLifetime: TimeInterval
 
+    private let updatedSubject = PassthroughSubject<Void, Never>()
+    lazy var updatedPublisher = updatedSubject.eraseToAnyPublisher()
+
     init(dateProvider: @escaping () -> Date = Date.init, entryLifetimeMin: TimeInterval) {
         self.dateProvider = dateProvider
         self.entryLifetime = entryLifetimeMin * 60
@@ -22,6 +25,7 @@ final class Cache<Key: Hashable, Value> {
         let date = dateProvider().addingTimeInterval(entryLifetime)
         let entry = Entry(value: value, expirationDate: date)
         wrapped.setObject(entry, forKey: WrappedKey(key))
+        updatedSubject.send()
     }
 
     func value(forKey key: Key) -> Value? {

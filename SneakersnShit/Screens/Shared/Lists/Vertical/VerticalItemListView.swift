@@ -44,12 +44,12 @@ struct VerticalItemListView: View {
 
             VerticalListView(bottomPadding: bottomPadding) {
                 ForEach(items ?? []) { item in
-                    VerticalListItem<EmptyView>(title: item.name ?? "",
-                                                imageURL: item.imageURL,
-                                                flipImage: item.imageURL?.store.id == .klekt,
-                                                requestInfo: requestInfo,
-                                                isEditing: .constant(false),
-                                                isSelected: false) { selectedItem = item }
+                    VerticalListItemWithoutAccessoryView(title: item.name ?? "",
+                                                         imageURL: item.imageURL,
+                                                         flipImage: item.imageURL?.store.id == .klekt,
+                                                         requestInfo: requestInfo,
+                                                         isEditing: .constant(false),
+                                                         isSelected: false) { selectedItem = item }
                 }
             }
             .padding(.top, 5)

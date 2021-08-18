@@ -103,8 +103,9 @@ extension AppStore {
     }
 
     func refreshItemPricesIfNeeded() {
+        guard state.user != nil else { return }
         let idsToRefresh = Set(state.inventoryItems.compactMap { $0.itemId }).filter { id in
-            if let item = ItemCache.default.value(forKey: id) {
+            if let item = ItemCache.default.value(forKey: Item.databaseId(itemId: id, settings: state.settings)) {
                 return !item.isUptodate
             } else {
                 return true

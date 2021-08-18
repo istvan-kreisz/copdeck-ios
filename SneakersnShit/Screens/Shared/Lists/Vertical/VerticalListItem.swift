@@ -7,12 +7,12 @@
 
 import SwiftUI
 
-struct VerticalListItem<V: View>: View {
-    enum SelectionStyle {
-        case checkmark
-        case highlight
-    }
+enum VerticalListItemSelectionStyle {
+    case checkmark
+    case highlight
+}
 
+struct VerticalListItem<V1: View, V2: View>: View {
     var title: String
     var imageURL: ImageURL?
     var flipImage = false
@@ -20,10 +20,11 @@ struct VerticalListItem<V: View>: View {
 
     @Binding var isEditing: Bool
     var isSelected: Bool
-    var selectionStyle: SelectionStyle = .checkmark
+    var selectionStyle: VerticalListItemSelectionStyle = .checkmark
     @State var animate = false
 
-    var accessoryView: V? = nil
+    var accessoryView1: V1? = nil
+    var accessoryView2: V2? = nil
     var onTapped: () -> Void
     var onSelectorTapped: (() -> Void)? = nil
 
@@ -60,7 +61,7 @@ struct VerticalListItem<V: View>: View {
                         .font(.bold(size: 14))
                         .leftAligned()
                         .layoutPriority(2)
-                    if let accessoryView = accessoryView {
+                    if let accessoryView = accessoryView1 {
                         Spacer()
                             .layoutPriority(0)
                         accessoryView
@@ -69,6 +70,10 @@ struct VerticalListItem<V: View>: View {
                         Spacer()
                             .layoutPriority(0)
                     }
+                }
+                if let accessoryView = accessoryView2 {
+                    Spacer()
+                    accessoryView
                 }
             }
             .padding(12)
@@ -87,13 +92,72 @@ struct VerticalListItem<V: View>: View {
     }
 }
 
-struct ListItem_Previews: PreviewProvider {
+struct VerticalListItem_Previews: PreviewProvider {
     static var previews: some View {
-        return VerticalListItem<EmptyView>(title: "yooo",
-                                           imageURL: nil,
-                                           requestInfo: AppStore.default.state.requestInfo,
-                                           isEditing: .constant(false),
-                                           isSelected: false,
-                                           onTapped: {})
+        return VerticalListItem<EmptyView, EmptyView>(title: "yooo",
+                                                      imageURL: nil,
+                                                      requestInfo: AppStore.default.state.requestInfo,
+                                                      isEditing: .constant(false),
+                                                      isSelected: false,
+                                                      onTapped: {})
+    }
+}
+
+struct VerticalListItemWithAccessoryView1<V: View>: View {
+    var title: String
+    var imageURL: ImageURL?
+    var flipImage = false
+    var requestInfo: [ScraperRequestInfo]
+
+    @Binding var isEditing: Bool
+    var isSelected: Bool
+    var selectionStyle: VerticalListItemSelectionStyle = .checkmark
+    @State var animate = false
+
+    var accessoryView: V? = nil
+    var onTapped: () -> Void
+    var onSelectorTapped: (() -> Void)? = nil
+
+    var body: some View {
+        VerticalListItem<V, EmptyView>(title: title,
+                                       imageURL: imageURL,
+                                       flipImage: flipImage,
+                                       requestInfo: requestInfo,
+                                       isEditing: $isEditing,
+                                       isSelected: isSelected,
+                                       selectionStyle: selectionStyle,
+                                       animate: animate,
+                                       accessoryView1: accessoryView,
+                                       accessoryView2: nil,
+                                       onTapped: onTapped,
+                                       onSelectorTapped: onSelectorTapped)
+    }
+}
+
+struct VerticalListItemWithoutAccessoryView: View {
+    var title: String
+    var imageURL: ImageURL?
+    var flipImage = false
+    var requestInfo: [ScraperRequestInfo]
+
+    @Binding var isEditing: Bool
+    var isSelected: Bool
+    var selectionStyle: VerticalListItemSelectionStyle = .checkmark
+    @State var animate = false
+
+    var onTapped: () -> Void
+    var onSelectorTapped: (() -> Void)? = nil
+
+    var body: some View {
+        VerticalListItem<EmptyView, EmptyView>(title: title,
+                                               imageURL: imageURL,
+                                               flipImage: flipImage,
+                                               requestInfo: requestInfo,
+                                               isEditing: $isEditing,
+                                               isSelected: isSelected,
+                                               selectionStyle: selectionStyle,
+                                               animate: animate,
+                                               onTapped: onTapped,
+                                               onSelectorTapped: onSelectorTapped)
     }
 }

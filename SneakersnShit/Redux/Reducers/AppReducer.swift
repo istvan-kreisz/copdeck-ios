@@ -63,10 +63,10 @@ func appReducer(state: inout AppState,
         case .setSelectedItem(let item):
             state.selectedItem = item
             if let item = item {
-                ItemCache.default.insert(item, forKey: item.id)
+                ItemCache.default.insert(item: item, settings: state.settings)
             }
         case let .addItemToCache(item):
-            ItemCache.default.insert(item, forKey: item.id)
+            ItemCache.default.insert(item: item, settings: state.settings)
         case let .addStack(stack):
             environment.dataController.update(stack: stack)
         case let .deleteStack(stack):

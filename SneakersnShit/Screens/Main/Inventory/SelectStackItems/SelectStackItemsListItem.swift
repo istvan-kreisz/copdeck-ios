@@ -13,14 +13,14 @@ struct SelectStackItemsListItem: View {
     var requestInfo: [ScraperRequestInfo]
 
     var body: some View {
-        VerticalListItem(title: inventoryItem.name,
-                         imageURL: inventoryItem.imageURL,
-                         flipImage: inventoryItem.imageURL?.store.id == .klekt,
-                         requestInfo: requestInfo,
-                         isEditing: .constant(false),
-                         isSelected: isSelected,
-                         selectionStyle: .highlight,
-                         accessoryView: InventoryViewPills(inventoryItem: inventoryItem).leftAligned()) {
+        VerticalListItemWithAccessoryView1(title: inventoryItem.name,
+                                           imageURL: inventoryItem.imageURL,
+                                           flipImage: inventoryItem.imageURL?.store.id == .klekt,
+                                           requestInfo: requestInfo,
+                                           isEditing: .constant(false),
+                                           isSelected: isSelected,
+                                           selectionStyle: .highlight,
+                                           accessoryView: InventoryViewPills(inventoryItem: inventoryItem).leftAligned()) {
                 isSelected.toggle()
         }
     }

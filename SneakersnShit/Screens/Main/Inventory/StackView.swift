@@ -18,8 +18,18 @@ struct StackView: View {
     @Binding var selectedInventoryItems: [InventoryItem]
     var didTapEditStack: (() -> Void)?
 
+    @State var updateSignal = 0
+
     var allItems: [InventoryItem] {
         inventoryItems.filter { $0.name.lowercased().fuzzyMatch(searchText.lowercased()) }
+    }
+
+    func bestPrice(for inventoryItem: InventoryItem) -> PriceWithCurrency? {
+        if let itemId = inventoryItem.itemId, let item = ItemCache.default.value(itemId: itemId, settings: store.state.settings) {
+            return item.bestPrice(for: inventoryItem.size, feeType: .none, priceType: .ask)
+        } else {
+            return nil
+        }
     }
 
     var body: some View {
@@ -31,7 +41,12 @@ struct StackView: View {
                 .padding(.horizontal, 28)
             VerticalListView(bottomPadding: 130) {
                 ForEach(allItems) { inventoryItem in
+                    let price = Binding<PriceWithCurrency?>(get: {
+                        _ = updateSignal
+                        return bestPrice(for: inventoryItem)
+                    }, set: { _ in })
                     InventoryListItem(inventoryItem: inventoryItem,
+                                      bestPrice: price,
                                       selectedInventoryItemId: $selectedInventoryItemId,
                                       isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }),
                                       isEditing: $isEditing,
@@ -56,6 +71,8 @@ struct StackView: View {
                         .padding(.top, 3)
                 }
             }
+        }.onReceive(ItemCache.default.updatedPublisher) { _ in
+            updateSignal += 1
         }
     }
 }
