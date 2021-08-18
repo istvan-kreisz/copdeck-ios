@@ -14,7 +14,7 @@ struct ItemDetailView: View {
     @State private var priceType: PriceType = .ask
     @State private var feeType: FeeType = .none
 
-    @State private var addToInventory = false
+    @State private var addToInventory: (isActive: Bool, size: String?) = (false, nil)
     @State private var addedInventoryItem = false
     @State private var firstShow = true
     @State var showSnackBar = false
@@ -40,10 +40,12 @@ struct ItemDetailView: View {
     var body: some View {
         ZStack {
             Color.customWhite.edgesIgnoringSafeArea(.all)
+            let isAddToInventoryActive = Binding<Bool>(get: { addToInventory.isActive },
+                                                       set: { addToInventory = $0 ? addToInventory : (false, nil) })
             if let item = item, showAddToInventoryButton {
                 NavigationLink("",
                                destination: AddToInventoryView(item: item, presented: $addToInventory, addedInvantoryItem: $addedInventoryItem),
-                               isActive: $addToInventory)
+                               isActive: isAddToInventoryActive)
             }
 
             ScrollView(.vertical, showsIndicators: false) {
@@ -178,11 +180,29 @@ struct ItemDetailView: View {
 
                                 ForEach((item?.allPriceRows(priceType: priceType, feeType: feeType)) ?? []) { (row: Item.PriceRow) in
                                     HStack(spacing: 10) {
-                                        Text(row.size)
-                                            .frame(height: 32)
-                                            .frame(maxWidth: .infinity)
-                                            .background(Color.customAccent2)
-                                            .clipShape(Capsule())
+                                        Button(action: {
+                                            addToInventory = (true, row.size)
+                                        }) {
+                                                ZStack(alignment: Alignment(horizontal: .trailing, vertical: .center)) {
+                                                    Text(row.size)
+                                                        .frame(height: 32)
+                                                        .frame(maxWidth: .infinity)
+                                                        .background(Color.customAccent2)
+                                                        .clipShape(Capsule())
+                                                        .overlay(Capsule().stroke(Color.customBlue, lineWidth: 2))
+                                                    ZStack {
+                                                        Circle()
+                                                            .fill(Color.customBlue)
+                                                            .frame(width: 18, height: 18)
+                                                        Image(systemName: "plus")
+                                                            .font(.bold(size: 7))
+                                                            .foregroundColor(Color.customWhite)
+                                                    }
+                                                    .frame(width: 18, height: 18)
+                                                    .offset(x: 9, y: 0)
+                                                }
+                                        }
+
                                         ForEach(row.prices) { price in
                                             Text(price.primaryText)
                                                 .frame(height: 32)
@@ -230,7 +250,7 @@ struct ItemDetailView: View {
                                                            size: .init(width: 260, height: 60),
                                                            color: .customBlack,
                                                            tapped: {
-                                                               addToInventory = true
+                                                               addToInventory = (true, nil)
                                                                addedInventoryItem = false
                                                            })
                             .disabled(loader.isLoading)

@@ -118,11 +118,13 @@ struct BottomAligned: ViewModifier {
 struct WrappedTabView: ViewModifier {
     @ObservedObject var viewRouter: ViewRouter
     let store: AppStore
+    let backgroundColor: Color
     @Binding var shouldShow: Bool
 
-    init(viewRouter: ViewRouter, store: AppStore, shouldShow: Binding<Bool> = .constant(true)) {
+    init(viewRouter: ViewRouter, store: AppStore, backgroundColor: Color, shouldShow: Binding<Bool> = .constant(true)) {
         self.viewRouter = viewRouter
         self.store = store
+        self.backgroundColor = backgroundColor
         self._shouldShow = shouldShow
     }
 
@@ -133,7 +135,7 @@ struct WrappedTabView: ViewModifier {
                 .edgesIgnoringSafeArea(.bottom)
                 .frame(maxWidth: UIScreen.main.bounds.width)
                 .withDefaultPadding(padding: .top)
-                .withBackgroundColor()
+                .withBackgroundColor(backgroundColor)
                 .withFloatingButton(button: TabBar(viewRouter: viewRouter), shouldShow: $shouldShow)
                 .navigationbarHidden()
         }

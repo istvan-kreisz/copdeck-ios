@@ -10,7 +10,7 @@ import SwiftUI
 struct AddToInventoryView: View {
     @EnvironmentObject var store: AppStore
     @State var item: Item
-    @Binding var presented: Bool
+    @Binding var presented: (isActive: Bool, size: String?)
     @Binding var addedInvantoryItem: Bool
 
     @State var name: String
@@ -33,7 +33,7 @@ struct AddToInventoryView: View {
         allInventoryItems.compactMap { $0 }.count
     }
 
-    init(item: Item, presented: Binding<Bool>, addedInvantoryItem: Binding<Bool>) {
+    init(item: Item, presented: Binding<(isActive: Bool, size: String?)>, addedInvantoryItem: Binding<Bool>) {
         self._item = State(initialValue: item)
         self._presented = presented
         self._addedInvantoryItem = addedInvantoryItem
@@ -54,9 +54,11 @@ struct AddToInventoryView: View {
     }
 
     var body: some View {
+        let isPresented = Binding<Bool>(get: { presented.isActive },
+                                        set: { presented = $0 ? presented : (false, nil) })
         ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .center, spacing: 20) {
-                ItemImageViewWithNavBar(showView: $presented,
+                ItemImageViewWithNavBar(showView: isPresented,
                                         imageURL: item.imageURL,
                                         requestInfo: store.state.requestInfo)
 
@@ -151,13 +153,13 @@ struct AddToInventoryView: View {
                 inventoryItem.copy(withName: name, itemId: styleId, notes: notes)
             }
         store.send(.main(action: .addToInventory(inventoryItems: inventoryItems)))
-        presented = false
+        presented = (false, nil)
         addedInvantoryItem = true
     }
 }
 
 struct AddToInventoryView_Previews: PreviewProvider {
     static var previews: some View {
-        return AddToInventoryView(item: Item.sample, presented: .constant(true), addedInvantoryItem: .constant(false))
+        return AddToInventoryView(item: Item.sample, presented: .constant((true, nil)), addedInvantoryItem: .constant(false))
     }
 }

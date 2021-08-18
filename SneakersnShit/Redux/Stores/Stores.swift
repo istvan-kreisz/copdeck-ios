@@ -23,8 +23,8 @@ extension AppStore {
 
     func setupObservers() {
         environment.dataController.errorsPublisher
-            .sink { [weak self] in
-                self?.state.error = $0
+            .sink { [weak self] error in
+                self?.state.error = error
             }
             .store(in: &effectCancellables)
 
@@ -35,10 +35,10 @@ extension AppStore {
             .store(in: &effectCancellables)
 
         environment.dataController.inventoryItemsPublisher
-            .sink { [weak self] in
-                self?.state.inventoryItems = $0
-                self?.updateAllStack(withInventoryItems: $0)
-                if !$0.isEmpty && self?.state.didFetchItemPrices == false {
+            .sink { [weak self] inventoryItems in
+                self?.state.inventoryItems = inventoryItems
+                self?.updateAllStack(withInventoryItems: inventoryItems)
+                if !inventoryItems.isEmpty && self?.state.didFetchItemPrices == false {
                     self?.refreshItemPricesIfNeeded()
                     self?.state.didFetchItemPrices = true
                 }
@@ -52,8 +52,8 @@ extension AppStore {
             .store(in: &effectCancellables)
 
         environment.dataController.exchangeRatesPublisher
-            .sink { [weak self] in
-                self?.state.exchangeRates = $0
+            .sink { [weak self] exchangeRates in
+                self?.state.exchangeRates = exchangeRates
             }
             .store(in: &effectCancellables)
 

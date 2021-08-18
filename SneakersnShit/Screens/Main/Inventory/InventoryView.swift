@@ -67,76 +67,90 @@ struct InventoryView: View {
                                isActive: showEditedStack) { EmptyView() }
             }
 
-            VStack(alignment: .leading, spacing: 19) {
-                HStack {
-                    Text("Inventory")
-                        .foregroundColor(.customText1)
-                        .font(.bold(size: 35))
-                        .leftAligned()
-                        .padding(.leading, 6)
-                    Spacer()
-                    Button(action: {
-                        settingsPresented = true
-                    }, label: {
-                        ZStack {
-                            Circle().stroke(Color.customAccent1, lineWidth: 2)
-                                .frame(width: 38, height: 38)
-                            Image("cog")
-                                .renderingMode(.template)
-                                .frame(height: 17)
-                                .foregroundColor(.customBlack)
+            VStack(alignment: .leading, spacing: 0) {
+                VStack(alignment: .center, spacing: 30) {
+                    HStack {
+                        Text("Inventory")
+                            .foregroundColor(.customText1)
+                            .font(.bold(size: 35))
+                            .leftAligned()
+                            .padding(.leading, 6)
+                        Spacer()
+                        Button(action: {
+                            settingsPresented = true
+                        }, label: {
+                            ZStack {
+                                Circle().stroke(Color.customAccent1, lineWidth: 2)
+                                    .frame(width: 38, height: 38)
+                                Image("cog")
+                                    .renderingMode(.template)
+                                    .frame(height: 17)
+                                    .foregroundColor(.customBlack)
+                            }
+                        })
+                    }
+                    HStack {
+                        VStack(spacing: 2) {
+                            Text("$300")
+                                .font(.bold(size: 20))
+                                .foregroundColor(.customText1)
+                            Text("Inventory Value")
+                                .font(.regular(size: 15))
+                                .foregroundColor(.customText2)
                         }
-                    })
+                        Spacer()
+                        VStack(spacing: 2) {
+                            Text("23")
+                                .font(.bold(size: 20))
+                                .foregroundColor(.customText1)
+                            Text("Inventory Size")
+                                .font(.regular(size: 15))
+                                .foregroundColor(.customText2)
+                        }
+                    }
                 }
                 .withDefaultPadding(padding: .horizontal)
+                .padding(.bottom, 22)
 
-                HStack(alignment: .center, spacing: 13) {
-                    TextFieldRounded(title: nil,
-                                     placeHolder: "Search your inventory",
-                                     style: .white,
-                                     text: $searchText)
-                    RoundedButton<EmptyView>(text: "Edit",
-                                             width: 80,
-                                             height: 32,
-                                             color: .customBlue,
-                                             accessoryView: nil,
-                                             tapped: { isEditing.toggle() })
-                }
-                .withDefaultPadding(padding: .horizontal)
-
-                ScrollableSegmentedControl(selectedIndex: $selectedStackIndex,
-                                           titles: stackTitles,
-                                           button: .init(title: "New Stack", tapped: { showAddNewStackAlert = true }))
+                VStack(alignment: .leading, spacing: 19) {
+                    HStack(alignment: .center, spacing: 13) {
+                        TextFieldRounded(title: nil,
+                                         placeHolder: "Search your inventory",
+                                         style: .white,
+                                         text: $searchText)
+                        RoundedButton<EmptyView>(text: "Edit",
+                                                 width: 80,
+                                                 height: 32,
+                                                 color: .customBlue,
+                                                 accessoryView: nil,
+                                                 tapped: { isEditing.toggle() })
+                    }
                     .withDefaultPadding(padding: .horizontal)
 
-                let stack = store.state.stacks[0]
-                                        let isSelected = Binding<Bool>(get: { stack.id == selectedStack?.id },
-                                                                       set: { _ in })
-                StackView(searchText: $searchText,
-                          inventoryItems: stack.inventoryItems(allInventoryItems: store.state.inventoryItems),
-                          selectedInventoryItemId: $selectedInventoryItemId,
-                          isEditing: $isEditing,
-                          selectedInventoryItems: $selectedInventoryItems,
-                          isSelected: isSelected,
-                          didTapEditStack: stack.id == "all" ? nil : {
-                              editedStack = stack
-                          })
+                    ScrollableSegmentedControl(selectedIndex: $selectedStackIndex,
+                                               titles: stackTitles,
+                                               button: .init(title: "New Stack", tapped: { showAddNewStackAlert = true }))
+                        .withDefaultPadding(padding: .horizontal)
 
-//                PagerView(pageCount: pageCount, currentIndex: $selectedStackIndex) {
-//                    ForEach(store.state.stacks) { stack in
-//                        let isSelected = Binding<Bool>(get: { stack.id == selectedStack?.id },
-//                                                       set: { _ in })
-//                        StackView(searchText: $searchText,
-//                                  inventoryItems: stack.inventoryItems(allInventoryItems: store.state.inventoryItems),
-//                                  selectedInventoryItemId: $selectedInventoryItemId,
-//                                  isEditing: $isEditing,
-//                                  selectedInventoryItems: $selectedInventoryItems,
-//                                  isSelected: isSelected,
-//                                  didTapEditStack: stack.id == "all" ? nil : {
-//                                      editedStack = stack
-//                                  })
-//                    }
-//                }
+                    PagerView(pageCount: pageCount, currentIndex: $selectedStackIndex) {
+                        ForEach(store.state.stacks) { stack in
+                            let isSelected = Binding<Bool>(get: { stack.id == selectedStack?.id },
+                                                           set: { _ in })
+                            StackView(searchText: $searchText,
+                                      inventoryItems: stack.inventoryItems(allInventoryItems: store.state.inventoryItems),
+                                      selectedInventoryItemId: $selectedInventoryItemId,
+                                      isEditing: $isEditing,
+                                      selectedInventoryItems: $selectedInventoryItems,
+                                      isSelected: isSelected,
+                                      didTapEditStack: stack.id == "all" ? nil : {
+                                          editedStack = stack
+                                      })
+                        }
+                    }
+                }
+                .padding(.top, 28)
+                .frame(width: UIScreen.screenWidth)
+                .background(Color.customBackground)
             }
             .withFloatingButton(button: EditInventoryTray(actions: actionsTrayActions)
                 .padding(.bottom, UIApplication.shared.safeAreaInsets().bottom)
@@ -155,7 +169,7 @@ struct InventoryView: View {
                 SettingsView(settings: store.state.settings, isPresented: $settingsPresented)
             }
         }
-        .withTabViewWrapper(viewRouter: viewRouter, store: store, shouldShow: $shouldShowTabBar)
+        .withTabViewWrapper(viewRouter: viewRouter, store: store, backgroundColor: .customWhite, shouldShow: $shouldShowTabBar)
         .withTextFieldPopup(isShowing: $showAddNewStackAlert,
                             title: "Add new stack",
                             subtitle: nil,

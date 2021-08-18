@@ -87,8 +87,11 @@ extension View {
         ModifiedContent(content: self, modifier: WithBackgroundColor(color, ignoringSafeArea: edges))
     }
 
-    func withTabViewWrapper(viewRouter: ViewRouter, store: AppStore, shouldShow: Binding<Bool> = .constant(true)) -> some View {
-        ModifiedContent(content: self, modifier: WrappedTabView(viewRouter: viewRouter, store: store, shouldShow: shouldShow))
+    func withTabViewWrapper(viewRouter: ViewRouter,
+                            store: AppStore,
+                            backgroundColor: Color = .customBackground,
+                            shouldShow: Binding<Bool> = .constant(true)) -> some View {
+        ModifiedContent(content: self, modifier: WrappedTabView(viewRouter: viewRouter, store: store, backgroundColor: backgroundColor, shouldShow: shouldShow))
     }
 
     func withSnackBar(text: String, shouldShow: Binding<Bool>, actionText: String? = nil, action: (() -> Void)? = nil) -> some View {
