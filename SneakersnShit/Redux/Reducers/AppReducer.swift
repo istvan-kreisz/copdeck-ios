@@ -58,15 +58,13 @@ func appReducer(state: inout AppState,
                 .catchErrors()
         case let .refreshItemIfNeeded(itemId):
             return environment.dataController.getItemDetails(for: nil, itemId: itemId, forced: false, settings: state.settings, exchangeRates: state.rates)
-                .map { AppAction.main(action: .addItemToCache(item: $0)) }
+                .map { _ in AppAction.none }
                 .catchErrors()
         case .setSelectedItem(let item):
             state.selectedItem = item
             if let item = item {
                 ItemCache.default.insert(item: item, settings: state.settings)
             }
-        case let .addItemToCache(item):
-            ItemCache.default.insert(item: item, settings: state.settings)
         case let .addStack(stack):
             environment.dataController.update(stack: stack)
         case let .deleteStack(stack):

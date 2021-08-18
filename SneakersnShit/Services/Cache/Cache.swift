@@ -33,10 +33,10 @@ final class Cache<Key: Hashable, Value> {
             return nil
         }
 
-        guard dateProvider() < entry.expirationDate else {
-            removeValue(forKey: key)
-            return nil
-        }
+//        guard dateProvider() < entry.expirationDate else {
+//            removeValue(forKey: key)
+//            return nil
+//        }
 
         return entry.value
     }

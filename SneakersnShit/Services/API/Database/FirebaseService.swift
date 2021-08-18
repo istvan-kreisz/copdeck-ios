@@ -11,7 +11,7 @@ import Firebase
 import Combine
 
 class FirebaseService: DatabaseManager {
-    private let firestore = Firestore.firestore()
+    private let firestore: Firestore
 
     private let inventoryItemsSubject = CurrentValueSubject<[InventoryItem], Never>([])
     private let stacksSubject = CurrentValueSubject<[Stack], Never>([])
@@ -37,8 +37,7 @@ class FirebaseService: DatabaseManager {
 
     #warning("yo")
     var errorsPublisher: AnyPublisher<AppError, Never> {
-        PassthroughSubject<AppError, Never>().eraseToAnyPublisher()
-//        errorsSubject.eraseToAnyPublisher()
+        errorsSubject.eraseToAnyPublisher()
     }
 
     private var userRef: DocumentReference?
@@ -59,6 +58,11 @@ class FirebaseService: DatabaseManager {
     }
 
     init() {
+        firestore = Firestore.firestore()
+        let settings = firestore.settings
+        settings.cacheSizeBytes = 200 * 1000000
+        firestore.settings = settings
+
         itemsRef = firestore.collection("items")
         exchangeRatesRef = firestore.collection("info").document("exchangerates")
     }

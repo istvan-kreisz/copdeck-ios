@@ -11,7 +11,6 @@ typealias AppStore = ReduxStore<AppState, AppAction, World>
 
 extension AppStore {
     static let exchangeRatesRefreshRateMin: TimeInterval = 1
-    static let pricesRefreshRateMin: TimeInterval = 30
 
     static let `default`: AppStore = {
         let appStore = AppStore(state: .init(), reducer: appReducer, environment: World())
@@ -87,7 +86,7 @@ extension AppStore {
         Timer.scheduledTimer(withTimeInterval: 60 * Self.exchangeRatesRefreshRateMin, repeats: true) { [weak self] _ in
             self?.refreshExchangeRatesIfNeeded()
         }
-        Timer.scheduledTimer(withTimeInterval: 60 * Self.pricesRefreshRateMin, repeats: true) { [weak self] _ in
+        Timer.scheduledTimer(withTimeInterval: 60 * Item.pricesRefreshRateMin, repeats: true) { [weak self] _ in
             self?.refreshItemPricesIfNeeded()
         }
     }

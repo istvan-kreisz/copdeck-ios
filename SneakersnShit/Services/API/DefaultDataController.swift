@@ -40,13 +40,9 @@ class DefaultDataController: DataController {
                              forced: Bool,
                              settings: CopDeckSettings,
                              exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
-        log("refreshing item")
+        log("refreshing item with id: \(itemId)")
         return localScraper
             .getItemDetails(for: item, itemId: itemId, forced: forced, settings: settings, exchangeRates: exchangeRates)
-            .handleEvents(receiveOutput: { [weak self] item in
-                ItemCache.default.insert(item: item, settings: settings)
-                self?.databaseManager.update(item: item, settings: settings)
-            })
             .map { refreshedItem in
                 if let item = item {
                     return refreshedItem.storePrices.isEmpty ? item : refreshedItem
@@ -54,6 +50,12 @@ class DefaultDataController: DataController {
                     return refreshedItem
                 }
             }
+            .handleEvents(receiveOutput: { [weak self] updatedItem in
+                ItemCache.default.insert(item: updatedItem, settings: settings)
+                if updatedItem != item {
+                    self?.databaseManager.update(item: updatedItem, settings: settings)
+                }
+            })
             .tryCatch { error -> AnyPublisher<Item, AppError> in
                 guard let item = item else {
                     return Fail<Item, AppError>(error: error).eraseToAnyPublisher()
@@ -80,7 +82,7 @@ class DefaultDataController: DataController {
                         guard let self = self else {
                             return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
                         }
-                        if let item = item, item.isUptodate {
+                        if let item = item, item.isUptodate, !item.storePrices.isEmpty {
                             log("cache")
                             return Just(item).setFailureType(to: AppError.self).eraseToAnyPublisher()
                         } else {
@@ -89,7 +91,7 @@ class DefaultDataController: DataController {
                                     guard let self = self else {
                                         return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
                                     }
-                                    if item.isUptodate {
+                                    if item.isUptodate && !item.storePrices.isEmpty {
                                         ItemCache.default.insert(item: item, settings: settings)
                                         return Just(item).setFailureType(to: AppError.self).eraseToAnyPublisher()
                                     } else {

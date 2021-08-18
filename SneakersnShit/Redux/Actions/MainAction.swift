@@ -23,7 +23,6 @@ enum MainAction {
     case getItemDetails(item: Item?, itemId: String, forced: Bool)
     case refreshItemIfNeeded(itemId: String)
     case setSelectedItem(item: Item?)
-    case addItemToCache(item: Item)
     // inventory
     case addStack(stack: Stack)
     case deleteStack(stack: Stack)
@@ -59,8 +58,6 @@ extension MainAction: Identifiable {
             return "refreshItemIfNeeded \(itemId)"
         case .setSelectedItem:
             return "setSelectedItem"
-        case let .addItemToCache(item):
-            return "addItemToCache \(item.id)"
         case .addStack:
             return "addStack"
         case .deleteStack:

@@ -28,6 +28,6 @@ extension ItemCache {
     }
 
     static let `default`: Cache<String, Item> = {
-        Cache<String, Item>(entryLifetimeMin: AppStore.pricesRefreshRateMin * 2)
+        Cache<String, Item>(entryLifetimeMin: Item.pricesRefreshRateMin * 2)
     }()
 }

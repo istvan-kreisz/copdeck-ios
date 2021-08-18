@@ -71,8 +71,11 @@ struct StackView: View {
                         .padding(.top, 3)
                 }
             }
-        }.onReceive(ItemCache.default.updatedPublisher.debounce(for: .milliseconds(500), scheduler: RunLoop.main)) { _ in
-            updateSignal += 1
+        }
+        .onReceive(ItemCache.default.updatedPublisher.debounce(for: .milliseconds(500), scheduler: RunLoop.main)) { _ in
+            if listenToUpdateSignal {
+                updateSignal += 1
+            }
         }
     }
 }
