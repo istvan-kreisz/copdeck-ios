@@ -42,9 +42,11 @@ struct ItemDetailView: View {
             Color.customWhite.edgesIgnoringSafeArea(.all)
             let isAddToInventoryActive = Binding<Bool>(get: { addToInventory.isActive },
                                                        set: { addToInventory = $0 ? addToInventory : (false, nil) })
-            if let item = item, showAddToInventoryButton {
+            if showAddToInventoryButton {
                 NavigationLink("",
-                               destination: AddToInventoryView(item: item, presented: $addToInventory, addedInvantoryItem: $addedInventoryItem),
+                               destination: item
+                                   .map { item in AddToInventoryView(item: item, presented: $addToInventory, addedInvantoryItem: $addedInventoryItem) } ??
+                                   nil,
                                isActive: isAddToInventoryActive)
             }
 

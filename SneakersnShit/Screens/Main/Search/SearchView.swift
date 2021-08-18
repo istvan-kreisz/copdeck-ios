@@ -24,60 +24,64 @@ struct SearchView: View {
     }
 
     var body: some View {
-        let showSelectedItem = Binding<Bool>(get: { selectedItem?.id != nil },
-                                             set: { selectedItem = $0 ? selectedItem : nil })
-        NavigationLink(destination: selectedItem.map { item in ItemDetailView(item: item,
-                                                                              showView: showSelectedItem,
-                                                                              itemId: item.id,
-                                                                              showAddToInventoryButton: true) },
-        isActive: showSelectedItem) { EmptyView() }
-
-        NavigationLink(destination:
-            PopularItemsListView(showView: $showPopularItems,
-                                 items: $store.state.popularItems,
-                                 requestInfo: store.state.requestInfo),
-            isActive: $showPopularItems) { EmptyView() }
-//            .isDetailLink(false)
-
-        VStack(alignment: .leading, spacing: 19) { [weak searchResultsLoader, weak popularItemsLoader] in
-            Text("Search")
-                .foregroundColor(.customText1)
-                .font(.bold(size: 35))
-                .leftAligned()
-                .padding(.leading, 6)
-                .withDefaultPadding(padding: .horizontal)
-
-            TextFieldRounded(title: nil,
-                             placeHolder: "Search sneakers",
-                             style: .white,
-                             text: $searchText)
-                .withDefaultPadding(padding: .horizontal)
-
-            if let popularItemsLoader = popularItemsLoader {
-                HorizontaltemListView(items: $store.state.popularItems,
-                                      selectedItem: $selectedItem,
-                                      showPopularItems: $showPopularItems,
-                                      loader: popularItemsLoader,
-                                      title: "Trending now",
-                                      requestInfo: store.state.requestInfo)
+        Group {
+            let showSelectedItem = Binding<Bool>(get: { selectedItem?.id != nil },
+                                                 set: { selectedItem = $0 ? selectedItem : nil })
+            let selectedItemId = Binding<String?>(get: { selectedItem?.id },
+                                                  set: { selectedItem = $0 != nil ? selectedItem : nil })
+            ForEach(allItems) { item in
+                NavigationLink(destination: ItemDetailView(item: item,
+                                                           showView: showSelectedItem,
+                                                           itemId: item.id,
+                                                           showAddToInventoryButton: true),
+                               tag: item.id,
+                               selection: selectedItemId) { EmptyView() }
             }
 
-            if let searchResultsLoader = searchResultsLoader {
+            NavigationLink(destination:
+                PopularItemsListView(showView: $showPopularItems,
+                                     items: $store.state.popularItems,
+                                     requestInfo: store.state.requestInfo),
+                isActive: $showPopularItems) { EmptyView() }
+
+            VStack(alignment: .leading, spacing: 19) {
+                Text("Search")
+                    .foregroundColor(.customText1)
+                    .font(.bold(size: 35))
+                    .leftAligned()
+                    .padding(.leading, 6)
+                    .withDefaultPadding(padding: .horizontal)
+
+                TextFieldRounded(title: nil,
+                                 placeHolder: "Search sneakers",
+                                 style: .white,
+                                 text: $searchText)
+                    .withDefaultPadding(padding: .horizontal)
+
+
+                    HorizontaltemListView(items: $store.state.popularItems,
+                                          selectedItem: $selectedItem,
+                                          isLoading: $popularItemsLoader.isLoading,
+                                          showPopularItems: $showPopularItems,
+                                          title: "Trending now",
+                                          requestInfo: store.state.requestInfo)
+
+
                 VerticalItemListView(items: $store.state.searchResults,
                                      selectedItem: $selectedItem,
-                                     loader: searchResultsLoader,
+                                     isLoading: $searchResultsLoader.isLoading,
                                      title: nil,
                                      resultsLabelText: "Search results:",
                                      bottomPadding: 130,
                                      requestInfo: store.state.requestInfo)
             }
-        }
-        .onChange(of: searchText) { searchText in
-            store.send(.main(action: .getSearchResults(searchTerm: searchText)), completed: searchResultsLoader.getLoader())
-        }
-        .onAppear {
-            if store.state.popularItems?.isEmpty != false {
-                store.send(.main(action: .getPopularItems))
+            .onChange(of: searchText) { searchText in
+                store.send(.main(action: .getSearchResults(searchTerm: searchText)), completed: searchResultsLoader.getLoader())
+            }
+            .onAppear {
+                if store.state.popularItems?.isEmpty != false {
+                    store.send(.main(action: .getPopularItems), completed: popularItemsLoader.getLoader())
+                }
             }
         }
     }

@@ -11,7 +11,7 @@ import Combine
 struct VerticalItemListView: View {
     @Binding var items: [Item]?
     @Binding var selectedItem: Item?
-    @ObservedObject var loader: Loader
+    @Binding var isLoading: Bool
 
     let title: String?
     let resultsLabelText: String?
@@ -20,7 +20,7 @@ struct VerticalItemListView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            VStack(alignment: .leading, spacing: 19) { [weak loader] in
+            VStack(alignment: .leading, spacing: 19) {
                 if let title = title {
                     Text(title)
                         .foregroundColor(.customText1)
@@ -29,7 +29,7 @@ struct VerticalItemListView: View {
                         .padding(.leading, 6)
                         .withDefaultPadding(padding: .horizontal)
                 }
-                if loader?.isLoading == true {
+                if isLoading {
                     CustomSpinner(text: "Loading...", animate: true)
                         .padding(.horizontal, 22)
                         .padding(.top, 5)
@@ -62,7 +62,7 @@ struct VerticalItemListView_Previews: PreviewProvider {
         return Group {
             VerticalItemListView(items: .constant([.sample, .sample]),
                                  selectedItem: .constant(.sample),
-                                 loader: Loader(),
+                                 isLoading: .constant(false),
                                  title: "title",
                                  resultsLabelText: nil,
                                  bottomPadding: 130,

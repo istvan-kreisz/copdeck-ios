@@ -16,34 +16,36 @@ struct PopularItemsListView: View {
     @State private var selectedItem: Item?
 
     var body: some View {
-        let showSelectedItem = Binding<Bool>(get: { selectedItem?.id != nil },
-                                             set: { selectedItem = $0 ? selectedItem : nil })
-        let selectedItemId = Binding<String?>(get: { selectedItem?.id }, set: { selectedItem = $0 == nil ? nil : selectedItem })
+        Group {
+            let showSelectedItem = Binding<Bool>(get: { selectedItem?.id != nil },
+                                                 set: { selectedItem = $0 ? selectedItem : nil })
+            let selectedItemId = Binding<String?>(get: { selectedItem?.id }, set: { selectedItem = $0 == nil ? nil : selectedItem })
 
-        ForEach(items ?? []) { item in
-            NavigationLink(destination: ItemDetailView(item: item,
-                                                       showView: showSelectedItem,
-                                                       itemId: item.id,
-                                                       showAddToInventoryButton: true),
-                           tag: item.id,
-                           selection: selectedItemId) { EmptyView() }
-        }
-        VStack(alignment: .center, spacing: 8) {
-            NavigationBar(showView: $showView, title: "Trending now", isBackButtonVisible: true, style: .dark)
-                .withDefaultPadding(padding: .horizontal)
+            ForEach(items ?? []) { item in
+                NavigationLink(destination: ItemDetailView(item: item,
+                                                           showView: showSelectedItem,
+                                                           itemId: item.id,
+                                                           showAddToInventoryButton: true),
+                               tag: item.id,
+                               selection: selectedItemId) { EmptyView() }
+            }
+            VStack(alignment: .center, spacing: 8) {
+                NavigationBar(showView: $showView, title: "Trending now", isBackButtonVisible: true, style: .dark)
+                    .withDefaultPadding(padding: .horizontal)
 
-            VerticalItemListView(items: $items,
-                                 selectedItem: $selectedItem,
-                                 loader: Loader(),
-                                 title: nil,
-                                 resultsLabelText: nil,
-                                 bottomPadding: 30,
-                                 requestInfo: requestInfo)
+                VerticalItemListView(items: $items,
+                                     selectedItem: $selectedItem,
+                                     isLoading: .constant(false),
+                                     title: nil,
+                                     resultsLabelText: nil,
+                                     bottomPadding: 30,
+                                     requestInfo: requestInfo)
+            }
+            .edgesIgnoringSafeArea(.bottom)
+            .frame(maxWidth: UIScreen.main.bounds.width)
+            .withDefaultPadding(padding: .top)
+            .withBackgroundColor()
+            .navigationbarHidden()
         }
-        .edgesIgnoringSafeArea(.bottom)
-        .frame(maxWidth: UIScreen.main.bounds.width)
-        .withDefaultPadding(padding: .top)
-        .withBackgroundColor()
-        .navigationbarHidden()
     }
 }

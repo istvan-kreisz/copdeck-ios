@@ -36,15 +36,13 @@ struct InventoryItemDetailView: View {
     }
 
     var body: some View {
-        if let itemId = inventoryItem.itemId {
-            NavigationLink(destination: ItemDetailView(item: nil,
-                                                       showView: $showItemDetails,
-                                                       itemId: itemId,
-                                                       showAddToInventoryButton: true),
-                           isActive: $showItemDetails) { EmptyView() }
-        }
-
         ScrollView(.vertical, showsIndicators: false) {
+            NavigationLink(destination: inventoryItem.itemId.map { itemId in ItemDetailView(item: nil,
+                                                                                            showView: $showItemDetails,
+                                                                                            itemId: itemId,
+                                                                                            showAddToInventoryButton: true) },
+            isActive: $showItemDetails) { EmptyView() }
+
             VStack(alignment: .center, spacing: 20) {
                 ItemImageViewWithNavBar(showView: $isEditingInventoryItem, imageURL: inventoryItem.imageURL, requestInfo: store.state.requestInfo)
 
@@ -77,7 +75,8 @@ struct InventoryItemDetailView: View {
                     }
                     .padding(.top, 15)
 
-                    NewItemCard(inventoryItem: $inventoryItem, purchasePrice: inventoryItem.purchasePrice, currency: store.state.currency, style: .noBackground)
+                    NewItemCard(inventoryItem: $inventoryItem, purchasePrice: inventoryItem.purchasePrice, currency: store.state.currency,
+                                style: .noBackground)
 
                     TextFieldRounded(title: "notes (optional)",
                                      placeHolder: "add any notes here",

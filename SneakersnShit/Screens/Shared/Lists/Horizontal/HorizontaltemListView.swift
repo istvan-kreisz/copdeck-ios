@@ -13,8 +13,8 @@ struct HorizontaltemListView: View {
 
     @Binding var items: [Item]?
     @Binding var selectedItem: Item?
+    @Binding var isLoading: Bool
     @Binding var showPopularItems: Bool
-    @ObservedObject var loader: Loader
 
     let title: String?
     var requestInfo: [ScraperRequestInfo]
@@ -80,8 +80,8 @@ struct HorizontaltemListView_Previews: PreviewProvider {
     static var previews: some View {
         HorizontaltemListView(items: .constant([.sample, .sample]),
                               selectedItem: .constant(nil),
+                              isLoading: .constant(true),
                               showPopularItems: .constant(false),
-                              loader: Loader(),
                               title: "title",
                               requestInfo: [])
     }

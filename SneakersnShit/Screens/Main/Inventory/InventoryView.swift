@@ -76,18 +76,17 @@ struct InventoryView: View {
                                tag: inventoryItem.id,
                                selection: $selectedInventoryItemId) { EmptyView() }
             }
-            if let editedStack = editedStack {
-                NavigationLink(destination: SelectStackItemsView(showView: showEditedStack,
-                                                                 stack: editedStack,
-                                                                 inventoryItems: store.state.inventoryItems,
-                                                                 requestInfo: store.state.requestInfo,
-                                                                 saveChanges: { updatedStackItems in
-                                                                     var updatedStack = editedStack
-                                                                     updatedStack.items = updatedStackItems
-                                                                     store.send(.main(action: .updateStack(stack: updatedStack)))
-                                                                 }),
-                               isActive: showEditedStack) { EmptyView() }
-            }
+            NavigationLink(destination: editedStack.map { editedStack in SelectStackItemsView(showView: showEditedStack,
+                                                                                              stack: editedStack,
+                                                                                              inventoryItems: store.state.inventoryItems,
+                                                                                              requestInfo: store.state.requestInfo,
+                                                                                              saveChanges: { updatedStackItems in
+                                                                                                  var updatedStack = editedStack
+                                                                                                  updatedStack.items = updatedStackItems
+                                                                                                  store
+                                                                                                      .send(.main(action: .updateStack(stack: updatedStack)))
+                                                                                              }) },
+            isActive: showEditedStack) { EmptyView() }
 
             VStack(alignment: .leading, spacing: 0) {
                 VStack(alignment: .center, spacing: 30) {
