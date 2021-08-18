@@ -59,13 +59,13 @@ struct InventoryItem: Codable, Equatable, Identifiable {
 }
 
 extension InventoryItem {
-    init(fromItem item: Item) {
+    init(fromItem item: Item, size: String? = nil) {
         self.init(id: UUID().uuidString,
                   itemId: item.id,
                   name: item.name ?? "",
                   purchasePrice: item.retailPrice.asPriceWithCurrency(currency: item.currency),
                   imageURL: item.imageURL,
-                  size: item.sortedSizes.first ?? "",
+                  size: (size ?? item.sortedSizes.first) ?? "",
                   condition: .new,
                   soldPrice: nil,
                   notes: nil,

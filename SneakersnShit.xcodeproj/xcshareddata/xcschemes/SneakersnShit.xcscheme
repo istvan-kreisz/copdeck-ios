@@ -61,12 +61,12 @@
          <EnvironmentVariable
             key = "pricesRefreshPeriodMin"
             value = "0.4"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "itemPricesRefreshPeriodMin"
             value = "0.2"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "showScraperLogs"

@@ -42,7 +42,7 @@ struct AddToInventoryView: View {
         self._styleId = State(initialValue: item.bestStoreInfo?.sku ?? "")
         self._notes = State(initialValue: "")
 
-        self._inventoryItem1 = State(initialValue: InventoryItem(fromItem: item))
+        self._inventoryItem1 = State(initialValue: InventoryItem(fromItem: item, size: presented.wrappedValue.size))
         self._inventoryItem2 = State(initialValue: nil)
         self._inventoryItem3 = State(initialValue: nil)
         self._inventoryItem4 = State(initialValue: nil)
@@ -136,13 +136,13 @@ struct AddToInventoryView: View {
 
     private func addMore() {
         if inventoryItem2 == nil {
-            inventoryItem2 = InventoryItem(fromItem: item)
+            inventoryItem2 = InventoryItem(fromItem: item, size: inventoryItem1.size)
         } else if inventoryItem3 == nil {
-            inventoryItem3 = InventoryItem(fromItem: item)
+            inventoryItem3 = InventoryItem(fromItem: item, size: inventoryItem2?.size)
         } else if inventoryItem4 == nil {
-            inventoryItem4 = InventoryItem(fromItem: item)
+            inventoryItem4 = InventoryItem(fromItem: item, size: inventoryItem3?.size)
         } else if inventoryItem5 == nil {
-            inventoryItem5 = InventoryItem(fromItem: item)
+            inventoryItem5 = InventoryItem(fromItem: item, size: inventoryItem4?.size)
         }
     }
 

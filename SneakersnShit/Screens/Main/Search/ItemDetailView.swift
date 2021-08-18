@@ -197,11 +197,11 @@ struct ItemDetailView: View {
                                                             .fill(Color.customBlue)
                                                             .frame(width: 18, height: 18)
                                                         Image(systemName: "plus")
-                                                            .font(.bold(size: 7))
+                                                            .font(.bold(size: 9))
                                                             .foregroundColor(Color.customWhite)
                                                     }
                                                     .frame(width: 18, height: 18)
-                                                    .offset(x: 9, y: 0)
+                                                    .offset(x: 7, y: 0)
                                                 }
                                         }
 
