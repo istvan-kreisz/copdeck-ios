@@ -37,12 +37,11 @@ class DefaultDataController: DataController {
 
     private func refreshItem(for item: Item?,
                              itemId: String,
-                             forced: Bool,
                              settings: CopDeckSettings,
                              exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
         log("refreshing item with id: \(itemId)")
         return localScraper
-            .getItemDetails(for: item, itemId: itemId, forced: forced, settings: settings, exchangeRates: exchangeRates)
+            .getItemDetails(for: item, itemId: itemId, fetchMode: .cacheOrRefresh, settings: settings, exchangeRates: exchangeRates)
             .map { refreshedItem in
                 if let item = item {
                     return refreshedItem.storePrices.isEmpty ? item : refreshedItem
@@ -50,31 +49,31 @@ class DefaultDataController: DataController {
                     return refreshedItem
                 }
             }
-            .handleEvents(receiveOutput: { [weak self] updatedItem in
-                ItemCache.default.insert(item: updatedItem, settings: settings)
-                if updatedItem != item {
-                    self?.databaseManager.update(item: updatedItem, settings: settings)
-                }
-            })
             .tryCatch { error -> AnyPublisher<Item, AppError> in
                 guard let item = item else {
                     return Fail<Item, AppError>(error: error).eraseToAnyPublisher()
                 }
                 return Just(item).setFailureType(to: AppError.self).eraseToAnyPublisher()
             }
+            .handleEvents(receiveOutput: { [weak self] updatedItem in
+                ItemCache.default.insert(item: updatedItem, settings: settings)
+                if updatedItem.updated != item?.updated {
+                    self?.databaseManager.update(item: updatedItem, settings: settings)
+                }
+            })
             .mapError { error in (error as? AppError) ?? AppError(error: error) }
             .eraseToAnyPublisher()
     }
 
     func getItemDetails(for item: Item?,
                         itemId: String,
-                        forced: Bool,
+                        fetchMode: FetchMode,
                         settings: CopDeckSettings,
                         exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
         let returnValue: AnyPublisher<Item, AppError>
 
-        if forced {
-            returnValue = refreshItem(for: item, itemId: itemId, forced: forced, settings: settings, exchangeRates: exchangeRates)
+        if fetchMode == .forcedRefresh {
+            returnValue = refreshItem(for: item, itemId: itemId, settings: settings, exchangeRates: exchangeRates)
         } else {
             returnValue =
                 ItemCache.default.valuePublisher(itemId: itemId, settings: settings)
@@ -86,26 +85,52 @@ class DefaultDataController: DataController {
                             log("cache")
                             return Just(item).setFailureType(to: AppError.self).eraseToAnyPublisher()
                         } else {
-                            return self.databaseManager.getItem(withId: itemId, settings: settings).eraseToAnyPublisher()
-                                .flatMap { [weak self] item -> AnyPublisher<Item, AppError> in
-                                    guard let self = self else {
-                                        return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
+                            if fetchMode == .cacheOnly {
+                                return self.databaseManager.getItem(withId: itemId, settings: settings).eraseToAnyPublisher()
+                                    .map { savedItem -> Item in
+                                        if let item = item {
+                                            if savedItem.updated ?? 0 > item.updated ?? 0 {
+                                                ItemCache.default.insert(item: savedItem, settings: settings)
+                                                return savedItem
+                                            } else {
+                                                return item
+                                            }
+                                        } else {
+                                            ItemCache.default.insert(item: savedItem, settings: settings)
+                                            return savedItem
+                                        }
                                     }
-                                    if item.isUptodate && !item.storePrices.isEmpty {
-                                        ItemCache.default.insert(item: item, settings: settings)
-                                        return Just(item).setFailureType(to: AppError.self).eraseToAnyPublisher()
-                                    } else {
-                                        return self.refreshItem(for: item, itemId: itemId, forced: forced, settings: settings, exchangeRates: exchangeRates)
+                                    .tryCatch { error -> AnyPublisher<Item, AppError> in
+                                        if let item = item {
+                                            return Just(item).setFailureType(to: AppError.self).eraseToAnyPublisher()
+                                        } else {
+                                            return Fail<Item, AppError>(error: error).eraseToAnyPublisher()
+                                        }
                                     }
-                                }
-                                .eraseToAnyPublisher()
+                                    .mapError { error in (error as? AppError) ?? AppError(error: error) }
+                                    .eraseToAnyPublisher()
+                            } else {
+                                return self.databaseManager.getItem(withId: itemId, settings: settings).eraseToAnyPublisher()
+                                    .flatMap { [weak self] savedItem -> AnyPublisher<Item, AppError> in
+                                        guard let self = self else {
+                                            return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
+                                        }
+                                        if savedItem.isUptodate && !savedItem.storePrices.isEmpty {
+                                            ItemCache.default.insert(item: savedItem, settings: settings)
+                                            return Just(savedItem).setFailureType(to: AppError.self).eraseToAnyPublisher()
+                                        } else {
+                                            return self.refreshItem(for: savedItem, itemId: itemId, settings: settings, exchangeRates: exchangeRates)
+                                        }
+                                    }
+                                    .eraseToAnyPublisher()
+                            }
                         }
                     }
                     .tryCatch { [weak self] error -> AnyPublisher<Item, AppError> in
                         guard let self = self else {
                             return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
                         }
-                        return self.refreshItem(for: item, itemId: itemId, forced: forced, settings: settings, exchangeRates: exchangeRates)
+                        return self.refreshItem(for: item, itemId: itemId, settings: settings, exchangeRates: exchangeRates)
                     }
                     .mapError { error in (error as? AppError) ?? AppError(error: error) }
                     .eraseToAnyPublisher()

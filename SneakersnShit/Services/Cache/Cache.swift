@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+#warning("set max size")
 final class Cache<Key: Hashable, Value> {
     private let wrapped = NSCache<WrappedKey, Entry>()
     private let dateProvider: () -> Date

@@ -10,7 +10,6 @@ import Combine
 import FirebaseFunctions
 
 class BackendAPI: API {
-
     var cookiesPublisher: AnyPublisher<[Cookie], Never> {
         PassthroughSubject<[Cookie], Never>().eraseToAnyPublisher()
     }
@@ -19,7 +18,8 @@ class BackendAPI: API {
         PassthroughSubject<[HeadersWithStoreId], Never>().eraseToAnyPublisher()
     }
 
-    func getItemDetails(for item: Item?, itemId: String, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
+    func getItemDetails(for item: Item?, itemId: String, fetchMode: FetchMode, settings: CopDeckSettings,
+                        exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
         if let item = item {
             return getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates)
         } else {
@@ -62,11 +62,9 @@ class BackendAPI: API {
     private let functions = Functions.functions(region: "europe-west1")
 
     init() {
-        #if DEBUG
-            if DebugSettings.shared.useFunctionsEmulator {
-                functions.useFunctionsEmulator(origin: "http://istvans-macbook-pro-2.local:5001")
-            }
-        #endif
+        if DebugSettings.shared.isInDebugMode, DebugSettings.shared.useFunctionsEmulator {
+            functions.useFunctionsEmulator(origin: "http://istvans-macbook-pro-2.local:5001")
+        }
     }
 
     private func callFirebaseFunction(functionName: String, model: Encodable) -> AnyPublisher<Void, AppError> {

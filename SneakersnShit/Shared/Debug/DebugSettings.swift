@@ -27,9 +27,14 @@ struct DebugSettings {
 
     static let shared = DebugSettings()
 
-    private func bool(for key: String) -> Bool {
+    func bool(for key: String) -> Bool {
         guard let value = ProcessInfo.processInfo.environment[key] else { return false }
         return Bool(value) ?? false
+    }
+
+    func double(for key: String) -> Double? {
+        guard let value = ProcessInfo.processInfo.environment[key] else { return nil }
+        return Double(value)
     }
 
     var useMockData: Bool {

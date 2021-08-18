@@ -41,15 +41,17 @@ class LocalScraper {
         let feeCalculation = APIConfig.FeeCalculation(countryName: settings.feeCalculation.country.name,
                                                       stockx: .init(sellerLevel: (settings.feeCalculation.stockx?.sellerLevel.rawValue) ?? 1,
                                                                     taxes: (settings.feeCalculation.stockx?.taxes) ?? 0,
-                                                                    successfulShipBonus: (settings.feeCalculation.stockx?.successfulShipBonus ?? false) && stockXLevelIsAtLeast4,
-                                                                    quickShipBonus: (settings.feeCalculation.stockx?.quickShipBonus ?? false) && stockXLevelIsAtLeast4),
+                                                                    successfulShipBonus: (settings.feeCalculation.stockx?.successfulShipBonus ?? false) &&
+                                                                        stockXLevelIsAtLeast4,
+                                                                    quickShipBonus: (settings.feeCalculation.stockx?.quickShipBonus ?? false) &&
+                                                                        stockXLevelIsAtLeast4),
                                                       goat: .init(commissionPercentage: (settings.feeCalculation.goat?.commissionPercentage.rawValue) ?? 0,
                                                                   cashOutFee: (settings.feeCalculation.goat?.cashOutFee == true) ? 0.029 : 0,
                                                                   taxes: (settings.feeCalculation.goat?.taxes) ?? 0))
         var showLogs = false
-        #if DEBUG
+        if DebugSettings.shared.isInDebugMode {
             showLogs = true && DebugSettings.shared.showScraperLogs
-        #endif
+        }
         return APIConfig(currency: settings.currency,
                          isLoggingEnabled: showLogs,
                          exchangeRates: exchangeRates,
@@ -75,7 +77,7 @@ class LocalScraper {
 extension LocalScraper: API {
     func getItemDetails(for item: Item?,
                         itemId: String,
-                        forced: Bool,
+                        fetchMode: FetchMode,
                         settings: CopDeckSettings,
                         exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
         if DebugSettings.shared.showScraperLogs {

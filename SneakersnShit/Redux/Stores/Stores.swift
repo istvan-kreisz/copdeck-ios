@@ -10,8 +10,6 @@ import Foundation
 typealias AppStore = ReduxStore<AppState, AppAction, World>
 
 extension AppStore {
-    static let exchangeRatesRefreshRateMin: TimeInterval = 1
-
     static let `default`: AppStore = {
         let appStore = AppStore(state: .init(), reducer: appReducer, environment: World())
         appStore.setup()
@@ -41,8 +39,8 @@ extension AppStore {
                 self?.state.inventoryItems = $0
                 self?.updateAllStack(withInventoryItems: $0)
                 if !$0.isEmpty && self?.state.didFetchItemPrices == false {
-                    self?.state.didFetchItemPrices = true
                     self?.refreshItemPricesIfNeeded()
+                    self?.state.didFetchItemPrices = true
                 }
             }
             .store(in: &effectCancellables)
@@ -83,10 +81,10 @@ extension AppStore {
 
     func setupTimers() {
         refreshExchangeRatesIfNeeded()
-        Timer.scheduledTimer(withTimeInterval: 60 * Self.exchangeRatesRefreshRateMin, repeats: true) { [weak self] _ in
+        Timer.scheduledTimer(withTimeInterval: 60 * World.Constants.exchangeRatesRefreshRateMin, repeats: true) { [weak self] _ in
             self?.refreshExchangeRatesIfNeeded()
         }
-        Timer.scheduledTimer(withTimeInterval: 60 * Item.pricesRefreshRateMin, repeats: true) { [weak self] _ in
+        Timer.scheduledTimer(withTimeInterval: 60 * World.Constants.pricesRefreshPeriodMin, repeats: true) { [weak self] _ in
             self?.refreshItemPricesIfNeeded()
         }
     }
@@ -118,10 +116,16 @@ extension AppStore {
             .map { offset, idWithDelay in
                 (idWithDelay.0, idWithDelay.1 + (idsWithDelay[safe: offset - 1]?.1 ?? 0))
             }
+        if !state.didFetchItemPrices {
+            idsWithDelay
+                .forEach { [weak self] id, _ in
+                    self?.send(.main(action: .refreshItemIfNeeded(itemId: id, fetchMode: .cacheOnly)))
+                }
+        }
         idsWithDelay
             .forEach { id, delay in
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
-                    self?.send(.main(action: .refreshItemIfNeeded(itemId: id)))
+                    self?.send(.main(action: .refreshItemIfNeeded(itemId: id, fetchMode: .cacheOrRefresh)))
                 }
             }
     }

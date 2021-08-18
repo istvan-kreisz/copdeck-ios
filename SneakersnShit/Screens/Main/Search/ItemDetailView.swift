@@ -148,7 +148,7 @@ struct ItemDetailView: View {
                                 .padding(.top, 5)
                                 .padding(.bottom, -5)
                                 .onTapGesture {
-                                    refreshPrices(forced: true)
+                                    refreshPrices(fetchMode: .forcedRefresh)
                                 }
 
                                 HStack(spacing: 10) {
@@ -243,7 +243,7 @@ struct ItemDetailView: View {
                 store.send(.main(action: .setSelectedItem(item: nil)))
                 if firstShow {
                     firstShow = false
-                    refreshPrices(forced: false)
+                    refreshPrices(fetchMode: .cacheOrRefresh)
                 }
             }
             .onChange(of: store.state.selectedItem) { item in
@@ -257,8 +257,8 @@ struct ItemDetailView: View {
         }
     }
 
-    private func refreshPrices(forced: Bool) {
-        store.send(.main(action: .getItemDetails(item: item, itemId: itemId, forced: forced)), completed: loader.getLoader())
+    private func refreshPrices(fetchMode: FetchMode) {
+        store.send(.main(action: .getItemDetails(item: item, itemId: itemId, fetchMode: fetchMode)), completed: loader.getLoader())
     }
 
     private func updateItem(newItem: Item?) {

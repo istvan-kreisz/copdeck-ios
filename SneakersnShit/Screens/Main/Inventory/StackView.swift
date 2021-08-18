@@ -16,6 +16,7 @@ struct StackView: View {
     @Binding var selectedInventoryItemId: String?
     @Binding var isEditing: Bool
     @Binding var selectedInventoryItems: [InventoryItem]
+    @Binding var isSelected: Bool
     var didTapEditStack: (() -> Void)?
 
     @State var updateSignal = 0
@@ -72,10 +73,13 @@ struct StackView: View {
                 }
             }
         }
-        .onReceive(ItemCache.default.updatedPublisher.debounce(for: .milliseconds(500), scheduler: RunLoop.main)) { _ in
-            if listenToUpdateSignal {
-                updateSignal += 1
-            }
-        }
+//        .onReceive(ItemCache.default.updatedPublisher.debounce(for: .milliseconds(500), scheduler: RunLoop.main)) { _ in
+//            if isSelected {
+//                print("------------------")
+//                print("updated \(updateSignal)")
+//                print("------------------")
+//                updateSignal += 1
+//            }
+//        }
     }
 }

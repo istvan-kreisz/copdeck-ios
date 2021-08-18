@@ -33,15 +33,15 @@ struct ImageView: View {
             if let image = state.image {
                 image.resizingMode(.aspectFit)
             } else if state.error != nil {
-                #if DEBUG
+                if DebugSettings.shared.isInDebugMode {
                     Color.customRed
-                #else
+                } else {
                     if showPlaceholder {
                         Color(.secondarySystemBackground)
                     } else {
                         Color.clear
                     }
-                #endif
+                }
             } else {
                 if showPlaceholder {
                     Color.customAccent2

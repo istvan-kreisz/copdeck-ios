@@ -108,18 +108,35 @@ struct InventoryView: View {
                                            titles: stackTitles,
                                            button: .init(title: "New Stack", tapped: { showAddNewStackAlert = true }))
                     .withDefaultPadding(padding: .horizontal)
-                PagerView(pageCount: pageCount, currentIndex: $selectedStackIndex) {
-                    ForEach(store.state.stacks) { stack in
-                        StackView(searchText: $searchText,
-                                  inventoryItems: stack.inventoryItems(allInventoryItems: store.state.inventoryItems),
-                                  selectedInventoryItemId: $selectedInventoryItemId,
-                                  isEditing: $isEditing,
-                                  selectedInventoryItems: $selectedInventoryItems,
-                                  didTapEditStack: stack.id == "all" ? nil : {
-                                      editedStack = stack
-                                  })
-                    }
-                }
+
+                let stack = store.state.stacks[0]
+                                        let isSelected = Binding<Bool>(get: { stack.id == selectedStack?.id },
+                                                                       set: { _ in })
+                StackView(searchText: $searchText,
+                          inventoryItems: stack.inventoryItems(allInventoryItems: store.state.inventoryItems),
+                          selectedInventoryItemId: $selectedInventoryItemId,
+                          isEditing: $isEditing,
+                          selectedInventoryItems: $selectedInventoryItems,
+                          isSelected: isSelected,
+                          didTapEditStack: stack.id == "all" ? nil : {
+                              editedStack = stack
+                          })
+
+//                PagerView(pageCount: pageCount, currentIndex: $selectedStackIndex) {
+//                    ForEach(store.state.stacks) { stack in
+//                        let isSelected = Binding<Bool>(get: { stack.id == selectedStack?.id },
+//                                                       set: { _ in })
+//                        StackView(searchText: $searchText,
+//                                  inventoryItems: stack.inventoryItems(allInventoryItems: store.state.inventoryItems),
+//                                  selectedInventoryItemId: $selectedInventoryItemId,
+//                                  isEditing: $isEditing,
+//                                  selectedInventoryItems: $selectedInventoryItems,
+//                                  isSelected: isSelected,
+//                                  didTapEditStack: stack.id == "all" ? nil : {
+//                                      editedStack = stack
+//                                  })
+//                    }
+//                }
             }
             .withFloatingButton(button: EditInventoryTray(actions: actionsTrayActions)
                 .padding(.bottom, UIApplication.shared.safeAreaInsets().bottom)

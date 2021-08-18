@@ -60,7 +60,7 @@ class FirebaseService: DatabaseManager {
     init() {
         firestore = Firestore.firestore()
         let settings = firestore.settings
-        settings.cacheSizeBytes = 200 * 1000000
+        settings.cacheSizeBytes = 200 * 1_000_000
         firestore.settings = settings
 
         itemsRef = firestore.collection("items")
@@ -180,43 +180,17 @@ class FirebaseService: DatabaseManager {
     }
 
     func getItem(withId id: String, settings: CopDeckSettings) -> AnyPublisher<Item, AppError> {
-        Future { [weak self] promise in
+        log("get item with id: \(id)")
+        return Future { [weak self] promise in
             self?.itemsRef?.document(Item.databaseId(itemId: id, settings: settings)).getDocument { snapshot, error in
                 if let dict = snapshot?.data(), let item = Item(from: dict) {
+                    log("db read")
                     promise(.success(item))
                 } else {
                     promise(.failure(error.map { AppError(error: $0) } ?? AppError.unknown))
                 }
             }
         }.eraseToAnyPublisher()
-
-//        Future { [weak self] promise in
-//            self?.itemsRef?.getDocuments(source: .cache) { snapshot, error in
-//                var cachedItem: Item?
-//                if let dict = snapshot?.documents.first?.data(), let item = Item(from: dict) {
-//                    cachedItem = item
-//                    if item.isUptodate, !item.storePrices.isEmpty {
-//                        log("fb cache")
-//                        promise(.success(item))
-//                        return
-//                    }
-//                }
-//
-//                self?.itemsRef?.getDocuments(source: .server) { snapshot, error in
-//                    if let dict = snapshot?.documents.first?.data(), let item = Item(from: dict) {
-//                        log("fb server")
-//                        promise(.success(item))
-//                    } else {
-//                        if let cachedItem = cachedItem {
-//                            log("fallback fb cache")
-//                            promise(.success(cachedItem))
-//                        } else {
-//                            promise(.failure(error.map { AppError(error: $0) } ?? AppError.unknown))
-//                        }
-//                    }
-//                }
-//            }
-//        }.eraseToAnyPublisher()
     }
 
     func delete(inventoryItems: [InventoryItem]) {

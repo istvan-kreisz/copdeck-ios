@@ -267,10 +267,8 @@ extension Item {
         "\(itemId.replacingOccurrences(of: "/", with: "."))-\(settings.feeCalculation.country.region)-\(settings.currency.code.rawValue)"
     }
 
-    static let pricesRefreshRateMin: TimeInterval = 30
-
     var isUptodate: Bool {
-        guard let updated = updated, !updated.isOlderThan(minutes: Item.pricesRefreshRateMin) else {
+        guard let updated = updated, !updated.isOlderThan(minutes: World.Constants.itemPricesRefreshPeriodMin) else {
             return false
         }
         return true

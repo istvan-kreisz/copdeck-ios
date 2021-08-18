@@ -20,8 +20,8 @@ enum MainAction {
     case getPopularItems
     case setPopularItems(items: [Item])
     // item details
-    case getItemDetails(item: Item?, itemId: String, forced: Bool)
-    case refreshItemIfNeeded(itemId: String)
+    case getItemDetails(item: Item?, itemId: String, fetchMode: FetchMode)
+    case refreshItemIfNeeded(itemId: String, fetchMode: FetchMode)
     case setSelectedItem(item: Item?)
     // inventory
     case addStack(stack: Stack)
@@ -54,8 +54,8 @@ extension MainAction: Identifiable {
             return "setPopularItems"
         case .getItemDetails:
             return "getItemDetails"
-        case let .refreshItemIfNeeded(itemId):
-            return "refreshItemIfNeeded \(itemId)"
+        case let .refreshItemIfNeeded(itemId, fetchMode):
+            return "refreshItemIfNeeded \(itemId) \(fetchMode.rawValue)"
         case .setSelectedItem:
             return "setSelectedItem"
         case .addStack:
