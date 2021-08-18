@@ -9,7 +9,7 @@ import SwiftUI
 
 struct InventoryListItem: View {
     var inventoryItem: InventoryItem
-    @Binding var bestPrice: PriceWithCurrency?
+    let bestPrice: PriceWithCurrency?
     @Binding var selectedInventoryItemId: String?
     var isSelected: Bool
 
@@ -22,7 +22,7 @@ struct InventoryListItem: View {
             Text("Best price".uppercased())
                 .foregroundColor(.customText2)
                 .font(.bold(size: 9))
-            Text(bestPrice.map { "\($0.currencySymbol.rawValue)\($0.price.rounded(toPlaces: 0))" } ?? "-")
+            Text(bestPrice?.asString ?? "-")
                 .foregroundColor(.customText1)
                 .font(.bold(size: 20))
         }

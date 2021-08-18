@@ -12,25 +12,15 @@ struct StackView: View {
     @EnvironmentObject var store: AppStore
 
     @Binding var searchText: String
-    var inventoryItems: [InventoryItem]
+    @Binding var inventoryItems: [InventoryItemWrapper]
     @Binding var selectedInventoryItemId: String?
     @Binding var isEditing: Bool
     @Binding var selectedInventoryItems: [InventoryItem]
     @Binding var isSelected: Bool
     var didTapEditStack: (() -> Void)?
 
-    @State var updateSignal = 0
-
-    var allItems: [InventoryItem] {
-        inventoryItems.filter { $0.name.lowercased().fuzzyMatch(searchText.lowercased()) }
-    }
-
-    func bestPrice(for inventoryItem: InventoryItem) -> PriceWithCurrency? {
-        if let itemId = inventoryItem.itemId, let item = ItemCache.default.value(itemId: itemId, settings: store.state.settings) {
-            return item.bestPrice(for: inventoryItem.size, feeType: .none, priceType: .ask)
-        } else {
-            return nil
-        }
+    var allItems: [InventoryItemWrapper] {
+        inventoryItems.filter { $0.inventoryItem.name.lowercased().fuzzyMatch(searchText.lowercased()) }
     }
 
     var body: some View {
@@ -42,12 +32,8 @@ struct StackView: View {
                 .padding(.horizontal, 28)
             VerticalListView(bottomPadding: 130) {
                 ForEach(allItems) { inventoryItem in
-                    let price = Binding<PriceWithCurrency?>(get: {
-                        _ = updateSignal
-                        return bestPrice(for: inventoryItem)
-                    }, set: { _ in })
-                    InventoryListItem(inventoryItem: inventoryItem,
-                                      bestPrice: price,
+                    InventoryListItem(inventoryItem: inventoryItem.inventoryItem,
+                                      bestPrice: inventoryItem.bestPrice,
                                       selectedInventoryItemId: $selectedInventoryItemId,
                                       isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }),
                                       isEditing: $isEditing,
@@ -55,7 +41,7 @@ struct StackView: View {
                             if selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }) {
                                 selectedInventoryItems = selectedInventoryItems.filter { $0.id != inventoryItem.id }
                             } else {
-                                selectedInventoryItems.append(inventoryItem)
+                                selectedInventoryItems.append(inventoryItem.inventoryItem)
                             }
                     }
                 }
@@ -73,13 +59,5 @@ struct StackView: View {
                 }
             }
         }
-//        .onReceive(ItemCache.default.updatedPublisher.debounce(for: .milliseconds(500), scheduler: RunLoop.main)) { _ in
-//            if isSelected {
-//                print("------------------")
-//                print("updated \(updateSignal)")
-//                print("------------------")
-//                updateSignal += 1
-//            }
-//        }
     }
 }

@@ -14,6 +14,10 @@ struct PriceWithCurrency: Codable, Equatable {
     var currencySymbol: Currency.CurrencySymbol {
         Currency.symbol(for: currencyCode)
     }
+
+    var asString: String {
+        "\(currencySymbol.rawValue)\(price.rounded(toPlaces: 0))"
+    }
 }
 
 struct InventoryItem: Codable, Equatable, Identifiable {
@@ -76,4 +80,12 @@ extension InventoryItem {
         copy.notes = notes
         return copy
     }
+}
+
+
+struct InventoryItemWrapper: Equatable, Identifiable {
+    var id: String { inventoryItem.id }
+
+    let inventoryItem: InventoryItem
+    let bestPrice: PriceWithCurrency?
 }

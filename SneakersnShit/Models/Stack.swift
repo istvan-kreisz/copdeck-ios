@@ -15,7 +15,7 @@ struct Stack: Codable, Equatable, Identifiable {
     let created: Double?
     let updated: Double?
 
-    func inventoryItems(allInventoryItems: [InventoryItem]) -> [InventoryItem] {
+    func inventoryItems(allInventoryItems: [InventoryItemWrapper]) -> [InventoryItemWrapper] {
         allInventoryItems.filter { inventoryItem in items.contains(where: { inventoryItem.id == $0.inventoryItemId }) }
     }
 

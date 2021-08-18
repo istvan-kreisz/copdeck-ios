@@ -18,6 +18,7 @@ struct InventoryView: View {
     @State private var selectedStackIndex = 0
     @State private var editedStack: Stack?
     @State private var showAddNewStackAlert = false
+    @State private var inventoryItems: [InventoryItemWrapper] = []
 
     @Binding var shouldShowTabBar: Bool
     @Binding var settingsPresented: Bool
@@ -30,6 +31,27 @@ struct InventoryView: View {
 
     var supportedTrayActions: [TrayAction] {
         ((selectedStackIndex == 0) ? [.deleteItems] : [.deleteItems, .deleteStack, .unstackItems])
+    }
+
+    func updateInventoryItems() {
+        inventoryItems = store.state.inventoryItems.map { InventoryItemWrapper(inventoryItem: $0, bestPrice: bestPrice(for: $0)) }
+    }
+
+    var inventoryValue: PriceWithCurrency? {
+        if let currencyCode = inventoryItems.first?.bestPrice?.currencyCode {
+            let sum = inventoryItems.compactMap { $0.bestPrice?.price }.sum()
+            return PriceWithCurrency(price: sum, currencyCode: currencyCode)
+        } else {
+            return nil
+        }
+    }
+
+    private func bestPrice(for inventoryItem: InventoryItem) -> PriceWithCurrency? {
+        if let itemId = inventoryItem.itemId, let item = ItemCache.default.value(itemId: itemId, settings: store.state.settings) {
+            return item.bestPrice(for: inventoryItem.size, feeType: store.state.settings.bestPriceFeeType, priceType: store.state.settings.bestPricePriceType)
+        } else {
+            return nil
+        }
     }
 
     var body: some View {
@@ -91,7 +113,7 @@ struct InventoryView: View {
                     }
                     HStack {
                         VStack(spacing: 2) {
-                            Text("$300")
+                            Text(inventoryValue?.asString ?? "-")
                                 .font(.bold(size: 20))
                                 .foregroundColor(.customText1)
                             Text("Inventory Value")
@@ -100,7 +122,7 @@ struct InventoryView: View {
                         }
                         Spacer()
                         VStack(spacing: 2) {
-                            Text("23")
+                            Text("\(store.state.inventoryItems.count)")
                                 .font(.bold(size: 20))
                                 .foregroundColor(.customText1)
                             Text("Inventory Size")
@@ -108,6 +130,8 @@ struct InventoryView: View {
                                 .foregroundColor(.customText2)
                         }
                     }
+                    .withDefaultPadding(padding: .horizontal)
+                    .padding(.top, 25)
                 }
                 .withDefaultPadding(padding: .horizontal)
                 .padding(.bottom, 22)
@@ -134,10 +158,11 @@ struct InventoryView: View {
 
                     PagerView(pageCount: pageCount, currentIndex: $selectedStackIndex) {
                         ForEach(store.state.stacks) { stack in
-                            let isSelected = Binding<Bool>(get: { stack.id == selectedStack?.id },
-                                                           set: { _ in })
+                            let isSelected = Binding<Bool>(get: { stack.id == selectedStack?.id }, set: { _ in })
+                            let items = Binding<[InventoryItemWrapper]>(get: { stack.inventoryItems(allInventoryItems: inventoryItems) }, set: { _ in })
+
                             StackView(searchText: $searchText,
-                                      inventoryItems: stack.inventoryItems(allInventoryItems: store.state.inventoryItems),
+                                      inventoryItems: items,
                                       selectedInventoryItemId: $selectedInventoryItemId,
                                       isEditing: $isEditing,
                                       selectedInventoryItems: $selectedInventoryItems,
@@ -164,6 +189,9 @@ struct InventoryView: View {
             }
             .onChange(of: editedStack) { stack in
                 shouldShowTabBar = stack == nil
+            }
+            .onReceive(ItemCache.default.updatedPublisher.debounce(for: .milliseconds(500), scheduler: RunLoop.main).prepend(())) { _ in
+                updateInventoryItems()
             }
             .sheet(isPresented: $settingsPresented) {
                 SettingsView(settings: store.state.settings, isPresented: $settingsPresented)
