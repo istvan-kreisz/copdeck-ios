@@ -35,6 +35,7 @@ struct InventoryListItem: View {
                          requestInfo: requestInfo,
                          isEditing: $isEditing,
                          isSelected: isSelected,
+                         ribbonText: inventoryItem.status == .sold ? "Sold" : nil,
                          accessoryView1: InventoryViewPills(inventoryItem: inventoryItem).leftAligned(),
                          accessoryView2: bestPriceStack()) {
                 selectedInventoryItemId = inventoryItem.id

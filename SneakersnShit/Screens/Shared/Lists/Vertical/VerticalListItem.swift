@@ -21,6 +21,7 @@ struct VerticalListItem<V1: View, V2: View>: View {
     @Binding var isEditing: Bool
     var isSelected: Bool
     var selectionStyle: VerticalListItemSelectionStyle = .checkmark
+    var ribbonText: String? = nil
     @State var animate = false
 
     var accessoryView1: V1? = nil
@@ -76,6 +77,18 @@ struct VerticalListItem<V1: View, V2: View>: View {
                     accessoryView
                 }
             }
+            .if(ribbonText != nil) {
+                $0.overlay(ZStack {
+                    Rectangle()
+                        .fill(Color.customRed)
+                        .frame(width: 120, height: 18)
+                    Text(ribbonText ?? "")
+                        .foregroundColor(.customWhite)
+                        .font(.bold(size: 12))
+                }
+                .rotationEffect(.degrees(-45))
+                .position(x: 12, y: 12))
+            }
             .padding(12)
             .frame(height: 86)
             .background(selectionStyle == .checkmark || !isSelected ? Color.customWhite : Color.customBlue.opacity(0.07))
@@ -99,6 +112,7 @@ struct VerticalListItem_Previews: PreviewProvider {
                                                       requestInfo: AppStore.default.state.requestInfo,
                                                       isEditing: .constant(false),
                                                       isSelected: false,
+                                                      ribbonText: "Sold",
                                                       onTapped: {})
     }
 }
@@ -112,6 +126,7 @@ struct VerticalListItemWithAccessoryView1<V: View>: View {
     @Binding var isEditing: Bool
     var isSelected: Bool
     var selectionStyle: VerticalListItemSelectionStyle = .checkmark
+    var ribbonText: String? = nil
     @State var animate = false
 
     var accessoryView: V? = nil
@@ -126,6 +141,7 @@ struct VerticalListItemWithAccessoryView1<V: View>: View {
                                        isEditing: $isEditing,
                                        isSelected: isSelected,
                                        selectionStyle: selectionStyle,
+                                       ribbonText: ribbonText,
                                        animate: animate,
                                        accessoryView1: accessoryView,
                                        accessoryView2: nil,
@@ -143,6 +159,7 @@ struct VerticalListItemWithoutAccessoryView: View {
     @Binding var isEditing: Bool
     var isSelected: Bool
     var selectionStyle: VerticalListItemSelectionStyle = .checkmark
+    var ribbonText: String? = nil
     @State var animate = false
 
     var onTapped: () -> Void
@@ -156,6 +173,7 @@ struct VerticalListItemWithoutAccessoryView: View {
                                                isEditing: $isEditing,
                                                isSelected: isSelected,
                                                selectionStyle: selectionStyle,
+                                               ribbonText: ribbonText,
                                                animate: animate,
                                                onTapped: onTapped,
                                                onSelectorTapped: onSelectorTapped)

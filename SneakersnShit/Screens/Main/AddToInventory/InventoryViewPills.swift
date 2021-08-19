@@ -10,29 +10,12 @@ import SwiftUI
 struct InventoryViewPills: View {
     var inventoryItem: InventoryItem
 
-    var statusText: String? {
-        guard let status = inventoryItem.status else { return nil }
-        switch status {
-        case .none:
-            return nil
-        case .listed:
-            return "listed"
-        case .sold:
-            if let soldPrice = inventoryItem.soldPrice {
-                return soldPrice.storeId.map { "sold on: \($0)" } ?? "sold"
-            } else {
-                return "sold"
-            }
-        }
-    }
-
     var columns: [GridItem] { Array.init(repeating: GridItem(.adaptive(minimum: 20, maximum: .infinity)), count: details.count) }
 
     var details: [(String, Int)] {
         [inventoryItem.condition.rawValue,
          inventoryItem.size,
-         inventoryItem.purchasePrice?.asString,
-         statusText].enumerated()
+         inventoryItem.purchasePrice?.asString].enumerated()
             .compactMap { item in item.element.map { ($0, item.offset) } ?? nil }
     }
 
