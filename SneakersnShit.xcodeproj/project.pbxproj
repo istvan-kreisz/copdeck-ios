@@ -122,6 +122,7 @@
 		5DCC467026A8D759007671BC /* DropDownMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCC466F26A8D759007671BC /* DropDownMenu.swift */; };
 		5DCC467226A8EBB9007671BC /* ToggleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCC467126A8EBB9007671BC /* ToggleButton.swift */; };
 		5DDEFDBC26CD7A42001B0F76 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DDEFDBB26CD7A42001B0F76 /* Constants.swift */; };
+		5DDEFDBF26CED83A001B0F76 /* ListSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DDEFDBE26CED83A001B0F76 /* ListSelector.swift */; };
 		5DE596E626C876790024F7D5 /* PagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE596E526C876790024F7D5 /* PagerView.swift */; };
 		5DE596E826C877120024F7D5 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE596E726C877120024F7D5 /* Stack.swift */; };
 		5DE596EA26C878280024F7D5 /* StackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE596E926C878280024F7D5 /* StackView.swift */; };
@@ -252,6 +253,7 @@
 		5DCC466F26A8D759007671BC /* DropDownMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownMenu.swift; sourceTree = "<group>"; };
 		5DCC467126A8EBB9007671BC /* ToggleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleButton.swift; sourceTree = "<group>"; };
 		5DDEFDBB26CD7A42001B0F76 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		5DDEFDBE26CED83A001B0F76 /* ListSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListSelector.swift; sourceTree = "<group>"; };
 		5DE596E526C876790024F7D5 /* PagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerView.swift; sourceTree = "<group>"; };
 		5DE596E726C877120024F7D5 /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		5DE596E926C878280024F7D5 /* StackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackView.swift; sourceTree = "<group>"; };
@@ -403,6 +405,7 @@
 		5D424D0B25C505450008D6F4 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				5DDEFDBD26CED829001B0F76 /* MultiSelector */,
 				5D2726CB26CB3CA600887449 /* TabBar */,
 				5DB590E426C54DAA006ECEBD /* HorizonalPaging */,
 				5D54FE3426C3141C008CD05F /* Image */,
@@ -807,6 +810,14 @@
 			path = Shared;
 			sourceTree = "<group>";
 		};
+		5DDEFDBD26CED829001B0F76 /* MultiSelector */ = {
+			isa = PBXGroup;
+			children = (
+				5DDEFDBE26CED83A001B0F76 /* ListSelector.swift */,
+			);
+			path = MultiSelector;
+			sourceTree = "<group>";
+		};
 		5DE596F126C8CE030024F7D5 /* SelectStackItems */ = {
 			isa = PBXGroup;
 			children = (
@@ -1026,6 +1037,7 @@
 				5D3DE37426AFA96D009E4D52 /* UINavigationController+Extensions.swift in Sources */,
 				5D8ABBC426B205CD00AFD8CF /* FeedView.swift in Sources */,
 				5D52E30F26130E2100FA02B8 /* InventoryView.swift in Sources */,
+				5DDEFDBF26CED83A001B0F76 /* ListSelector.swift in Sources */,
 				5D19B0D426A6F0DC00A31F4E /* CopDeckApp.swift in Sources */,
 				5D6312552696696500876D99 /* JSLogger.swift in Sources */,
 				5D424CAE25C4FDCC0008D6F4 /* SignInButton.swift in Sources */,
