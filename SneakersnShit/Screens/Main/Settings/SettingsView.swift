@@ -11,10 +11,13 @@ import Combine
 struct SettingsView: View {
     @EnvironmentObject var store: AppStore
     @State private var settings: CopDeckSettings
+    @State private var selectedStores: [String] = []
+
     @Binding private var isPresented: Bool
 
     init(settings: CopDeckSettings, isPresented: Binding<Bool>) {
         self._settings = State(initialValue: settings)
+        self._selectedStores = State(initialValue: settings.displayedStores.compactMap { Store.store(withId: $0)?.name.rawValue })
         self._isPresented = isPresented
     }
 
@@ -36,6 +39,17 @@ struct SettingsView: View {
                         }
                     }
                     .pickerStyle(SegmentedPickerStyle())
+                }
+
+                Section(header: Text("Show prices from")) {
+                    ListSelectorMenu(title: "Enabled stores",
+                                     selectorScreenTitle: "Select sites to display",
+                                     buttonTitle: "Select sites",
+                                     enableMultipleSelection: true,
+                                     options: ALLSTORES.map { $0.name.rawValue },
+                                     selectedOptions: $selectedStores) {
+                        settings.displayedStores = selectedStores.compactMap { Store.store(withName: $0)?.id }
+                    }
                 }
 
                 Section(header: Text("Country")) {

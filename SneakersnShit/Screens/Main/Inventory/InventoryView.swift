@@ -61,7 +61,10 @@ struct InventoryView: View {
 
     private func bestPrice(for inventoryItem: InventoryItem) -> PriceWithCurrency? {
         if let itemId = inventoryItem.itemId, let item = ItemCache.default.value(itemId: itemId, settings: store.state.settings) {
-            return item.bestPrice(for: inventoryItem.size, feeType: store.state.settings.bestPriceFeeType, priceType: store.state.settings.bestPricePriceType)
+            return item.bestPrice(for: inventoryItem.size,
+                                  feeType: store.state.settings.bestPriceFeeType,
+                                  priceType: store.state.settings.bestPricePriceType,
+                                  stores: store.state.settings.displayedStores)
         } else {
             return nil
         }

@@ -31,6 +31,20 @@ struct Store: Codable, Equatable, Identifiable, Hashable {
     let name: StoreName
 }
 
+extension Store {
+    static func store(withName name: String) -> Store? {
+        ALLSTORES.first(where: { $0.name.rawValue == name })
+    }
+
+    static func store(withId id: StoreId) -> Store? {
+        ALLSTORES.first(where: { $0.id == id })
+    }
+
+    static func store(withId id: String) -> Store? {
+        ALLSTORES.first(where: { $0.id.rawValue == id })
+    }
+}
+
 enum PriceType: String, CaseIterable, Identifiable, Codable {
     case ask, bid
 
@@ -201,8 +215,8 @@ extension Item {
         return PriceItem(ask: askInfo, bid: bidInfo, sellLink: storeInfo?.sellUrl, buyLink: (storeInfo?.buyUrl).map { $0 + sizeQuery })
     }
 
-    private func prices(size: String, priceType: PriceType, feeType: FeeType) -> PriceRow {
-        let prices = ALLSTORES.map { store -> PriceRow.Price in
+    private func prices(size: String, priceType: PriceType, feeType: FeeType, stores: [StoreId]) -> PriceRow {
+        let prices = stores.compactMap { Store.store(withId: $0) }.map { store -> PriceRow.Price in
             let p = price(size: size, storeId: store.id, feeType: feeType, currency: currency)
             return PriceRow.Price(primaryText: priceType == .ask ? p.ask.text : p.bid.text,
                                   secondaryText: priceType == .ask ? p.bid.text : p.ask.text,
@@ -221,12 +235,12 @@ extension Item {
         return PriceRow(size: size, lowest: lowest, highest: highest, prices: prices)
     }
 
-    func allPriceRows(priceType: PriceType, feeType: FeeType) -> [PriceRow] {
-        sortedSizes.map { prices(size: $0, priceType: priceType, feeType: feeType) }
+    func allPriceRows(priceType: PriceType, feeType: FeeType, stores: [StoreId]) -> [PriceRow] {
+        sortedSizes.map { prices(size: $0, priceType: priceType, feeType: feeType, stores: stores) }
     }
 
-    func bestPrice(for size: String, feeType: FeeType, priceType: PriceType) -> PriceWithCurrency? {
-        if let bestPrice = prices(size: size, priceType: priceType, feeType: feeType).prices.map(\.price).max() {
+    func bestPrice(for size: String, feeType: FeeType, priceType: PriceType, stores: [StoreId]) -> PriceWithCurrency? {
+        if let bestPrice = prices(size: size, priceType: priceType, feeType: feeType, stores: stores).prices.map(\.price).max() {
             return .init(price: bestPrice, currencyCode: currency.code)
         } else {
             return nil

@@ -15,7 +15,7 @@ struct CopDeckSettings: Codable, Equatable {
     var feeCalculation: FeeCalculation
     var bestPricePriceType: PriceType
     var bestPriceFeeType: FeeType
-    var displayedStores: [Store]
+    var displayedStores: [StoreId]
 
     struct FeeCalculation: Codable, Equatable {
         var country: Country
@@ -63,7 +63,7 @@ extension CopDeckSettings {
         feeCalculation = try container.decode(FeeCalculation.self, forKey: .feeCalculation)
         bestPricePriceType = try container.decodeIfPresent(PriceType.self, forKey: .bestPricePriceType) ?? .ask
         bestPriceFeeType = try container.decodeIfPresent(FeeType.self, forKey: .bestPriceFeeType) ?? .none
-        displayedStores = try container.decodeIfPresent([Store].self, forKey: .displayedStores) ?? ALLSTORES
+        displayedStores = try container.decodeIfPresent([StoreId].self, forKey: .displayedStores) ?? ALLSTORES.map(\.id)
     }
 
     static let `default` = CopDeckSettings(currency: Currency(code: .eur, symbol: .eur),
@@ -80,5 +80,5 @@ extension CopDeckSettings {
                                                                              taxes: 0)),
                                            bestPricePriceType: .ask,
                                            bestPriceFeeType: .none,
-                                           displayedStores: ALLSTORES)
+                                           displayedStores: ALLSTORES.map(\.id))
 }

@@ -210,7 +210,7 @@ struct ItemDetailView: View {
                                         .padding(5)
                                 }
 
-                                ForEach((item?.allPriceRows(priceType: priceType, feeType: feeType)) ?? []) { (row: Item.PriceRow) in
+                                ForEach((item?.allPriceRows(priceType: priceType, feeType: feeType, stores: store.state.settings.displayedStores)) ?? []) { (row: Item.PriceRow) in
                                     HStack(spacing: 10) {
                                         Button(action: {
                                             addToInventory = (true, row.size)
