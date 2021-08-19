@@ -16,6 +16,7 @@ struct NewItemCard: View {
     let purchasePrice: PriceWithCurrency?
     let currency: Currency
     let style: Style
+    let didTapDelete: (() -> Void)?
 
     var textFieldStyle: TextFieldRounded.Style {
         style == .card ? .gray : .white
@@ -32,15 +33,33 @@ struct NewItemCard: View {
     init(inventoryItem: Binding<InventoryItem>?,
          purchasePrice: PriceWithCurrency?,
          currency: Currency,
-         style: Style = .card) {
+         style: Style = .card,
+         didTapDelete: (() -> Void)? = nil) {
         self._inventoryItem = inventoryItem ?? Binding.constant(InventoryItem.init(fromItem: .sample))
         self.purchasePrice = purchasePrice
         self.currency = currency
         self.style = style
+        self.didTapDelete = didTapDelete
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 11) {
+            if didTapDelete != nil {
+                Button(action: { didTapDelete?() }, label: {
+                    ZStack {
+                        Color.clear.frame(width: 22, height: 22)
+                        Circle()
+                            .stroke(Color.customRed, lineWidth: 2)
+                            .frame(width: 18, height: 18)
+                        Image(systemName: "xmark")
+                            .font(.bold(size: 11))
+                            .foregroundColor(Color.customRed)
+                    }.frame(width: 18, height: 18)
+                })
+                    .rightAligned()
+                    .padding(.bottom, -12)
+            }
+
             HStack(alignment: .top, spacing: 11) {
                 let condition = Binding<String>(get: { inventoryItem.condition.rawValue },
                                                 set: { inventoryItem.condition = .init(rawValue: $0) ?? .new })
@@ -101,11 +120,14 @@ struct NewItemCard: View {
                     }
                 }
                 .padding(.top, 5)
-            }
-            else if inventoryItem.status == .sold {
+            } else if inventoryItem.status == .sold {
                 let text =
                     Binding<String>(get: { (inventoryItem.soldPrice?.price?.price).asString },
-                                    set: { inventoryItem.soldPrice = .init(storeId: inventoryItem.soldPrice?.storeId, price: Double($0).asPriceWithCurrency(currency: currency)) })
+                                    set: {
+                                        inventoryItem
+                                            .soldPrice = .init(storeId: inventoryItem.soldPrice?.storeId,
+                                                               price: Double($0).asPriceWithCurrency(currency: currency))
+                                    })
                 let soldOn =
                     Binding<String>(get: { inventoryItem.soldPrice?.storeId?.uppercased() ?? "OTHER" },
                                     set: { inventoryItem.soldPrice = .init(storeId: $0.lowercased(), price: inventoryItem.soldPrice?.price) })
@@ -139,6 +161,7 @@ struct NewItemCard: View {
 struct NewItemCard_Previews: PreviewProvider {
     static var previews: some View {
         NewItemCard(inventoryItem: .constant(InventoryItem.init(fromItem: Item.sample)),
-                    purchasePrice: Item.sample.retailPrice.map { PriceWithCurrency(price: $0, currencyCode: .usd) }, currency: Currency(code: .usd, symbol: .usd))
+                    purchasePrice: Item.sample.retailPrice.map { PriceWithCurrency(price: $0, currencyCode: .usd) },
+                    currency: Currency(code: .usd, symbol: .usd))
     }
 }

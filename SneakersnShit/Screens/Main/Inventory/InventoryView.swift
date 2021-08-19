@@ -18,7 +18,7 @@ struct InventoryView: View {
     @State private var selectedStackIndex = 0
     @State private var editedStack: Stack?
     @State private var showAddNewStackAlert = false
-    @State private var inventoryItems: [InventoryItemWrapper] = []
+    @State private var bestPrices: [String: PriceWithCurrency] = [:]
 
     @Binding var shouldShowTabBar: Bool
     @Binding var settingsPresented: Bool
@@ -33,13 +33,26 @@ struct InventoryView: View {
         ((selectedStackIndex == 0) ? [.deleteItems] : [.deleteItems, .deleteStack, .unstackItems])
     }
 
-    func updateInventoryItems() {
-        inventoryItems = store.state.inventoryItems.map { InventoryItemWrapper(inventoryItem: $0, bestPrice: bestPrice(for: $0)) }
+    var inventoryItems: [InventoryItem] {
+        store.state.inventoryItems
+    }
+
+    func updateBestPrices() {
+        bestPrices = store.state.inventoryItems.map { ($0.id, bestPrice(for: $0)) }
+            .reduce([:]) { (dict: [String: PriceWithCurrency], element: (String, PriceWithCurrency?)) in
+                if let price = element.1 {
+                    var newDict = dict
+                    newDict[element.0] = price
+                    return newDict
+                } else {
+                    return dict
+                }
+            }
     }
 
     var inventoryValue: PriceWithCurrency? {
-        if let currencyCode = inventoryItems.first?.bestPrice?.currencyCode {
-            let sum = inventoryItems.compactMap { $0.bestPrice?.price }.sum()
+        if let currencyCode = bestPrices.values.first?.currencyCode {
+            let sum = inventoryItems.compactMap { bestPrices[$0.id]?.price }.sum()
             return PriceWithCurrency(price: sum, currencyCode: currencyCode)
         } else {
             return nil
@@ -70,7 +83,7 @@ struct InventoryView: View {
             let showEditedStack = Binding<Bool>(get: { editedStack?.id != nil },
                                                 set: { editedStack = $0 ? editedStack : nil })
 
-            ForEach(store.state.inventoryItems) { inventoryItem in
+            ForEach(inventoryItems) { inventoryItem in
                 NavigationLink(destination: InventoryItemDetailView(inventoryItem: inventoryItem,
                                                                     isEditingInventoryItem: isEditingInventoryItem),
                                tag: inventoryItem.id,
@@ -78,7 +91,7 @@ struct InventoryView: View {
             }
             NavigationLink(destination: editedStack.map { editedStack in SelectStackItemsView(showView: showEditedStack,
                                                                                               stack: editedStack,
-                                                                                              inventoryItems: store.state.inventoryItems,
+                                                                                              inventoryItems: $store.state.inventoryItems,
                                                                                               requestInfo: store.state.requestInfo,
                                                                                               saveChanges: { updatedStackItems in
                                                                                                   var updatedStack = editedStack
@@ -121,7 +134,7 @@ struct InventoryView: View {
                         }
                         Spacer()
                         VStack(spacing: 2) {
-                            Text("\(store.state.inventoryItems.count)")
+                            Text("\(inventoryItems.count)")
                                 .font(.bold(size: 20))
                                 .foregroundColor(.customText1)
                             Text("Inventory Size")
@@ -156,18 +169,20 @@ struct InventoryView: View {
                         .withDefaultPadding(padding: .horizontal)
 
                     PagerView(pageCount: pageCount, currentIndex: $selectedStackIndex) {
-                        ForEach(store.state.stacks) { stack in
-                            let isSelected = Binding<Bool>(get: { stack.id == selectedStack?.id }, set: { _ in })
-                            let items = Binding<[InventoryItemWrapper]>(get: { stack.inventoryItems(allInventoryItems: inventoryItems) }, set: { _ in })
+                        ForEach(store.state.stacks.indices) { index in
+                            let isSelected = Binding<Bool>(get: { store.state.stacks[safe: index]?.id == selectedStack?.id }, set: { _ in })
 
-                            StackView(searchText: $searchText,
-                                      inventoryItems: items,
+                            StackView(stack: index < store.state.stacks.count ? $store.state.stacks[index] : .constant(.empty),
+                                      searchText: $searchText,
+                                      inventoryItems: $store.state.inventoryItems,
                                       selectedInventoryItemId: $selectedInventoryItemId,
                                       isEditing: $isEditing,
                                       selectedInventoryItems: $selectedInventoryItems,
                                       isSelected: isSelected,
-                                      didTapEditStack: stack.id == "all" ? nil : {
-                                          editedStack = stack
+                                      bestPrices: $bestPrices,
+                                      requestInfo: store.state.requestInfo,
+                                      didTapEditStack: store.state.stacks[safe: index]?.id == "all" ? nil : {
+                                          editedStack = store.state.stacks[safe: index]
                                       })
                         }
                     }
@@ -190,7 +205,7 @@ struct InventoryView: View {
                 shouldShowTabBar = stack == nil
             }
             .onReceive(ItemCache.default.updatedPublisher.debounce(for: .milliseconds(500), scheduler: RunLoop.main).prepend(())) { _ in
-                updateInventoryItems()
+                updateBestPrices()
             }
             .sheet(isPresented: $settingsPresented) {
                 SettingsView(settings: store.state.settings, isPresented: $settingsPresented)

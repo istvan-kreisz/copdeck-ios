@@ -9,18 +9,19 @@ import SwiftUI
 import Combine
 
 struct StackView: View {
-    @EnvironmentObject var store: AppStore
-
+    @Binding var stack: Stack
     @Binding var searchText: String
-    @Binding var inventoryItems: [InventoryItemWrapper]
+    @Binding var inventoryItems: [InventoryItem]
     @Binding var selectedInventoryItemId: String?
     @Binding var isEditing: Bool
     @Binding var selectedInventoryItems: [InventoryItem]
     @Binding var isSelected: Bool
+    @Binding var bestPrices: [String: PriceWithCurrency]
+    let requestInfo: [ScraperRequestInfo]
     var didTapEditStack: (() -> Void)?
 
-    var allItems: [InventoryItemWrapper] {
-        inventoryItems.filter { $0.inventoryItem.name.lowercased().fuzzyMatch(searchText.lowercased()) }
+    var allStackItems: [InventoryItem] {
+        stack.inventoryItems(allInventoryItems: inventoryItems).filter { $0.name.lowercased().fuzzyMatch(searchText.lowercased()) }
     }
 
     var body: some View {
@@ -31,17 +32,17 @@ struct StackView: View {
                 .leftAligned()
                 .padding(.horizontal, 28)
             VerticalListView(bottomPadding: 130) {
-                ForEach(allItems) { inventoryItem in
-                    InventoryListItem(inventoryItem: inventoryItem.inventoryItem,
-                                      bestPrice: inventoryItem.bestPrice,
+                ForEach(allStackItems) { inventoryItem in
+                    InventoryListItem(inventoryItem: inventoryItem,
+                                      bestPrice: bestPrices[inventoryItem.id],
                                       selectedInventoryItemId: $selectedInventoryItemId,
                                       isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }),
                                       isEditing: $isEditing,
-                                      requestInfo: store.state.requestInfo) {
+                                      requestInfo: requestInfo) {
                             if selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }) {
                                 selectedInventoryItems = selectedInventoryItems.filter { $0.id != inventoryItem.id }
                             } else {
-                                selectedInventoryItems.append(inventoryItem.inventoryItem)
+                                selectedInventoryItems.append(inventoryItem)
                             }
                     }
                 }

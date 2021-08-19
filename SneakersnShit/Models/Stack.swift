@@ -15,7 +15,7 @@ struct Stack: Codable, Equatable, Identifiable {
     let created: Double?
     let updated: Double?
 
-    func inventoryItems(allInventoryItems: [InventoryItemWrapper]) -> [InventoryItemWrapper] {
+    func inventoryItems(allInventoryItems: [InventoryItem]) -> [InventoryItem] {
         allInventoryItems.filter { inventoryItem in items.contains(where: { inventoryItem.id == $0.inventoryItemId }) }
     }
 
@@ -24,6 +24,15 @@ struct Stack: Codable, Equatable, Identifiable {
               name: "All",
               isPublished: false,
               items: inventoryItems.map { .init(inventoryItemId: $0.id) },
+              created: Date().timeIntervalSince1970 * 1000,
+              updated: Date().timeIntervalSince1970 * 1000)
+    }
+
+    static var empty: Stack {
+        .init(id: UUID().uuidString,
+              name: "",
+              isPublished: false,
+              items: [],
               created: Date().timeIntervalSince1970 * 1000,
               updated: Date().timeIntervalSince1970 * 1000)
     }

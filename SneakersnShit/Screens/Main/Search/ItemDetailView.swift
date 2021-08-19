@@ -96,14 +96,23 @@ struct ItemDetailView: View {
                         }
 
                         VStack(alignment: .leading, spacing: 10) {
+                            VStack(alignment: .leading, spacing: 6) {
                             Text("Price Comparison")
-                                .font(.bold(size: 20))
+                                .font(.bold(size: 25))
                             Text("Tap price to visit website")
                                 .font(.regular(size: 14))
                                 .foregroundColor(.customText2)
+                            }
+                            .padding(.bottom, 20)
 
                             VStack(alignment: .leading, spacing: 20) {
-                                HStack(spacing: 10) {
+                                HStack(spacing: 5) {
+                                    Text("Price type:")
+                                        .font(.semiBold(size: 19))
+                                        .foregroundColor(.customText2)
+                                        .multilineTextAlignment(.leading)
+                                        .frame(width: 98, alignment: .leading)
+
                                     ForEach(PriceType.allCases) { priceType in
                                         Text(priceType.rawValue.capitalized)
                                             .frame(width: 60, height: 31)
@@ -114,14 +123,22 @@ struct ItemDetailView: View {
                                             } else: {
                                                 $0
                                                     .foregroundColor(Color.customText1)
-                                                    .background(Capsule().stroke(Color.customBlue, lineWidth: 2))
+                                                    .background(Capsule().stroke(Color.customAccent1, lineWidth: 2))
                                             }
                                             .onTapGesture {
                                                 self.priceType = priceType
                                             }
                                     }
+                                    Spacer()
                                 }
-                                HStack(spacing: 10) {
+
+                                HStack(spacing: 5) {
+                                    Text("Fee type:")
+                                        .font(.semiBold(size: 19))
+                                        .foregroundColor(.customText2)
+                                        .multilineTextAlignment(.leading)
+                                        .frame(width: 98, alignment: .leading)
+
                                     ForEach(FeeType.allCases) { feeType in
                                         Text(feeType.rawValue.capitalized)
                                             .frame(width: 60, height: 31)
@@ -132,12 +149,13 @@ struct ItemDetailView: View {
                                             } else: {
                                                 $0
                                                     .foregroundColor(Color.customText1)
-                                                    .background(Capsule().stroke(Color.customPurple, lineWidth: 2))
+                                                    .background(Capsule().stroke(Color.customAccent1, lineWidth: 2))
                                             }
                                             .onTapGesture {
                                                 self.feeType = feeType
                                             }
                                     }
+                                    Spacer()
                                 }
                                 .padding(.top, -10)
 
@@ -149,15 +167,27 @@ struct ItemDetailView: View {
                                         .font(.bold(size: 13))
                                         .foregroundColor(.customOrange)
                                 }
-                                .padding(.top, 5)
+                                .padding(.top, 3)
                                 .padding(.bottom, -5)
                                 .onTapGesture {
                                     refreshPrices(fetchMode: .forcedRefresh)
                                 }
+//                                RoundedButton<EmptyView>(text: "refresh prices",
+//                                              width: 100,
+//                                              height: 30,
+//                                              maxSize: nil,
+//                                              fontSize: 16,
+//                                              color: Color.customOrange,
+//                                              borderColor: Color.clear,
+//                                              textColor: Color.customWhite,
+//                                              padding: 10,
+//                                              accessoryView: nil) {
+//
+//                                }
 
                                 HStack(spacing: 10) {
                                     Text("Size")
-                                        .font(.regular(size: 14))
+                                        .font(.semiBold(size: 16))
                                         .foregroundColor(.customText2)
                                         .frame(maxWidth: .infinity)
                                     ForEach(ALLSTORES) { store in
@@ -238,9 +268,9 @@ struct ItemDetailView: View {
                                 }
                             }
                         }
-                        .padding(.horizontal, 28)
-                        .padding(.vertical, 37)
-                        .padding(.bottom, 100)
+                        .withDefaultPadding(padding: .horizontal)
+                        .padding(.vertical, 10)
+                        .padding(.bottom, 127)
                     }
 
                     .onAppear { scrollViewProxy.scrollTo(0) }

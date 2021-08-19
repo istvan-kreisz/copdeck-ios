@@ -81,11 +81,3 @@ extension InventoryItem {
         return copy
     }
 }
-
-
-struct InventoryItemWrapper: Equatable, Identifiable {
-    var id: String { inventoryItem.id }
-
-    let inventoryItem: InventoryItem
-    let bestPrice: PriceWithCurrency?
-}
