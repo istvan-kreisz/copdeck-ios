@@ -26,7 +26,7 @@ struct StackView: View {
 
     var body: some View {
         VStack {
-            Text("\(inventoryItems.count) \(searchText.isEmpty ? "Items:" : "Results:")")
+            Text("\(allStackItems.count) \(searchText.isEmpty ? "Items:" : "Results:")")
                 .foregroundColor(.customText1)
                 .font(.bold(size: 12))
                 .leftAligned()

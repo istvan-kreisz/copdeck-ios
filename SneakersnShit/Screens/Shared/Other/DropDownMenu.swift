@@ -27,28 +27,24 @@ struct DropDownMenu: View {
                 .foregroundColor(style == .white ? .customText1 : .customText2)
                 .padding(.leading, 5)
 
-            ZStack(alignment: Alignment(horizontal: .leading, vertical: .center)) {
-                GeometryReader { geo in
-                    Picker(selection: $selectedItem,
-                           label: Text(selectedItem).leftAligned()) {
-                            ForEach(options, id: \.self) {
-                                Text($0)
-                            }
-                    }
-                    .pickerStyle(MenuPickerStyle())
-                    .padding(10)
-                    .padding(.trailing, 10)
-                    .frame(width: geo.frame(in: .local).width)
-                    .foregroundColor(.customText2)
-
-                    Image(systemName: "chevron.down")
-                        .font(.bold(size: 14))
-                        .foregroundColor(.customText2)
-                        .padding(.trailing, 10)
-                        .centeredVertically()
-                        .rightAligned()
-                        .allowsHitTesting(false)
+            GeometryReader { geo in
+                Picker(selection: $selectedItem,
+                       label: Text(selectedItem).leftAligned()) {
+                        ForEach(options, id: \.self) {
+                            Text($0)
+                        }
                 }
+                .padding(.leading, 10)
+                .pickerStyle(MenuPickerStyle())
+                .frame(width: geo.frame(in: .local).width)
+                .foregroundColor(.customText2)
+                .overlay(Image(systemName: "chevron.down")
+                    .font(.bold(size: 14))
+                    .foregroundColor(.customText2)
+                    .padding(.trailing, 10)
+                    .centeredVertically()
+                    .rightAligned()
+                    .allowsHitTesting(false))
                 .frame(height: Styles.inputFieldHeight)
                 .background(style == .gray ? Color.customAccent4 : Color.customWhite)
                 .cornerRadius(Styles.cornerRadius)
