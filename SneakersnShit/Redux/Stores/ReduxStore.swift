@@ -6,8 +6,6 @@
 //
 
 import Foundation
-
-import Foundation
 import Combine
 
 typealias Reducer<State, Action, Environment> =
@@ -43,5 +41,35 @@ final class ReduxStore<State, Action: Identifiable, Environment>: ObservableObje
                 self?.process($0, completed: completed)
             })
             .store(in: &effectCancellables)
+    }
+}
+
+protocol RStore: ObservableObject {
+    associatedtype Action
+    associatedtype State
+    func send(_ action: Action, completed: ((Result<Void, AppError>) -> Void)?)
+    var state: State { get }
+}
+
+class SearchStore: ObservableObject {
+    let appStore: AppStore
+    @Published var searchResults: [Item]?
+    var effectCancellables: Set<AnyCancellable> = []
+
+    init(appStore: AppStore) {
+        self.appStore = appStore
+        self.searchResults = appStore.state.searchResults
+
+        appStore.$state
+            .map(\.searchResults)
+            .removeDuplicates()
+            .sink { [weak self] items in
+                self?.searchResults = items
+            }
+            .store(in: &effectCancellables)
+    }
+
+    func send(_ action: AppAction, completed: ((Result<Void, AppError>) -> Void)? = nil) {
+        appStore.send(action, completed: completed)
     }
 }
