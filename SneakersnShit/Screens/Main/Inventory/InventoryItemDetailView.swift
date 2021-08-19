@@ -18,6 +18,15 @@ struct InventoryItemDetailView: View {
 
     @State var showItemDetails = false
 
+    var item: Item? {
+        guard let itemId = inventoryItem.itemId,
+              let item = ItemCache.default.value(itemId: itemId, settings: store.state.settings)
+        else {
+            return nil
+        }
+        return item
+    }
+
     var imageDownloadHeaders: [String: String] {
         if let imageURLStoreId = inventoryItem.imageURL?.store.id, let requestInfo = store.state.requestInfo(for: imageURLStoreId) {
             return requestInfo.imageDownloadHeaders
@@ -75,8 +84,11 @@ struct InventoryItemDetailView: View {
                     }
                     .padding(.top, 15)
 
-                    NewItemCard(inventoryItem: $inventoryItem, purchasePrice: inventoryItem.purchasePrice, currency: store.state.currency,
-                                style: .noBackground)
+                    NewItemCard(inventoryItem: $inventoryItem,
+                                purchasePrice: inventoryItem.purchasePrice,
+                                currency: store.state.currency,
+                                style: .noBackground,
+                                sizes: item?.sortedSizes ?? ALLSHOESIZES)
 
                     TextFieldRounded(title: "notes (optional)",
                                      placeHolder: "add any notes here",

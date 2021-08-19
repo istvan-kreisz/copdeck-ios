@@ -13,8 +13,9 @@ struct CopDeckSettings: Codable, Equatable {
     var notificationFrequency: Double
     var darkModeOn: Bool
     var feeCalculation: FeeCalculation
-    var bestPricePriceType: PriceType = .ask
-    var bestPriceFeeType: FeeType = .none
+    var bestPricePriceType: PriceType
+    var bestPriceFeeType: FeeType
+    var displayedStores: [Store]
 
     struct FeeCalculation: Codable, Equatable {
         var country: Country
@@ -62,6 +63,7 @@ extension CopDeckSettings {
         feeCalculation = try container.decode(FeeCalculation.self, forKey: .feeCalculation)
         bestPricePriceType = try container.decodeIfPresent(PriceType.self, forKey: .bestPricePriceType) ?? .ask
         bestPriceFeeType = try container.decodeIfPresent(FeeType.self, forKey: .bestPriceFeeType) ?? .none
+        displayedStores = try container.decodeIfPresent([Store].self, forKey: .displayedStores) ?? ALLSTORES
     }
 
     static let `default` = CopDeckSettings(currency: Currency(code: .eur, symbol: .eur),
@@ -75,5 +77,8 @@ extension CopDeckSettings {
                                                                                quickShipBonus: false),
                                                                  goat: .init(commissionPercentage: .low,
                                                                              cashOutFee: false,
-                                                                             taxes: 0)))
+                                                                             taxes: 0)),
+                                           bestPricePriceType: .ask,
+                                           bestPriceFeeType: .none,
+                                           displayedStores: ALLSTORES)
 }

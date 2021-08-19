@@ -8,8 +8,6 @@
 import Foundation
 import SwiftUI
 
-#warning("fix tappable area")
-
 struct DropDownMenu: View {
     enum Style {
         case gray, white
@@ -30,7 +28,7 @@ struct DropDownMenu: View {
             GeometryReader { geo in
                 Picker(selection: $selectedItem,
                        label: Text(selectedItem).leftAligned()) {
-                        ForEach(options, id: \.self) {
+                    ForEach(options.reversed(), id: \.self) {
                             Text($0)
                         }
                 }

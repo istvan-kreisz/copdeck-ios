@@ -16,6 +16,7 @@ struct NewItemCard: View {
     let purchasePrice: PriceWithCurrency?
     let currency: Currency
     let style: Style
+    let sizes: [String]
     let didTapDelete: (() -> Void)?
 
     var textFieldStyle: TextFieldRounded.Style {
@@ -34,11 +35,13 @@ struct NewItemCard: View {
          purchasePrice: PriceWithCurrency?,
          currency: Currency,
          style: Style = .card,
+         sizes: [String],
          didTapDelete: (() -> Void)? = nil) {
         self._inventoryItem = inventoryItem ?? Binding.constant(InventoryItem.init(fromItem: .sample))
         self.purchasePrice = purchasePrice
         self.currency = currency
         self.style = style
+        self.sizes = sizes
         self.didTapDelete = didTapDelete
     }
 
@@ -74,7 +77,7 @@ struct NewItemCard: View {
                                  text: purchasePrice)
                 DropDownMenu(title: "size",
                              selectedItem: $inventoryItem.size,
-                             options: ALLSHOESIZES,
+                             options: sizes,
                              style: dropdownStyle)
                 DropDownMenu(title: "condition",
                              selectedItem: condition,
@@ -162,6 +165,7 @@ struct NewItemCard_Previews: PreviewProvider {
     static var previews: some View {
         NewItemCard(inventoryItem: .constant(InventoryItem.init(fromItem: Item.sample)),
                     purchasePrice: Item.sample.retailPrice.map { PriceWithCurrency(price: $0, currencyCode: .usd) },
-                    currency: Currency(code: .usd, symbol: .usd))
+                    currency: Currency(code: .usd, symbol: .usd),
+                    sizes: [])
     }
 }
