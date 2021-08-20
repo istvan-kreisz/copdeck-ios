@@ -22,7 +22,7 @@ struct ListSelector: View {
         VStack {
             Text(title)
                 .foregroundColor(.customText1)
-                .font(.bold(size: 35))
+                .font(.bold(size: 28))
                 .leftAligned()
                 .padding(.leading, 12)
 
@@ -55,10 +55,11 @@ struct ListSelector: View {
                             }
                     }
                 }
+                Color.clear.padding(.bottom, 137)
+                    .listRow(backgroundColor: .customWhite)
             }
-            Color.clear.padding(.bottom, 137)
         }
-        .withDefaultPadding(padding: .top)
+        .padding(.top, 30)
         .withFloatingButton(button: NextButton(text: buttonTitle,
                                                size: .init(width: 260, height: 60),
                                                color: .customBlack,

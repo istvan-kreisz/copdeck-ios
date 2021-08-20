@@ -12,8 +12,8 @@ import GoogleSignIn
 struct LoginView: View {
     @EnvironmentObject var store: AppStore
 
-    @State var email = ""
-    @State var password = ""
+    @State var email = DebugSettings.shared.loginCredentials?.username ?? ""
+    @State var password = DebugSettings.shared.loginCredentials?.password ?? ""
     @State var signUpTapped = false
     @State var resetPasswordPresented = false
 

@@ -27,13 +27,31 @@ struct DebugSettings {
 
     static let shared = DebugSettings()
 
+    struct Credentials {
+        let username: String
+        let password: String
+    }
+
+    var loginCredentials: Credentials? {
+        guard isInDebugMode else { return nil }
+        if let username = string(for: "username"), let password = string(for: "password") {
+            return .init(username: username, password: password)
+        } else {
+            return nil
+        }
+    }
+
+    func string(for key: String) -> String? {
+        ProcessInfo.processInfo.environment[key]
+    }
+
     func bool(for key: String) -> Bool {
-        guard let value = ProcessInfo.processInfo.environment[key] else { return false }
+        guard let value = string(for: key) else { return false }
         return Bool(value) ?? false
     }
 
     func double(for key: String) -> Double? {
-        guard let value = ProcessInfo.processInfo.environment[key] else { return nil }
+        guard let value = string(for: key) else { return nil }
         return Double(value)
     }
 

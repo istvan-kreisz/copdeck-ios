@@ -9,9 +9,9 @@ import Foundation
 
 struct CopDeckSettings: Codable, Equatable {
     var currency: Currency
-    var updateInterval: Double
-    var notificationFrequency: Double
-    var darkModeOn: Bool
+//    var updateInterval: Double
+//    var notificationFrequency: Double
+//    var darkModeOn: Bool
     var feeCalculation: FeeCalculation
     var bestPricePriceType: PriceType
     var bestPriceFeeType: FeeType
@@ -21,6 +21,7 @@ struct CopDeckSettings: Codable, Equatable {
         var country: Country
         var stockx: StockX?
         var goat: Goat?
+        var klekt: Klekt?
 
         struct StockX: Codable, Equatable {
             enum SellerLevel: Int, Codable, Equatable, CaseIterable {
@@ -48,6 +49,10 @@ struct CopDeckSettings: Codable, Equatable {
             var cashOutFee: Bool
             var taxes: Double
         }
+
+        struct Klekt: Codable, Equatable {
+            var taxes: Double
+        }
     }
 }
 
@@ -56,9 +61,9 @@ extension CopDeckSettings {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         currency = try container.decode(Currency.self, forKey: .currency)
-        updateInterval = try container.decode(Double.self, forKey: .updateInterval)
-        notificationFrequency = try container.decode(Double.self, forKey: .notificationFrequency)
-        darkModeOn = try container.decode(Bool.self, forKey: .darkModeOn)
+//        updateInterval = try container.decode(Double.self, forKey: .updateInterval)
+//        notificationFrequency = try container.decode(Double.self, forKey: .notificationFrequency)
+//        darkModeOn = try container.decode(Bool.self, forKey: .darkModeOn)
 
         feeCalculation = try container.decode(FeeCalculation.self, forKey: .feeCalculation)
         bestPricePriceType = try container.decodeIfPresent(PriceType.self, forKey: .bestPricePriceType) ?? .ask
@@ -67,9 +72,9 @@ extension CopDeckSettings {
     }
 
     static let `default` = CopDeckSettings(currency: Currency(code: .eur, symbol: .eur),
-                                           updateInterval: 60,
-                                           notificationFrequency: 24,
-                                           darkModeOn: false,
+//                                           updateInterval: 60,
+//                                           notificationFrequency: 24,
+//                                           darkModeOn: false,
                                            feeCalculation: .init(country: .US,
                                                                  stockx: .init(sellerLevel: .level1,
                                                                                taxes: 0,
@@ -77,7 +82,8 @@ extension CopDeckSettings {
                                                                                quickShipBonus: false),
                                                                  goat: .init(commissionPercentage: .low,
                                                                              cashOutFee: false,
-                                                                             taxes: 0)),
+                                                                             taxes: 0),
+                                                                 klekt: .init(taxes: 0)),
                                            bestPricePriceType: .ask,
                                            bestPriceFeeType: .none,
                                            displayedStores: ALLSTORES.map(\.id))

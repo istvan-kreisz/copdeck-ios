@@ -11,7 +11,6 @@ struct ListSelectorMenu: View {
     let title: String
     let selectorScreenTitle: String
     let buttonTitle: String
-    let enableMultipleSelection: Bool
     let options: [String]
     var selectedOptions: Binding<[String]>?
     var selectedOption: Binding<String>?
@@ -20,14 +19,12 @@ struct ListSelectorMenu: View {
     init(title: String,
          selectorScreenTitle: String,
          buttonTitle: String,
-         enableMultipleSelection: Bool,
          options: [String],
          selectedOption: Binding<String>,
          buttonTapped: @escaping () -> Void) {
         self.title = title
         self.selectorScreenTitle = selectorScreenTitle
         self.buttonTitle = buttonTitle
-        self.enableMultipleSelection = enableMultipleSelection
         self.options = options
         self.selectedOptions = nil
         self.selectedOption = selectedOption
@@ -37,14 +34,12 @@ struct ListSelectorMenu: View {
     init(title: String,
          selectorScreenTitle: String,
          buttonTitle: String,
-         enableMultipleSelection: Bool,
          options: [String],
          selectedOptions: Binding<[String]>,
          buttonTapped: @escaping () -> Void) {
         self.title = title
         self.selectorScreenTitle = selectorScreenTitle
         self.buttonTitle = buttonTitle
-        self.enableMultipleSelection = enableMultipleSelection
         self.options = options
         self.selectedOptions = selectedOptions
         self.selectedOption = nil
@@ -67,7 +62,7 @@ struct ListSelectorMenu: View {
         })
         NavigationLink(destination: ListSelector(title: selectorScreenTitle,
                                                  buttonTitle: buttonTitle,
-                                                 enableMultipleSelection: enableMultipleSelection,
+                                                 enableMultipleSelection: selectedOptions != nil,
                                                  popBackOnSelect: true,
                                                  options: options,
                                                  selectedOptions: _options,

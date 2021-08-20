@@ -19,6 +19,7 @@ struct APIConfig: Codable {
         let countryName: String
         let stockx: Stockx
         let goat: Goat
+        let klekt: Klekt
 
         struct Goat: Codable {
             let commissionPercentage: Double
@@ -31,6 +32,10 @@ struct APIConfig: Codable {
             let taxes: Double
             let successfulShipBonus: Bool
             let quickShipBonus: Bool
+        }
+
+        struct Klekt: Codable {
+            let taxes: Double
         }
     }
 }

@@ -59,6 +59,16 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "username"
+            value = "kreiszistvan@icloud.com"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "password"
+            value = "Kakikukker7298"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "pricesRefreshPeriodMin"
             value = "0.4"
             isEnabled = "NO">

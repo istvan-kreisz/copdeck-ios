@@ -66,12 +66,12 @@ struct NewItemCard: View {
             HStack(alignment: .top, spacing: 11) {
                 let condition = Binding<String>(get: { inventoryItem.condition.rawValue },
                                                 set: { inventoryItem.condition = .init(rawValue: $0) ?? .new })
-                let purchasePrice = Binding<String>(get: { (inventoryItem.purchasePrice?.price).asString },
+                let purchasePrice = Binding<String>(get: { (inventoryItem.purchasePrice?.price).asString() },
                                                     set: { new in
                                                         inventoryItem.purchasePrice = PriceWithCurrency(price: Double(new) ?? 0, currencyCode: currency.code)
                                                     })
                 TextFieldRounded(title: "purchase price",
-                                 placeHolder: (self.purchasePrice?.price).asString,
+                                 placeHolder: (self.purchasePrice?.price).asString(),
                                  style: textFieldStyle,
                                  keyboardType: .numberPad,
                                  text: purchasePrice)
@@ -102,7 +102,7 @@ struct NewItemCard: View {
                             let text =
                                 Binding<String>(get: {
                                                     (inventoryItem.listingPrices
-                                                        .first(where: { $0.storeId == store.id })?.price.price).asString
+                                                        .first(where: { $0.storeId == store.id })?.price.price).asString()
                                                 },
                                                 set: { new in
                                                     if let index = inventoryItem.listingPrices.firstIndex(where: { $0.storeId == store.id }) {
@@ -125,7 +125,7 @@ struct NewItemCard: View {
                 .padding(.top, 5)
             } else if inventoryItem.status == .sold {
                 let text =
-                    Binding<String>(get: { (inventoryItem.soldPrice?.price?.price).asString },
+                    Binding<String>(get: { (inventoryItem.soldPrice?.price?.price).asString() },
                                     set: {
                                         inventoryItem
                                             .soldPrice = .init(storeId: inventoryItem.soldPrice?.storeId,

@@ -8,8 +8,8 @@
 import Foundation
 
 extension Optional where Wrapped == Double {
-    var asString: String {
-        map { String(Int($0)) } ?? ""
+    func asString(defaultValue: String = "") -> String {
+        map { String(Int($0)) } ?? defaultValue
     }
 
     func asPriceWithCurrency(currency: Currency) -> PriceWithCurrency? {
