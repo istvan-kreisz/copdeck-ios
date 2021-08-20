@@ -215,7 +215,7 @@ extension Item {
         return PriceItem(ask: askInfo, bid: bidInfo, sellLink: storeInfo?.sellUrl, buyLink: (storeInfo?.buyUrl).map { $0 + sizeQuery })
     }
 
-    private func prices(size: String, priceType: PriceType, feeType: FeeType, stores: [StoreId]) -> PriceRow {
+    func priceRow(size: String, priceType: PriceType, feeType: FeeType, stores: [StoreId]) -> PriceRow {
         let prices = stores.compactMap { Store.store(withId: $0) }.map { store -> PriceRow.Price in
             let p = price(size: size, storeId: store.id, feeType: feeType, currency: currency)
             return PriceRow.Price(primaryText: priceType == .ask ? p.ask.text : p.bid.text,
@@ -236,11 +236,11 @@ extension Item {
     }
 
     func allPriceRows(priceType: PriceType, feeType: FeeType, stores: [StoreId]) -> [PriceRow] {
-        sortedSizes.map { prices(size: $0, priceType: priceType, feeType: feeType, stores: stores) }
+        sortedSizes.map { priceRow(size: $0, priceType: priceType, feeType: feeType, stores: stores) }
     }
 
     func bestPrice(for size: String, feeType: FeeType, priceType: PriceType, stores: [StoreId]) -> PriceWithCurrency? {
-        if let bestPrice = prices(size: size, priceType: priceType, feeType: feeType, stores: stores).prices.map(\.price).max() {
+        if let bestPrice = priceRow(size: size, priceType: priceType, feeType: feeType, stores: stores).prices.map(\.price).max() {
             return .init(price: bestPrice, currencyCode: currency.code)
         } else {
             return nil

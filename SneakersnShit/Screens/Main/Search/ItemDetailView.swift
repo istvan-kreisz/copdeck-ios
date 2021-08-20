@@ -37,6 +37,64 @@ struct ItemDetailView: View {
         self.showAddToInventoryButton = showAddToInventoryButton
     }
 
+    private func priceRow(row: Item.PriceRow) -> some View {
+        HStack(spacing: 10) {
+            Button(action: {
+                addToInventory = (true, row.size)
+            }) {
+                    ZStack(alignment: Alignment(horizontal: .trailing, vertical: .center)) {
+                        Text(row.size)
+                            .frame(height: 32)
+                            .frame(maxWidth: 90)
+                            .background(Color.customAccent2)
+                            .clipShape(Capsule())
+                            .overlay(Capsule().stroke(Color.customBlue, lineWidth: 2))
+                        ZStack {
+                            Circle()
+                                .fill(Color.customBlue)
+                                .frame(width: 18, height: 18)
+                            Image(systemName: "plus")
+                                .font(.bold(size: 9))
+                                .foregroundColor(Color.customWhite)
+                        }
+                        .frame(width: 18, height: 18)
+                        .offset(x: 7, y: 0)
+                    }
+            }
+
+            ForEach(row.prices) { price in
+                Text(price.primaryText)
+                    .frame(height: 32)
+                    .frame(maxWidth: .infinity)
+                    .if(price.store.id == row.lowest?.id && (feeType == .buy || feeType == .none)) {
+                        $0.overlay(Capsule().stroke(Color.customGreen, lineWidth: 2))
+                    } else: {
+                        $0.if(price.store.id == row.highest?.id && (feeType == .sell || feeType == .none)) {
+                            $0.overlay(Capsule().stroke(Color.customRed, lineWidth: 2))
+                        } else: {
+                            $0.overlay(Capsule().stroke(Color.customAccent1, lineWidth: 2))
+                        }
+                    }
+                    .onTapGesture {
+                        var link: String?
+                        switch feeType {
+                        case .buy:
+                            link = price.buyLink
+                        case .sell:
+                            link = price.sellLink
+                        case .none:
+                            link = price.buyLink
+                        }
+                        if let link = link, let url = URL(string: link) {
+                            UIApplication.shared.open(url)
+                        }
+                    }
+            }
+            Spacer()
+        }
+        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0))
+    }
+
     var body: some View {
         ZStack {
             Color.customWhite.edgesIgnoringSafeArea(.all)
@@ -97,11 +155,11 @@ struct ItemDetailView: View {
 
                         VStack(alignment: .leading, spacing: 10) {
                             VStack(alignment: .leading, spacing: 6) {
-                            Text("Price Comparison")
-                                .font(.bold(size: 25))
-                            Text("Tap price to visit website")
-                                .font(.regular(size: 14))
-                                .foregroundColor(.customText2)
+                                Text("Price Comparison")
+                                    .font(.bold(size: 25))
+                                Text("Tap price to visit website")
+                                    .font(.regular(size: 14))
+                                    .foregroundColor(.customText2)
                             }
                             .padding(.bottom, 20)
 
@@ -211,62 +269,26 @@ struct ItemDetailView: View {
                                         .padding(5)
                                 }
 
-                                ForEach((item?.allPriceRows(priceType: priceType, feeType: feeType, stores: store.state.settings.displayedStores)) ?? []) { (row: Item.PriceRow) in
-                                    HStack(spacing: 10) {
-                                        Button(action: {
-                                            addToInventory = (true, row.size)
-                                        }) {
-                                                ZStack(alignment: Alignment(horizontal: .trailing, vertical: .center)) {
-                                                    Text(row.size)
-                                                        .frame(height: 32)
-                                                        .frame(maxWidth: 90)
-                                                        .background(Color.customAccent2)
-                                                        .clipShape(Capsule())
-                                                        .overlay(Capsule().stroke(Color.customBlue, lineWidth: 2))
-                                                    ZStack {
-                                                        Circle()
-                                                            .fill(Color.customBlue)
-                                                            .frame(width: 18, height: 18)
-                                                        Image(systemName: "plus")
-                                                            .font(.bold(size: 9))
-                                                            .foregroundColor(Color.customWhite)
-                                                    }
-                                                    .frame(width: 18, height: 18)
-                                                    .offset(x: 7, y: 0)
-                                                }
-                                        }
-
-                                        ForEach(row.prices) { price in
-                                            Text(price.primaryText)
-                                                .frame(height: 32)
-                                                .frame(maxWidth: .infinity)
-                                                .if(price.store.id == row.lowest?.id && (feeType == .buy || feeType == .none)) {
-                                                    $0.overlay(Capsule().stroke(Color.customGreen, lineWidth: 2))
-                                                } else: {
-                                                    $0.if(price.store.id == row.highest?.id && (feeType == .sell || feeType == .none)) {
-                                                        $0.overlay(Capsule().stroke(Color.customRed, lineWidth: 2))
-                                                    } else: {
-                                                        $0.overlay(Capsule().stroke(Color.customAccent1, lineWidth: 2))
-                                                    }
-                                                }
-                                                .onTapGesture {
-                                                    var link: String?
-                                                    switch feeType {
-                                                    case .buy:
-                                                        link = price.buyLink
-                                                    case .sell:
-                                                        link = price.sellLink
-                                                    case .none:
-                                                        link = price.buyLink
-                                                    }
-                                                    if let link = link, let url = URL(string: link) {
-                                                        UIApplication.shared.open(url)
-                                                    }
-                                                }
-                                        }
-                                        Spacer()
-                                    }
-                                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0))
+                                if let preferredSize = store.state.settings.preferredShoeSize,
+                                   item?.sortedSizes.contains(preferredSize) == true,
+                                   let row = item?.priceRow(size: preferredSize,
+                                                            priceType: priceType,
+                                                            feeType: feeType,
+                                                            stores: store.state.settings.displayedStores) {
+                                    Text("Your size:")
+                                        .font(.semiBold(size: 14))
+                                        .foregroundColor(.customText1)
+                                        .padding(.top, -5)
+                                        .padding(.bottom, -10)
+                                    priceRow(row: row)
+                                    Text("All sizes:")
+                                        .font(.semiBold(size: 14))
+                                        .foregroundColor(.customText1)
+                                        .padding(.bottom, -10)
+                                }
+                                ForEach((item?.allPriceRows(priceType: priceType, feeType: feeType, stores: store.state.settings.displayedStores)) ??
+                                    []) { (row: Item.PriceRow) in
+                                        priceRow(row: row)
                                 }
                             }
                         }
