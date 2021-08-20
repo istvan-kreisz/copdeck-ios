@@ -189,8 +189,8 @@ struct ItemDetailView: View {
                                     Text("Size")
                                         .font(.semiBold(size: 16))
                                         .foregroundColor(.customText2)
-                                        .frame(maxWidth: .infinity)
-                                    ForEach(ALLSTORES) { store in
+                                        .frame(maxWidth: 90)
+                                    ForEach(store.state.settings.displayedStores.compactMap { Store.store(withId: $0) }) { store in
                                         Text(store.name.rawValue)
                                             .font(.bold(size: 18))
                                             .foregroundColor(.customText1)
@@ -202,6 +202,7 @@ struct ItemDetailView: View {
                                                 }
                                             }
                                     }
+                                    Spacer()
                                 }
                                 .padding(5)
 
@@ -218,7 +219,7 @@ struct ItemDetailView: View {
                                                 ZStack(alignment: Alignment(horizontal: .trailing, vertical: .center)) {
                                                     Text(row.size)
                                                         .frame(height: 32)
-                                                        .frame(maxWidth: .infinity)
+                                                        .frame(maxWidth: 90)
                                                         .background(Color.customAccent2)
                                                         .clipShape(Capsule())
                                                         .overlay(Capsule().stroke(Color.customBlue, lineWidth: 2))
@@ -263,6 +264,7 @@ struct ItemDetailView: View {
                                                     }
                                                 }
                                         }
+                                        Spacer()
                                     }
                                     .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0))
                                 }
