@@ -21,6 +21,7 @@ struct CountrySelector: View {
         ListSelector(title: "Select your country",
                      buttonTitle: "Select country",
                      enableMultipleSelection: false,
+                     popBackOnSelect: false,
                      options: Country.allCases.map { $0.name },
                      selectedOptions: $countries,
                      buttonTapped: selectCountryTapped)

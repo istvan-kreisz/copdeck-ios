@@ -24,9 +24,10 @@ struct ListSelectorMenu: View {
         NavigationLink(destination: ListSelector(title: selectorScreenTitle,
                                                  buttonTitle: buttonTitle,
                                                  enableMultipleSelection: enableMultipleSelection,
+                                                 popBackOnSelect: true,
                                                  options: options,
                                                  selectedOptions: $selectedOptions,
-                                                 buttonTapped: buttonTapped)) {
+                                                 buttonTapped: buttonTapped).navigationbarHidden()) {
                 HStack {
                     Text(title)
                     Spacer()

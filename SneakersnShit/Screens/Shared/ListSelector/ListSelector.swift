@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct ListSelector: View {
+    @Environment(\.presentationMode) var presentationMode
+
     let title: String
     let buttonTitle: String
     let enableMultipleSelection: Bool
+    let popBackOnSelect: Bool
     let options: [String]
     @Binding var selectedOptions: [String]
     let buttonTapped: () -> Void
@@ -21,9 +24,7 @@ struct ListSelector: View {
                 .foregroundColor(.customText1)
                 .font(.bold(size: 35))
                 .leftAligned()
-                .padding(.leading, 6)
-                .padding(.horizontal, 28)
-                .withDefaultPadding(padding: .top)
+                .padding(.leading, 12)
 
             List {
                 ForEach(options, id: \.self) { option in
@@ -57,10 +58,16 @@ struct ListSelector: View {
                 Color.clear.padding(.bottom, 137)
             }
         }
+        .withDefaultPadding(padding: .top)
         .withFloatingButton(button: NextButton(text: buttonTitle,
                                                size: .init(width: 260, height: 60),
                                                color: .customBlack,
-                                               tapped: buttonTapped)
+                                               tapped: {
+                                                   buttonTapped()
+                                                   if popBackOnSelect {
+                                                       presentationMode.wrappedValue.dismiss()
+                                                   }
+                                               })
                 .centeredHorizontally()
                 .padding(.top, 20))
         .hideKeyboardOnScroll()
@@ -72,6 +79,7 @@ struct ListSelector_Previews: PreviewProvider {
         ListSelector(title: "title",
                      buttonTitle: "buttonTitle",
                      enableMultipleSelection: true,
+                     popBackOnSelect: true,
                      options: ["first", "second", "third"],
                      selectedOptions: .constant(["first", "second"])) { print("hey") }
     }
