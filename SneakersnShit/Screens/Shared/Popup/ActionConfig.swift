@@ -7,7 +7,9 @@
 
 import Foundation
 
-struct ActionConfig {
+struct ActionConfig: Identifiable {
     let name: String
     let tapped: () -> Void
+
+    var id: String { name }
 }

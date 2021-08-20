@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct StackView: View {
-    @Binding var stack: Stack
+    var stack: Stack
     @Binding var searchText: String
     @Binding var inventoryItems: [InventoryItem]
     @Binding var selectedInventoryItemId: String?

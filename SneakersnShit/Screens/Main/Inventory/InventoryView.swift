@@ -172,10 +172,10 @@ struct InventoryView: View {
                         .withDefaultPadding(padding: .horizontal)
 
                     PagerView(pageCount: pageCount, currentIndex: $selectedStackIndex) {
-                        ForEach(store.state.stacks.indices) { index in
-                            let isSelected = Binding<Bool>(get: { store.state.stacks[safe: index]?.id == selectedStack?.id }, set: { _ in })
+                        ForEach(store.state.stacks) { stack in
+                            let isSelected = Binding<Bool>(get: { stack.id == selectedStack?.id }, set: { _ in })
 
-                            StackView(stack: index < store.state.stacks.count ? $store.state.stacks[index] : .constant(.empty),
+                            StackView(stack: stack,
                                       searchText: $searchText,
                                       inventoryItems: $store.state.inventoryItems,
                                       selectedInventoryItemId: $selectedInventoryItemId,
@@ -184,8 +184,8 @@ struct InventoryView: View {
                                       isSelected: isSelected,
                                       bestPrices: $bestPrices,
                                       requestInfo: store.state.requestInfo,
-                                      didTapEditStack: store.state.stacks[safe: index]?.id == "all" ? nil : {
-                                          editedStack = store.state.stacks[safe: index]
+                                      didTapEditStack: stack.id == "all" ? nil : {
+                                          editedStack = stack
                                       })
                         }
                     }

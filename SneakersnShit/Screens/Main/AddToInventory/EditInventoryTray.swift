@@ -23,19 +23,17 @@ struct EditInventoryTray: View {
 
     var body: some View {
         HStack(alignment: .center, spacing: 0) {
-            ForEach(actions.indices) { index in
-                if let action = actions[safe: index] {
-                    Button(action: {
-                        action.tapped()
-                    }) {
-                            Text(action.name.uppercased())
-                                .multilineTextAlignment(.center)
-                                .font(.bold(size: 14))
-                                .foregroundColor(.customWhite)
-                    }
-                    .frame(width: sectionWidth, height: Self.height)
-                    .background((index % 2 == 0 && actions.count != 1) ? Color.customAccent5 : Color.clear)
+            ForEach(actions) { action in
+                Button(action: {
+                    action.tapped()
+                }) {
+                        Text(action.name.uppercased())
+                            .multilineTextAlignment(.center)
+                            .font(.bold(size: 14))
+                            .foregroundColor(.customWhite)
                 }
+                .frame(width: sectionWidth, height: Self.height)
+                .background(((actions.firstIndex(where: { $0.name == action.name }) ?? 0) % 2 == 0 && actions.count != 1) ? Color.customAccent5 : Color.clear)
             }
         }
         .frame(width: sectionWidth * CGFloat(actions.count), height: Self.height)
