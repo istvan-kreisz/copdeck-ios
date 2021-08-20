@@ -31,6 +31,7 @@ struct SettingsView: View {
     @State private var country: String
     @State private var bestPricePriceType: String
     @State private var bestPriceFeeType: String
+    @State private var preferredShoeSize: String
     // stockx
     @State private var stockxLevel: String
     @State private var stockxSuccessfulShipBonus: String
@@ -54,7 +55,7 @@ struct SettingsView: View {
         self._country = State(initialValue: settings.feeCalculation.country.name)
         self._bestPricePriceType = State(initialValue: settings.bestPricePriceType.rawValue.capitalized)
         self._bestPriceFeeType = State(initialValue: settings.bestPriceFeeType.rawValue.capitalized)
-
+        self._preferredShoeSize = State(initialValue: settings.preferredShoeSize ?? "")
         // stockx
         self._stockxLevel = State(initialValue: (settings.feeCalculation.stockx?.sellerLevel.rawValue).map { "Level \($0)" } ?? "")
         self._stockxSuccessfulShipBonus = State(initialValue: IncludeOption.from(settings.feeCalculation.stockx?.successfulShipBonus).rawValue)
@@ -101,6 +102,12 @@ struct SettingsView: View {
         if let feeType = FeeType.allCases.first(where: { $0.rawValue == bestPriceFeeType.lowercased() }),
            settings.bestPriceFeeType != feeType {
             settings.bestPriceFeeType = feeType
+        }
+    }
+
+    private func selectPreferredShoeSize() {
+        if settings.preferredShoeSize != preferredShoeSize {
+            settings.preferredShoeSize = preferredShoeSize
         }
     }
 
@@ -192,11 +199,10 @@ struct SettingsView: View {
                                 .font(.bold(size: 18))
                                 .foregroundColor(.customBlue)
                         })
-                        .buttonStyle(StaticButtonStyle())
-                        .padding(.leading, -10)
+                            .buttonStyle(StaticButtonStyle())
+                            .padding(.leading, -10)
                     }
                     .buttonStyle(StaticButtonStyle())
-
 
                     Section(header: Text("General")) {
                         ListSelectorMenu(title: "Currency",
@@ -222,17 +228,24 @@ struct SettingsView: View {
 
                         ListSelectorMenu(title: "Best price type",
                                          selectorScreenTitle: "Best price type",
-                                         buttonTitle: "Select type",
+                                         buttonTitle: "Select option",
                                          options: PriceType.allCases.map { $0.rawValue.capitalized },
                                          selectedOption: $bestPricePriceType,
                                          buttonTapped: selectBestPricePriceType)
 
                         ListSelectorMenu(title: "Best price fees",
                                          selectorScreenTitle: "Best price fees",
-                                         buttonTitle: "Best price fees",
+                                         buttonTitle: "Select option",
                                          options: FeeType.allCases.map { $0.rawValue.capitalized },
                                          selectedOption: $bestPriceFeeType,
                                          buttonTapped: selectBestPriceFeeType)
+
+                        ListSelectorMenu(title: "Preferred shoe size",
+                                         selectorScreenTitle: "Preferred shoe size",
+                                         buttonTitle: "Select size",
+                                         options: ALLSHOESIZES.reversed(),
+                                         selectedOption: $preferredShoeSize,
+                                         buttonTapped: selectPreferredShoeSize)
                     }
 
                     Section(header: Text("StockX")) {
@@ -330,7 +343,7 @@ struct SettingsView: View {
                             .font(.bold(size: 18))
                             .foregroundColor(.customRed)
                     })
-                    .centeredHorizontally()
+                        .centeredHorizontally()
                 }
                 .hideKeyboardOnScroll()
                 .navigationbarHidden()
