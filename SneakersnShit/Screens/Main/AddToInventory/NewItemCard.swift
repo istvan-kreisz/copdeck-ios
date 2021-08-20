@@ -12,6 +12,8 @@ struct NewItemCard: View {
         case card, noBackground
     }
 
+    @State var didTapPurchasePrice = false
+
     @Binding var inventoryItem: InventoryItem
     let purchasePrice: PriceWithCurrency?
     let currency: Currency
@@ -74,7 +76,14 @@ struct NewItemCard: View {
                                  placeHolder: (self.purchasePrice?.price).asString(),
                                  style: textFieldStyle,
                                  keyboardType: .numberPad,
-                                 text: purchasePrice)
+                                 text: purchasePrice) { isActive in
+                    if isActive && style == .card {
+                        if !didTapPurchasePrice {
+                            didTapPurchasePrice = true
+                            inventoryItem.purchasePrice = nil
+                        }
+                    }
+                }
                 DropDownMenu(title: "size",
                              selectedItem: $inventoryItem.size,
                              options: sizes,

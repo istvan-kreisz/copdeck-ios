@@ -11,6 +11,7 @@ struct TextFieldRounded: View {
     enum Style {
         case white, gray
     }
+
     enum Size {
         case regular, large
     }
@@ -22,10 +23,10 @@ struct TextFieldRounded: View {
     var size: Size = .regular
     @Binding var text: String
     var width: CGFloat? = nil
+    var onEdited: ((Bool) -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-
             if let title = title {
                 Text(title)
                     .font(.regular(size: 12))
@@ -34,7 +35,9 @@ struct TextFieldRounded: View {
             }
 
             if size == .regular {
-                TextField(placeHolder, text: $text)
+                TextField(placeHolder, text: $text, onEditingChanged: { isActive in
+                    onEdited?(isActive)
+                })
                     .keyboardType(keyboardType)
                     .foregroundColor(.customText2)
                     .frame(width: width, height: Styles.inputFieldHeight)
@@ -55,7 +58,6 @@ struct TextFieldRounded: View {
         }
     }
 }
-
 
 struct TextFieldRounded_Previews: PreviewProvider {
     static var previews: some View {
