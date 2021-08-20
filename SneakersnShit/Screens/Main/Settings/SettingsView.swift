@@ -193,6 +193,7 @@ struct SettingsView: View {
                                 .foregroundColor(.customBlue)
                         })
                         .buttonStyle(StaticButtonStyle())
+                        .padding(.leading, -10)
                     }
                     .buttonStyle(StaticButtonStyle())
 
