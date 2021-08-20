@@ -183,6 +183,7 @@ struct SettingsView: View {
                         Text("Settings")
                             .foregroundColor(.customText1)
                             .font(.bold(size: 35))
+                            .withDefaultPadding(padding: [.top])
                         Spacer()
                         Button(action: {
                             isPresented = false
@@ -191,7 +192,10 @@ struct SettingsView: View {
                                 .font(.bold(size: 18))
                                 .foregroundColor(.customBlue)
                         })
+                        .buttonStyle(StaticButtonStyle())
                     }
+                    .buttonStyle(StaticButtonStyle())
+
 
                     Section(header: Text("General")) {
                         ListSelectorMenu(title: "Currency",
@@ -329,7 +333,6 @@ struct SettingsView: View {
                 }
                 .hideKeyboardOnScroll()
                 .navigationbarHidden()
-                .withDefaultPadding(padding: [.top, .bottom])
                 .onChange(of: settings) { value in
                     store.send(.main(action: .updateSettings(settings: value)))
                 }

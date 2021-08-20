@@ -238,4 +238,3 @@ struct WithTextFieldPopup: ViewModifier {
         }
     }
 }
-
