@@ -24,11 +24,11 @@ struct Popup<Content: View>: View {
     }
 
     var frameWidth: CGFloat {
-        min(300, UIScreen.screenWidth - 16 * 2)
+        min(310, UIScreen.screenWidth - 16 * 2)
     }
 
     var buttonWidth: CGFloat {
-        (frameWidth - Self.padding / 2 - Self.buttonSpacing) * 0.37
+        (frameWidth - Self.padding / 2 - Self.buttonSpacing) * 0.45
     }
 
     init(isShowing: Binding<Bool>,
@@ -50,7 +50,7 @@ struct Popup<Content: View>: View {
             Color(r: 38, g: 38, b: 38, opacity: 0.62)
                 .edgesIgnoringSafeArea(.all)
                 .onTapGesture { isShowing = false }
-            VStack(alignment: .center, spacing: 11) {
+            VStack(alignment: .center, spacing: 13) {
                 Text(title)
                     .foregroundColor(.customText1)
                     .font(.bold(size: 25))
