@@ -55,8 +55,8 @@ struct ListSelector: View {
                             }
                     }
                 }
-                Color.clear.padding(.bottom, 137)
             }
+            Color.clear.padding(.bottom, 137)
         }
         .withDefaultPadding(padding: .top)
         .withFloatingButton(button: NextButton(text: buttonTitle,

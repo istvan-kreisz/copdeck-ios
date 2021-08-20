@@ -13,6 +13,7 @@ struct SettingsView: View {
     @State private var settings: CopDeckSettings
     @State private var selectedStores: [String] = []
     @State private var countries: [String] = []
+    @State private var stockxLevel: String
 
     @Binding private var isPresented: Bool
 
@@ -21,6 +22,8 @@ struct SettingsView: View {
         self._selectedStores = State(initialValue: settings.displayedStores.compactMap { Store.store(withId: $0)?.name.rawValue })
         self._isPresented = isPresented
         self._countries = State(initialValue: [settings.feeCalculation.country.name])
+        let stockXLevel = (settings.feeCalculation.stockx?.sellerLevel.rawValue).map { "Level \($0)" } ?? ""
+        self._stockxLevel = State(initialValue: stockXLevel)
     }
 
     private func selectCountryTapped() {
@@ -31,19 +34,23 @@ struct SettingsView: View {
         }
     }
 
+    private func selectStockXLevelTapped() {
+        if let level = CopDeckSettings.FeeCalculation.StockX.SellerLevel.allCases.first(where: { stockxLevel.contains("\($0.rawValue)") }) {
+            settings.feeCalculation.stockx?.sellerLevel = level
+        }
+    }
+
     var body: some View {
         NavigationView {
-            VStack {
-                HStack {
+            VStack(spacing: 20) {
+                Form {
                     Text("Settings")
                         .foregroundColor(.customText1)
                         .font(.bold(size: 35))
                         .padding(.leading, 12)
                         .leftAligned()
-                    Spacer()
-                }
-                Form {
-                    Section(header: Text("Currency")) {
+
+                    Section(header: Text("General")) {
                         let currency = Binding<String>(get: { settings.currency.symbol.rawValue },
                                                        set: { new in
                                                            if let symbol = Currency.CurrencySymbol(rawValue: new),
@@ -52,26 +59,26 @@ struct SettingsView: View {
                                                            }
                                                        })
 
-                        Picker(selection: currency, label: Text("Choose your currency")) {
-                            ForEach(ALLCURRENCIES.map { $0.symbol.rawValue }, id: \.self) {
-                                Text($0)
+                        HStack {
+                            Text("Currency")
+                            Spacer(minLength: 15)
+                            Picker(selection: currency, label: Text("Choose your currency")) {
+                                ForEach(ALLCURRENCIES.map { $0.symbol.rawValue }, id: \.self) {
+                                    Text($0)
+                                }
                             }
+                            .pickerStyle(SegmentedPickerStyle())
                         }
-                        .pickerStyle(SegmentedPickerStyle())
-                    }
 
-                    Section(header: Text("Show prices from")) {
                         ListSelectorMenu(title: "Enabled stores",
-                                         selectorScreenTitle: "Select sites to display",
+                                         selectorScreenTitle: "Select sites",
                                          buttonTitle: "Select sites",
                                          enableMultipleSelection: true,
                                          options: ALLSTORES.map { $0.name.rawValue },
                                          selectedOptions: $selectedStores) {
                                 settings.displayedStores = selectedStores.compactMap { Store.store(withName: $0)?.id }
                         }
-                    }
 
-                    Section(header: Text("Country")) {
                         ListSelectorMenu(title: "Country",
                                          selectorScreenTitle: "Select your country",
                                          buttonTitle: "Select country",
@@ -81,60 +88,62 @@ struct SettingsView: View {
                                          buttonTapped: selectCountryTapped)
                     }
 
-                    Section(header: Text("StockX seller level")) {
-                        let sellerLevel = Binding<String>(get: {
-                                                              (settings.feeCalculation.stockx?.sellerLevel.rawValue).map { "Level \($0)" } ?? ""
-                                                          },
-                                                          set: { new in
-                                                              if let level = CopDeckSettings.FeeCalculation.StockX.SellerLevel.allCases
-                                                                  .first(where: { new.contains("\($0.rawValue)") }) {
-                                                                  settings.feeCalculation.stockx?.sellerLevel = level
-                                                              }
-                                                          })
+                    Section(header: Text("StockX")) {
+                        ListSelectorMenu(title: "Seller Level",
+                                         selectorScreenTitle: "Select seller level",
+                                         buttonTitle: "Select level",
+                                         enableMultipleSelection: false,
+                                         options: CopDeckSettings.FeeCalculation.StockX.SellerLevel.allCases.map { "Level \($0.rawValue)" },
+                                         selectedOption: $stockxLevel,
+                                         buttonTapped: selectStockXLevelTapped)
 
-                        Picker(selection: sellerLevel, label: Text("StockX seller level")) {
-                            ForEach(CopDeckSettings.FeeCalculation.StockX.SellerLevel.allCases.map { "Level \($0.rawValue)" }, id: \.self) {
-                                Text($0)
-                            }
-                        }
-                        .pickerStyle(SegmentedPickerStyle())
-                    }
-                    if settings.feeCalculation.stockx?.sellerLevel == .level4 || settings.feeCalculation.stockx?.sellerLevel == .level5 {
-                        Section(header: Text("StockX successful ship bonus (-1%)")) {
-                            let shipBonus =
-                                Binding<String>(get: { (settings.feeCalculation.stockx?.successfulShipBonus == true) ? "Include" : "Don't include" },
-                                                set: { new in settings.feeCalculation.stockx?.successfulShipBonus = new == "Include" })
+                        if settings.feeCalculation.stockx?.sellerLevel == .level4 || settings.feeCalculation.stockx?.sellerLevel == .level5 {
+                            HStack {
+                                Text("Successful ship bonus (-1%)")
+                                Spacer(minLength: 15)
+                                let shipBonus =
+                                    Binding<String>(get: { (settings.feeCalculation.stockx?.successfulShipBonus == true) ? "Include" : "Don't include" },
+                                                    set: { new in settings.feeCalculation.stockx?.successfulShipBonus = new == "Include" })
 
-                            Picker(selection: shipBonus, label: Text("StockX successful ship bonus (-1%)")) {
-                                ForEach(["Include", "Don't include"], id: \.self) {
-                                    Text($0)
+                                Picker(selection: shipBonus, label: Text("Successful ship bonus (-1%)")) {
+                                    ForEach(["Include", "Don't include"], id: \.self) {
+                                        Text($0)
+                                    }
                                 }
+                                .pickerStyle(SegmentedPickerStyle())
                             }
-                            .pickerStyle(SegmentedPickerStyle())
-                        }
-                        Section(header: Text("StockX quick ship bonus (-1%)")) {
-                            let shipBonus = Binding<String>(get: { (settings.feeCalculation.stockx?.quickShipBonus == true) ? "Include" : "Don't include" },
-                                                            set: { new in settings.feeCalculation.stockx?.quickShipBonus = new == "Include" })
 
-                            Picker(selection: shipBonus, label: Text("StockX quick ship bonus (-1%)")) {
-                                ForEach(["Include", "Don't include"], id: \.self) {
-                                    Text($0)
+                            HStack {
+                                Text("Quick ship bonus (-1%)")
+                                Spacer(minLength: 15)
+                                let shipBonus = Binding<String>(get: { (settings.feeCalculation.stockx?.quickShipBonus == true) ? "Include" : "Don't include" },
+                                                                set: { new in settings.feeCalculation.stockx?.quickShipBonus = new == "Include" })
+
+                                Picker(selection: shipBonus, label: Text("Quick ship bonus (-1%)")) {
+                                    ForEach(["Include", "Don't include"], id: \.self) {
+                                        Text($0)
+                                    }
                                 }
-                            }
-                            .pickerStyle(SegmentedPickerStyle())
-                        }
-                    }
+                                .pickerStyle(SegmentedPickerStyle())
 
-                    if settings.feeCalculation.country == .US || settings.feeCalculation.country == .USE {
-                        Section(header: Text("StockX buyer's taxes (%)")) {
-                            let taxes = Binding<String>(get: { (settings.feeCalculation.stockx?.taxes).asString },
-                                                        set: { new in
-                                                            if let taxes = Double(new) {
-                                                                settings.feeCalculation.stockx?.taxes = taxes
-                                                            }
-                                                        })
-                            TextField("0%", text: taxes)
-                                .keyboardType(.numberPad)
+                            }
+                        }
+
+                        if settings.feeCalculation.country == .US || settings.feeCalculation.country == .USE {
+                            HStack {
+
+                                let taxes = Binding<String>(get: { (settings.feeCalculation.stockx?.taxes).asString },
+                                                            set: { new in
+                                                                if let taxes = Double(new) {
+                                                                    settings.feeCalculation.stockx?.taxes = taxes
+                                                                }
+                                                            })
+                                Text("StockX buyer's taxes (%)")
+                                Spacer(minLength: 15)
+                                TextField("0%", text: taxes)
+                                    .keyboardType(.numberPad)
+                            }
+
                         }
                     }
 
@@ -178,33 +187,32 @@ struct SettingsView: View {
                         TextField("0%", text: taxes)
                             .keyboardType(.numberPad)
                     }
+                }
+                VStack(alignment: .center, spacing: 40) {
+                    Button(action: {
+                        store.send(.authentication(action: .signOut))
+                    }, label: {
+                        Text("Sign Out")
+                            .font(.bold(size: 18))
+                            .foregroundColor(.customRed)
+                    })
 
-                    VStack(alignment: .center, spacing: 30) {
-                        Button(action: {
-                            store.send(.authentication(action: .signOut))
-                        }, label: {
-                            Text("Sign Out")
-                                .font(.bold(size: 18))
-                                .foregroundColor(.customRed)
-                        })
-
-
-                        Button(action: {
-                            isPresented = false
-                        }, label: {
-                            Text("Done")
-                                .font(.bold(size: 18))
-                                .foregroundColor(.customBlue)
-                        })
-                    }
+                    Button(action: {
+                        isPresented = false
+                    }, label: {
+                        Text("Done")
+                            .font(.bold(size: 18))
+                            .foregroundColor(.customBlue)
+                    })
                 }
             }
             .navigationbarHidden()
-            .withDefaultPadding(padding: [.top])
+            .withDefaultPadding(padding: [.top, .bottom])
             .onChange(of: settings) { value in
                 store.send(.main(action: .updateSettings(settings: value)))
             }
         }
+        .navigationViewStyle(StackNavigationViewStyle())
         .preferredColorScheme(.light)
     }
 }

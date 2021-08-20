@@ -212,6 +212,7 @@ struct InventoryView: View {
             }
             .sheet(isPresented: $settingsPresented) {
                 SettingsView(settings: store.state.settings, isPresented: $settingsPresented)
+                    .environmentObject(store)
             }
         }
         .withTabViewWrapper(viewRouter: viewRouter, store: store, backgroundColor: .customWhite, shouldShow: $shouldShowTabBar)
