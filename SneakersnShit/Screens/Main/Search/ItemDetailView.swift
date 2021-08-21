@@ -334,7 +334,7 @@ struct ItemDetailView: View {
     }
 
     private func updateItem(newItem: Item?) {
-        guard let newItem = newItem else { return }
+        guard let newItem = newItem, newItem.id == itemId else { return }
         if let item = self.item {
             if newItem.id == item.id {
                 self.item = newItem
