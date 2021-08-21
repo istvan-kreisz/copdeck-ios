@@ -314,6 +314,7 @@ struct ItemDetailView: View {
             .onAppear {
                 if firstShow {
                     firstShow = false
+                    updateItem(newItem: store.state.selectedItem)
                     refreshPrices(fetchMode: .cacheOrRefresh)
                 }
             }

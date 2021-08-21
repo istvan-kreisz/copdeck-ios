@@ -71,11 +71,11 @@
          <EnvironmentVariable
             key = "pricesRefreshPeriodMin"
             value = "3"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "itemPricesRefreshPeriodMin"
-            value = "0.2"
+            value = "2"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
