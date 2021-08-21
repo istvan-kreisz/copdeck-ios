@@ -48,15 +48,6 @@ struct SearchView: View {
                     .padding(.leading, 6)
                     .withDefaultPadding(padding: .horizontal)
 
-                if let item = store.state.searchResults?.first {
-                    VerticalListItemWithoutAccessoryView(title: item.name ?? "",
-                                                         imageURL: item.imageURL,
-                                                         flipImage: item.imageURL?.store.id == .klekt,
-                                                         requestInfo: store.state.requestInfo,
-                                                         isEditing: .constant(false),
-                                                         isSelected: false) { selectedItem = item }
-                }
-
                 TextFieldRounded(title: nil,
                                  placeHolder: "Search sneakers",
                                  style: .white,
