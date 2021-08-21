@@ -11,6 +11,7 @@ import Combine
 struct StackView: View {
     var stack: Stack
     @Binding var searchText: String
+    @Binding var filters: Filters
     @Binding var inventoryItems: [InventoryItem]
     @Binding var selectedInventoryItemId: String?
     @Binding var isEditing: Bool
@@ -21,7 +22,7 @@ struct StackView: View {
     var didTapEditStack: (() -> Void)?
 
     var allStackItems: [InventoryItem] {
-        stack.inventoryItems(allInventoryItems: inventoryItems).filter { $0.name.lowercased().fuzzyMatch(searchText.lowercased()) }
+        stack.inventoryItems(allInventoryItems: inventoryItems, filters: filters, searchText: searchText)
     }
 
     var body: some View {

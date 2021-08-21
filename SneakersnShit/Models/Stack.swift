@@ -15,8 +15,21 @@ struct Stack: Codable, Equatable, Identifiable {
     let created: Double?
     let updated: Double?
 
-    func inventoryItems(allInventoryItems: [InventoryItem]) -> [InventoryItem] {
-        allInventoryItems.filter { inventoryItem in items.contains(where: { inventoryItem.id == $0.inventoryItemId }) }
+    func inventoryItems(allInventoryItems: [InventoryItem], filters: Filters, searchText: String) -> [InventoryItem] {
+        allInventoryItems.filter { inventoryItem in
+            if items.contains(where: { inventoryItem.id == $0.inventoryItemId }), inventoryItem.name.lowercased().fuzzyMatch(searchText.lowercased()) {
+                switch filters.soldStatus {
+                case .all:
+                    return true
+                case .sold:
+                    return inventoryItem.status == .sold
+                case .unsold:
+                    return inventoryItem.status != .sold
+                }
+            } else {
+                return false
+            }
+        }
     }
 
     static func allStack(inventoryItems: [InventoryItem]) -> Stack {

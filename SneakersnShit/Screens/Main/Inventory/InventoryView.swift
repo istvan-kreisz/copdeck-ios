@@ -14,6 +14,7 @@ struct InventoryView: View {
 
     @State private var searchText = ""
     @State private var isEditing = false
+    @State private var showFilters = false
     @State private var selectedInventoryItems: [InventoryItem] = []
     @State private var selectedStackIndex = 0
     @State private var editedStack: Stack?
@@ -83,12 +84,13 @@ struct InventoryView: View {
                                                              set: { _ in })
             let showEditedStack = Binding<Bool>(get: { editedStack?.id != nil },
                                                 set: { editedStack = $0 ? editedStack : nil })
+            let filters = Binding<Filters>(get: { store.state.settings.filters }, set: { _ in })
 
             NavigationLink(destination: EmptyView()) {
                 EmptyView()
             }
             ForEach(inventoryItems) { inventoryItem in
-                NavigationLink(destination: InventoryItemDetailView(inventoryItem: inventoryItem) { selectedInventoryItemId = nil } ,
+                NavigationLink(destination: InventoryItemDetailView(inventoryItem: inventoryItem) { selectedInventoryItemId = nil },
                                tag: inventoryItem.id,
                                selection: $selectedInventoryItemId) { EmptyView() }
             }
@@ -163,6 +165,20 @@ struct InventoryView: View {
                                                  color: .customBlue,
                                                  accessoryView: nil,
                                                  tapped: { isEditing.toggle() })
+
+                        Button(action: {
+                            showFilters = true
+                        }, label: {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.customOrange)
+                                    .frame(width: 32, height: 32)
+                                Image("filter")
+                                    .renderingMode(.template)
+                                    .frame(height: 24)
+                                    .foregroundColor(.customWhite)
+                            }
+                        })
                     }
                     .withDefaultPadding(padding: .horizontal)
 
@@ -177,6 +193,7 @@ struct InventoryView: View {
 
                             StackView(stack: stack,
                                       searchText: $searchText,
+                                      filters: filters,
                                       inventoryItems: $store.state.inventoryItems,
                                       selectedInventoryItemId: $selectedInventoryItemId,
                                       isEditing: $isEditing,
@@ -215,6 +232,10 @@ struct InventoryView: View {
             }
             .sheet(isPresented: $settingsPresented) {
                 SettingsView(settings: store.state.settings, isPresented: $settingsPresented)
+                    .environmentObject(store)
+            }
+            .sheet(isPresented: $showFilters) {
+                FiltersModal(settings: store.state.settings, isPresented: $showFilters)
                     .environmentObject(store)
             }
         }

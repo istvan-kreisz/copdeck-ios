@@ -17,6 +17,7 @@ struct CopDeckSettings: Codable, Equatable {
     var bestPriceFeeType: FeeType
     var preferredShoeSize: String?
     var displayedStores: [StoreId]
+    var filters: Filters
 
     struct FeeCalculation: Codable, Equatable {
         var country: Country
@@ -71,6 +72,7 @@ extension CopDeckSettings {
         bestPriceFeeType = try container.decodeIfPresent(FeeType.self, forKey: .bestPriceFeeType) ?? .none
         preferredShoeSize = try container.decodeIfPresent(String.self, forKey: .preferredShoeSize)
         displayedStores = try container.decodeIfPresent([StoreId].self, forKey: .displayedStores) ?? ALLSTORES.map(\.id)
+        filters = try container.decodeIfPresent(Filters.self, forKey: .filters) ?? Filters(soldStatus: .all)
     }
 
     static let `default` = CopDeckSettings(currency: Currency(code: .eur, symbol: .eur),
@@ -89,5 +91,6 @@ extension CopDeckSettings {
                                            bestPricePriceType: .ask,
                                            bestPriceFeeType: .none,
                                            preferredShoeSize: nil,
-                                           displayedStores: ALLSTORES.map(\.id))
+                                           displayedStores: ALLSTORES.map(\.id),
+                                           filters: .init(soldStatus: .all))
 }
