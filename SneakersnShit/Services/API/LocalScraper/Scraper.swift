@@ -105,9 +105,8 @@ extension LocalScraper: API {
             .eraseToAnyPublisher()
     }
 
+    #warning("refactor publishers")
     private func getItemDetails(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
-        itemSubject.send(completion: .finished)
-        itemSubject = PassthroughSubject<Item, AppError>()
         guard let itemJSON = item.asJSON else {
             return Fail(outputType: Item.self, failure: AppError(title: "Error", message: "Invalid Item object", error: nil)).eraseToAnyPublisher()
         }
@@ -116,7 +115,10 @@ extension LocalScraper: API {
                          functionName: "scraper.api.getItemPrices",
                          arguments: [itemJSON, config(from: settings, exchangeRates: exchangeRates)],
                          completion: { _ in })
-        return itemSubject.first().eraseToAnyPublisher()
+        return itemSubject
+            .timeout(.seconds(15), scheduler: DispatchQueue.main)
+            .first { $0.id == item.id }
+            .eraseToAnyPublisher()
     }
 
     func getExchangeRates(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<ExchangeRates, AppError> {
@@ -144,8 +146,6 @@ extension LocalScraper: API {
     }
 
     func getCalculatedPrices(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
-        itemWithCalculatedPricesSubject.send(completion: .finished)
-        itemWithCalculatedPricesSubject = PassthroughSubject<Item, AppError>()
         guard let itemJSON = item.asJSON else {
             return Fail(outputType: Item.self, failure: AppError(title: "Error", message: "Invalid Item object", error: nil)).eraseToAnyPublisher()
         }
@@ -154,7 +154,10 @@ extension LocalScraper: API {
                          functionName: "scraper.api.calculatePrices",
                          arguments: [itemJSON, config(from: settings, exchangeRates: exchangeRates)],
                          completion: { _ in })
-        return itemWithCalculatedPricesSubject.first().eraseToAnyPublisher()
+        return itemWithCalculatedPricesSubject
+            .timeout(.seconds(15), scheduler: DispatchQueue.main)
+            .first { $0.id == item.id }
+            .eraseToAnyPublisher()
     }
 
     func getPopularItems(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {

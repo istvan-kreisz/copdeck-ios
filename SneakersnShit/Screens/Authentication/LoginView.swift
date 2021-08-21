@@ -23,6 +23,7 @@ struct LoginView: View {
         NavigationView {
             ZStack {
                 Color.customBackground.edgesIgnoringSafeArea(.all)
+                NavigationLink(destination: EmptyView()) { EmptyView() }
                 NavigationLink("",
                                destination: SignUpView(showView: $signUpTapped),
                                isActive: $signUpTapped)

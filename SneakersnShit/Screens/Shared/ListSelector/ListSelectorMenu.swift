@@ -60,6 +60,7 @@ struct ListSelectorMenu: View {
         }, set: { options in
             options.first.map { self.selectedOption?.wrappedValue = $0 }
         })
+        NavigationLink(destination: EmptyView()) { EmptyView() }
         NavigationLink(destination: ListSelector(title: selectorScreenTitle,
                                                  buttonTitle: buttonTitle,
                                                  enableMultipleSelection: selectedOptions != nil,

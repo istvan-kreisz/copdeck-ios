@@ -21,6 +21,8 @@ class DefaultDataController: DataController {
     lazy var cookiesPublisher = localScraper.cookiesPublisher
     lazy var imageDownloadHeadersPublisher = localScraper.imageDownloadHeadersPublisher
 
+    private var cancellables: Set<AnyCancellable> = []
+
     init(backendAPI: API, localScraper: API, databaseManager: DatabaseManager) {
         self.backendAPI = backendAPI
         self.localScraper = localScraper
@@ -56,7 +58,7 @@ class DefaultDataController: DataController {
                 return Just(item).setFailureType(to: AppError.self).eraseToAnyPublisher()
             }
             .handleEvents(receiveOutput: { [weak self] updatedItem in
-                ItemCache.default.insert(item: updatedItem, settings: settings)
+                self?.cache(item: updatedItem, settings: settings, exchangeRates: exchangeRates)
                 if updatedItem.updated != item?.updated {
                     self?.databaseManager.update(item: updatedItem, settings: settings)
                 }
@@ -90,13 +92,13 @@ class DefaultDataController: DataController {
                                     .map { savedItem -> Item in
                                         if let item = item {
                                             if savedItem.updated ?? 0 > item.updated ?? 0 {
-                                                ItemCache.default.insert(item: savedItem, settings: settings)
+                                                self.cache(item: savedItem, settings: settings, exchangeRates: exchangeRates)
                                                 return savedItem
                                             } else {
                                                 return item
                                             }
                                         } else {
-                                            ItemCache.default.insert(item: savedItem, settings: settings)
+                                            self.cache(item: savedItem, settings: settings, exchangeRates: exchangeRates)
                                             return savedItem
                                         }
                                     }
@@ -115,8 +117,8 @@ class DefaultDataController: DataController {
                                         guard let self = self else {
                                             return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
                                         }
-                                        if savedItem.isUptodate && !savedItem.storePrices.isEmpty {
-                                            ItemCache.default.insert(item: savedItem, settings: settings)
+                                        if savedItem.isUptodate, !savedItem.storePrices.isEmpty {
+                                            self.cache(item: savedItem, settings: settings, exchangeRates: exchangeRates)
                                             return Just(savedItem).setFailureType(to: AppError.self).eraseToAnyPublisher()
                                         } else {
                                             return self.refreshItem(for: savedItem, itemId: itemId, settings: settings, exchangeRates: exchangeRates)
@@ -143,6 +145,15 @@ class DefaultDataController: DataController {
                 return self.localScraper.getCalculatedPrices(for: item, settings: settings, exchangeRates: exchangeRates)
             }
             .eraseToAnyPublisher()
+    }
+
+    private func cache(item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) {
+        localScraper.getCalculatedPrices(for: item, settings: settings, exchangeRates: exchangeRates)
+            .sink(receiveCompletion: { _ in },
+                  receiveValue: { item in
+                ItemCache.default.insert(item: item, settings: settings)
+            })
+            .store(in: &cancellables)
     }
 
     func getCalculatedPrices(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {

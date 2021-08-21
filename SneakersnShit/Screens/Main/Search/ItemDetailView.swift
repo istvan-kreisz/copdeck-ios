@@ -22,7 +22,6 @@ struct ItemDetailView: View {
     @Binding var showView: Bool
 
     private let itemId: String
-    private let showAddToInventoryButton: Bool
 
     enum BorderStyle {
         case red, green, regular
@@ -30,11 +29,10 @@ struct ItemDetailView: View {
 
     @StateObject private var loader = Loader()
 
-    init(item: Item?, showView: Binding<Bool>, itemId: String, showAddToInventoryButton: Bool = true) {
+    init(item: Item?, showView: Binding<Bool>, itemId: String) {
         self._item = State(initialValue: item)
         self._showView = showView
         self.itemId = itemId
-        self.showAddToInventoryButton = showAddToInventoryButton
     }
 
     private func priceRow(row: Item.PriceRow) -> some View {
@@ -100,13 +98,13 @@ struct ItemDetailView: View {
             Color.customWhite.edgesIgnoringSafeArea(.all)
             let isAddToInventoryActive = Binding<Bool>(get: { addToInventory.isActive },
                                                        set: { addToInventory = $0 ? addToInventory : (false, nil) })
-            if showAddToInventoryButton {
-                NavigationLink("",
-                               destination: item
-                                   .map { item in AddToInventoryView(item: item, presented: $addToInventory, addedInvantoryItem: $addedInventoryItem) } ??
-                                   nil,
-                               isActive: isAddToInventoryActive)
-            }
+            NavigationLink(destination: EmptyView()) { EmptyView() }
+
+            NavigationLink("",
+                           destination: item
+                               .map { item in AddToInventoryView(item: item, presented: $addToInventory, addedInvantoryItem: $addedInventoryItem) } ??
+                               nil,
+                           isActive: isAddToInventoryActive)
 
             ScrollView(.vertical, showsIndicators: false) {
                 ScrollViewReader { scrollViewProxy in
@@ -300,7 +298,7 @@ struct ItemDetailView: View {
                     .onAppear { scrollViewProxy.scrollTo(0) }
                 }
             }
-            .if(item != nil && showAddToInventoryButton) {
+            .if(item != nil) {
                 $0
                     .withFloatingButton(button: NextButton(text: "Add to Inventory",
                                                            size: .init(width: 260, height: 60),
@@ -316,7 +314,6 @@ struct ItemDetailView: View {
             .withSnackBar(text: "Added to inventory", shouldShow: $showSnackBar)
             .navigationbarHidden()
             .onAppear {
-                store.send(.main(action: .setSelectedItem(item: nil)))
                 if firstShow {
                     firstShow = false
                     refreshPrices(fetchMode: .cacheOrRefresh)

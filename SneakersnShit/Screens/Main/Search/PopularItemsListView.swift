@@ -21,11 +21,9 @@ struct PopularItemsListView: View {
                                                  set: { selectedItem = $0 ? selectedItem : nil })
             let selectedItemId = Binding<String?>(get: { selectedItem?.id }, set: { selectedItem = $0 == nil ? nil : selectedItem })
 
+            NavigationLink(destination: EmptyView()) { EmptyView() }
             ForEach(items ?? []) { item in
-                NavigationLink(destination: ItemDetailView(item: item,
-                                                           showView: showSelectedItem,
-                                                           itemId: item.id,
-                                                           showAddToInventoryButton: true),
+                NavigationLink(destination: ItemDetailView(item: item, showView: showSelectedItem, itemId: item.id),
                                tag: item.id,
                                selection: selectedItemId) { EmptyView() }
             }

@@ -28,7 +28,7 @@
 		5D3DE37426AFA96D009E4D52 /* UINavigationController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D3DE37326AFA96D009E4D52 /* UINavigationController+Extensions.swift */; };
 		5D3DE37626AFAB54009E4D52 /* CountrySelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D3DE37526AFAB54009E4D52 /* CountrySelector.swift */; };
 		5D3E872125C5CCD700FC65FE /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D3E872025C5CCD700FC65FE /* SearchView.swift */; };
-		5D3E872525C5D3FC00FC65FE /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D3E872425C5D3FC00FC65FE /* Array+Extensions.swift */; };
+		5D3E872525C5D3FC00FC65FE /* Sequence+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D3E872425C5D3FC00FC65FE /* Sequence+Extensions.swift */; };
 		5D424CAE25C4FDCC0008D6F4 /* SignInButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424CAB25C4FDCC0008D6F4 /* SignInButton.swift */; };
 		5D424CD425C4FF2F0008D6F4 /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424CD325C4FF2F0008D6F4 /* IAPManager.swift */; };
 		5D424CEE25C502F90008D6F4 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424CED25C502F90008D6F4 /* Colors.swift */; };
@@ -162,7 +162,7 @@
 		5D3DE37326AFA96D009E4D52 /* UINavigationController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+Extensions.swift"; sourceTree = "<group>"; };
 		5D3DE37526AFAB54009E4D52 /* CountrySelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountrySelector.swift; sourceTree = "<group>"; };
 		5D3E872025C5CCD700FC65FE /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
-		5D3E872425C5D3FC00FC65FE /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
+		5D3E872425C5D3FC00FC65FE /* Sequence+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence+Extensions.swift"; sourceTree = "<group>"; };
 		5D424CAB25C4FDCC0008D6F4 /* SignInButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInButton.swift; sourceTree = "<group>"; };
 		5D424CD325C4FF2F0008D6F4 /* IAPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPManager.swift; sourceTree = "<group>"; };
 		5D424CD725C501B20008D6F4 /* Karla-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Karla-ExtraBold.ttf"; sourceTree = "<group>"; };
@@ -374,7 +374,7 @@
 			children = (
 				5D424CF625C503D10008D6F4 /* UIScreen+Extensions.swift */,
 				5D424CFA25C503F00008D6F4 /* UIApplication+Extensions.swift */,
-				5D3E872425C5D3FC00FC65FE /* Array+Extensions.swift */,
+				5D3E872425C5D3FC00FC65FE /* Sequence+Extensions.swift */,
 				5D52E306261303AF00FA02B8 /* Publishers+Extensions.swift */,
 				5D52E30A2613063B00FA02B8 /* Encodable+Extensions.swift */,
 				5D6312232694D83100876D99 /* Decodable+Extensions.swift */,
@@ -1085,7 +1085,7 @@
 				5D2726D026CC59CC00887449 /* Cache.swift in Sources */,
 				5DC3538F26117C7F00294DF0 /* ItemDetailView.swift in Sources */,
 				5D424CD425C4FF2F0008D6F4 /* IAPManager.swift in Sources */,
-				5D3E872525C5D3FC00FC65FE /* Array+Extensions.swift in Sources */,
+				5D3E872525C5D3FC00FC65FE /* Sequence+Extensions.swift in Sources */,
 				5D424CEE25C502F90008D6F4 /* Colors.swift in Sources */,
 				5D83156B25C397C4008AB948 /* MainContainerView.swift in Sources */,
 				5D8ABBBA26B0B51200AFD8CF /* Snackbar.swift in Sources */,

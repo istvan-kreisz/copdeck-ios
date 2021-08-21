@@ -12,6 +12,7 @@ func appReducer(state: inout AppState,
                 action: AppAction,
                 environment: World,
                 completed: ((Result<Void, AppError>) -> Void)?) -> AnyPublisher<AppAction, Never> {
+    log("processing: \(action.id)")
     switch action {
     case .none:
         break

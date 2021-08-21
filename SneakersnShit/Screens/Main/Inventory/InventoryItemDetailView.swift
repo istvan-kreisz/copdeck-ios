@@ -46,10 +46,13 @@ struct InventoryItemDetailView: View {
 
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
+            NavigationLink(destination: EmptyView()) {
+                EmptyView()
+            }
+
             NavigationLink(destination: inventoryItem.itemId.map { itemId in ItemDetailView(item: nil,
                                                                                             showView: $showItemDetails,
-                                                                                            itemId: itemId,
-                                                                                            showAddToInventoryButton: true) },
+                                                                                            itemId: itemId) },
             isActive: $showItemDetails) { EmptyView() }
 
             VStack(alignment: .center, spacing: 20) {

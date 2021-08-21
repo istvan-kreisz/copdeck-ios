@@ -20,7 +20,7 @@ struct SearchView: View {
     @State private var showPopularItems = false
 
     var allItems: [Item] {
-        (store.state.searchResults ?? []) + (store.state.popularItems ?? []) + (selectedItem.map { [$0] } ?? [])
+        ((selectedItem.map { [$0] } ?? []) + (store.state.searchResults ?? []) + (store.state.popularItems ?? [])).uniqued()
     }
 
     var body: some View {
@@ -29,11 +29,9 @@ struct SearchView: View {
                                                  set: { selectedItem = $0 ? selectedItem : nil })
             let selectedItemId = Binding<String?>(get: { selectedItem?.id },
                                                   set: { selectedItem = $0 != nil ? selectedItem : nil })
+            NavigationLink(destination: EmptyView()) { EmptyView() }
             ForEach(allItems) { item in
-                NavigationLink(destination: ItemDetailView(item: item,
-                                                           showView: showSelectedItem,
-                                                           itemId: item.id,
-                                                           showAddToInventoryButton: true),
+                NavigationLink(destination: ItemDetailView(item: item, showView: showSelectedItem, itemId: item.id),
                                tag: item.id,
                                selection: selectedItemId) { EmptyView() }
             }
@@ -52,20 +50,27 @@ struct SearchView: View {
                     .padding(.leading, 6)
                     .withDefaultPadding(padding: .horizontal)
 
+                if let item = store.state.searchResults?.first {
+                    VerticalListItemWithoutAccessoryView(title: item.name ?? "",
+                                                         imageURL: item.imageURL,
+                                                         flipImage: item.imageURL?.store.id == .klekt,
+                                                         requestInfo: store.state.requestInfo,
+                                                         isEditing: .constant(false),
+                                                         isSelected: false) { selectedItem = item }
+                }
+
                 TextFieldRounded(title: nil,
                                  placeHolder: "Search sneakers",
                                  style: .white,
                                  text: $searchText)
                     .withDefaultPadding(padding: .horizontal)
 
-
-                    HorizontaltemListView(items: $store.state.popularItems,
-                                          selectedItem: $selectedItem,
-                                          isLoading: $popularItemsLoader.isLoading,
-                                          showPopularItems: $showPopularItems,
-                                          title: "Trending now",
-                                          requestInfo: store.state.requestInfo)
-
+                HorizontaltemListView(items: $store.state.popularItems,
+                                      selectedItem: $selectedItem,
+                                      isLoading: $popularItemsLoader.isLoading,
+                                      showPopularItems: $showPopularItems,
+                                      title: "Trending now",
+                                      requestInfo: store.state.requestInfo)
 
                 VerticalItemListView(items: $store.state.searchResults,
                                      selectedItem: $selectedItem,

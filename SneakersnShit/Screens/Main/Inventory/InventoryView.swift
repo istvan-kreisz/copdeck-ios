@@ -86,6 +86,9 @@ struct InventoryView: View {
             let showEditedStack = Binding<Bool>(get: { editedStack?.id != nil },
                                                 set: { editedStack = $0 ? editedStack : nil })
 
+            NavigationLink(destination: EmptyView()) {
+                EmptyView()
+            }
             ForEach(inventoryItems) { inventoryItem in
                 NavigationLink(destination: InventoryItemDetailView(inventoryItem: inventoryItem,
                                                                     isEditingInventoryItem: isEditingInventoryItem),
@@ -206,6 +209,12 @@ struct InventoryView: View {
             }
             .onChange(of: editedStack) { stack in
                 shouldShowTabBar = stack == nil
+            }
+            .onChange(of: store.state.inventoryItems) { _ in
+                print("asdjlsdsakdkasd")
+                print("asdjlsdsakdkasd")
+                print("asdjlsdsakdkasd")
+                updateBestPrices()
             }
             .onReceive(ItemCache.default.updatedPublisher.debounce(for: .milliseconds(500), scheduler: RunLoop.main).prepend(())) { _ in
                 updateBestPrices()
