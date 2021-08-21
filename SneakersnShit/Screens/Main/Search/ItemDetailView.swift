@@ -19,7 +19,7 @@ struct ItemDetailView: View {
     @State private var firstShow = true
     @State var showSnackBar = false
 
-    @Binding var showView: Bool
+    var shouldDismiss: () -> Void
 
     private let itemId: String
 
@@ -29,10 +29,10 @@ struct ItemDetailView: View {
 
     @StateObject private var loader = Loader()
 
-    init(item: Item?, showView: Binding<Bool>, itemId: String) {
+    init(item: Item?, itemId: String, shouldDismiss: @escaping () -> Void) {
         self._item = State(initialValue: item)
-        self._showView = showView
         self.itemId = itemId
+        self.shouldDismiss = shouldDismiss
     }
 
     private func priceRow(row: Item.PriceRow) -> some View {
@@ -109,9 +109,7 @@ struct ItemDetailView: View {
             ScrollView(.vertical, showsIndicators: false) {
                 ScrollViewReader { scrollViewProxy in
                     VStack(alignment: .center, spacing: 20) {
-                        ItemImageViewWithNavBar(showView: $showView,
-                                                imageURL: item?.imageURL,
-                                                requestInfo: store.state.requestInfo)
+                        ItemImageViewWithNavBar(imageURL: item?.imageURL, requestInfo: store.state.requestInfo, shouldDismiss: shouldDismiss)
                             .id(0)
 
                         ZStack {
@@ -369,7 +367,6 @@ struct ItemDetailView_Previews: PreviewProvider {
                                           name: "yolo",
                                           retailPrice: 12,
                                           imageURL: nil),
-                              showView: .constant(false),
-                              itemId: "GHVDY45")
+                              itemId: "GHVDY45") {}
     }
 }

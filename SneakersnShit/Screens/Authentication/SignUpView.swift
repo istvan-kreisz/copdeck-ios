@@ -27,7 +27,7 @@ struct SignUpView: View {
         ZStack {
             Color.customBackground.edgesIgnoringSafeArea(.all)
             VStack(alignment: .center, spacing: 8) {
-                NavigationBar(showView: $showView, title: nil, isBackButtonVisible: true, style: .light)
+                NavigationBar(title: nil, isBackButtonVisible: true, style: .light) { showView = false }
 
                 Text("Sign up")
                     .font(.bold(size: 22))

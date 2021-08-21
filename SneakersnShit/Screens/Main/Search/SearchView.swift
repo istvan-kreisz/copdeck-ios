@@ -25,13 +25,11 @@ struct SearchView: View {
 
     var body: some View {
         Group {
-            let showSelectedItem = Binding<Bool>(get: { selectedItem?.id != nil },
-                                                 set: { selectedItem = $0 ? selectedItem : nil })
             let selectedItemId = Binding<String?>(get: { selectedItem?.id },
                                                   set: { selectedItem = $0 != nil ? selectedItem : nil })
             NavigationLink(destination: EmptyView()) { EmptyView() }
             ForEach(allItems) { item in
-                NavigationLink(destination: ItemDetailView(item: item, showView: showSelectedItem, itemId: item.id),
+                NavigationLink(destination: ItemDetailView(item: item, itemId: item.id) { selectedItem = nil },
                                tag: item.id,
                                selection: selectedItemId) { EmptyView() }
             }

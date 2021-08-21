@@ -74,8 +74,6 @@ struct InventoryView: View {
         Group {
             let pageCount = Binding<Int>(get: { store.state.stacks.count }, set: { _ in })
             let stackTitles = Binding<[String]>(get: { store.state.stacks.map { $0.name } }, set: { _ in })
-            let isEditingInventoryItem = Binding<Bool>(get: { selectedInventoryItemId != nil },
-                                                       set: { selectedInventoryItemId = $0 ? selectedInventoryItemId : nil })
             let actionsTrayActions = Binding<[ActionConfig]>(get: {
                                                                  supportedTrayActions
                                                                      .map { action in
@@ -90,8 +88,7 @@ struct InventoryView: View {
                 EmptyView()
             }
             ForEach(inventoryItems) { inventoryItem in
-                NavigationLink(destination: InventoryItemDetailView(inventoryItem: inventoryItem,
-                                                                    isEditingInventoryItem: isEditingInventoryItem),
+                NavigationLink(destination: InventoryItemDetailView(inventoryItem: inventoryItem) { selectedInventoryItemId = nil } ,
                                tag: inventoryItem.id,
                                selection: $selectedInventoryItemId) { EmptyView() }
             }
@@ -211,9 +208,6 @@ struct InventoryView: View {
                 shouldShowTabBar = stack == nil
             }
             .onChange(of: store.state.inventoryItems) { _ in
-                print("asdjlsdsakdkasd")
-                print("asdjlsdsakdkasd")
-                print("asdjlsdsakdkasd")
                 updateBestPrices()
             }
             .onReceive(ItemCache.default.updatedPublisher.debounce(for: .milliseconds(500), scheduler: RunLoop.main).prepend(())) { _ in

@@ -54,13 +54,9 @@ struct AddToInventoryView: View {
     }
 
     var body: some View {
-        let isPresented = Binding<Bool>(get: { presented.isActive },
-                                        set: { presented = $0 ? presented : (false, nil) })
         ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .center, spacing: 20) {
-                ItemImageViewWithNavBar(showView: isPresented,
-                                        imageURL: item.imageURL,
-                                        requestInfo: store.state.requestInfo)
+                ItemImageViewWithNavBar(imageURL: item.imageURL, requestInfo: store.state.requestInfo) { presented = (false, nil) }
 
                 VStack(alignment: .center, spacing: 8) {
                     Text("Add To Inventory")

@@ -54,11 +54,19 @@ func appReducer(state: inout AppState,
         case let .setPopularItems(items):
             state.popularItems = items
         case let .getItemDetails(item, itemId, fetchMode):
-            return environment.dataController.getItemDetails(for: item, itemId: itemId, fetchMode: fetchMode, settings: state.settings, exchangeRates: state.rates)
+            return environment.dataController.getItemDetails(for: item,
+                                                             itemId: itemId,
+                                                             fetchMode: fetchMode,
+                                                             settings: state.settings,
+                                                             exchangeRates: state.rates)
                 .map { AppAction.main(action: .setSelectedItem(item: $0)) }
                 .catchErrors()
         case let .refreshItemIfNeeded(itemId, fetchMode):
-            return environment.dataController.getItemDetails(for: nil, itemId: itemId, fetchMode: fetchMode, settings: state.settings, exchangeRates: state.rates)
+            return environment.dataController.getItemDetails(for: nil,
+                                                             itemId: itemId,
+                                                             fetchMode: fetchMode,
+                                                             settings: state.settings,
+                                                             exchangeRates: state.rates)
                 .map { _ in AppAction.none }
                 .catchErrors()
         case .setSelectedItem(let item):

@@ -12,10 +12,10 @@ struct NavigationBar: View {
         case light, dark, clear
     }
 
-    @Binding var showView: Bool
     let title: String?
     let isBackButtonVisible: Bool
     let style: Style
+    var shouldDismiss: () -> Void
 
     static let lightBackgroundColor = Color(r: 233, g: 233, b: 236)
     static let titlePadding: CGFloat = 15
@@ -42,13 +42,12 @@ struct NavigationBar: View {
         }
     }
 
-
     var body: some View {
         HStack {
             if isBackButtonVisible {
                 Button(action: {
                     if style != .clear {
-                        showView = false
+                        shouldDismiss()
                     }
                 }) {
                         ZStack {
@@ -82,11 +81,11 @@ struct NavigationBar: View {
         .padding(.bottom, 20)
     }
 
-    static let placeHolder = NavigationBar(showView: .constant(false), title: nil, isBackButtonVisible: true, style: .clear)
+    static let placeHolder = NavigationBar(title: nil, isBackButtonVisible: true, style: .clear, shouldDismiss: {})
 }
 
 struct NavigationBar_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationBar(showView: .constant(false), title: "yo", isBackButtonVisible: true, style: .light)
+        NavigationBar(title: "yo", isBackButtonVisible: true, style: .light) {}
     }
 }

@@ -32,7 +32,7 @@ struct SelectStackItemsView: View {
 
     var body: some View {
         VStack(alignment: .center, spacing: 8) {
-            NavigationBar(showView: $showView, title: title, isBackButtonVisible: true, style: .dark)
+            NavigationBar(title: title, isBackButtonVisible: true, style: .dark) { showView = false }
                 .withDefaultPadding(padding: .horizontal)
 
             VerticalListView(bottomPadding: 130) {

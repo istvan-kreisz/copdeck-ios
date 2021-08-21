@@ -10,7 +10,7 @@ import SwiftUI
 struct InventoryItemDetailView: View {
     @EnvironmentObject var store: AppStore
     @State var inventoryItem: InventoryItem
-    @Binding var isEditingInventoryItem: Bool
+    var shouldDismiss: () -> Void
 
     @State var name: String
     @State var styleId: String
@@ -20,7 +20,7 @@ struct InventoryItemDetailView: View {
 
     var item: Item? {
         guard let itemId = inventoryItem.itemId,
-              let item = ItemCache.default.value(itemId: itemId, settings: store.state.settings)
+              let item = ItemCache.default.value(itemId: itemId, settings: .default)
         else {
             return nil
         }
@@ -31,13 +31,13 @@ struct InventoryItemDetailView: View {
         if let imageURLStoreId = inventoryItem.imageURL?.store.id, let requestInfo = store.state.requestInfo(for: imageURLStoreId) {
             return requestInfo.imageDownloadHeaders
         } else {
-            return [:]
+        return [:]
         }
     }
 
-    init(inventoryItem: InventoryItem, isEditingInventoryItem: Binding<Bool>) {
+    init(inventoryItem: InventoryItem, shouldDismiss: @escaping () -> Void) {
         self._inventoryItem = State(initialValue: inventoryItem)
-        self._isEditingInventoryItem = isEditingInventoryItem
+        self.shouldDismiss = shouldDismiss
 
         self._name = State(initialValue: inventoryItem.name)
         self._styleId = State(initialValue: inventoryItem.itemId ?? "")
@@ -45,111 +45,108 @@ struct InventoryItemDetailView: View {
     }
 
     var body: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            NavigationLink(destination: EmptyView()) {
-                EmptyView()
-            }
+        VStack {
+            NavigationLink(destination: inventoryItem.itemId.map { itemId in ItemDetailView(item: nil, itemId: itemId) { showItemDetails = false } },
+                           isActive: $showItemDetails) { EmptyView() }
 
-            NavigationLink(destination: inventoryItem.itemId.map { itemId in ItemDetailView(item: nil,
-                                                                                            showView: $showItemDetails,
-                                                                                            itemId: itemId) },
-            isActive: $showItemDetails) { EmptyView() }
+            ScrollView(.vertical, showsIndicators: false) {
 
-            VStack(alignment: .center, spacing: 20) {
-                ItemImageViewWithNavBar(showView: $isEditingInventoryItem, imageURL: inventoryItem.imageURL, requestInfo: store.state.requestInfo)
+                VStack(alignment: .center, spacing: 20) {
+                    ItemImageViewWithNavBar(imageURL: inventoryItem.imageURL, requestInfo: [], shouldDismiss: shouldDismiss)
 
-                VStack(alignment: .center, spacing: 8) {
-                    Text("Edit Item")
-                        .font(.bold(size: 30))
-                        .foregroundColor(.customText1)
-                        .padding(.bottom, 8)
+                    VStack(alignment: .center, spacing: 8) {
+                        Text("Edit Item")
+                            .font(.bold(size: 30))
+                            .foregroundColor(.customText1)
+                            .padding(.bottom, 8)
 
-                    if inventoryItem.itemId != nil {
-                        AccessoryButton(title: "View Prices",
-                                        color: .customAccent1,
-                                        textColor: .customText1,
-                                        width: 125,
-                                        imageName: "chevron.right",
-                                        buttonPosition: .right,
-                                        tapped: { showItemDetails = true })
-                    }
+                        if inventoryItem.itemId != nil {
+                            AccessoryButton(title: "View Prices",
+                                            color: .customAccent1,
+                                            textColor: .customText1,
+                                            width: 125,
+                                            imageName: "chevron.right",
+                                            buttonPosition: .right,
+                                            tapped: { showItemDetails = true })
+                        }
 
-                    HStack(spacing: 10) {
-                        TextFieldRounded(title: "name",
-                                         placeHolder: "name",
-                                         style: .white,
-                                         text: $name)
-                        TextFieldRounded(title: "styleid (optional)",
-                                         placeHolder: "styleid",
-                                         style: .white,
-                                         text: $styleId,
-                                         width: 100)
-                    }
-                    .padding(.top, 15)
-
-                    NewItemCard(inventoryItem: $inventoryItem,
-                                purchasePrice: inventoryItem.purchasePrice,
-                                currency: store.state.currency,
-                                style: .noBackground,
-                                sizes: item?.sortedSizes ?? ALLSHOESIZES)
-
-                    TextFieldRounded(title: "notes (optional)",
-                                     placeHolder: "add any notes here",
-                                     style: .white,
-                                     size: .large,
-                                     text: $notes)
+                        HStack(spacing: 10) {
+                            TextFieldRounded(title: "name",
+                                             placeHolder: "name",
+                                             style: .white,
+                                             text: $name)
+                            TextFieldRounded(title: "styleid (optional)",
+                                             placeHolder: "styleid",
+                                             style: .white,
+                                             text: $styleId,
+                                             width: 100)
+                        }
                         .padding(.top, 15)
 
-                    HStack(spacing: 10) {
-                        RoundedButton<EmptyView>(text: "Delete item",
-                                                 width: 180,
-                                                 height: 60,
-                                                 maxSize: CGSize(width: (UIScreen.screenWidth - Styles.horizontalPadding * 2 - 10) / 2,
-                                                                 height: UIScreen.isSmallScreen ? 50 : 60),
-                                                 fontSize: UIScreen.isSmallScreen ? 14 : 16,
-                                                 color: .clear,
-                                                 borderColor: .customRed,
-                                                 textColor: .customRed,
-                                                 accessoryView: nil,
-                                                 tapped: { deleteInventoryItem() })
+                        NewItemCard(inventoryItem: $inventoryItem,
+                                    purchasePrice: inventoryItem.purchasePrice,
+                                    currency: .init(code: .usd, symbol: .usd),
+                                    style: .noBackground,
+                                    sizes: item?.sortedSizes ?? ALLSHOESIZES)
 
-                        RoundedButton<EmptyView>(text: "Save changes",
-                                                 width: 180,
-                                                 height: 60,
-                                                 maxSize: CGSize(width: (UIScreen.screenWidth - Styles.horizontalPadding * 2 - 10) / 2,
-                                                                 height: UIScreen.isSmallScreen ? 50 : 60),
-                                                 fontSize: UIScreen.isSmallScreen ? 14 : 16,
-                                                 color: .customBlack,
-                                                 accessoryView: nil,
-                                                 tapped: { updateInventoryItem() })
+                        TextFieldRounded(title: "notes (optional)",
+                                         placeHolder: "add any notes here",
+                                         style: .white,
+                                         size: .large,
+                                         text: $notes)
+                            .padding(.top, 15)
+
+                        HStack(spacing: 10) {
+                            RoundedButton<EmptyView>(text: "Delete item",
+                                                     width: 180,
+                                                     height: 60,
+                                                     maxSize: CGSize(width: (UIScreen.screenWidth - Styles.horizontalPadding * 2 - 10) / 2,
+                                                                     height: UIScreen.isSmallScreen ? 50 : 60),
+                                                     fontSize: UIScreen.isSmallScreen ? 14 : 16,
+                                                     color: .clear,
+                                                     borderColor: .customRed,
+                                                     textColor: .customRed,
+                                                     accessoryView: nil,
+                                                     tapped: { deleteInventoryItem() })
+
+                            RoundedButton<EmptyView>(text: "Save changes",
+                                                     width: 180,
+                                                     height: 60,
+                                                     maxSize: CGSize(width: (UIScreen.screenWidth - Styles.horizontalPadding * 2 - 10) / 2,
+                                                                     height: UIScreen.isSmallScreen ? 50 : 60),
+                                                     fontSize: UIScreen.isSmallScreen ? 14 : 16,
+                                                     color: .customBlack,
+                                                     accessoryView: nil,
+                                                     tapped: { updateInventoryItem() })
+                        }
+                        .padding(.top, 40)
                     }
-                    .padding(.top, 40)
+                    .padding(.horizontal, Styles.horizontalPadding)
+                    .padding(.top, 14)
+                    .padding(.bottom, 20)
+                    .background(Color.customBackground
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .edgesIgnoringSafeArea(.all))
                 }
-                .padding(.horizontal, Styles.horizontalPadding)
-                .padding(.top, 14)
-                .padding(.bottom, 20)
-                .background(Color.customBackground
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .edgesIgnoringSafeArea(.all))
             }
+            .navigationbarHidden()
         }
-        .navigationbarHidden()
     }
 
     private func deleteInventoryItem() {
         store.send(.main(action: .removeFromInventory(inventoryItems: [inventoryItem])))
-        isEditingInventoryItem = false
+        shouldDismiss()
     }
 
     private func updateInventoryItem() {
         let updatedInventoryItem = inventoryItem.copy(withName: name, itemId: styleId, notes: notes)
         store.send(.main(action: .addToInventory(inventoryItems: [updatedInventoryItem])))
-        isEditingInventoryItem = false
+        shouldDismiss()
     }
 }
 
 struct InventoryItemDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        return InventoryItemDetailView(inventoryItem: .init(fromItem: .sample), isEditingInventoryItem: .constant(true))
+        return InventoryItemDetailView(inventoryItem: .init(fromItem: .sample)) {}
     }
 }

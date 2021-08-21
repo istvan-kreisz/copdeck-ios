@@ -17,18 +17,16 @@ struct PopularItemsListView: View {
 
     var body: some View {
         Group {
-            let showSelectedItem = Binding<Bool>(get: { selectedItem?.id != nil },
-                                                 set: { selectedItem = $0 ? selectedItem : nil })
             let selectedItemId = Binding<String?>(get: { selectedItem?.id }, set: { selectedItem = $0 == nil ? nil : selectedItem })
 
             NavigationLink(destination: EmptyView()) { EmptyView() }
             ForEach(items ?? []) { item in
-                NavigationLink(destination: ItemDetailView(item: item, showView: showSelectedItem, itemId: item.id),
+                NavigationLink(destination: ItemDetailView(item: item, itemId: item.id) { selectedItem = nil },
                                tag: item.id,
                                selection: selectedItemId) { EmptyView() }
             }
             VStack(alignment: .center, spacing: 8) {
-                NavigationBar(showView: $showView, title: "Trending now", isBackButtonVisible: true, style: .dark)
+                NavigationBar(title: "Trending now", isBackButtonVisible: true, style: .dark) { showView = false }
                     .withDefaultPadding(padding: .horizontal)
 
                 VerticalItemListView(items: $items,
