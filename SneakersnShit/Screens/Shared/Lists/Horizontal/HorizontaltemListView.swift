@@ -16,6 +16,8 @@ struct HorizontaltemListView: View {
     @Binding var isLoading: Bool
     @Binding var showPopularItems: Bool
 
+    @State var showTitle = true
+
     let title: String?
     var requestInfo: [ScraperRequestInfo]
 
@@ -24,16 +26,23 @@ struct HorizontaltemListView: View {
     }
 
     var body: some View {
-        if !itemsToShow.isEmpty {
-            VStack(alignment: .leading, spacing: 15) {
-                if let title = title {
+        VStack(alignment: .leading, spacing: 15) {
+            if let title = title {
+                if items?.isEmpty == false || showTitle {
                     Text(title)
                         .foregroundColor(.customText1)
                         .font(.bold(size: 22))
                         .leftAligned()
                         .withDefaultPadding(padding: .horizontal)
                 }
+            }
+            if isLoading {
+                CustomSpinner(text: "Loading...", animate: true)
+                    .padding(.horizontal, 22)
+                    .padding(.top, 5)
+            }
 
+            if !itemsToShow.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 24) {
                         Color.clear
@@ -70,8 +79,20 @@ struct HorizontaltemListView: View {
                     .frame(height: HorizontalListItem.size)
                 }
             }
-            .padding(.top, 12)
-            .padding(.bottom, 6)
+        }
+        .padding(.top, 12)
+        .padding(.bottom, 6)
+        .onChange(of: isLoading) { isLoading in
+            #warning("refactor")
+            if !isLoading {
+                Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false) { _ in
+                    if !self.isLoading, self.itemsToShow.isEmpty {
+                        showTitle = false
+                    }
+                }
+            } else {
+                showTitle = true
+            }
         }
     }
 }
