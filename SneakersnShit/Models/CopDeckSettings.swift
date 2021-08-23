@@ -68,11 +68,11 @@ extension CopDeckSettings {
 //        darkModeOn = try container.decode(Bool.self, forKey: .darkModeOn)
 
         feeCalculation = try container.decode(FeeCalculation.self, forKey: .feeCalculation)
-        bestPricePriceType = try container.decodeIfPresent(PriceType.self, forKey: .bestPricePriceType) ?? .ask
-        bestPriceFeeType = try container.decodeIfPresent(FeeType.self, forKey: .bestPriceFeeType) ?? .none
+        bestPricePriceType = try container.decodeIfPresent(PriceType.self, forKey: .bestPricePriceType) ?? .Ask
+        bestPriceFeeType = try container.decodeIfPresent(FeeType.self, forKey: .bestPriceFeeType) ?? .None
         preferredShoeSize = try container.decodeIfPresent(String.self, forKey: .preferredShoeSize)
         displayedStores = try container.decodeIfPresent([StoreId].self, forKey: .displayedStores) ?? ALLSTORES.map(\.id)
-        filters = try container.decodeIfPresent(Filters.self, forKey: .filters) ?? Filters(soldStatus: .all)
+        filters = try container.decodeIfPresent(Filters.self, forKey: .filters) ?? Filters(soldStatus: .All)
     }
 
     static let `default` = CopDeckSettings(currency: Currency(code: .eur, symbol: .eur),
@@ -88,9 +88,9 @@ extension CopDeckSettings {
                                                                              cashOutFee: false,
                                                                              taxes: 0),
                                                                  klekt: .init(taxes: 0)),
-                                           bestPricePriceType: .ask,
-                                           bestPriceFeeType: .none,
+                                           bestPricePriceType: .Ask,
+                                           bestPriceFeeType: .None,
                                            preferredShoeSize: nil,
                                            displayedStores: ALLSTORES.map(\.id),
-                                           filters: .init(soldStatus: .all))
+                                           filters: .init(soldStatus: .All))
 }

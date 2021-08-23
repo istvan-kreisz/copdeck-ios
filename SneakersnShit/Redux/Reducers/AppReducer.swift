@@ -33,7 +33,7 @@ func appReducer(state: inout AppState,
             if var updatedUser = state.user {
                 updatedUser.settings = settings
                 updatedUser.inited = true
-                environment.dataController.updateUser(user: updatedUser)
+                environment.dataController.update(user: updatedUser)
             }
         case let .getSearchResults(searchTerm: searchTerm):
             if searchTerm.isEmpty {
@@ -82,6 +82,8 @@ func appReducer(state: inout AppState,
             environment.dataController.update(stack: stack)
         case let .addToInventory(inventoryItems):
             environment.dataController.add(inventoryItems: inventoryItems)
+        case let .updateInventoryItem(inventoryItem: InventoryItem):
+            environment.dataController.update(inventoryItem: InventoryItem)
         case let .removeFromInventory(inventoryItems):
             environment.dataController.delete(inventoryItems: inventoryItems)
         case let .stack(inventoryItems, stack):

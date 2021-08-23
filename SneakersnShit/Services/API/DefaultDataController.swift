@@ -9,8 +9,8 @@ import Foundation
 import Combine
 
 class DefaultDataController: DataController {
-    let backendAPI: API
-    let localScraper: API
+    let backendAPI: BackendAPI
+    let localScraper: LocalAPI
     let databaseManager: DatabaseManager
 
     lazy var inventoryItemsPublisher = databaseManager.inventoryItemsPublisher
@@ -18,12 +18,13 @@ class DefaultDataController: DataController {
     lazy var userPublisher = databaseManager.userPublisher
     lazy var exchangeRatesPublisher = databaseManager.exchangeRatesPublisher
     lazy var errorsPublisher = databaseManager.errorsPublisher
+    lazy var popularItemsPublisher = databaseManager.popularItemsPublisher
     lazy var cookiesPublisher = localScraper.cookiesPublisher
     lazy var imageDownloadHeadersPublisher = localScraper.imageDownloadHeadersPublisher
 
     private var cancellables: Set<AnyCancellable> = []
 
-    init(backendAPI: API, localScraper: API, databaseManager: DatabaseManager) {
+    init(backendAPI: BackendAPI, localScraper: LocalAPI, databaseManager: DatabaseManager) {
         self.backendAPI = backendAPI
         self.localScraper = localScraper
         self.databaseManager = databaseManager
@@ -151,8 +152,8 @@ class DefaultDataController: DataController {
         localScraper.getCalculatedPrices(for: item, settings: settings, exchangeRates: exchangeRates)
             .sink(receiveCompletion: { _ in },
                   receiveValue: { item in
-                ItemCache.default.insert(item: item, settings: settings)
-            })
+                      ItemCache.default.insert(item: item, settings: settings)
+                  })
             .store(in: &cancellables)
     }
 
@@ -168,36 +169,33 @@ class DefaultDataController: DataController {
         databaseManager.getItem(withId: id, settings: settings)
     }
 
-    func add(exchangeRates: ExchangeRates) {
-        databaseManager.add(exchangeRates: exchangeRates)
-    }
-
     func setup(userId: String) {
         databaseManager.setup(userId: userId)
+        backendAPI.setup(userId: userId)
     }
 
     func delete(stack: Stack) {
-        databaseManager.delete(stack: stack)
+        backendAPI.delete(stack: stack)
     }
 
     func update(stack: Stack) {
-        databaseManager.update(stack: stack)
+        backendAPI.update(stack: stack)
     }
 
     func add(inventoryItems: [InventoryItem]) {
-        databaseManager.add(inventoryItems: inventoryItems)
+        backendAPI.add(inventoryItems: inventoryItems)
     }
 
     func update(item: Item, settings: CopDeckSettings) {
-        databaseManager.update(item: item, settings: settings)
+        backendAPI.update(item: item, settings: settings)
     }
 
     func update(inventoryItem: InventoryItem) {
-        databaseManager.update(inventoryItem: inventoryItem)
+        backendAPI.update(inventoryItem: inventoryItem)
     }
 
     func delete(inventoryItems: [InventoryItem]) {
-        databaseManager.delete(inventoryItems: inventoryItems)
+        backendAPI.delete(inventoryItems: inventoryItems)
     }
 
     func stack(inventoryItems: [InventoryItem], stack: Stack) {
@@ -207,18 +205,14 @@ class DefaultDataController: DataController {
                 !updatedStack.items.contains(where: { $0.inventoryItemId == inventoryItem.id })
             }
             .map { .init(inventoryItemId: $0.id) }
-        databaseManager.update(stack: updatedStack)
+        backendAPI.update(stack: updatedStack)
     }
 
     func unstack(inventoryItems: [InventoryItem], stack: Stack) {
         let inventoryItemIds = inventoryItems.map(\.id)
         var updatedStack = stack
         updatedStack.items = updatedStack.items.filter { !inventoryItemIds.contains($0.inventoryItemId) }
-        databaseManager.update(stack: updatedStack)
-    }
-
-    func updateUser(user: User) {
-        databaseManager.updateUser(user: user)
+        backendAPI.update(stack: updatedStack)
     }
 
     func stopListening() {
@@ -227,5 +221,13 @@ class DefaultDataController: DataController {
 
     func getPopularItems(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
         localScraper.getPopularItems(settings: settings, exchangeRates: exchangeRates)
+    }
+
+    func update(user: User) {
+        backendAPI.update(user: user)
+    }
+
+    func deleteUser() {
+        backendAPI.deleteUser()
     }
 }

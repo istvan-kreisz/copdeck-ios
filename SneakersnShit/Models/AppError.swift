@@ -26,6 +26,7 @@ extension AppError {
     }
 
     static var unknown: Self = .init(title: "", message: "")
+    static var unauthenticated: Self = .init(title: "Error", message: "Not Authenticated")
 
     static func == (_ lhs: AppError, _ rhs: AppError) -> Bool {
         lhs.id == rhs.id

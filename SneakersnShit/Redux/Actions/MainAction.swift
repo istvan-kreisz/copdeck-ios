@@ -28,6 +28,7 @@ enum MainAction {
     case deleteStack(stack: Stack)
     case updateStack(stack: Stack)
     case addToInventory(inventoryItems: [InventoryItem])
+    case updateInventoryItem(inventoryItem: InventoryItem)
     case removeFromInventory(inventoryItems: [InventoryItem])
     case stack(inventoryItems: [InventoryItem], stack: Stack)
     case unstack(inventoryItems: [InventoryItem], stack: Stack)
@@ -66,6 +67,8 @@ extension MainAction: Identifiable {
             return "updateStack"
         case .addToInventory:
             return "addToInventory"
+        case .updateInventoryItem:
+            return "updateInventoryItem"
         case .removeFromInventory:
             return "removeFromInventory"
         case .stack:

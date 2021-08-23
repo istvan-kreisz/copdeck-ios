@@ -18,7 +18,7 @@ class World {
     }
 
     convenience init() {
-        self.init(dataController: DefaultDataController(backendAPI: BackendAPI(),
+        self.init(dataController: DefaultDataController(backendAPI: DefaultBackendAPI(),
                                                         localScraper: LocalScraper(),
                                                         databaseManager: FirebaseService()),
                   authenticator: DefaultAuthenticator())

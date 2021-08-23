@@ -8,8 +8,8 @@
 import Foundation
 
 struct Filters: Codable, Equatable {
-    enum SoldStatusFilter: String, Codable, Equatable, CaseIterable {
-        case sold, unsold, all
+    enum SoldStatusFilter: String, Equatable, CaseIterable, EnumCodable {
+        case Sold, Unsold, All
     }
 
     var soldStatus: SoldStatusFilter

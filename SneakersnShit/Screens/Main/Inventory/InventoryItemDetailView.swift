@@ -140,7 +140,7 @@ struct InventoryItemDetailView: View {
 
     private func updateInventoryItem() {
         let updatedInventoryItem = inventoryItem.copy(withName: name, itemId: styleId, notes: notes)
-        store.send(.main(action: .addToInventory(inventoryItems: [updatedInventoryItem])))
+        store.send(.main(action: .updateInventoryItem(inventoryItem: updatedInventoryItem)))
         shouldDismiss()
     }
 }

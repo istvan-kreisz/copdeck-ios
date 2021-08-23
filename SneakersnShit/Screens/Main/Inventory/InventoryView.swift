@@ -268,7 +268,8 @@ struct InventoryView: View {
                                                         isPublished: false,
                                                         items: [],
                                                         created: Date().timeIntervalSinceNow * 1000,
-                                                        updated: Date().timeIntervalSinceNow * 1000))))
+                                                        updated: Date().timeIntervalSinceNow * 1000,
+                                                        publishedDate: nil))))
     }
 }
 

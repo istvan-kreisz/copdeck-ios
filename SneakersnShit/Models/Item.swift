@@ -45,14 +45,14 @@ extension Store {
     }
 }
 
-enum PriceType: String, CaseIterable, Identifiable, Codable {
-    case ask, bid
+enum PriceType: String, CaseIterable, Identifiable, EnumCodable {
+    case Ask, Bid
 
     var id: String { rawValue }
 }
 
-enum FeeType: String, CaseIterable, Identifiable, Codable {
-    case none, buy, sell
+enum FeeType: String, CaseIterable, Identifiable, EnumCodable {
+    case None, Buy, Sell
 
     var id: String { rawValue }
 }
@@ -196,9 +196,9 @@ extension Item {
 
         var askPrice = prices?.lowestAsk
         var bidPrice = prices?.highestBid
-        if feeType != .none {
-            askPrice = feeType == .buy ? prices?.lowestAskWithBuyerFees : prices?.lowestAskWithSellerFees
-            bidPrice = feeType == .buy ? prices?.highestBidWithBuyerFees : prices?.highestBidWithSellerFees
+        if feeType != .None {
+            askPrice = feeType == .Buy ? prices?.lowestAskWithBuyerFees : prices?.lowestAskWithSellerFees
+            bidPrice = feeType == .Buy ? prices?.highestBidWithBuyerFees : prices?.highestBidWithSellerFees
         }
         let priceMissing = PriceItem.PriceInfo(text: "-", num: 0)
         let askInfo: PriceItem.PriceInfo = askPrice.map { price in
@@ -218,9 +218,9 @@ extension Item {
     func priceRow(size: String, priceType: PriceType, feeType: FeeType, stores: [StoreId]) -> PriceRow {
         let prices = stores.compactMap { Store.store(withId: $0) }.map { store -> PriceRow.Price in
             let p = price(size: size, storeId: store.id, feeType: feeType, currency: currency)
-            return PriceRow.Price(primaryText: priceType == .ask ? p.ask.text : p.bid.text,
-                                  secondaryText: priceType == .ask ? p.bid.text : p.ask.text,
-                                  price: priceType == .ask ? p.ask.num : p.bid.num,
+            return PriceRow.Price(primaryText: priceType == .Ask ? p.ask.text : p.bid.text,
+                                  secondaryText: priceType == .Ask ? p.bid.text : p.ask.text,
+                                  price: priceType == .Ask ? p.ask.num : p.bid.num,
                                   buyLink: p.buyLink,
                                   sellLink: p.sellLink,
                                   store: store)

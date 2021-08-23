@@ -18,6 +18,7 @@ class FirebaseService: DatabaseManager {
     private let userSubject = CurrentValueSubject<User?, Never>(nil)
     private let exchangeRatesSubject = PassthroughSubject<ExchangeRates, Never>()
     private let errorsSubject = PassthroughSubject<AppError, Never>()
+    private let popularItemsSubject = PassthroughSubject<[Item], Never>()
 
     var inventoryItemsPublisher: AnyPublisher<[InventoryItem], Never> {
         inventoryItemsSubject.eraseToAnyPublisher()
@@ -38,6 +39,10 @@ class FirebaseService: DatabaseManager {
     #warning("yo")
     var errorsPublisher: AnyPublisher<AppError, Never> {
         errorsSubject.eraseToAnyPublisher()
+    }
+
+    var popularItemsPublisher: AnyPublisher<[Item], Never> {
+        popularItemsSubject.eraseToAnyPublisher()
     }
 
     private var userRef: DocumentReference?

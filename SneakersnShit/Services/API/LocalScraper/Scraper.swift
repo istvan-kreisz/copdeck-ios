@@ -75,7 +75,7 @@ class LocalScraper {
     }
 }
 
-extension LocalScraper: API {
+extension LocalScraper: LocalAPI {
     func getItemDetails(for item: Item?,
                         itemId: String,
                         fetchMode: FetchMode,

@@ -11,8 +11,8 @@ import Combine
 struct ItemDetailView: View {
     @EnvironmentObject var store: AppStore
     @State private var item: Item?
-    @State private var priceType: PriceType = .ask
-    @State private var feeType: FeeType = .none
+    @State private var priceType: PriceType = .Ask
+    @State private var feeType: FeeType = .None
 
     @State private var addToInventory: (isActive: Bool, size: String?) = (false, nil)
     @State private var addedInventoryItem = false
@@ -64,10 +64,10 @@ struct ItemDetailView: View {
                 Text(price.primaryText)
                     .frame(height: 32)
                     .frame(maxWidth: .infinity)
-                    .if(price.store.id == row.lowest?.id && (feeType == .buy || feeType == .none)) {
+                    .if(price.store.id == row.lowest?.id && (feeType == .Buy || feeType == .None)) {
                         $0.overlay(Capsule().stroke(Color.customGreen, lineWidth: 2))
                     } else: {
-                        $0.if(price.store.id == row.highest?.id && (feeType == .sell || feeType == .none)) {
+                        $0.if(price.store.id == row.highest?.id && (feeType == .Sell || feeType == .None)) {
                             $0.overlay(Capsule().stroke(Color.customRed, lineWidth: 2))
                         } else: {
                             $0.overlay(Capsule().stroke(Color.customAccent1, lineWidth: 2))
@@ -76,11 +76,11 @@ struct ItemDetailView: View {
                     .onTapGesture {
                         var link: String?
                         switch feeType {
-                        case .buy:
+                        case .Buy:
                             link = price.buyLink
-                        case .sell:
+                        case .Sell:
                             link = price.sellLink
-                        case .none:
+                        case .None:
                             link = price.buyLink
                         }
                         if let link = link, let url = URL(string: link) {

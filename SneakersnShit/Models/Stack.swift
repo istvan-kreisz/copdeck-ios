@@ -14,16 +14,17 @@ struct Stack: Codable, Equatable, Identifiable {
     var items: [StackItem]
     let created: Double?
     let updated: Double?
+    let publishedDate: Double?
 
     func inventoryItems(allInventoryItems: [InventoryItem], filters: Filters, searchText: String) -> [InventoryItem] {
         allInventoryItems.filter { inventoryItem in
             if items.contains(where: { inventoryItem.id == $0.inventoryItemId }), inventoryItem.name.lowercased().fuzzyMatch(searchText.lowercased()) {
                 switch filters.soldStatus {
-                case .all:
+                case .All:
                     return true
-                case .sold:
+                case .Sold:
                     return inventoryItem.status == .sold
-                case .unsold:
+                case .Unsold:
                     return inventoryItem.status != .sold
                 }
             } else {
@@ -38,7 +39,8 @@ struct Stack: Codable, Equatable, Identifiable {
               isPublished: false,
               items: inventoryItems.map { .init(inventoryItemId: $0.id) },
               created: Date().timeIntervalSince1970 * 1000,
-              updated: Date().timeIntervalSince1970 * 1000)
+              updated: Date().timeIntervalSince1970 * 1000,
+              publishedDate: nil)
     }
 
     static var empty: Stack {
@@ -47,7 +49,8 @@ struct Stack: Codable, Equatable, Identifiable {
               isPublished: false,
               items: [],
               created: Date().timeIntervalSince1970 * 1000,
-              updated: Date().timeIntervalSince1970 * 1000)
+              updated: Date().timeIntervalSince1970 * 1000,
+              publishedDate: nil)
     }
 }
 

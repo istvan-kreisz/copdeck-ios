@@ -292,7 +292,7 @@ struct SettingsView: View {
                         ListSelectorMenu(title: "Commission fee (%)",
                                          selectorScreenTitle: "Commission fee (%)",
                                          buttonTitle: "Select fee",
-                                         options: CopDeckSettings.FeeCalculation.Goat.CommissionPercentage.allCases.map { $0.rawValue.rounded(toPlaces: 0) },
+                                         options: CopDeckSettings.FeeCalculation.Goat.CommissionPercentage.allCases.map { $0.rawValue.rounded(toPlaces: 1) },
                                          selectedOption: $goatCommissionFee,
                                          buttonTapped: selectGoatCommissionFees)
 
