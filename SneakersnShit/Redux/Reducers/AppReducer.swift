@@ -23,12 +23,13 @@ func appReducer(state: inout AppState,
             if !state.firstLoadDone {
                 state.firstLoadDone = true
             }
-            environment.dataController.stopListening()
+            environment.dataController.reset()
         case let .setUser(user):
             if !state.firstLoadDone {
                 state.firstLoadDone = true
             }
             state.user = user
+            environment.dataController.setup(userId: user.id)
         case let .updateSettings(settings):
             if var updatedUser = state.user {
                 updatedUser.settings = settings
@@ -97,7 +98,6 @@ func appReducer(state: inout AppState,
                 if userId.isEmpty {
                     return Just(AppAction.main(action: .signOut)).eraseToAnyPublisher()
                 } else {
-                    environment.dataController.setup(userId: userId)
                     return environment.dataController.getUser(withId: userId)
                         .flatMap { Just(AppAction.main(action: .setUser(user: $0))) }
                         .tryCatch {

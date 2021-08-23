@@ -30,6 +30,12 @@ class DefaultDataController: DataController {
         self.databaseManager = databaseManager
     }
 
+    func reset() {
+        backendAPI.reset()
+        databaseManager.reset()
+        localScraper.reset()
+    }
+
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
         localScraper.search(searchTerm: searchTerm, settings: settings, exchangeRates: exchangeRates)
     }
@@ -145,9 +151,11 @@ class DefaultDataController: DataController {
     }
 
     private func cache(item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) {
+        log("--> calculating prices for item with id: \(item.id)")
         localScraper.getCalculatedPrices(for: item, settings: settings, exchangeRates: exchangeRates)
             .sink(receiveCompletion: { _ in },
                   receiveValue: { item in
+                    log("--> cached item with id: \(item.id)")
                       ItemCache.default.insert(item: item, settings: settings)
                   })
             .store(in: &cancellables)
@@ -209,10 +217,6 @@ class DefaultDataController: DataController {
         var updatedStack = stack
         updatedStack.items = updatedStack.items.filter { !inventoryItemIds.contains($0.inventoryItemId) }
         backendAPI.update(stack: updatedStack)
-    }
-
-    func stopListening() {
-        databaseManager.stopListening()
     }
 
     func getPopularItems(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {

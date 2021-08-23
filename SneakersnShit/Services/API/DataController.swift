@@ -18,6 +18,7 @@ protocol LocalAPI {
     var cookiesPublisher: AnyPublisher<[Cookie], Never> { get }
     var imageDownloadHeadersPublisher: AnyPublisher<[HeadersWithStoreId], Never> { get }
 
+    func reset()
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError>
     func getItemDetails(for item: Item?, itemId: String, fetchMode: FetchMode, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError>
     func getCalculatedPrices(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError>
@@ -28,6 +29,7 @@ protocol BackendAPI {
     var errorsPublisher: AnyPublisher<AppError, Never> { get }
 
     func setup(userId: String)
+    func reset()
     // search
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError>
     // item
@@ -47,7 +49,7 @@ protocol DatabaseManager {
     // init
     func setup(userId: String)
     // deinit
-    func stopListening()
+    func reset()
     // read
     var inventoryItemsPublisher: AnyPublisher<[InventoryItem], Never> { get }
     var popularItemsPublisher: AnyPublisher<[Item], Never> { get }

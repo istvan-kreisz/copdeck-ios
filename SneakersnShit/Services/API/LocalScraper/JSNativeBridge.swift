@@ -9,14 +9,20 @@ import Foundation
 import Combine
 import OasisJSBridge
 
+struct WrappedResult<T: Codable>: Codable {
+    let res: T
+    let requestId: String
+}
+
 protocol JSNativeBridgeDelegate: AnyObject {
-    func setExchangeRates(_ exchangeRates: ExchangeRates)
-    func setItems(_ items: [Item])
-    func setItem(_ item: Item)
-    func setItemWithCalculatedPrices(_ item: Item)
-    func setCookies(_ cookies: [Cookie])
-    func setImageDownloadHeaders(_ headers: [HeadersWithStoreId])
-    func setPopularItems(_ items: [Item])
+    func setExchangeRates(_ exchangeRates: WrappedResult<ExchangeRates>)
+    func setItems(_ items: WrappedResult<[Item]>)
+    func setItem(_ item: WrappedResult<Item>)
+    func setItemWithCalculatedPrices(_ item: WrappedResult<Item>)
+    func setCookies(_ cookies: WrappedResult<[Cookie]>)
+    func setImageDownloadHeaders(_ headers: WrappedResult<[HeadersWithStoreId]>)
+    func setPopularItems(_ items: WrappedResult<[Item]>)
+    func setError(_ error: String, requestId: String)
 }
 
 @objc protocol NativeProtocol: JSExport {
@@ -27,60 +33,66 @@ protocol JSNativeBridgeDelegate: AnyObject {
     func setCookies(_ cookies: Any)
     func setImageDownloadHeaders(_ headers: Any)
     func setPopularItems(_ items: Any)
+    func setError(_ error: Any, requestId: Any)
 }
 
 @objc class JSNativeBridge: NSObject, NativeProtocol {
-
     weak var delegate: JSNativeBridgeDelegate?
 
     func setExchangeRates(_ exchangeRates: Any) {
-        guard let exchangeRates = ExchangeRates(from: exchangeRates) else { return }
+        guard let exchangeRates = WrappedResult<ExchangeRates>(from: exchangeRates) else { return }
         DispatchQueue.main.async { [weak self] in
             self?.delegate?.setExchangeRates(exchangeRates)
         }
     }
 
     func setItems(_ items: Any) {
-        guard let items = [Item](from: items) else { return }
+        guard let items = WrappedResult<[Item]>(from: items) else { return }
         DispatchQueue.main.async { [weak self] in
             self?.delegate?.setItems(items)
         }
     }
 
     func setItem(_ item: Any) {
-        guard let item = Item(from: item) else { return }
+        guard let item = WrappedResult<Item>(from: item) else { return }
         DispatchQueue.main.async { [weak self] in
             self?.delegate?.setItem(item)
         }
     }
 
     func setItemWithCalculatedPrices(_ item: Any) {
-        guard let item = Item(from: item) else { return }
+        guard let item = WrappedResult<Item>(from: item) else { return }
         DispatchQueue.main.async { [weak self] in
             self?.delegate?.setItemWithCalculatedPrices(item)
         }
     }
 
     func setCookies(_ cookies: Any) {
-        guard let cookiesArray = cookies as? [Any] else { return }
-        let cookies = cookiesArray.compactMap { Cookie(from: $0) }
+        guard let cookies = WrappedResult<[Cookie]>(from: cookies) else { return }
         DispatchQueue.main.async { [weak self] in
             self?.delegate?.setCookies(cookies)
         }
     }
 
     func setImageDownloadHeaders(_ headers: Any) {
-        guard let headersArray = headers as? [Any] else { return }
-        let headers = headersArray.compactMap { HeadersWithStoreId(from: $0) }
+        guard let headers = WrappedResult<[HeadersWithStoreId]>(from: headers) else { return }
         DispatchQueue.main.async { [weak self] in
             self?.delegate?.setImageDownloadHeaders(headers)
         }
     }
 
     func setPopularItems(_ items: Any) {
-        guard let items = [Item](from: items) else { return }
+        guard let items = WrappedResult<[Item]>(from: items) else { return }
         DispatchQueue.main.async { [weak self] in
             self?.delegate?.setPopularItems(items)
+        }
+    }
+
+    func setError(_ error: Any, requestId: Any) {
+        if let error = error as? String, let requestId = requestId as? String {
+            DispatchQueue.main.async { [weak self] in
+                self?.delegate?.setError(error, requestId: requestId)
+            }
         }
     }
 }

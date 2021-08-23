@@ -14,6 +14,10 @@ struct PagerView<Content: View>: View {
 
     @GestureState private var translation: CGFloat = 0
 
+    var index: Int {
+        min(pageCount - 1, currentIndex)
+    }
+
     init(pageCount: Binding<Int>, currentIndex: Binding<Int>, @ViewBuilder content: () -> Content) {
         self._pageCount = pageCount
         self._currentIndex = currentIndex
@@ -26,15 +30,15 @@ struct PagerView<Content: View>: View {
                 content.frame(width: geometry.size.width)
             }
             .frame(width: geometry.size.width, alignment: .leading)
-            .offset(x: -CGFloat(currentIndex) * geometry.size.width)
+            .offset(x: -CGFloat(index) * geometry.size.width)
             .offset(x: pageCount == 1 ? 0 : translation)
-            .animation(.interactiveSpring(), value: currentIndex)
+            .animation(.interactiveSpring(), value: index)
             .animation(.interactiveSpring(), value: translation)
             .simultaneousGesture(DragGesture().updating($translation) { value, state, _ in
                 state = value.translation.width
             }.onEnded { value in
                 let offset = value.translation.width / geometry.size.width
-                let newIndex = (CGFloat(currentIndex) - offset).rounded()
+                let newIndex = (CGFloat(index) - offset).rounded()
                 currentIndex = min(max(Int(newIndex), 0), pageCount - 1)
             })
         }

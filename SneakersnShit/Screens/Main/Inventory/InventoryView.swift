@@ -24,6 +24,8 @@ struct InventoryView: View {
     @Binding var shouldShowTabBar: Bool
     @Binding var settingsPresented: Bool
 
+    @State var newStackId: String?
+
     @ObservedObject var viewRouter: ViewRouter
 
     var selectedStack: Stack? {
@@ -224,6 +226,12 @@ struct InventoryView: View {
             .onChange(of: editedStack) { stack in
                 shouldShowTabBar = stack == nil
             }
+            .onChange(of: store.state.stacks) { stacks in
+                if let indexOfNewStack = stacks.firstIndex(where: { $0.id == newStackId }) {
+                    newStackId = nil
+                    selectedStackIndex = indexOfNewStack
+                }
+            }
             .onChange(of: store.state.inventoryItems) { _ in
                 updateBestPrices()
             }
@@ -263,7 +271,9 @@ struct InventoryView: View {
     }
 
     func addNewStack(withName name: String) {
-        store.send(.main(action: .addStack(stack: .init(id: UUID().uuidString,
+        let newStackId = UUID().uuidString
+        self.newStackId = newStackId
+        store.send(.main(action: .addStack(stack: .init(id: newStackId,
                                                         name: name,
                                                         isPublished: false,
                                                         items: [],

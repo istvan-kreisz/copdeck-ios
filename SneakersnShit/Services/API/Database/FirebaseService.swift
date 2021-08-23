@@ -13,6 +13,8 @@ import Combine
 class FirebaseService: DatabaseManager {
     private let firestore: Firestore
 
+    private var userId: String?
+
     private let inventoryItemsSubject = CurrentValueSubject<[InventoryItem], Never>([])
     private let stacksSubject = CurrentValueSubject<[Stack], Never>([])
     private let userSubject = CurrentValueSubject<User?, Never>(nil)
@@ -79,15 +81,17 @@ class FirebaseService: DatabaseManager {
     }
 
     func setup(userId: String) {
+        guard userId != self.userId else { return }
         userRef = firestore.collection("users").document(userId)
         userInventoryRef = userRef?.collection("inventory")
         userStacksRef = userRef?.collection("stacks")
+        self.userId = userId
 
         listenToChanges()
     }
 
     private func listenToChanges() {
-        stopListening()
+        reset()
         addUserListener()
         addInventoryListener()
         addStacksListener()
@@ -167,7 +171,7 @@ class FirebaseService: DatabaseManager {
             }
     }
 
-    func stopListening() {
+    func reset() {
         inventoryListener?.remove()
         stacksListener?.remove()
         userListener?.remove()

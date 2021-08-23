@@ -18,12 +18,12 @@ struct FiltersModal: View {
 
     init(settings: CopDeckSettings, isPresented: Binding<Bool>) {
         self._settings = State(initialValue: settings)
-        self._soldStatus = State(initialValue: settings.filters.soldStatus.rawValue.capitalized)
+        self._soldStatus = State(initialValue: settings.filters.soldStatus.rawValue)
         self._isPresented = isPresented
     }
 
     private func selectSoldStatus() {
-        if let soldStatus = Filters.SoldStatusFilter(rawValue: soldStatus.lowercased()),
+        if let soldStatus = Filters.SoldStatusFilter(rawValue: soldStatus),
            settings.filters.soldStatus != soldStatus {
             settings.filters.soldStatus = soldStatus
         }
@@ -40,7 +40,7 @@ struct FiltersModal: View {
                 ListSelectorMenu(title: "Sold status",
                                  selectorScreenTitle: "Select filter",
                                  buttonTitle: "Select filter",
-                                 options: Filters.SoldStatusFilter.allCases.map(\.rawValue.capitalized),
+                                 options: Filters.SoldStatusFilter.allCases.map(\.rawValue),
                                  selectedOption: $soldStatus,
                                  buttonTapped: selectSoldStatus)
             }

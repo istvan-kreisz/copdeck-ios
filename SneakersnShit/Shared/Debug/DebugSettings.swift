@@ -7,6 +7,14 @@
 
 import Foundation
 
+enum AppEnvironment: String {
+    case debugStaging = "Debug Staging"
+    case releaseStaging = "Release Staging"
+
+    case debugProduction = "Debug"
+    case releaseProduction = "Release"
+}
+
 func log(_ value: Any) {
     if DebugSettings.shared.isInDebugMode {
         print("------------------")
@@ -16,6 +24,11 @@ func log(_ value: Any) {
 
 struct DebugSettings {
     let isInDebugMode: Bool
+    lazy var environment: AppEnvironment? = {
+        guard let currentConfiguration = Bundle.main.object(forInfoDictionaryKey: "Configuration") as? String,
+              let environment = AppEnvironment(rawValue: currentConfiguration) else { return nil }
+        return environment
+    }()
 
     private init() {
         #if DEBUG

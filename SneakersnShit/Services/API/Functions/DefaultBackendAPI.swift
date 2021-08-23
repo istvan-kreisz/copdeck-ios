@@ -26,7 +26,12 @@ class DefaultBackendAPI: BackendAPI {
     }
 
     func setup(userId: String) {
+        guard userId != self.userId else { return }
         self.userId = userId
+    }
+
+    func reset() {
+        self.userId = nil
     }
 
     private func handlePublisherResult<Model>(publisher: AnyPublisher<Model, AppError>) {

@@ -30,6 +30,9 @@ extension AppStore {
 
         environment.dataController.userPublisher
             .sink { [weak self] newUser in
+                if self?.state.user?.settings?.feeCalculation != newUser.settings?.feeCalculation {
+                    self?.refreshItemPricesIfNeeded()
+                }
                 self?.state.user = newUser
             }
             .store(in: &effectCancellables)
@@ -102,6 +105,7 @@ extension AppStore {
             .map { offset, idWithDelay in
                 (idWithDelay.0, idWithDelay.1 + (idsWithDelay[safe: offset - 1]?.1 ?? 0))
             }
+        log("refreshing prices for items with ids: \(idsToRefresh)")
         if !state.didFetchItemPrices {
             idsWithDelay
                 .forEach { [weak self] id, _ in
