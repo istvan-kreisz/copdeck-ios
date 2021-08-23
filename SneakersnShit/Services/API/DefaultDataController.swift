@@ -30,10 +30,6 @@ class DefaultDataController: DataController {
         self.databaseManager = databaseManager
     }
 
-    func getExchangeRates(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<ExchangeRates, AppError> {
-        localScraper.getExchangeRates(settings: settings, exchangeRates: exchangeRates)
-    }
-
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
         localScraper.search(searchTerm: searchTerm, settings: settings, exchangeRates: exchangeRates)
     }
@@ -61,7 +57,7 @@ class DefaultDataController: DataController {
             .handleEvents(receiveOutput: { [weak self] updatedItem in
                 self?.cache(item: updatedItem, settings: settings, exchangeRates: exchangeRates)
                 if updatedItem.updated != item?.updated {
-                    self?.databaseManager.update(item: updatedItem, settings: settings)
+                    self?.backendAPI.update(item: updatedItem, settings: settings)
                 }
             })
             .mapError { error in (error as? AppError) ?? AppError(error: error) }

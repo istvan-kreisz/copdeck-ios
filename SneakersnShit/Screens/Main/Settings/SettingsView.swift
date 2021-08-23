@@ -92,14 +92,14 @@ struct SettingsView: View {
     }
 
     private func selectBestPricePriceType() {
-        if let priceType = PriceType.allCases.first(where: { $0.rawValue == bestPricePriceType.lowercased() }),
+        if let priceType = PriceType.allCases.first(where: { $0.rawValue == bestPricePriceType }),
            settings.bestPricePriceType != priceType {
             settings.bestPricePriceType = priceType
         }
     }
 
     private func selectBestPriceFeeType() {
-        if let feeType = FeeType.allCases.first(where: { $0.rawValue == bestPriceFeeType.lowercased() }),
+        if let feeType = FeeType.allCases.first(where: { $0.rawValue == bestPriceFeeType }),
            settings.bestPriceFeeType != feeType {
             settings.bestPriceFeeType = feeType
         }

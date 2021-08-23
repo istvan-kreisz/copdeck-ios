@@ -80,22 +80,8 @@ extension AppStore {
     }
 
     func setupTimers() {
-        refreshExchangeRatesIfNeeded()
-        Timer.scheduledTimer(withTimeInterval: 60 * World.Constants.exchangeRatesRefreshRateMin, repeats: true) { [weak self] _ in
-            self?.refreshExchangeRatesIfNeeded()
-        }
         Timer.scheduledTimer(withTimeInterval: 60 * World.Constants.pricesRefreshPeriodMin, repeats: true) { [weak self] _ in
             self?.refreshItemPricesIfNeeded()
-        }
-    }
-
-    func refreshExchangeRatesIfNeeded() {
-        if let lastUpdated = state.exchangeRates?.updated {
-            if lastUpdated.isOlderThan(minutes: 60) {
-                send(.main(action: .getExchangeRates))
-            }
-        } else {
-            send(.main(action: .getExchangeRates))
         }
     }
 

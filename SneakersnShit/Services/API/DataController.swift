@@ -18,7 +18,6 @@ protocol LocalAPI {
     var cookiesPublisher: AnyPublisher<[Cookie], Never> { get }
     var imageDownloadHeadersPublisher: AnyPublisher<[HeadersWithStoreId], Never> { get }
 
-    func getExchangeRates(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<ExchangeRates, AppError>
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError>
     func getItemDetails(for item: Item?, itemId: String, fetchMode: FetchMode, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError>
     func getCalculatedPrices(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError>
@@ -61,4 +60,7 @@ protocol DatabaseManager {
     func getItem(withId id: String, settings: CopDeckSettings) -> AnyPublisher<Item, AppError>
 }
 
-protocol DataController: LocalAPI, BackendAPI, DatabaseManager {}
+protocol DataController: LocalAPI, BackendAPI, DatabaseManager {
+    func stack(inventoryItems: [InventoryItem], stack: Stack)
+    func unstack(inventoryItems: [InventoryItem], stack: Stack)
+}

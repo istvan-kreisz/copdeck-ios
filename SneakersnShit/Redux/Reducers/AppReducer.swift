@@ -90,14 +90,6 @@ func appReducer(state: inout AppState,
             environment.dataController.stack(inventoryItems: inventoryItems, stack: stack)
         case let .unstack(inventoryItems, stack):
             environment.dataController.unstack(inventoryItems: inventoryItems, stack: stack)
-        case .getExchangeRates:
-            return environment.dataController.getExchangeRates(settings: state.settings, exchangeRates: state.rates)
-                .map {
-                    environment.dataController.add(exchangeRates: $0)
-                    return AppAction.none
-                }
-                .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
-                .eraseToAnyPublisher()
         }
     case let .authentication(action: action):
         return environment.authenticator.handle(action)

@@ -12,8 +12,6 @@ enum MainAction {
     case setUser(user: User)
     // settings
     case updateSettings(settings: CopDeckSettings)
-    // exchange rates
-    case getExchangeRates
     // search
     case getSearchResults(searchTerm: String)
     case setSearchResults(searchResults: [Item])
@@ -43,8 +41,6 @@ extension MainAction: Identifiable {
             return "setUser"
         case .updateSettings:
             return "updateSettings"
-        case .getExchangeRates:
-            return "getExchangeRates"
         case .getSearchResults:
             return "getSearchResults"
         case .setSearchResults:

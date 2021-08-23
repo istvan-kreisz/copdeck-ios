@@ -23,9 +23,9 @@ struct Stack: Codable, Equatable, Identifiable {
                 case .All:
                     return true
                 case .Sold:
-                    return inventoryItem.status == .sold
+                    return inventoryItem.status == .Sold
                 case .Unsold:
-                    return inventoryItem.status != .sold
+                    return inventoryItem.status != .Sold
                 }
             } else {
                 return false

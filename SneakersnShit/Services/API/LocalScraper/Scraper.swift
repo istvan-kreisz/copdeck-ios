@@ -121,16 +121,6 @@ extension LocalScraper: LocalAPI {
             .eraseToAnyPublisher()
     }
 
-    func getExchangeRates(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<ExchangeRates, AppError> {
-        exchangeRatesSubject.send(completion: .finished)
-        exchangeRatesSubject = PassthroughSubject<ExchangeRates, AppError>()
-        interpreter.call(object: nil,
-                         functionName: "scraper.api.getExchangeRates",
-                         arguments: [config(from: settings, exchangeRates: exchangeRates)],
-                         completion: { _ in })
-        return exchangeRatesSubject.first().eraseToAnyPublisher()
-    }
-
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
         itemsSubject.send(completion: .finished)
         itemsSubject = PassthroughSubject<[Item], AppError>()

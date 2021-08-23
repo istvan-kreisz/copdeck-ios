@@ -35,8 +35,8 @@ struct InventoryItem: Codable, Equatable, Identifiable {
         var price: PriceWithCurrency?
     }
 
-    enum SoldStatus: String, Codable, Equatable {
-        case none, listed, sold
+    enum SoldStatus: String, Equatable, EnumCodable {
+        case None, Listed, Sold
     }
 
     let id: String
@@ -48,7 +48,7 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     var condition: Condition
     var listingPrices: [ListingPrice] = []
     var soldPrice: SoldPrice?
-    var status: SoldStatus? = InventoryItem.SoldStatus.none
+    var status: SoldStatus? = .None
     var notes: String?
     let created: Double?
     let updated: Double?

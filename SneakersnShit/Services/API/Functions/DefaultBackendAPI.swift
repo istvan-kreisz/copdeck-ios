@@ -47,9 +47,13 @@ class DefaultBackendAPI: BackendAPI {
         callFirebaseFunction(functionName: "search", model: searchTerm)
     }
 
-    #warning("fix")
     func update(item: Item, settings: CopDeckSettings) {
-        handlePublisherResult(publisher: callFirebaseFunction(functionName: "updateItem", model: item))
+        struct Wrapper: Encodable {
+            let userId: String?
+            let item: Item
+            let settings: CopDeckSettings
+        }
+        handlePublisherResult(publisher: callFirebaseFunction(functionName: "updateItem", model: Wrapper(userId: userId, item: item, settings: settings)))
     }
 
     func add(inventoryItems: [InventoryItem]) {

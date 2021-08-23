@@ -93,13 +93,13 @@ struct NewItemCard: View {
                              options: InventoryItem.Condition.allCases.map { $0.rawValue },
                              style: dropdownStyle)
             }
-            let soldStatus = Binding<String>(get: { (inventoryItem.status ?? InventoryItem.SoldStatus.none).rawValue.uppercased() },
-                                             set: { inventoryItem.status = .init(rawValue: $0.lowercased()) ?? InventoryItem.SoldStatus.none })
+            let soldStatus = Binding<String>(get: { (inventoryItem.status ?? InventoryItem.SoldStatus.None).rawValue.uppercased() },
+                                             set: { inventoryItem.status = .init(rawValue: $0.lowercased()) ?? InventoryItem.SoldStatus.None })
             ToggleButton(title: "status",
                          selection: soldStatus,
                          options: ["NONE", "LISTED", "SOLD"],
                          style: toggleButtonStyle)
-            if inventoryItem.status == .listed {
+            if inventoryItem.status == .Listed {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("listing prices (optional)")
                         .font(.semiBold(size: 12))
@@ -132,7 +132,7 @@ struct NewItemCard: View {
                     }
                 }
                 .padding(.top, 5)
-            } else if inventoryItem.status == .sold {
+            } else if inventoryItem.status == .Sold {
                 let text =
                     Binding<String>(get: { (inventoryItem.soldPrice?.price?.price).asString() },
                                     set: {
