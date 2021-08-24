@@ -65,7 +65,7 @@ struct ImageURL: Codable, Equatable, Hashable {
 struct Item: Codable, Equatable, Identifiable, Hashable {
     let id: String
     let storeInfo: [StoreInfo]
-    let storePrices: [StorePrice]
+    var storePrices: [StorePrice]
     let ownedByCount: Int?
     let priceAlertCount: Int?
     let created: Double?
@@ -93,7 +93,7 @@ struct Item: Codable, Equatable, Identifiable, Hashable {
     struct StorePrice: Codable, Equatable, Hashable {
         let retailPrice: Double?
         let store: Store
-        let inventory: [StoreInventoryItem]
+        var inventory: [StoreInventoryItem]
         let currencyCode: Currency.CurrencyCode?
 
         struct StoreInventoryItem: Codable, Equatable, Identifiable, Hashable {
@@ -113,12 +113,6 @@ struct Item: Codable, Equatable, Identifiable, Hashable {
             var sizeTrimmed: String? {
                 let numString = size.trimmingCharacters(in: CharacterSet.letters.union(CharacterSet.whitespacesAndNewlines))
                 return Double(numString) != nil ? numString : nil
-            }
-
-            struct Price: Codable, Equatable {
-                let noFees: Double
-                let withSellerFees: Double?
-                let withBuyerFees: Double?
             }
         }
     }

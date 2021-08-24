@@ -30,8 +30,10 @@ extension AppStore {
 
         environment.dataController.userPublisher
             .sink { [weak self] newUser in
-                if self?.state.user?.settings?.feeCalculation != newUser.settings?.feeCalculation {
-                    self?.refreshItemPricesIfNeeded()
+                let oldSettings = self?.state.user?.settings
+                let newSettings = newUser.settings
+                if oldSettings?.feeCalculation != newSettings?.feeCalculation || oldSettings?.currency != newSettings?.currency {
+                    self?.refreshItemPricesIfNeeded(newUser: newUser)
                 }
                 self?.state.user = newUser
             }
@@ -41,7 +43,7 @@ extension AppStore {
             .sink { [weak self] inventoryItems in
                 self?.state.inventoryItems = inventoryItems
                 self?.updateAllStack(withInventoryItems: inventoryItems)
-                if !inventoryItems.isEmpty && self?.state.didFetchItemPrices == false {
+                if !inventoryItems.isEmpty, self?.state.didFetchItemPrices == false {
                     self?.refreshItemPricesIfNeeded()
                     self?.state.didFetchItemPrices = true
                 }
@@ -88,11 +90,11 @@ extension AppStore {
         }
     }
 
-    func refreshItemPricesIfNeeded() {
+    func refreshItemPricesIfNeeded(newUser: User? = nil) {
         guard state.user != nil else { return }
         let idsToRefresh = Set(state.inventoryItems.compactMap { $0.itemId }).filter { id in
-            if let item = ItemCache.default.value(forKey: Item.databaseId(itemId: id, settings: state.settings)) {
-                return !item.isUptodate
+            if let item = ItemCache.default.value(forKey: Item.databaseId(itemId: id, settings: newUser?.settings ?? state.settings)) {
+                return item.storePrices.isEmpty || !item.isUptodate
             } else {
                 return true
             }

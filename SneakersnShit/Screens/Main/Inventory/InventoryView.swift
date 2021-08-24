@@ -55,7 +55,10 @@ struct InventoryView: View {
 
     var inventoryValue: PriceWithCurrency? {
         if let currencyCode = bestPrices.values.first?.currencyCode {
-            let sum = inventoryItems.compactMap { bestPrices[$0.id]?.price }.sum()
+            let sum = inventoryItems
+                .filter { $0.status != .Sold }
+                .compactMap { bestPrices[$0.id]?.price }
+                .sum()
             return PriceWithCurrency(price: sum, currencyCode: currencyCode)
         } else {
             return nil
@@ -233,6 +236,9 @@ struct InventoryView: View {
                 }
             }
             .onChange(of: store.state.inventoryItems) { _ in
+                updateBestPrices()
+            }
+            .onChange(of: store.state.user?.settings) { _ in
                 updateBestPrices()
             }
             .onReceive(ItemCache.default.updatedPublisher.debounce(for: .milliseconds(500), scheduler: RunLoop.main).prepend(())) { _ in
