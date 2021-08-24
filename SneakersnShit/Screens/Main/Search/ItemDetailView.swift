@@ -98,8 +98,6 @@ struct ItemDetailView: View {
             Color.customWhite.edgesIgnoringSafeArea(.all)
             let isAddToInventoryActive = Binding<Bool>(get: { addToInventory.isActive },
                                                        set: { addToInventory = $0 ? addToInventory : (false, nil) })
-            NavigationLink(destination: EmptyView()) { EmptyView() }
-
             NavigationLink("",
                            destination: item
                                .map { item in AddToInventoryView(item: item, presented: $addToInventory, addedInvantoryItem: $addedInventoryItem) } ??
@@ -226,18 +224,6 @@ struct ItemDetailView: View {
                                 .onTapGesture {
                                     refreshPrices(fetchMode: .forcedRefresh)
                                 }
-//                                RoundedButton<EmptyView>(text: "refresh prices",
-//                                              width: 100,
-//                                              height: 30,
-//                                              maxSize: nil,
-//                                              fontSize: 16,
-//                                              color: Color.customOrange,
-//                                              borderColor: Color.clear,
-//                                              textColor: Color.customWhite,
-//                                              padding: 10,
-//                                              accessoryView: nil) {
-//
-//                                }
 
                                 HStack(spacing: 10) {
                                     Text("Size")
