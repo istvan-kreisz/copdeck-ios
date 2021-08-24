@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Stack: Codable, Equatable, Identifiable {
+struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
     let id: String
     let name: String
     var isPublished: Bool
@@ -38,8 +38,8 @@ struct Stack: Codable, Equatable, Identifiable {
               name: "All",
               isPublished: false,
               items: inventoryItems.map { .init(inventoryItemId: $0.id) },
-              created: Date().timeIntervalSince1970 * 1000,
-              updated: Date().timeIntervalSince1970 * 1000,
+              created: 0,
+              updated: 0,
               publishedDate: nil)
     }
 

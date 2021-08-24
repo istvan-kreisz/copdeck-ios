@@ -29,7 +29,7 @@ struct InventoryView: View {
     @ObservedObject var viewRouter: ViewRouter
 
     var selectedStack: Stack? {
-        store.state.stacks[safe: selectedStackIndex]
+        stacks[safe: selectedStackIndex]
     }
 
     var supportedTrayActions: [TrayAction] {
@@ -38,6 +38,10 @@ struct InventoryView: View {
 
     var inventoryItems: [InventoryItem] {
         store.state.inventoryItems
+    }
+
+    var stacks: [Stack] {
+        store.state.stacks.sortedByDate()
     }
 
     func updateBestPrices() {
@@ -79,7 +83,7 @@ struct InventoryView: View {
     var body: some View {
         Group {
             let pageCount = Binding<Int>(get: { store.state.stacks.count }, set: { _ in })
-            let stackTitles = Binding<[String]>(get: { store.state.stacks.map { $0.name } }, set: { _ in })
+            let stackTitles = Binding<[String]>(get: { stacks.map { $0.name } }, set: { _ in })
             let actionsTrayActions = Binding<[ActionConfig]>(get: {
                                                                  supportedTrayActions
                                                                      .map { action in
@@ -193,7 +197,7 @@ struct InventoryView: View {
                         .withDefaultPadding(padding: .horizontal)
 
                     PagerView(pageCount: pageCount, currentIndex: $selectedStackIndex) {
-                        ForEach(store.state.stacks) { stack in
+                        ForEach(stacks) { stack in
                             let isSelected = Binding<Bool>(get: { stack.id == selectedStack?.id }, set: { _ in })
 
                             StackView(stack: stack,
@@ -230,7 +234,7 @@ struct InventoryView: View {
                 shouldShowTabBar = stack == nil
             }
             .onChange(of: store.state.stacks) { stacks in
-                if let indexOfNewStack = stacks.firstIndex(where: { $0.id == newStackId }) {
+                if let indexOfNewStack = stacks.sortedByDate().firstIndex(where: { $0.id == newStackId }) {
                     newStackId = nil
                     selectedStackIndex = indexOfNewStack
                 }
@@ -283,8 +287,8 @@ struct InventoryView: View {
                                                         name: name,
                                                         isPublished: false,
                                                         items: [],
-                                                        created: Date().timeIntervalSinceNow * 1000,
-                                                        updated: Date().timeIntervalSinceNow * 1000,
+                                                        created: Date().timeIntervalSince1970 * 1000,
+                                                        updated: Date().timeIntervalSince1970 * 1000,
                                                         publishedDate: nil))))
     }
 }

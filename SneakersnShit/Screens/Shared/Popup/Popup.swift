@@ -84,7 +84,7 @@ struct Popup<Content: View>: View {
                 .padding(.top, 16)
             }
             .padding(Self.padding)
-            .frame(width: min(375, UIScreen.screenWidth - 16 * 2))
+            .frame(width: frameWidth)
             .background(Color.customAccent4)
             .cornerRadius(Styles.cornerRadius)
             .withDefaultShadow()

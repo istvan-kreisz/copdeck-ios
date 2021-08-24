@@ -68,7 +68,7 @@ class LocalScraper {
     }
 
     private func isOlderThan(date: Double, minutes: Double) -> Bool {
-        (Date().timeIntervalSinceNow - date) / 60 > minutes
+        (Date().timeIntervalSince1970 - date) / 60 > minutes
     }
 
     private func clearOldPublishers() {

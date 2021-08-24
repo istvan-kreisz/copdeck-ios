@@ -154,7 +154,7 @@ class DefaultDataController: DataController {
         localScraper.getCalculatedPrices(for: item, settings: settings, exchangeRates: exchangeRates)
             .sink(receiveCompletion: { _ in },
                   receiveValue: { item in
-                    log("--> cached item with id: \(item.id)")
+                      log("--> cached item with id: \(item.id)")
                       ItemCache.default.insert(item: item, settings: settings)
                   })
             .store(in: &cancellables)
@@ -177,28 +177,33 @@ class DefaultDataController: DataController {
         backendAPI.setup(userId: userId)
     }
 
-    func delete(stack: Stack) {
-        backendAPI.delete(stack: stack)
-    }
-
-    func update(stack: Stack) {
-        backendAPI.update(stack: stack)
-    }
-
-    func add(inventoryItems: [InventoryItem]) {
-        backendAPI.add(inventoryItems: inventoryItems)
-    }
-
     func update(item: Item, settings: CopDeckSettings) {
         backendAPI.update(item: item, settings: settings)
     }
 
+    func delete(stack: Stack) {
+        databaseManager.delete(stack: stack)
+//        backendAPI.delete(stack: stack)
+    }
+
+    func update(stack: Stack) {
+        databaseManager.update(stack: stack)
+//        backendAPI.update(stack: stack)
+    }
+
+    func add(inventoryItems: [InventoryItem]) {
+        databaseManager.add(inventoryItems: inventoryItems)
+//        backendAPI.add(inventoryItems: inventoryItems)
+    }
+
     func update(inventoryItem: InventoryItem) {
-        backendAPI.update(inventoryItem: inventoryItem)
+        databaseManager.update(inventoryItem: inventoryItem)
+        //        backendAPI.update(inventoryItem: inventoryItem)
     }
 
     func delete(inventoryItems: [InventoryItem]) {
-        backendAPI.delete(inventoryItems: inventoryItems)
+        databaseManager.delete(inventoryItems: inventoryItems)
+//        backendAPI.delete(inventoryItems: inventoryItems)
     }
 
     func stack(inventoryItems: [InventoryItem], stack: Stack) {
@@ -208,14 +213,16 @@ class DefaultDataController: DataController {
                 !updatedStack.items.contains(where: { $0.inventoryItemId == inventoryItem.id })
             }
             .map { .init(inventoryItemId: $0.id) }
-        backendAPI.update(stack: updatedStack)
+        databaseManager.update(stack: updatedStack)
+//        backendAPI.update(stack: updatedStack)
     }
 
     func unstack(inventoryItems: [InventoryItem], stack: Stack) {
         let inventoryItemIds = inventoryItems.map(\.id)
         var updatedStack = stack
         updatedStack.items = updatedStack.items.filter { !inventoryItemIds.contains($0.inventoryItemId) }
-        backendAPI.update(stack: updatedStack)
+        databaseManager.update(stack: updatedStack)
+//        backendAPI.update(stack: updatedStack)
     }
 
     func getPopularItems(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
@@ -223,7 +230,8 @@ class DefaultDataController: DataController {
     }
 
     func update(user: User) {
-        backendAPI.update(user: user)
+        databaseManager.update(user: user)
+//        backendAPI.update(user: user)
     }
 
     func deleteUser() {

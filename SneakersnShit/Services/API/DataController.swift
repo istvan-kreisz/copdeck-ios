@@ -20,7 +20,8 @@ protocol LocalAPI {
 
     func reset()
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError>
-    func getItemDetails(for item: Item?, itemId: String, fetchMode: FetchMode, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError>
+    func getItemDetails(for item: Item?, itemId: String, fetchMode: FetchMode, settings: CopDeckSettings, exchangeRates: ExchangeRates)
+        -> AnyPublisher<Item, AppError>
     func getCalculatedPrices(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError>
     func getPopularItems(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError>
 }
@@ -58,8 +59,17 @@ protocol DatabaseManager {
     var exchangeRatesPublisher: AnyPublisher<ExchangeRates, Never> { get }
     var errorsPublisher: AnyPublisher<AppError, Never> { get }
 
+    // read
     func getUser(withId id: String) -> AnyPublisher<User, AppError>
     func getItem(withId id: String, settings: CopDeckSettings) -> AnyPublisher<Item, AppError>
+
+    // write
+    func add(inventoryItems: [InventoryItem])
+    func delete(inventoryItems: [InventoryItem])
+    func update(inventoryItem: InventoryItem)
+    func update(stack: Stack)
+    func delete(stack: Stack)
+    func update(user: User)
 }
 
 protocol DataController: LocalAPI, BackendAPI, DatabaseManager {

@@ -38,7 +38,6 @@ class FirebaseService: DatabaseManager {
         exchangeRatesSubject.eraseToAnyPublisher()
     }
 
-    #warning("yo")
     var errorsPublisher: AnyPublisher<AppError, Never> {
         errorsSubject.eraseToAnyPublisher()
     }
@@ -205,5 +204,106 @@ class FirebaseService: DatabaseManager {
                 }
             }
         }.eraseToAnyPublisher()
+    }
+
+    func delete(inventoryItems: [InventoryItem]) {
+        let batch = firestore.batch()
+        // update inventory items
+        inventoryItems
+            .forEach { inventoryItem in
+                _ = (userInventoryRef?.document(inventoryItem.id)).map { batch.deleteDocument($0) }
+            }
+        // update stacks
+        stacksSubject
+            .value
+            .filter { stack in
+                stack.items
+                    .map(\.inventoryItemId)
+                    .contains(where: { id in
+                        inventoryItems.map(\.id).contains(id)
+                    })
+            }
+            .map { stack -> Stack in
+                var updatedStack = stack
+                updatedStack.items = updatedStack.items
+                    .filter { item in
+                        !inventoryItems.map(\.id).contains(item.inventoryItemId)
+                    }
+                return updatedStack
+            }
+            .forEach { stack in
+                _ = (userStacksRef?.document(stack.id))
+                    .map { ref in
+                        if let data = try? stack.asDictionary() {
+                            batch.updateData(data, forDocument: ref)
+                        }
+                    }
+            }
+
+        batch.commit { [weak self] error in
+            if let error = error {
+                self?.errorsSubject.send(AppError(error: error))
+            }
+        }
+    }
+
+    func update(stack: Stack) {
+        if let dict = try? stack.asDictionary() {
+            userStacksRef?
+                .document(stack.id)
+                .setData(dict, merge: true) { [weak self] error in
+                    if let error = error {
+                        self?.errorsSubject.send(AppError(error: error))
+                    }
+                }
+        }
+    }
+
+    func delete(stack: Stack) {
+        userStacksRef?
+            .document(stack.id)
+            .delete { [weak self] error in
+                error.map { self?.errorsSubject.send(AppError(error: $0)) }
+            }
+    }
+
+    func add(inventoryItems: [InventoryItem]) {
+        let batch = firestore.batch()
+        inventoryItems
+            .compactMap { inventoryItem -> (String, [String: Any])? in
+                (try? inventoryItem.asDictionary()).map { (inventoryItem.id, $0) } ?? nil
+            }
+            .forEach { id, dict in
+                _ = (userInventoryRef?.document(id)).map { batch.setData(dict, forDocument: $0, merge: true) }
+            }
+
+        batch.commit { [weak self] error in
+            if let error = error {
+                self?.errorsSubject.send(AppError(error: error))
+            }
+        }
+    }
+
+    func update(inventoryItem: InventoryItem) {
+        if let dict = try? inventoryItem.asDictionary() {
+            userInventoryRef?
+                .document(inventoryItem.id)
+                .setData(dict, merge: true) { [weak self] error in
+                    if let error = error {
+                        self?.errorsSubject.send(AppError(error: error))
+                    }
+                }
+        }
+    }
+
+    func update(user: User) {
+        if let dict = try? user.asDictionary() {
+            userRef?
+                .setData(dict, merge: true) { [weak self] error in
+                    if let error = error {
+                        self?.errorsSubject.send(AppError(error: error))
+                    }
+                }
+        }
     }
 }
