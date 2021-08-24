@@ -94,7 +94,7 @@ struct NewItemCard: View {
                              style: dropdownStyle)
             }
             let soldStatus = Binding<String>(get: { (inventoryItem.status ?? InventoryItem.SoldStatus.None).rawValue.uppercased() },
-                                             set: { inventoryItem.status = .init(rawValue: $0.lowercased()) ?? InventoryItem.SoldStatus.None })
+                                             set: { inventoryItem.status = .init(rawValue: $0.lowercased().capitalized) ?? InventoryItem.SoldStatus.None })
             ToggleButton(title: "status",
                          selection: soldStatus,
                          options: ["NONE", "LISTED", "SOLD"],
