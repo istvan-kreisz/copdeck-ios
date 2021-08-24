@@ -20,6 +20,7 @@ struct SelectStackItemsListItem: View {
                                            isEditing: .constant(false),
                                            isSelected: isSelected,
                                            selectionStyle: .highlight,
+                                           ribbonText: inventoryItem.status == .Sold ? "Sold" : nil,
                                            accessoryView: InventoryViewPills(inventoryItem: inventoryItem).leftAligned()) {
                 isSelected.toggle()
         }
