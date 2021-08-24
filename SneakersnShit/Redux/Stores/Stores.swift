@@ -33,6 +33,7 @@ extension AppStore {
                 let oldSettings = self?.state.user?.settings
                 let newSettings = newUser.settings
                 if oldSettings?.feeCalculation != newSettings?.feeCalculation || oldSettings?.currency != newSettings?.currency {
+                    ItemCache.default.removeAll()
                     self?.refreshItemPricesIfNeeded(newUser: newUser)
                 }
                 self?.state.user = newUser

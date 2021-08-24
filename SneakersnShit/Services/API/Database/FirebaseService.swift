@@ -195,11 +195,10 @@ class FirebaseService: DatabaseManager {
     }
 
     func getItem(withId id: String, settings: CopDeckSettings) -> AnyPublisher<Item, AppError> {
-        log("get item with id: \(id)")
         return Future { [weak self] promise in
             self?.itemsRef?.document(Item.databaseId(itemId: id, settings: settings)).getDocument { snapshot, error in
+                log("db read itemId: \(id)")
                 if let dict = snapshot?.data(), let item = Item(from: dict) {
-                    log("db read")
                     promise(.success(item))
                 } else {
                     promise(.failure(error.map { AppError(error: $0) } ?? AppError.unknown))

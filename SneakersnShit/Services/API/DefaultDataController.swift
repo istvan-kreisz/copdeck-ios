@@ -87,7 +87,7 @@ class DefaultDataController: DataController {
                             return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
                         }
                         if let item = item, item.isUptodate, !item.storePrices.isEmpty {
-                            log("cache")
+                            log("cache itemId: \(item.id)")
                             return Just(item).setFailureType(to: AppError.self).eraseToAnyPublisher()
                         } else {
                             if fetchMode == .cacheOnly {
@@ -151,7 +151,6 @@ class DefaultDataController: DataController {
     }
 
     private func cache(item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) {
-        log("--> calculating prices for item with id: \(item.id)")
         localScraper.getCalculatedPrices(for: item, settings: settings, exchangeRates: exchangeRates)
             .sink(receiveCompletion: { _ in },
                   receiveValue: { item in

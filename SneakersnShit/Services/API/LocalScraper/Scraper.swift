@@ -138,9 +138,6 @@ extension LocalScraper: LocalAPI {
                         fetchMode: FetchMode,
                         settings: CopDeckSettings,
                         exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
-        if DebugSettings.shared.showScraperLogs {
-            print("scraping...")
-        }
         if let item = item {
             return getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates)
                 .handleEvents(receiveOutput: { [weak self] _ in self?.refreshHeadersAndCookie() }).eraseToAnyPublisher()
