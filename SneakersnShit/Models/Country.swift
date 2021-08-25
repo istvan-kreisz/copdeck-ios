@@ -42,6 +42,15 @@ enum Country: String, Codable, CaseIterable {
     case GB
     case US
     case USE
+    case MY
+    case ID
+    case PH
+    case SG
+    case TH
+    case CN
+    case KR
+    case TW
+    case VN
 
     var name: String {
         switch self {
@@ -113,6 +122,24 @@ enum Country: String, Codable, CaseIterable {
             return "US (mainland)"
         case .USE:
             return "US (Alaska, Hawaii)"
+        case .MY:
+            return "Malaysia"
+        case .ID:
+            return "Indonesia"
+        case .PH:
+            return "Philippines"
+        case .SG:
+            return "Singapore"
+        case .TH:
+            return "Thailand"
+        case .CN:
+            return "China"
+        case .KR:
+            return "SouthKorea"
+        case .TW:
+            return "Taiwan"
+        case .VN:
+            return "Vietnam"
         }
     }
 
@@ -163,6 +190,16 @@ enum Country: String, Codable, CaseIterable {
         case .US,
              .USE:
             return "US"
+        case .MY,
+             .ID,
+             .PH,
+             .SG,
+             .TH,
+             .CN,
+             .KR,
+             .TW,
+             .VN:
+            return "AS"
         }
     }
 }
