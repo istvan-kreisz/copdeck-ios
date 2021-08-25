@@ -272,19 +272,17 @@ struct SettingsView: View {
                                              buttonTapped: selectStockxQuickShipBonus)
                         }
 
-                        if settings.feeCalculation.country == .US || settings.feeCalculation.country == .USE {
-                            HStack {
-                                Text("StockX buyer's taxes (%)")
-                                    .layoutPriority(2)
-                                TextField("0%", text: $stockxBuyersTaxes, onEditingChanged: { isActive in
-                                    if !isActive {
-                                        selectStockxBuyersTaxes()
-                                    }
-                                })
-                                    .multilineTextAlignment(.trailing)
-                                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                                    .keyboardType(.numberPad)
-                            }
+                        HStack {
+                            Text("StockX buyer's taxes (%)")
+                                .layoutPriority(2)
+                            TextField("0%", text: $stockxBuyersTaxes, onEditingChanged: { isActive in
+                                if !isActive {
+                                    selectStockxBuyersTaxes()
+                                }
+                            })
+                                .multilineTextAlignment(.trailing)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .keyboardType(.numberPad)
                         }
                     }
 
@@ -303,36 +301,32 @@ struct SettingsView: View {
                                          selectedOption: $goatCashOutFee,
                                          buttonTapped: selectGoatCashOutFee)
 
-                        if settings.feeCalculation.country == .US || settings.feeCalculation.country == .USE {
-                            HStack {
-                                Text("GOAT buyer's taxes (%)")
-                                    .layoutPriority(2)
-                                TextField("0%", text: $goatBuyersTaxes, onEditingChanged: { isActive in
-                                    if !isActive {
-                                        selectGoatBuyersTaxes()
-                                    }
-                                })
-                                    .multilineTextAlignment(.trailing)
-                                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                                    .keyboardType(.numberPad)
-                            }
+                        HStack {
+                            Text("GOAT buyer's taxes (%)")
+                                .layoutPriority(2)
+                            TextField("0%", text: $goatBuyersTaxes, onEditingChanged: { isActive in
+                                if !isActive {
+                                    selectGoatBuyersTaxes()
+                                }
+                            })
+                                .multilineTextAlignment(.trailing)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .keyboardType(.numberPad)
                         }
                     }
 
-                    if settings.feeCalculation.country == .US || settings.feeCalculation.country == .USE {
-                        Section(header: Text("Klekt")) {
-                            HStack {
-                                Text("Klekt buyer's taxes (%)")
-                                    .layoutPriority(2)
-                                TextField("0%", text: $klektBuyersTaxes, onEditingChanged: { isActive in
-                                    if !isActive {
-                                        selectKlektBuyersTaxes()
-                                    }
-                                })
-                                    .multilineTextAlignment(.trailing)
-                                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                                    .keyboardType(.numberPad)
-                            }
+                    Section(header: Text("Klekt")) {
+                        HStack {
+                            Text("Klekt buyer's taxes (%)")
+                                .layoutPriority(2)
+                            TextField("0%", text: $klektBuyersTaxes, onEditingChanged: { isActive in
+                                if !isActive {
+                                    selectKlektBuyersTaxes()
+                                }
+                            })
+                                .multilineTextAlignment(.trailing)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .keyboardType(.numberPad)
                         }
                     }
 
