@@ -21,7 +21,7 @@ class DefaultBackendAPI: BackendAPI {
 
     init() {
         if DebugSettings.shared.isInDebugMode, DebugSettings.shared.useFunctionsEmulator {
-            functions.useFunctionsEmulator(origin: "http://istvans-macbook-pro-2.local:5001")
+            functions.useFunctionsEmulator(origin: "http://172.20.10.4:5001")
         }
     }
 

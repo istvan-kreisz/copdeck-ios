@@ -54,11 +54,6 @@
       </BuildableProductRunnable>
       <EnvironmentVariables>
          <EnvironmentVariable
-            key = "useMockData"
-            value = "false"
-            isEnabled = "NO">
-         </EnvironmentVariable>
-         <EnvironmentVariable
             key = "username"
             value = "kreiszistvan@icloud.com"
             isEnabled = "YES">
@@ -86,7 +81,7 @@
          <EnvironmentVariable
             key = "useFunctionsEmulator"
             value = "true"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>

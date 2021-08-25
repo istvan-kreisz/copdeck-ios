@@ -22,7 +22,7 @@ struct CountrySelector: View {
                      buttonTitle: "Select country",
                      enableMultipleSelection: false,
                      popBackOnSelect: false,
-                     options: Country.allCases.map { $0.name },
+                     options: Country.allCases.map { $0.name }.sorted(),
                      selectedOptions: $countries,
                      buttonTapped: selectCountryTapped)
     }

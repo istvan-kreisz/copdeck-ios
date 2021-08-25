@@ -135,7 +135,7 @@ enum Country: String, Codable, CaseIterable {
         case .CN:
             return "China"
         case .KR:
-            return "SouthKorea"
+            return "South Korea"
         case .TW:
             return "Taiwan"
         case .VN:

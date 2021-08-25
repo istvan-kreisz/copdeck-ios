@@ -68,7 +68,7 @@ class FirebaseService: DatabaseManager {
         let settings = firestore.settings
         settings.cacheSizeBytes = 200 * 1_000_000
         if DebugSettings.shared.isInDebugMode, DebugSettings.shared.useFunctionsEmulator {
-            settings.host = "istvans-macbook-pro-2.local:8080"
+            settings.host = "172.20.10.4:8080"
             settings.isPersistenceEnabled = false
             settings.isSSLEnabled = false
         }
@@ -232,7 +232,7 @@ class FirebaseService: DatabaseManager {
                 return updatedStack
             }
             .forEach { stack in
-                _ = (userStacksRef?.document(stack.id))
+                _ = (userStacksRef?.document(stack.id)) 
                     .map { ref in
                         if let data = try? stack.asDictionary() {
                             batch.updateData(data, forDocument: ref)

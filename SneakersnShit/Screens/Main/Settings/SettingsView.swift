@@ -222,7 +222,7 @@ struct SettingsView: View {
                         ListSelectorMenu(title: "Country",
                                          selectorScreenTitle: "Select your country",
                                          buttonTitle: "Select country",
-                                         options: Country.allCases.map { $0.name },
+                                         options: Country.allCases.map { $0.name }.sorted(),
                                          selectedOption: $country,
                                          buttonTapped: selectCountry)
 

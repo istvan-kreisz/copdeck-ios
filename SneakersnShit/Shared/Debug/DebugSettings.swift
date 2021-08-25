@@ -68,10 +68,6 @@ struct DebugSettings {
         return Double(value)
     }
 
-    var useMockData: Bool {
-        bool(for: "useMockData")
-    }
-
     var useFunctionsEmulator: Bool {
         bool(for: "useFunctionsEmulator")
     }
