@@ -134,11 +134,14 @@ struct SettingsView: View {
     }
 
     private func selectStockxBuyersTaxes() {
-        if let newValue = Double(stockxBuyersTaxes),
-           newValue <= 100,
-           newValue >= 0,
-           settings.feeCalculation.stockx?.taxes != newValue {
-            settings.feeCalculation.stockx?.taxes = newValue
+        if let newValue = Double(stockxBuyersTaxes) {
+            if newValue <= 100, newValue >= 0, settings.feeCalculation.stockx?.taxes != newValue {
+                settings.feeCalculation.stockx?.taxes = newValue
+            }
+        } else {
+            if settings.feeCalculation.stockx?.taxes != 0 {
+                settings.feeCalculation.stockx?.taxes = 0
+            }
         }
     }
 
@@ -159,25 +162,26 @@ struct SettingsView: View {
     }
 
     private func selectGoatBuyersTaxes() {
-        if let newValue = Double(goatBuyersTaxes),
-           newValue <= 100,
-           newValue >= 0,
-           settings.feeCalculation.goat?.taxes != newValue {
-            settings.feeCalculation.goat?.taxes = newValue
+        if let newValue = Double(goatBuyersTaxes) {
+            if newValue <= 100, newValue >= 0, settings.feeCalculation.goat?.taxes != newValue {
+                settings.feeCalculation.goat?.taxes = newValue
+            }
+        } else {
+            if settings.feeCalculation.goat?.taxes != 0 {
+                settings.feeCalculation.goat?.taxes = 0
+            }
         }
     }
 
     // klekt
     private func selectKlektBuyersTaxes() {
-        if let newValue = Double(klektBuyersTaxes),
-           newValue <= 100,
-           newValue >= 0,
-           settings.feeCalculation.klekt?.taxes != newValue {
-            #warning("cover cases when settings might be missing")
-            if settings.feeCalculation.klekt == nil {
-                settings.feeCalculation.klekt = .init(taxes: newValue)
-            } else {
+        if let newValue = Double(klektBuyersTaxes) {
+            if newValue <= 100, newValue >= 0, settings.feeCalculation.klekt?.taxes != newValue {
                 settings.feeCalculation.klekt?.taxes = newValue
+            }
+        } else {
+            if settings.feeCalculation.klekt?.taxes != 0 {
+                settings.feeCalculation.klekt?.taxes = 0
             }
         }
     }
