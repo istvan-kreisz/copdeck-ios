@@ -86,7 +86,7 @@ class FirebaseService: DatabaseManager {
         let settings = firestore.settings
         settings.cacheSizeBytes = 200 * 1_000_000
         if DebugSettings.shared.isInDebugMode, DebugSettings.shared.useFunctionsEmulator {
-            settings.host = "172.20.10.4:8080"
+            settings.host = "192.168.0.199:8080"
             settings.isPersistenceEnabled = false
             settings.isSSLEnabled = false
         }

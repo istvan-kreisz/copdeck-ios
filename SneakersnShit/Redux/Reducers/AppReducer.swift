@@ -57,15 +57,13 @@ func appReducer(state: inout AppState,
         case let .searchUsers(searchTerm):
             return environment.dataController.searchUsers(searchTerm: searchTerm)
                 .map { AppAction.main(action: .setUserSearchResults(searchResults: $0)) }
-                .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
-                .eraseToAnyPublisher()
+                .catchErrors()
         case let .setUserSearchResults(searchResults):
             state.userSearchResults = searchResults
         case let .getUserProfile(userId):
             return environment.dataController.getUserProfile(userId: userId)
                 .map { AppAction.main(action: .setSelectedUser(user: $0)) }
-                .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
-                .eraseToAnyPublisher()
+                .catchErrors()
         case let .setSelectedUser(user):
             state.selectedUserProfile = user
         case let .getItemDetails(item, itemId, fetchMode):

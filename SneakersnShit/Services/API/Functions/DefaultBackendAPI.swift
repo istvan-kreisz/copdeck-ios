@@ -93,6 +93,6 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI  {
         struct Wrapper: Encodable {
             let searchTerm: String
         }
-        return callFirebaseFunction(functionName: "searchUsers", model: Wrapper(searchTerm: searchTerm))
+        return callFirebaseFunctionArray(functionName: "searchUsers", model: Wrapper(searchTerm: searchTerm))
     }
 }

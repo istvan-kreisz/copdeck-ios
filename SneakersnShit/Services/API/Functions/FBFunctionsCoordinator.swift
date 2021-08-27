@@ -21,7 +21,7 @@ class FBFunctionsCoordinator {
 
     init() {
         if DebugSettings.shared.isInDebugMode, DebugSettings.shared.useFunctionsEmulator {
-            functions.useFunctionsEmulator(origin: "http://172.20.10.4:5001")
+            functions.useFunctionsEmulator(origin: "http://192.168.0.199:5001")
         }
     }
 
@@ -76,14 +76,14 @@ class FBFunctionsCoordinator {
             var parameters = try model.asDictionary()
             parameters["userId"] = userId
             return Future<Model, AppError> { [weak self] completion in
-                self?.functions.httpsCallable(functionName).call(parameters) { [weak self] result, error in
+                self?.functions.httpsCallable(functionName).call(parameters) { [weak self] result, functionError in
                     guard let self = self else { return }
                     do {
-                        try self.handleError(error)
+                        try self.handleError(functionError)
                         try handleResult(result, completion)
                     } catch {
-                        let error = (error as? AppError) ?? AppError()
-                        completion(.failure(error))
+                        let appError = (error as? AppError) ?? AppError(error: error)
+                        completion(.failure(appError))
                     }
                 }
             }
