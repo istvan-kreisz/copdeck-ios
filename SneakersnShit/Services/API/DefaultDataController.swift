@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import UIKit
 
 class DefaultDataController: DataController {
     let backendAPI: BackendAPI
@@ -21,6 +22,9 @@ class DefaultDataController: DataController {
     lazy var popularItemsPublisher = databaseManager.popularItemsPublisher
     lazy var cookiesPublisher = localScraper.cookiesPublisher
     lazy var imageDownloadHeadersPublisher = localScraper.imageDownloadHeadersPublisher
+
+    var imageURL: URL? { databaseManager.imageURL }
+    lazy var profileImagePublisher = databaseManager.profileImagePublisher
 
     private var cancellables: Set<AnyCancellable> = []
 
@@ -236,5 +240,17 @@ class DefaultDataController: DataController {
 
     func deleteUser() {
         backendAPI.deleteUser()
+    }
+
+    func getUserProfile(userId: String) -> AnyPublisher<UserWithStacks, AppError> {
+        backendAPI.getUserProfile(userId: userId)
+    }
+
+    func searchUsers(searchTerm: String) -> AnyPublisher<[User], AppError> {
+        backendAPI.searchUsers(searchTerm: searchTerm)
+    }
+
+    func uploadProfileImage(image: UIImage) {
+        databaseManager.uploadProfileImage(image: image)
     }
 }

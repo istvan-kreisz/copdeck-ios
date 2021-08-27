@@ -9,9 +9,14 @@
 import Foundation
 import Firebase
 import Combine
+import UIKit
+import FirebaseStorage
+
+#warning("better error handling for image downloads")
 
 class FirebaseService: DatabaseManager {
     private let firestore: Firestore
+    private let storage: Storage
 
     private var userId: String?
 
@@ -21,6 +26,15 @@ class FirebaseService: DatabaseManager {
     private let exchangeRatesSubject = PassthroughSubject<ExchangeRates, Never>()
     private let errorsSubject = PassthroughSubject<AppError, Never>()
     private let popularItemsSubject = PassthroughSubject<[Item], Never>()
+    private let imageSubject = CurrentValueSubject<URL?, Never>(nil)
+
+    var imageURL: URL? {
+        imageSubject.value
+    }
+
+    var profileImagePublisher: AnyPublisher<URL?, Never> {
+        imageSubject.eraseToAnyPublisher()
+    }
 
     var inventoryItemsPublisher: AnyPublisher<[InventoryItem], Never> {
         inventoryItemsSubject.eraseToAnyPublisher()
@@ -59,12 +73,16 @@ class FirebaseService: DatabaseManager {
     private var userListener: ListenerRegistration?
     private var exchangeRatesListener: ListenerRegistration?
 
+    private var imageRef: StorageReference?
+    private var uploadTask: StorageUploadTask?
+
     private var settings: CopDeckSettings {
         userSubject.value?.settings ?? .default
     }
 
     init() {
         firestore = Firestore.firestore()
+        storage = Storage.storage()
         let settings = firestore.settings
         settings.cacheSizeBytes = 200 * 1_000_000
         if DebugSettings.shared.isInDebugMode, DebugSettings.shared.useFunctionsEmulator {
@@ -76,7 +94,6 @@ class FirebaseService: DatabaseManager {
 
         itemsRef = firestore.collection("items")
         exchangeRatesRef = firestore.collection("info").document("exchangerates")
-
     }
 
     func setup(userId: String) {
@@ -84,9 +101,13 @@ class FirebaseService: DatabaseManager {
         userRef = firestore.collection("users").document(userId)
         userInventoryRef = userRef?.collection("inventory")
         userStacksRef = userRef?.collection("stacks")
+
+        imageRef = storage.reference().child("images/\(userId)/profilePicture.jpg")
+
         self.userId = userId
 
         listenToChanges()
+        getProfileImage()
     }
 
     private func listenToChanges() {
@@ -95,6 +116,16 @@ class FirebaseService: DatabaseManager {
         addInventoryListener()
         addStacksListener()
         addExchangeRatesListener()
+    }
+
+    private func getProfileImage() {
+        imageRef?.downloadURL { [weak self] url, error in
+            if let error = error {
+                log(error)
+            } else {
+                self?.imageSubject.send(url)
+            }
+        }
     }
 
     private func addUserListener() {
@@ -232,7 +263,7 @@ class FirebaseService: DatabaseManager {
                 return updatedStack
             }
             .forEach { stack in
-                _ = (userStacksRef?.document(stack.id)) 
+                _ = (userStacksRef?.document(stack.id))
                     .map { ref in
                         if let data = try? stack.asDictionary() {
                             batch.updateData(data, forDocument: ref)
@@ -304,6 +335,33 @@ class FirebaseService: DatabaseManager {
                         self?.errorsSubject.send(AppError(error: error))
                     }
                 }
+        }
+    }
+
+    func uploadProfileImage(image: UIImage) {
+        guard let data = image.jpegData(compressionQuality: 0.2),
+              let imageRef = imageRef
+        else { return }
+        uploadTask?.cancel()
+
+        imageRef.listAll { [weak self] result, error in
+            if result.items.isEmpty {
+                self?.uploadImageData(data)
+            } else {
+                imageRef.delete { error in
+                    if let error = error {
+                        self?.uploadImageData(data)
+                    } else {
+                        self?.uploadImageData(data)
+                    }
+                }
+            }
+        }
+    }
+
+    private func uploadImageData(_ data: Data) {
+        uploadTask = imageRef?.putData(data, metadata: nil) { [weak self] metadata, error in
+            self?.getProfileImage()
         }
     }
 }

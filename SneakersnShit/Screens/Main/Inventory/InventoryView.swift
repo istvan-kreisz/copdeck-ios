@@ -9,6 +9,8 @@ import SwiftUI
 import Combine
 
 struct InventoryView: View {
+    private static let profileImageSize: CGFloat = 108
+
     @EnvironmentObject var store: AppStore
     @State private var selectedInventoryItemId: String?
 
@@ -20,11 +22,12 @@ struct InventoryView: View {
     @State private var editedStack: Stack?
     @State private var showAddNewStackAlert = false
     @State private var bestPrices: [String: PriceWithCurrency] = [:]
+    @State private var newStackId: String?
+    @State private var showImagePicker = false
+    @State private var image: UIImage?
 
     @Binding var shouldShowTabBar: Bool
     @Binding var settingsPresented: Bool
-
-    @State var newStackId: String?
 
     @ObservedObject var viewRouter: ViewRouter
 
@@ -137,6 +140,51 @@ struct InventoryView: View {
                             }
                         })
                     }
+
+                    if let profileImageURL = store.state.profileImageURL {
+                        ZStack {
+                            ImageView(withRequest: profileImageURL,
+                                      size: Self.profileImageSize,
+                                      aspectRatio: 1.0,
+                                      flipImage: false,
+                                      showPlaceholder: true,
+                                      resizingMode: .aspectFill)
+                                .frame(width: Self.profileImageSize, height: Self.profileImageSize)
+                            VStack(spacing: 0) {
+                                Rectangle()
+                                    .fill(Color.clear)
+                                    .frame(width: Self.profileImageSize, height: Self.profileImageSize / 2)
+                                ZStack {
+                                    Rectangle()
+                                        .fill(Color.customBlack.opacity(0.2))
+                                        .frame(width: Self.profileImageSize, height: Self.profileImageSize / 2)
+                                    Text("Select profile image")
+                                        .font(.bold(size: 12))
+                                        .foregroundColor(.customWhite)
+
+                                }
+                                .frame(width: Self.profileImageSize, height: Self.profileImageSize / 2)
+                            }
+                            .frame(width: Self.profileImageSize, height: Self.profileImageSize)
+                        }
+                        .frame(width: Self.profileImageSize, height: Self.profileImageSize)
+                        .cornerRadius(Self.profileImageSize / 2)
+                    } else {
+                        Button(action: {
+                            showImagePicker = true
+                        }, label: {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.customOrange)
+                                    .frame(width: Self.profileImageSize, height: Self.profileImageSize)
+//                                Image("filter")
+//                                    .renderingMode(.template)
+//                                    .frame(height: 24)
+//                                    .foregroundColor(.customWhite)
+                            }
+                        })
+                    }
+
                     HStack {
                         VStack(spacing: 2) {
                             Text(inventoryValue?.asString ?? "-")
@@ -255,6 +303,11 @@ struct InventoryView: View {
             .sheet(isPresented: $showFilters) {
                 FiltersModal(settings: store.state.settings, isPresented: $showFilters)
                     .environmentObject(store)
+            }
+            .sheet(isPresented: $showImagePicker) {
+                ImagePickerView(sourceType: .photoLibrary) { image in
+                    self.store.send(.main(action: .uploadProfileImage(image: image)))
+                }
             }
         }
         .withTabViewWrapper(viewRouter: viewRouter, store: store, backgroundColor: .customWhite, shouldShow: $shouldShowTabBar)

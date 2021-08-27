@@ -15,17 +15,20 @@ struct ImageView: View {
     let aspectRatio: CGFloat?
     let flipImage: Bool
     let showPlaceholder: Bool
+    let resizingMode: ImageResizingMode
 
     init(withRequest request: ImageRequestConvertible,
          size: CGFloat,
          aspectRatio: CGFloat?,
          flipImage: Bool = false,
-         showPlaceholder: Bool = true) {
+         showPlaceholder: Bool = true,
+         resizingMode: ImageResizingMode = .aspectFit) {
         self.request = request
         self.size = size
         self.aspectRatio = aspectRatio
         self.flipImage = flipImage
         self.showPlaceholder = showPlaceholder
+        self.resizingMode = resizingMode
     }
 
     var body: some View {

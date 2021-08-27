@@ -12,6 +12,7 @@ target 'SneakersnShit' do
   pod 'Firebase/Firestore'
   pod 'FirebaseFirestoreSwift'
   pod 'GoogleSignIn'
+  pod 'Firebase/Storage'
   # pod 'FBSDKLoginKit'
   pod 'OasisJSBridge'
 end

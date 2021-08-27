@@ -9,44 +9,7 @@ import Foundation
 import Combine
 import FirebaseFunctions
 
-class DefaultBackendAPI: BackendAPI {
-    private let functions = Functions.functions(region: "europe-west1")
-    private var userId: String?
-    var cancellables: Set<AnyCancellable> = []
-
-    private let errorsSubject = PassthroughSubject<AppError, Never>()
-    var errorsPublisher: AnyPublisher<AppError, Never> {
-        errorsSubject.eraseToAnyPublisher()
-    }
-
-    init() {
-        if DebugSettings.shared.isInDebugMode, DebugSettings.shared.useFunctionsEmulator {
-            functions.useFunctionsEmulator(origin: "http://172.20.10.4:5001")
-        }
-    }
-
-    func setup(userId: String) {
-        guard userId != self.userId else { return }
-        self.userId = userId
-    }
-
-    func reset() {
-        self.userId = nil
-    }
-
-    private func handlePublisherResult<Model>(publisher: AnyPublisher<Model, AppError>) {
-        publisher
-            .sink { [weak self] result in
-                switch result {
-                case let .failure(error):
-                    self?.errorsSubject.send(error)
-                case .finished:
-                    break
-                }
-            } receiveValue: { _ in }
-            .store(in: &cancellables)
-    }
-
+class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI  {
     #warning("fix")
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
         callFirebaseFunction(functionName: "search", model: searchTerm)
@@ -119,86 +82,17 @@ class DefaultBackendAPI: BackendAPI {
         handlePublisherResult(publisher: callFirebaseFunction(functionName: "updateUser", model: Wrapper(userId: userId, user: user)))
     }
 
-    private func callFirebaseFunction(functionName: String, model: Encodable) -> AnyPublisher<Void, AppError> {
-        firebaseFunction(functionName: functionName, model: model) { result, completion in
-            completion(.success(()))
+    func getUserProfile(userId: String) -> AnyPublisher<UserWithStacks, AppError> {
+        struct Wrapper: Encodable {
+            let userId: String
         }
+        return callFirebaseFunction(functionName: "getUserProfile", model: Wrapper(userId: userId))
     }
 
-    private func callFirebaseFunction<Model: Decodable>(functionName: String, model: Encodable) -> AnyPublisher<Model, AppError> {
-        firebaseFunction(functionName: functionName, model: model) { result, completion in
-            let result: Model = try self.decodeResult(result)
-            completion(.success(result))
+    func searchUsers(searchTerm: String) -> AnyPublisher<[User], AppError> {
+        struct Wrapper: Encodable {
+            let searchTerm: String
         }
-    }
-
-    private func callFirebaseFunctionArray<Model: Decodable>(functionName: String, model: Encodable) -> AnyPublisher<[Model], AppError> {
-        firebaseFunction(functionName: functionName, model: model) { result, completion in
-            let result: [Model] = try self.decodeResultArray(result)
-            completion(.success(result))
-        }
-    }
-
-    private func firebaseFunction<Model>(functionName: String,
-                                         model: Encodable,
-                                         handleResult: @escaping (HTTPSCallableResult?, (Result<Model, AppError>) -> Void) throws -> Void)
-        -> AnyPublisher<Model, AppError> {
-        guard let userId = userId else { return Fail(error: AppError.unauthenticated).eraseToAnyPublisher() }
-        do {
-            var parameters = try model.asDictionary()
-            parameters["userId"] = userId
-            return Future<Model, AppError> { [weak self] completion in
-                self?.functions.httpsCallable(functionName).call(parameters) { [weak self] result, error in
-                    guard let self = self else { return }
-                    do {
-                        try self.handleError(error)
-                        try handleResult(result, completion)
-                    } catch {
-                        let error = (error as? AppError) ?? AppError()
-                        completion(.failure(error))
-                    }
-                }
-            }
-            .eraseToAnyPublisher()
-        } catch {
-            return Fail(error: AppError(error: error)).eraseToAnyPublisher()
-        }
-    }
-
-    private func decodeResult<Model: Decodable>(_ result: HTTPSCallableResult?) throws -> Model {
-        if let result = result?.data as? [String: Any] {
-            do {
-                let jsonData = try JSONSerialization.data(withJSONObject: result, options: .prettyPrinted)
-                return try JSONDecoder().decode(Model.self, from: jsonData)
-            } catch {
-                throw AppError(title: "Network Error", message: "Data decoding failed", error: error)
-            }
-        } else {
-            throw AppError(title: "Network Error", message: "Data decoding failed")
-        }
-    }
-
-    private func decodeResultArray<Model: Decodable>(_ result: HTTPSCallableResult?) throws -> [Model] {
-        if let result = result?.data as? [Any] {
-            do {
-                let jsonData = try JSONSerialization.data(withJSONObject: result, options: .prettyPrinted)
-                return try JSONDecoder().decode([Model].self, from: jsonData)
-            } catch {
-                throw AppError(title: "Network Error", message: "Data decoding failed", error: error)
-            }
-        } else {
-            throw AppError(title: "Network Error", message: "Data decoding failed")
-        }
-    }
-
-    private func handleError(_ error: Error?) throws {
-        if let error = error as NSError? {
-            if error.domain == FunctionsErrorDomain {
-                let message = error.localizedDescription
-                throw AppError(message: message, error: error)
-            } else {
-                throw AppError(title: "Network Error", message: error.localizedDescription, error: error)
-            }
-        }
+        return callFirebaseFunction(functionName: "searchUsers", model: Wrapper(searchTerm: searchTerm))
     }
 }

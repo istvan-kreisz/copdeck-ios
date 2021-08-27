@@ -54,6 +54,20 @@ func appReducer(state: inout AppState,
                 .eraseToAnyPublisher()
         case let .setPopularItems(items):
             state.popularItems = items
+        case let .searchUsers(searchTerm):
+            return environment.dataController.searchUsers(searchTerm: searchTerm)
+                .map { AppAction.main(action: .setUserSearchResults(searchResults: $0)) }
+                .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
+                .eraseToAnyPublisher()
+        case let .setUserSearchResults(searchResults):
+            state.userSearchResults = searchResults
+        case let .getUserProfile(userId):
+            return environment.dataController.getUserProfile(userId: userId)
+                .map { AppAction.main(action: .setSelectedUser(user: $0)) }
+                .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
+                .eraseToAnyPublisher()
+        case let .setSelectedUser(user):
+            state.selectedUserProfile = user
         case let .getItemDetails(item, itemId, fetchMode):
             return environment.dataController.getItemDetails(for: item,
                                                              itemId: itemId,
@@ -91,6 +105,8 @@ func appReducer(state: inout AppState,
             environment.dataController.stack(inventoryItems: inventoryItems, stack: stack)
         case let .unstack(inventoryItems, stack):
             environment.dataController.unstack(inventoryItems: inventoryItems, stack: stack)
+        case let .uploadProfileImage(profileImage):
+            environment.dataController.uploadProfileImage(image: profileImage)
         }
     case let .authentication(action: action):
         return environment.authenticator.handle(action)

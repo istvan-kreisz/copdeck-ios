@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import UIKit
 
 enum FetchMode: String {
     case forcedRefresh
@@ -44,6 +45,8 @@ protocol BackendAPI {
     // user
     func update(user: User)
     func deleteUser()
+    func getUserProfile(userId: String) -> AnyPublisher<UserWithStacks, AppError>
+    func searchUsers(searchTerm: String) -> AnyPublisher<[User], AppError>
 }
 
 protocol DatabaseManager {
@@ -58,6 +61,8 @@ protocol DatabaseManager {
     var userPublisher: AnyPublisher<User, Never> { get }
     var exchangeRatesPublisher: AnyPublisher<ExchangeRates, Never> { get }
     var errorsPublisher: AnyPublisher<AppError, Never> { get }
+    var imageURL: URL? { get }
+    var profileImagePublisher: AnyPublisher<URL?, Never> { get }
 
     // read
     func getUser(withId id: String) -> AnyPublisher<User, AppError>
@@ -70,6 +75,7 @@ protocol DatabaseManager {
     func update(stack: Stack)
     func delete(stack: Stack)
     func update(user: User)
+    func uploadProfileImage(image: UIImage)
 }
 
 protocol DataController: LocalAPI, BackendAPI, DatabaseManager {

@@ -20,6 +20,9 @@ struct AppState: Equatable {
     var error: AppError?
     var exchangeRates: ExchangeRates?
     var requestInfo: [ScraperRequestInfo] = []
+    var profileImageURL: URL?
+    var selectedUserProfile: UserWithStacks?
+    var userSearchResults: [User] = []
 
     var settings: CopDeckSettings {
         user?.settings ?? .default

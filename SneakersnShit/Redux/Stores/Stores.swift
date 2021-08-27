@@ -75,6 +75,11 @@ extension AppStore {
                 self?.state.requestInfo = $0
             })
             .store(in: &effectCancellables)
+
+        environment.dataController.profileImagePublisher.sink { [weak self] url in
+            self?.state.profileImageURL = url
+        }
+        .store(in: &effectCancellables)
     }
 
     func updateAllStack(withInventoryItems inventoryItems: [InventoryItem]) {
