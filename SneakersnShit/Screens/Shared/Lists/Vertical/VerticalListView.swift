@@ -13,11 +13,17 @@ struct VerticalListView<Content: View, ToolBar: View>: View {
     let content: Content
     let bottomPadding: CGFloat
     let spacing: CGFloat
+    let addHorizontalPadding: Bool
 
-    init(bottomPadding: CGFloat = 0, spacing: CGFloat = 15, toolbar: ToolBar? = nil, @ViewBuilder content: () -> Content) {
+    init(bottomPadding: CGFloat = 0,
+         spacing: CGFloat = 15,
+         addHorizontalPadding: Bool = true,
+         toolbar: ToolBar? = nil,
+         @ViewBuilder content: () -> Content) {
         self.bottomPadding = bottomPadding
         self.spacing = spacing
         self.toolbar = toolbar
+        self.addHorizontalPadding = addHorizontalPadding
         self.content = content()
     }
 
@@ -26,7 +32,7 @@ struct VerticalListView<Content: View, ToolBar: View>: View {
             toolbar
                 .listRow()
             content
-                .withDefaultPadding(padding: .horizontal)
+                .withDefaultPadding(padding: addHorizontalPadding ? .horizontal : [])
                 .padding(.top, spacing)
                 .listRow()
 

@@ -85,25 +85,22 @@ struct StackView: View {
     }
 
     var body: some View {
-        VStack {
-            HStack {}
-            VerticalListView(bottomPadding: 130, toolbar: toolbar()) {
-                ForEach(allStackItems) { (inventoryItem: InventoryItem) in
-                    InventoryListItem(inventoryItem: inventoryItem,
-                                      bestPrice: bestPrices[inventoryItem.id],
-                                      selectedInventoryItemId: $selectedInventoryItemId,
-                                      isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }),
-                                      isEditing: $isEditing,
-                                      requestInfo: requestInfo) {
-                            if selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }) {
-                                selectedInventoryItems = selectedInventoryItems.filter { $0.id != inventoryItem.id }
-                            } else {
-                                selectedInventoryItems.append(inventoryItem)
-                            }
-                    }
+        VerticalListView(bottomPadding: 130, toolbar: toolbar()) {
+            ForEach(allStackItems) { (inventoryItem: InventoryItem) in
+                InventoryListItem(inventoryItem: inventoryItem,
+                                  bestPrice: bestPrices[inventoryItem.id],
+                                  selectedInventoryItemId: $selectedInventoryItemId,
+                                  isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }),
+                                  isEditing: $isEditing,
+                                  requestInfo: requestInfo) {
+                        if selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }) {
+                            selectedInventoryItems = selectedInventoryItems.filter { $0.id != inventoryItem.id }
+                        } else {
+                            selectedInventoryItems.append(inventoryItem)
+                        }
                 }
-                .padding(.vertical, 6)
             }
+            .padding(.vertical, 6)
         }
     }
 }

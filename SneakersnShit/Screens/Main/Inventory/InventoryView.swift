@@ -109,16 +109,21 @@ struct InventoryView: View {
                                tag: inventoryItem.id,
                                selection: $selectedInventoryItemId) { EmptyView() }
             }
-            NavigationLink(destination: editedStack.map { editedStack in SelectStackItemsView(showView: showEditedStack,
-                                                                                              stack: editedStack,
-                                                                                              inventoryItems: $store.state.inventoryItems,
-                                                                                              requestInfo: store.state.requestInfo,
-                                                                                              saveChanges: { updatedStackItems in
-                                                                                                  var updatedStack = editedStack
-                                                                                                  updatedStack.items = updatedStackItems
-                                                                                                  store
-                                                                                                      .send(.main(action: .updateStack(stack: updatedStack)))
-                                                                                              }) },
+            NavigationLink(destination: editedStack.map { editedStack in
+                StackDetail(stack: .constant(editedStack),
+                            inventoryItems: $store.state.inventoryItems,
+                            bestPrices: $bestPrices,
+                            showView: .constant(false),
+                            filters: filters,
+                            linkURL: editedStack.linkURL(userId: store.state.user?.id ?? ""),
+                            requestInfo: store.state.requestInfo,
+                            saveChanges: { updatedStackItems in
+                                var updatedStack = editedStack
+                                updatedStack.items = updatedStackItems
+                                store
+                                    .send(.main(action: .updateStack(stack: updatedStack)))
+                            })
+            },
             isActive: showEditedStack) { EmptyView() }
 
             VStack(alignment: .leading, spacing: 0) {
@@ -185,7 +190,7 @@ struct InventoryView: View {
                 .withDefaultPadding(padding: .horizontal)
                 .padding(.bottom, 22)
 
-                VStack(alignment: .leading, spacing: 19) {
+                VStack(alignment: .leading, spacing: 0) {
                     ScrollableSegmentedControl(selectedIndex: $selectedStackIndex,
                                                titles: stackTitles,
                                                button: .init(title: "New Stack", tapped: { showAddNewStackAlert = true }))
@@ -214,7 +219,7 @@ struct InventoryView: View {
                         }
                     }
                 }
-                .padding(.top, 10)
+                .padding(.top, 5)
                 .frame(width: UIScreen.screenWidth)
                 .background(Color.customBackground)
             }
@@ -277,7 +282,7 @@ struct InventoryView: View {
             CopyLinkPopup(isShowing: showCopyLink,
                           title: "Share stack",
                           subtitle: "Share this link with anyone to show them what's in your stack. The link opens a webpage so whoever you share it with doesn't need to have the app downloaded.",
-                          linkURL: "https://www.copdeck.com/shared/\(sharedStack?.id ?? "")?userid=\(store.state.user?.id ?? "")",
+                          linkURL: sharedStack?.linkURL(userId: store.state.user?.id ?? "") ?? "",
                           actionTitle: "Copy Link") { link in
                 if var updatedStack = sharedStack {
                     UIPasteboard.general.string = link

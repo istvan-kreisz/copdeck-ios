@@ -33,12 +33,15 @@ struct TextFieldUnderlined: View {
                         SecureField(placeHolder, text: $text, onCommit: onFinishedEditing)
                             .multilineTextAlignment(textAlignment)
                     } else {
-                        TextField(placeHolder, text: $text, onCommit: onFinishedEditing)
+                        TextField(placeHolder, text: $text, onEditingChanged: { isActive in
+                            if !isActive {
+                                onFinishedEditing()
+                            }
+                        })
                             .multilineTextAlignment(textAlignment)
                     }
                 }
             }
-//            .ignoresSafeArea(.keyboard, edges: .bottom)
             .keyboardType(keyboardType)
             .background(Color.clear)
             .foregroundColor(color)

@@ -10,6 +10,7 @@ import Foundation
 struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
     let id: String
     let name: String
+    var caption: String?
     var isPublished: Bool?
     var isPublic: Bool?
     var isSharedViaLink: Bool?
@@ -33,6 +34,10 @@ struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
                 return false
             }
         }
+    }
+
+    func linkURL(userId: String) -> String {
+        "https://www.copdeck.com/shared/\(id)?userid=\(userId)"
     }
 
     static func allStack(inventoryItems: [InventoryItem]) -> Stack {
