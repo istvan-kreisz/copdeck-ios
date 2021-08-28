@@ -13,7 +13,7 @@ extension Optional where Wrapped == Double {
     }
 
     func asPriceWithCurrency(currency: Currency) -> PriceWithCurrency? {
-        map { $0.asPriceWithCurrency(currency: currency) }
+        map { (value: Double) in value.asPriceWithCurrency(currency: currency) }
     }
 }
 

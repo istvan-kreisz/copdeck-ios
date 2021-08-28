@@ -57,7 +57,7 @@ struct SettingsView: View {
         self._bestPriceFeeType = State(initialValue: settings.bestPriceFeeType.rawValue.capitalized)
         self._preferredShoeSize = State(initialValue: settings.preferredShoeSize ?? "")
         // stockx
-        self._stockxLevel = State(initialValue: (settings.feeCalculation.stockx?.sellerLevel.rawValue).map { "Level \($0)" } ?? "")
+        self._stockxLevel = State(initialValue: (settings.feeCalculation.stockx?.sellerLevel.rawValue).map { (level: Int) in "Level \(level)" } ?? "")
         self._stockxSuccessfulShipBonus = State(initialValue: IncludeOption.from(settings.feeCalculation.stockx?.successfulShipBonus).rawValue)
         self._stockxQuickShipBonus = State(initialValue: IncludeOption.from(settings.feeCalculation.stockx?.quickShipBonus).rawValue)
         self._stockxBuyersTaxes = State(initialValue: (settings.feeCalculation.stockx?.taxes).asString(defaultValue: ""))
@@ -212,35 +212,35 @@ struct SettingsView: View {
                         ListSelectorMenu(title: "Currency",
                                          selectorScreenTitle: "Select currency",
                                          buttonTitle: "Select currency",
-                                         options: ALLCURRENCIES.map { $0.symbol.rawValue },
+                                         options: ALLCURRENCIES.map { (currency: Currency) in currency.symbol.rawValue },
                                          selectedOption: $currency,
                                          buttonTapped: selectCurrency)
 
                         ListSelectorMenu(title: "Show prices on",
                                          selectorScreenTitle: "Select sites",
                                          buttonTitle: "Select sites",
-                                         options: ALLSTORES.map { $0.name.rawValue },
+                                         options: ALLSTORES.map { (store: Store) in store.name.rawValue },
                                          selectedOptions: $stores,
                                          buttonTapped: selectStores)
 
                         ListSelectorMenu(title: "Country",
                                          selectorScreenTitle: "Select your country",
                                          buttonTitle: "Select country",
-                                         options: Country.allCases.map { $0.name }.sorted(),
+                                         options: Country.allCases.map { (country: Country) in country.name }.sorted(),
                                          selectedOption: $country,
                                          buttonTapped: selectCountry)
 
                         ListSelectorMenu(title: "Best price type",
                                          selectorScreenTitle: "Best price type",
                                          buttonTitle: "Select option",
-                                         options: PriceType.allCases.map { $0.rawValue.capitalized },
+                                         options: PriceType.allCases.map { (priceType: PriceType) in priceType.rawValue.capitalized },
                                          selectedOption: $bestPricePriceType,
                                          buttonTapped: selectBestPricePriceType)
 
                         ListSelectorMenu(title: "Best price fees",
                                          selectorScreenTitle: "Best price fees",
                                          buttonTitle: "Select option",
-                                         options: FeeType.allCases.map { $0.rawValue.capitalized },
+                                         options: FeeType.allCases.map { (feeType: FeeType) in feeType.rawValue.capitalized },
                                          selectedOption: $bestPriceFeeType,
                                          buttonTapped: selectBestPriceFeeType)
 
@@ -256,7 +256,8 @@ struct SettingsView: View {
                         ListSelectorMenu(title: "Seller level",
                                          selectorScreenTitle: "Select seller level",
                                          buttonTitle: "Select level",
-                                         options: CopDeckSettings.FeeCalculation.StockX.SellerLevel.allCases.map { "Level \($0.rawValue)" },
+                                         options: CopDeckSettings.FeeCalculation.StockX.SellerLevel.allCases
+                                             .map { (level: CopDeckSettings.FeeCalculation.StockX.SellerLevel) in "Level \(level.rawValue)" },
                                          selectedOption: $stockxLevel,
                                          buttonTapped: selectStockXLevel)
 
@@ -294,7 +295,10 @@ struct SettingsView: View {
                         ListSelectorMenu(title: "Commission fee (%)",
                                          selectorScreenTitle: "Commission fee (%)",
                                          buttonTitle: "Select fee",
-                                         options: CopDeckSettings.FeeCalculation.Goat.CommissionPercentage.allCases.map { $0.rawValue.rounded(toPlaces: 1) },
+                                         options: CopDeckSettings.FeeCalculation.Goat.CommissionPercentage.allCases
+                                             .map { (commissionFee: CopDeckSettings.FeeCalculation.Goat.CommissionPercentage) in
+                                                 commissionFee.rawValue.rounded(toPlaces: 1)
+                                             },
                                          selectedOption: $goatCommissionFee,
                                          buttonTapped: selectGoatCommissionFees)
 

@@ -23,7 +23,7 @@ struct EditInventoryTray: View {
 
     var body: some View {
         HStack(alignment: .center, spacing: 0) {
-            ForEach(actions) { action in
+            ForEach(actions) { (action: ActionConfig) in
                 Button(action: {
                     action.tapped()
                 }) {

@@ -27,13 +27,11 @@ struct StackView: View {
 
     var body: some View {
         VStack {
-            Text("\(allStackItems.count) \(searchText.isEmpty ? "Items:" : "Results:")")
-                .foregroundColor(.customText1)
-                .font(.bold(size: 12))
-                .leftAligned()
-                .padding(.horizontal, 28)
+            HStack {
+                
+            }
             VerticalListView(bottomPadding: 130) {
-                ForEach(allStackItems) { inventoryItem in
+                ForEach(allStackItems) { (inventoryItem: InventoryItem) in
                     InventoryListItem(inventoryItem: inventoryItem,
                                       bestPrice: bestPrices[inventoryItem.id],
                                       selectedInventoryItemId: $selectedInventoryItemId,

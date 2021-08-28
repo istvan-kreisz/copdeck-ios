@@ -15,9 +15,10 @@ enum StoreName: String, Codable, CaseIterable, Hashable {
     case StockX, Klekt, GOAT
 }
 
-let ALLSTORES = zip(StoreId.allCases, StoreName.allCases).map { Store(id: $0, name: $1) }
+let ALLSTORES: [Store] = zip(StoreId.allCases, StoreName.allCases).map { (id: StoreId, name: StoreName) in Store(id: id, name: name) }
 
-let ALLSTORESWITHOTHER = ALLSTORES.map { GenericStore(id: $0.id.rawValue, name: $0.name.rawValue) } + [GenericStore(id: "other", name: "Other")]
+let ALLSTORESWITHOTHER: [GenericStore] = ALLSTORES
+    .map { (store: Store) in GenericStore(id: store.id.rawValue, name: store.name.rawValue) } + [GenericStore(id: "other", name: "Other")]
 
 let ALLSHOESIZES = (2 ... 40).reversed().map { "US \((Double($0) * 0.5).rounded(toPlaces: $0 % 2 == 1 ? 1 : 0))" }
 

@@ -47,7 +47,7 @@ struct InventoryView: View {
     }
 
     func updateBestPrices() {
-        bestPrices = store.state.inventoryItems.map { ($0.id, bestPrice(for: $0)) }
+        bestPrices = store.state.inventoryItems.map { (inventoryItem: InventoryItem) in (inventoryItem.id, bestPrice(for: inventoryItem)) }
             .reduce([:]) { (dict: [String: PriceWithCurrency], element: (String, PriceWithCurrency?)) in
                 if let price = element.1 {
                     var newDict = dict
@@ -85,7 +85,7 @@ struct InventoryView: View {
     var body: some View {
         Group {
             let pageCount = Binding<Int>(get: { store.state.stacks.count }, set: { _ in })
-            let stackTitles = Binding<[String]>(get: { stacks.map { $0.name } }, set: { _ in })
+            let stackTitles = Binding<[String]>(get: { stacks.map { (stack: Stack) in stack.name } }, set: { _ in })
             let actionsTrayActions = Binding<[ActionConfig]>(get: {
                                                                  supportedTrayActions
                                                                      .map { action in
@@ -100,7 +100,7 @@ struct InventoryView: View {
             NavigationLink(destination: EmptyView()) {
                 EmptyView()
             }
-            ForEach(inventoryItems) { inventoryItem in
+            ForEach(inventoryItems) { (inventoryItem: InventoryItem) in
                 NavigationLink(destination: InventoryItemDetailView(inventoryItem: inventoryItem) { selectedInventoryItemId = nil },
                                tag: inventoryItem.id,
                                selection: $selectedInventoryItemId) { EmptyView() }
@@ -216,7 +216,7 @@ struct InventoryView: View {
                         .withDefaultPadding(padding: .horizontal)
 
                     PagerView(pageCount: pageCount, currentIndex: $selectedStackIndex) {
-                        ForEach(stacks) { stack in
+                        ForEach(stacks) { (stack: Stack) in
                             let isSelected = Binding<Bool>(get: { stack.id == selectedStack?.id }, set: { _ in })
 
                             StackView(stack: stack,
@@ -300,9 +300,9 @@ struct InventoryView: View {
         case .deleteItems:
             store.send(.main(action: .removeFromInventory(inventoryItems: selectedInventoryItems)))
         case .unstackItems:
-            selectedStack.map { store.send(.main(action: .unstack(inventoryItems: selectedInventoryItems, stack: $0))) }
+            selectedStack.map { (stack: Stack) in store.send(.main(action: .unstack(inventoryItems: selectedInventoryItems, stack: stack))) }
         case .deleteStack:
-            selectedStack.map { store.send(.main(action: .deleteStack(stack: $0))) }
+            selectedStack.map { (stack: Stack) in store.send(.main(action: .deleteStack(stack: stack))) }
         }
         isEditing = false
     }

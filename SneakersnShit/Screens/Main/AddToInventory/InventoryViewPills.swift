@@ -22,7 +22,7 @@ struct InventoryViewPills: View {
     var body: some View {
 //        TagCloudView(tags: details.map { $0.0 })
         HStack {
-            ForEach(Array(details), id: \.self.1) { detail, index in
+            ForEach(Array(details), id: \.self.1) { (detail: String, index: Int) in
                 PillView(title: detail, color: Color.pillColors[index % Color.pillColors.count])
             }
         }
@@ -57,7 +57,7 @@ struct TagCloudView: View {
         var height = CGFloat.zero
 
         return ZStack(alignment: .topLeading) {
-            ForEach(tags, id: \.self) { tag in
+            ForEach(tags, id: \.self) { (tag: String) in
                 item(for: tag)
                     .padding([.horizontal, .vertical], 4)
                     .alignmentGuide(.leading, computeValue: { d in

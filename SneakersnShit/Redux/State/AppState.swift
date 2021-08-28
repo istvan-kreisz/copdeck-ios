@@ -41,7 +41,7 @@ struct AppState: Equatable {
     }
 
     var allStack: Stack? {
-        allStackIndex.map { stacks[$0] }
+        allStackIndex.map { (index: Int) in stacks[index] }
     }
 
     func requestInfo(for storeId: StoreId) -> ScraperRequestInfo? {

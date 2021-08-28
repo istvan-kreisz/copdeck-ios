@@ -165,7 +165,7 @@ struct ItemDetailView: View {
                                         .multilineTextAlignment(.leading)
                                         .frame(width: 98, alignment: .leading)
 
-                                    ForEach(PriceType.allCases) { priceType in
+                                    ForEach(PriceType.allCases) { (priceType: PriceType) in
                                         Text(priceType.rawValue.capitalized)
                                             .frame(width: 60, height: 31)
                                             .if(priceType == self.priceType) {
@@ -230,7 +230,7 @@ struct ItemDetailView: View {
                                         .font(.semiBold(size: 16))
                                         .foregroundColor(.customText2)
                                         .frame(maxWidth: 90)
-                                    ForEach(store.state.settings.displayedStores.compactMap { Store.store(withId: $0) }) { store in
+                                    ForEach(store.state.settings.displayedStores.compactMap { Store.store(withId: $0) }) { (store: Store) in
                                         Text(store.name.rawValue)
                                             .font(.bold(size: 18))
                                             .foregroundColor(.customText1)

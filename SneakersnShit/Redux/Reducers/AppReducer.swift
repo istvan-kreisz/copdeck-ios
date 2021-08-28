@@ -46,7 +46,7 @@ func appReducer(state: inout AppState,
                 state.searchResults = []
             } else {
                 return environment.dataController.search(searchTerm: searchTerm, settings: state.settings, exchangeRates: state.rates)
-                    .map { AppAction.main(action: .setSearchResults(searchResults: $0)) }
+                    .map { (items: [Item]) in AppAction.main(action: .setSearchResults(searchResults: items)) }
                     .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
                     .eraseToAnyPublisher()
             }
@@ -54,20 +54,20 @@ func appReducer(state: inout AppState,
             state.searchResults = searchResults
         case .getPopularItems:
             return environment.dataController.getPopularItems(settings: state.settings, exchangeRates: state.rates)
-                .map { AppAction.main(action: .setPopularItems(items: $0)) }
+                .map { (items: [Item]) in AppAction.main(action: .setPopularItems(items: items)) }
                 .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
                 .eraseToAnyPublisher()
         case let .setPopularItems(items):
             state.popularItems = items
         case let .searchUsers(searchTerm):
             return environment.dataController.searchUsers(searchTerm: searchTerm)
-                .map { AppAction.main(action: .setUserSearchResults(searchResults: $0)) }
+                .map { (users: [User]) in AppAction.main(action: .setUserSearchResults(searchResults: users)) }
                 .catchErrors()
         case let .setUserSearchResults(searchResults):
             state.userSearchResults = searchResults
         case let .getUserProfile(userId):
             return environment.dataController.getUserProfile(userId: userId)
-                .map { AppAction.main(action: .setSelectedUser(user: $0)) }
+                .map { (user: UserWithStacks) in AppAction.main(action: .setSelectedUser(user: user)) }
                 .catchErrors()
         case let .setSelectedUser(user):
             state.selectedUserProfile = user

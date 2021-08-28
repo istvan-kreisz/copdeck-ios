@@ -25,7 +25,7 @@ struct ToggleButton: View {
                 .padding(.leading, 5)
 
             HStack(spacing: 10) {
-                ForEach(options, id: \.self) { option in
+                ForEach(options, id: \.self) { (option: String) in
                     Text(option)
                         .font(.bold(size: 12))
                         .frame(width: 71, height: 31)

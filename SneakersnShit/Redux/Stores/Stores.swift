@@ -53,7 +53,7 @@ extension AppStore {
 
         environment.dataController.stacksPublisher
             .sink { [weak self] stacks in
-                self?.state.stacks = (self?.state.allStack.map { [$0] } ?? []) + stacks
+                self?.state.stacks = (self?.state.allStack.map { (stack: Stack) in [stack] } ?? []) + stacks
             }
             .store(in: &effectCancellables)
 
@@ -65,7 +65,7 @@ extension AppStore {
 
         environment.dataController.cookiesPublisher.removeDuplicates()
             .combineLatest(environment.dataController.imageDownloadHeadersPublisher.removeDuplicates()) { cookies, headers in
-                cookies.map { cookie -> ScraperRequestInfo in
+                cookies.map { (cookie: Cookie) -> ScraperRequestInfo in
                     ScraperRequestInfo(storeId: cookie.store,
                                        cookie: cookie.cookie,
                                        imageDownloadHeaders: headers.first(where: { $0.storeId == cookie.store })?.headers ?? [:])
@@ -86,7 +86,7 @@ extension AppStore {
         if state.stacks.isEmpty {
             state.stacks = [.allStack(inventoryItems: inventoryItems)]
         } else if let allStackIndex = state.allStackIndex {
-            state.stacks[allStackIndex].items = inventoryItems.map { .init(inventoryItemId: $0.id) }
+            state.stacks[allStackIndex].items = inventoryItems.map { (inventoryItem: InventoryItem) in StackItem(inventoryItemId: inventoryItem.id) }
         }
     }
 
@@ -106,22 +106,22 @@ extension AppStore {
             }
         }
         var idsWithDelay = idsToRefresh
-            .map { ($0, Double.random(in: 0.2 ... 0.45)) }
+            .map { (id: String) in (id, Double.random(in: 0.2 ... 0.45)) }
 
         idsWithDelay = idsWithDelay
             .enumerated()
-            .map { offset, idWithDelay in
+            .map { (offset: Int, idWithDelay: (String, Double)) in
                 (idWithDelay.0, idWithDelay.1 + (idsWithDelay[safe: offset - 1]?.1 ?? 0))
             }
         log("refreshing prices for items with ids: \(idsToRefresh)")
         if !state.didFetchItemPrices {
             idsWithDelay
-                .forEach { [weak self] id, _ in
+                .forEach { [weak self] (id: String, _) in
                     self?.send(.main(action: .refreshItemIfNeeded(itemId: id, fetchMode: .cacheOnly)))
                 }
         }
         idsWithDelay
-            .forEach { id, delay in
+            .forEach { (id: String, delay: Double) in
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
                     self?.send(.main(action: .refreshItemIfNeeded(itemId: id, fetchMode: .cacheOrRefresh)))
                 }

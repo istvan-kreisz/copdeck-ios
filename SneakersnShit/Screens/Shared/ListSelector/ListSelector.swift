@@ -27,7 +27,7 @@ struct ListSelector: View {
                 .padding(.leading, 12)
 
             List {
-                ForEach(options, id: \.self) { option in
+                ForEach(options, id: \.self) { (option: String) in
                     Button(action: {
                         if enableMultipleSelection {
                             if let index = selectedOptions.firstIndex(of: option) {

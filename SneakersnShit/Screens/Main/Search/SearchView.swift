@@ -20,7 +20,10 @@ struct SearchView: View {
     @State private var showPopularItems = false
 
     var allItems: [Item] {
-        ((selectedItem.map { [$0] } ?? []) + (store.state.searchResults ?? []) + (store.state.popularItems ?? [])).uniqued()
+        let selectedItem: [Item] = selectedItem.map { (item: Item) in [item] } ?? []
+        let searchResults: [Item] = store.state.searchResults ?? []
+        let popularItems: [Item] = store.state.popularItems ?? []
+        return (selectedItem + searchResults + popularItems).uniqued()
     }
 
     var body: some View {
@@ -28,7 +31,7 @@ struct SearchView: View {
             let selectedItemId = Binding<String?>(get: { selectedItem?.id },
                                                   set: { selectedItem = $0 != nil ? selectedItem : nil })
             NavigationLink(destination: EmptyView()) { EmptyView() }
-            ForEach(allItems) { item in
+            ForEach(allItems) { (item: Item) in
                 NavigationLink(destination: ItemDetailView(item: item, itemId: item.id) { selectedItem = nil },
                                tag: item.id,
                                selection: selectedItemId) { EmptyView() }

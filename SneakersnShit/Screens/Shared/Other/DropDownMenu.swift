@@ -28,8 +28,8 @@ struct DropDownMenu: View {
             GeometryReader { geo in
                 Picker(selection: $selectedItem,
                        label: Text(selectedItem).leftAligned()) {
-                    ForEach(options.reversed(), id: \.self) {
-                            Text($0)
+                    ForEach(options.reversed(), id: \.self) { (option: String) in
+                            Text(option)
                         }
                 }
                 .padding(.leading, 10)

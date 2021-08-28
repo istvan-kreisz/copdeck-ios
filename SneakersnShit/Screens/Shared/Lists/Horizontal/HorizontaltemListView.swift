@@ -44,7 +44,7 @@ struct HorizontaltemListView: View {
                         Color.clear
                             .frame(width: 0, height: 0)
                             .padding(.leading, Styles.horizontalPadding - 24)
-                        ForEach(itemsToShow) { item in
+                        ForEach(itemsToShow) { (item: Item) in
                             HorizontalListItem(title: item.name ?? "",
                                                imageURL: item.imageURL,
                                                flipImage: item.imageURL?.store.id == .klekt,

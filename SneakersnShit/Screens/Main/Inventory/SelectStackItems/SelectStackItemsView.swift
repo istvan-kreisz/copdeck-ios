@@ -36,7 +36,7 @@ struct SelectStackItemsView: View {
                 .withDefaultPadding(padding: .horizontal)
 
             VerticalListView(bottomPadding: 130) {
-                ForEach(inventoryItems) { inventoryItem in
+                ForEach(inventoryItems) { (inventoryItem: InventoryItem) in
                     let isSelected = Binding<Bool>(get: { selectedStackItems.map(\.inventoryItemId).contains(inventoryItem.id) },
                                                    set: { selected in
                                                        if selected {

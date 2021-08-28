@@ -33,7 +33,7 @@ struct ScrollableSegmentedControl: View {
             ScrollViewReader { sp in
                 HStack(spacing: 0) {
                     HStack(spacing: 0) {
-                        ForEach(titles.indices, id: \.self) { index in
+                        ForEach(titles.indices, id: \.self) { (index: Int) in
                             Button {
                                 selectedIndex = index
                             } label: {

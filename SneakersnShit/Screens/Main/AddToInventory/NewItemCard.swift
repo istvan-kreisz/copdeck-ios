@@ -107,7 +107,7 @@ struct NewItemCard: View {
                         .padding(.leading, 5)
 
                     HStack(alignment: .top, spacing: 11) {
-                        ForEach(ALLSTORESWITHOTHER) { store in
+                        ForEach(ALLSTORESWITHOTHER) { (store: GenericStore) in
                             let text =
                                 Binding<String>(get: {
                                                     (inventoryItem.listingPrices
@@ -155,7 +155,7 @@ struct NewItemCard: View {
                     }
                     ToggleButton(title: "sold on (optional)",
                                  selection: soldOn,
-                                 options: ALLSTORESWITHOTHER.map { $0.id.uppercased() },
+                                 options: ALLSTORESWITHOTHER.map { (store: GenericStore) in store.id.uppercased() },
                                  style: toggleButtonStyle)
                 }
             }
