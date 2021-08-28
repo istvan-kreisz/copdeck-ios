@@ -100,6 +100,7 @@ struct InventoryView: View {
             let showEditedStack = Binding<Bool>(get: { editedStack?.id != nil },
                                                 set: { editedStack = $0 ? editedStack : nil })
             let filters = Binding<Filters>(get: { store.state.settings.filters }, set: { _ in })
+            let stackDetail = Binding<Stack>(get: { editedStack ?? .empty }, set: { _ in })
 
             NavigationLink(destination: EmptyView()) {
                 EmptyView()
@@ -110,10 +111,10 @@ struct InventoryView: View {
                                selection: $selectedInventoryItemId) { EmptyView() }
             }
             NavigationLink(destination: editedStack.map { editedStack in
-                StackDetail(stack: .constant(editedStack),
+                StackDetail(stack: stackDetail,
                             inventoryItems: $store.state.inventoryItems,
                             bestPrices: $bestPrices,
-                            showView: .constant(false),
+                            showView: showEditedStack,
                             filters: filters,
                             linkURL: editedStack.linkURL(userId: store.state.user?.id ?? ""),
                             requestInfo: store.state.requestInfo,
@@ -241,6 +242,17 @@ struct InventoryView: View {
                     newStackId = nil
                     selectedStackIndex = indexOfNewStack
                 }
+            }
+            .onChange(of: store.state.stacks) { newStacks in
+//                if let editedStack = editedStack {
+//                    let newValue = newStacks.first(where: { $0.id == editedStack.id }) {
+//                        if newValue != editedStack {
+//                            self.editedStack = newValue
+//                        }
+//                    } else {
+//                        editedStack = nil
+//                    }
+//                }
             }
             .onChange(of: store.state.inventoryItems) { _ in
                 updateBestPrices()

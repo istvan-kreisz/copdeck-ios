@@ -10,7 +10,7 @@ import Combine
 
 struct SelectStackItemsView: View {
     @Binding var showView: Bool
-    @Binding var inventoryItems: [InventoryItem]
+    var inventoryItems: [InventoryItem]
     let requestInfo: [ScraperRequestInfo]
     let saveChanges: ([StackItem]) -> Void
     let title: String
@@ -19,11 +19,11 @@ struct SelectStackItemsView: View {
 
     init(showView: Binding<Bool>,
          stack: Stack,
-         inventoryItems: Binding<[InventoryItem]>,
+         inventoryItems: [InventoryItem],
          requestInfo: [ScraperRequestInfo],
          saveChanges: @escaping ([StackItem]) -> Void) {
         self._showView = showView
-        self._inventoryItems = inventoryItems
+        self.inventoryItems = inventoryItems
         self.requestInfo = requestInfo
         self.saveChanges = saveChanges
         self.title = "Edit \(stack.name)"
