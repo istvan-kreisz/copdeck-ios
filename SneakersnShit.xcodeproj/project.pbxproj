@@ -107,6 +107,7 @@
 		5D9D520A26AF17C900AB1F30 /* ItemImageViewWithNavBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D520926AF17C900AB1F30 /* ItemImageViewWithNavBar.swift */; };
 		5D9DFB0126D978F9005A575D /* UserWithStacks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9DFB0026D978F9005A575D /* UserWithStacks.swift */; };
 		5D9DFB0326D97990005A575D /* FBFunctionsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9DFB0226D97990005A575D /* FBFunctionsCoordinator.swift */; };
+		5D9DFB0526D998A8005A575D /* ProfilePhotoSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9DFB0426D998A8005A575D /* ProfilePhotoSelectorView.swift */; };
 		5D9E85F126931F4300477377 /* scraper.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = 5D9E85F026931F4200477377 /* scraper.bundle.js */; };
 		5DA5140426A614530067C4A2 /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140026A614530067C4A2 /* FirebaseService.swift */; };
 		5DA5140B26A6161A0067C4A2 /* CopDeckSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140A26A6161A0067C4A2 /* CopDeckSettings.swift */; };
@@ -248,6 +249,7 @@
 		5D9D520926AF17C900AB1F30 /* ItemImageViewWithNavBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemImageViewWithNavBar.swift; sourceTree = "<group>"; };
 		5D9DFB0026D978F9005A575D /* UserWithStacks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserWithStacks.swift; sourceTree = "<group>"; };
 		5D9DFB0226D97990005A575D /* FBFunctionsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FBFunctionsCoordinator.swift; sourceTree = "<group>"; };
+		5D9DFB0426D998A8005A575D /* ProfilePhotoSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePhotoSelectorView.swift; sourceTree = "<group>"; };
 		5D9E85F026931F4200477377 /* scraper.bundle.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = scraper.bundle.js; sourceTree = "<group>"; };
 		5DA5140026A614530067C4A2 /* FirebaseService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
 		5DA5140A26A6161A0067C4A2 /* CopDeckSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopDeckSettings.swift; sourceTree = "<group>"; };
@@ -482,6 +484,7 @@
 				5D52E30E26130E2100FA02B8 /* InventoryView.swift */,
 				5D52E31126130E7500FA02B8 /* InventoryItemDetailView.swift */,
 				5DE596E926C878280024F7D5 /* StackView.swift */,
+				5D9DFB0426D998A8005A575D /* ProfilePhotoSelectorView.swift */,
 			);
 			path = Inventory;
 			sourceTree = "<group>";
@@ -1114,6 +1117,7 @@
 				5DB590E826C556ED006ECEBD /* ScrollableSegmentedControl.swift in Sources */,
 				5DE596E626C876790024F7D5 /* PagerView.swift in Sources */,
 				5D424CFB25C503F00008D6F4 /* UIApplication+Extensions.swift in Sources */,
+				5D9DFB0526D998A8005A575D /* ProfilePhotoSelectorView.swift in Sources */,
 				5DE596E826C877120024F7D5 /* Stack.swift in Sources */,
 				5D63122B2695066500876D99 /* ExchangeRates.swift in Sources */,
 				5D2726C826CAF3AF00887449 /* List+Extensions.swift in Sources */,
@@ -1318,6 +1322,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.9.6;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xfrontend -debug-time-function-bodies";
 				PRODUCT_BUNDLE_IDENTIFIER = istvankreisz.SneakersnShit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1345,6 +1350,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.9.6;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xfrontend -debug-time-function-bodies";
 				PRODUCT_BUNDLE_IDENTIFIER = istvankreisz.SneakersnShit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1434,6 +1440,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.9.6;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xfrontend -debug-time-function-bodies";
 				PRODUCT_BUNDLE_IDENTIFIER = istvankreisz.SneakersnShit.staging;
 				PRODUCT_NAME = "$(TARGET_NAME)-Staging";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1516,6 +1523,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.9.6;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xfrontend -debug-time-function-bodies";
 				PRODUCT_BUNDLE_IDENTIFIER = istvankreisz.SneakersnShit.staging;
 				PRODUCT_NAME = "$(TARGET_NAME)-Staging";
 				PROVISIONING_PROFILE_SPECIFIER = "";

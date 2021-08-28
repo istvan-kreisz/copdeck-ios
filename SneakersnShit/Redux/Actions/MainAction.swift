@@ -10,6 +10,7 @@ import UIKit
 enum MainAction {
     case signOut
     case setUser(user: User)
+    case updateUsername(username: String)
     // settings
     case updateSettings(settings: CopDeckSettings)
     // search
@@ -45,6 +46,8 @@ extension MainAction: Identifiable {
             return "signOut"
         case .setUser:
             return "setUser"
+        case let .updateUsername:
+            return "updateUsername"
         case .updateSettings:
             return "updateSettings"
         case .getSearchResults:

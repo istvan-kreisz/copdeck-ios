@@ -10,7 +10,7 @@ import Foundation
 struct User: Codable, Equatable {
     let id: String
     var inited: Bool?
-    let name: String?
+    var name: String?
     let created: Double?
     let updated: Double?
     var settings: CopDeckSettings?

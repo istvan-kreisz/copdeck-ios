@@ -60,7 +60,7 @@ struct ItemDetailView: View {
                     }
             }
 
-            ForEach(row.prices) { price in
+            ForEach(row.prices) { (price: Item.PriceRow.Price) in
                 Text(price.primaryText)
                     .frame(height: 32)
                     .frame(maxWidth: .infinity)
@@ -191,7 +191,7 @@ struct ItemDetailView: View {
                                         .multilineTextAlignment(.leading)
                                         .frame(width: 98, alignment: .leading)
 
-                                    ForEach(FeeType.allCases) { feeType in
+                                    ForEach(FeeType.allCases) { (feeType: FeeType) in
                                         Text(feeType.rawValue.capitalized)
                                             .frame(width: 60, height: 31)
                                             .if(feeType == self.feeType) {

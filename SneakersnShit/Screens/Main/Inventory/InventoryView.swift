@@ -9,8 +9,6 @@ import SwiftUI
 import Combine
 
 struct InventoryView: View {
-    private static let profileImageSize: CGFloat = 108
-
     @EnvironmentObject var store: AppStore
     @State private var selectedInventoryItemId: String?
 
@@ -25,6 +23,7 @@ struct InventoryView: View {
     @State private var newStackId: String?
     @State private var showImagePicker = false
     @State private var image: UIImage?
+    @State private var username: String = ""
 
     @Binding var shouldShowTabBar: Bool
     @Binding var settingsPresented: Bool
@@ -141,48 +140,20 @@ struct InventoryView: View {
                         })
                     }
 
-                    if let profileImageURL = store.state.profileImageURL {
-                        ZStack {
-                            ImageView(withRequest: profileImageURL,
-                                      size: Self.profileImageSize,
-                                      aspectRatio: 1.0,
-                                      flipImage: false,
-                                      showPlaceholder: true,
-                                      resizingMode: .aspectFill)
-                                .frame(width: Self.profileImageSize, height: Self.profileImageSize)
-                            VStack(spacing: 0) {
-                                Rectangle()
-                                    .fill(Color.clear)
-                                    .frame(width: Self.profileImageSize, height: Self.profileImageSize / 2)
-                                ZStack {
-                                    Rectangle()
-                                        .fill(Color.customBlack.opacity(0.2))
-                                        .frame(width: Self.profileImageSize, height: Self.profileImageSize / 2)
-                                    Text("Select profile image")
-                                        .font(.bold(size: 12))
-                                        .foregroundColor(.customWhite)
-
-                                }
-                                .frame(width: Self.profileImageSize, height: Self.profileImageSize / 2)
-                            }
-                            .frame(width: Self.profileImageSize, height: Self.profileImageSize)
-                        }
-                        .frame(width: Self.profileImageSize, height: Self.profileImageSize)
-                        .cornerRadius(Self.profileImageSize / 2)
-                    } else {
-                        Button(action: {
-                            showImagePicker = true
-                        }, label: {
-                            ZStack {
-                                Circle()
-                                    .fill(Color.customOrange)
-                                    .frame(width: Self.profileImageSize, height: Self.profileImageSize)
-//                                Image("filter")
-//                                    .renderingMode(.template)
-//                                    .frame(height: 24)
-//                                    .foregroundColor(.customWhite)
-                            }
-                        })
+                    VStack(spacing: 5) {
+                        ProfilePhotoSelectorView(showImagePicker: $showImagePicker, profileImageURL: $store.state.profileImageURL)
+                        TextFieldUnderlined(text: $username,
+                                            placeHolder: "username",
+                                            color: .customText1,
+                                            dismissKeyboardOnReturn: false,
+                                            icon: nil,
+                                            keyboardType: .default,
+                                            isSecureField: false,
+                                            textAlignment: TextAlignment.center,
+                                            trailingPadding: 0,
+                                            addLeadingPadding: false,
+                                            onFinishedEditing: updateUsername)
+                            .frame(width: 150)
                     }
 
                     HStack {
@@ -290,6 +261,9 @@ struct InventoryView: View {
             .onChange(of: store.state.inventoryItems) { _ in
                 updateBestPrices()
             }
+            .onChange(of: store.state.user?.name) { newValue in
+                self.username = newValue ?? ""
+            }
             .onChange(of: store.state.user?.settings) { _ in
                 updateBestPrices()
             }
@@ -343,6 +317,10 @@ struct InventoryView: View {
                                                         created: Date().timeIntervalSince1970 * 1000,
                                                         updated: Date().timeIntervalSince1970 * 1000,
                                                         publishedDate: nil))))
+    }
+
+    private func updateUsername() {
+        store.send(.main(action: .updateUsername(username: username)))
     }
 }
 

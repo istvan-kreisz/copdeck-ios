@@ -30,6 +30,11 @@ func appReducer(state: inout AppState,
             }
             state.user = user
             environment.dataController.setup(userId: user.id)
+        case let .updateUsername(username):
+            if var updatedUser = state.user {
+                updatedUser.name = username
+                environment.dataController.update(user: updatedUser)
+            }
         case let .updateSettings(settings):
             if var updatedUser = state.user {
                 updatedUser.settings = settings

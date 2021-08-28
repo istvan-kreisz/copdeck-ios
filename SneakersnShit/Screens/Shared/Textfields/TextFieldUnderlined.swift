@@ -16,6 +16,9 @@ struct TextFieldUnderlined: View {
     let icon: Image?
     let keyboardType: UIKeyboardType
     let isSecureField: Bool
+    var textAlignment: TextAlignment = .leading
+    var trailingPadding: CGFloat = 15
+    var addLeadingPadding: Bool = true
     let onFinishedEditing: () -> Void
 
     var body: some View {
@@ -28,8 +31,10 @@ struct TextFieldUnderlined: View {
                 Group {
                     if isSecureField {
                         SecureField(placeHolder, text: $text, onCommit: onFinishedEditing)
+                            .multilineTextAlignment(textAlignment)
                     } else {
                         TextField(placeHolder, text: $text, onCommit: onFinishedEditing)
+                            .multilineTextAlignment(textAlignment)
                     }
                 }
             }
@@ -38,14 +43,14 @@ struct TextFieldUnderlined: View {
             .background(Color.clear)
             .foregroundColor(color)
             .font(.regular(size: 20))
-            .padding(.leading)
+            .padding(.leading, addLeadingPadding ? nil : 0)
             Rectangle()
                 .fill(Color.customAccent2)
                 .frame(height: 1)
                 .frame(maxWidth: .infinity)
         }
         .frame(height: 45)
-        .padding(.trailing, 15)
+        .padding(.trailing, trailingPadding)
     }
 }
 

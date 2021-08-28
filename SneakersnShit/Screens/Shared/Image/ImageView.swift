@@ -34,7 +34,7 @@ struct ImageView: View {
     var body: some View {
         LazyImage(source: request) { state in
             if let image = state.image {
-                image.resizingMode(.aspectFit)
+                image.resizingMode(resizingMode)
             } else if state.error != nil {
                 if DebugSettings.shared.isInDebugMode {
                     Color.customRed

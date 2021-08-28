@@ -31,7 +31,7 @@ struct InventoryItemDetailView: View {
         if let imageURLStoreId = inventoryItem.imageURL?.store.id, let requestInfo = store.state.requestInfo(for: imageURLStoreId) {
             return requestInfo.imageDownloadHeaders
         } else {
-        return [:]
+            return [:]
         }
     }
 
@@ -46,11 +46,10 @@ struct InventoryItemDetailView: View {
 
     var body: some View {
         VStack {
-            NavigationLink(destination: inventoryItem.itemId.map { itemId in ItemDetailView(item: nil, itemId: itemId) { showItemDetails = false } },
+            NavigationLink(destination: inventoryItem.itemId.map { (itemId: String) in ItemDetailView(item: nil, itemId: itemId) { showItemDetails = false } },
                            isActive: $showItemDetails) { EmptyView() }
 
             ScrollView(.vertical, showsIndicators: false) {
-
                 VStack(alignment: .center, spacing: 20) {
                     ItemImageViewWithNavBar(imageURL: inventoryItem.imageURL, requestInfo: [], shouldDismiss: shouldDismiss)
 
@@ -85,14 +84,14 @@ struct InventoryItemDetailView: View {
 
                         NewItemCard(inventoryItem: $inventoryItem,
                                     purchasePrice: inventoryItem.purchasePrice,
-                                    currency: .init(code: .usd, symbol: .usd),
-                                    style: .noBackground,
+                                    currency: Currency(code: .usd, symbol: .usd),
+                                    style: NewItemCard.Style.noBackground,
                                     sizes: item?.sortedSizes ?? ALLSHOESIZES)
 
                         TextFieldRounded(title: "notes (optional)",
                                          placeHolder: "add any notes here",
-                                         style: .white,
-                                         size: .large,
+                                         style: TextFieldRounded.Style.white,
+                                         size: TextFieldRounded.Size.large,
                                          text: $notes)
                             .padding(.top, 15)
 
