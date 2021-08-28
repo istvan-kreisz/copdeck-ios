@@ -11,7 +11,7 @@ struct AccessoryButton: View {
     let title: String
     let color: Color
     let textColor: Color
-    let width: CGFloat
+    let width: CGFloat?
     let imageName: String
     var buttonPosition: RoundedButtonPosition = .left
     let tapped: () -> Void
@@ -33,7 +33,7 @@ struct AccessoryButton: View {
                               .font(.bold(size: 7))
                               .foregroundColor(color)
                       }.frame(width: 18, height: 18),
-                      buttonPosition, 10, .none)) {
+                      buttonPosition, 6, .none)) {
                 tapped()
         }
     }

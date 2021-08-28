@@ -24,6 +24,8 @@ struct InventoryView: View {
     @State private var showImagePicker = false
     @State private var image: UIImage?
     @State private var username: String = ""
+    @State private var sharedStack: Stack?
+    @State private var showSnackBar = false
 
     @Binding var shouldShowTabBar: Bool
     @Binding var settingsPresented: Bool
@@ -83,6 +85,8 @@ struct InventoryView: View {
     }
 
     var body: some View {
+        let showCopyLink = Binding<Bool>(get: { sharedStack != nil },
+                                         set: { sharedStack = $0 ? sharedStack : nil })
         Group {
             let pageCount = Binding<Int>(get: { store.state.stacks.count }, set: { _ in })
             let stackTitles = Binding<[String]>(get: { stacks.map { (stack: Stack) in stack.name } }, set: { _ in })
@@ -154,62 +158,34 @@ struct InventoryView: View {
                                             addLeadingPadding: false,
                                             onFinishedEditing: updateUsername)
                             .frame(width: 150)
-                    }
 
-                    HStack {
-                        VStack(spacing: 2) {
-                            Text(inventoryValue?.asString ?? "-")
-                                .font(.bold(size: 20))
-                                .foregroundColor(.customText1)
-                            Text("Inventory Value")
-                                .font(.regular(size: 15))
-                                .foregroundColor(.customText2)
+                        HStack {
+                            VStack(spacing: 2) {
+                                Text(inventoryValue?.asString ?? "-")
+                                    .font(.bold(size: 20))
+                                    .foregroundColor(.customText1)
+                                Text("Inventory Value")
+                                    .font(.regular(size: 15))
+                                    .foregroundColor(.customText2)
+                            }
+                            Spacer()
+                            VStack(spacing: 2) {
+                                Text("\(inventoryItems.count)")
+                                    .font(.bold(size: 20))
+                                    .foregroundColor(.customText1)
+                                Text("Inventory Size")
+                                    .font(.regular(size: 15))
+                                    .foregroundColor(.customText2)
+                            }
                         }
-                        Spacer()
-                        VStack(spacing: 2) {
-                            Text("\(inventoryItems.count)")
-                                .font(.bold(size: 20))
-                                .foregroundColor(.customText1)
-                            Text("Inventory Size")
-                                .font(.regular(size: 15))
-                                .foregroundColor(.customText2)
-                        }
+                        .withDefaultPadding(padding: .horizontal)
+                        .padding(.top, 5)
                     }
-                    .withDefaultPadding(padding: .horizontal)
-                    .padding(.top, 25)
                 }
                 .withDefaultPadding(padding: .horizontal)
                 .padding(.bottom, 22)
 
                 VStack(alignment: .leading, spacing: 19) {
-                    HStack(alignment: .center, spacing: 13) {
-                        TextFieldRounded(title: nil,
-                                         placeHolder: "Search your inventory",
-                                         style: .white,
-                                         text: $searchText)
-                        RoundedButton<EmptyView>(text: "Edit",
-                                                 width: 80,
-                                                 height: 32,
-                                                 color: .customBlue,
-                                                 accessoryView: nil,
-                                                 tapped: { isEditing.toggle() })
-
-                        Button(action: {
-                            showFilters = true
-                        }, label: {
-                            ZStack {
-                                Circle()
-                                    .fill(Color.customOrange)
-                                    .frame(width: 32, height: 32)
-                                Image("filter")
-                                    .renderingMode(.template)
-                                    .frame(height: 24)
-                                    .foregroundColor(.customWhite)
-                            }
-                        })
-                    }
-                    .withDefaultPadding(padding: .horizontal)
-
                     ScrollableSegmentedControl(selectedIndex: $selectedStackIndex,
                                                titles: stackTitles,
                                                button: .init(title: "New Stack", tapped: { showAddNewStackAlert = true }))
@@ -225,17 +201,20 @@ struct InventoryView: View {
                                       inventoryItems: $store.state.inventoryItems,
                                       selectedInventoryItemId: $selectedInventoryItemId,
                                       isEditing: $isEditing,
+                                      showFilters: $showFilters,
                                       selectedInventoryItems: $selectedInventoryItems,
                                       isSelected: isSelected,
                                       bestPrices: $bestPrices,
                                       requestInfo: store.state.requestInfo,
                                       didTapEditStack: stack.id == "all" ? nil : {
                                           editedStack = stack
+                                      }, didTapShareStack: stack.id == "all" ? nil : {
+                                          sharedStack = stack
                                       })
                         }
                     }
                 }
-                .padding(.top, 28)
+                .padding(.top, 10)
                 .frame(width: UIScreen.screenWidth)
                 .background(Color.customBackground)
             }
@@ -285,6 +264,7 @@ struct InventoryView: View {
             }
         }
         .withTabViewWrapper(viewRouter: viewRouter, store: store, backgroundColor: .customWhite, shouldShow: $shouldShowTabBar)
+        .withSnackBar(text: "Link Copied", shouldShow: $showSnackBar)
         .withTextFieldPopup(isShowing: $showAddNewStackAlert,
                             title: "Add new stack",
                             subtitle: nil,
@@ -292,6 +272,20 @@ struct InventoryView: View {
                             actionTitle: "Add Stack") { stackName in
                 guard !stackName.isEmpty else { return }
                 addNewStack(withName: stackName)
+        }
+        .withPopup {
+            CopyLinkPopup(isShowing: showCopyLink,
+                          title: "Share stack",
+                          subtitle: "Share this link with anyone to show them what's in your stack. The link opens a webpage so whoever you share it with doesn't need to have the app downloaded.",
+                          linkURL: "https://www.copdeck.com/shared/\(sharedStack?.id ?? "")?userid=\(store.state.user?.id ?? "")",
+                          actionTitle: "Copy Link") { link in
+                if var updatedStack = sharedStack {
+                    UIPasteboard.general.string = link
+                    showSnackBar = true
+                    updatedStack.isSharedViaLink = true
+                    store.send(.main(action: .updateStack(stack: updatedStack)))
+                }
+            }
         }
     }
 

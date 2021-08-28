@@ -98,6 +98,10 @@ extension View {
         ModifiedContent(content: self, modifier: WithSnackbar(text: text, shouldShow: shouldShow, actionText: actionText, action: action))
     }
 
+    func withPopup<Popup: View>(@ViewBuilder _ popup: () -> Popup) -> some View {
+        ModifiedContent(content: self, modifier: WithPopup(popup))
+    }
+
     func withTextFieldPopup(isShowing: Binding<Bool>,
                             title: String,
                             subtitle: String?,

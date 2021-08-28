@@ -42,7 +42,7 @@ struct VerticalItemListView: View {
                 }
             }
 
-            VerticalListView(bottomPadding: bottomPadding) {
+            VerticalListView(bottomPadding: bottomPadding, toolbar: EmptyView()) {
                 ForEach(items ?? []) { (item: Item) in
                     VerticalListItemWithoutAccessoryView(title: item.name ?? "",
                                                          imageURL: item.imageURL,

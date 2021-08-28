@@ -10,7 +10,9 @@ import Foundation
 struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
     let id: String
     let name: String
-    var isPublished: Bool
+    var isPublished: Bool?
+    var isPublic: Bool?
+    var isSharedViaLink: Bool?
     var items: [StackItem]
     let created: Double?
     let updated: Double?
@@ -37,6 +39,8 @@ struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
         .init(id: "all",
               name: "All",
               isPublished: false,
+              isPublic: nil,
+              isSharedViaLink: nil,
               items: inventoryItems.map { .init(inventoryItemId: $0.id) },
               created: 0,
               updated: 0,
@@ -47,6 +51,8 @@ struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
         .init(id: UUID().uuidString,
               name: "",
               isPublished: false,
+              isPublic: nil,
+              isSharedViaLink: nil,
               items: [],
               created: Date().timeIntervalSince1970 * 1000,
               updated: Date().timeIntervalSince1970 * 1000,
