@@ -127,78 +127,78 @@ struct InventoryView: View {
             },
             isActive: showEditedStack) { EmptyView() }
 
-            VStack(alignment: .leading, spacing: 0) {
-                VStack(alignment: .center, spacing: 30) {
-                    HStack {
-                        Text("Inventory")
-                            .foregroundColor(.customText1)
-                            .font(.bold(size: 35))
-                            .leftAligned()
-                            .padding(.leading, 6)
-                        Spacer()
-                        Button(action: {
-                            settingsPresented = true
-                        }, label: {
-                            ZStack {
-                                Circle().stroke(Color.customAccent1, lineWidth: 2)
-                                    .frame(width: 38, height: 38)
-                                Image("cog")
-                                    .renderingMode(.template)
-                                    .frame(height: 17)
-                                    .foregroundColor(.customBlack)
-                            }
-                        })
-                    }
-
-                    VStack(spacing: 5) {
-                        ProfilePhotoSelectorView(showImagePicker: $showImagePicker, profileImageURL: $store.state.profileImageURL)
-                        TextFieldUnderlined(text: $username,
-                                            placeHolder: "username",
-                                            color: .customText1,
-                                            dismissKeyboardOnReturn: false,
-                                            icon: nil,
-                                            keyboardType: .default,
-                                            isSecureField: false,
-                                            textAlignment: TextAlignment.center,
-                                            trailingPadding: 0,
-                                            addLeadingPadding: false,
-                                            onFinishedEditing: updateUsername)
-                            .frame(width: 150)
-
-                        HStack {
-                            VStack(spacing: 2) {
-                                Text(inventoryValue?.asString ?? "-")
-                                    .font(.bold(size: 20))
-                                    .foregroundColor(.customText1)
-                                Text("Inventory Value")
-                                    .font(.regular(size: 15))
-                                    .foregroundColor(.customText2)
-                            }
-                            Spacer()
-                            VStack(spacing: 2) {
-                                Text("\(inventoryItems.count)")
-                                    .font(.bold(size: 20))
-                                    .foregroundColor(.customText1)
-                                Text("Inventory Size")
-                                    .font(.regular(size: 15))
-                                    .foregroundColor(.customText2)
-                            }
-                        }
-                        .withDefaultPadding(padding: .horizontal)
-                        .padding(.top, 5)
-                    }
-                }
-                .withDefaultPadding(padding: .horizontal)
-                .padding(.bottom, 22)
-
+            VerticalListView(bottomPadding: 130, toolbar: EmptyView()) {
                 VStack(alignment: .leading, spacing: 0) {
-                    ScrollableSegmentedControl(selectedIndex: $selectedStackIndex,
-                                               titles: stackTitles,
-                                               button: .init(title: "New Stack", tapped: { showAddNewStackAlert = true }))
-                        .withDefaultPadding(padding: .horizontal)
+                    VStack(alignment: .center, spacing: 30) {
+                        HStack {
+                            Text("Inventory")
+                                .foregroundColor(.customText1)
+                                .font(.bold(size: 35))
+                                .leftAligned()
+                                .padding(.leading, 6)
+                            Spacer()
+                            Button(action: {
+                                settingsPresented = true
+                            }, label: {
+                                ZStack {
+                                    Circle().stroke(Color.customAccent1, lineWidth: 2)
+                                        .frame(width: 38, height: 38)
+                                    Image("cog")
+                                        .renderingMode(.template)
+                                        .frame(height: 17)
+                                        .foregroundColor(.customBlack)
+                                }
+                            })
+                        }
 
-                    PagerView(pageCount: pageCount, currentIndex: $selectedStackIndex) {
-                        ForEach(stacks) { (stack: Stack) in
+                        VStack(spacing: 5) {
+                            ProfilePhotoSelectorView(showImagePicker: $showImagePicker, profileImageURL: $store.state.profileImageURL)
+                            TextFieldUnderlined(text: $username,
+                                                placeHolder: "username",
+                                                color: .customText1,
+                                                dismissKeyboardOnReturn: false,
+                                                icon: nil,
+                                                keyboardType: .default,
+                                                isSecureField: false,
+                                                textAlignment: TextAlignment.center,
+                                                trailingPadding: 0,
+                                                addLeadingPadding: false,
+                                                onFinishedEditing: updateUsername)
+                                .frame(width: 150)
+
+                            HStack {
+                                VStack(spacing: 2) {
+                                    Text(inventoryValue?.asString ?? "-")
+                                        .font(.bold(size: 20))
+                                        .foregroundColor(.customText1)
+                                    Text("Inventory Value")
+                                        .font(.regular(size: 15))
+                                        .foregroundColor(.customText2)
+                                }
+                                Spacer()
+                                VStack(spacing: 2) {
+                                    Text("\(inventoryItems.count)")
+                                        .font(.bold(size: 20))
+                                        .foregroundColor(.customText1)
+                                    Text("Inventory Size")
+                                        .font(.regular(size: 15))
+                                        .foregroundColor(.customText2)
+                                }
+                            }
+                            .withDefaultPadding(padding: .horizontal)
+                            .padding(.top, 5)
+                        }
+                    }
+                    .withDefaultPadding(padding: .horizontal)
+                    .padding(.bottom, 22)
+
+                    VStack(alignment: .leading, spacing: 0) {
+                        ScrollableSegmentedControl(selectedIndex: $selectedStackIndex,
+                                                   titles: stackTitles,
+                                                   button: .init(title: "New Stack", tapped: { showAddNewStackAlert = true }))
+                            .withDefaultPadding(padding: .horizontal)
+
+                        if let stack = stacks[safe: selectedStackIndex] {
                             let isSelected = Binding<Bool>(get: { stack.id == selectedStack?.id }, set: { _ in })
 
                             StackView(stack: stack,
@@ -219,10 +219,10 @@ struct InventoryView: View {
                                       })
                         }
                     }
+                    .padding(.top, 5)
+                    .withDefaultPadding(padding: .horizontal)
+                    .background(Color.customBackground)
                 }
-                .padding(.top, 5)
-                .frame(width: UIScreen.screenWidth)
-                .background(Color.customBackground)
             }
             .withFloatingButton(button: EditInventoryTray(actions: actionsTrayActions)
                 .padding(.bottom, UIApplication.shared.safeAreaInsets().bottom)

@@ -80,12 +80,12 @@ struct StackView: View {
             }
             .padding(.top, 3)
         }
-        .withDefaultPadding(padding: .horizontal)
         .padding(.bottom, 5)
     }
 
     var body: some View {
-        VerticalListView(bottomPadding: 130, toolbar: toolbar()) {
+        VStack(spacing: 10) {
+            toolbar()
             ForEach(allStackItems) { (inventoryItem: InventoryItem) in
                 InventoryListItem(inventoryItem: inventoryItem,
                                   bestPrice: bestPrices[inventoryItem.id],
@@ -99,6 +99,7 @@ struct StackView: View {
                             selectedInventoryItems.append(inventoryItem)
                         }
                 }
+                .id(inventoryItem.id)
             }
             .padding(.vertical, 6)
         }
