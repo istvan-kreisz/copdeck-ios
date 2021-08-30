@@ -37,7 +37,7 @@ struct InventoryView: View {
     }
 
     var supportedTrayActions: [TrayAction] {
-        ((selectedStackIndex == 0) ? [.deleteItems] : [.deleteItems, .deleteStack, .unstackItems])
+        ((selectedStackIndex == 0) ? [TrayAction.deleteItems] : [TrayAction.deleteItems, TrayAction.deleteStack, TrayAction.unstackItems])
     }
 
     var inventoryItems: [InventoryItem] {
@@ -49,7 +49,8 @@ struct InventoryView: View {
     }
 
     func updateBestPrices() {
-        bestPrices = store.state.inventoryItems.map { (inventoryItem: InventoryItem) in (inventoryItem.id, bestPrice(for: inventoryItem)) }
+        bestPrices = store.state.inventoryItems
+            .map { (inventoryItem: InventoryItem) -> (String, PriceWithCurrency?) in (inventoryItem.id, bestPrice(for: inventoryItem)) }
             .reduce([:]) { (dict: [String: PriceWithCurrency], element: (String, PriceWithCurrency?)) in
                 if let price = element.1 {
                     var newDict = dict
@@ -64,8 +65,8 @@ struct InventoryView: View {
     var inventoryValue: PriceWithCurrency? {
         if let currencyCode = bestPrices.values.first?.currencyCode {
             let sum = inventoryItems
-                .filter { $0.status != .Sold }
-                .compactMap { bestPrices[$0.id]?.price }
+                .filter { (inventoryItem: InventoryItem) -> Bool in inventoryItem.status != .Sold }
+                .compactMap { (inventoryItem: InventoryItem) -> Double? in bestPrices[inventoryItem.id]?.price }
                 .sum()
             return PriceWithCurrency(price: sum, currencyCode: currencyCode)
         } else {
@@ -110,7 +111,7 @@ struct InventoryView: View {
                                selection: $selectedInventoryItemId) { EmptyView() }
             }
             NavigationLink(destination: editedStack.map { editedStack in
-                StackDetail(stack: editedStack,
+                StackDetail(stack: .constant(editedStack),
                             inventoryItems: $store.state.inventoryItems,
                             bestPrices: $bestPrices,
                             showView: showEditedStack,
@@ -284,12 +285,12 @@ struct InventoryView: View {
                           subtitle: "Share this link with anyone to show them what's in your stack. The link opens a webpage so whoever you share it with doesn't need to have the app downloaded.",
                           linkURL: sharedStack?.linkURL(userId: store.state.user?.id ?? "") ?? "",
                           actionTitle: "Copy Link") { link in
-                if var updatedStack = sharedStack {
-                    UIPasteboard.general.string = link
-                    showSnackBar = true
-                    updatedStack.isSharedViaLink = true
-                    store.send(.main(action: .updateStack(stack: updatedStack)))
-                }
+                    if var updatedStack = sharedStack {
+                        UIPasteboard.general.string = link
+                        showSnackBar = true
+                        updatedStack.isSharedViaLink = true
+                        store.send(.main(action: .updateStack(stack: updatedStack)))
+                    }
             }
         }
     }
