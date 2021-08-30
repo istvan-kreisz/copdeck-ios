@@ -120,80 +120,28 @@ struct InventoryView: View {
                             saveChanges: { updatedStackItems in
                                 var updatedStack = editedStack
                                 updatedStack.items = updatedStackItems
-                                store
-                                    .send(.main(action: .updateStack(stack: updatedStack)))
+                                store.send(.main(action: .updateStack(stack: updatedStack)))
                             })
             },
             isActive: showEditedStack) { EmptyView() }
 
             VerticalListView(bottomPadding: 130, spacing: 0, addListRowStyling: false) {
-                VStack(alignment: .center, spacing: 30) {
-                    HStack {
-                        Text("Inventory")
-                            .foregroundColor(.customText1)
-                            .font(.bold(size: 35))
-                            .leftAligned()
-                            .padding(.leading, 6)
-                        Spacer()
-                        Button(action: {
-                            settingsPresented = true
-                        }, label: {
-                            ZStack {
-                                Circle().stroke(Color.customAccent1, lineWidth: 2)
-                                    .frame(width: 38, height: 38)
-                                Image("cog")
-                                    .renderingMode(.template)
-                                    .frame(height: 17)
-                                    .foregroundColor(.customBlack)
-                            }
-                        })
-                    }
-
-                    VStack(spacing: 15) {
-                        ProfilePhotoSelectorView(showImagePicker: $showImagePicker, profileImageURL: $store.state.profileImageURL)
-                        TextFieldUnderlined(text: $username,
-                                            placeHolder: "username",
-                                            color: .customText1,
-                                            dismissKeyboardOnReturn: false,
-                                            icon: nil,
-                                            keyboardType: .default,
-                                            isSecureField: false,
-                                            textAlignment: TextAlignment.center,
-                                            trailingPadding: 0,
-                                            addLeadingPadding: false,
-                                            onFinishedEditing: updateUsername)
-                            .frame(width: 150)
-
-                        HStack {
-                            VStack(spacing: 2) {
-                                Text(inventoryValue?.asString ?? "-")
-                                    .font(.bold(size: 20))
-                                    .foregroundColor(.customText1)
-                                Text("Inventory Value")
-                                    .font(.regular(size: 15))
-                                    .foregroundColor(.customText2)
-                            }
-                            Spacer()
-                            VStack(spacing: 2) {
-                                Text("\(inventoryItems.count)")
-                                    .font(.bold(size: 20))
-                                    .foregroundColor(.customText1)
-                                Text("Inventory Size")
-                                    .font(.regular(size: 15))
-                                    .foregroundColor(.customText2)
-                            }
-                        }
-                        .padding(.top, 5)
-                    }
-                }
-                .padding(.bottom, 22)
-                .buttonStyle(PlainButtonStyle())
-                .listRow(backgroundColor: .customWhite)
+                InventoryHeaderView(settingsPresented: $settingsPresented,
+                                    showImagePicker: $showImagePicker,
+                                    profileImageURL: $store.state.profileImageURL,
+                                    username: $username,
+                                    inventoryValue: inventoryValue,
+                                    inventoryItemsCount: inventoryItems.count,
+                                    updateUsername: updateUsername)
 
                 ScrollableSegmentedControl(selectedIndex: $selectedStackIndex,
                                            titles: stackTitles,
                                            button: .init(title: "New Stack", tapped: { showAddNewStackAlert = true }))
-                    .listRow()
+                    .padding(.vertical, 2)
+                    .listRowBackground(Color.customBackground)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                    .listRowInsets(EdgeInsets(top: -2, leading: -1, bottom: -2, trailing: -1))
+                    .background(Color.customBackground)
 
                 if let stack = stacks[safe: selectedStackIndex] {
                     let isSelected = Binding<Bool>(get: { stack.id == selectedStack?.id }, set: { _ in })
@@ -228,9 +176,6 @@ struct InventoryView: View {
             .onChange(of: selectedStackIndex) { stackIndex in
                 isEditing = false
             }
-            .onChange(of: editedStack) { stack in
-                shouldShowTabBar = stack == nil
-            }
             .onChange(of: store.state.stacks) { stacks in
                 if let indexOfNewStack = stacks.sortedByDate().firstIndex(where: { $0.id == newStackId }) {
                     newStackId = nil
@@ -246,6 +191,10 @@ struct InventoryView: View {
             .onChange(of: store.state.user?.settings) { _ in
                 updateBestPrices()
             }
+            #warning("do smth with this")
+//            .onChange(of: showEditedStack) { showStack in
+//                shouldShowTabBar = !showStack
+//            }
             .onReceive(ItemCache.default.updatedPublisher.debounce(for: .milliseconds(500), scheduler: RunLoop.main).prepend(())) { _ in
                 updateBestPrices()
             }

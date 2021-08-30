@@ -20,15 +20,21 @@ struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
     let publishedDate: Double?
 
     func inventoryItems(allInventoryItems: [InventoryItem], filters: Filters, searchText: String) -> [InventoryItem] {
-        allInventoryItems.filter { inventoryItem in
-            if items.contains(where: { inventoryItem.id == $0.inventoryItemId }), inventoryItem.name.lowercased().fuzzyMatch(searchText.lowercased()) {
-                switch filters.soldStatus {
-                case .All:
-                    return true
-                case .Sold:
-                    return inventoryItem.status == .Sold
-                case .Unsold:
-                    return inventoryItem.status != .Sold
+        allInventoryItems.filter { (inventoryItem: InventoryItem) -> Bool in
+            let hasStackItem = items.contains(where: { (stackItem: StackItem) -> Bool in inventoryItem.id == stackItem.inventoryItemId })
+            if hasStackItem {
+                let matchesSearchString = inventoryItem.name.lowercased().fuzzyMatch(searchText.lowercased())
+                if matchesSearchString {
+                    switch filters.soldStatus {
+                    case .All:
+                        return true
+                    case .Sold:
+                        return inventoryItem.status == .Sold
+                    case .Unsold:
+                        return inventoryItem.status != .Sold
+                    }
+                } else {
+                    return false
                 }
             } else {
                 return false
@@ -41,7 +47,7 @@ struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
     }
 
     static func allStack(inventoryItems: [InventoryItem]) -> Stack {
-        .init(id: "all",
+        Stack(id: "all",
               name: "All",
               isPublished: false,
               isPublic: nil,
@@ -53,7 +59,7 @@ struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
     }
 
     static var empty: Stack {
-        .init(id: UUID().uuidString,
+        Stack(id: UUID().uuidString,
               name: "",
               isPublished: false,
               isPublic: nil,

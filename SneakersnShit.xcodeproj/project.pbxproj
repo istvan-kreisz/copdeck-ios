@@ -126,6 +126,7 @@
 		5DCC466E26A8CEDE007671BC /* NewItemCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCC466D26A8CEDE007671BC /* NewItemCard.swift */; };
 		5DCC467026A8D759007671BC /* DropDownMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCC466F26A8D759007671BC /* DropDownMenu.swift */; };
 		5DCC467226A8EBB9007671BC /* ToggleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCC467126A8EBB9007671BC /* ToggleButton.swift */; };
+		5DD01E5426DD78480054F6F1 /* InventoryHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DD01E5326DD78480054F6F1 /* InventoryHeaderView.swift */; };
 		5DDEFDBC26CD7A42001B0F76 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DDEFDBB26CD7A42001B0F76 /* Constants.swift */; };
 		5DDEFDBF26CED83A001B0F76 /* ListSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DDEFDBE26CED83A001B0F76 /* ListSelector.swift */; };
 		5DDEFDC126CEE16F001B0F76 /* ListSelectorMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DDEFDC026CEE16F001B0F76 /* ListSelectorMenu.swift */; };
@@ -268,6 +269,7 @@
 		5DCC466D26A8CEDE007671BC /* NewItemCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewItemCard.swift; sourceTree = "<group>"; };
 		5DCC466F26A8D759007671BC /* DropDownMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownMenu.swift; sourceTree = "<group>"; };
 		5DCC467126A8EBB9007671BC /* ToggleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleButton.swift; sourceTree = "<group>"; };
+		5DD01E5326DD78480054F6F1 /* InventoryHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryHeaderView.swift; sourceTree = "<group>"; };
 		5DDEFDBB26CD7A42001B0F76 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		5DDEFDBE26CED83A001B0F76 /* ListSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListSelector.swift; sourceTree = "<group>"; };
 		5DDEFDC026CEE16F001B0F76 /* ListSelectorMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListSelectorMenu.swift; sourceTree = "<group>"; };
@@ -490,6 +492,7 @@
 				5DE596E926C878280024F7D5 /* StackView.swift */,
 				5D9DFB0426D998A8005A575D /* ProfilePhotoSelectorView.swift */,
 				5D8CD46526DA69BC00318CC1 /* StackDetail.swift */,
+				5DD01E5326DD78480054F6F1 /* InventoryHeaderView.swift */,
 			);
 			path = Inventory;
 			sourceTree = "<group>";
@@ -1139,6 +1142,7 @@
 				5D4E19BC26C9404E00FCF780 /* TextFieldPopup.swift in Sources */,
 				5D2726D026CC59CC00887449 /* Cache.swift in Sources */,
 				5DC3538F26117C7F00294DF0 /* ItemDetailView.swift in Sources */,
+				5DD01E5426DD78480054F6F1 /* InventoryHeaderView.swift in Sources */,
 				5D424CD425C4FF2F0008D6F4 /* IAPManager.swift in Sources */,
 				5D3E872525C5D3FC00FC65FE /* Sequence+Extensions.swift in Sources */,
 				5D8CD46426DA5D2100318CC1 /* CopyLinkPopup.swift in Sources */,
