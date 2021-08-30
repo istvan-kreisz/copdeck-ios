@@ -118,9 +118,10 @@ extension View {
 
     func listRow(backgroundColor: Color = .customBackground) -> some View {
         padding(.vertical, 2)
+            .padding(.horizontal, 30)
             .listRowBackground(backgroundColor)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-            .listRowInsets(EdgeInsets(top: -2, leading: -1, bottom: -2, trailing: -1))
+            .listRowInsets(EdgeInsets(top: -2, leading: -30, bottom: -2, trailing: -30))
             .background(backgroundColor)
     }
 }

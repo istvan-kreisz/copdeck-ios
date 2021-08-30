@@ -29,13 +29,24 @@ struct VerticalListView<Content: View>: View {
 
     var body: some View {
         List {
-            content
-                .withDefaultPadding(padding: addHorizontalPadding ? .horizontal : [])
-                .padding(.top, spacing)
-                .if(addListRowStyling) { $0.listRow() }
-
-            Color.clear.padding(.bottom, bottomPadding)
-                .if(addListRowStyling) { $0.listRow() }
+            if addListRowStyling {
+                content
+                    .withDefaultPadding(padding: addHorizontalPadding ? .horizontal : [])
+                    .padding(.top, spacing)
+                    .listRow()
+            } else {
+                content
+                    .withDefaultPadding(padding: addHorizontalPadding ? .horizontal : [])
+                    .padding(.top, spacing)
+            }
+            if bottomPadding != 0 {
+                if addListRowStyling {
+                    Color.clear.padding(.bottom, bottomPadding)
+                        .listRow()
+                } else {
+                    Color.clear.padding(.bottom, bottomPadding)
+                }
+            }
         }
         .listStyle(PlainListStyle())
     }

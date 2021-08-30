@@ -26,8 +26,6 @@ struct MainContainerView: View {
                     .withTabViewWrapper(viewRouter: viewRouter, store: store, shouldShow: $shouldShowTabBar)
             },
             TabBarElement(tabBarElementItem: .init(title: "Third", systemImageName: "folder.fill")) {
-//                InventoryView(shouldShowTabBar: $shouldShowTabBar, settingsPresented: $settingsPresented)
-//                    .environmentObject(store)
                 InventoryView(shouldShowTabBar: $shouldShowTabBar, settingsPresented: $settingsPresented, viewRouter: viewRouter)
                     .environmentObject(store)
             })

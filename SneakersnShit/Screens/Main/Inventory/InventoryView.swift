@@ -8,6 +8,8 @@
 import SwiftUI
 import Combine
 
+#warning("do smth with showEditedStack")
+
 struct InventoryView: View {
     @EnvironmentObject var store: AppStore
     @State private var selectedInventoryItemId: String?
@@ -125,7 +127,7 @@ struct InventoryView: View {
             },
             isActive: showEditedStack) { EmptyView() }
 
-            VerticalListView(bottomPadding: 130, spacing: 0, addListRowStyling: false) {
+            VerticalListView(bottomPadding: 0, spacing: 0, addListRowStyling: false) {
                 InventoryHeaderView(settingsPresented: $settingsPresented,
                                     showImagePicker: $showImagePicker,
                                     profileImageURL: $store.state.profileImageURL,
@@ -133,15 +135,14 @@ struct InventoryView: View {
                                     inventoryValue: inventoryValue,
                                     inventoryItemsCount: inventoryItems.count,
                                     updateUsername: updateUsername)
+                    .listRow(backgroundColor: .customWhite)
 
                 ScrollableSegmentedControl(selectedIndex: $selectedStackIndex,
                                            titles: stackTitles,
                                            button: .init(title: "New Stack", tapped: { showAddNewStackAlert = true }))
-                    .padding(.vertical, 2)
-                    .listRowBackground(Color.customBackground)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                    .listRowInsets(EdgeInsets(top: -2, leading: -1, bottom: -2, trailing: -1))
-                    .background(Color.customBackground)
+                    .listRow()
+                    .padding(.top, -2)
+                    .padding(.bottom, 12)
 
                 if let stack = stacks[safe: selectedStackIndex] {
                     let isSelected = Binding<Bool>(get: { stack.id == selectedStack?.id }, set: { _ in })
@@ -165,6 +166,8 @@ struct InventoryView: View {
                         .padding(.top, 5)
                         .listRow()
                 }
+                Color.clear.padding(.bottom, 130)
+                    .listRow()
             }
             .withFloatingButton(button: EditInventoryTray(actions: actionsTrayActions)
                 .padding(.bottom, UIApplication.shared.safeAreaInsets().bottom)
@@ -191,7 +194,6 @@ struct InventoryView: View {
             .onChange(of: store.state.user?.settings) { _ in
                 updateBestPrices()
             }
-            #warning("do smth with this")
 //            .onChange(of: showEditedStack) { showStack in
 //                shouldShowTabBar = !showStack
 //            }
@@ -212,7 +214,7 @@ struct InventoryView: View {
                 }
             }
         }
-        .withTabViewWrapper(viewRouter: viewRouter, store: store, backgroundColor: .customWhite, shouldShow: $shouldShowTabBar)
+        .withTabViewWrapper(viewRouter: viewRouter, store: store, backgroundColor: .customBackground, shouldShow: $shouldShowTabBar)
         .withSnackBar(text: "Link Copied", shouldShow: $showSnackBar)
         .withTextFieldPopup(isShowing: $showAddNewStackAlert,
                             title: "Add new stack",
