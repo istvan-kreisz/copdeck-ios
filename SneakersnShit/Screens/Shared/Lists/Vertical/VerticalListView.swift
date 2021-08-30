@@ -13,14 +13,17 @@ struct VerticalListView<Content: View>: View {
     let bottomPadding: CGFloat
     let spacing: CGFloat
     let addHorizontalPadding: Bool
+    let addListRowStyling: Bool
 
     init(bottomPadding: CGFloat = 0,
          spacing: CGFloat = 15,
          addHorizontalPadding: Bool = true,
+         addListRowStyling: Bool = true,
          @ViewBuilder content: () -> Content) {
         self.bottomPadding = bottomPadding
         self.spacing = spacing
         self.addHorizontalPadding = addHorizontalPadding
+        self.addListRowStyling = addListRowStyling
         self.content = content()
     }
 
@@ -29,10 +32,10 @@ struct VerticalListView<Content: View>: View {
             content
                 .withDefaultPadding(padding: addHorizontalPadding ? .horizontal : [])
                 .padding(.top, spacing)
-                .listRow()
+                .if(addListRowStyling) { $0.listRow() }
 
             Color.clear.padding(.bottom, bottomPadding)
-                .listRow()
+                .if(addListRowStyling) { $0.listRow() }
         }
         .listStyle(PlainListStyle())
     }

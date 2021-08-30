@@ -120,7 +120,7 @@ extension View {
         padding(.vertical, 2)
             .listRowBackground(backgroundColor)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-            .listRowInsets(EdgeInsets(top: -2, leading: -1, bottom: -2, trailing: -1))
+            .listRowInsets(EdgeInsets(top: -2, leading: 0, bottom: -2, trailing: 0))
             .background(backgroundColor)
     }
 }

@@ -84,7 +84,7 @@ struct StackView: View {
     }
 
     var body: some View {
-        VStack(spacing: 10) {
+//        VStack(spacing: 10) {
             toolbar()
             ForEach(allStackItems) { (inventoryItem: InventoryItem) in
                 InventoryListItem(inventoryItem: inventoryItem,
@@ -102,6 +102,6 @@ struct StackView: View {
                 .id(inventoryItem.id)
             }
             .padding(.vertical, 6)
-        }
+//        }
     }
 }
