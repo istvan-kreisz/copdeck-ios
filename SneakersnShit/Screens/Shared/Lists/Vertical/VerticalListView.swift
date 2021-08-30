@@ -8,8 +8,7 @@
 import SwiftUI
 import Combine
 
-struct VerticalListView<Content: View, ToolBar: View>: View {
-    let toolbar: ToolBar?
+struct VerticalListView<Content: View>: View {
     let content: Content
     let bottomPadding: CGFloat
     let spacing: CGFloat
@@ -18,19 +17,15 @@ struct VerticalListView<Content: View, ToolBar: View>: View {
     init(bottomPadding: CGFloat = 0,
          spacing: CGFloat = 15,
          addHorizontalPadding: Bool = true,
-         toolbar: ToolBar? = nil,
          @ViewBuilder content: () -> Content) {
         self.bottomPadding = bottomPadding
         self.spacing = spacing
-        self.toolbar = toolbar
         self.addHorizontalPadding = addHorizontalPadding
         self.content = content()
     }
 
     var body: some View {
         List {
-            toolbar
-                .listRow()
             content
                 .withDefaultPadding(padding: addHorizontalPadding ? .horizontal : [])
                 .padding(.top, spacing)

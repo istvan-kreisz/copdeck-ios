@@ -89,7 +89,6 @@ struct InventoryView: View {
         let showCopyLink = Binding<Bool>(get: { sharedStack != nil },
                                          set: { sharedStack = $0 ? sharedStack : nil })
         Group {
-            let pageCount = Binding<Int>(get: { store.state.stacks.count }, set: { _ in })
             let stackTitles = Binding<[String]>(get: { stacks.map { (stack: Stack) in stack.name } }, set: { _ in })
             let actionsTrayActions = Binding<[ActionConfig]>(get: {
                                                                  supportedTrayActions
@@ -127,7 +126,7 @@ struct InventoryView: View {
             },
             isActive: showEditedStack) { EmptyView() }
 
-            VerticalListView(bottomPadding: 130, toolbar: EmptyView()) {
+            VerticalListView(bottomPadding: 130, spacing: 0) {
                 VStack(alignment: .leading, spacing: 0) {
                     VStack(alignment: .center, spacing: 30) {
                         HStack {
@@ -151,7 +150,7 @@ struct InventoryView: View {
                             })
                         }
 
-                        VStack(spacing: 5) {
+                        VStack(spacing: 15) {
                             ProfilePhotoSelectorView(showImagePicker: $showImagePicker, profileImageURL: $store.state.profileImageURL)
                             TextFieldUnderlined(text: $username,
                                                 placeHolder: "username",
@@ -185,18 +184,15 @@ struct InventoryView: View {
                                         .foregroundColor(.customText2)
                                 }
                             }
-                            .withDefaultPadding(padding: .horizontal)
                             .padding(.top, 5)
                         }
                     }
-                    .withDefaultPadding(padding: .horizontal)
                     .padding(.bottom, 22)
 
                     VStack(alignment: .leading, spacing: 0) {
                         ScrollableSegmentedControl(selectedIndex: $selectedStackIndex,
                                                    titles: stackTitles,
                                                    button: .init(title: "New Stack", tapped: { showAddNewStackAlert = true }))
-                            .withDefaultPadding(padding: .horizontal)
 
                         if let stack = stacks[safe: selectedStackIndex] {
                             let isSelected = Binding<Bool>(get: { stack.id == selectedStack?.id }, set: { _ in })
@@ -220,9 +216,9 @@ struct InventoryView: View {
                         }
                     }
                     .padding(.top, 5)
-                    .withDefaultPadding(padding: .horizontal)
                     .background(Color.customBackground)
                 }
+                .buttonStyle(PlainButtonStyle())
             }
             .withFloatingButton(button: EditInventoryTray(actions: actionsTrayActions)
                 .padding(.bottom, UIApplication.shared.safeAreaInsets().bottom)
