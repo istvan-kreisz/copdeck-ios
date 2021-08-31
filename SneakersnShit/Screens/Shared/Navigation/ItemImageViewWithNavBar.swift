@@ -21,7 +21,8 @@ struct ItemImageViewWithNavBar: View {
                               size: UIScreen.main.bounds.width - 80,
                               aspectRatio: nil,
                               flipImage: imageURL.store.id == .klekt,
-                              showPlaceholder: false)
+                              showPlaceholder: false,
+                              isFavorited: .constant(false))
             } else {
                 Color.clear
                     .frame(width: UIScreen.main.bounds.width - 80, height: UIScreen.main.bounds.width - 80)

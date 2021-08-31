@@ -52,9 +52,9 @@ struct ItemImageView: View {
             ZStack {
                 ImageView(withRequest: request, size: size, aspectRatio: aspectRatio, flipImage: flipImage, showPlaceholder: showPlaceholder)
                 Image(systemName: isFavorited.wrappedValue ? "heart.fill" : "heart")
-                    .font(.bold(size: 20))
+                    .font(.semiBold(size: self.size / 9))
                     .foregroundColor(isFavorited.wrappedValue ? Color.customAccent1 : Color.customRed)
-                    .leftAligned()
+                    .rightAligned()
                     .bottomAligned()
                     .padding(.leading, 20)
                     .padding(.bottom, 20)

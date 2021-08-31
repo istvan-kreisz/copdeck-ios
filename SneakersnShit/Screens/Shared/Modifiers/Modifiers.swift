@@ -109,8 +109,8 @@ struct TopAligned: ViewModifier {
 struct BottomAligned: ViewModifier {
     func body(content: Content) -> some View {
         VStack {
-            content
             Spacer()
+            content
         }
     }
 }

@@ -15,6 +15,8 @@ class DefaultDataController: DataController {
     let databaseManager: DatabaseManager
 
     lazy var inventoryItemsPublisher = databaseManager.inventoryItemsPublisher
+    lazy var favoritesPublisher = databaseManager.favoritesPublisher
+    lazy var recentSearchesPublisher = databaseManager.recentSearchesPublisher
     lazy var stacksPublisher = databaseManager.stacksPublisher
     lazy var userPublisher = databaseManager.userPublisher
     lazy var exchangeRatesPublisher = databaseManager.exchangeRatesPublisher

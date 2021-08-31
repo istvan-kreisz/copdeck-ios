@@ -6,7 +6,6 @@
 //  Copyright © 2020 István Kreisz. All rights reserved.
 //
 
-import Foundation
 import Firebase
 import Combine
 import UIKit
@@ -20,36 +19,58 @@ class FirebaseService: DatabaseManager {
 
     private var userId: String?
 
-    private let inventoryItemsSubject = CurrentValueSubject<[InventoryItem], Never>([])
-    private let stacksSubject = CurrentValueSubject<[Stack], Never>([])
-    private let userSubject = CurrentValueSubject<User?, Never>(nil)
-    private let exchangeRatesSubject = PassthroughSubject<ExchangeRates, Never>()
+    // collection listeners
+    private var inventoryListener = CollectionListener<InventoryItem>()
+    private var stacksListener = CollectionListener<Stack>()
+    private var favoritesListener = CollectionListener<FavoritedItem>()
+    private var recentSearchesListener = CollectionListener<FavoritedItem>()
+
+    // document listeners
+    private var userListener = DocumentListener<User>()
+    private var exchangeRatesListener = DocumentListener<ExchangeRates>()
+
     private let errorsSubject = PassthroughSubject<AppError, Never>()
     private let popularItemsSubject = PassthroughSubject<[Item], Never>()
     private let imageSubject = CurrentValueSubject<URL?, Never>(nil)
+
+    private var dbListeners: [FireStoreListener] {
+        let listeners: [FireStoreListener?] = [inventoryListener,
+                                               stacksListener,
+                                               favoritesListener,
+                                               recentSearchesListener,
+                                               userListener,
+                                               exchangeRatesListener]
+        return listeners.compactMap { $0 }
+    }
 
     var imageURL: URL? {
         imageSubject.value
     }
 
-    var profileImagePublisher: AnyPublisher<URL?, Never> {
-        imageSubject.eraseToAnyPublisher()
+    // collection publishers
+    var inventoryItemsPublisher: AnyPublisher<[InventoryItem], Never> {
+        inventoryListener.dataPublisher
     }
 
-    var inventoryItemsPublisher: AnyPublisher<[InventoryItem], Never> {
-        inventoryItemsSubject.eraseToAnyPublisher()
+    var favoritesPublisher: AnyPublisher<[FavoritedItem], Never> {
+        favoritesListener.dataPublisher
+    }
+
+    var recentSearchesPublisher: AnyPublisher<[FavoritedItem], Never> {
+        recentSearchesListener.dataPublisher
     }
 
     var stacksPublisher: AnyPublisher<[Stack], Never> {
-        stacksSubject.eraseToAnyPublisher()
+        stacksListener.dataPublisher
     }
 
+    // document publishers
     var userPublisher: AnyPublisher<User, Never> {
-        userSubject.compactMap { $0 }.eraseToAnyPublisher()
+        userListener.dataPublisher.compactMap { $0 }.eraseToAnyPublisher()
     }
 
     var exchangeRatesPublisher: AnyPublisher<ExchangeRates, Never> {
-        exchangeRatesSubject.eraseToAnyPublisher()
+        exchangeRatesListener.dataPublisher.compactMap { $0 }.eraseToAnyPublisher()
     }
 
     var errorsPublisher: AnyPublisher<AppError, Never> {
@@ -60,25 +81,18 @@ class FirebaseService: DatabaseManager {
         popularItemsSubject.eraseToAnyPublisher()
     }
 
-    private var userRef: DocumentReference?
-    private var userSettingsRef: DocumentReference?
-    private var exchangeRatesRef: DocumentReference?
+    var profileImagePublisher: AnyPublisher<URL?, Never> {
+        imageSubject.eraseToAnyPublisher()
+    }
 
     private var itemsRef: CollectionReference?
-    private var userInventoryRef: CollectionReference?
-    private var userStacksRef: CollectionReference?
-
-    private var inventoryListener: ListenerRegistration?
-    private var stacksListener: ListenerRegistration?
-    private var userListener: ListenerRegistration?
-    private var exchangeRatesListener: ListenerRegistration?
 
     private var imageRef: StorageReference?
     private var uploadTask: StorageUploadTask?
 
-    private var settings: CopDeckSettings {
-        userSubject.value?.settings ?? .default
-    }
+//    private var settings: CopDeckSettings {
+//        userSubject.value?.settings ?? .default
+//    }
 
     init() {
         firestore = Firestore.firestore()
@@ -93,29 +107,26 @@ class FirebaseService: DatabaseManager {
         firestore.settings = settings
 
         itemsRef = firestore.collection("items")
-        exchangeRatesRef = firestore.collection("info").document("exchangerates")
+        exchangeRatesListener.startListening(documentRef: firestore.collection("info").document("exchangerates"))
     }
 
     func setup(userId: String) {
         guard userId != self.userId else { return }
-        userRef = firestore.collection("users").document(userId)
-        userInventoryRef = userRef?.collection("inventory")
-        userStacksRef = userRef?.collection("stacks")
 
         imageRef = storage.reference().child("images/\(userId)/profilePicture.jpg")
-
         self.userId = userId
 
-        listenToChanges()
+        reset()
+        listenToChanges(userId: userId)
         getProfileImage()
     }
 
-    private func listenToChanges() {
-        reset()
-        addUserListener()
-        addInventoryListener()
-        addStacksListener()
-        addExchangeRatesListener()
+    private func listenToChanges(userId: String) {
+        userListener.startListening(documentRef: firestore.collection("users").document(userId))
+        inventoryListener.startListening(collectionName: "inventory", baseDocumentReference: userListener.documentRef)
+        stacksListener.startListening(collectionName: "stacks", baseDocumentReference: userListener.documentRef)
+        favoritesListener.startListening(collectionName: "favorites", baseDocumentReference: userListener.documentRef)
+        recentSearchesListener.startListening(collectionName: "recentsearches", baseDocumentReference: userListener.documentRef)
     }
 
     private func getProfileImage() {
@@ -126,26 +137,6 @@ class FirebaseService: DatabaseManager {
                 self?.imageSubject.send(url)
             }
         }
-    }
-
-    private func addUserListener() {
-        userListener = addDocumentListener(documentRef: userRef, updated: { [weak self] in self?.userSubject.send($0) })
-    }
-
-    private func addInventoryListener() {
-        inventoryListener = addCollectionListener(collectionRef: userInventoryRef) { [weak self] in
-            self?.inventoryItemsSubject.send($0)
-        }
-    }
-
-    private func addStacksListener() {
-        stacksListener = addCollectionListener(collectionRef: userStacksRef) { [weak self] in
-            self?.stacksSubject.send($0)
-        }
-    }
-
-    private func addExchangeRatesListener() {
-        exchangeRatesListener = addDocumentListener(documentRef: exchangeRatesRef, updated: { [weak self] in self?.exchangeRatesSubject.send($0) })
     }
 
     private func addCollectionUpdatesListener<T: Codable>(collectionRef: CollectionReference?,
@@ -176,35 +167,8 @@ class FirebaseService: DatabaseManager {
             }
     }
 
-    private func addCollectionListener<T: Codable>(collectionRef: CollectionReference?, updated: @escaping (_ items: [T]) -> Void)
-        -> ListenerRegistration? {
-        collectionRef?
-            .addSnapshotListener { snapshot, error in
-                if let error = error {
-                    print("Error fetching documents: \(error)")
-                    return
-                }
-                updated(snapshot?.documents.compactMap { T(from: $0.data()) } ?? [])
-            }
-    }
-
-    private func addDocumentListener<T: Codable>(documentRef: DocumentReference?, updated: @escaping (T) -> Void) -> ListenerRegistration? {
-        documentRef?
-            .addSnapshotListener { [weak self] snapshot, error in
-                if let error = error {
-                    self?.errorsSubject.send(AppError(error: error))
-                    return
-                }
-                if let document = snapshot?.data(), let result = T(from: document) {
-                    updated(result)
-                }
-            }
-    }
-
     func reset() {
-        inventoryListener?.remove()
-        stacksListener?.remove()
-        userListener?.remove()
+        dbListeners.forEach { $0.reset() }
     }
 
     func getUser(withId id: String) -> AnyPublisher<User, AppError> {
@@ -242,10 +206,10 @@ class FirebaseService: DatabaseManager {
         // update inventory items
         inventoryItems
             .forEach { inventoryItem in
-                _ = (userInventoryRef?.document(inventoryItem.id)).map { batch.deleteDocument($0) }
+                _ = (inventoryListener.collectionRef?.document(inventoryItem.id)).map { batch.deleteDocument($0) }
             }
         // update stacks
-        stacksSubject
+        stacksListener.dataSubject
             .value
             .filter { stack in
                 stack.items
@@ -263,7 +227,7 @@ class FirebaseService: DatabaseManager {
                 return updatedStack
             }
             .forEach { stack in
-                _ = (userStacksRef?.document(stack.id))
+                _ = (stacksListener.collectionRef?.document(stack.id))
                     .map { ref in
                         if let data = try? stack.asDictionary() {
                             batch.updateData(data, forDocument: ref)
@@ -280,7 +244,7 @@ class FirebaseService: DatabaseManager {
 
     func update(stack: Stack) {
         if let dict = try? stack.asDictionary() {
-            userStacksRef?
+            stacksListener.collectionRef?
                 .document(stack.id)
                 .setData(dict, merge: true) { [weak self] error in
                     if let error = error {
@@ -291,7 +255,7 @@ class FirebaseService: DatabaseManager {
     }
 
     func delete(stack: Stack) {
-        userStacksRef?
+        stacksListener.collectionRef?
             .document(stack.id)
             .delete { [weak self] error in
                 error.map { self?.errorsSubject.send(AppError(error: $0)) }
@@ -305,7 +269,7 @@ class FirebaseService: DatabaseManager {
                 (try? inventoryItem.asDictionary()).map { (inventoryItem.id, $0) } ?? nil
             }
             .forEach { id, dict in
-                _ = (userInventoryRef?.document(id)).map { batch.setData(dict, forDocument: $0, merge: true) }
+                _ = (inventoryListener.collectionRef?.document(id)).map { batch.setData(dict, forDocument: $0, merge: true) }
             }
 
         batch.commit { [weak self] error in
@@ -317,7 +281,7 @@ class FirebaseService: DatabaseManager {
 
     func update(inventoryItem: InventoryItem) {
         if let dict = try? inventoryItem.asDictionary() {
-            userInventoryRef?
+            inventoryListener.collectionRef?
                 .document(inventoryItem.id)
                 .setData(dict, merge: true) { [weak self] error in
                     if let error = error {
@@ -329,7 +293,7 @@ class FirebaseService: DatabaseManager {
 
     func update(user: User) {
         if let dict = try? user.asDictionary() {
-            userRef?
+            userListener.documentRef?
                 .setData(dict, merge: true) { [weak self] error in
                     if let error = error {
                         self?.errorsSubject.send(AppError(error: error))

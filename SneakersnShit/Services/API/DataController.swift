@@ -56,6 +56,8 @@ protocol DatabaseManager {
     func reset()
     // read
     var inventoryItemsPublisher: AnyPublisher<[InventoryItem], Never> { get }
+    var favoritesPublisher: AnyPublisher<[FavoritedItem], Never> { get }
+    var recentSearchesPublisher: AnyPublisher<[FavoritedItem], Never> { get }
     var popularItemsPublisher: AnyPublisher<[Item], Never> { get }
     var stacksPublisher: AnyPublisher<[Stack], Never> { get }
     var userPublisher: AnyPublisher<User, Never> { get }
