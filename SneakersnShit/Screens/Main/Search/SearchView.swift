@@ -19,6 +19,8 @@ struct SearchView: View {
 
     @State private var showPopularItems = false
 
+    @State private var selectedTabIndex = 0
+
     var allItems: [Item] {
         let selectedItem: [Item] = selectedItem.map { (item: Item) in [item] } ?? []
         let searchResults: [Item] = store.state.searchResults
@@ -62,36 +64,48 @@ struct SearchView: View {
                                  text: $searchText)
                     .withDefaultPadding(padding: .horizontal)
 
-                if store.state.searchResults.isEmpty {
-                    VStack(alignment: .leading, spacing: 10) {
-                        HorizontaltemListView(items: $store.state.popularItems,
-                                              selectedItem: $selectedItem,
-                                              isLoading: $popularItemsLoader.isLoading,
-                                              title: "Trending now",
-                                              requestInfo: store.state.requestInfo) { showPopularItems = true }
+                ScrollableSegmentedControl(selectedIndex: $selectedTabIndex,
+                                           titles: .constant(["Sneakers", "People"]),
+                                           button: nil,
+                                           size: (UIScreen.screenWidth - Styles.horizontalPadding * 2) / 2)
+                    .frame(width: UIScreen.screenWidth - Styles.horizontalPadding * 2)
+                    .withDefaultPadding(padding: .horizontal)
 
-                        HorizontaltemListView(items: $store.state.favoritedItems,
-                                              selectedItem: $selectedItem,
-                                              isLoading: .constant(false),
-                                              title: "Your favorites",
-                                              requestInfo: store.state.requestInfo)
+                if selectedTabIndex == 0 {
+                    if store.state.searchResults.isEmpty {
+                        VStack(alignment: .leading, spacing: 10) {
+                            HorizontaltemListView(items: $store.state.popularItems,
+                                                  selectedItem: $selectedItem,
+                                                  isLoading: $popularItemsLoader.isLoading,
+                                                  title: "Trending now",
+                                                  requestInfo: store.state.requestInfo) { showPopularItems = true }
 
-                        HorizontaltemListView(items: $store.state.recentlyViewed,
-                                              selectedItem: $selectedItem,
-                                              isLoading: .constant(false),
-                                              title: "Recently viewed",
-                                              requestInfo: store.state.requestInfo,
-                                              sortedBy: .created)
+                            HorizontaltemListView(items: $store.state.favoritedItems,
+                                                  selectedItem: $selectedItem,
+                                                  isLoading: .constant(false),
+                                                  title: "Your favorites",
+                                                  requestInfo: store.state.requestInfo)
+
+                            HorizontaltemListView(items: $store.state.recentlyViewed,
+                                                  selectedItem: $selectedItem,
+                                                  isLoading: .constant(false),
+                                                  title: "Recently viewed",
+                                                  requestInfo: store.state.requestInfo,
+                                                  sortedBy: .created)
+                        }
                     }
+
+                    VerticalItemListView(items: $store.state.searchResults,
+                                         selectedItem: $selectedItem,
+                                         isLoading: $searchResultsLoader.isLoading,
+                                         title: nil,
+                                         resultsLabelText: nil,
+                                         bottomPadding: 130,
+                                         requestInfo: store.state.requestInfo)
+                } else {
+                    Spacer()
                 }
 
-                VerticalItemListView(items: $store.state.searchResults,
-                                     selectedItem: $selectedItem,
-                                     isLoading: $searchResultsLoader.isLoading,
-                                     title: nil,
-                                     resultsLabelText: nil,
-                                     bottomPadding: 130,
-                                     requestInfo: store.state.requestInfo)
             }
             .onChange(of: searchText) { searchText in
                 store.send(.main(action: .getSearchResults(searchTerm: searchText)), completed: searchResultsLoader.getLoader())

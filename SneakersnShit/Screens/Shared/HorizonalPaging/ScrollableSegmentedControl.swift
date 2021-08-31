@@ -16,15 +16,17 @@ struct ScrollableSegmentedControl: View {
     @Binding private var selectedIndex: Int
     @Binding private var titles: [String]
     let button: ButtonConfig?
+    let size: CGFloat?
 
     @State private var frames: [CGRect]
     @State private var backgroundFrame = CGRect.zero
     @State private var isScrollable = true
 
-    init(selectedIndex: Binding<Int>, titles: Binding<[String]>, button: ButtonConfig?) {
+    init(selectedIndex: Binding<Int>, titles: Binding<[String]>, button: ButtonConfig?, size: CGFloat? = nil) {
         self._selectedIndex = selectedIndex
         self._titles = titles
         self.button = button
+        self.size = size
         self._frames = State<[CGRect]>(initialValue: [CGRect](repeating: .zero, count: titles.wrappedValue.count))
     }
 
@@ -45,6 +47,7 @@ struct ScrollableSegmentedControl: View {
                                 }
                             }
                             .buttonStyle(CustomSegmentButtonStyle())
+                            .frame(width: size)
                             .background(GeometryReader { geoReader in
                                 Color.clear.preference(key: RectPreferenceKey.self, value: geoReader.frame(in: .global))
                                     .onPreferenceChange(RectPreferenceKey.self) {
@@ -86,8 +89,10 @@ struct ScrollableSegmentedControl: View {
                     }
                 }
                 .onChange(of: selectedIndex) { value in
-                    withAnimation {
-                        sp.scrollTo(value, anchor: .center)
+                    if size == nil {
+                        withAnimation {
+                            sp.scrollTo(value, anchor: .center)
+                        }
                     }
                 }
                 .onChange(of: titles) { newTitles in
