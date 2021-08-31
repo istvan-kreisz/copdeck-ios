@@ -46,8 +46,14 @@ struct InventoryItemDetailView: View {
 
     var body: some View {
         VStack {
-            NavigationLink(destination: inventoryItem.itemId.map { (itemId: String) in ItemDetailView(item: nil, itemId: itemId) { showItemDetails = false } },
-                           isActive: $showItemDetails) { EmptyView() }
+            NavigationLink(destination: inventoryItem.itemId.map { (itemId: String) in
+                ItemDetailView(item: nil,
+                               itemId: itemId,
+                               favoritedItemIds: store.state.favoritedItems.map(\.id)) {
+                        showItemDetails = false
+                }
+            },
+            isActive: $showItemDetails) { EmptyView() }
 
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .center, spacing: 20) {

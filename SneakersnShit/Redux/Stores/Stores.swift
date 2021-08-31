@@ -76,6 +76,18 @@ extension AppStore {
             })
             .store(in: &effectCancellables)
 
+        environment.dataController.recentSearchesPublisher
+            .sink { [weak self] recentSearches in
+                self?.state.recentSearches = recentSearches
+            }
+            .store(in: &effectCancellables)
+
+        environment.dataController.favoritesPublisher
+            .sink { [weak self] favorites in
+                self?.state.favoritedItems = favorites
+            }
+            .store(in: &effectCancellables)
+
         environment.dataController.profileImagePublisher.sink { [weak self] url in
             self?.state.profileImageURL = url
         }

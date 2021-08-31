@@ -22,8 +22,8 @@ class FirebaseService: DatabaseManager {
     // collection listeners
     private var inventoryListener = CollectionListener<InventoryItem>()
     private var stacksListener = CollectionListener<Stack>()
-    private var favoritesListener = CollectionListener<FavoritedItem>()
-    private var recentSearchesListener = CollectionListener<FavoritedItem>()
+    private var favoritesListener = CollectionListener<Item>()
+    private var recentSearchesListener = CollectionListener<Item>()
 
     // document listeners
     private var userListener = DocumentListener<User>()
@@ -52,11 +52,11 @@ class FirebaseService: DatabaseManager {
         inventoryListener.dataPublisher
     }
 
-    var favoritesPublisher: AnyPublisher<[FavoritedItem], Never> {
+    var favoritesPublisher: AnyPublisher<[Item], Never> {
         favoritesListener.dataPublisher
     }
 
-    var recentSearchesPublisher: AnyPublisher<[FavoritedItem], Never> {
+    var recentSearchesPublisher: AnyPublisher<[Item], Never> {
         recentSearchesListener.dataPublisher
     }
 
@@ -89,10 +89,6 @@ class FirebaseService: DatabaseManager {
 
     private var imageRef: StorageReference?
     private var uploadTask: StorageUploadTask?
-
-//    private var settings: CopDeckSettings {
-//        userSubject.value?.settings ?? .default
-//    }
 
     init() {
         firestore = Firestore.firestore()
@@ -299,6 +295,54 @@ class FirebaseService: DatabaseManager {
                         self?.errorsSubject.send(AppError(error: error))
                     }
                 }
+        }
+    }
+
+    func add(recentSearch: Item) {
+        let recentSearches = recentSearchesListener.dataSubject.value
+        guard !recentSearches.contains(where: { $0.id == recentSearch.id }) else { return }
+
+        let batch = firestore.batch()
+
+        // delete old ones if over limit
+        if recentSearches.count >= 10 {
+            let mostRecents = recentSearches.sortedByDate(sortOrder: .descending).first(n: 10)
+            let mostRecentIds = mostRecents.map(\.id)
+            let deleted = recentSearches.filter { !mostRecentIds.contains($0.id) }
+            let deletedDocRefs = deleted.compactMap { recentSearchesListener.collectionRef?.document(Item.databaseId(itemId: $0.id, settings: nil)) }
+            deletedDocRefs.forEach { batch.deleteDocument($0) }
+        }
+        // add new
+        if let dict = try? recentSearch.strippedOfPrices.asDictionary() {
+            if let newDocumentRef = recentSearchesListener.collectionRef?.document(Item.databaseId(itemId: recentSearch.id, settings: nil)) {
+                batch.updateData(dict, forDocument: newDocumentRef)
+            }
+        }
+
+        batch.commit { [weak self] error in
+            if let error = error {
+                self?.errorsSubject.send(AppError(error: error))
+            }
+        }
+    }
+
+    func favorite(item: Item) {
+        guard !favoritesListener.dataSubject.value.contains(where: { $0.id == item.id }) else { return }
+        if let dict = try? item.strippedOfPrices.asDictionary() {
+            favoritesListener.collectionRef?
+                .document(Item.databaseId(itemId: item.id, settings: nil)).setData(dict) { [weak self] error in
+                    if let error = error {
+                        self?.errorsSubject.send(AppError(error: error))
+                    }
+                }
+        }
+    }
+
+    func unfavorite(item: Item) {
+        favoritesListener.collectionRef?.document(Item.databaseId(itemId: item.id, settings: nil)).delete { [weak self] error in
+            if let error = error {
+                self?.errorsSubject.send(AppError(error: error))
+            }
         }
     }
 

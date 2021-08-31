@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct VerticalItemListView: View {
-    @Binding var items: [Item]?
+    @Binding var items: [Item]
     @Binding var selectedItem: Item?
     @Binding var isLoading: Bool
 
@@ -34,7 +34,7 @@ struct VerticalItemListView: View {
                         .padding(.horizontal, 22)
                         .padding(.top, 5)
                 }
-                if let resultCount = items?.count, let resultsLabelText = resultsLabelText {
+                if let resultCount = items.count, let resultsLabelText = resultsLabelText {
                     Text("\(resultCount) \(resultsLabelText)")
                         .font(.bold(size: 12))
                         .leftAligned()
@@ -43,7 +43,7 @@ struct VerticalItemListView: View {
             }
 
             VerticalListView(bottomPadding: bottomPadding) {
-                ForEach(items ?? []) { (item: Item) in
+                ForEach(items) { (item: Item) in
                     VerticalListItemWithoutAccessoryView(title: item.name ?? "",
                                                          imageURL: item.imageURL,
                                                          flipImage: item.imageURL?.store.id == .klekt,

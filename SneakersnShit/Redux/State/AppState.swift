@@ -11,9 +11,11 @@ struct AppState: Equatable {
     var user: User?
     var firstLoadDone = false
     var didFetchItemPrices = false
-    var searchResults: [Item]?
-    var popularItems: [Item]?
+    var searchResults: [Item] = []
+    var popularItems: [Item] = []
     var selectedItem: Item?
+    var favoritedItems: [Item] = []
+    var recentSearches: [Item] = []
     var selectedInventoryItem: InventoryItem?
     var inventoryItems: [InventoryItem] = []
     var stacks: [Stack] = []
@@ -51,9 +53,11 @@ struct AppState: Equatable {
     mutating func reset() {
         user = nil
         didFetchItemPrices = false
-        searchResults = nil
+        searchResults = []
         selectedItem = nil
         selectedInventoryItem = nil
+        favoritedItems = []
+        recentSearches = []
         inventoryItems = []
         stacks = []
         error = nil

@@ -63,16 +63,14 @@ struct ImageURL: Codable, Equatable, Hashable {
     let store: Store
 }
 
-struct Item: Codable, Equatable, Identifiable, Hashable {
+struct Item: Codable, Equatable, Identifiable, Hashable, ModelWithDate {
     let id: String
-    let storeInfo: [StoreInfo]
+    var storeInfo: [StoreInfo]
     var storePrices: [StorePrice]
-    let ownedByCount: Int?
-    let priceAlertCount: Int?
     let created: Double?
     let updated: Double?
     let name: String?
-    let retailPrice: Double?
+    var retailPrice: Double?
     let imageURL: ImageURL?
 
     struct StoreInfo: Codable, Equatable, Identifiable, Hashable {
@@ -258,8 +256,6 @@ extension Item {
                                         buyUrl: "",
                                         productId: "")],
              storePrices: [],
-             ownedByCount: 0,
-             priceAlertCount: 0,
              created: 0,
              updated: 0,
              name: "yolo",
@@ -272,8 +268,13 @@ extension Item {
         Item.databaseId(itemId: id, settings: settings)
     }
 
-    static func databaseId(itemId: String, settings: CopDeckSettings) -> String {
-        "\(itemId.replacingOccurrences(of: "/", with: "."))-\(settings.feeCalculation.country.region)-\(settings.currency.code.rawValue)"
+    static func databaseId(itemId: String, settings: CopDeckSettings?) -> String {
+        let baseId = itemId.replacingOccurrences(of: "/", with: ".")
+        if let settings = settings {
+            return "\(baseId)-\(settings.feeCalculation.country.region)-\(settings.currency.code.rawValue)"
+        } else {
+            return baseId
+        }
     }
 
     var isUptodate: Bool {
@@ -281,6 +282,15 @@ extension Item {
             return false
         }
         return true
+    }
+
+    var strippedOfPrices: Item {
+        var copy = self
+        copy.storeInfo = []
+        copy.storePrices = []
+        copy.retailPrice = nil
+        return copy
+
     }
 }
 

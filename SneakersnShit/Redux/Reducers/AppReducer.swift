@@ -65,6 +65,12 @@ func appReducer(state: inout AppState,
                 .catchErrors()
         case let .setUserSearchResults(searchResults):
             state.userSearchResults = searchResults
+        case let .favorite(searchItem):
+            environment.dataController.favorite(item: searchItem)
+        case let .unfavorite(searchItem):
+            environment.dataController.unfavorite(item: searchItem)
+        case let .addRecentSearch(searchItem):
+            environment.dataController.add(recentSearch: searchItem)
         case let .getUserProfile(userId):
             return environment.dataController.getUserProfile(userId: userId)
                 .map { (user: UserWithStacks) in AppAction.main(action: .setSelectedUser(user: user)) }

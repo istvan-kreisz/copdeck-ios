@@ -18,6 +18,7 @@ struct ItemDetailView: View {
     @State private var addedInventoryItem = false
     @State private var firstShow = true
     @State var showSnackBar = false
+    @State var isFavorited: Bool
 
     var shouldDismiss: () -> Void
 
@@ -29,10 +30,11 @@ struct ItemDetailView: View {
 
     @StateObject private var loader = Loader()
 
-    init(item: Item?, itemId: String, shouldDismiss: @escaping () -> Void) {
+    init(item: Item?, itemId: String, favoritedItemIds: [String], shouldDismiss: @escaping () -> Void) {
         self._item = State(initialValue: item)
         self.itemId = itemId
         self.shouldDismiss = shouldDismiss
+        self._isFavorited = State<Bool>(initialValue: favoritedItemIds.contains(itemId))
     }
 
     private func priceRow(row: Item.PriceRow) -> some View {
@@ -98,6 +100,8 @@ struct ItemDetailView: View {
             Color.customWhite.edgesIgnoringSafeArea(.all)
             let isAddToInventoryActive = Binding<Bool>(get: { addToInventory.isActive },
                                                        set: { addToInventory = $0 ? addToInventory : (false, nil) })
+            let isFavorited = Binding<Bool>(get: { self.isFavorited }, set: { self.didToggleFavorite(newValue: $0) })
+
             NavigationLink("",
                            destination: item
                                .map { item in AddToInventoryView(item: item, presented: $addToInventory, addedInvantoryItem: $addedInventoryItem) } ??
@@ -107,7 +111,8 @@ struct ItemDetailView: View {
             ScrollView(.vertical, showsIndicators: false) {
                 ScrollViewReader { scrollViewProxy in
                     VStack(alignment: .center, spacing: 20) {
-                        ItemImageViewWithNavBar(imageURL: item?.imageURL, requestInfo: store.state.requestInfo, shouldDismiss: shouldDismiss)
+                        ItemImageViewWithNavBar(imageURL: item?.imageURL, requestInfo: store.state.requestInfo, shouldDismiss: shouldDismiss,
+                                                isFavorited: isFavorited)
                             .id(0)
 
                         ZStack {
@@ -329,6 +334,17 @@ struct ItemDetailView: View {
             self.item = newItem
         }
     }
+
+    private func didToggleFavorite(newValue: Bool) {
+        guard let item = item else { return }
+        log("didToggleFavorite \(newValue)")
+        isFavorited = newValue
+        if newValue {
+            store.send(.main(action: .favorite(searchItem: item)))
+        } else {
+            store.send(.main(action: .unfavorite(searchItem: item)))
+        }
+    }
 }
 
 struct ItemDetailView_Previews: PreviewProvider {
@@ -347,13 +363,12 @@ struct ItemDetailView_Previews: PreviewProvider {
         return ItemDetailView(item: .init(id: "GHVDY45",
                                           storeInfo: [storeInfo],
                                           storePrices: [],
-                                          ownedByCount: 0,
-                                          priceAlertCount: 0,
                                           created: 0,
                                           updated: 0,
                                           name: "yolo",
                                           retailPrice: 12,
                                           imageURL: nil),
-                              itemId: "GHVDY45") {}
+                              itemId: "GHVDY45",
+                              favoritedItemIds: []) {}
     }
 }

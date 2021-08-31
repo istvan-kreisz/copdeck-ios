@@ -20,6 +20,9 @@ enum MainAction {
     case setPopularItems(items: [Item])
     case searchUsers(searchTerm: String)
     case setUserSearchResults(searchResults: [User])
+    case favorite(searchItem: Item)
+    case unfavorite(searchItem: Item)
+    case addRecentSearch(searchItem: Item)
     // users
     case getUserProfile(userId: String)
     case setSelectedUser(user: UserWithStacks?)
@@ -46,7 +49,7 @@ extension MainAction: Identifiable {
             return "signOut"
         case .setUser:
             return "setUser"
-        case let .updateUsername:
+        case .updateUsername:
             return "updateUsername"
         case .updateSettings:
             return "updateSettings"
@@ -60,6 +63,12 @@ extension MainAction: Identifiable {
             return "searchUsers"
         case .setUserSearchResults:
             return "setUserSearchResults"
+        case .favorite:
+            return "favorite"
+        case .unfavorite:
+            return "unfavorite"
+        case .addRecentSearch:
+            return "addRecentSearch"
         case .getUserProfile:
             return "getUserProfile"
         case .setSelectedUser:

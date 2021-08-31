@@ -21,9 +21,11 @@ struct SearchView: View {
 
     var allItems: [Item] {
         let selectedItem: [Item] = selectedItem.map { (item: Item) in [item] } ?? []
-        let searchResults: [Item] = store.state.searchResults ?? []
-        let popularItems: [Item] = store.state.popularItems ?? []
-        return (selectedItem + searchResults + popularItems).uniqued()
+        let searchResults: [Item] = store.state.searchResults
+        let popularItems: [Item] = store.state.popularItems
+        let favoritedItems: [Item] = store.state.favoritedItems
+        let recentSearches: [Item] = store.state.recentSearches
+        return (selectedItem + searchResults + popularItems + favoritedItems + recentSearches).uniqued()
     }
 
     var body: some View {
@@ -32,7 +34,9 @@ struct SearchView: View {
                                                   set: { selectedItem = $0 != nil ? selectedItem : nil })
             NavigationLink(destination: EmptyView()) { EmptyView() }
             ForEach(allItems) { (item: Item) in
-                NavigationLink(destination: ItemDetailView(item: item, itemId: item.id) { selectedItem = nil },
+                NavigationLink(destination: ItemDetailView(item: item,
+                                                           itemId: item.id,
+                                                           favoritedItemIds: store.state.favoritedItems.map(\.id)) { selectedItem = nil },
                                tag: item.id,
                                selection: selectedItemId) { EmptyView() }
             }
@@ -40,7 +44,8 @@ struct SearchView: View {
             NavigationLink(destination:
                 PopularItemsListView(showView: $showPopularItems,
                                      items: $store.state.popularItems,
-                                     requestInfo: store.state.requestInfo),
+                                     requestInfo: store.state.requestInfo,
+                                     favoritedItemIds: store.state.favoritedItems.map(\.id)),
                 isActive: $showPopularItems) { EmptyView() }
 
             VStack(alignment: .leading, spacing: 19) {
@@ -57,6 +62,13 @@ struct SearchView: View {
                                  text: $searchText)
                     .withDefaultPadding(padding: .horizontal)
 
+                HorizontaltemListView(items: $store.state.favoritedItems,
+                                      selectedItem: $selectedItem,
+                                      isLoading: .constant(false),
+                                      showPopularItems: .constant(false),
+                                      title: "Your favorites",
+                                      requestInfo: store.state.requestInfo)
+
                 HorizontaltemListView(items: $store.state.popularItems,
                                       selectedItem: $selectedItem,
                                       isLoading: $popularItemsLoader.isLoading,
@@ -68,7 +80,7 @@ struct SearchView: View {
                                      selectedItem: $selectedItem,
                                      isLoading: $searchResultsLoader.isLoading,
                                      title: nil,
-                                     resultsLabelText: "Search results:",
+                                     resultsLabelText: nil,
                                      bottomPadding: 130,
                                      requestInfo: store.state.requestInfo)
             }
@@ -76,7 +88,7 @@ struct SearchView: View {
                 store.send(.main(action: .getSearchResults(searchTerm: searchText)), completed: searchResultsLoader.getLoader())
             }
             .onAppear {
-                if store.state.popularItems?.isEmpty != false {
+                if store.state.popularItems.isEmpty {
                     store.send(.main(action: .getPopularItems), completed: popularItemsLoader.getLoader())
                 }
             }

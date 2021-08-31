@@ -10,8 +10,10 @@ import Combine
 
 struct PopularItemsListView: View {
     @Binding var showView: Bool
-    @Binding var items: [Item]?
+    @Binding var items: [Item]
+
     let requestInfo: [ScraperRequestInfo]
+    let favoritedItemIds: [String]
 
     @State private var selectedItem: Item?
 
@@ -20,8 +22,10 @@ struct PopularItemsListView: View {
             let selectedItemId = Binding<String?>(get: { selectedItem?.id }, set: { selectedItem = $0 == nil ? nil : selectedItem })
 
             NavigationLink(destination: EmptyView()) { EmptyView() }
-            ForEach(items ?? []) { (item: Item) in
-                NavigationLink(destination: ItemDetailView(item: item, itemId: item.id) { selectedItem = nil },
+            ForEach(items) { (item: Item) in
+                NavigationLink(destination: ItemDetailView(item: item,
+                                                           itemId: item.id,
+                                                           favoritedItemIds: favoritedItemIds) { selectedItem = nil },
                                tag: item.id,
                                selection: selectedItemId) { EmptyView() }
             }

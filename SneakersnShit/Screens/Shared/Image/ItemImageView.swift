@@ -16,22 +16,19 @@ struct ItemImageView: View {
     let aspectRatio: CGFloat?
     let flipImage: Bool
     let showPlaceholder: Bool
-    let isFavorited: Binding<Bool>?
 
     init(withImageURL imageURL: ImageURL?,
          requestInfo: [ScraperRequestInfo],
          size: CGFloat,
          aspectRatio: CGFloat?,
          flipImage: Bool = false,
-         showPlaceholder: Bool = true,
-         isFavorited: Binding<Bool>? = nil) {
+         showPlaceholder: Bool = true) {
         self.imageURL = imageURL
         self.requestInfo = requestInfo
         self.size = size
         self.aspectRatio = aspectRatio
         self.flipImage = flipImage
         self.showPlaceholder = showPlaceholder
-        self.isFavorited = isFavorited
     }
 
     var request: ImageRequestConvertible {
@@ -48,20 +45,7 @@ struct ItemImageView: View {
     }
 
     var body: some View {
-        if let isFavorited = isFavorited {
-            ZStack {
-                ImageView(withRequest: request, size: size, aspectRatio: aspectRatio, flipImage: flipImage, showPlaceholder: showPlaceholder)
-                Image(systemName: isFavorited.wrappedValue ? "heart.fill" : "heart")
-                    .font(.semiBold(size: self.size / 9))
-                    .foregroundColor(isFavorited.wrappedValue ? Color.customAccent1 : Color.customRed)
-                    .rightAligned()
-                    .bottomAligned()
-                    .padding(.leading, 20)
-                    .padding(.bottom, 20)
-            }
-        } else {
-            ImageView(withRequest: request, size: size, aspectRatio: aspectRatio, flipImage: flipImage, showPlaceholder: showPlaceholder)
-        }
+        ImageView(withRequest: request, size: size, aspectRatio: aspectRatio, flipImage: flipImage, showPlaceholder: showPlaceholder)
     }
 }
 

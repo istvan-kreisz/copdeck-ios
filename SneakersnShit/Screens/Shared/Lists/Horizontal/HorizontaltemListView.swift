@@ -11,7 +11,7 @@ import Combine
 struct HorizontaltemListView: View {
     private static let maxHorizontalItemCount = 6
 
-    @Binding var items: [Item]?
+    @Binding var items: [Item]
     @Binding var selectedItem: Item?
     @Binding var isLoading: Bool
     @Binding var showPopularItems: Bool
@@ -20,11 +20,11 @@ struct HorizontaltemListView: View {
     var requestInfo: [ScraperRequestInfo]
 
     var itemsToShow: [Item] {
-        items?.first(n: Self.maxHorizontalItemCount) ?? []
+        items.first(n: Self.maxHorizontalItemCount)
     }
 
     var body: some View {
-        if items?.isEmpty == false {
+        if !items.isEmpty {
             VStack(alignment: .leading, spacing: 15) {
                 if let title = title {
                     Text(title)
@@ -51,7 +51,7 @@ struct HorizontaltemListView: View {
                                                requestInfo: requestInfo,
                                                index: itemsToShow.firstIndex(where: { $0.id == item.id }) ?? 0) { selectedItem = item }
                         }
-                        if (items?.count ?? 0) > Self.maxHorizontalItemCount {
+                        if items.count > Self.maxHorizontalItemCount {
                             Button(action: {
                                 showPopularItems = true
                             }, label: {

@@ -189,27 +189,22 @@ class DefaultDataController: DataController {
 
     func delete(stack: Stack) {
         databaseManager.delete(stack: stack)
-//        backendAPI.delete(stack: stack)
     }
 
     func update(stack: Stack) {
         databaseManager.update(stack: stack)
-//        backendAPI.update(stack: stack)
     }
 
     func add(inventoryItems: [InventoryItem]) {
         databaseManager.add(inventoryItems: inventoryItems)
-//        backendAPI.add(inventoryItems: inventoryItems)
     }
 
     func update(inventoryItem: InventoryItem) {
         databaseManager.update(inventoryItem: inventoryItem)
-        //        backendAPI.update(inventoryItem: inventoryItem)
     }
 
     func delete(inventoryItems: [InventoryItem]) {
         databaseManager.delete(inventoryItems: inventoryItems)
-//        backendAPI.delete(inventoryItems: inventoryItems)
     }
 
     func stack(inventoryItems: [InventoryItem], stack: Stack) {
@@ -220,7 +215,6 @@ class DefaultDataController: DataController {
             }
             .map { .init(inventoryItemId: $0.id) }
         databaseManager.update(stack: updatedStack)
-//        backendAPI.update(stack: updatedStack)
     }
 
     func unstack(inventoryItems: [InventoryItem], stack: Stack) {
@@ -228,7 +222,6 @@ class DefaultDataController: DataController {
         var updatedStack = stack
         updatedStack.items = updatedStack.items.filter { !inventoryItemIds.contains($0.inventoryItemId) }
         databaseManager.update(stack: updatedStack)
-//        backendAPI.update(stack: updatedStack)
     }
 
     func getPopularItems(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
@@ -237,7 +230,6 @@ class DefaultDataController: DataController {
 
     func update(user: User) {
         databaseManager.update(user: user)
-//        backendAPI.update(user: user)
     }
 
     func deleteUser() {
@@ -250,6 +242,18 @@ class DefaultDataController: DataController {
 
     func searchUsers(searchTerm: String) -> AnyPublisher<[User], AppError> {
         backendAPI.searchUsers(searchTerm: searchTerm)
+    }
+
+    func add(recentSearch: Item) {
+        databaseManager.add(recentSearch: recentSearch)
+    }
+
+    func favorite(item: Item) {
+        databaseManager.favorite(item: item)
+    }
+
+    func unfavorite(item: Item) {
+        databaseManager.unfavorite(item: item)
     }
 
     func uploadProfileImage(image: UIImage) {
