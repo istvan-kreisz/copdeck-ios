@@ -92,16 +92,17 @@ struct SearchView: View {
                                                   title: "Recently viewed",
                                                   requestInfo: store.state.requestInfo,
                                                   sortedBy: .created)
+                            Spacer()
                         }
+                    } else {
+                        VerticalItemListView(items: $store.state.searchResults,
+                                             selectedItem: $selectedItem,
+                                             isLoading: $searchResultsLoader.isLoading,
+                                             title: nil,
+                                             resultsLabelText: nil,
+                                             bottomPadding: 130,
+                                             requestInfo: store.state.requestInfo)
                     }
-
-                    VerticalItemListView(items: $store.state.searchResults,
-                                         selectedItem: $selectedItem,
-                                         isLoading: $searchResultsLoader.isLoading,
-                                         title: nil,
-                                         resultsLabelText: nil,
-                                         bottomPadding: 130,
-                                         requestInfo: store.state.requestInfo)
                 } else {
                     Spacer()
                 }
