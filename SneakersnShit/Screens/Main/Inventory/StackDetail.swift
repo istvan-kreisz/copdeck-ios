@@ -148,21 +148,21 @@ struct StackDetail: View {
                 .cornerRadius(12)
                 .withDefaultPadding(padding: .horizontal)
                 .withDefaultShadow()
-                .padding(.vertical, 12)
+                .padding(.vertical, 10)
 
                 TextFieldRounded(title: "stack name",
                                  placeHolder: "name",
                                  style: .white,
                                  text: $name) { _ in nameChanged() }
                     .withDefaultPadding(padding: .horizontal)
-                    .padding(.vertical, 12)
+                    .padding(.vertical, 10)
 
                 TextFieldRounded(title: "caption (optional)",
                                  placeHolder: "caption",
                                  style: .white,
                                  text: $caption) { _ in captionChanged() }
                     .withDefaultPadding(padding: .horizontal)
-                    .padding(.vertical, 12)
+                    .padding(.vertical, 10)
 
                 toggleView(title: "Publish on Feed",
                            buttonTitle: "How does this work?",
