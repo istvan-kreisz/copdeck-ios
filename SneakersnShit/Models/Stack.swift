@@ -9,7 +9,7 @@ import Foundation
 
 struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
     let id: String
-    let name: String
+    var name: String
     var caption: String?
     var isPublished: Bool?
     var isPublic: Bool?

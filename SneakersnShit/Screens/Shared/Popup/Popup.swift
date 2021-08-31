@@ -58,7 +58,7 @@ struct Popup<Content: View>: View {
                 if let subtitle = subtitle {
                     Text(subtitle)
                         .foregroundColor(.customText2)
-                        .font(.regular(size: 13))
+                        .font(.regular(size: 14))
                         .multilineTextAlignment(.center)
                 }
 

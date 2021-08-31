@@ -9,6 +9,9 @@ import SwiftUI
 import Combine
 
 struct StackDetail: View {
+    private static let popupTitles = ["Publish on Feed", "Make Public"]
+    private static let popupDescriptions = ["some text blah blah blah", "some text blah blah blah"]
+
     @EnvironmentObject var store: AppStore
 
     @Binding var stack: Stack
@@ -24,9 +27,12 @@ struct StackDetail: View {
     @State var selectedInventoryItemId: String?
     @State var name: String
     @State var caption: String
+    @State var isPublished: Bool
+    @State var isPublic: Bool
 
     @State private var showItemSelector = false
     @State private var showSnackBar = false
+    @State private var popupIndex: Int? = nil
 
     var allStackItems: [InventoryItem] {
         stack.inventoryItems(allInventoryItems: inventoryItems, filters: filters, searchText: "")
@@ -80,15 +86,19 @@ struct StackDetail: View {
         self.saveChanges = saveChanges
         self._name = State<String>(initialValue: stack.wrappedValue.name)
         self._caption = State<String>(initialValue: stack.wrappedValue.caption ?? "")
+        self._isPublished = State<Bool>(initialValue: stack.wrappedValue.isPublished ?? false)
+        self._isPublic = State<Bool>(initialValue: stack.wrappedValue.isPublic ?? false)
     }
 
     var body: some View {
-        let isPublished = Binding<Bool>(get: { stack.isPublished == true },
-                                        set: { isPublished in didTogglePublished(newValue: isPublished) })
-        let isPublic = Binding<Bool>(get: { stack.isPublic == true },
-                                     set: { isPublic in didTogglePublic(newValue: isPublic) })
-
+        let showPopup = Binding<Bool>(get: { popupIndex != nil }, set: { show in popupIndex = show ? popupIndex : nil })
         Group {
+            ForEach(inventoryItems) { (inventoryItem: InventoryItem) in
+                NavigationLink(destination: InventoryItemDetailView(inventoryItem: inventoryItem) { selectedInventoryItemId = nil },
+                               tag: inventoryItem.id,
+                               selection: $selectedInventoryItemId) { EmptyView() }
+            }
+
             NavigationLink(destination: SelectStackItemsView(showView: $showItemSelector,
                                                              stack: stack,
                                                              inventoryItems: inventoryItems,
@@ -100,7 +110,7 @@ struct StackDetail: View {
                                                              }),
                            isActive: $showItemSelector) { EmptyView() }
 
-            VerticalListView(bottomPadding: 130, addHorizontalPadding: false) {
+            VerticalListView(bottomPadding: 130, spacing: 2, addHorizontalPadding: false) {
                 NavigationBar(title: stack.name, isBackButtonVisible: true, style: .dark) { showView = false }
                     .withDefaultPadding(padding: .horizontal)
 
@@ -138,32 +148,37 @@ struct StackDetail: View {
                 .cornerRadius(12)
                 .withDefaultPadding(padding: .horizontal)
                 .withDefaultShadow()
+                .padding(.vertical, 12)
 
                 TextFieldRounded(title: "stack name",
                                  placeHolder: "name",
                                  style: .white,
-                                 text: $name) { newName in
-                        // save name
-                }
-                .withDefaultPadding(padding: .horizontal)
+                                 text: $name) { _ in nameChanged() }
+                    .withDefaultPadding(padding: .horizontal)
+                    .padding(.vertical, 12)
 
                 TextFieldRounded(title: "caption (optional)",
                                  placeHolder: "caption",
                                  style: .white,
-                                 text: $caption) { newCaption in
-                        // save name
-                }
-                .withDefaultPadding(padding: .horizontal)
+                                 text: $caption) { _ in captionChanged() }
+                    .withDefaultPadding(padding: .horizontal)
+                    .padding(.vertical, 12)
 
                 toggleView(title: "Publish on Feed",
                            buttonTitle: "How does this work?",
-                           isOn: isPublished) {}
-                    .withDefaultPadding(padding: .horizontal)
+                           isOn: $isPublished) {
+                        popupIndex = 0
+                }
+                .withDefaultPadding(padding: .horizontal)
+                .buttonStyle(PlainButtonStyle())
 
                 toggleView(title: "Make Public",
                            buttonTitle: "How does this work?",
-                           isOn: isPublic) {}
-                    .withDefaultPadding(padding: .horizontal)
+                           isOn: $isPublic) {
+                        popupIndex = 1
+                }
+                .withDefaultPadding(padding: .horizontal)
+                .buttonStyle(PlainButtonStyle())
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("share link")
@@ -195,6 +210,7 @@ struct StackDetail: View {
                 }
                 .buttonStyle(PlainButtonStyle())
                 .withDefaultPadding(padding: .horizontal)
+                .padding(.vertical, 12)
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("sneakers")
@@ -235,6 +251,25 @@ struct StackDetail: View {
             .navigationbarHidden()
             .withSnackBar(text: "Link Copied", shouldShow: $showSnackBar)
         }
+        .withPopup {
+            Popup<EmptyView>(isShowing: showPopup,
+                             title: popupIndex.map { Self.popupTitles[safe: $0] ?? "" } ?? "",
+                             subtitle: popupIndex.map { Self.popupDescriptions[safe: $0] } ?? "",
+                             firstAction: .init(name: "Okay", tapped: { showPopup.wrappedValue = false }),
+                             secondAction: nil)
+        }
+    }
+
+    func nameChanged() {
+        var updatedStack = stack
+        updatedStack.name = name
+        store.send(.main(action: .updateStack(stack: updatedStack)))
+    }
+
+    func captionChanged() {
+        var updatedStack = stack
+        updatedStack.caption = caption
+        store.send(.main(action: .updateStack(stack: updatedStack)))
     }
 
     func copyLinkTapped() {
@@ -249,6 +284,7 @@ struct StackDetail: View {
         var updatedStack = stack
         updatedStack.isPublished = newValue
         if newValue {
+            isPublic = newValue
             updatedStack.isPublic = newValue
         }
         store.send(.main(action: .updateStack(stack: updatedStack)))
@@ -258,6 +294,7 @@ struct StackDetail: View {
         var updatedStack = stack
         updatedStack.isPublic = newValue
         if !newValue {
+            isPublished = newValue
             updatedStack.isPublished = newValue
         }
         store.send(.main(action: .updateStack(stack: updatedStack)))

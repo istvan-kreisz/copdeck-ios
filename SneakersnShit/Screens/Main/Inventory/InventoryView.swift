@@ -8,8 +8,6 @@
 import SwiftUI
 import Combine
 
-#warning("do smth with showEditedStack")
-
 struct InventoryView: View {
     @EnvironmentObject var store: AppStore
     @State private var selectedInventoryItemId: String?
@@ -25,7 +23,7 @@ struct InventoryView: View {
     @State private var newStackId: String?
     @State private var showImagePicker = false
     @State private var image: UIImage?
-    @State private var username: String = ""
+    @State var username: String = ""
     @State private var sharedStack: Stack?
     @State private var showSnackBar = false
 
@@ -140,9 +138,9 @@ struct InventoryView: View {
                 ScrollableSegmentedControl(selectedIndex: $selectedStackIndex,
                                            titles: stackTitles,
                                            button: .init(title: "New Stack", tapped: { showAddNewStackAlert = true }))
-                    .listRow()
-                    .padding(.top, -2)
                     .padding(.bottom, 12)
+                    .padding(.top, -2)
+                    .listRow()
 
                 if let stack = stacks[safe: selectedStackIndex] {
                     let isSelected = Binding<Bool>(get: { stack.id == selectedStack?.id }, set: { _ in })
@@ -184,6 +182,11 @@ struct InventoryView: View {
                     newStackId = nil
                     selectedStackIndex = indexOfNewStack
                 }
+                if let updatedEditedStack = stacks.first(where: { $0.id == editedStack?.id }) {
+                    if editedStack != updatedEditedStack {
+                        editedStack = updatedEditedStack
+                    }
+                }
             }
             .onChange(of: store.state.inventoryItems) { _ in
                 updateBestPrices()
@@ -194,9 +197,6 @@ struct InventoryView: View {
             .onChange(of: store.state.user?.settings) { _ in
                 updateBestPrices()
             }
-//            .onChange(of: showEditedStack) { showStack in
-//                shouldShowTabBar = !showStack
-//            }
             .onReceive(ItemCache.default.updatedPublisher.debounce(for: .milliseconds(500), scheduler: RunLoop.main).prepend(())) { _ in
                 updateBestPrices()
             }
@@ -272,7 +272,7 @@ struct InventoryView: View {
 struct InventoryView_Previews: PreviewProvider {
     static var previews: some View {
         return Group {
-            InventoryView(shouldShowTabBar: .constant(true), settingsPresented: .constant(false), viewRouter: ViewRouter())
+            InventoryView(username: "", shouldShowTabBar: .constant(true), settingsPresented: .constant(false), viewRouter: ViewRouter())
                 .environmentObject(AppStore.default)
         }
     }
