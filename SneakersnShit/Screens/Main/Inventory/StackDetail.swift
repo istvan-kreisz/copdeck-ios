@@ -91,6 +91,8 @@ struct StackDetail: View {
     }
 
     var body: some View {
+        let isPublished = Binding<Bool>(get: { self.isPublished }, set: { didTogglePublished(newValue: $0) })
+        let isPublic = Binding<Bool>(get: { self.isPublic }, set: { didTogglePublic(newValue: $0) })
         let showPopup = Binding<Bool>(get: { popupIndex != nil }, set: { show in popupIndex = show ? popupIndex : nil })
         Group {
             ForEach(inventoryItems) { (inventoryItem: InventoryItem) in
@@ -166,7 +168,7 @@ struct StackDetail: View {
 
                 toggleView(title: "Publish on Feed",
                            buttonTitle: "How does this work?",
-                           isOn: $isPublished) {
+                           isOn: isPublished) {
                         popupIndex = 0
                 }
                 .withDefaultPadding(padding: .horizontal)
@@ -174,7 +176,7 @@ struct StackDetail: View {
 
                 toggleView(title: "Make Public",
                            buttonTitle: "How does this work?",
-                           isOn: $isPublic) {
+                           isOn: isPublic) {
                         popupIndex = 1
                 }
                 .withDefaultPadding(padding: .horizontal)
@@ -283,6 +285,7 @@ struct StackDetail: View {
     func didTogglePublished(newValue: Bool) {
         var updatedStack = stack
         updatedStack.isPublished = newValue
+        isPublished = newValue
         if newValue {
             isPublic = newValue
             updatedStack.isPublic = newValue
@@ -293,6 +296,7 @@ struct StackDetail: View {
     func didTogglePublic(newValue: Bool) {
         var updatedStack = stack
         updatedStack.isPublic = newValue
+        isPublic = newValue
         if !newValue {
             isPublished = newValue
             updatedStack.isPublished = newValue
