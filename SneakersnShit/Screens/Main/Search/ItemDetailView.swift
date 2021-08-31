@@ -329,9 +329,11 @@ struct ItemDetailView: View {
         if let item = self.item {
             if newItem.id == item.id {
                 self.item = newItem
+                store.send(.main(action: .addRecentlyViewed(item: newItem)))
             }
         } else {
             self.item = newItem
+            store.send(.main(action: .addRecentlyViewed(item: newItem)))
         }
     }
 
@@ -340,9 +342,9 @@ struct ItemDetailView: View {
         log("didToggleFavorite \(newValue)")
         isFavorited = newValue
         if newValue {
-            store.send(.main(action: .favorite(searchItem: item)))
+            store.send(.main(action: .favorite(item: item)))
         } else {
-            store.send(.main(action: .unfavorite(searchItem: item)))
+            store.send(.main(action: .unfavorite(item: item)))
         }
     }
 }

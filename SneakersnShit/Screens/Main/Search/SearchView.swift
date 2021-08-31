@@ -24,8 +24,8 @@ struct SearchView: View {
         let searchResults: [Item] = store.state.searchResults
         let popularItems: [Item] = store.state.popularItems
         let favoritedItems: [Item] = store.state.favoritedItems
-        let recentSearches: [Item] = store.state.recentSearches
-        return (selectedItem + searchResults + popularItems + favoritedItems + recentSearches).uniqued()
+        let recentlyViewed: [Item] = store.state.recentlyViewed
+        return (selectedItem + searchResults + popularItems + favoritedItems + recentlyViewed).uniqued()
     }
 
     var body: some View {
@@ -62,19 +62,28 @@ struct SearchView: View {
                                  text: $searchText)
                     .withDefaultPadding(padding: .horizontal)
 
-                HorizontaltemListView(items: $store.state.favoritedItems,
-                                      selectedItem: $selectedItem,
-                                      isLoading: .constant(false),
-                                      showPopularItems: .constant(false),
-                                      title: "Your favorites",
-                                      requestInfo: store.state.requestInfo)
+                if store.state.searchResults.isEmpty {
+                    VStack(alignment: .leading, spacing: 10) {
+                        HorizontaltemListView(items: $store.state.popularItems,
+                                              selectedItem: $selectedItem,
+                                              isLoading: $popularItemsLoader.isLoading,
+                                              title: "Trending now",
+                                              requestInfo: store.state.requestInfo) { showPopularItems = true }
 
-                HorizontaltemListView(items: $store.state.popularItems,
-                                      selectedItem: $selectedItem,
-                                      isLoading: $popularItemsLoader.isLoading,
-                                      showPopularItems: $showPopularItems,
-                                      title: "Trending now",
-                                      requestInfo: store.state.requestInfo)
+                        HorizontaltemListView(items: $store.state.favoritedItems,
+                                              selectedItem: $selectedItem,
+                                              isLoading: .constant(false),
+                                              title: "Your favorites",
+                                              requestInfo: store.state.requestInfo)
+
+                        HorizontaltemListView(items: $store.state.recentlyViewed,
+                                              selectedItem: $selectedItem,
+                                              isLoading: .constant(false),
+                                              title: "Recently viewed",
+                                              requestInfo: store.state.requestInfo,
+                                              sortedBy: .created)
+                    }
+                }
 
                 VerticalItemListView(items: $store.state.searchResults,
                                      selectedItem: $selectedItem,

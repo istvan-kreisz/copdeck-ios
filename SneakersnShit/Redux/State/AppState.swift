@@ -15,7 +15,7 @@ struct AppState: Equatable {
     var popularItems: [Item] = []
     var selectedItem: Item?
     var favoritedItems: [Item] = []
-    var recentSearches: [Item] = []
+    var recentlyViewed: [Item] = []
     var selectedInventoryItem: InventoryItem?
     var inventoryItems: [InventoryItem] = []
     var stacks: [Stack] = []
@@ -57,7 +57,7 @@ struct AppState: Equatable {
         selectedItem = nil
         selectedInventoryItem = nil
         favoritedItems = []
-        recentSearches = []
+        recentlyViewed = []
         inventoryItems = []
         stacks = []
         error = nil

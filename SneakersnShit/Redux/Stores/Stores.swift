@@ -76,9 +76,9 @@ extension AppStore {
             })
             .store(in: &effectCancellables)
 
-        environment.dataController.recentSearchesPublisher
-            .sink { [weak self] recentSearches in
-                self?.state.recentSearches = recentSearches
+        environment.dataController.recentlyViewedPublisher
+            .sink { [weak self] recentlyViewed in
+                self?.state.recentlyViewed = recentlyViewed
             }
             .store(in: &effectCancellables)
 

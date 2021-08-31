@@ -57,7 +57,7 @@ protocol DatabaseManager {
     // read
     var inventoryItemsPublisher: AnyPublisher<[InventoryItem], Never> { get }
     var favoritesPublisher: AnyPublisher<[Item], Never> { get }
-    var recentSearchesPublisher: AnyPublisher<[Item], Never> { get }
+    var recentlyViewedPublisher: AnyPublisher<[Item], Never> { get }
     var popularItemsPublisher: AnyPublisher<[Item], Never> { get }
     var stacksPublisher: AnyPublisher<[Stack], Never> { get }
     var userPublisher: AnyPublisher<User, Never> { get }
@@ -78,7 +78,7 @@ protocol DatabaseManager {
     func delete(stack: Stack)
     func update(user: User)
     func uploadProfileImage(image: UIImage)
-    func add(recentSearch: Item)
+    func add(recentlyViewedItem: Item)
     func favorite(item: Item)
     func unfavorite(item: Item)
 }

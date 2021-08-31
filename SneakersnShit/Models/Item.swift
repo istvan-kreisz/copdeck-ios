@@ -67,8 +67,8 @@ struct Item: Codable, Equatable, Identifiable, Hashable, ModelWithDate {
     let id: String
     var storeInfo: [StoreInfo]
     var storePrices: [StorePrice]
-    let created: Double?
-    let updated: Double?
+    var created: Double?
+    var updated: Double?
     let name: String?
     var retailPrice: Double?
     let imageURL: ImageURL?
@@ -289,8 +289,8 @@ extension Item {
         copy.storeInfo = []
         copy.storePrices = []
         copy.retailPrice = nil
+        copy.created = Date().timeIntervalSince1970 * 1000
         return copy
-
     }
 }
 

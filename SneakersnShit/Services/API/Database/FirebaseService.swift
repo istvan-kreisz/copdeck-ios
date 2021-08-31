@@ -14,6 +14,8 @@ import FirebaseStorage
 #warning("better error handling for image downloads")
 
 class FirebaseService: DatabaseManager {
+    private static let recentlyViewedLimit = 20
+
     private let firestore: Firestore
     private let storage: Storage
 
@@ -23,7 +25,7 @@ class FirebaseService: DatabaseManager {
     private var inventoryListener = CollectionListener<InventoryItem>()
     private var stacksListener = CollectionListener<Stack>()
     private var favoritesListener = CollectionListener<Item>()
-    private var recentSearchesListener = CollectionListener<Item>()
+    private var recentlyViewedListener = CollectionListener<Item>()
 
     // document listeners
     private var userListener = DocumentListener<User>()
@@ -37,7 +39,7 @@ class FirebaseService: DatabaseManager {
         let listeners: [FireStoreListener?] = [inventoryListener,
                                                stacksListener,
                                                favoritesListener,
-                                               recentSearchesListener,
+                                               recentlyViewedListener,
                                                userListener,
                                                exchangeRatesListener]
         return listeners.compactMap { $0 }
@@ -56,8 +58,8 @@ class FirebaseService: DatabaseManager {
         favoritesListener.dataPublisher
     }
 
-    var recentSearchesPublisher: AnyPublisher<[Item], Never> {
-        recentSearchesListener.dataPublisher
+    var recentlyViewedPublisher: AnyPublisher<[Item], Never> {
+        recentlyViewedListener.dataPublisher
     }
 
     var stacksPublisher: AnyPublisher<[Stack], Never> {
@@ -122,7 +124,7 @@ class FirebaseService: DatabaseManager {
         inventoryListener.startListening(collectionName: "inventory", baseDocumentReference: userListener.documentRef)
         stacksListener.startListening(collectionName: "stacks", baseDocumentReference: userListener.documentRef)
         favoritesListener.startListening(collectionName: "favorites", baseDocumentReference: userListener.documentRef)
-        recentSearchesListener.startListening(collectionName: "recentsearches", baseDocumentReference: userListener.documentRef)
+        recentlyViewedListener.startListening(collectionName: "recentlyViewed", baseDocumentReference: userListener.documentRef)
     }
 
     private func getProfileImage() {
@@ -298,24 +300,25 @@ class FirebaseService: DatabaseManager {
         }
     }
 
-    func add(recentSearch: Item) {
-        let recentSearches = recentSearchesListener.dataSubject.value
-        guard !recentSearches.contains(where: { $0.id == recentSearch.id }) else { return }
+    func add(recentlyViewedItem: Item) {
+        let recentlyViewed = recentlyViewedListener.dataSubject.value
+        guard !recentlyViewed.contains(where: { $0.id == recentlyViewedItem.id }) else { return }
 
         let batch = firestore.batch()
 
         // delete old ones if over limit
-        if recentSearches.count >= 10 {
-            let mostRecents = recentSearches.sortedByDate(sortOrder: .descending).first(n: 10)
+        if recentlyViewed.count >= Self.recentlyViewedLimit - 1 {
+            let mostRecents = recentlyViewed.sortedByDate(sortOrder: .descending).first(n: Self.recentlyViewedLimit - 1)
             let mostRecentIds = mostRecents.map(\.id)
-            let deleted = recentSearches.filter { !mostRecentIds.contains($0.id) }
-            let deletedDocRefs = deleted.compactMap { recentSearchesListener.collectionRef?.document(Item.databaseId(itemId: $0.id, settings: nil)) }
+            let deleted = recentlyViewed.filter { !mostRecentIds.contains($0.id) }
+            let deletedDocRefs = deleted.compactMap { recentlyViewedListener.collectionRef?.document(Item.databaseId(itemId: $0.id, settings: nil)) }
             deletedDocRefs.forEach { batch.deleteDocument($0) }
         }
         // add new
-        if let dict = try? recentSearch.strippedOfPrices.asDictionary() {
-            if let newDocumentRef = recentSearchesListener.collectionRef?.document(Item.databaseId(itemId: recentSearch.id, settings: nil)) {
-                batch.updateData(dict, forDocument: newDocumentRef)
+        log("add new recentlyViewedItem \(recentlyViewedItem.id)")
+        if let dict = try? recentlyViewedItem.strippedOfPrices.asDictionary() {
+            if let newDocumentRef = recentlyViewedListener.collectionRef?.document(Item.databaseId(itemId: recentlyViewedItem.id, settings: nil)) {
+                batch.setData(dict, forDocument: newDocumentRef, merge: true)
             }
         }
 

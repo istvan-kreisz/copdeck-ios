@@ -20,9 +20,9 @@ enum MainAction {
     case setPopularItems(items: [Item])
     case searchUsers(searchTerm: String)
     case setUserSearchResults(searchResults: [User])
-    case favorite(searchItem: Item)
-    case unfavorite(searchItem: Item)
-    case addRecentSearch(searchItem: Item)
+    case favorite(item: Item)
+    case unfavorite(item: Item)
+    case addRecentlyViewed(item: Item)
     // users
     case getUserProfile(userId: String)
     case setSelectedUser(user: UserWithStacks?)
@@ -67,8 +67,8 @@ extension MainAction: Identifiable {
             return "favorite"
         case .unfavorite:
             return "unfavorite"
-        case .addRecentSearch:
-            return "addRecentSearch"
+        case .addRecentlyViewed:
+            return "addRecentlyViewed"
         case .getUserProfile:
             return "getUserProfile"
         case .setSelectedUser:

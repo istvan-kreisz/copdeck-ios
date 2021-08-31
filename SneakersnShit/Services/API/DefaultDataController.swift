@@ -16,7 +16,7 @@ class DefaultDataController: DataController {
 
     lazy var inventoryItemsPublisher = databaseManager.inventoryItemsPublisher
     lazy var favoritesPublisher = databaseManager.favoritesPublisher
-    lazy var recentSearchesPublisher = databaseManager.recentSearchesPublisher
+    lazy var recentlyViewedPublisher = databaseManager.recentlyViewedPublisher
     lazy var stacksPublisher = databaseManager.stacksPublisher
     lazy var userPublisher = databaseManager.userPublisher
     lazy var exchangeRatesPublisher = databaseManager.exchangeRatesPublisher
@@ -244,8 +244,8 @@ class DefaultDataController: DataController {
         backendAPI.searchUsers(searchTerm: searchTerm)
     }
 
-    func add(recentSearch: Item) {
-        databaseManager.add(recentSearch: recentSearch)
+    func add(recentlyViewedItem: Item) {
+        databaseManager.add(recentlyViewedItem: recentlyViewedItem)
     }
 
     func favorite(item: Item) {

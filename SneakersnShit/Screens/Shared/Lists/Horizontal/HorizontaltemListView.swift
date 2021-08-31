@@ -9,18 +9,24 @@ import SwiftUI
 import Combine
 
 struct HorizontaltemListView: View {
-    private static let maxHorizontalItemCount = 6
+    private static let maxHorizontalItemCount = 20
 
     @Binding var items: [Item]
     @Binding var selectedItem: Item?
     @Binding var isLoading: Bool
-    @Binding var showPopularItems: Bool
 
     let title: String?
     var requestInfo: [ScraperRequestInfo]
 
+    var sortedBy: DateType? = nil
+    var moreTapped: (() -> Void)? = nil
+
     var itemsToShow: [Item] {
-        items.first(n: Self.maxHorizontalItemCount)
+        if let sortedBy = sortedBy {
+            return items.first(n: Self.maxHorizontalItemCount).sortedByDate(dateType: sortedBy, sortOrder: .descending)
+        } else {
+            return items.first(n: Self.maxHorizontalItemCount)
+        }
     }
 
     var body: some View {
@@ -51,10 +57,8 @@ struct HorizontaltemListView: View {
                                                requestInfo: requestInfo,
                                                index: itemsToShow.firstIndex(where: { $0.id == item.id }) ?? 0) { selectedItem = item }
                         }
-                        if items.count > Self.maxHorizontalItemCount {
-                            Button(action: {
-                                showPopularItems = true
-                            }, label: {
+                        if let moreTapped = moreTapped, items.count > Self.maxHorizontalItemCount {
+                            Button(action: moreTapped) {
                                 ZStack {
                                     Circle()
                                         .fill(Color.customBlue)
@@ -66,7 +70,7 @@ struct HorizontaltemListView: View {
                                         .foregroundColor(.customWhite)
                                         .font(.semiBold(size: 13))
                                 }
-                            })
+                            }
                         }
                         Color.clear
                             .frame(width: 0, height: 0)
@@ -86,7 +90,6 @@ struct HorizontaltemListView_Previews: PreviewProvider {
         HorizontaltemListView(items: .constant([.sample, .sample]),
                               selectedItem: .constant(nil),
                               isLoading: .constant(true),
-                              showPopularItems: .constant(false),
                               title: "title",
                               requestInfo: [])
     }
