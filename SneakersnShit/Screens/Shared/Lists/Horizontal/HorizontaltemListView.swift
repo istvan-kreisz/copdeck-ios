@@ -53,7 +53,7 @@ struct HorizontaltemListView: View {
                         ForEach(itemsToShow) { (item: Item) in
                             HorizontalListItem(title: item.name ?? "",
                                                imageURL: item.imageURL,
-                                               flipImage: item.imageURL?.store.id == .klekt,
+                                               flipImage: item.imageURL?.store?.id == .klekt,
                                                requestInfo: requestInfo,
                                                index: itemsToShow.firstIndex(where: { $0.id == item.id }) ?? 0) { selectedItem = item }
                         }

@@ -7,13 +7,18 @@
 
 import Foundation
 
-struct User: Codable, Equatable {
+struct User: Codable, Equatable, Identifiable {
     let id: String
     var inited: Bool?
     var name: String?
     let created: Double?
     let updated: Double?
     var settings: CopDeckSettings?
+    var imageURL: URL?
+
+    enum CodingKeys: String, CodingKey {
+        case id, inited, name, created, updated, settings
+    }
 }
 
 extension User {

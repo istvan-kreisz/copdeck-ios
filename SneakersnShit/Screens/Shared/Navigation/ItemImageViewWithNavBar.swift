@@ -23,7 +23,7 @@ struct ItemImageViewWithNavBar: View {
                               requestInfo: requestInfo,
                               size: size,
                               aspectRatio: nil,
-                              flipImage: imageURL.store.id == .klekt,
+                              flipImage: imageURL.store?.id == .klekt,
                               showPlaceholder: false)
             } else {
                 Color.clear

@@ -60,7 +60,7 @@ enum FeeType: String, CaseIterable, Identifiable, EnumCodable {
 
 struct ImageURL: Codable, Equatable, Hashable {
     let url: String
-    let store: Store
+    let store: Store?
 }
 
 struct Item: Codable, Equatable, Identifiable, Hashable, ModelWithDate {

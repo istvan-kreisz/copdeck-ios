@@ -31,7 +31,7 @@ struct InventoryListItem: View {
     var body: some View {
         VerticalListItem(title: inventoryItem.name,
                          imageURL: inventoryItem.imageURL,
-                         flipImage: inventoryItem.imageURL?.store.id == .klekt,
+                         flipImage: inventoryItem.imageURL?.store?.id == .klekt,
                          requestInfo: requestInfo,
                          isEditing: $isEditing,
                          isSelected: isSelected,

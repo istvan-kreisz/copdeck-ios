@@ -15,7 +15,7 @@ struct SelectStackItemsListItem: View {
     var body: some View {
         VerticalListItemWithAccessoryView1(title: inventoryItem.name,
                                            imageURL: inventoryItem.imageURL,
-                                           flipImage: inventoryItem.imageURL?.store.id == .klekt,
+                                           flipImage: inventoryItem.imageURL?.store?.id == .klekt,
                                            requestInfo: requestInfo,
                                            isEditing: .constant(false),
                                            isSelected: isSelected,

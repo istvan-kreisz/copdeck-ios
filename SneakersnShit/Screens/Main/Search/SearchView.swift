@@ -13,9 +13,11 @@ struct SearchView: View {
 
     @State private var searchText = ""
     @State private var selectedItem: Item?
+    @State private var selectedUser: User?
 
     @StateObject private var searchResultsLoader = Loader()
     @StateObject private var popularItemsLoader = Loader()
+    @StateObject private var userSearchResultsLoader = Loader()
 
     @State private var showPopularItems = false
 
@@ -59,7 +61,7 @@ struct SearchView: View {
                     .withDefaultPadding(padding: .horizontal)
 
                 TextFieldRounded(title: nil,
-                                 placeHolder: "Search sneakers",
+                                 placeHolder: selectedTabIndex == 0 ? "Search sneakers" : "Search people",
                                  style: .white,
                                  text: $searchText)
                     .withDefaultPadding(padding: .horizontal)
@@ -104,12 +106,18 @@ struct SearchView: View {
                                              requestInfo: store.state.requestInfo)
                     }
                 } else {
-                    Spacer()
+                    VerticalUserListView(users: $store.state.userSearchResults,
+                                         selectedUser: $selectedUser,
+                                         isLoading: $userSearchResultsLoader.isLoading,
+                                         bottomPadding: 130)
                 }
-
             }
             .onChange(of: searchText) { searchText in
-                store.send(.main(action: .getSearchResults(searchTerm: searchText)), completed: searchResultsLoader.getLoader())
+                if selectedTabIndex == 0 {
+                    store.send(.main(action: .getSearchResults(searchTerm: searchText)), completed: searchResultsLoader.getLoader())
+                } else {
+                    store.send(.main(action: .searchUsers(searchTerm: searchText)), completed: userSearchResultsLoader.getLoader())
+                }
             }
             .onAppear {
                 if store.state.popularItems.isEmpty {

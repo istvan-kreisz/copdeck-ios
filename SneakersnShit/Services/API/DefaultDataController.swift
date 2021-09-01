@@ -240,8 +240,16 @@ class DefaultDataController: DataController {
         backendAPI.getUserProfile(userId: userId)
     }
 
+    func getImageURLs(for users: [User]) -> AnyPublisher<[User], AppError> {
+        databaseManager.getImageURLs(for: users)
+    }
+
     func searchUsers(searchTerm: String) -> AnyPublisher<[User], AppError> {
         backendAPI.searchUsers(searchTerm: searchTerm)
+            .flatMap { [weak self] (users: [User]) -> AnyPublisher<[User], AppError> in
+                guard let self = self else { return Just(users).setFailureType(to: AppError.self).eraseToAnyPublisher() }
+                return self.getImageURLs(for: users).eraseToAnyPublisher()
+            }.eraseToAnyPublisher()
     }
 
     func add(recentlyViewedItem: Item) {

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import NukeUI
 
 enum VerticalListItemSelectionStyle {
     case checkmark
@@ -23,6 +24,7 @@ struct VerticalListItem<V1: View, V2: View>: View {
     var selectionStyle: VerticalListItemSelectionStyle = .checkmark
     var ribbonText: String? = nil
     @State var animate = false
+    var resizingMode: ImageResizingMode = .aspectFit
 
     var accessoryView1: V1? = nil
     var accessoryView2: V2? = nil
@@ -53,7 +55,8 @@ struct VerticalListItem<V1: View, V2: View>: View {
                               requestInfo: requestInfo,
                               size: 62,
                               aspectRatio: nil,
-                              flipImage: flipImage)
+                              flipImage: flipImage,
+                              resizingMode: resizingMode)
                     .cornerRadius(8)
 
                 VStack(spacing: 3) {
@@ -129,6 +132,7 @@ struct VerticalListItemWithAccessoryView1<V: View>: View {
     var ribbonText: String? = nil
     @State var animate = false
 
+    var resizingMode: ImageResizingMode = .aspectFit
     var accessoryView: V? = nil
     var onTapped: () -> Void
     var onSelectorTapped: (() -> Void)? = nil
@@ -143,6 +147,7 @@ struct VerticalListItemWithAccessoryView1<V: View>: View {
                                        selectionStyle: selectionStyle,
                                        ribbonText: ribbonText,
                                        animate: animate,
+                                       resizingMode: resizingMode,
                                        accessoryView1: accessoryView,
                                        accessoryView2: nil,
                                        onTapped: onTapped,
@@ -162,6 +167,8 @@ struct VerticalListItemWithoutAccessoryView: View {
     var ribbonText: String? = nil
     @State var animate = false
 
+    var resizingMode: ImageResizingMode = .aspectFit
+
     var onTapped: () -> Void
     var onSelectorTapped: (() -> Void)? = nil
 
@@ -175,6 +182,7 @@ struct VerticalListItemWithoutAccessoryView: View {
                                                selectionStyle: selectionStyle,
                                                ribbonText: ribbonText,
                                                animate: animate,
+                                               resizingMode: resizingMode,
                                                onTapped: onTapped,
                                                onSelectorTapped: onSelectorTapped)
     }

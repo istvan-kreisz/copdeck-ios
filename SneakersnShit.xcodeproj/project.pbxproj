@@ -137,6 +137,8 @@
 		5DDEFDCA26D13695001B0F76 /* FiltersModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DDEFDC926D13695001B0F76 /* FiltersModal.swift */; };
 		5DDEFDCC26D14095001B0F76 /* Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DDEFDCB26D14095001B0F76 /* Filters.swift */; };
 		5DDEFDCF26D2ADC2001B0F76 /* EnumCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DDEFDCE26D2ADC2001B0F76 /* EnumCodable.swift */; };
+		5DE4F20C26DEF85D0087077A /* VerticalUserListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE4F20B26DEF85D0087077A /* VerticalUserListView.swift */; };
+		5DE4F20E26DEFA070087077A /* UserListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE4F20D26DEFA070087077A /* UserListItem.swift */; };
 		5DE596E626C876790024F7D5 /* PagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE596E526C876790024F7D5 /* PagerView.swift */; };
 		5DE596E826C877120024F7D5 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE596E726C877120024F7D5 /* Stack.swift */; };
 		5DE596EA26C878280024F7D5 /* StackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE596E926C878280024F7D5 /* StackView.swift */; };
@@ -283,6 +285,8 @@
 		5DDEFDC926D13695001B0F76 /* FiltersModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersModal.swift; sourceTree = "<group>"; };
 		5DDEFDCB26D14095001B0F76 /* Filters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filters.swift; sourceTree = "<group>"; };
 		5DDEFDCE26D2ADC2001B0F76 /* EnumCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnumCodable.swift; sourceTree = "<group>"; };
+		5DE4F20B26DEF85D0087077A /* VerticalUserListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalUserListView.swift; sourceTree = "<group>"; };
+		5DE4F20D26DEFA070087077A /* UserListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListItem.swift; sourceTree = "<group>"; };
 		5DE596E526C876790024F7D5 /* PagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerView.swift; sourceTree = "<group>"; };
 		5DE596E726C877120024F7D5 /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		5DE596E926C878280024F7D5 /* StackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackView.swift; sourceTree = "<group>"; };
@@ -322,7 +326,6 @@
 			children = (
 				5D0E5A10269E4EDE006D7E9C /* AddToInventoryView.swift */,
 				5DCC466D26A8CEDE007671BC /* NewItemCard.swift */,
-				5D9D520126AE29DB00AB1F30 /* InventoryListItem.swift */,
 				5D9D520326AE359C00AB1F30 /* InventoryViewPills.swift */,
 				5D9D520726AE4CF400AB1F30 /* EditInventoryTray.swift */,
 			);
@@ -575,7 +578,11 @@
 			children = (
 				5D9D51FF26AE211900AB1F30 /* VerticalListItem.swift */,
 				5D54FE2726C30931008CD05F /* VerticalItemListView.swift */,
+				5D9D520126AE29DB00AB1F30 /* InventoryListItem.swift */,
 				5D2726C926CB2CE400887449 /* VerticalListView.swift */,
+				5DE596EF26C8CD600024F7D5 /* SelectStackItemsListItem.swift */,
+				5DE4F20B26DEF85D0087077A /* VerticalUserListView.swift */,
+				5DE4F20D26DEFA070087077A /* UserListItem.swift */,
 			);
 			path = Vertical;
 			sourceTree = "<group>";
@@ -898,7 +905,6 @@
 			isa = PBXGroup;
 			children = (
 				5DE596ED26C8C74B0024F7D5 /* SelectStackItemsView.swift */,
-				5DE596EF26C8CD600024F7D5 /* SelectStackItemsListItem.swift */,
 			);
 			path = SelectStackItems;
 			sourceTree = "<group>";
@@ -1104,6 +1110,7 @@
 				5D3DE37626AFAB54009E4D52 /* CountrySelector.swift in Sources */,
 				5D54FE2826C30931008CD05F /* VerticalItemListView.swift in Sources */,
 				5D53A1F226AF2A61001DAA8D /* AccessoryButton.swift in Sources */,
+				5DE4F20E26DEFA070087077A /* UserListItem.swift in Sources */,
 				5D9C8E3F269FAB8B008538D6 /* NextButton.swift in Sources */,
 				5D2726D226CC5B6900887449 /* ItemCache.swift in Sources */,
 				5D95570C269A60DA00CCC2E7 /* String+Extensions.swift in Sources */,
@@ -1111,6 +1118,7 @@
 				5D2D5AAF25C552B0009598AA /* DefaultBackendAPI.swift in Sources */,
 				5D424CFF25C5041E0008D6F4 /* DebugSettings.swift in Sources */,
 				5D69609B258713760058BABE /* LoginView.swift in Sources */,
+				5DE4F20C26DEF85D0087077A /* VerticalUserListView.swift in Sources */,
 				5D424CF725C503D10008D6F4 /* UIScreen+Extensions.swift in Sources */,
 				5DC00EAF25C3A387009A3AB9 /* DefaultAuthenticator.swift in Sources */,
 				5D3E872125C5CCD700FC65FE /* SearchView.swift in Sources */,

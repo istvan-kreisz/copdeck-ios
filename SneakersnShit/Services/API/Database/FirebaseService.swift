@@ -116,7 +116,7 @@ class FirebaseService: DatabaseManager {
 
         reset()
         listenToChanges(userId: userId)
-        getProfileImage()
+        getUserProfileImage()
     }
 
     private func listenToChanges(userId: String) {
@@ -127,14 +127,49 @@ class FirebaseService: DatabaseManager {
         recentlyViewedListener.startListening(collectionName: "recentlyViewed", baseDocumentReference: userListener.documentRef)
     }
 
-    private func getProfileImage() {
-        imageRef?.downloadURL { [weak self] url, error in
+    func getImageURLs(for users: [User]) -> AnyPublisher<[User], AppError> {
+        Future { [weak self] promise in
+            guard let self = self else {
+                promise(.success([]))
+                return
+            }
+            var usersWithImageURLs: [User] = []
+            let dispatchGroup = DispatchGroup()
+            for user in users {
+                dispatchGroup.enter()
+                let imageRef = self.storage.reference().child("images/\(user.id)/profilePicture.jpg")
+                self.getProfileImage(at: imageRef) { url, error in
+                    DispatchQueue.main.async {
+                        if let error = error {
+                            log("error downloading image \(error)")
+                            usersWithImageURLs.append(user)
+                        } else {
+                            var copy = user
+                            copy.imageURL = url
+                            usersWithImageURLs.append(copy)
+                        }
+                        dispatchGroup.leave()
+                    }
+                }
+            }
+            dispatchGroup.notify(queue: .main) {
+                promise(.success(usersWithImageURLs))
+            }
+        }.eraseToAnyPublisher()
+    }
+
+    private func getUserProfileImage() {
+        getProfileImage(at: imageRef) { [weak self] url, error in
             if let error = error {
-                log(error)
+                log("error downloading image \(error)")
             } else {
                 self?.imageSubject.send(url)
             }
         }
+    }
+
+    private func getProfileImage(at storageRef: StorageReference?, completion: @escaping (URL?, Error?) -> Void) {
+        storageRef?.downloadURL(completion: completion)
     }
 
     private func addCollectionUpdatesListener<T: Codable>(collectionRef: CollectionReference?,
@@ -372,7 +407,7 @@ class FirebaseService: DatabaseManager {
 
     private func uploadImageData(_ data: Data) {
         uploadTask = imageRef?.putData(data, metadata: nil) { [weak self] metadata, error in
-            self?.getProfileImage()
+            self?.getUserProfileImage()
         }
     }
 }

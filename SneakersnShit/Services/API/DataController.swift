@@ -69,6 +69,7 @@ protocol DatabaseManager {
     // read
     func getUser(withId id: String) -> AnyPublisher<User, AppError>
     func getItem(withId id: String, settings: CopDeckSettings) -> AnyPublisher<Item, AppError>
+    func getImageURLs(for users: [User]) -> AnyPublisher<[User], AppError>
 
     // write
     func add(inventoryItems: [InventoryItem])

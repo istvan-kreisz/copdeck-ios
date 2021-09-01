@@ -16,23 +16,26 @@ struct ItemImageView: View {
     let aspectRatio: CGFloat?
     let flipImage: Bool
     let showPlaceholder: Bool
+    let resizingMode: ImageResizingMode
 
     init(withImageURL imageURL: ImageURL?,
          requestInfo: [ScraperRequestInfo],
          size: CGFloat,
          aspectRatio: CGFloat?,
          flipImage: Bool = false,
-         showPlaceholder: Bool = true) {
+         showPlaceholder: Bool = true,
+         resizingMode: ImageResizingMode = .aspectFit) {
         self.imageURL = imageURL
         self.requestInfo = requestInfo
         self.size = size
         self.aspectRatio = aspectRatio
         self.flipImage = flipImage
         self.showPlaceholder = showPlaceholder
+        self.resizingMode = resizingMode
     }
 
     var request: ImageRequestConvertible {
-        if let imageURL = imageURL, let headers = requestInfo.first(where: { $0.storeId == imageURL.store.id })?.imageDownloadHeaders,
+        if let imageURL = imageURL, let headers = requestInfo.first(where: { $0.storeId == imageURL.store?.id })?.imageDownloadHeaders,
            let url = URL(string: imageURL.url) {
             var request = URLRequest(url: url)
             headers.forEach { name, value in
@@ -45,7 +48,7 @@ struct ItemImageView: View {
     }
 
     var body: some View {
-        ImageView(withRequest: request, size: size, aspectRatio: aspectRatio, flipImage: flipImage, showPlaceholder: showPlaceholder)
+        ImageView(withRequest: request, size: size, aspectRatio: aspectRatio, flipImage: flipImage, showPlaceholder: showPlaceholder, resizingMode: resizingMode)
     }
 }
 

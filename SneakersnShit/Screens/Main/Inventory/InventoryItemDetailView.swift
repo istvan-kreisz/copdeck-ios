@@ -28,7 +28,7 @@ struct InventoryItemDetailView: View {
     }
 
     var imageDownloadHeaders: [String: String] {
-        if let imageURLStoreId = inventoryItem.imageURL?.store.id, let requestInfo = store.state.requestInfo(for: imageURLStoreId) {
+        if let imageURLStoreId = inventoryItem.imageURL?.store?.id, let requestInfo = store.state.requestInfo(for: imageURLStoreId) {
             return requestInfo.imageDownloadHeaders
         } else {
             return [:]

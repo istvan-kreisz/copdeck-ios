@@ -46,7 +46,7 @@ struct VerticalItemListView: View {
                 ForEach(items) { (item: Item) in
                     VerticalListItemWithoutAccessoryView(title: item.name ?? "",
                                                          imageURL: item.imageURL,
-                                                         flipImage: item.imageURL?.store.id == .klekt,
+                                                         flipImage: item.imageURL?.store?.id == .klekt,
                                                          requestInfo: requestInfo,
                                                          isEditing: .constant(false),
                                                          isSelected: false) { selectedItem = item }
