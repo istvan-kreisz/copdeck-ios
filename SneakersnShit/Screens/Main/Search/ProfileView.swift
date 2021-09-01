@@ -18,7 +18,7 @@ struct ProfileView: View {
 
     var joinedDate: String {
         guard let joined = profileData.user.created else { return "" }
-        let joinedDate = Date(timeIntervalSince1970: joined)
+        let joinedDate = Date(timeIntervalSince1970: joined / 1000)
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMMM yyyy"
 
@@ -63,7 +63,7 @@ struct ProfileView: View {
                                     username: .constant(profileData.user.name ?? ""),
                                     textBox1: .init(title: "Joined", text: joinedDate),
                                     textBox2: .init(title: "Shared Stacks", text: "\(profileData.stacks.count)"),
-                                    showHeader: false)
+                                    isOwnProfile: false)
 
 //                if let stack = stacks[safe: selectedStackIndex] {
 //                    let isSelected = Binding<Bool>(get: { stack.id == selectedStack?.id }, set: { _ in })

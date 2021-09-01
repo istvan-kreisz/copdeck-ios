@@ -76,7 +76,17 @@ func appReducer(state: inout AppState,
                 .map { (user: ProfileData) in AppAction.main(action: .setSelectedUser(user: user)) }
                 .catchErrors()
         case let .setSelectedUser(user):
-            state.selectedUserProfile = user
+            var newUser = user
+            if state.selectedUserProfile?.user.imageURL != nil {
+                if state.selectedUserProfile?.user.id == user?.user.id {
+                    newUser?.user.imageURL = state.selectedUserProfile?.user.imageURL
+                }
+            } else {
+                if let user = state.userSearchResults.first(where: { $0.id == newUser?.user.id }), user.imageURL != nil {
+                    newUser?.user.imageURL = user.imageURL
+                }
+            }
+            state.selectedUserProfile = newUser
         case let .getItemDetails(item, itemId, fetchMode):
             return environment.dataController.getItemDetails(for: item,
                                                              itemId: itemId,

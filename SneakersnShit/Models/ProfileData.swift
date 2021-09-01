@@ -8,7 +8,7 @@
 import Foundation
 
 struct ProfileData: Codable, Equatable {
-    let user: User
+    var user: User
     let stacks: [Stack]
     let inventoryItems: [InventoryItem]
 }

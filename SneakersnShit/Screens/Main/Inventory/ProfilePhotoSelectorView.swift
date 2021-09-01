@@ -13,6 +13,8 @@ struct ProfilePhotoSelectorView: View {
     @Binding var showImagePicker: Bool
     @Binding var profileImageURL: URL?
 
+    let isEditable: Bool
+
     var body: some View {
         ZStack {
             Color.customAccent1.frame(width: Self.profileImageSize, height: Self.profileImageSize)
@@ -33,28 +35,30 @@ struct ProfilePhotoSelectorView: View {
                     .frame(height: Self.profileImageSize * 0.35)
                     .foregroundColor(Color.customWhite)
             }
-            Button(action: {
-                showImagePicker = true
-            }, label: {
-                ZStack {
-                    VStack(spacing: 0) {
-                        Rectangle()
-                            .fill(Color.clear)
-                            .frame(width: Self.profileImageSize, height: Self.profileImageSize / 2)
-                        ZStack {
+            if isEditable {
+                Button(action: {
+                    showImagePicker = true
+                }, label: {
+                    ZStack {
+                        VStack(spacing: 0) {
                             Rectangle()
-                                .fill(Color.customBlack.opacity(0.2))
+                                .fill(Color.clear)
                                 .frame(width: Self.profileImageSize, height: Self.profileImageSize / 2)
-                            Text("Select photo")
-                                .font(.bold(size: 12))
-                                .foregroundColor(.customWhite)
-                                .padding(.bottom, 5)
+                            ZStack {
+                                Rectangle()
+                                    .fill(Color.customBlack.opacity(0.2))
+                                    .frame(width: Self.profileImageSize, height: Self.profileImageSize / 2)
+                                Text("Select photo")
+                                    .font(.bold(size: 12))
+                                    .foregroundColor(.customWhite)
+                                    .padding(.bottom, 5)
+                            }
+                            .frame(width: Self.profileImageSize, height: Self.profileImageSize / 2)
                         }
-                        .frame(width: Self.profileImageSize, height: Self.profileImageSize / 2)
+                        .frame(width: Self.profileImageSize, height: Self.profileImageSize)
                     }
-                    .frame(width: Self.profileImageSize, height: Self.profileImageSize)
-                }
-            })
+                })
+            }
         }
         .frame(width: Self.profileImageSize, height: Self.profileImageSize)
         .cornerRadius(Self.profileImageSize / 2)

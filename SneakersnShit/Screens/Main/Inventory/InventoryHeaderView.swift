@@ -20,12 +20,12 @@ struct InventoryHeaderView: View {
 
     var textBox1: TextBox
     var textBox2: TextBox
-    var showHeader: Bool = true
+    var isOwnProfile: Bool = true
     var updateUsername: (() -> Void)?
 
     var body: some View {
         VStack(alignment: .center, spacing: 30) {
-            if showHeader {
+            if isOwnProfile {
                 HStack {
                     Text("Inventory")
                         .foregroundColor(.customText1)
@@ -49,7 +49,7 @@ struct InventoryHeaderView: View {
             }
 
             VStack(spacing: 15) {
-                ProfilePhotoSelectorView(showImagePicker: $showImagePicker, profileImageURL: $profileImageURL)
+                ProfilePhotoSelectorView(showImagePicker: $showImagePicker, profileImageURL: $profileImageURL, isEditable: isOwnProfile)
                 if let updateUsername = updateUsername {
                     TextFieldUnderlined(text: $username,
                                         placeHolder: "username",
