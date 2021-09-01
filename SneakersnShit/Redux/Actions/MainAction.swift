@@ -25,7 +25,7 @@ enum MainAction {
     case addRecentlyViewed(item: Item)
     // users
     case getUserProfile(userId: String)
-    case setSelectedUser(user: UserWithStacks?)
+    case setSelectedUser(user: ProfileData?)
     // item details
     case getItemDetails(item: Item?, itemId: String, fetchMode: FetchMode)
     case refreshItemIfNeeded(itemId: String, fetchMode: FetchMode)

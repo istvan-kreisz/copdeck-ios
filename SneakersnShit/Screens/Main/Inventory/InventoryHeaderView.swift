@@ -7,69 +7,83 @@
 
 import SwiftUI
 
+struct TextBox {
+    let title: String
+    let text: String
+}
+
 struct InventoryHeaderView: View {
     @Binding var settingsPresented: Bool
     @Binding var showImagePicker: Bool
     @Binding var profileImageURL: URL?
     @Binding var username: String
 
-    var inventoryValue: PriceWithCurrency?
-    var inventoryItemsCount: Int
-    var updateUsername: () -> Void
+    var textBox1: TextBox
+    var textBox2: TextBox
+    var showHeader: Bool = true
+    var updateUsername: (() -> Void)?
 
     var body: some View {
         VStack(alignment: .center, spacing: 30) {
-            HStack {
-                Text("Inventory")
-                    .foregroundColor(.customText1)
-                    .font(.bold(size: 35))
-                    .leftAligned()
-                    .padding(.leading, 6)
-                Spacer()
-                Button(action: {
-                    settingsPresented = true
-                }, label: {
-                    ZStack {
-                        Circle().stroke(Color.customAccent1, lineWidth: 2)
-                            .frame(width: 38, height: 38)
-                        Image("cog")
-                            .renderingMode(.template)
-                            .frame(height: 17)
-                            .foregroundColor(.customBlack)
-                    }
-                })
+            if showHeader {
+                HStack {
+                    Text("Inventory")
+                        .foregroundColor(.customText1)
+                        .font(.bold(size: 35))
+                        .leftAligned()
+                        .padding(.leading, 6)
+                    Spacer()
+                    Button(action: {
+                        settingsPresented = true
+                    }, label: {
+                        ZStack {
+                            Circle().stroke(Color.customAccent1, lineWidth: 2)
+                                .frame(width: 38, height: 38)
+                            Image("cog")
+                                .renderingMode(.template)
+                                .frame(height: 17)
+                                .foregroundColor(.customBlack)
+                        }
+                    })
+                }
             }
 
             VStack(spacing: 15) {
                 ProfilePhotoSelectorView(showImagePicker: $showImagePicker, profileImageURL: $profileImageURL)
-                TextFieldUnderlined(text: $username,
-                                    placeHolder: "username",
-                                    color: .customText1,
-                                    dismissKeyboardOnReturn: false,
-                                    icon: nil,
-                                    keyboardType: .default,
-                                    isSecureField: false,
-                                    textAlignment: TextAlignment.center,
-                                    trailingPadding: 0,
-                                    addLeadingPadding: false,
-                                    onFinishedEditing: updateUsername)
-                    .frame(width: 150)
+                if let updateUsername = updateUsername {
+                    TextFieldUnderlined(text: $username,
+                                        placeHolder: "username",
+                                        color: .customText1,
+                                        dismissKeyboardOnReturn: false,
+                                        icon: nil,
+                                        keyboardType: .default,
+                                        isSecureField: false,
+                                        textAlignment: TextAlignment.center,
+                                        trailingPadding: 0,
+                                        addLeadingPadding: false,
+                                        onFinishedEditing: updateUsername)
+                        .frame(width: 150)
+                } else {
+                    Text(username)
+                        .foregroundColor(.customText1)
+                        .font(.bold(size: 22))
+                }
 
                 HStack {
                     VStack(spacing: 2) {
-                        Text(inventoryValue?.asString ?? "-")
+                        Text(textBox1.text)
                             .font(.bold(size: 20))
                             .foregroundColor(.customText1)
-                        Text("Inventory Value")
+                        Text(textBox1.title)
                             .font(.regular(size: 15))
                             .foregroundColor(.customText2)
                     }
                     Spacer()
                     VStack(spacing: 2) {
-                        Text("\(inventoryItemsCount)")
+                        Text(textBox2.text)
                             .font(.bold(size: 20))
                             .foregroundColor(.customText1)
-                        Text("Inventory Size")
+                        Text(textBox2.title)
                             .font(.regular(size: 15))
                             .foregroundColor(.customText2)
                     }

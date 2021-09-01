@@ -13,7 +13,7 @@ struct SearchView: View {
 
     @State private var searchText = ""
     @State private var selectedItem: Item?
-    @State private var selectedUser: User?
+    @State private var selectedUser: ProfileData?
 
     @StateObject private var searchResultsLoader = Loader()
     @StateObject private var popularItemsLoader = Loader()
@@ -32,17 +32,33 @@ struct SearchView: View {
         return (selectedItem + searchResults + popularItems + favoritedItems + recentlyViewed).uniqued()
     }
 
+    var allProfiles: [ProfileData] {
+        let selectedProfile: [ProfileData] = selectedUser.map { (profile: ProfileData) in [profile] } ?? []
+        let searchResults: [ProfileData] = store.state.userSearchResults.map { (user: User) in ProfileData(user: user, stacks: [], inventoryItems: []) }
+        var uniqued: [ProfileData] = []
+        (selectedProfile + searchResults).forEach { profileData in
+            if !uniqued.contains(where: { $0.user.id == profileData.user.id }) {
+                uniqued.append(profileData)
+            }
+        }
+        return uniqued
+    }
+
     var body: some View {
         Group {
-            let selectedItemId = Binding<String?>(get: { selectedItem?.id },
-                                                  set: { selectedItem = $0 != nil ? selectedItem : nil })
             NavigationLink(destination: EmptyView()) { EmptyView() }
             ForEach(allItems) { (item: Item) in
                 NavigationLink(destination: ItemDetailView(item: item,
                                                            itemId: item.id,
                                                            favoritedItemIds: store.state.favoritedItems.map(\.id)) { selectedItem = nil },
                                tag: item.id,
-                               selection: selectedItemId) { EmptyView() }
+                               selection: convertToId(_selectedItem)) { EmptyView() }
+            }
+
+            ForEach(allProfiles) { (profileData: ProfileData) in
+                NavigationLink(destination: ProfileView(profileData: profileData) { selectedUser = nil },
+                               tag: profileData.user.id,
+                               selection: convertToId(_selectedUser)) { EmptyView() }
             }
 
             NavigationLink(destination:
@@ -106,10 +122,10 @@ struct SearchView: View {
                                              requestInfo: store.state.requestInfo)
                     }
                 } else {
-                    VerticalUserListView(users: $store.state.userSearchResults,
-                                         selectedUser: $selectedUser,
-                                         isLoading: $userSearchResultsLoader.isLoading,
-                                         bottomPadding: 130)
+                    VerticalProfileListView(profiles: $store.state.userSearchResults.asProfiles,
+                                            selectedProfile: $selectedUser,
+                                            isLoading: $userSearchResultsLoader.isLoading,
+                                            bottomPadding: 130)
                 }
             }
             .onChange(of: searchText) { searchText in

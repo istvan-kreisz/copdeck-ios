@@ -45,7 +45,7 @@ protocol BackendAPI {
     // user
     func update(user: User)
     func deleteUser()
-    func getUserProfile(userId: String) -> AnyPublisher<UserWithStacks, AppError>
+    func getUserProfile(userId: String) -> AnyPublisher<ProfileData, AppError>
     func searchUsers(searchTerm: String) -> AnyPublisher<[User], AppError>
 }
 

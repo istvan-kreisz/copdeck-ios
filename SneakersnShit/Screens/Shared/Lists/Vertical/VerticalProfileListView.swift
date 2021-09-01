@@ -8,9 +8,9 @@
 import SwiftUI
 import Combine
 
-struct VerticalUserListView: View {
-    @Binding var users: [User]
-    @Binding var selectedUser: User?
+struct VerticalProfileListView: View {
+    @Binding var profiles: [ProfileData]
+    @Binding var selectedProfile: ProfileData?
     @Binding var isLoading: Bool
 
     let bottomPadding: CGFloat
@@ -24,8 +24,8 @@ struct VerticalUserListView: View {
             }
 
             VerticalListView(bottomPadding: bottomPadding) {
-                ForEach(users) { (user: User) in
-                    UserListItem(user: user, selectedUser: $selectedUser)
+                ForEach(profiles) { (profileData: ProfileData) in
+                    ProfileListItem(profileData: profileData, selectedProfile: $selectedProfile)
                 }
             }
             .padding(.top, 5)

@@ -82,7 +82,7 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI  {
         handlePublisherResult(publisher: callFirebaseFunction(functionName: "updateUser", model: Wrapper(userId: userId, user: user)))
     }
 
-    func getUserProfile(userId: String) -> AnyPublisher<UserWithStacks, AppError> {
+    func getUserProfile(userId: String) -> AnyPublisher<ProfileData, AppError> {
         struct Wrapper: Encodable {
             let userId: String
         }

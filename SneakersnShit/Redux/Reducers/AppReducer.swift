@@ -73,7 +73,7 @@ func appReducer(state: inout AppState,
             environment.dataController.add(recentlyViewedItem: item)
         case let .getUserProfile(userId):
             return environment.dataController.getUserProfile(userId: userId)
-                .map { (user: UserWithStacks) in AppAction.main(action: .setSelectedUser(user: user)) }
+                .map { (user: ProfileData) in AppAction.main(action: .setSelectedUser(user: user)) }
                 .catchErrors()
         case let .setSelectedUser(user):
             state.selectedUserProfile = user

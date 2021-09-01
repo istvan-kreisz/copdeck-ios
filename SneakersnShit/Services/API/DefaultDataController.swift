@@ -236,7 +236,7 @@ class DefaultDataController: DataController {
         backendAPI.deleteUser()
     }
 
-    func getUserProfile(userId: String) -> AnyPublisher<UserWithStacks, AppError> {
+    func getUserProfile(userId: String) -> AnyPublisher<ProfileData, AppError> {
         backendAPI.getUserProfile(userId: userId)
     }
 

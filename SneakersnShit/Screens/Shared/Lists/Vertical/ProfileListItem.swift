@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct UserListItem: View {
-    var user: User
-    @Binding var selectedUser: User?
+struct ProfileListItem: View {
+    var profileData: ProfileData
+    @Binding var selectedProfile: ProfileData?
 
     var body: some View {
-        VerticalListItemWithAccessoryView1(title: user.name ?? "",
-                                           imageURL: .init(url: user.imageURL?.absoluteString ?? "", store: nil),
+        VerticalListItemWithAccessoryView1(title: profileData.user.name ?? "",
+                                           imageURL: .init(url: profileData.user.imageURL?.absoluteString ?? "", store: nil),
                                            flipImage: false,
                                            requestInfo: [],
                                            isEditing: .constant(false),
@@ -21,7 +21,7 @@ struct UserListItem: View {
                                            ribbonText: nil,
                                            resizingMode: .aspectFill,
                                            accessoryView: EmptyView()) {
-                selectedUser = user
+                selectedProfile = profileData
         }
     }
 }

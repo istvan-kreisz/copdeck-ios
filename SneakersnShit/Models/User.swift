@@ -26,3 +26,12 @@ extension User {
         self.init(id: id, name: nil, created: nil, updated: nil, settings: nil)
     }
 }
+
+extension Array where Element == User {
+    var asProfiles: [ProfileData] {
+        get {
+            map { .init(user: $0, stacks: [], inventoryItems: []) }
+        }
+        set {}
+    }
+}

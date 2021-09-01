@@ -22,7 +22,6 @@ struct InventoryView: View {
     @State private var bestPrices: [String: PriceWithCurrency] = [:]
     @State private var newStackId: String?
     @State private var showImagePicker = false
-    @State private var image: UIImage?
     @State var username: String = ""
     @State private var sharedStack: Stack?
     @State private var showSnackBar = false
@@ -130,10 +129,9 @@ struct InventoryView: View {
                                     showImagePicker: $showImagePicker,
                                     profileImageURL: $store.state.profileImageURL,
                                     username: $username,
-                                    inventoryValue: inventoryValue,
-                                    inventoryItemsCount: inventoryItems.count,
+                                    textBox1: .init(title: "Inventory Value", text: inventoryValue?.asString ?? "-"),
+                                    textBox2: .init(title: "Inventory Size", text: "\(inventoryItems.count)"),
                                     updateUsername: updateUsername)
-                    .listRow(backgroundColor: .customWhite)
 
                 ScrollableSegmentedControl(selectedIndex: $selectedStackIndex,
                                            titles: stackTitles,

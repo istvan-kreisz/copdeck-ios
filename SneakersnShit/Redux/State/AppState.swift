@@ -23,7 +23,7 @@ struct AppState: Equatable {
     var exchangeRates: ExchangeRates?
     var requestInfo: [ScraperRequestInfo] = []
     var profileImageURL: URL?
-    var selectedUserProfile: UserWithStacks?
+    var selectedUserProfile: ProfileData?
     var userSearchResults: [User] = []
 
     var settings: CopDeckSettings {
