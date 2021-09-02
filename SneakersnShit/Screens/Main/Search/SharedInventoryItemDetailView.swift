@@ -34,7 +34,6 @@ struct SharedInventoryItemView: View {
                         .foregroundColor(.customText1)
                         .padding(.bottom, 8)
                     HStack(spacing: 10) {
-                        Spacer()
                         VStack(spacing: 2) {
                             Text(inventoryItem.itemId ?? "")
                                 .font(.bold(size: 20))
@@ -61,7 +60,6 @@ struct SharedInventoryItemView: View {
                                 .font(.regular(size: 15))
                                 .foregroundColor(.customText2)
                         }
-                        Spacer()
                     }
                 }
                 .asCard()
