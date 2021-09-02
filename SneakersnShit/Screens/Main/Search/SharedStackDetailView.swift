@@ -47,20 +47,31 @@ struct SharedStackDetailView: View {
                                   resizingMode: .aspectFill)
                             .frame(width: Self.profileImageSize, height: Self.profileImageSize)
                             .cornerRadius(Self.profileImageSize / 2)
-                        VStack(alignment: .leading) {
+                        VStack(alignment: .leading, spacing: 0) {
                             Text(profileData.user.name ?? "")
                                 .font(.bold(size: 14))
                                 .foregroundColor(.customText1)
-                            AccessoryButton(title: "Message \(profileData.user.name)",
-                                            color: .customAccent1,
-                                            textColor: .customText1,
-                                            fontSize: 11,
-                                            width: nil,
-                                            imageName: "chevron.right",
-                                            buttonPosition: .right,
-                                            tapped: {
-                                                #warning("navigate to message view")
-                                            })
+
+                            Button {
+                                #warning("navigate to message view")
+                            } label: {
+                                HStack {
+                                    Text("Message \(profileData.user.name ?? "owner")")
+                                        .lineLimit(1)
+                                        .font(.bold(size: 13))
+                                        .foregroundColor(.customText2)
+                                        .layoutPriority(2)
+                                    ZStack {
+                                        Circle()
+                                            .fill(Color.customAccent1.opacity(0.2))
+                                            .frame(width: 16, height: 16)
+                                        Image(systemName: "chevron.right")
+                                            .font(.bold(size: 7))
+                                            .foregroundColor(Color.customAccent1)
+                                    }.frame(width: 16, height: 16)
+                                }
+                            }
+                            Spacer()
                         }
                         Spacer()
                     }

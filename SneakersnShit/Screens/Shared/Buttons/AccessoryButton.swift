@@ -11,8 +11,11 @@ struct AccessoryButton: View {
     let title: String
     let color: Color
     let textColor: Color
+    var borderColor: Color?
     var fontSize: CGFloat = 12
+    var height: CGFloat = 27
     let width: CGFloat?
+    var padding: CGFloat = 10
     let imageName: String
     var buttonPosition: RoundedButtonPosition = .left
     let tapped: () -> Void
@@ -20,12 +23,12 @@ struct AccessoryButton: View {
     var body: some View {
         RoundedButton(text: title,
                       width: width,
-                      height: 27,
+                      height: height,
                       fontSize: fontSize,
                       color: .clear,
-                      borderColor: color.opacity(0.4),
+                      borderColor: borderColor ?? color.opacity(0.4),
                       textColor: textColor,
-                      padding: 10,
+                      padding: padding,
                       accessoryView: (ZStack {
                           Circle()
                               .fill(color.opacity(0.2))
