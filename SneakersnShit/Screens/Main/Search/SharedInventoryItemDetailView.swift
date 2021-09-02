@@ -1,101 +1,78 @@
-////
-////  SharedInventoryItemView.swift
-////  SneakersnShit
-////
-////  Created by István Kreisz on 9/2/21.
-////
 //
-//import SwiftUI
-//import Combine
+//  SharedInventoryItemView.swift
+//  SneakersnShit
 //
-//struct SharedInventoryItemView: View {
-//    private static let profileImageSize: CGFloat = 38
+//  Created by István Kreisz on 9/2/21.
 //
-//    let profileData: ProfileData
-//    let stack: Stack
-//    let inventoryItems: [InventoryItem]
-//    let requestInfo: [ScraperRequestInfo]
-//
-//    let shouldDismiss: () -> Void
-//
-//    @State var selectedInventoryItemId: String?
-//
-//    var body: some View {
-//        Group {
-////            ForEach(inventoryItems) { (inventoryItem: InventoryItem) in
-////                NavigationLink(destination: InventoryItemDetailView(inventoryItem: inventoryItem) { selectedInventoryItemId = nil },
-////                               tag: inventoryItem.id,
-////                               selection: $selectedInventoryItemId) { EmptyView() }
-////            }
-//
-//            VerticalListView(bottomPadding: 30, spacing: 2, addHorizontalPadding: false) {
-//                NavigationBar(title: stack.name, isBackButtonVisible: true, style: .dark, shouldDismiss: shouldDismiss)
-//                    .withDefaultPadding(padding: .horizontal)
-//
-//                VStack(spacing: 9) {
-//                    Text("Owner")
-//                        .font(.bold(size: 12))
-//                        .foregroundColor(.customText2)
-//                        .leftAligned()
-//
-//                    HStack {
-//                        ImageView(withRequest: profileData.user.imageURL,
-//                                  size: Self.profileImageSize,
-//                                  aspectRatio: 1.0,
-//                                  flipImage: false,
-//                                  showPlaceholder: true,
-//                                  resizingMode: .aspectFill)
-//                            .frame(width: Self.profileImageSize, height: Self.profileImageSize)
-//                            .cornerRadius(Self.profileImageSize / 2)
-//                        VStack(alignment: .leading) {
-//                            Text(profileData.user.name ?? "")
-//                                .font(.bold(size: 14))
-//                                .foregroundColor(.customText1)
-////                            Text(publishedDate)
-////                                .font(.regular(size: 12))
-////                                .foregroundColor(.customText2)
-//                        }
-//                        Spacer()
-//                    }
-//                }
-//                .asCard()
-//                .withDefaultPadding(padding: .horizontal)
-//                .padding(.vertical, 10)
-//
-//                if let caption = stack.caption {
-//                    HStack {
-//                        VStack(alignment: .leading, spacing: 2) {
-//                            Text("notes")
-//                                .font(.regular(size: 12))
-//                                .foregroundColor(.customText2)
-//                            Text(caption)
-//                                .font(.regular(size: 14))
-//                                .foregroundColor(.customText1)
-//                        }
-//                        Spacer()
-//                    }
-//                    .asCard()
-//                    .withDefaultPadding(padding: .horizontal)
-//                    .padding(.vertical, 10)
-//                }
-//
-//                ForEach(inventoryItems) { (inventoryItem: InventoryItem) in
-//                    InventoryListItem(inventoryItem: inventoryItem,
-//                                      bestPrice: .init(price: 212, currencyCode: .usd),
-//                                      selectedInventoryItemId: $selectedInventoryItemId,
-//                                      isSelected: false,
-//                                      isEditing: .constant(false),
-//                                      requestInfo: store.state.requestInfo) {}
-//                }
-//                .padding(.vertical, 6)
-//                .withDefaultPadding(padding: .horizontal)
-//            }
-//            .buttonStyle(PlainButtonStyle())
-//        }
-//        .edgesIgnoringSafeArea(.bottom)
-//        .frame(maxWidth: UIScreen.main.bounds.width)
-//        .withDefaultPadding(padding: .top)
-//        .withBackgroundColor()
-//        .navigationbarHidden()
-//    }
-//}
+
+import SwiftUI
+import Combine
+
+struct SharedInventoryItemView: View {
+    private static let profileImageSize: CGFloat = 38
+
+    let profileData: ProfileData
+    let inventoryItem: InventoryItem
+    let requestInfo: [ScraperRequestInfo]
+
+    let shouldDismiss: () -> Void
+
+    var body: some View {
+        Group {
+            VerticalListView(bottomPadding: 30, spacing: 2, addHorizontalPadding: false) {
+                NavigationBar(title: profileData.user.name.map { "\($0)'s sneaker" } ?? "sneaker details",
+                              isBackButtonVisible: true,
+                              style: .dark,
+                              shouldDismiss: shouldDismiss)
+                    .withDefaultPadding(padding: .horizontal)
+
+                OwnerCardView(user: profileData.user)
+
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(inventoryItem.name)
+                        .font(.bold(size: 30))
+                        .foregroundColor(.customText1)
+                        .padding(.bottom, 8)
+                    HStack(spacing: 10) {
+                        Spacer()
+                        VStack(spacing: 2) {
+                            Text(inventoryItem.itemId ?? "")
+                                .font(.bold(size: 20))
+                                .foregroundColor(.customText1)
+                            Text("Style")
+                                .font(.regular(size: 15))
+                                .foregroundColor(.customText2)
+                        }
+                        Spacer()
+                        VStack(spacing: 2) {
+                            Text(inventoryItem.size)
+                                .font(.bold(size: 20))
+                                .foregroundColor(.customText1)
+                            Text("Size")
+                                .font(.regular(size: 15))
+                                .foregroundColor(.customText2)
+                        }
+                        Spacer()
+                        VStack(spacing: 2) {
+                            Text(inventoryItem.condition.rawValue)
+                                .font(.bold(size: 20))
+                                .foregroundColor(.customText1)
+                            Text("Condition")
+                                .font(.regular(size: 15))
+                                .foregroundColor(.customText2)
+                        }
+                        Spacer()
+                    }
+                }
+                .asCard()
+                .withDefaultPadding(padding: .horizontal)
+            }
+            .buttonStyle(PlainButtonStyle())
+        }
+        .edgesIgnoringSafeArea(.bottom)
+        .frame(maxWidth: UIScreen.main.bounds.width)
+        .withDefaultPadding(padding: .top)
+        .withBackgroundColor()
+        .navigationbarHidden()
+    }
+}

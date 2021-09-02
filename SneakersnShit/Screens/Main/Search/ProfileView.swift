@@ -36,11 +36,13 @@ struct ProfileView: View {
                 EmptyView()
             }
 
-//            ForEach(inventoryItems) { (inventoryItem: InventoryItem) in
-//                NavigationLink(destination: InventoryItemDetailView(inventoryItem: inventoryItem) { selectedInventoryItemId = nil },
-//                               tag: inventoryItem.id,
-//                               selection: $selectedInventoryItemId) { EmptyView() }
-//            }
+            ForEach(profileData.inventoryItems) { (inventoryItem: InventoryItem) in
+                NavigationLink(destination: SharedInventoryItemView(profileData: profileData,
+                                                                    inventoryItem: inventoryItem,
+                                                                    requestInfo: store.state.requestInfo) { selectedInventoryItemId = nil },
+                               tag: inventoryItem.id,
+                               selection: $selectedInventoryItemId) { EmptyView() }
+            }
 
             ForEach(profileData.stacks) { (stack: Stack) in
                 NavigationLink(destination: SharedStackDetailView(profileData: profileData,
