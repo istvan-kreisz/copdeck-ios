@@ -57,7 +57,7 @@ struct TagCloudView: View {
         // .frame(maxHeight: totalHeight) // << variant for VStack
     }
 
-    private func generateContent(in g: GeometryProxy) -> some View {
+    private func generateContent(in geometryProxy: GeometryProxy) -> some View {
         var width = CGFloat.zero
         var height = CGFloat.zero
 
@@ -66,7 +66,7 @@ struct TagCloudView: View {
                 item(for: tag)
                     .padding([.horizontal, .vertical], 4)
                     .alignmentGuide(.leading, computeValue: { d in
-                        if abs(width - d.width) > g.size.width {
+                        if abs(width - d.width) > geometryProxy.size.width {
                             width = 0
                             height -= d.height
                         }

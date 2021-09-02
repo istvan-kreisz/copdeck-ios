@@ -17,6 +17,10 @@ struct SharedInventoryItemView: View {
 
     let shouldDismiss: () -> Void
 
+    var imageSize: CGFloat {
+        (UIScreen.screenWidth - (Styles.horizontalPadding * 4.0) - (Styles.horizontalMargin * 2.0)) / 3
+    }
+
     var body: some View {
         Group {
             VerticalListView(bottomPadding: 30, spacing: 2, addHorizontalPadding: false) {
@@ -64,6 +68,31 @@ struct SharedInventoryItemView: View {
                 }
                 .asCard()
                 .withDefaultPadding(padding: .horizontal)
+
+                GeometryReader { geometryProxy in
+                    VStack(alignment: .leading, spacing: 9) {
+                        Text("Stock photo:".uppercased())
+                            .font(.bold(size: 12))
+                            .foregroundColor(.customText2)
+                            .leftAligned()
+
+                        HStack(spacing: Styles.verticalPadding) {
+                            if let url = inventoryItem.imageURL?.URL {
+                                ImageView(withRequest: url,
+                                          size: imageSize,
+                                          aspectRatio: 1.0,
+                                          flipImage: false,
+                                          showPlaceholder: true)
+                                    .frame(width: imageSize, height: imageSize)
+                                    .cornerRadius(4)
+                            }
+                            Spacer()
+                        }
+                    }
+                    .asCard()
+                    .withDefaultPadding(padding: .horizontal)
+                }
+                .padding(.vertical, 10)
             }
             .buttonStyle(PlainButtonStyle())
         }

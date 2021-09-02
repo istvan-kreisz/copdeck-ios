@@ -61,6 +61,10 @@ enum FeeType: String, CaseIterable, Identifiable, EnumCodable {
 struct ImageURL: Codable, Equatable, Hashable {
     let url: String
     let store: Store?
+
+    var URL: URL? {
+        Foundation.URL(string: url)
+    }
 }
 
 struct Item: Codable, Equatable, Identifiable, Hashable, ModelWithDate {
