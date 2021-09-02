@@ -47,6 +47,7 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     var size: String
     var condition: Condition
     var listingPrices: [ListingPrice] = []
+    var copdeckPrice: ListingPrice?
     var soldPrice: SoldPrice?
     var status: SoldStatus? = .None
     var notes: String?
@@ -54,7 +55,7 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     let updated: Double?
 
     enum CodingKeys: String, CodingKey {
-        case id, itemId, name, purchasePrice, imageURL, size, condition, listingPrices, soldPrice, status, notes, created, updated
+        case id, itemId, name, purchasePrice, imageURL, size, condition, copdeckPrice, listingPrices, soldPrice, status, notes, created, updated
     }
 }
 

@@ -88,12 +88,12 @@ struct LoginView: View {
 
                     VStack(spacing: 10) {
                         NextButton(text: "Sign In",
-                                   size: .init(width: UIScreen.screenWidth - Styles.horizontalPadding * 2, height: 60),
+                                   size: .init(width: UIScreen.screenWidth - Styles.horizontalMargin * 2, height: 60),
                                    color: .customBlue,
                                    tapped: signIn)
                             .centeredHorizontally()
                         NextButton(text: "Create an account",
-                                   size: .init(width: UIScreen.screenWidth - Styles.horizontalPadding * 2, height: 60),
+                                   size: .init(width: UIScreen.screenWidth - Styles.horizontalMargin * 2, height: 60),
                                    color: .customPurple,
                                    tapped: signUp)
                             .centeredHorizontally()
@@ -110,7 +110,7 @@ struct LoginView: View {
                         .padding(.leading, 10)
                     Spacer()
                 }
-                .padding(.horizontal, Styles.horizontalPadding)
+                .padding(.horizontal, Styles.horizontalMargin)
             }
             .navigationbarHidden()
             .sheet(isPresented: $resetPasswordPresented) {

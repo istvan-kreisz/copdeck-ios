@@ -11,6 +11,7 @@ struct AccessoryButton: View {
     let title: String
     let color: Color
     let textColor: Color
+    var fontSize: CGFloat = 12
     let width: CGFloat?
     let imageName: String
     var buttonPosition: RoundedButtonPosition = .left
@@ -20,7 +21,7 @@ struct AccessoryButton: View {
         RoundedButton(text: title,
                       width: width,
                       height: 27,
-                      fontSize: 12,
+                      fontSize: fontSize,
                       color: .clear,
                       borderColor: color.opacity(0.4),
                       textColor: textColor,

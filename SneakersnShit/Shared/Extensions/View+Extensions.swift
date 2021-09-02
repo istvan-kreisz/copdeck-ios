@@ -44,6 +44,14 @@ extension View {
         ModifiedContent(content: self, modifier: NavigationbarHidden())
     }
 
+    func asCard() -> some View {
+        padding(.vertical, Styles.verticalPadding)
+            .padding(.horizontal, Styles.horizontalPadding)
+            .background(Color.customWhite)
+            .cornerRadius(Styles.cornerRadius)
+            .withDefaultShadow()
+    }
+
     @ViewBuilder func `if`<Content: View>(_ condition: @autoclosure () -> Bool, transform: (Self) -> Content) -> some View {
         if condition() {
             transform(self)

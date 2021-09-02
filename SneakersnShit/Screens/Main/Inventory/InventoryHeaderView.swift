@@ -49,7 +49,7 @@ struct InventoryHeaderView: View {
             }
 
             VStack(spacing: 15) {
-                ProfilePhotoSelectorView(showImagePicker: $showImagePicker, profileImageURL: $profileImageURL, isEditable: isOwnProfile)
+                ProfileImageView(showImagePicker: $showImagePicker, profileImageURL: $profileImageURL, isEditable: isOwnProfile)
                 if let updateUsername = updateUsername {
                     TextFieldUnderlined(text: $username,
                                         placeHolder: "username",

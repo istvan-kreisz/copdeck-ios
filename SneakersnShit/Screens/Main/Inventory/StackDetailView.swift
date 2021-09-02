@@ -1,5 +1,5 @@
 //
-//  StackDetail.swift
+//  StackDetailView.swift
 //  SneakersnShit
 //
 //  Created by István Kreisz on 8/28/21.
@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-struct StackDetail: View {
+struct StackDetailView: View {
     private static let popupTitles = ["Publish on Feed", "Make Public"]
     private static let popupDescriptions = ["some text blah blah blah", "some text blah blah blah"]
 
@@ -145,11 +145,8 @@ struct StackDetail: View {
                     .withDefaultPadding(padding: .horizontal)
                     .padding(.top, 5)
                 }
-                .padding(10)
-                .background(Color.customWhite)
-                .cornerRadius(12)
+                .asCard()
                 .withDefaultPadding(padding: .horizontal)
-                .withDefaultShadow()
                 .padding(.vertical, 10)
 
                 TextFieldRounded(title: "stack name",
@@ -214,37 +211,29 @@ struct StackDetail: View {
                 .withDefaultPadding(padding: .horizontal)
                 .padding(.vertical, 12)
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("sneakers")
-                        .font(.regular(size: 12))
-                        .foregroundColor(.customText1)
-                        .padding(.leading, 5)
-                        .withDefaultPadding(padding: .horizontal)
-
-                    ForEach(allStackItems) { (inventoryItem: InventoryItem) in
-                        InventoryListItem(inventoryItem: inventoryItem,
-                                          bestPrice: bestPrices[inventoryItem.id],
-                                          selectedInventoryItemId: $selectedInventoryItemId,
-                                          isSelected: false,
-                                          isEditing: .constant(false),
-                                          requestInfo: requestInfo) {}
-                    }
-                    .padding(.vertical, 6)
-                    .withDefaultPadding(padding: .horizontal)
-
-                    AccessoryButton(title: "Add / Delete Items",
-                                    color: .customBlue,
-                                    textColor: .customBlue,
-                                    width: 170,
-                                    imageName: "plus",
-                                    tapped: {
-                                        showItemSelector = true
-                                    })
-                        .leftAligned()
-                        .padding(.top, 3)
-                        .withDefaultPadding(padding: .horizontal)
+                ForEach(allStackItems) { (inventoryItem: InventoryItem) in
+                    InventoryListItem(inventoryItem: inventoryItem,
+                                      bestPrice: bestPrices[inventoryItem.id],
+                                      selectedInventoryItemId: $selectedInventoryItemId,
+                                      isSelected: false,
+                                      isEditing: .constant(false),
+                                      requestInfo: requestInfo) {}
                 }
-                .buttonStyle(PlainButtonStyle())
+                .padding(.vertical, 6)
+                .withDefaultPadding(padding: .horizontal)
+
+                AccessoryButton(title: "Add / Delete Items",
+                                color: .customBlue,
+                                textColor: .customBlue,
+                                width: 170,
+                                imageName: "plus",
+                                tapped: {
+                                    showItemSelector = true
+                                })
+                    .leftAligned()
+                    .padding(.top, 5)
+                    .withDefaultPadding(padding: .horizontal)
+                    .buttonStyle(PlainButtonStyle())
             }
             .edgesIgnoringSafeArea(.bottom)
             .frame(maxWidth: UIScreen.main.bounds.width)

@@ -25,6 +25,7 @@ struct VerticalListItem<V1: View, V2: View>: View {
     var ribbonText: String? = nil
     @State var animate = false
     var resizingMode: ImageResizingMode = .aspectFit
+    var addShadow: Bool = true
 
     var accessoryView1: V1? = nil
     var accessoryView2: V2? = nil
@@ -99,7 +100,7 @@ struct VerticalListItem<V1: View, V2: View>: View {
             .if(selectionStyle == .highlight && isSelected) {
                 $0.overlay(RoundedRectangle(cornerRadius: Self.cornerRadius).stroke(Color.customBlue, lineWidth: 2))
             }
-            .withDefaultShadow()
+            .if(addShadow) { $0.withDefaultShadow() }
             .onTapGesture(perform: onTapped)
             .offset(isEditing ? CGSize(width: -48, height: 0) : CGSize.zero)
             .animation(.spring(), value: isEditing)

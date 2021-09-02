@@ -36,12 +36,13 @@ struct DefaultPadding: ViewModifier {
         self.padding = padding
     }
 
+    #warning("refactor margins + paddings")
     func body(content: Content) -> some View {
         content
             .padding(.top, padding.contains(.top) ? 20 : 0)
             .padding(.bottom, padding.contains(.bottom) ? 30 : 0)
-            .padding(.leading, padding.contains(.leading) ? Styles.horizontalPadding : 0)
-            .padding(.trailing, padding.contains(.trailing) ? Styles.horizontalPadding : 0)
+            .padding(.leading, padding.contains(.leading) ? Styles.horizontalMargin : 0)
+            .padding(.trailing, padding.contains(.trailing) ? Styles.horizontalMargin : 0)
     }
 }
 

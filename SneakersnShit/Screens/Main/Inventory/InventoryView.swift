@@ -109,7 +109,7 @@ struct InventoryView: View {
                                selection: $selectedInventoryItemId) { EmptyView() }
             }
             NavigationLink(destination: editedStack.map { editedStack in
-                StackDetail(stack: .constant(editedStack),
+                StackDetailView(stack: .constant(editedStack),
                             inventoryItems: $store.state.inventoryItems,
                             bestPrices: $bestPrices,
                             showView: showEditedStack,

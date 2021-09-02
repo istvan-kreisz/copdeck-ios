@@ -105,7 +105,7 @@ struct InventoryItemDetailView: View {
                             RoundedButton<EmptyView>(text: "Delete item",
                                                      width: 180,
                                                      height: 60,
-                                                     maxSize: CGSize(width: (UIScreen.screenWidth - Styles.horizontalPadding * 2 - 10) / 2,
+                                                     maxSize: CGSize(width: (UIScreen.screenWidth - Styles.horizontalMargin * 2 - 10) / 2,
                                                                      height: UIScreen.isSmallScreen ? 50 : 60),
                                                      fontSize: UIScreen.isSmallScreen ? 14 : 16,
                                                      color: .clear,
@@ -117,7 +117,7 @@ struct InventoryItemDetailView: View {
                             RoundedButton<EmptyView>(text: "Save changes",
                                                      width: 180,
                                                      height: 60,
-                                                     maxSize: CGSize(width: (UIScreen.screenWidth - Styles.horizontalPadding * 2 - 10) / 2,
+                                                     maxSize: CGSize(width: (UIScreen.screenWidth - Styles.horizontalMargin * 2 - 10) / 2,
                                                                      height: UIScreen.isSmallScreen ? 50 : 60),
                                                      fontSize: UIScreen.isSmallScreen ? 14 : 16,
                                                      color: .customBlack,
@@ -126,7 +126,7 @@ struct InventoryItemDetailView: View {
                         }
                         .padding(.top, 40)
                     }
-                    .padding(.horizontal, Styles.horizontalPadding)
+                    .padding(.horizontal, Styles.horizontalMargin)
                     .padding(.top, 14)
                     .padding(.bottom, 20)
                     .background(Color.customBackground

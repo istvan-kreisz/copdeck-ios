@@ -15,7 +15,7 @@ struct EditInventoryTray: View {
         if actions.count == 1 {
             return 140
         } else {
-            return min(Self.defaultSectionWidth, (UIScreen.screenWidth - Styles.horizontalPadding * 2) / CGFloat(actions.count))
+            return min(Self.defaultSectionWidth, (UIScreen.screenWidth - Styles.horizontalMargin * 2) / CGFloat(actions.count))
         }
     }
 

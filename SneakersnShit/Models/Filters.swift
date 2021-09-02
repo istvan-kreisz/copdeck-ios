@@ -13,4 +13,6 @@ struct Filters: Codable, Equatable {
     }
 
     var soldStatus: SoldStatusFilter
+
+    static let `default` = Filters(soldStatus: .All)
 }

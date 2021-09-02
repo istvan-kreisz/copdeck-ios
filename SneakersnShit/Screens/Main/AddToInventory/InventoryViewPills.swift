@@ -8,7 +8,12 @@
 import SwiftUI
 
 struct InventoryViewPills: View {
+    enum PillType: CaseIterable {
+        case condition, size, purchasePrice
+    }
+
     var inventoryItem: InventoryItem
+    var pillTypes: [PillType] = PillType.allCases
 
     var columns: [GridItem] { Array.init(repeating: GridItem(.adaptive(minimum: 20, maximum: .infinity)), count: details.count) }
 

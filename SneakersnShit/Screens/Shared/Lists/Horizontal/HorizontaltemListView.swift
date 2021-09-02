@@ -49,7 +49,7 @@ struct HorizontaltemListView: View {
                     HStack(spacing: 24) {
                         Color.clear
                             .frame(width: 0, height: 0)
-                            .padding(.leading, Styles.horizontalPadding - 24)
+                            .padding(.leading, Styles.horizontalMargin - 24)
                         ForEach(itemsToShow) { (item: Item) in
                             HorizontalListItem(title: item.name ?? "",
                                                imageURL: item.imageURL,
@@ -74,7 +74,7 @@ struct HorizontaltemListView: View {
                         }
                         Color.clear
                             .frame(width: 0, height: 0)
-                            .padding(.trailing, Styles.horizontalPadding - 24)
+                            .padding(.trailing, Styles.horizontalMargin - 24)
                     }
                     .frame(height: HorizontalListItem.size)
                 }

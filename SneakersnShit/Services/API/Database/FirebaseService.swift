@@ -385,7 +385,7 @@ class FirebaseService: DatabaseManager {
     }
 
     func uploadProfileImage(image: UIImage) {
-        guard let data = image.jpegData(compressionQuality: 0.2),
+        guard let data = image.resizeImage(300).jpegData(compressionQuality: 0.4),
               let imageRef = imageRef
         else { return }
         uploadTask?.cancel()

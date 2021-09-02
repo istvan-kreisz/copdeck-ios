@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ProfilePhotoSelectorView: View {
+struct ProfileImageView: View {
     private static let profileImageSize: CGFloat = 108
 
     @Binding var showImagePicker: Bool

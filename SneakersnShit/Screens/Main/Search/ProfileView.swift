@@ -11,6 +11,7 @@ struct ProfileView: View {
     @EnvironmentObject var store: AppStore
     @State var profileData: ProfileData
     @State private var selectedInventoryItemId: String?
+    @State private var selectedStackId: String?
 
     @State private var selectedStack: Stack?
 
@@ -25,38 +26,36 @@ struct ProfileView: View {
         return dateFormatter.string(from: joinedDate)
     }
 
-    var body: some View {
-        VStack(alignment: .center, spacing: 8) {
-//            let stackTitles = Binding<[String]>(get: { stacks.map { (stack: Stack) in stack.name } }, set: { _ in })
+    func stackItems(in stack: Stack) -> [InventoryItem] {
+        stack.inventoryItems(allInventoryItems: profileData.inventoryItems, filters: .default, searchText: "")
+    }
 
+    var body: some View {
+        Group {
             NavigationLink(destination: EmptyView()) {
                 EmptyView()
             }
-            NavigationBar(title: nil, isBackButtonVisible: true, style: .dark, shouldDismiss: shouldDismiss)
-                .withDefaultPadding(padding: .horizontal)
 
 //            ForEach(inventoryItems) { (inventoryItem: InventoryItem) in
 //                NavigationLink(destination: InventoryItemDetailView(inventoryItem: inventoryItem) { selectedInventoryItemId = nil },
 //                               tag: inventoryItem.id,
 //                               selection: $selectedInventoryItemId) { EmptyView() }
 //            }
-//            NavigationLink(destination: editedStack.map { editedStack in
-//                StackDetail(stack: .constant(editedStack),
-//                            inventoryItems: $store.state.inventoryItems,
-//                            bestPrices: $bestPrices,
-//                            showView: showEditedStack,
-//                            filters: filters,
-//                            linkURL: editedStack.linkURL(userId: store.state.user?.id ?? ""),
-//                            requestInfo: store.state.requestInfo,
-//                            saveChanges: { updatedStackItems in
-//                                var updatedStack = editedStack
-//                                updatedStack.items = updatedStackItems
-//                                store.send(.main(action: .updateStack(stack: updatedStack)))
-//                            })
-//            },
-//            isActive: showEditedStack) { EmptyView() }
+
+            ForEach(profileData.stacks) { (stack: Stack) in
+                NavigationLink(destination: SharedStackDetailView(profileData: profileData,
+                                                                  stack: stack,
+                                                                  inventoryItems: stackItems(in: stack),
+                                                                  requestInfo: store.state.requestInfo) { selectedStackId = nil },
+                               tag: stack.id,
+                               selection: $selectedStackId) { EmptyView() }
+            }
 
             VerticalListView(bottomPadding: 0, spacing: 0, addListRowStyling: false) {
+                NavigationBar(title: nil, isBackButtonVisible: true, style: .dark, shouldDismiss: shouldDismiss)
+                    .listRow(backgroundColor: .customWhite)
+                    .buttonStyle(PlainButtonStyle())
+
                 InventoryHeaderView(settingsPresented: .constant(false),
                                     showImagePicker: .constant(false),
                                     profileImageURL: .constant(profileData.user.imageURL),
@@ -65,30 +64,25 @@ struct ProfileView: View {
                                     textBox2: .init(title: "Shared Stacks", text: "\(profileData.stacks.count)"),
                                     isOwnProfile: false)
 
-//                if let stack = stacks[safe: selectedStackIndex] {
-//                    let isSelected = Binding<Bool>(get: { stack.id == selectedStack?.id }, set: { _ in })
-//
-//                    StackView(stack: stack,
-//                              searchText: $searchText,
-//                              filters: filters,
-//                              inventoryItems: $store.state.inventoryItems,
-//                              selectedInventoryItemId: $selectedInventoryItemId,
-//                              isEditing: $isEditing,
-//                              showFilters: $showFilters,
-//                              selectedInventoryItems: $selectedInventoryItems,
-//                              isSelected: isSelected,
-//                              bestPrices: $bestPrices,
-//                              requestInfo: store.state.requestInfo,
-//                              didTapEditStack: stack.id == "all" ? nil : {
-//                                  editedStack = stack
-//                              }, didTapShareStack: stack.id == "all" ? nil : {
-//                                  sharedStack = stack
-//                              })
-//                        .padding(.top, 5)
-//                        .listRow()
-//                }
-                Color.clear.padding(.bottom, 130)
+                Text(profileData.user.name.map { "\($0)'s Stacks" } ?? "Stacks")
+                    .font(.bold(size: 25))
+                    .foregroundColor(.customText1)
+                    .padding(.top, 24)
+                    .padding(.bottom, 12)
+                    .centeredHorizontally()
                     .listRow()
+
+                ForEach(profileData.stacks) { (stack: Stack) in
+                    SharedStackSummaryView(selectedInventoryItemId: $selectedInventoryItemId,
+                                           selectedStackId: $selectedStackId,
+                                           stack: stack,
+                                           inventoryItems: stackItems(in: stack),
+                                           requestInfo: store.state.requestInfo,
+                                           profileInfo: (profileData.user.name ?? "", profileData.user.imageURL))
+                        .buttonStyle(PlainButtonStyle())
+                        .padding(.bottom, 8)
+                        .listRow()
+                }
             }
         }
         .navigationbarHidden()
@@ -99,20 +93,5 @@ struct ProfileView: View {
             guard let profile = profile else { return }
             self.profileData = profile
         }
-//        .withSnackBar(text: "Link Copied", shouldShow: $showSnackBar)
-//        .withPopup {
-//            CopyLinkPopup(isShowing: showCopyLink,
-//                          title: "Share stack",
-//                          subtitle: "Share this link with anyone to show them what's in your stack. The link opens a webpage so whoever you share it with doesn't need to have the app downloaded.",
-//                          linkURL: sharedStack?.linkURL(userId: store.state.user?.id ?? "") ?? "",
-//                          actionTitle: "Copy Link") { link in
-//                    if var updatedStack = sharedStack {
-//                        UIPasteboard.general.string = link
-//                        showSnackBar = true
-//                        updatedStack.isSharedViaLink = true
-//                        store.send(.main(action: .updateStack(stack: updatedStack)))
-//                    }
-//            }
-//        }
     }
 }

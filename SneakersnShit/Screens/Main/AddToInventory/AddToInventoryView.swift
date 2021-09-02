@@ -148,7 +148,7 @@ struct AddToInventoryView: View {
                         .centeredHorizontally()
                         .padding(.top, 15)
                 }
-                .padding(.horizontal, Styles.horizontalPadding)
+                .padding(.horizontal, Styles.horizontalMargin)
                 .padding(.top, 14)
                 .padding(.bottom, 20)
                 .background(Color.customBackground
