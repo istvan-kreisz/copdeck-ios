@@ -96,20 +96,23 @@ struct SearchView: View {
                                                   selectedItem: $selectedItem,
                                                   isLoading: $popularItemsLoader.isLoading,
                                                   title: "Trending now",
-                                                  requestInfo: store.state.requestInfo) { showPopularItems = true }
+                                                  requestInfo: store.state.requestInfo,
+                                                  style: .round) { showPopularItems = true }
 
                             HorizontaltemListView(items: $store.state.favoritedItems,
                                                   selectedItem: $selectedItem,
                                                   isLoading: .constant(false),
                                                   title: "Your favorites",
-                                                  requestInfo: store.state.requestInfo)
+                                                  requestInfo: store.state.requestInfo,
+                                                  style: .square)
 
                             HorizontaltemListView(items: $store.state.recentlyViewed,
                                                   selectedItem: $selectedItem,
                                                   isLoading: .constant(false),
                                                   title: "Recently viewed",
                                                   requestInfo: store.state.requestInfo,
-                                                  sortedBy: .created)
+                                                  sortedBy: .created,
+                                                  style: .square)
                             Spacer()
                         }
                     } else {

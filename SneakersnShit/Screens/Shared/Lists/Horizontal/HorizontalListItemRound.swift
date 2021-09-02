@@ -1,5 +1,5 @@
 //
-//  HorizontalListItem.swift
+//  HorizontalListItemRound.swift
 //  SneakersnShit
 //
 //  Created by István Kreisz on 7/26/21.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct HorizontalListItem: View {
+struct HorizontalListItemRound: View {
     var title: String
     var imageURL: ImageURL?
     var flipImage = false
@@ -37,7 +37,7 @@ struct HorizontalListItem: View {
 
 struct HorizontalListItem_Previews: PreviewProvider {
     static var previews: some View {
-        return HorizontalListItem(title: "yooo",
+        return HorizontalListItemRound(title: "yooo",
                                   imageURL: nil,
                                   requestInfo: AppStore.default.state.requestInfo,
                                   index: 0,

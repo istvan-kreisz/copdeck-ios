@@ -9,6 +9,10 @@ import SwiftUI
 import Combine
 
 struct HorizontaltemListView: View {
+    enum Style {
+        case round, square
+    }
+
     private static let maxHorizontalItemCount = 20
 
     @Binding var items: [Item]
@@ -17,8 +21,9 @@ struct HorizontaltemListView: View {
 
     let title: String?
     var requestInfo: [ScraperRequestInfo]
-
     var sortedBy: DateType? = nil
+    let style: Style
+
     var moreTapped: (() -> Void)? = nil
 
     var itemsToShow: [Item] {
@@ -31,7 +36,7 @@ struct HorizontaltemListView: View {
 
     var body: some View {
         if !items.isEmpty {
-            VStack(alignment: .leading, spacing: 15) {
+            VStack(alignment: .leading, spacing: 2) {
                 if let title = title {
                     Text(title)
                         .foregroundColor(.customText1)
@@ -51,19 +56,27 @@ struct HorizontaltemListView: View {
                             .frame(width: 0, height: 0)
                             .padding(.leading, Styles.horizontalMargin - 24)
                         ForEach(itemsToShow) { (item: Item) in
-                            HorizontalListItem(title: item.name ?? "",
-                                               imageURL: item.imageURL,
-                                               flipImage: item.imageURL?.store?.id == .klekt,
-                                               requestInfo: requestInfo,
-                                               index: itemsToShow.firstIndex(where: { $0.id == item.id }) ?? 0) { selectedItem = item }
+                            if style == .round {
+                                HorizontalListItemRound(title: item.name ?? "",
+                                                        imageURL: item.imageURL,
+                                                        flipImage: item.imageURL?.store?.id == .klekt,
+                                                        requestInfo: requestInfo,
+                                                        index: itemsToShow.firstIndex(where: { $0.id == item.id }) ?? 0) { selectedItem = item }
+                            } else {
+                                HorizontalListItemSquare(title: item.name ?? "",
+                                                         imageURL: item.imageURL,
+                                                         flipImage: item.imageURL?.store?.id == .klekt,
+                                                         requestInfo: requestInfo,
+                                                         index: itemsToShow.firstIndex(where: { $0.id == item.id }) ?? 0) { selectedItem = item }
+                            }
                         }
                         if let moreTapped = moreTapped, items.count > Self.maxHorizontalItemCount {
                             Button(action: moreTapped) {
                                 ZStack {
                                     Circle()
                                         .fill(Color.customBlue)
-                                        .frame(width: HorizontalListItem.size, height: HorizontalListItem.size)
-                                        .cornerRadius(HorizontalListItem.size / 2)
+                                        .frame(width: HorizontalListItemRound.size, height: HorizontalListItemRound.size)
+                                        .cornerRadius(HorizontalListItemRound.size / 2)
                                         .withDefaultShadow()
                                     Text("See\nmore")
                                         .multilineTextAlignment(.center)
@@ -76,21 +89,9 @@ struct HorizontaltemListView: View {
                             .frame(width: 0, height: 0)
                             .padding(.trailing, Styles.horizontalMargin - 24)
                     }
-                    .frame(height: HorizontalListItem.size)
+                    .frame(height: HorizontalListItemRound.size + 20)
                 }
             }
-            .padding(.top, 12)
-            .padding(.bottom, 6)
         }
-    }
-}
-
-struct HorizontaltemListView_Previews: PreviewProvider {
-    static var previews: some View {
-        HorizontaltemListView(items: .constant([.sample, .sample]),
-                              selectedItem: .constant(nil),
-                              isLoading: .constant(true),
-                              title: "title",
-                              requestInfo: [])
     }
 }
