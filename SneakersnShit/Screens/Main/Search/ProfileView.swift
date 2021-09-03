@@ -37,7 +37,7 @@ struct ProfileView: View {
             }
 
             ForEach(profileData.inventoryItems) { (inventoryItem: InventoryItem) in
-                NavigationLink(destination: SharedInventoryItemView(profileData: profileData,
+                NavigationLink(destination: SharedInventoryItemView(user: profileData.user,
                                                                     inventoryItem: inventoryItem,
                                                                     requestInfo: store.state.requestInfo) { selectedInventoryItemId = nil },
                                tag: inventoryItem.id,
@@ -45,7 +45,7 @@ struct ProfileView: View {
             }
 
             ForEach(profileData.stacks) { (stack: Stack) in
-                NavigationLink(destination: SharedStackDetailView(profileData: profileData,
+                NavigationLink(destination: SharedStackDetailView(user: profileData.user,
                                                                   stack: stack,
                                                                   inventoryItems: stackItems(in: stack),
                                                                   requestInfo: store.state.requestInfo) { selectedStackId = nil },

@@ -24,6 +24,8 @@ func log(_ value: Any) {
 
 struct DebugSettings {
     let isInDebugMode: Bool
+    let ipAddress: String = "192.168.0.199"
+    
     lazy var environment: AppEnvironment? = {
         guard let currentConfiguration = Bundle.main.object(forInfoDictionaryKey: "Configuration") as? String,
               let environment = AppEnvironment(rawValue: currentConfiguration) else { return nil }
@@ -70,6 +72,10 @@ struct DebugSettings {
 
     var useFunctionsEmulator: Bool {
         bool(for: "useFunctionsEmulator")
+    }
+
+    var useFirestoreEmulator: Bool {
+        bool(for: "useFirestoreEmulator")
     }
 
     var showScraperLogs: Bool {

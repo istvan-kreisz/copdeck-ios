@@ -11,7 +11,7 @@ import Combine
 struct SharedInventoryItemView: View {
     private static let profileImageSize: CGFloat = 38
 
-    let profileData: ProfileData
+    let user: User
     let inventoryItem: InventoryItem
     let requestInfo: [ScraperRequestInfo]
 
@@ -24,13 +24,13 @@ struct SharedInventoryItemView: View {
     var body: some View {
         Group {
             VerticalListView(bottomPadding: 30, spacing: 2, addHorizontalPadding: false) {
-                NavigationBar(title: profileData.user.name.map { "\($0)'s sneaker" } ?? "sneaker details",
+                NavigationBar(title: user.name.map { "\($0)'s sneaker" } ?? "sneaker details",
                               isBackButtonVisible: true,
                               style: .dark,
                               shouldDismiss: shouldDismiss)
                     .withDefaultPadding(padding: .horizontal)
 
-                OwnerCardView(user: profileData.user)
+                OwnerCardView(user: user)
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text(inventoryItem.name)

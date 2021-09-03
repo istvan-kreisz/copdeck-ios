@@ -21,7 +21,7 @@ class FBFunctionsCoordinator {
 
     init() {
         if DebugSettings.shared.isInDebugMode, DebugSettings.shared.useFunctionsEmulator {
-            functions.useFunctionsEmulator(origin: "http://192.168.0.199:5001")
+            functions.useFunctionsEmulator(origin: "http://\(DebugSettings.shared.ipAddress):5001")
         }
     }
 
@@ -62,6 +62,7 @@ class FBFunctionsCoordinator {
 
     func callFirebaseFunctionArray<Model: Decodable>(functionName: String, model: Encodable) -> AnyPublisher<[Model], AppError> {
         firebaseFunction(functionName: functionName, model: model) { result, completion in
+            log(functionName)
             let result: [Model] = try self.decodeResultArray(result)
             completion(.success(result))
         }

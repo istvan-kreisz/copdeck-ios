@@ -148,6 +148,7 @@
 		5DE4F21C26E048100087077A /* SharedInventoryItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE4F21B26E048100087077A /* SharedInventoryItemDetailView.swift */; };
 		5DE4F21E26E052570087077A /* OwnerCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE4F21D26E052570087077A /* OwnerCardView.swift */; };
 		5DE4F22026E0C9AA0087077A /* HorizontalListItemSquare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE4F21F26E0C9AA0087077A /* HorizontalListItemSquare.swift */; };
+		5DE4F22226E0FD790087077A /* FeedPostData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE4F22126E0FD790087077A /* FeedPostData.swift */; };
 		5DE596E626C876790024F7D5 /* PagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE596E526C876790024F7D5 /* PagerView.swift */; };
 		5DE596E826C877120024F7D5 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE596E726C877120024F7D5 /* Stack.swift */; };
 		5DE596EA26C878280024F7D5 /* StackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE596E926C878280024F7D5 /* StackView.swift */; };
@@ -305,6 +306,7 @@
 		5DE4F21B26E048100087077A /* SharedInventoryItemDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedInventoryItemDetailView.swift; sourceTree = "<group>"; };
 		5DE4F21D26E052570087077A /* OwnerCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OwnerCardView.swift; sourceTree = "<group>"; };
 		5DE4F21F26E0C9AA0087077A /* HorizontalListItemSquare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalListItemSquare.swift; sourceTree = "<group>"; };
+		5DE4F22126E0FD790087077A /* FeedPostData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedPostData.swift; sourceTree = "<group>"; };
 		5DE596E526C876790024F7D5 /* PagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerView.swift; sourceTree = "<group>"; };
 		5DE596E726C877120024F7D5 /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		5DE596E926C878280024F7D5 /* StackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackView.swift; sourceTree = "<group>"; };
@@ -786,6 +788,7 @@
 				5DE596E726C877120024F7D5 /* Stack.swift */,
 				5DDEFDCB26D14095001B0F76 /* Filters.swift */,
 				5D9DFB0026D978F9005A575D /* ProfileData.swift */,
+				5DE4F22126E0FD790087077A /* FeedPostData.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1119,6 +1122,7 @@
 				5D424D1D25C505450008D6F4 /* Modifiers.swift in Sources */,
 				5DE596F026C8CD600024F7D5 /* SelectStackItemsListItem.swift in Sources */,
 				5DE596EE26C8C74B0024F7D5 /* SelectStackItemsView.swift in Sources */,
+				5DE4F22226E0FD790087077A /* FeedPostData.swift in Sources */,
 				5DDEFDBC26CD7A42001B0F76 /* Constants.swift in Sources */,
 				5D63123A26950A5900876D99 /* Stores.swift in Sources */,
 				5DEBC088269B24BA000EEADC /* ViewRouter.swift in Sources */,

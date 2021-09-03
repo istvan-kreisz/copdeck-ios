@@ -65,7 +65,7 @@ struct VerticalItemListView_Previews: PreviewProvider {
                                  isLoading: .constant(false),
                                  title: "title",
                                  resultsLabelText: nil,
-                                 bottomPadding: 130,
+                                 bottomPadding: Styles.tabScreenBottomPadding,
                                  requestInfo: [])
         }
     }

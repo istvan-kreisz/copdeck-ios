@@ -10,7 +10,7 @@ import Combine
 
 struct HorizontaltemListView: View {
     enum Style {
-        case round, square
+        case round, square(Color)
     }
 
     private static let maxHorizontalItemCount = 20
@@ -56,18 +56,20 @@ struct HorizontaltemListView: View {
                             .frame(width: 0, height: 0)
                             .padding(.leading, Styles.horizontalMargin - 24)
                         ForEach(itemsToShow) { (item: Item) in
-                            if style == .round {
+                            switch style {
+                            case .round:
                                 HorizontalListItemRound(title: item.name ?? "",
                                                         imageURL: item.imageURL,
                                                         flipImage: item.imageURL?.store?.id == .klekt,
                                                         requestInfo: requestInfo,
                                                         index: itemsToShow.firstIndex(where: { $0.id == item.id }) ?? 0) { selectedItem = item }
-                            } else {
+                            case let .square(color):
                                 HorizontalListItemSquare(title: item.name ?? "",
                                                          imageURL: item.imageURL,
                                                          flipImage: item.imageURL?.store?.id == .klekt,
                                                          requestInfo: requestInfo,
-                                                         index: itemsToShow.firstIndex(where: { $0.id == item.id }) ?? 0) { selectedItem = item }
+                                                         index: itemsToShow.firstIndex(where: { $0.id == item.id }) ?? 0,
+                                                         color: color) { selectedItem = item }
                             }
                         }
                         if let moreTapped = moreTapped, items.count > Self.maxHorizontalItemCount {

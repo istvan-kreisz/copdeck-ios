@@ -11,6 +11,13 @@ import FirebaseFunctions
 
 class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI  {
     #warning("fix")
+    func getFeedPosts() -> AnyPublisher<[FeedPostData], AppError> {
+        struct Wrapper: Encodable {
+            let userId: String?
+        }
+        return callFirebaseFunctionArray(functionName: "getFeedPosts", model: Wrapper(userId: userId))
+    }
+
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
         callFirebaseFunction(functionName: "search", model: searchTerm)
     }

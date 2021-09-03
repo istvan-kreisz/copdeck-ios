@@ -162,7 +162,7 @@ struct InventoryView: View {
                         .padding(.top, 5)
                         .listRow()
                 }
-                Color.clear.padding(.bottom, 130)
+                Color.clear.padding(.bottom, Styles.tabScreenBottomPadding)
                     .listRow()
             }
             .withFloatingButton(button: EditInventoryTray(actions: actionsTrayActions)

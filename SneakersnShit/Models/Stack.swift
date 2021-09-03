@@ -17,7 +17,11 @@ struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
     var items: [StackItem]
     let created: Double?
     let updated: Double?
-    let publishedDate: Double?
+    var publishedDate: Double?
+
+    var itemIds: [String] {
+        items.map(\.inventoryItemId)
+    }
 
     func inventoryItems(allInventoryItems: [InventoryItem], filters: Filters, searchText: String) -> [InventoryItem] {
         allInventoryItems.filter { (inventoryItem: InventoryItem) -> Bool in

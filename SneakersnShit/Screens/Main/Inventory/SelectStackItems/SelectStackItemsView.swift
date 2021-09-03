@@ -35,7 +35,7 @@ struct SelectStackItemsView: View {
             NavigationBar(title: title, isBackButtonVisible: true, style: .dark) { showView = false }
                 .withDefaultPadding(padding: .horizontal)
 
-            VerticalListView(bottomPadding: 130) {
+            VerticalListView(bottomPadding: Styles.tabScreenBottomPadding) {
                 ForEach(inventoryItems) { (inventoryItem: InventoryItem) in
                     let isSelected = Binding<Bool>(get: { selectedStackItems.map(\.inventoryItemId).contains(inventoryItem.id) },
                                                    set: { selected in

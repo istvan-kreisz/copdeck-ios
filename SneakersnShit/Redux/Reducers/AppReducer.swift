@@ -35,6 +35,13 @@ func appReducer(state: inout AppState,
                 updatedUser.name = username
                 environment.dataController.update(user: updatedUser)
             }
+        case .getFeedPosts:
+            return environment.dataController.getFeedPosts()
+                .map { (feedPosts: [FeedPostData]) in AppAction.main(action: .setFeedPosts(feedPosts)) }
+                .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
+                .eraseToAnyPublisher()
+        case let .setFeedPosts(postsData):
+            state.feedPosts += postsData
         case let .updateSettings(settings):
             if var updatedUser = state.user {
                 updatedUser.settings = settings

@@ -21,6 +21,8 @@ class FirebaseService: DatabaseManager {
 
     private var userId: String?
 
+    private var feedLastDocument: QueryDocumentSnapshot?
+
     // collection listeners
     private var inventoryListener = CollectionListener<InventoryItem>()
     private var stacksListener = CollectionListener<Stack>()
@@ -97,8 +99,8 @@ class FirebaseService: DatabaseManager {
         storage = Storage.storage()
         let settings = firestore.settings
         settings.cacheSizeBytes = 200 * 1_000_000
-        if DebugSettings.shared.isInDebugMode, DebugSettings.shared.useFunctionsEmulator {
-            settings.host = "192.168.0.199:8080"
+        if DebugSettings.shared.isInDebugMode, DebugSettings.shared.useFirestoreEmulator {
+            settings.host = "\(DebugSettings.shared.ipAddress):8080"
             settings.isPersistenceEnabled = false
             settings.isSSLEnabled = false
         }
@@ -276,9 +278,13 @@ class FirebaseService: DatabaseManager {
     }
 
     func update(stack: Stack) {
-        if let dict = try? stack.asDictionary() {
+        var updatedStack = stack
+        if updatedStack.isPublished ?? false, updatedStack.publishedDate == nil {
+            updatedStack.publishedDate = Date().timeIntervalSince1970 * 1000
+        }
+        if let dict = try? updatedStack.asDictionary() {
             stacksListener.collectionRef?
-                .document(stack.id)
+                .document(updatedStack.id)
                 .setData(dict, merge: true) { [weak self] error in
                     if let error = error {
                         self?.errorsSubject.send(AppError(error: error))

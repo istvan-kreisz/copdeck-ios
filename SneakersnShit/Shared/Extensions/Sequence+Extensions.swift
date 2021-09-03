@@ -25,3 +25,15 @@ extension Sequence where Element: Hashable {
         return filter { set.insert($0).inserted }
     }
 }
+
+extension Sequence where Element: Identifiable, Element.ID == String {
+    func uniqueById() -> [Element] {
+        var uniqueElements: [Element] = []
+        self.forEach { element in
+            if !uniqueElements.contains(where: { $0.id == element.id }) {
+                uniqueElements.append(element)
+            }
+        }
+        return uniqueElements
+    }
+}

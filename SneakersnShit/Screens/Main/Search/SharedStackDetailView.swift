@@ -11,7 +11,7 @@ import Combine
 struct SharedStackDetailView: View {
     private static let profileImageSize: CGFloat = 38
 
-    let profileData: ProfileData
+    let user: User
     let stack: Stack
     let inventoryItems: [InventoryItem]
     let requestInfo: [ScraperRequestInfo]
@@ -23,7 +23,7 @@ struct SharedStackDetailView: View {
     var body: some View {
         Group {
             ForEach(inventoryItems) { (inventoryItem: InventoryItem) in
-                NavigationLink(destination: SharedInventoryItemView(profileData: profileData,
+                NavigationLink(destination: SharedInventoryItemView(user: user,
                                                                     inventoryItem: inventoryItem,
                                                                     requestInfo: requestInfo) { selectedInventoryItemId = nil },
                                tag: inventoryItem.id,
@@ -34,7 +34,7 @@ struct SharedStackDetailView: View {
                 NavigationBar(title: stack.name, isBackButtonVisible: true, style: .dark, shouldDismiss: shouldDismiss)
                     .withDefaultPadding(padding: .horizontal)
 
-                OwnerCardView(user: profileData.user)
+                OwnerCardView(user: user)
 
                 if let caption = stack.caption {
                     HStack {

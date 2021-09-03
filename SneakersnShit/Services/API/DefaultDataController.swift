@@ -178,6 +178,28 @@ class DefaultDataController: DataController {
         databaseManager.getItem(withId: id, settings: settings)
     }
 
+    func getFeedPosts() -> AnyPublisher<[FeedPostData], AppError> {
+        let hey = backendAPI.getFeedPosts()
+            .flatMap { [weak self] (feedPosts: [FeedPostData]) -> AnyPublisher<[FeedPostData], AppError> in
+                guard let self = self else { return Just(feedPosts).setFailureType(to: AppError.self).eraseToAnyPublisher() }
+
+                let allUsers: [User] = feedPosts.map { $0.user }.uniqueById()
+                return self.getImageURLs(for: allUsers).map { (users: [User]) -> [FeedPostData] in
+                    feedPosts.map { post in
+                        if let updatedUser = users.first(where: { $0.id == post.user.id }) {
+                            var updatedPost = post
+                            updatedPost.user = updatedUser
+                            return updatedPost
+                        } else {
+                            return post
+                        }
+                    }
+                }.eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
+        return hey
+    }
+
     func setup(userId: String) {
         databaseManager.setup(userId: userId)
         backendAPI.setup(userId: userId)

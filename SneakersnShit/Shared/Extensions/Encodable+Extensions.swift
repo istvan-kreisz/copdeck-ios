@@ -10,7 +10,7 @@ import Foundation
 extension Encodable {
     func asDictionary() throws -> [String: Any] {
         let encodedSelf = try JSONEncoder().encode(self)
-        if let dictionary = try JSONSerialization.jsonObject(with: encodedSelf) as? [String: Any] {
+        if let dictionary = try JSONSerialization.jsonObject(with: encodedSelf, options: .allowFragments) as? [String: Any] {
             return dictionary
         } else {
             throw AppError(title: "Encoding Model Failed", message: "", error: nil)

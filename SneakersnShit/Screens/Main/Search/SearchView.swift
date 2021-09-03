@@ -104,7 +104,7 @@ struct SearchView: View {
                                                   isLoading: .constant(false),
                                                   title: "Your favorites",
                                                   requestInfo: store.state.requestInfo,
-                                                  style: .square)
+                                                  style: .square(.customRed))
 
                             HorizontaltemListView(items: $store.state.recentlyViewed,
                                                   selectedItem: $selectedItem,
@@ -112,7 +112,7 @@ struct SearchView: View {
                                                   title: "Recently viewed",
                                                   requestInfo: store.state.requestInfo,
                                                   sortedBy: .created,
-                                                  style: .square)
+                                                  style: .square(.clear))
                             Spacer()
                         }
                     } else {
@@ -121,14 +121,14 @@ struct SearchView: View {
                                              isLoading: $searchResultsLoader.isLoading,
                                              title: nil,
                                              resultsLabelText: nil,
-                                             bottomPadding: 130,
+                                             bottomPadding: Styles.tabScreenBottomPadding,
                                              requestInfo: store.state.requestInfo)
                     }
                 } else {
                     VerticalProfileListView(profiles: $store.state.userSearchResults.asProfiles,
                                             selectedProfile: $selectedUser,
                                             isLoading: $userSearchResultsLoader.isLoading,
-                                            bottomPadding: 130)
+                                            bottomPadding: Styles.tabScreenBottomPadding)
                 }
             }
             .onChange(of: searchText) { searchText in

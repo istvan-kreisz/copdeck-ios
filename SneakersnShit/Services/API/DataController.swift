@@ -32,6 +32,8 @@ protocol BackendAPI {
 
     func setup(userId: String)
     func reset()
+    // feed
+    func getFeedPosts() -> AnyPublisher<[FeedPostData], AppError>
     // search
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError>
     // item

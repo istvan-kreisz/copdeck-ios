@@ -15,6 +15,7 @@ struct HorizontalListItemSquare: View {
     var flipImage = false
     var requestInfo: [ScraperRequestInfo]
     var index: Int
+    let color: Color
 
     var onTapped: () -> Void
 
@@ -26,7 +27,7 @@ struct HorizontalListItemSquare: View {
                 .fill(Color.customWhite)
                 .frame(width: Self.size, height: Self.size)
                 .background(RoundedRectangle(cornerRadius: Styles.cornerRadius)
-                    .stroke(Color.pillColors[index % Color.pillColors.count], lineWidth: 4)
+                    .stroke(color, lineWidth: 4)
                     .background(Color.clear))
                 .withDefaultShadow()
 

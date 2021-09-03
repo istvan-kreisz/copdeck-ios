@@ -14,4 +14,5 @@ enum Styles {
     static let inputFieldHeight: CGFloat = 42
     static let inputFieldHeightLarge: CGFloat = 120
     static let cornerRadius: CGFloat = 12
+    static let tabScreenBottomPadding: CGFloat = 130
 }

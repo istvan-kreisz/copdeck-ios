@@ -112,7 +112,7 @@ struct StackDetailView: View {
                                                              }),
                            isActive: $showItemSelector) { EmptyView() }
 
-            VerticalListView(bottomPadding: 130, spacing: 2, addHorizontalPadding: false) {
+            VerticalListView(bottomPadding: Styles.tabScreenBottomPadding, spacing: 2, addHorizontalPadding: false) {
                 NavigationBar(title: stack.name, isBackButtonVisible: true, style: .dark) { showView = false }
                     .withDefaultPadding(padding: .horizontal)
 
