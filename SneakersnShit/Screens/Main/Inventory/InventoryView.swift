@@ -124,7 +124,7 @@ struct InventoryView: View {
             },
             isActive: showEditedStack) { EmptyView() }
 
-            VerticalListView(bottomPadding: 0, spacing: 0, addListRowStyling: false) {
+            VerticalListView(bottomPadding: 0, spacing: 0, listRowStyling: .none) {
                 InventoryHeaderView(settingsPresented: $settingsPresented,
                                     showImagePicker: $showImagePicker,
                                     profileImageURL: $store.state.profileImageURL,

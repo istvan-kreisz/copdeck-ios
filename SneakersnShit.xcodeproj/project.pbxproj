@@ -88,6 +88,7 @@
 		5D6B112E26A46E3A00B6B67A /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6B112D26A46E3A00B6B67A /* NavigationBar.swift */; };
 		5D7B17CC26868CA60065D01C /* Scraper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D7B17CB26868CA60065D01C /* Scraper.swift */; };
 		5D83156B25C397C4008AB948 /* MainContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D83156A25C397C4008AB948 /* MainContainerView.swift */; };
+		5D84875526E2E220006062DC /* PullToRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D84875426E2E220006062DC /* PullToRefresh.swift */; };
 		5D8ABBBA26B0B51200AFD8CF /* Snackbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ABBB926B0B51200AFD8CF /* Snackbar.swift */; };
 		5D8ABBBF26B1C82500AFD8CF /* ScraperRequestInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ABBBE26B1C82500AFD8CF /* ScraperRequestInfo.swift */; };
 		5D8ABBC126B1D2E100AFD8CF /* ItemImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ABBC026B1D2E100AFD8CF /* ItemImageView.swift */; };
@@ -249,6 +250,7 @@
 		5D6B112D26A46E3A00B6B67A /* NavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBar.swift; sourceTree = "<group>"; };
 		5D7B17CB26868CA60065D01C /* Scraper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scraper.swift; sourceTree = "<group>"; };
 		5D83156A25C397C4008AB948 /* MainContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainContainerView.swift; sourceTree = "<group>"; };
+		5D84875426E2E220006062DC /* PullToRefresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PullToRefresh.swift; sourceTree = "<group>"; };
 		5D8ABBB926B0B51200AFD8CF /* Snackbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snackbar.swift; sourceTree = "<group>"; };
 		5D8ABBBB26B0DF4900AFD8CF /* SneakersnShit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SneakersnShit.entitlements; sourceTree = "<group>"; };
 		5D8ABBBE26B1C82500AFD8CF /* ScraperRequestInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScraperRequestInfo.swift; sourceTree = "<group>"; };
@@ -612,6 +614,7 @@
 				5DE4F20B26DEF85D0087077A /* VerticalProfileListView.swift */,
 				5DE4F20D26DEFA070087077A /* ProfileListItem.swift */,
 				5DE4F21526E00BBC0087077A /* StackSummaryListItem.swift */,
+				5D84875426E2E220006062DC /* PullToRefresh.swift */,
 			);
 			path = Vertical;
 			sourceTree = "<group>";
@@ -1122,6 +1125,7 @@
 				5D424D1D25C505450008D6F4 /* Modifiers.swift in Sources */,
 				5DE596F026C8CD600024F7D5 /* SelectStackItemsListItem.swift in Sources */,
 				5DE596EE26C8C74B0024F7D5 /* SelectStackItemsView.swift in Sources */,
+				5D84875526E2E220006062DC /* PullToRefresh.swift in Sources */,
 				5DE4F22226E0FD790087077A /* FeedPostData.swift in Sources */,
 				5DDEFDBC26CD7A42001B0F76 /* Constants.swift in Sources */,
 				5D63123A26950A5900876D99 /* Stores.swift in Sources */,

@@ -8,8 +8,6 @@
 import SwiftUI
 import Combine
 
-var yo = true
-
 struct FeedView: View {
     @EnvironmentObject var store: AppStore
     @State private var selectedInventoryItemId: String?
@@ -17,12 +15,10 @@ struct FeedView: View {
 
     @State private var selectedStack: Stack?
 
+    @StateObject private var postsLoader = Loader()
+
     var feedPosts: [FeedPostData] {
         store.state.feedPosts
-    }
-
-    var stacks: [Stack] {
-        store.state.feedPosts.flatMap { $0.stack }
     }
 
     var inventoryItems: [InventoryItem] {
@@ -62,7 +58,11 @@ struct FeedView: View {
                     .padding(.leading, 6)
                     .withDefaultPadding(padding: .horizontal)
 
-                VerticalListView(bottomPadding: Styles.tabScreenBottomPadding, spacing: 0, addListRowStyling: false) {
+                VerticalListView(bottomPadding: Styles.tabScreenBottomPadding, spacing: 0) {
+                    PullToRefresh(coordinateSpaceName: "pullToRefresh") {
+                        // do your stuff when pulled
+                    }
+
                     ForEach(store.state.feedPosts) { (feedPostData: FeedPostData) in
                         SharedStackSummaryView(selectedInventoryItemId: $selectedInventoryItemId,
                                                selectedStackId: $selectedStackId,
@@ -72,16 +72,14 @@ struct FeedView: View {
                                                profileInfo: (feedPostData.user.name ?? "", feedPostData.user.imageURL))
                             .buttonStyle(PlainButtonStyle())
                             .padding(.bottom, 8)
-                            .listRow()
                     }
                 }
+                .environment(\.defaultMinListRowHeight, 1)
+                .coordinateSpace(name: "pullToRefresh")
             }
         }
         .onAppear {
-            if yo {
-                yo = false
-                store.send(.main(action: .getFeedPosts))
-            }
+            store.send(.main(action: .getFeedPosts))
         }
     }
 }
