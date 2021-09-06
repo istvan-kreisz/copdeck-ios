@@ -18,6 +18,7 @@ struct PullToRefresh: View {
             if geo.frame(in: .named(coordinateSpaceName)).midY > 130 {
                 Spacer()
                     .onAppear {
+                        guard geo.frame(in: .named(coordinateSpaceName)).midY > 130 else { return }
                         generator.impactOccurred()
                         onRefresh()
                     }

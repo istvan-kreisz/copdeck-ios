@@ -339,7 +339,7 @@ struct ItemDetailView: View {
 
     private func didToggleFavorite(newValue: Bool) {
         guard let item = item else { return }
-        log("didToggleFavorite \(newValue)")
+//        log("didToggleFavorite \(newValue)")
         isFavorited = newValue
         if newValue {
             store.send(.main(action: .favorite(item: item)))

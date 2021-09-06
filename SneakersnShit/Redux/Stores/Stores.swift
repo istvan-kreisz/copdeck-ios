@@ -125,7 +125,7 @@ extension AppStore {
             .map { (offset: Int, idWithDelay: (String, Double)) in
                 (idWithDelay.0, idWithDelay.1 + (idsWithDelay[safe: offset - 1]?.1 ?? 0))
             }
-        log("refreshing prices for items with ids: \(idsToRefresh)")
+        log("refreshing prices for items with ids: \(idsToRefresh)", logType: .scraping)
         if !state.didFetchItemPrices {
             idsWithDelay
                 .forEach { [weak self] (id: String, _) in

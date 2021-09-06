@@ -9,13 +9,50 @@ import Foundation
 import Combine
 import FirebaseFunctions
 
-class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI  {
+class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
+    private var feedPagination = PaginationState<FeedPost>(lastLoaded: nil, isLastPage: false)
+
     #warning("fix")
-    func getFeedPosts() -> AnyPublisher<[FeedPostData], AppError> {
+
+    func getFeedPosts(loadMore: Bool) -> AnyPublisher<PaginatedResult<[FeedPost]>, AppError> {
         struct Wrapper: Encodable {
             let userId: String?
+            let startAfter: [String]?
         }
-        return callFirebaseFunctionArray(functionName: "getFeedPosts", model: Wrapper(userId: userId))
+        struct Result: Codable, Equatable {
+            var posts: [FeedPost]
+            let users: [User]
+        }
+        var model: Wrapper
+        if loadMore {
+            if let lastLoadedFeedPost = feedPagination.lastLoaded, !feedPagination.isLastPage {
+                let lastLoadedStackPath = ["users", lastLoadedFeedPost.userId, "stacks", lastLoadedFeedPost.stack.id]
+                model = .init(userId: userId, startAfter: lastLoadedStackPath)
+            } else {
+                feedPagination.reset()
+                return Just(.init(data: [], isLastPage: true)).setFailureType(to: AppError.self).eraseToAnyPublisher()
+            }
+        } else {
+            feedPagination.reset()
+            model = .init(userId: userId, startAfter: nil)
+        }
+        let result: AnyPublisher<PaginatedResult<Result>, AppError> = callFirebaseFunction(functionName: "getFeedPosts", model: model)
+        return result
+            .map { result in
+                let updatedPosts = result.data.posts.map { (post: FeedPost) -> FeedPost in
+                    var updatedPost = post
+                    updatedPost.user = result.data.users.first(where: { $0.id == post.userId })
+                    return updatedPost
+                }
+                return PaginatedResult(data: updatedPosts, isLastPage: result.isLastPage)
+            }
+            .handleEvents(receiveOutput: { [weak self] result in
+                if let lastPost = result.data.sortedByDate(sortOrder: .descending).last {
+                    self?.feedPagination.lastLoaded = lastPost
+                }
+                self?.feedPagination.isLastPage = result.isLastPage
+            })
+            .eraseToAnyPublisher()
     }
 
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {

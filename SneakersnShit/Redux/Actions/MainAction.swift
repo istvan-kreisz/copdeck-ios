@@ -12,8 +12,9 @@ enum MainAction {
     case setUser(user: User)
     case updateUsername(username: String)
     // feed
-    case getFeedPosts
-    case setFeedPosts([FeedPostData])
+    case getFeedPosts(loadMore: Bool)
+    case setFeedPosts(feedPosts: PaginatedResult<[FeedPost]>)
+    case addFeedPosts(feedPosts: PaginatedResult<[FeedPost]>)
     // settings
     case updateSettings(settings: CopDeckSettings)
     // search
@@ -56,6 +57,8 @@ extension MainAction: Identifiable {
             return "updateUsername"
         case .getFeedPosts:
             return "getFeedPosts"
+        case .addFeedPosts:
+            return "addFeedPosts"
         case .setFeedPosts:
             return "setFeedPosts"
         case .updateSettings:

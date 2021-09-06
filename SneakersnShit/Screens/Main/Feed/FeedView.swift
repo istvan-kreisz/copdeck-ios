@@ -14,11 +14,18 @@ struct FeedView: View {
     @State private var selectedStackId: String?
 
     @State private var selectedStack: Stack?
+    @State private var selectedUser: ProfileData?
 
     @StateObject private var postsLoader = Loader()
 
-    var feedPosts: [FeedPostData] {
-        store.state.feedPosts
+    @State private var didStartFirstLoad = false
+
+    var feedPosts: [FeedPost] {
+        store.state.feedPosts.data
+    }
+
+    var allProfiles: [ProfileData] {
+        feedPosts.compactMap { $0.profileData }
     }
 
     var inventoryItems: [InventoryItem] {
@@ -41,13 +48,21 @@ struct FeedView: View {
                 }
             }
 
-            ForEach(feedPosts) { (feedPost: FeedPostData) in
-                NavigationLink(destination: SharedStackDetailView(user: feedPost.user,
-                                                                  stack: feedPost.stack,
-                                                                  inventoryItems: feedPost.inventoryItems,
-                                                                  requestInfo: store.state.requestInfo) { selectedStackId = nil },
-                               tag: feedPost.stack.id,
-                               selection: $selectedStackId) { EmptyView() }
+            ForEach(allProfiles) { (profileData: ProfileData) in
+                NavigationLink(destination: ProfileView(profileData: profileData) { selectedUser = nil },
+                               tag: profileData.user.id,
+                               selection: convertToId(_selectedUser)) { EmptyView() }
+            }
+
+            ForEach(feedPosts) { (feedPost: FeedPost) in
+                if let user = feedPost.user {
+                    NavigationLink(destination: SharedStackDetailView(user: user,
+                                                                      stack: feedPost.stack,
+                                                                      inventoryItems: feedPost.inventoryItems,
+                                                                      requestInfo: store.state.requestInfo) { selectedStackId = nil },
+                                   tag: feedPost.stack.id,
+                                   selection: $selectedStackId) { EmptyView() }
+                }
             }
 
             VStack(alignment: .leading, spacing: 19) {
@@ -60,18 +75,40 @@ struct FeedView: View {
 
                 VerticalListView(bottomPadding: Styles.tabScreenBottomPadding, spacing: 0) {
                     PullToRefresh(coordinateSpaceName: "pullToRefresh") {
-                        // do your stuff when pulled
+                        log("getFeedPost - refresh")
+                        loadFeedPosts(loadMore: false)
                     }
 
-                    ForEach(store.state.feedPosts) { (feedPostData: FeedPostData) in
-                        SharedStackSummaryView(selectedInventoryItemId: $selectedInventoryItemId,
-                                               selectedStackId: $selectedStackId,
-                                               stack: feedPostData.stack,
-                                               inventoryItems: feedPostData.inventoryItems,
-                                               requestInfo: store.state.requestInfo,
-                                               profileInfo: (feedPostData.user.name ?? "", feedPostData.user.imageURL))
+                    ForEach(feedPosts) { (feedPostData: FeedPost) in
+                        if let user = feedPostData.user {
+                            SharedStackSummaryView(selectedInventoryItemId: $selectedInventoryItemId,
+                                                   selectedStackId: $selectedStackId,
+                                                   stack: feedPostData.stack,
+                                                   inventoryItems: feedPostData.inventoryItems,
+                                                   requestInfo: store.state.requestInfo,
+                                                   profileInfo: (user.name ?? "", user.imageURL)) {
+                                    selectedUser = feedPostData.profileData
+                            }
                             .buttonStyle(PlainButtonStyle())
                             .padding(.bottom, 8)
+                        }
+                    }
+                    if store.state.feedPosts.isLastPage {
+                        Text("That's it!")
+                            .font(.bold(size: 14))
+                            .foregroundColor(.customText2)
+                            .padding(.top, 25)
+                            .centeredHorizontally()
+                    } else {
+                        CustomSpinner(text: "Loading posts...", animate: true)
+                            .padding(.top, 25)
+                            .centeredHorizontally()
+                            .onAppear {
+                                if !feedPosts.isEmpty {
+                                    log("getFeedPost - loadMore")
+                                    loadFeedPosts(loadMore: true)
+                                }
+                            }
                     }
                 }
                 .environment(\.defaultMinListRowHeight, 1)
@@ -79,8 +116,13 @@ struct FeedView: View {
             }
         }
         .onAppear {
-            store.send(.main(action: .getFeedPosts))
+            log("getFeedPost - onAppear")
+            loadFeedPosts(loadMore: false)
         }
+    }
+
+    private func loadFeedPosts(loadMore: Bool) {
+        store.send(.main(action: .getFeedPosts(loadMore: loadMore)), debounceDelayMs: 2000)
     }
 }
 

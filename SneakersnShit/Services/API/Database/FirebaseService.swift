@@ -143,7 +143,7 @@ class FirebaseService: DatabaseManager {
                 self.getProfileImage(at: imageRef) { url, error in
                     DispatchQueue.main.async {
                         if let error = error {
-                            log("error downloading image \(error)")
+                            log("error downloading image \(error)", logType: .error)
                             usersWithImageURLs.append(user)
                         } else {
                             var copy = user
@@ -163,7 +163,7 @@ class FirebaseService: DatabaseManager {
     private func getUserProfileImage() {
         getProfileImage(at: imageRef) { [weak self] url, error in
             if let error = error {
-                log("error downloading image \(error)")
+                log("error downloading image \(error)", logType: .error)
             } else {
                 self?.imageSubject.send(url)
             }
@@ -226,7 +226,7 @@ class FirebaseService: DatabaseManager {
     func getItem(withId id: String, settings: CopDeckSettings) -> AnyPublisher<Item, AppError> {
         return Future { [weak self] promise in
             self?.itemsRef?.document(Item.databaseId(itemId: id, settings: settings)).getDocument { snapshot, error in
-                log("db read itemId: \(id)")
+                log("db read itemId: \(id)", logType: .database)
                 if let dict = snapshot?.data(), let item = Item(from: dict) {
                     promise(.success(item))
                 } else {
@@ -356,7 +356,7 @@ class FirebaseService: DatabaseManager {
             deletedDocRefs.forEach { batch.deleteDocument($0) }
         }
         // add new
-        log("add new recentlyViewedItem \(recentlyViewedItem.id)")
+        log("add new recentlyViewedItem \(recentlyViewedItem.id)", logType: .database)
         if let dict = try? recentlyViewedItem.strippedOfPrices.asDictionary() {
             if let newDocumentRef = recentlyViewedListener.collectionRef?.document(Item.databaseId(itemId: recentlyViewedItem.id, settings: nil)) {
                 batch.setData(dict, forDocument: newDocumentRef, merge: true)

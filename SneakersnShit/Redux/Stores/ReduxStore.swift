@@ -24,8 +24,8 @@ final class ReduxStore<State, Action: Identifiable, Environment>: ObservableObje
         self.environment = environment
     }
 
-    func send(_ action: Action, completed: ((Result<Void, AppError>) -> Void)? = nil) {
-        Debouncer.debounce(delay: .milliseconds(500), id: action.id) { [weak self] in
+    func send(_ action: Action, debounceDelayMs: Int? = nil, completed: ((Result<Void, AppError>) -> Void)? = nil) {
+        Debouncer.debounce(delay: .milliseconds(debounceDelayMs ?? 500), id: action.id) { [weak self] in
             self?.process(action, completed: completed)
         } cancel: {
             completed?(.success(()))
@@ -69,7 +69,7 @@ class SearchStore: ObservableObject {
             .store(in: &effectCancellables)
     }
 
-    func send(_ action: AppAction, completed: ((Result<Void, AppError>) -> Void)? = nil) {
-        appStore.send(action, completed: completed)
+    func send(_ action: AppAction, debounceDelayMs: Int, completed: ((Result<Void, AppError>) -> Void)? = nil) {
+        appStore.send(action, debounceDelayMs: debounceDelayMs, completed: completed)
     }
 }

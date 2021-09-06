@@ -21,6 +21,8 @@ struct SharedStackSummaryView: View {
 
     let profileInfo: (username: String, imageURL: URL?)?
 
+    var didTapProfile: (() -> Void)? = nil
+
     var notShownItemCount: Int {
         inventoryItems.count - Self.maxCount
     }
@@ -57,6 +59,9 @@ struct SharedStackSummaryView: View {
                     Spacer()
                 }
                 .padding(.bottom, 12)
+                .onTapGesture {
+                    didTapProfile?()
+                }
             }
             if let caption = stack.caption {
                 Text(caption)

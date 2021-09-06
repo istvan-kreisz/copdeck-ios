@@ -1,5 +1,5 @@
 //
-//  FeedPostData.swift
+//  FeedPost.swift
 //  SneakersnShit
 //
 //  Created by István Kreisz on 9/2/21.
@@ -7,16 +7,28 @@
 
 import Foundation
 
-struct FeedPostData: Codable, Equatable {
-    var user: User
+struct FeedPost: Codable, Equatable {
+    let userId: String
     let stack: Stack
     let inventoryItems: [InventoryItem]
+
+    var user: User?
 }
 
-extension FeedPostData: Identifiable {
+extension FeedPost: Identifiable {
     var id: String { stack.id }
 
-    var profileData: ProfileData {
-        .init(user: user, stacks: [stack], inventoryItems: inventoryItems)
+    var profileData: ProfileData? {
+        user.map { .init(user: $0, stacks: [stack], inventoryItems: inventoryItems) }
+    }
+}
+
+extension FeedPost: ModelWithDate {
+    var created: Double? {
+        stack.publishedDate
+    }
+
+    var updated: Double? {
+        stack.updated
     }
 }

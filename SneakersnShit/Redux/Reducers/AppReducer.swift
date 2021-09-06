@@ -12,7 +12,7 @@ func appReducer(state: inout AppState,
                 action: AppAction,
                 environment: World,
                 completed: ((Result<Void, AppError>) -> Void)?) -> AnyPublisher<AppAction, Never> {
-    log("processing: \(action.id)")
+    log("processing: \(action.id)", logType: .reduxAction)
     switch action {
     case .none:
         break
@@ -35,13 +35,22 @@ func appReducer(state: inout AppState,
                 updatedUser.name = username
                 environment.dataController.update(user: updatedUser)
             }
-        case .getFeedPosts:
-            return environment.dataController.getFeedPosts()
-                .map { (feedPosts: [FeedPostData]) in AppAction.main(action: .setFeedPosts(feedPosts)) }
+        case let .getFeedPosts(loadMore):
+            return environment.dataController.getFeedPosts(loadMore: loadMore)
+                .map { (result: PaginatedResult<[FeedPost]>) in
+                    if loadMore {
+                        return AppAction.main(action: .addFeedPosts(feedPosts: result))
+                    } else {
+                        return AppAction.main(action: .setFeedPosts(feedPosts: result))
+                    }
+                }
                 .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
                 .eraseToAnyPublisher()
         case let .setFeedPosts(postsData):
-            state.feedPosts += postsData
+            state.feedPosts = postsData
+        case let .addFeedPosts(postsData):
+            state.feedPosts.data += postsData.data
+            state.feedPosts.isLastPage = postsData.isLastPage
         case let .updateSettings(settings):
             if var updatedUser = state.user {
                 updatedUser.settings = settings

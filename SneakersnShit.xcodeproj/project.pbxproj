@@ -89,6 +89,7 @@
 		5D7B17CC26868CA60065D01C /* Scraper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D7B17CB26868CA60065D01C /* Scraper.swift */; };
 		5D83156B25C397C4008AB948 /* MainContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D83156A25C397C4008AB948 /* MainContainerView.swift */; };
 		5D84875526E2E220006062DC /* PullToRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D84875426E2E220006062DC /* PullToRefresh.swift */; };
+		5D84875826E3BF60006062DC /* PaginatedResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D84875726E3BF60006062DC /* PaginatedResult.swift */; };
 		5D8ABBBA26B0B51200AFD8CF /* Snackbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ABBB926B0B51200AFD8CF /* Snackbar.swift */; };
 		5D8ABBBF26B1C82500AFD8CF /* ScraperRequestInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ABBBE26B1C82500AFD8CF /* ScraperRequestInfo.swift */; };
 		5D8ABBC126B1D2E100AFD8CF /* ItemImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ABBC026B1D2E100AFD8CF /* ItemImageView.swift */; };
@@ -251,6 +252,7 @@
 		5D7B17CB26868CA60065D01C /* Scraper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scraper.swift; sourceTree = "<group>"; };
 		5D83156A25C397C4008AB948 /* MainContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainContainerView.swift; sourceTree = "<group>"; };
 		5D84875426E2E220006062DC /* PullToRefresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PullToRefresh.swift; sourceTree = "<group>"; };
+		5D84875726E3BF60006062DC /* PaginatedResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginatedResult.swift; sourceTree = "<group>"; };
 		5D8ABBB926B0B51200AFD8CF /* Snackbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snackbar.swift; sourceTree = "<group>"; };
 		5D8ABBBB26B0DF4900AFD8CF /* SneakersnShit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SneakersnShit.entitlements; sourceTree = "<group>"; };
 		5D8ABBBE26B1C82500AFD8CF /* ScraperRequestInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScraperRequestInfo.swift; sourceTree = "<group>"; };
@@ -703,6 +705,7 @@
 		5D6312512695BC3F00876D99 /* API */ = {
 			isa = PBXGroup;
 			children = (
+				5D84875626E3BF51006062DC /* Pagination */,
 				5DA513FF26A6143A0067C4A2 /* Database */,
 				5D2D5A9F25C529E3009598AA /* DataController.swift */,
 				5D631256269669A600876D99 /* DefaultDataController.swift */,
@@ -824,6 +827,14 @@
 				5D424D0B25C505450008D6F4 /* Shared */,
 			);
 			path = Screens;
+			sourceTree = "<group>";
+		};
+		5D84875626E3BF51006062DC /* Pagination */ = {
+			isa = PBXGroup;
+			children = (
+				5D84875726E3BF60006062DC /* PaginatedResult.swift */,
+			);
+			path = Pagination;
 			sourceTree = "<group>";
 		};
 		5D8ABBC226B205BE00AFD8CF /* Feed */ = {
@@ -1122,6 +1133,7 @@
 				5DCC466E26A8CEDE007671BC /* NewItemCard.swift in Sources */,
 				5D19B0AE26A6D7CA00A31F4E /* AuthenticationAction.swift in Sources */,
 				5D63125026950CB400876D99 /* AppReducer.swift in Sources */,
+				5D84875826E3BF60006062DC /* PaginatedResult.swift in Sources */,
 				5D424D1D25C505450008D6F4 /* Modifiers.swift in Sources */,
 				5DE596F026C8CD600024F7D5 /* SelectStackItemsListItem.swift in Sources */,
 				5DE596EE26C8C74B0024F7D5 /* SelectStackItemsView.swift in Sources */,

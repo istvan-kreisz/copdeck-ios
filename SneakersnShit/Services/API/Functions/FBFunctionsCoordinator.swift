@@ -62,7 +62,6 @@ class FBFunctionsCoordinator {
 
     func callFirebaseFunctionArray<Model: Decodable>(functionName: String, model: Encodable) -> AnyPublisher<[Model], AppError> {
         firebaseFunction(functionName: functionName, model: model) { result, completion in
-            log(functionName)
             let result: [Model] = try self.decodeResultArray(result)
             completion(.success(result))
         }

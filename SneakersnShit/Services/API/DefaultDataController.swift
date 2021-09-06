@@ -50,7 +50,7 @@ class DefaultDataController: DataController {
                              itemId: String,
                              settings: CopDeckSettings,
                              exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
-        log("refreshing item with id: \(itemId)")
+        log("refreshing item with id: \(itemId)", logType: .scraping)
         return localScraper
             .getItemDetails(for: item, itemId: itemId, fetchMode: .cacheOrRefresh, settings: settings, exchangeRates: exchangeRates)
             .map { refreshedItem in
@@ -93,7 +93,7 @@ class DefaultDataController: DataController {
                             return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
                         }
                         if let item = item, item.isUptodate, !item.storePrices.isEmpty {
-                            log("cache itemId: \(item.id)")
+                            log("cache itemId: \(item.id)", logType: .database)
                             return Just(item).setFailureType(to: AppError.self).eraseToAnyPublisher()
                         } else {
                             if fetchMode == .cacheOnly {
@@ -160,7 +160,7 @@ class DefaultDataController: DataController {
         localScraper.getCalculatedPrices(for: item, settings: settings, exchangeRates: exchangeRates)
             .sink(receiveCompletion: { _ in },
                   receiveValue: { item in
-                      log("--> cached item with id: \(item.id)")
+                      log("--> cached item with id: \(item.id)", logType: .database)
                       ItemCache.default.insert(item: item, settings: settings)
                   })
             .store(in: &cancellables)
@@ -178,15 +178,15 @@ class DefaultDataController: DataController {
         databaseManager.getItem(withId: id, settings: settings)
     }
 
-    func getFeedPosts() -> AnyPublisher<[FeedPostData], AppError> {
-        let hey = backendAPI.getFeedPosts()
-            .flatMap { [weak self] (feedPosts: [FeedPostData]) -> AnyPublisher<[FeedPostData], AppError> in
-                guard let self = self else { return Just(feedPosts).setFailureType(to: AppError.self).eraseToAnyPublisher() }
+    func getFeedPosts(loadMore: Bool) -> AnyPublisher<PaginatedResult<[FeedPost]>, AppError> {
+        backendAPI.getFeedPosts(loadMore: loadMore)
+            .flatMap { [weak self] result -> AnyPublisher<PaginatedResult<[FeedPost]>, AppError> in
+                guard let self = self else { return Just(result).setFailureType(to: AppError.self).eraseToAnyPublisher() }
 
-                let allUsers: [User] = feedPosts.map { $0.user }.uniqueById()
-                return self.getImageURLs(for: allUsers).map { (users: [User]) -> [FeedPostData] in
-                    feedPosts.map { post in
-                        if let updatedUser = users.first(where: { $0.id == post.user.id }) {
+                let allUsers: [User] = result.data.compactMap { $0.user }.uniqueById()
+                let updatedPosts = self.getImageURLs(for: allUsers).map { (users: [User]) -> [FeedPost] in
+                    result.data.map { (post: FeedPost) -> FeedPost in
+                        if let updatedUser = users.first(where: { $0.id == post.userId }) {
                             var updatedPost = post
                             updatedPost.user = updatedUser
                             return updatedPost
@@ -194,10 +194,14 @@ class DefaultDataController: DataController {
                             return post
                         }
                     }
-                }.eraseToAnyPublisher()
+                }
+                return updatedPosts
+                    .map { (feedPosts: [FeedPost]) -> PaginatedResult<[FeedPost]> in
+                        PaginatedResult<[FeedPost]>(data: feedPosts, isLastPage: result.isLastPage)
+                    }
+                    .eraseToAnyPublisher()
             }
             .eraseToAnyPublisher()
-        return hey
     }
 
     func setup(userId: String) {

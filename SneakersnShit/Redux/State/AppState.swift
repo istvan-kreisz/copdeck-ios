@@ -11,7 +11,7 @@ struct AppState: Equatable {
     var user: User?
     var firstLoadDone = false
     var didFetchItemPrices = false
-    var feedPosts: [FeedPostData] = []
+    var feedPosts: PaginatedResult<[FeedPost]> = .init(data: [], isLastPage: false)
     var searchResults: [Item] = []
     var popularItems: [Item] = []
     var selectedItem: Item?
@@ -53,7 +53,7 @@ struct AppState: Equatable {
 
     mutating func reset() {
         user = nil
-        feedPosts = []
+        feedPosts = .init(data: [], isLastPage: false)
         didFetchItemPrices = false
         searchResults = []
         selectedItem = nil

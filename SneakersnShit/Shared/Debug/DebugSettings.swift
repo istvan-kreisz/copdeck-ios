@@ -15,20 +15,41 @@ enum AppEnvironment: String {
     case releaseProduction = "Release"
 }
 
-func log(_ value: Any) {
+enum LogType {
+    case reduxAction, database, scraping, error
+}
+
+func log(_ value: Any, logType: LogType? = nil) {
     if DebugSettings.shared.isInDebugMode {
-        print("------------------")
-        print(value)
+        var shouldPrint = false
+        switch logType {
+        case .reduxAction:
+            shouldPrint = DebugSettings.shared.showReduxLogs
+        case .database:
+            shouldPrint = DebugSettings.shared.showDatabaseLogs
+        case .scraping:
+            shouldPrint = DebugSettings.shared.showScrapingLogs
+        case .error:
+            shouldPrint = DebugSettings.shared.showErrorLogs
+        case .none:
+            shouldPrint = true
+        }
+        if shouldPrint {
+            print("------------------")
+            print(value)
+        }
     }
 }
 
 struct DebugSettings {
     let isInDebugMode: Bool
     let ipAddress: String = "192.168.0.199"
-    
+//    let ipAddress: String = "10.112.208.225"
+
     lazy var environment: AppEnvironment? = {
         guard let currentConfiguration = Bundle.main.object(forInfoDictionaryKey: "Configuration") as? String,
-              let environment = AppEnvironment(rawValue: currentConfiguration) else { return nil }
+              let environment = AppEnvironment(rawValue: currentConfiguration)
+        else { return nil }
         return environment
     }()
 
@@ -80,5 +101,21 @@ struct DebugSettings {
 
     var showScraperLogs: Bool {
         bool(for: "showScraperLogs")
+    }
+
+    var showDatabaseLogs: Bool {
+        bool(for: "showDatabaseLogs")
+    }
+
+    var showReduxLogs: Bool {
+        bool(for: "showReduxLogs")
+    }
+
+    var showScrapingLogs: Bool {
+        bool(for: "showScrapingLogs")
+    }
+
+    var showErrorLogs: Bool {
+        bool(for: "showErrorLogs")
     }
 }
