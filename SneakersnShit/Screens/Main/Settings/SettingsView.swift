@@ -55,14 +55,14 @@ struct SettingsView: View {
         self._bestPriceFeeType = State(initialValue: settings.bestPriceFeeType.rawValue.capitalized)
         self._preferredShoeSize = State(initialValue: settings.preferredShoeSize ?? "")
         // stockx
-        self._stockxSellerFee = State(initialValue: (settings.feeCalculation.stockx?.sellerFee).asString(defaultValue: ""))
-        self._stockxBuyersTaxes = State(initialValue: (settings.feeCalculation.stockx?.taxes).asString(defaultValue: ""))
+        self._stockxSellerFee = State(initialValue: (settings.feeCalculation.stockx?.sellerFee)?.rounded(toPlaces: 1) ?? "")
+        self._stockxBuyersTaxes = State(initialValue: (settings.feeCalculation.stockx?.taxes)?.rounded(toPlaces: 1) ?? "")
         // goat
-        self._goatCommissionFee = State(initialValue: (settings.feeCalculation.goat?.commissionPercentage ?? .low)?.rawValue.rounded(toPlaces: 0) ?? "")
+        self._goatCommissionFee = State(initialValue: (settings.feeCalculation.goat?.commissionPercentage ?? .low)?.rawValue.rounded(toPlaces: 1) ?? "")
         self._goatCashOutFee = State(initialValue: IncludeOption.from(settings.feeCalculation.goat?.cashOutFee).rawValue)
-        self._goatBuyersTaxes = State(initialValue: (settings.feeCalculation.goat?.taxes).asString(defaultValue: ""))
+        self._goatBuyersTaxes = State(initialValue: (settings.feeCalculation.goat?.taxes)?.rounded(toPlaces: 1) ?? "")
         // klekt
-        self._klektBuyersTaxes = State(initialValue: (settings.feeCalculation.klekt?.taxes).asString(defaultValue: ""))
+        self._klektBuyersTaxes = State(initialValue: (settings.feeCalculation.klekt?.taxes)?.rounded(toPlaces: 1) ?? "")
 
         self._isPresented = isPresented
     }
