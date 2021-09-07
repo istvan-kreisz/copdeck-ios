@@ -26,18 +26,8 @@ struct CopDeckSettings: Codable, Equatable {
         var klekt: Klekt?
 
         struct StockX: Codable, Equatable {
-            enum SellerLevel: Int, Codable, Equatable, CaseIterable {
-                case level1 = 1
-                case level2 = 2
-                case level3 = 3
-                case level4 = 4
-                case level5 = 5
-            }
-
-            var sellerLevel: SellerLevel
+            var sellerFee: Double?
             var taxes: Double
-            var successfulShipBonus: Bool
-            var quickShipBonus: Bool
         }
 
         struct Goat: Codable, Equatable {
@@ -80,10 +70,7 @@ extension CopDeckSettings {
 //                                           notificationFrequency: 24,
 //                                           darkModeOn: false,
                                            feeCalculation: .init(country: .US,
-                                                                 stockx: .init(sellerLevel: .level1,
-                                                                               taxes: 0,
-                                                                               successfulShipBonus: false,
-                                                                               quickShipBonus: false),
+                                                                 stockx: .init(sellerFee: nil, taxes: 0),
                                                                  goat: .init(commissionPercentage: .low,
                                                                              cashOutFee: false,
                                                                              taxes: 0),

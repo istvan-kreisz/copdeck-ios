@@ -45,14 +45,9 @@ class LocalScraper {
     }()
 
     func config(from settings: CopDeckSettings, exchangeRates: ExchangeRates) -> Any {
-        let stockXLevelIsAtLeast4 = settings.feeCalculation.stockx?.sellerLevel == .level4 || settings.feeCalculation.stockx?.sellerLevel == .level5
         let feeCalculation = APIConfig.FeeCalculation(countryName: settings.feeCalculation.country.name,
-                                                      stockx: .init(sellerLevel: (settings.feeCalculation.stockx?.sellerLevel.rawValue) ?? 1,
-                                                                    taxes: (settings.feeCalculation.stockx?.taxes) ?? 0,
-                                                                    successfulShipBonus: (settings.feeCalculation.stockx?.successfulShipBonus ?? false) &&
-                                                                        stockXLevelIsAtLeast4,
-                                                                    quickShipBonus: (settings.feeCalculation.stockx?.quickShipBonus ?? false) &&
-                                                                        stockXLevelIsAtLeast4),
+                                                      stockx: .init(sellerFee: settings.feeCalculation.stockx?.sellerFee ?? 0,
+                                                                    taxes: (settings.feeCalculation.stockx?.taxes) ?? 0),
                                                       goat: .init(commissionPercentage: (settings.feeCalculation.goat?.commissionPercentage.rawValue) ?? 0,
                                                                   cashOutFee: (settings.feeCalculation.goat?.cashOutFee == true) ? 0.029 : 0,
                                                                   taxes: (settings.feeCalculation.goat?.taxes) ?? 0),
