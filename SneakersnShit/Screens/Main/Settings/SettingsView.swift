@@ -33,9 +33,7 @@ struct SettingsView: View {
     @State private var bestPriceFeeType: String
     @State private var preferredShoeSize: String
     // stockx
-    @State private var stockxLevel: String
-    @State private var stockxSuccessfulShipBonus: String
-    @State private var stockxQuickShipBonus: String
+    @State private var stockxSellerFee: String
     @State private var stockxBuyersTaxes: String
     // goat
     @State private var goatCommissionFee: String
@@ -57,16 +55,14 @@ struct SettingsView: View {
         self._bestPriceFeeType = State(initialValue: settings.bestPriceFeeType.rawValue.capitalized)
         self._preferredShoeSize = State(initialValue: settings.preferredShoeSize ?? "")
         // stockx
-        self._stockxLevel = State(initialValue: (settings.feeCalculation.stockx?.sellerLevel.rawValue).map { (level: Int) in "Level \(level)" } ?? "")
-        self._stockxSuccessfulShipBonus = State(initialValue: IncludeOption.from(settings.feeCalculation.stockx?.successfulShipBonus).rawValue)
-        self._stockxQuickShipBonus = State(initialValue: IncludeOption.from(settings.feeCalculation.stockx?.quickShipBonus).rawValue)
-        self._stockxBuyersTaxes = State(initialValue: (settings.feeCalculation.stockx?.taxes).asString(defaultValue: ""))
+        self._stockxSellerFee = State(initialValue: (settings.feeCalculation.stockx?.sellerFee)?.rounded(toPlaces: 1) ?? "")
+        self._stockxBuyersTaxes = State(initialValue: (settings.feeCalculation.stockx?.taxes)?.rounded(toPlaces: 1) ?? "")
         // goat
-        self._goatCommissionFee = State(initialValue: (settings.feeCalculation.goat?.commissionPercentage ?? .low)?.rawValue.rounded(toPlaces: 0) ?? "")
+        self._goatCommissionFee = State(initialValue: (settings.feeCalculation.goat?.commissionPercentage ?? .low)?.rawValue.rounded(toPlaces: 1) ?? "")
         self._goatCashOutFee = State(initialValue: IncludeOption.from(settings.feeCalculation.goat?.cashOutFee).rawValue)
-        self._goatBuyersTaxes = State(initialValue: (settings.feeCalculation.goat?.taxes).asString(defaultValue: ""))
+        self._goatBuyersTaxes = State(initialValue: (settings.feeCalculation.goat?.taxes)?.rounded(toPlaces: 1) ?? "")
         // klekt
-        self._klektBuyersTaxes = State(initialValue: (settings.feeCalculation.klekt?.taxes).asString(defaultValue: ""))
+        self._klektBuyersTaxes = State(initialValue: (settings.feeCalculation.klekt?.taxes)?.rounded(toPlaces: 1) ?? "")
 
         self._isPresented = isPresented
     }
@@ -112,24 +108,15 @@ struct SettingsView: View {
     }
 
     // stockx
-    private func selectStockXLevel() {
-        if let level = CopDeckSettings.FeeCalculation.StockX.SellerLevel.allCases.first(where: { stockxLevel.contains("\($0.rawValue)") }),
-           settings.feeCalculation.stockx?.sellerLevel != level {
-            settings.feeCalculation.stockx?.sellerLevel = level
-        }
-    }
-
-    private func selectStockxSuccessfulShipBonus() {
-        if let newValue = IncludeOption(rawValue: stockxSuccessfulShipBonus)?.asBool,
-           settings.feeCalculation.stockx?.successfulShipBonus != newValue {
-            settings.feeCalculation.stockx?.successfulShipBonus = newValue
-        }
-    }
-
-    private func selectStockxQuickShipBonus() {
-        if let newValue = IncludeOption(rawValue: stockxQuickShipBonus)?.asBool,
-           settings.feeCalculation.stockx?.quickShipBonus != newValue {
-            settings.feeCalculation.stockx?.quickShipBonus = newValue
+    private func selectStockxSellerFee() {
+        if let newValue = Double(stockxSellerFee) {
+            if newValue <= 100, newValue >= 0, settings.feeCalculation.stockx?.sellerFee != newValue {
+                settings.feeCalculation.stockx?.sellerFee = newValue
+            }
+        } else {
+            if settings.feeCalculation.stockx?.sellerFee != 0 {
+                settings.feeCalculation.stockx?.sellerFee = 0
+            }
         }
     }
 
@@ -253,28 +240,17 @@ struct SettingsView: View {
                     }
 
                     Section(header: Text("StockX")) {
-                        ListSelectorMenu(title: "Seller level",
-                                         selectorScreenTitle: "Select seller level",
-                                         buttonTitle: "Select level",
-                                         options: CopDeckSettings.FeeCalculation.StockX.SellerLevel.allCases
-                                             .map { (level: CopDeckSettings.FeeCalculation.StockX.SellerLevel) in "Level \(level.rawValue)" },
-                                         selectedOption: $stockxLevel,
-                                         buttonTapped: selectStockXLevel)
-
-                        if settings.feeCalculation.stockx?.sellerLevel == .level4 || settings.feeCalculation.stockx?.sellerLevel == .level5 {
-                            ListSelectorMenu(title: "Successful ship bonus (-1%)",
-                                             selectorScreenTitle: "Successful ship bonus (-1%)",
-                                             buttonTitle: "Select option",
-                                             options: IncludeOption.allCases.map(\.rawValue),
-                                             selectedOption: $stockxSuccessfulShipBonus,
-                                             buttonTapped: selectStockxSuccessfulShipBonus)
-
-                            ListSelectorMenu(title: "Quick ship bonus (-1%)",
-                                             selectorScreenTitle: "Quick ship bonus (-1%)",
-                                             buttonTitle: "Select option",
-                                             options: IncludeOption.allCases.map(\.rawValue),
-                                             selectedOption: $stockxQuickShipBonus,
-                                             buttonTapped: selectStockxQuickShipBonus)
+                        HStack {
+                            Text("StockX seller fee (%)")
+                                .layoutPriority(2)
+                            TextField("0%", text: $stockxSellerFee, onEditingChanged: { isActive in
+                                if !isActive {
+                                    selectStockxSellerFee()
+                                }
+                            })
+                                .multilineTextAlignment(.trailing)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .keyboardType(.decimalPad)
                         }
 
                         HStack {
