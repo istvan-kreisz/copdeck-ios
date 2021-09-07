@@ -31,8 +31,8 @@ struct StockXSellerFeeSelector: View {
     }
 
     var body: some View {
-        SettingMenu(title: "Enter your StockX seller fee",
-                    buttonTitle: "Save seller fee (%)",
+        SettingMenu(title: "Enter your StockX seller fee (%)",
+                    buttonTitle: "Save seller fee",
                     popBackOnSelect: false,
                     buttonTapped: selectStockxSellerFee) {
                 HStack {
