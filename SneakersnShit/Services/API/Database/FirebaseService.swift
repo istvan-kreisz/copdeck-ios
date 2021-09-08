@@ -277,19 +277,43 @@ class FirebaseService: DatabaseManager {
         }
     }
 
-    func update(stack: Stack) {
-        var updatedStack = stack
-        if updatedStack.isPublished ?? false, updatedStack.publishedDate == nil {
-            updatedStack.publishedDate = Date().timeIntervalSince1970 * 1000
-        }
-        if let dict = try? updatedStack.asDictionary() {
-            stacksListener.collectionRef?
-                .document(updatedStack.id)
-                .setData(dict, merge: true) { [weak self] error in
+    func update(stacks: [Stack]) {
+        let batch = firestore.batch()
+        // update inventory items
+        let stacksToUpdate = stacks
+            .map { stack in
+                var updatedStack = stack
+                if updatedStack.isPublished ?? false, updatedStack.publishedDate == nil {
+                    updatedStack.publishedDate = Date().timeIntervalSince1970 * 1000
+                }
+                return updatedStack
+            }
+            .compactMap { (stack: Stack) -> ([String: Any], DocumentReference)? in
+                if let dict = try? stack.asDictionary(), let ref = stacksListener.collectionRef?.document(stack.id) {
+                    return (dict, ref)
+                } else {
+                    return nil
+                }
+            }
+
+        if stacksToUpdate.count == 1 {
+            if let (dict, ref) = stacksToUpdate.first {
+                ref.setData(dict, merge: true) { [weak self] error in
                     if let error = error {
                         self?.errorsSubject.send(AppError(error: error))
                     }
                 }
+            }
+        } else {
+            stacksToUpdate
+                .forEach { dict, ref in
+                    batch.setData(dict, forDocument: ref, merge: true)
+                }
+            batch.commit { [weak self] error in
+                if let error = error {
+                    self?.errorsSubject.send(AppError(error: error))
+                }
+            }
         }
     }
 

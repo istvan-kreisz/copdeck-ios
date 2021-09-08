@@ -95,12 +95,15 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
                                                               model: Wrapper(userId: userId, inventoryItem: inventoryItem)))
     }
 
-    func update(stack: Stack) {
+    func update(stacks: [Stack]) {
+        #warning("rewrite if reenabled")
         struct Wrapper: Encodable {
             let userId: String?
             let stack: Stack
         }
-        handlePublisherResult(publisher: callFirebaseFunction(functionName: "updateStack", model: Wrapper(userId: userId, stack: stack)))
+        stacks.forEach { stack in
+            handlePublisherResult(publisher: callFirebaseFunction(functionName: "updateStack", model: Wrapper(userId: userId, stack: stack)))
+        }
     }
 
     func delete(stack: Stack) {

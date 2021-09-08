@@ -217,8 +217,8 @@ class DefaultDataController: DataController {
         databaseManager.delete(stack: stack)
     }
 
-    func update(stack: Stack) {
-        databaseManager.update(stack: stack)
+    func update(stacks: [Stack]) {
+        databaseManager.update(stacks: stacks)
     }
 
     func add(inventoryItems: [InventoryItem]) {
@@ -240,14 +240,14 @@ class DefaultDataController: DataController {
                 !updatedStack.items.contains(where: { $0.inventoryItemId == inventoryItem.id })
             }
             .map { .init(inventoryItemId: $0.id) }
-        databaseManager.update(stack: updatedStack)
+        databaseManager.update(stacks: [updatedStack])
     }
 
     func unstack(inventoryItems: [InventoryItem], stack: Stack) {
         let inventoryItemIds = inventoryItems.map(\.id)
         var updatedStack = stack
         updatedStack.items = updatedStack.items.filter { !inventoryItemIds.contains($0.inventoryItemId) }
-        databaseManager.update(stack: updatedStack)
+        databaseManager.update(stacks: [updatedStack])
     }
 
     func getPopularItems(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {

@@ -11,19 +11,20 @@ struct User: Codable, Equatable, Identifiable {
     let id: String
     var inited: Bool?
     var name: String?
+    var isPublic: Bool?
     let created: Double?
     let updated: Double?
     var settings: CopDeckSettings?
     var imageURL: URL?
 
     enum CodingKeys: String, CodingKey {
-        case id, inited, name, created, updated, settings
+        case id, inited, name, isPublic, created, updated, settings
     }
 }
 
 extension User {
     init(id: String) {
-        self.init(id: id, name: nil, created: nil, updated: nil, settings: nil)
+        self.init(id: id, name: nil, isPublic: nil, created: nil, updated: nil, settings: nil)
     }
 }
 

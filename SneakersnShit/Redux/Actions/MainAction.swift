@@ -8,9 +8,12 @@
 import UIKit
 
 enum MainAction {
+    // auth
     case signOut
+    // user - own
     case setUser(user: User)
     case updateUsername(username: String)
+    case updateProfileVisibility(isPublic: Bool)
     // feed
     case getFeedPosts(loadMore: Bool)
     case setFeedPosts(feedPosts: PaginatedResult<[FeedPost]>)
@@ -47,68 +50,21 @@ enum MainAction {
 }
 
 extension MainAction: Identifiable {
+    var label: String {
+        let mirror = Mirror(reflecting: self)
+        if let label = mirror.children.first?.label {
+            return label
+        } else {
+            return String(describing: self)
+        }
+    }
+
     var id: String {
         switch self {
-        case .signOut:
-            return "signOut"
-        case .setUser:
-            return "setUser"
-        case .updateUsername:
-            return "updateUsername"
-        case .getFeedPosts:
-            return "getFeedPosts"
-        case .addFeedPosts:
-            return "addFeedPosts"
-        case .setFeedPosts:
-            return "setFeedPosts"
-        case .updateSettings:
-            return "updateSettings"
-        case .getSearchResults:
-            return "getSearchResults"
-        case .setSearchResults:
-            return "setSearchResults"
-        case .getPopularItems:
-            return "getPopularItems"
-        case .searchUsers:
-            return "searchUsers"
-        case .setUserSearchResults:
-            return "setUserSearchResults"
-        case .favorite:
-            return "favorite"
-        case .unfavorite:
-            return "unfavorite"
-        case .addRecentlyViewed:
-            return "addRecentlyViewed"
-        case .getUserProfile:
-            return "getUserProfile"
-        case .setSelectedUser:
-            return "setSelectedUser"
-        case .setPopularItems:
-            return "setPopularItems"
-        case .getItemDetails:
-            return "getItemDetails"
         case let .refreshItemIfNeeded(itemId, fetchMode):
             return "refreshItemIfNeeded \(itemId) \(fetchMode.rawValue)"
-        case .setSelectedItem:
-            return "setSelectedItem"
-        case .addStack:
-            return "addStack"
-        case .deleteStack:
-            return "deleteStack"
-        case .updateStack:
-            return "updateStack"
-        case .addToInventory:
-            return "addToInventory"
-        case .updateInventoryItem:
-            return "updateInventoryItem"
-        case .removeFromInventory:
-            return "removeFromInventory"
-        case .stack:
-            return "stack"
-        case .unstack:
-            return "unstack"
-        case .uploadProfileImage:
-            return "uploadProfileImage"
+        default:
+            return label
         }
     }
 }

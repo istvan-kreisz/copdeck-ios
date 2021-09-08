@@ -42,7 +42,7 @@ protocol BackendAPI {
     func add(inventoryItems: [InventoryItem])
     func delete(inventoryItems: [InventoryItem])
     func update(inventoryItem: InventoryItem)
-    func update(stack: Stack)
+    func update(stacks: [Stack])
     func delete(stack: Stack)
     // user
     func update(user: User)
@@ -77,7 +77,7 @@ protocol DatabaseManager {
     func add(inventoryItems: [InventoryItem])
     func delete(inventoryItems: [InventoryItem])
     func update(inventoryItem: InventoryItem)
-    func update(stack: Stack)
+    func update(stacks: [Stack])
     func delete(stack: Stack)
     func update(user: User)
     func uploadProfileImage(image: UIImage)
