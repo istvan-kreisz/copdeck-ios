@@ -21,13 +21,13 @@ struct Filters: Codable, Equatable {
         var name: String {
             switch self {
             case .CreatedDesc:
-                return "Created date (desc)"
+                return "Created (desc)"
             case .CreatedAsc:
-                return "Created date (asc)"
+                return "Created (asc)"
             case .UpdatedDesc:
-                return "Updated date (desc)"
+                return "Updated (desc)"
             case .UpdatedAsc:
-                return "Updated date (asc)"
+                return "Updated (asc)"
             }
         }
 

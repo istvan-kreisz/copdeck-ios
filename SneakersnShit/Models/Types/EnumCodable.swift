@@ -21,6 +21,6 @@ extension EnumCodable {
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
-        try container.encode(rawValue.capitalized)
+        try container.encode(rawValue.capitalizingFirstLetter())
     }
 }

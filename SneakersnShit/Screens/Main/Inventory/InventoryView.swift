@@ -272,28 +272,6 @@ struct InventoryView: View {
     private func updateUsername() {
         store.send(.main(action: .updateUsername(username: username)))
     }
-
-//    func didTogglePublished(newValue: Bool) {
-//        var updatedStack = stack
-//        updatedStack.isPublished = newValue
-//        isPublished = newValue
-//        if newValue {
-//            isPublic = newValue
-//            updatedStack.isPublic = newValue
-//        }
-//        store.send(.main(action: .updateStack(stack: updatedStack)))
-//    }
-//
-//    func didTogglePublic(newValue: Bool) {
-//        var updatedStack = stack
-//        updatedStack.isPublic = newValue
-//        isPublic = newValue
-//        if !newValue {
-//            isPublished = newValue
-//            updatedStack.isPublished = newValue
-//        }
-//        store.send(.main(action: .updateStack(stack: updatedStack)))
-//    }
 }
 
 struct InventoryView_Previews: PreviewProvider {

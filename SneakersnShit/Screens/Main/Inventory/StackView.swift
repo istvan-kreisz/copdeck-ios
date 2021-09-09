@@ -40,7 +40,7 @@ struct StackView: View {
         if filters.groupByModels {
             var items: [InventoryItem] = []
             sortedItems.forEach { item in
-                if let firstIndex = items.firstIndex(where: { $0.id == item.id }) {
+                if let firstIndex = items.firstIndex(where: { $0.itemId == item.itemId }) {
                     items.insert(item, at: firstIndex)
                 } else {
                     items.append(item)
