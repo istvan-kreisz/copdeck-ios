@@ -241,7 +241,10 @@ class FirebaseService: DatabaseManager {
         // update inventory items
         inventoryItems
             .forEach { inventoryItem in
-                _ = (inventoryListener.collectionRef?.document(inventoryItem.id)).map { batch.deleteDocument($0) }
+                _ = (inventoryListener.collectionRef?.document(inventoryItem.id))
+                    .map { [weak self] in
+                        self?.deleteDocument(atRef: $0, using: batch)
+                    }
             }
         // update stacks
         stacksListener.dataSubject
@@ -263,9 +266,9 @@ class FirebaseService: DatabaseManager {
             }
             .forEach { stack in
                 _ = (stacksListener.collectionRef?.document(stack.id))
-                    .map { ref in
+                    .map { [weak self] ref in
                         if let data = try? stack.asDictionary() {
-                            batch.updateData(data, forDocument: ref)
+                            self?.updateDocument(data, atRef: ref, using: batch)
                         }
                     }
             }
@@ -298,16 +301,12 @@ class FirebaseService: DatabaseManager {
 
         if stacksToUpdate.count == 1 {
             if let (dict, ref) = stacksToUpdate.first {
-                ref.setData(dict, merge: true) { [weak self] error in
-                    if let error = error {
-                        self?.errorsSubject.send(AppError(error: error))
-                    }
-                }
+                setDocument(dict, atRef: ref)
             }
         } else {
             stacksToUpdate
                 .forEach { dict, ref in
-                    batch.setData(dict, forDocument: ref, merge: true)
+                    setDocument(dict, atRef: ref, using: batch)
                 }
             batch.commit { [weak self] error in
                 if let error = error {
@@ -318,11 +317,8 @@ class FirebaseService: DatabaseManager {
     }
 
     func delete(stack: Stack) {
-        stacksListener.collectionRef?
-            .document(stack.id)
-            .delete { [weak self] error in
-                error.map { self?.errorsSubject.send(AppError(error: $0)) }
-            }
+        guard let ref = stacksListener.collectionRef?.document(stack.id) else { return }
+        deleteDocument(atRef: ref)
     }
 
     func add(inventoryItems: [InventoryItem]) {
@@ -331,8 +327,10 @@ class FirebaseService: DatabaseManager {
             .compactMap { inventoryItem -> (String, [String: Any])? in
                 (try? inventoryItem.asDictionary()).map { (inventoryItem.id, $0) } ?? nil
             }
-            .forEach { id, dict in
-                _ = (inventoryListener.collectionRef?.document(id)).map { batch.setData(dict, forDocument: $0, merge: true) }
+            .forEach { [weak self] id, dict in
+                if let ref = inventoryListener.collectionRef?.document(id) {
+                    self?.setDocument(dict, atRef: ref, using: batch)
+                }
             }
 
         batch.commit { [weak self] error in
@@ -343,26 +341,15 @@ class FirebaseService: DatabaseManager {
     }
 
     func update(inventoryItem: InventoryItem) {
-        if let dict = try? inventoryItem.asDictionary() {
-            inventoryListener.collectionRef?
-                .document(inventoryItem.id)
-                .setData(dict, merge: true) { [weak self] error in
-                    if let error = error {
-                        self?.errorsSubject.send(AppError(error: error))
-                    }
-                }
-        }
+        guard let dict = try? inventoryItem.asDictionary(),
+              let ref = inventoryListener.collectionRef?.document(inventoryItem.id)
+        else { return }
+        setDocument(dict, atRef: ref)
     }
 
     func update(user: User) {
-        if let dict = try? user.asDictionary() {
-            userListener.documentRef?
-                .setData(dict, merge: true) { [weak self] error in
-                    if let error = error {
-                        self?.errorsSubject.send(AppError(error: error))
-                    }
-                }
-        }
+        guard let dict = try? user.asDictionary(), let ref = userListener.documentRef else { return }
+        setDocument(dict, atRef: ref)
     }
 
     func add(recentlyViewedItem: Item) {
@@ -377,13 +364,15 @@ class FirebaseService: DatabaseManager {
             let mostRecentIds = mostRecents.map(\.id)
             let deleted = recentlyViewed.filter { !mostRecentIds.contains($0.id) }
             let deletedDocRefs = deleted.compactMap { recentlyViewedListener.collectionRef?.document(Item.databaseId(itemId: $0.id, settings: nil)) }
-            deletedDocRefs.forEach { batch.deleteDocument($0) }
+            deletedDocRefs.forEach { [weak self] in
+                self?.deleteDocument(atRef: $0, using: batch)
+            }
         }
         // add new
         log("add new recentlyViewedItem \(recentlyViewedItem.id)", logType: .database)
         if let dict = try? recentlyViewedItem.strippedOfPrices.asDictionary() {
             if let newDocumentRef = recentlyViewedListener.collectionRef?.document(Item.databaseId(itemId: recentlyViewedItem.id, settings: nil)) {
-                batch.setData(dict, forDocument: newDocumentRef, merge: true)
+                setDocument(dict, atRef: newDocumentRef, using: batch)
             }
         }
 
@@ -396,22 +385,15 @@ class FirebaseService: DatabaseManager {
 
     func favorite(item: Item) {
         guard !favoritesListener.dataSubject.value.contains(where: { $0.id == item.id }) else { return }
-        if let dict = try? item.strippedOfPrices.asDictionary() {
-            favoritesListener.collectionRef?
-                .document(Item.databaseId(itemId: item.id, settings: nil)).setData(dict) { [weak self] error in
-                    if let error = error {
-                        self?.errorsSubject.send(AppError(error: error))
-                    }
-                }
-        }
+        guard let dict = try? item.strippedOfPrices.asDictionary(),
+              let ref = favoritesListener.collectionRef?.document(Item.databaseId(itemId: item.id, settings: nil))
+        else { return }
+        setDocument(dict, atRef: ref)
     }
 
     func unfavorite(item: Item) {
-        favoritesListener.collectionRef?.document(Item.databaseId(itemId: item.id, settings: nil)).delete { [weak self] error in
-            if let error = error {
-                self?.errorsSubject.send(AppError(error: error))
-            }
-        }
+        guard let ref = favoritesListener.collectionRef?.document(Item.databaseId(itemId: item.id, settings: nil)) else { return }
+        deleteDocument(atRef: ref)
     }
 
     func uploadProfileImage(image: UIImage) {
@@ -439,5 +421,52 @@ class FirebaseService: DatabaseManager {
         uploadTask = imageRef?.putData(data, metadata: nil) { [weak self] metadata, error in
             self?.getUserProfileImage()
         }
+    }
+
+    private func setDocument(_ data: [String: Any], atRef ref: DocumentReference, using batch: WriteBatch? = nil) {
+        let data = dataWithUpdatedDates(data)
+        if let batch = batch {
+            batch.setData(data, forDocument: ref, merge: true)
+        } else {
+            ref.setData(data, merge: true) { [weak self] error in
+                if let error = error {
+                    self?.errorsSubject.send(AppError(error: error))
+                }
+            }
+        }
+    }
+
+    private func updateDocument(_ data: [String: Any], atRef ref: DocumentReference, using batch: WriteBatch? = nil) {
+        let data = dataWithUpdatedDates(data)
+        if let batch = batch {
+            batch.updateData(data, forDocument: ref)
+        } else {
+            ref.updateData(data) { [weak self] error in
+                if let error = error {
+                    self?.errorsSubject.send(AppError(error: error))
+                }
+            }
+        }
+    }
+
+    private func deleteDocument(atRef ref: DocumentReference, using batch: WriteBatch? = nil) {
+        if let batch = batch {
+            batch.deleteDocument(ref)
+        } else {
+            ref.delete { [weak self] error in
+                if let error = error {
+                    self?.errorsSubject.send(AppError(error: error))
+                }
+            }
+        }
+    }
+
+    private func dataWithUpdatedDates(_ data: [String: Any]) -> [String: Any] {
+        var copy = data
+        if copy["created"] == nil {
+            copy["created"] = Date().timeIntervalSince1970 * 1000
+        }
+        copy["updated"] = Date().timeIntervalSince1970 * 1000
+        return copy
     }
 }
