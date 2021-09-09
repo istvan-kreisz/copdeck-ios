@@ -24,7 +24,32 @@ struct StackView: View {
     var didTapShareStack: (() -> Void)?
 
     var allStackItems: [InventoryItem] {
-        stack.inventoryItems(allInventoryItems: inventoryItems, filters: filters, searchText: searchText)
+        let sortedItems = stack.inventoryItems(allInventoryItems: inventoryItems, filters: filters, searchText: searchText)
+            .sorted { item1, item2 in
+                switch filters.sortOption {
+                case .CreatedDesc:
+                    return (item1.created ?? 0) > (item2.created ?? 0)
+                case .CreatedAsc:
+                    return (item1.created ?? 0) < (item2.created ?? 0)
+                case .UpdatedDesc:
+                    return (item1.updated ?? 0) > (item2.updated ?? 0)
+                case .UpdatedAsc:
+                    return (item1.updated ?? 0) < (item2.updated ?? 0)
+                }
+            }
+        if filters.groupByModels {
+            var items: [InventoryItem] = []
+            sortedItems.forEach { item in
+                if let firstIndex = items.firstIndex(where: { $0.id == item.id }) {
+                    items.insert(item, at: firstIndex)
+                } else {
+                    items.append(item)
+                }
+            }
+            return items
+        } else {
+            return sortedItems
+        }
     }
 
     func toolbar() -> some View {
@@ -84,24 +109,22 @@ struct StackView: View {
     }
 
     var body: some View {
-//        VStack(spacing: 10) {
-            toolbar()
-            ForEach(allStackItems) { (inventoryItem: InventoryItem) in
-                InventoryListItem(inventoryItem: inventoryItem,
-                                  bestPrice: bestPrices[inventoryItem.id],
-                                  selectedInventoryItemId: $selectedInventoryItemId,
-                                  isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }),
-                                  isEditing: $isEditing,
-                                  requestInfo: requestInfo) {
-                        if selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }) {
-                            selectedInventoryItems = selectedInventoryItems.filter { $0.id != inventoryItem.id }
-                        } else {
-                            selectedInventoryItems.append(inventoryItem)
-                        }
-                }
-                .id(inventoryItem.id)
+        toolbar()
+        ForEach(allStackItems) { (inventoryItem: InventoryItem) in
+            InventoryListItem(inventoryItem: inventoryItem,
+                              bestPrice: bestPrices[inventoryItem.id],
+                              selectedInventoryItemId: $selectedInventoryItemId,
+                              isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }),
+                              isEditing: $isEditing,
+                              requestInfo: requestInfo) {
+                    if selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }) {
+                        selectedInventoryItems = selectedInventoryItems.filter { $0.id != inventoryItem.id }
+                    } else {
+                        selectedInventoryItems.append(inventoryItem)
+                    }
             }
-            .padding(.vertical, 6)
-//        }
+            .id(inventoryItem.id)
+        }
+        .padding(.vertical, 6)
     }
 }

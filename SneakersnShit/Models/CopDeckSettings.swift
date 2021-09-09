@@ -62,7 +62,7 @@ extension CopDeckSettings {
         bestPriceFeeType = try container.decodeIfPresent(FeeType.self, forKey: .bestPriceFeeType) ?? .None
         preferredShoeSize = try container.decodeIfPresent(String.self, forKey: .preferredShoeSize)
         displayedStores = try container.decodeIfPresent([StoreId].self, forKey: .displayedStores) ?? ALLSTORES.map(\.id)
-        filters = try container.decodeIfPresent(Filters.self, forKey: .filters) ?? Filters(soldStatus: .All)
+        filters = try container.decodeIfPresent(Filters.self, forKey: .filters) ?? Filters.default
     }
 
     static let `default` = CopDeckSettings(currency: Currency(code: .eur, symbol: .eur),
@@ -79,5 +79,5 @@ extension CopDeckSettings {
                                            bestPriceFeeType: .None,
                                            preferredShoeSize: nil,
                                            displayedStores: ALLSTORES.map(\.id),
-                                           filters: .init(soldStatus: .All))
+                                           filters: .default)
 }

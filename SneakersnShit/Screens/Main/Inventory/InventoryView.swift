@@ -242,6 +242,7 @@ struct InventoryView: View {
             }
         }
         .withSnackBar(text: "Link Copied", shouldShow: $showSnackBar)
+
     }
 
     func didTapActionsTray(action: TrayAction) {

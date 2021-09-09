@@ -35,6 +35,7 @@ class DocumentListener<T: Codable>: FireStoreListener {
     private func addDocumentListener<T: Codable>(documentRef: DocumentReference?, updated: @escaping (T) -> Void) -> ListenerRegistration? {
         documentRef?
             .addSnapshotListener { snapshot, error in
+                log("yooooo - \(documentRef)")
                 if let error = error {
                     print("Error fetching document: \(error)")
                     return

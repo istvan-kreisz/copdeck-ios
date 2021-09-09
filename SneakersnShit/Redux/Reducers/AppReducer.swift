@@ -169,7 +169,9 @@ func appReducer(state: inout AppState,
                     return Just(AppAction.main(action: .signOut)).eraseToAnyPublisher()
                 } else {
                     return environment.dataController.getUser(withId: userId)
-                        .flatMap { Just(AppAction.main(action: .setUser(user: $0))) }
+                        .flatMap {
+                            Just(AppAction.main(action: .setUser(user: $0)))
+                        }
                         .tryCatch {
                             Just(AppAction.main(action: .signOut)).merge(with: Just(AppAction.error(action: .setError(error: AppError(error: $0)))))
                         }
