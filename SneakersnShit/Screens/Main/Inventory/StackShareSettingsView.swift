@@ -40,19 +40,12 @@ struct StackShareSettingsView: View {
         self.updateStack = updateStack
     }
 
-    func toggleView(title: String, buttonTitle: String, isOn: Binding<Bool>, didTapButton: @escaping () -> Void) -> some View {
+    func toggleView(title: String, isOn: Binding<Bool>, didTapButton: @escaping () -> Void) -> some View {
         HStack {
-            VStack(alignment: .leading, spacing: 3) {
-                Text(title)
-                    .font(.bold(size: 16))
-                    .foregroundColor(.customText1)
-                Button(action: didTapButton) {
-                    Text(buttonTitle)
-                        .underline()
-                        .font(.bold(size: 12))
-                        .foregroundColor(.customText2)
-                }
-            }
+            Text(title)
+                .font(.bold(size: 16))
+                .foregroundColor(.customText1)
+                .withTellTip(didTap: didTapButton)
             Spacer()
             Toggle("", isOn: isOn)
         }
@@ -62,17 +55,13 @@ struct StackShareSettingsView: View {
         let isPublished = Binding<Bool>(get: { self.isPublished }, set: { didTogglePublished(newValue: $0) })
         let isPublic = Binding<Bool>(get: { self.isPublic }, set: { didTogglePublic(newValue: $0) })
 
-        toggleView(title: "Publish on Feed",
-                   buttonTitle: "How does this work?",
-                   isOn: isPublished) {
-                showPopup(Self.popupTitles[0], Self.popupDescriptions[0])
+        toggleView(title: "Publish on Feed", isOn: isPublished) {
+            showPopup(Self.popupTitles[0], Self.popupDescriptions[0])
         }
         .buttonStyle(PlainButtonStyle())
 
-        toggleView(title: "Make Public",
-                   buttonTitle: "How does this work?",
-                   isOn: isPublic) {
-                showPopup(Self.popupTitles[1], Self.popupDescriptions[1])
+        toggleView(title: "Make Public", isOn: isPublic) {
+            showPopup(Self.popupTitles[1], Self.popupDescriptions[1])
         }
         .buttonStyle(PlainButtonStyle())
 

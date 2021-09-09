@@ -120,6 +120,8 @@ struct InventoryView: View {
                                     var updatedStack = editedStack
                                     updatedStack.items = updatedStackItems
                                     store.send(.main(action: .updateStack(stack: updatedStack)))
+                                }, dseleteStack: {
+                                    store.send(.main(action: .deleteStack()))
                                 })
             },
             isActive: showEditedStack) { EmptyView() }
@@ -232,7 +234,7 @@ struct InventoryView: View {
                                                stack: stack,
                                                isPublic: stack.isPublic ?? false,
                                                isPublished: stack.isPublished ?? false) { title in
-                            showSnackBar = true
+                                showSnackBar = true
                         } showPopup: { title, subtitle in
 
                         } updateStack: { stack in
@@ -242,7 +244,6 @@ struct InventoryView: View {
             }
         }
         .withSnackBar(text: "Link Copied", shouldShow: $showSnackBar)
-
     }
 
     func didTapActionsTray(action: TrayAction) {

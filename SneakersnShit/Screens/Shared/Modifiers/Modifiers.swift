@@ -254,3 +254,21 @@ struct WithTextFieldPopup: ViewModifier {
         }
     }
 }
+
+struct WithTellTip: ViewModifier {
+    let text: String
+    let didTap: () -> Void
+
+    func body(content: Content) -> some View {
+        HStack(alignment: .bottom, spacing: 4) {
+            content
+            Button(action: didTap) {
+                Text(text)
+                    .underline()
+                    .font(.bold(size: 12))
+                    .foregroundColor(.customText2)
+                Spacer()
+            }
+        }
+    }
+}

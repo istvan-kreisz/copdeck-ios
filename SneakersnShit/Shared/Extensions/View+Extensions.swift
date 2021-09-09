@@ -132,4 +132,8 @@ extension View {
             .listRowInsets(EdgeInsets(top: -2, leading: -30, bottom: -2, trailing: -30))
             .background(backgroundColor)
     }
+
+    func withTellTip(text: String = "What's this?", didTap: @escaping () -> Void) -> some View {
+        ModifiedContent(content: self, modifier: WithTellTip(text: text, didTap: didTap))
+    }
 }

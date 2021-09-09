@@ -20,6 +20,7 @@ struct StackDetailView: View {
     let linkURL: String
     let requestInfo: [ScraperRequestInfo]
     let saveChanges: ([StackItem]) -> Void
+    let deleteStack: () -> Void
 
     @State var selectedInventoryItemId: String?
     @State var name: String
@@ -72,7 +73,8 @@ struct StackDetailView: View {
          filters: Binding<Filters>,
          linkURL: String,
          requestInfo: [ScraperRequestInfo],
-         saveChanges: @escaping ([StackItem]) -> Void) {
+         saveChanges: @escaping ([StackItem]) -> Void,
+         deleteStack: @escaping () -> Void) {
         self._stack = stack
         self._inventoryItems = inventoryItems
         self._bestPrices = bestPrices
@@ -81,6 +83,7 @@ struct StackDetailView: View {
         self.linkURL = linkURL
         self.requestInfo = requestInfo
         self.saveChanges = saveChanges
+        self.deleteStack = deleteStack
         self._name = State<String>(initialValue: stack.wrappedValue.name)
         self._caption = State<String>(initialValue: stack.wrappedValue.caption ?? "")
     }
@@ -160,14 +163,13 @@ struct StackDetailView: View {
                                        stack: stack,
                                        isPublic: stack.isPublic ?? false,
                                        isPublished: stack.isPublished ?? false) { title in
-                    showSnackBar = true
+                        showSnackBar = true
                 } showPopup: { title, subtitle in
                     popup = (title, subtitle)
                 } updateStack: { stack in
                     store.send(.main(action: .updateStack(stack: stack)))
                 }
                 .withDefaultPadding(padding: .horizontal)
-
 
                 ForEach(allStackItems) { (inventoryItem: InventoryItem) in
                     InventoryListItem(inventoryItem: inventoryItem,
@@ -192,6 +194,20 @@ struct StackDetailView: View {
                     .padding(.top, 5)
                     .withDefaultPadding(padding: .horizontal)
                     .buttonStyle(PlainButtonStyle())
+
+                RoundedButton<EmptyView>(text: "Delete stack",
+                                         width: 400,
+                                         height: 50,
+                                         maxSize: CGSize(width: UIScreen.screenWidth - Styles.horizontalMargin * 2, height: UIScreen.isSmallScreen ? 50 : 60),
+                                         fontSize: UIScreen.isSmallScreen ? 14 : 16,
+                                         color: .clear,
+                                         borderColor: .customRed,
+                                         textColor: .customRed,
+                                         accessoryView: nil,
+                                         tapped: { deleteStack() })
+                    .centeredHorizontally()
+                    .withDefaultPadding(padding: .horizontal)
+                    .padding(.top, 40)
             }
             .edgesIgnoringSafeArea(.bottom)
             .frame(maxWidth: UIScreen.main.bounds.width)
