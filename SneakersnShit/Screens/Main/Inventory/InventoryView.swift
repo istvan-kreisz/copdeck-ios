@@ -120,8 +120,9 @@ struct InventoryView: View {
                                     var updatedStack = editedStack
                                     updatedStack.items = updatedStackItems
                                     store.send(.main(action: .updateStack(stack: updatedStack)))
-                                }, dseleteStack: {
-                                    store.send(.main(action: .deleteStack()))
+                                }, deleteStack: {
+                                    showEditedStack.wrappedValue = false
+                                    store.send(.main(action: .deleteStack(stack: editedStack)))
                                 })
             },
             isActive: showEditedStack) { EmptyView() }

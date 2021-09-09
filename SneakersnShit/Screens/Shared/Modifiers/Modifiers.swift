@@ -260,15 +260,23 @@ struct WithTellTip: ViewModifier {
     let didTap: () -> Void
 
     func body(content: Content) -> some View {
-        HStack(alignment: .bottom, spacing: 4) {
+        HStack(alignment: .bottom, spacing: 8) {
             content
+                .layoutPriority(2)
             Button(action: didTap) {
-                Text(text)
-                    .underline()
-                    .font(.bold(size: 12))
-                    .foregroundColor(.customText2)
-                Spacer()
+                HStack(alignment: .bottom, spacing: 3) {
+                    Text(text)
+                        .underline()
+                        .lineLimit(1)
+                        .font(.bold(size: 12))
+                        .foregroundColor(.customText2)
+                    Image(systemName: "questionmark.circle.fill")
+                        .font(.bold(size: 12))
+                        .foregroundColor(.customText2)
+                }
             }
+            .layoutPriority(1)
+            Spacer()
         }
     }
 }

@@ -41,13 +41,13 @@ struct StackShareSettingsView: View {
     }
 
     func toggleView(title: String, isOn: Binding<Bool>, didTapButton: @escaping () -> Void) -> some View {
-        HStack {
+        Toggle(isOn: isOn) {
             Text(title)
-                .font(.bold(size: 16))
+                .lineLimit(1)
+                .font(.bold(size: 18))
                 .foregroundColor(.customText1)
+                .layoutPriority(2)
                 .withTellTip(didTap: didTapButton)
-            Spacer()
-            Toggle("", isOn: isOn)
         }
     }
 
