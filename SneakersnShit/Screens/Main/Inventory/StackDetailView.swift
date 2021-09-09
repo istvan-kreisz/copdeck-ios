@@ -11,7 +11,7 @@ import Combine
 struct StackDetailView: View {
     @EnvironmentObject var store: AppStore
 
-    @State var stack: Stack
+    @Binding var stack: Stack
     @Binding var inventoryItems: [InventoryItem]
     @Binding var bestPrices: [String: PriceWithCurrency]
     @Binding var showView: Bool
@@ -65,7 +65,7 @@ struct StackDetailView: View {
         }
     }
 
-    init(stack: Stack,
+    init(stack: Binding<Stack>,
          inventoryItems: Binding<[InventoryItem]>,
          bestPrices: Binding<[String: PriceWithCurrency]>,
          showView: Binding<Bool>,
@@ -73,7 +73,7 @@ struct StackDetailView: View {
          linkURL: String,
          requestInfo: [ScraperRequestInfo],
          saveChanges: @escaping ([StackItem]) -> Void) {
-        self._stack = State(initialValue: stack)
+        self._stack = stack
         self._inventoryItems = inventoryItems
         self._bestPrices = bestPrices
         self._showView = showView
@@ -81,8 +81,8 @@ struct StackDetailView: View {
         self.linkURL = linkURL
         self.requestInfo = requestInfo
         self.saveChanges = saveChanges
-        self._name = State<String>(initialValue: stack.name)
-        self._caption = State<String>(initialValue: stack.caption ?? "")
+        self._name = State<String>(initialValue: stack.wrappedValue.name)
+        self._caption = State<String>(initialValue: stack.wrappedValue.caption ?? "")
     }
 
     var body: some View {
