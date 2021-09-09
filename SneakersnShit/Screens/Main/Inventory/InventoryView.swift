@@ -85,8 +85,8 @@ struct InventoryView: View {
     }
 
     var body: some View {
-        let showCopyLink = Binding<Bool>(get: { sharedStack != nil },
-                                         set: { sharedStack = $0 ? sharedStack : nil })
+        let showSharePopup = Binding<Bool>(get: { sharedStack != nil },
+                                           set: { sharedStack = $0 ? sharedStack : nil })
         Group {
             let stackTitles = Binding<[String]>(get: { stacks.map { (stack: Stack) in stack.name } }, set: { _ in })
             let actionsTrayActions = Binding<[ActionConfig]>(get: {
@@ -109,18 +109,18 @@ struct InventoryView: View {
                                selection: $selectedInventoryItemId) { EmptyView() }
             }
             NavigationLink(destination: editedStack.map { editedStack in
-                StackDetailView(stack: .constant(editedStack),
-                            inventoryItems: $store.state.inventoryItems,
-                            bestPrices: $bestPrices,
-                            showView: showEditedStack,
-                            filters: filters,
-                            linkURL: editedStack.linkURL(userId: store.state.user?.id ?? ""),
-                            requestInfo: store.state.requestInfo,
-                            saveChanges: { updatedStackItems in
-                                var updatedStack = editedStack
-                                updatedStack.items = updatedStackItems
-                                store.send(.main(action: .updateStack(stack: updatedStack)))
-                            })
+                StackDetailView(stack: editedStack,
+                                inventoryItems: $store.state.inventoryItems,
+                                bestPrices: $bestPrices,
+                                showView: showEditedStack,
+                                filters: filters,
+                                linkURL: editedStack.linkURL(userId: store.state.user?.id ?? ""),
+                                requestInfo: store.state.requestInfo,
+                                saveChanges: { updatedStackItems in
+                                    var updatedStack = editedStack
+                                    updatedStack.items = updatedStackItems
+                                    store.send(.main(action: .updateStack(stack: updatedStack)))
+                                })
             },
             isActive: showEditedStack) { EmptyView() }
 
@@ -213,7 +213,6 @@ struct InventoryView: View {
             }
         }
         .withTabViewWrapper(viewRouter: viewRouter, store: store, backgroundColor: .customBackground, shouldShow: $shouldShowTabBar)
-        .withSnackBar(text: "Link Copied", shouldShow: $showSnackBar)
         .withTextFieldPopup(isShowing: $showAddNewStackAlert,
                             title: "Add new stack",
                             subtitle: nil,
@@ -223,19 +222,26 @@ struct InventoryView: View {
                 addNewStack(withName: stackName)
         }
         .withPopup {
-            CopyLinkPopup(isShowing: showCopyLink,
-                          title: "Share stack",
-                          subtitle: "Share this link with anyone to show them what's in your stack. The link opens a webpage so whoever you share it with doesn't need to have the app downloaded.",
-                          linkURL: sharedStack?.linkURL(userId: store.state.user?.id ?? "") ?? "",
-                          actionTitle: "Copy Link") { link in
-                    if var updatedStack = sharedStack {
-                        UIPasteboard.general.string = link
-                        showSnackBar = true
-                        updatedStack.isSharedViaLink = true
-                        store.send(.main(action: .updateStack(stack: updatedStack)))
-                    }
+            if let stack = sharedStack {
+                Popup(isShowing: showSharePopup,
+                      title: "Share stack",
+                      subtitle: "Share this link with anyone to show them what's in your stack. The link opens a webpage so whoever you share it with doesn't need to have the app downloaded.",
+                      firstAction: .init(name: "Done", tapped: { sharedStack = nil }),
+                      secondAction: nil) {
+                        StackShareSettingsView(linkURL: sharedStack?.linkURL(userId: store.state.user?.id ?? "") ?? "",
+                                               stack: stack,
+                                               isPublic: stack.isPublic ?? false,
+                                               isPublished: stack.isPublished ?? false) { title in
+                            showSnackBar = true
+                        } showPopup: { title, subtitle in
+
+                        } updateStack: { stack in
+                            store.send(.main(action: .updateStack(stack: stack)))
+                        }
+                }
             }
         }
+        .withSnackBar(text: "Link Copied", shouldShow: $showSnackBar)
     }
 
     func didTapActionsTray(action: TrayAction) {
@@ -287,7 +293,6 @@ struct InventoryView: View {
 //        }
 //        store.send(.main(action: .updateStack(stack: updatedStack)))
 //    }
-
 }
 
 struct InventoryView_Previews: PreviewProvider {

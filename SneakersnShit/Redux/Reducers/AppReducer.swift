@@ -146,6 +146,9 @@ func appReducer(state: inout AppState,
             environment.dataController.delete(stack: stack)
         case let .updateStack(stack):
             environment.dataController.update(stacks: [stack])
+            if state.user?.isPublic != true && (stack.isPublished == true || stack.isPublic == true) {
+                return Just(AppAction.main(action: .updateProfileVisibility(isPublic: true))).eraseToAnyPublisher()
+            }
         case let .addToInventory(inventoryItems):
             environment.dataController.add(inventoryItems: inventoryItems)
         case let .updateInventoryItem(inventoryItem: InventoryItem):

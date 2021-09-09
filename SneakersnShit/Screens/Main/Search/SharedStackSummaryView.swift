@@ -63,7 +63,7 @@ struct SharedStackSummaryView: View {
                     didTapProfile?()
                 }
             }
-            if let caption = stack.caption {
+            if let caption = stack.caption, !caption.isEmpty {
                 Text(caption)
                     .font(.regular(size: 14))
                     .foregroundColor(.customText1)
