@@ -20,7 +20,6 @@ struct PullToRefresh: View {
             if geo.frame(in: .named(coordinateSpaceName)).midY > offset {
                 Spacer()
                     .onAppear {
-                        log("shaaaa - \(geo.frame(in: .named(coordinateSpaceName)).midY)")
                         guard geo.frame(in: .named(coordinateSpaceName)).midY > offset else { return }
                         generator.impactOccurred()
                         onRefresh()

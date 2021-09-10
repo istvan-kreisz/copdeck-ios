@@ -78,7 +78,7 @@ private extension Cache {
         }
     }
 
-    final class Entry {
+    final class Entry: NSDiscardableContent {
         let value: Value
         let expirationDate: Date
 
@@ -86,6 +86,14 @@ private extension Cache {
             self.value = value
             self.expirationDate = expirationDate
         }
+
+        func beginContentAccess() -> Bool { true }
+
+        func endContentAccess() {}
+
+        func discardContentIfPossible() {}
+
+        func isContentDiscarded() -> Bool { false }
     }
 }
 

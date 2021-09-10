@@ -59,19 +59,19 @@
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "password"
-            value = "Kakikukker7298"
-            isEnabled = "YES">
+            key = "itemPricesRefreshPeriodMin"
+            value = "0.2"
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "pricesRefreshPeriodMin"
-            value = "3"
+            value = "0.2"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "itemPricesRefreshPeriodMin"
-            value = "2"
-            isEnabled = "NO">
+            key = "password"
+            value = "Kakikukker7298"
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "useFunctionsEmulator"
@@ -96,7 +96,7 @@
          <EnvironmentVariable
             key = "showDatabaseLogs"
             value = "true"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "showScrapingLogs"
