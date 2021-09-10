@@ -92,7 +92,7 @@ struct SharedInventoryItemView: View {
                     .asCard()
                     .withDefaultPadding(padding: .horizontal)
                 }
-                .padding(.vertical, 10)
+                .padding(.vertical, 6)
             }
             .buttonStyle(PlainButtonStyle())
         }

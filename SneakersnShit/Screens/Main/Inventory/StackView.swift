@@ -107,7 +107,6 @@ struct StackView: View {
                 }
                 Spacer()
             }
-            .padding(.top, 3)
         }
         .padding(.bottom, 5)
     }
@@ -135,7 +134,7 @@ struct StackView: View {
                 }
                 .id(inventoryItem.id)
             }
-            .padding(.vertical, 6)
+            .padding(.vertical, 5)
         }
     }
 }

@@ -72,14 +72,14 @@ struct ProfileView: View {
                 Text(profileData.user.name.map { "\($0)'s Stacks" } ?? "Stacks")
                     .font(.bold(size: 25))
                     .foregroundColor(.customText1)
-                    .padding(.top, 24)
-                    .padding(.bottom, 12)
+                    .padding(.top, 20)
+                    .padding(.bottom, 8)
                     .centeredHorizontally()
                     .listRow()
 
                 if loader.isLoading {
                     CustomSpinner(text: "Loading stacks...", animate: true)
-                        .padding(.top, 25)
+                        .padding(.top, 21)
                         .listRow()
                 }
 
@@ -91,7 +91,7 @@ struct ProfileView: View {
                                            requestInfo: store.state.requestInfo,
                                            profileInfo: (profileData.user.name ?? "", profileData.user.imageURL))
                         .buttonStyle(PlainButtonStyle())
-                        .padding(.bottom, 8)
+                        .padding(.bottom, 4)
                         .listRow()
                 }
             }

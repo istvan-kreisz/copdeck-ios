@@ -125,7 +125,7 @@ extension View {
     }
 
     func listRow(backgroundColor: Color = .customBackground) -> some View {
-        padding(.vertical, 2)
+        padding(.vertical, 6)
             .padding(.horizontal, 30)
             .listRowBackground(backgroundColor)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)

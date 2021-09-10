@@ -51,7 +51,7 @@ struct SelectStackItemsView: View {
                                              isSelected: isSelected,
                                              requestInfo: requestInfo)
                 }
-                .padding(.vertical, 6)
+                .padding(.vertical, 2)
             }
             Spacer()
         }

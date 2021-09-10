@@ -143,21 +143,21 @@ struct StackDetailView: View {
                 }
                 .asCard()
                 .withDefaultPadding(padding: .horizontal)
-                .padding(.vertical, 10)
+                .padding(.vertical, 6)
 
                 TextFieldRounded(title: "stack name",
                                  placeHolder: "name",
                                  style: .white,
                                  text: $name) { _ in nameChanged() }
                     .withDefaultPadding(padding: .horizontal)
-                    .padding(.vertical, 10)
+                    .padding(.vertical, 6)
 
                 TextFieldRounded(title: "caption (optional)",
                                  placeHolder: "caption",
                                  style: .white,
                                  text: $caption) { _ in captionChanged() }
                     .withDefaultPadding(padding: .horizontal)
-                    .padding(.vertical, 10)
+                    .padding(.vertical, 6)
 
                 StackShareSettingsView(linkURL: linkURL,
                                        stack: stack,
@@ -179,7 +179,7 @@ struct StackDetailView: View {
                                       isEditing: .constant(false),
                                       requestInfo: requestInfo) {}
                 }
-                .padding(.vertical, 6)
+                .padding(.vertical, 2)
                 .withDefaultPadding(padding: .horizontal)
 
                 AccessoryButton(title: "Add / Delete Items",
@@ -191,7 +191,6 @@ struct StackDetailView: View {
                                     showItemSelector = true
                                 })
                     .leftAligned()
-                    .padding(.top, 5)
                     .withDefaultPadding(padding: .horizontal)
                     .buttonStyle(PlainButtonStyle())
 
@@ -207,7 +206,7 @@ struct StackDetailView: View {
                                          tapped: { deleteStack() })
                     .centeredHorizontally()
                     .withDefaultPadding(padding: .horizontal)
-                    .padding(.top, 40)
+                    .padding(.top, 36)
             }
             .edgesIgnoringSafeArea(.bottom)
             .frame(maxWidth: UIScreen.main.bounds.width)

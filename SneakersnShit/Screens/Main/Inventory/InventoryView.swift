@@ -156,8 +156,8 @@ struct InventoryView: View {
                 ScrollableSegmentedControl(selectedIndex: $selectedStackIndex,
                                            titles: stackTitles,
                                            button: .init(title: "New Stack", tapped: { showAddNewStackAlert = true }))
-                    .padding(.bottom, 12)
-                    .padding(.top, -2)
+                    .padding(.bottom, 8)
+                    .padding(.top, -6)
                     .listRow()
 
                 if let stack = stacks[safe: selectedStackIndex] {
@@ -180,7 +180,6 @@ struct InventoryView: View {
                               }, didTapShareStack: stack.id == "all" ? nil : {
                                   sharedStack = stack
                               })
-                        .padding(.top, 5)
                         .listRow()
                 }
                 Color.clear.padding(.bottom, Styles.tabScreenBottomPadding)

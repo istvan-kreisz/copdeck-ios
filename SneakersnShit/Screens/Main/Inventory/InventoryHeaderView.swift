@@ -91,7 +91,7 @@ struct InventoryHeaderView: View {
                 .padding(.top, 5)
             }
         }
-        .padding(.bottom, 22)
+        .padding(.bottom, 18)
         .buttonStyle(PlainButtonStyle())
         .listRow(backgroundColor: .customWhite)
     }

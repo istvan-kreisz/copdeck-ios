@@ -50,7 +50,7 @@ struct SharedStackDetailView: View {
                     }
                     .asCard()
                     .withDefaultPadding(padding: .horizontal)
-                    .padding(.vertical, 10)
+                    .padding(.vertical, 6)
                 }
 
                 ForEach(inventoryItems) { (inventoryItem: InventoryItem) in
@@ -61,7 +61,7 @@ struct SharedStackDetailView: View {
                                       isEditing: .constant(false),
                                       requestInfo: requestInfo) {}
                 }
-                .padding(.vertical, 6)
+                .padding(.vertical, 2)
                 .withDefaultPadding(padding: .horizontal)
             }
             .buttonStyle(PlainButtonStyle())

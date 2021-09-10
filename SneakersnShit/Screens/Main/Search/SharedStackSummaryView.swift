@@ -87,6 +87,6 @@ struct SharedStackSummaryView: View {
             .padding(12)
             .background(RoundedRectangle(cornerRadius: Styles.cornerRadius).fill(Color.customWhite).withDefaultShadow())
         }
-        .padding(.top, 25)
+        .padding(.top, 22)
     }
 }

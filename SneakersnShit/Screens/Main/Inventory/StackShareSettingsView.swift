@@ -94,7 +94,7 @@ struct StackShareSettingsView: View {
             }
         }
         .buttonStyle(PlainButtonStyle())
-        .padding(.vertical, 12)
+        .padding(.vertical, 8)
     }
 
     func copyLinkTapped() {

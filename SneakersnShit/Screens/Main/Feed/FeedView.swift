@@ -80,8 +80,7 @@ struct FeedView: View {
 
                     if loader.isLoading && store.state.feedPosts.isLastPage {
                         CustomSpinner(text: "Loading posts...", animate: true)
-                            .padding(.top, 25)
-                            .padding(.bottom, 4)
+                            .padding(.top, 21)
                             .centeredHorizontally()
                     }
 
@@ -96,7 +95,7 @@ struct FeedView: View {
                                     selectedUser = feedPostData.profileData
                             }
                             .buttonStyle(PlainButtonStyle())
-                            .padding(.bottom, 8)
+                            .padding(.bottom, 4)
                         }
                     }
 
@@ -104,11 +103,11 @@ struct FeedView: View {
                         Text("That's it!")
                             .font(.bold(size: 14))
                             .foregroundColor(.customText2)
-                            .padding(.top, 25)
+                            .padding(.top, 21)
                             .centeredHorizontally()
                     } else {
                         CustomSpinner(text: "Loading posts...", animate: true)
-                            .padding(.top, 25)
+                            .padding(.top, 21)
                             .centeredHorizontally()
                             .onAppear {
                                 if !feedPosts.isEmpty {
