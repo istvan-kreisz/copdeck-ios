@@ -31,6 +31,8 @@ struct InventoryView: View {
 
     @ObservedObject var viewRouter: ViewRouter
 
+    @State var itemSelectorStack: Stack?
+
     var selectedStack: Stack? {
         stacks[safe: selectedStackIndex]
     }
@@ -87,6 +89,9 @@ struct InventoryView: View {
     var body: some View {
         let showSharePopup = Binding<Bool>(get: { sharedStack != nil },
                                            set: { sharedStack = $0 ? sharedStack : nil })
+        let showItemSelector = Binding<Bool>(get: { itemSelectorStack != nil },
+                                             set: { itemSelectorStack = $0 ? itemSelectorStack : nil })
+
         Group {
             let stackTitles = Binding<[String]>(get: { stacks.map { (stack: Stack) in stack.name } }, set: { _ in })
             let actionsTrayActions = Binding<[ActionConfig]>(get: {
@@ -126,6 +131,18 @@ struct InventoryView: View {
                                 })
             },
             isActive: showEditedStack) { EmptyView() }
+            NavigationLink(destination:
+                SelectStackItemsView(showView: showItemSelector,
+                                     stack: itemSelectorStack ?? Stack.empty,
+                                     inventoryItems: store.state.inventoryItems,
+                                     requestInfo: store.state.requestInfo,
+                                     saveChanges: { updatedStackItems in
+                                         if var updatedStack = itemSelectorStack {
+                                             updatedStack.items = updatedStackItems
+                                             store.send(.main(action: .updateStack(stack: updatedStack)))
+                                         }
+                                     }),
+                isActive: showItemSelector) { EmptyView() }
 
             VerticalListView(bottomPadding: 0, spacing: 0, listRowStyling: .none) {
                 InventoryHeaderView(settingsPresented: $settingsPresented,
@@ -156,6 +173,7 @@ struct InventoryView: View {
                               selectedInventoryItems: $selectedInventoryItems,
                               isSelected: isSelected,
                               bestPrices: $bestPrices,
+                              itemSelectorStack: $itemSelectorStack,
                               requestInfo: store.state.requestInfo,
                               didTapEditStack: stack.id == "all" ? nil : {
                                   editedStack = stack

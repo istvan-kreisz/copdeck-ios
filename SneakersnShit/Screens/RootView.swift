@@ -31,7 +31,6 @@ struct RootView: View {
                         CountrySelector(settings: store.state.settings)
                     } else if user?.settings?.feeCalculation.stockx?.sellerFee == nil {
                         StockXSellerFeeSelector(settings: store.state.settings)
-                        #warning("show stoxk")
                     } else {
                         MainContainerView()
                             .environmentObject(store)

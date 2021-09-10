@@ -19,6 +19,7 @@ struct StackView: View {
     @Binding var selectedInventoryItems: [InventoryItem]
     @Binding var isSelected: Bool
     @Binding var bestPrices: [String: PriceWithCurrency]
+    @Binding var itemSelectorStack: Stack?
     let requestInfo: [ScraperRequestInfo]
     var didTapEditStack: (() -> Void)?
     var didTapShareStack: (() -> Void)?
@@ -76,21 +77,23 @@ struct StackView: View {
             .padding(.top, 2)
 
             HStack(spacing: 8) {
-                AccessoryButton(title: "Edit Items",
+                AccessoryButton(title: "Quick Edit",
                                 color: .customPurple,
                                 textColor: .customPurple,
                                 width: nil,
                                 imageName: "plus",
                                 tapped: { isEditing.toggle() })
                     .buttonStyle(PlainButtonStyle())
+                    .layoutPriority(1)
                 if let didTapEditStack = didTapEditStack {
-                    AccessoryButton(title: "Edit Stack",
+                    AccessoryButton(title: "Stack Details",
                                     color: .customBlue,
                                     textColor: .customBlue,
                                     width: nil,
                                     imageName: "chevron.right",
                                     tapped: didTapEditStack)
                         .buttonStyle(PlainButtonStyle())
+                        .layoutPriority(1)
                     if let didTapShareStack = didTapShareStack {
                         AccessoryButton(title: "Share Stack",
                                         color: .customOrange,
@@ -99,6 +102,7 @@ struct StackView: View {
                                         imageName: "arrowshape.turn.up.right.fill",
                                         tapped: didTapShareStack)
                             .buttonStyle(PlainButtonStyle())
+                            .layoutPriority(1)
                     }
                 }
                 Spacer()
@@ -110,21 +114,51 @@ struct StackView: View {
 
     var body: some View {
         toolbar()
-        ForEach(allStackItems) { (inventoryItem: InventoryItem) in
-            InventoryListItem(inventoryItem: inventoryItem,
-                              bestPrice: bestPrices[inventoryItem.id],
-                              selectedInventoryItemId: $selectedInventoryItemId,
-                              isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }),
-                              isEditing: $isEditing,
-                              requestInfo: requestInfo) {
-                    if selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }) {
-                        selectedInventoryItems = selectedInventoryItems.filter { $0.id != inventoryItem.id }
-                    } else {
-                        selectedInventoryItems.append(inventoryItem)
-                    }
+        if allStackItems.isEmpty {
+            VStack(alignment: .center, spacing: 3) {
+                Text("Your stack is empty")
+                    .font(.bold(size: 16))
+                    .foregroundColor(.customText2)
+
+                Button(action: {
+                    itemSelectorStack = stack
+                }) {
+                        HStack {
+                            Text("Start adding items")
+                                .underline()
+                                .font(.bold(size: 18))
+                                .foregroundColor(.customBlue)
+                                .frame(height: 42)
+                            ZStack {
+                                Circle()
+                                    .fill(Color.customBlue.opacity(0.2))
+                                    .frame(width: 19, height: 19)
+                                Image(systemName: "plus")
+                                    .font(.bold(size: 8))
+                                    .foregroundColor(Color.customBlue)
+                            }.frame(width: 19, height: 10)
+                        }
+                }
             }
-            .id(inventoryItem.id)
+            .centeredHorizontally()
+            .padding(.top, 50)
+        } else {
+            ForEach(allStackItems) { (inventoryItem: InventoryItem) in
+                InventoryListItem(inventoryItem: inventoryItem,
+                                  bestPrice: bestPrices[inventoryItem.id],
+                                  selectedInventoryItemId: $selectedInventoryItemId,
+                                  isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }),
+                                  isEditing: $isEditing,
+                                  requestInfo: requestInfo) {
+                        if selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }) {
+                            selectedInventoryItems = selectedInventoryItems.filter { $0.id != inventoryItem.id }
+                        } else {
+                            selectedInventoryItems.append(inventoryItem)
+                        }
+                }
+                .id(inventoryItem.id)
+            }
+            .padding(.vertical, 6)
         }
-        .padding(.vertical, 6)
     }
 }

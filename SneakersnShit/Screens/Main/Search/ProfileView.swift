@@ -13,6 +13,8 @@ struct ProfileView: View {
     @State private var selectedInventoryItemId: String?
     @State private var selectedStackId: String?
 
+    @State private var isFirstLoad = true
+
     @State private var selectedStack: Stack?
     @StateObject private var loader = Loader()
 
@@ -96,11 +98,20 @@ struct ProfileView: View {
         }
         .navigationbarHidden()
         .onAppear {
-            store.send(.main(action: .getUserProfile(userId: profileData.user.id)), completed: loader.getLoader())
+            if isFirstLoad {
+                updateProfile(newProfile: store.state.selectedUserProfile)
+                store.send(.main(action: .getUserProfile(userId: profileData.user.id)), completed: loader.getLoader())
+                isFirstLoad = false
+            }
         }
         .onChange(of: store.state.selectedUserProfile) { profile in
-            guard let profile = profile else { return }
-            self.profileData = profile
+            updateProfile(newProfile: profile)
         }
     }
+
+    private func updateProfile(newProfile: ProfileData?) {
+        guard let newProfile = newProfile, newProfile.id == profileData.id else { return }
+        self.profileData = newProfile
+    }
+
 }
