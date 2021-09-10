@@ -115,32 +115,9 @@ struct StackView: View {
     var body: some View {
         toolbar()
         if allStackItems.isEmpty {
-            VStack(alignment: .center, spacing: 3) {
-                Text("Your stack is empty")
-                    .font(.bold(size: 16))
-                    .foregroundColor(.customText2)
-
-                Button(action: {
-                    itemSelectorStack = stack
-                }) {
-                        HStack {
-                            Text("Start adding items")
-                                .underline()
-                                .font(.bold(size: 18))
-                                .foregroundColor(.customBlue)
-                                .frame(height: 42)
-                            ZStack {
-                                Circle()
-                                    .fill(Color.customBlue.opacity(0.2))
-                                    .frame(width: 19, height: 19)
-                                Image(systemName: "plus")
-                                    .font(.bold(size: 8))
-                                    .foregroundColor(Color.customBlue)
-                            }.frame(width: 19, height: 10)
-                        }
-                }
+            EmptyStateButton(title: "Your stack is empty", buttonTitle: "Start adding items", style: .large, showPlusIcon: true) {
+                itemSelectorStack = stack
             }
-            .centeredHorizontally()
             .padding(.top, 50)
         } else {
             ForEach(allStackItems) { (inventoryItem: InventoryItem) in

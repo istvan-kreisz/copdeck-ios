@@ -18,6 +18,8 @@ struct FeedView: View {
 
     @State private var didStartFirstLoad = false
 
+    @StateObject private var loader = Loader()
+
     var feedPosts: [FeedPost] {
         store.state.feedPosts.data
     }
@@ -73,8 +75,14 @@ struct FeedView: View {
 
                 VerticalListView(bottomPadding: Styles.tabScreenBottomPadding, spacing: 0) {
                     PullToRefresh(coordinateSpaceName: "pullToRefresh") {
-                        log("getFeedPost - refresh")
                         loadFeedPosts(loadMore: false)
+                    }
+
+                    if loader.isLoading && store.state.feedPosts.isLastPage {
+                        CustomSpinner(text: "Loading posts...", animate: true)
+                            .padding(.top, 25)
+                            .padding(.bottom, 4)
+                            .centeredHorizontally()
                     }
 
                     ForEach(feedPosts) { (feedPostData: FeedPost) in
@@ -91,6 +99,7 @@ struct FeedView: View {
                             .padding(.bottom, 8)
                         }
                     }
+
                     if store.state.feedPosts.isLastPage {
                         Text("That's it!")
                             .font(.bold(size: 14))
@@ -103,7 +112,6 @@ struct FeedView: View {
                             .centeredHorizontally()
                             .onAppear {
                                 if !feedPosts.isEmpty {
-                                    log("getFeedPost - loadMore")
                                     loadFeedPosts(loadMore: true)
                                 }
                             }
@@ -114,13 +122,12 @@ struct FeedView: View {
             }
         }
         .onAppear {
-            log("getFeedPost - onAppear")
             loadFeedPosts(loadMore: false)
         }
     }
 
     private func loadFeedPosts(loadMore: Bool) {
-        store.send(.main(action: .getFeedPosts(loadMore: loadMore)), debounceDelayMs: 2000)
+        store.send(.main(action: .getFeedPosts(loadMore: loadMore)), debounceDelayMs: 2000, completed: loader.getLoader())
     }
 }
 

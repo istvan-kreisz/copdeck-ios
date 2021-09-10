@@ -417,6 +417,26 @@ class FirebaseService: DatabaseManager {
         }
     }
 
+//    func uploadItemImage(image: UIImage, inventoryItemId: String) {
+//        guard let data = image.resizeImage(500).jpegData(compressionQuality: 0.4),
+//              let imageRef = storage.reference().child("images/\(userId)/.jpg") else { return }
+////        uploadTask?.cancel()
+//
+//        imageRef.listAll { [weak self] result, error in
+//            if result.items.isEmpty {
+//                self?.uploadImageData(data)
+//            } else {
+//                imageRef.delete { error in
+//                    if let error = error {
+//                        self?.uploadImageData(data)
+//                    } else {
+//                        self?.uploadImageData(data)
+//                    }
+//                }
+//            }
+//        }
+//    }
+
     private func uploadImageData(_ data: Data) {
         uploadTask = imageRef?.putData(data, metadata: nil) { [weak self] metadata, error in
             self?.getUserProfileImage()

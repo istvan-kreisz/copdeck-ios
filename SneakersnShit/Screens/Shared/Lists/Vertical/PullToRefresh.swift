@@ -13,19 +13,23 @@ struct PullToRefresh: View {
     var coordinateSpaceName: String
     var onRefresh: () -> Void
 
+    let offset: CGFloat = 195
+
     var body: some View {
         GeometryReader { geo in
-            if geo.frame(in: .named(coordinateSpaceName)).midY > 130 {
+            if geo.frame(in: .named(coordinateSpaceName)).midY > offset {
                 Spacer()
                     .onAppear {
-                        guard geo.frame(in: .named(coordinateSpaceName)).midY > 130 else { return }
+                        log("shaaaa - \(geo.frame(in: .named(coordinateSpaceName)).midY)")
+                        guard geo.frame(in: .named(coordinateSpaceName)).midY > offset else { return }
                         generator.impactOccurred()
                         onRefresh()
                     }
+                ProgressView()
+                    .centeredHorizontally()
+                    .padding(.top, 50)
             }
-            ProgressView()
-                .centeredHorizontally()
         }
-        .padding(.top, -50)
+        .padding(.top, -offset)
     }
 }

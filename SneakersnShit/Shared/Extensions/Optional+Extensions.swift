@@ -22,3 +22,21 @@ extension Optional where Wrapped == Int {
         map { String($0) } ?? ""
     }
 }
+
+extension Optional where Wrapped: Sequence {
+    func asArray() -> [Wrapped.Element] {
+        map { (sequence: Wrapped) -> [Wrapped.Element] in
+            if let array = sequence as? [Wrapped.Element] {
+                return array
+            } else {
+                return Array(sequence)
+            }
+        } ?? []
+    }
+}
+
+extension Optional where Wrapped: Collection {
+    var isEmpty: Bool {
+        self?.isEmpty ?? true
+    }
+}

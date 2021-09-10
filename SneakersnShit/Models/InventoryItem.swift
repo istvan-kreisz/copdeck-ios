@@ -50,6 +50,7 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     var copdeckPrice: ListingPrice?
     var soldPrice: SoldPrice?
     var status: SoldStatus? = .None
+    var photos: [String]? = []
     var notes: String?
     let created: Double?
     let updated: Double?

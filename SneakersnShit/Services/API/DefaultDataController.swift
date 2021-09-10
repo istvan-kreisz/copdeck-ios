@@ -30,6 +30,8 @@ class DefaultDataController: DataController {
 
     private var cancellables: Set<AnyCancellable> = []
 
+    private let imageCache = Cache<String, URL>(entryLifetimeMin: 60)
+
     init(backendAPI: BackendAPI, localScraper: LocalAPI, databaseManager: DatabaseManager) {
         self.backendAPI = backendAPI
         self.localScraper = localScraper
@@ -267,7 +269,40 @@ class DefaultDataController: DataController {
     }
 
     func getImageURLs(for users: [User]) -> AnyPublisher<[User], AppError> {
-        databaseManager.getImageURLs(for: users)
+        var cachedUsers: [User] = []
+        var nonCachedUsers: [User] = []
+        users
+            .forEach { (user: User) in
+                if user.imageURL == nil {
+                    if let cachedURL = imageCache.value(forKey: user.id) {
+                        var copy = user
+                        copy.imageURL = cachedURL
+                        cachedUsers.append(copy)
+                    } else {
+                        nonCachedUsers.append(user)
+                    }
+                } else {
+                    cachedUsers.append(user)
+                }
+            }
+        let cachedUsersPublisher = Just(cachedUsers).setFailureType(to: AppError.self)
+        let nonCachedUsersPublisher = databaseManager.getImageURLs(for: nonCachedUsers)
+            .handleEvents(receiveOutput: { [weak self] users in
+                users.forEach { [weak self] user in
+                    guard let imageURL = user.imageURL else { return }
+                    self?.imageCache.insert(imageURL, forKey: user.id)
+                }
+            })
+
+        if nonCachedUsers.isEmpty {
+            return cachedUsersPublisher.eraseToAnyPublisher()
+        } else if cachedUsers.isEmpty {
+            return nonCachedUsersPublisher.eraseToAnyPublisher()
+        } else {
+            return nonCachedUsersPublisher
+                .combineLatest(cachedUsersPublisher) { $0 + $1 }
+                .eraseToAnyPublisher()
+        }
     }
 
     func searchUsers(searchTerm: String) -> AnyPublisher<[User], AppError> {
