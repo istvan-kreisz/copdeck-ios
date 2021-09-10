@@ -233,7 +233,7 @@ struct InventoryView: View {
                 }
             }
         }
-        .withTabViewWrapper(viewRouter: viewRouter, store: store, backgroundColor: .customBackground, shouldShow: $shouldShowTabBar)
+        .withTabViewWrapper(viewRouter: viewRouter, store: store, backgroundColor: .customWhite, shouldShow: $shouldShowTabBar)
         .withTextFieldPopup(isShowing: $showAddNewStackAlert,
                             title: "Add new stack",
                             subtitle: nil,
