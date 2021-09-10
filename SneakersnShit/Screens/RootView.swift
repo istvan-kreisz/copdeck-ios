@@ -12,17 +12,14 @@ struct RootView: View {
     @State var user: User?
     @StateObject var viewState = ViewState()
 
+    @State private var error: (String, String)? = nil
+
     class ViewState: ObservableObject {
         @Published var firstShow = true
     }
 
     var body: some View {
-        let presentErrorAlert = Binding<Bool>(get: {
-                                                  store.state.error != nil
-                                                      && (store.state.error?.title.isEmpty == false ||
-                                                          store.state.error?.message.isEmpty == false)
-                                              },
-                                              set: { _ in })
+        let presentErrorAlert = Binding<Bool>(get: { error != nil }, set: { new in error = new ? error : nil })
         ZStack {
             if store.state.firstLoadDone {
                 if store.state.user?.id.isEmpty ?? true {
@@ -60,10 +57,13 @@ struct RootView: View {
             }
             user = state.user
         }
+        .onChange(of: store.state.error) { error in
+            if let title = error?.title, let message = error?.message {
+                self.error = (title, message)
+            }
+        }
         .alert(isPresented: presentErrorAlert) {
-            Alert(title: Text((store.state.error?.title) ?? "Ooops"),
-                  message: Text((store.state.error?.message) ?? "Unknown Error"),
-                  dismissButton: .default(Text("OK")))
+            Alert(title: Text(error?.0 ?? "Ooops"), message: Text(error?.1 ?? "Unknown Error"), dismissButton: .default(Text("OK")))
         }
         .onAppear { [weak viewState] in
             guard let viewState = viewState else { return }

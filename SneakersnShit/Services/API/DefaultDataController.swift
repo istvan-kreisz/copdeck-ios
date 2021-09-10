@@ -20,7 +20,7 @@ class DefaultDataController: DataController {
     lazy var stacksPublisher = databaseManager.stacksPublisher
     lazy var userPublisher = databaseManager.userPublisher
     lazy var exchangeRatesPublisher = databaseManager.exchangeRatesPublisher
-    lazy var errorsPublisher = databaseManager.errorsPublisher
+    lazy var errorsPublisher = databaseManager.errorsPublisher.merge(with: backendAPI.errorsPublisher).eraseToAnyPublisher()
     lazy var popularItemsPublisher = databaseManager.popularItemsPublisher
     lazy var cookiesPublisher = localScraper.cookiesPublisher
     lazy var imageDownloadHeadersPublisher = localScraper.imageDownloadHeadersPublisher
