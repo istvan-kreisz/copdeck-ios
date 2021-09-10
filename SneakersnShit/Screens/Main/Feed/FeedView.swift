@@ -16,8 +16,6 @@ struct FeedView: View {
     @State private var selectedStack: Stack?
     @State private var selectedUser: ProfileData?
 
-    @StateObject private var postsLoader = Loader()
-
     @State private var didStartFirstLoad = false
 
     var feedPosts: [FeedPost] {

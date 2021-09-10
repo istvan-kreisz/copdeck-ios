@@ -55,7 +55,7 @@ struct ImageView: View {
         }
         .background(Color.customWhite)
         .frame(width: size, height: size)
-        .if(flipImage) { $0.scaleEffect(CGSize(width: -1.0, height: 1.0)) }
+        .scaleEffect(CGSize(width: flipImage ? -1.0 : 1.0, height: 1.0))
     }
 }
 

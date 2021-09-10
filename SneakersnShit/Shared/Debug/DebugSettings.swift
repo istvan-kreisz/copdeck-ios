@@ -43,7 +43,7 @@ func log(_ value: Any, logType: LogType? = nil) {
 
 struct DebugSettings {
     let isInDebugMode: Bool
-    let ipAddress: String = "192.168.0.199"
+    let ipAddress: String = "172.20.10.18"
 //    let ipAddress: String = "10.112.208.225"
 
     lazy var environment: AppEnvironment? = {

@@ -14,6 +14,7 @@ struct ProfileView: View {
     @State private var selectedStackId: String?
 
     @State private var selectedStack: Stack?
+    @StateObject private var loader = Loader()
 
     var shouldDismiss: () -> Void
 
@@ -74,6 +75,12 @@ struct ProfileView: View {
                     .centeredHorizontally()
                     .listRow()
 
+                if loader.isLoading {
+                    CustomSpinner(text: "Loading stacks...", animate: true)
+                        .padding(.top, 25)
+                        .listRow()
+                }
+
                 ForEach(profileData.stacks) { (stack: Stack) in
                     SharedStackSummaryView(selectedInventoryItemId: $selectedInventoryItemId,
                                            selectedStackId: $selectedStackId,
@@ -89,7 +96,7 @@ struct ProfileView: View {
         }
         .navigationbarHidden()
         .onAppear {
-            store.send(.main(action: .getUserProfile(userId: profileData.user.id)))
+            store.send(.main(action: .getUserProfile(userId: profileData.user.id)), completed: loader.getLoader())
         }
         .onChange(of: store.state.selectedUserProfile) { profile in
             guard let profile = profile else { return }

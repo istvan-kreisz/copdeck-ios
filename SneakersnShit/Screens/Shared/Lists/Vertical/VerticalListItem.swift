@@ -81,25 +81,25 @@ struct VerticalListItem<V1: View, V2: View>: View {
                     accessoryView
                 }
             }
-            .if(ribbonText != nil) {
-                $0.overlay(ZStack {
-                    Rectangle()
-                        .fill(Color.customRed)
-                        .frame(width: 120, height: 18)
-                    Text(ribbonText ?? "")
-                        .foregroundColor(.customWhite)
-                        .font(.bold(size: 12))
-                }
-                .rotationEffect(.degrees(-45))
-                .position(x: 12, y: 12))
+
+            .overlay(ZStack {
+                Rectangle()
+                    .fill(Color.customRed)
+                    .frame(width: 120, height: 18)
+                Text(ribbonText ?? "")
+                    .foregroundColor(.customWhite)
+                    .font(.bold(size: 12))
+                    .opacity(ribbonText != nil ? 1.0 : 0)
             }
+            .rotationEffect(.degrees(-45))
+            .position(x: 12, y: 12))
+
             .padding(12)
             .frame(height: 86)
             .background(selectionStyle == .checkmark || !isSelected ? Color.customWhite : Color.customBlue.opacity(0.07))
             .cornerRadius(Self.cornerRadius)
-            .if(selectionStyle == .highlight && isSelected) {
-                $0.overlay(RoundedRectangle(cornerRadius: Self.cornerRadius).stroke(Color.customBlue, lineWidth: 2))
-            }
+            .overlay(RoundedRectangle(cornerRadius: Self.cornerRadius)
+                .stroke(selectionStyle == .highlight && isSelected ? Color.customBlue : Color.clear, lineWidth: 2))
             .if(addShadow) { $0.withDefaultShadow() }
             .onTapGesture(perform: onTapped)
             .offset(isEditing ? CGSize(width: -48, height: 0) : CGSize.zero)

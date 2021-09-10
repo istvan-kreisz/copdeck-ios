@@ -170,7 +170,7 @@ struct InventoryView: View {
             }
             .withFloatingButton(button: EditInventoryTray(actions: actionsTrayActions)
                 .padding(.bottom, UIApplication.shared.safeAreaInsets().bottom)
-                .if(!isEditing) { $0.hidden() })
+                .opacity(isEditing ? 1.0 : 0.0))
             .onChange(of: isEditing) { editing in
                 shouldShowTabBar = !editing
                 selectedInventoryItems = []

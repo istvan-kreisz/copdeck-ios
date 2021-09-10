@@ -29,15 +29,9 @@ struct ToggleButton: View {
                     Text(option)
                         .font(.bold(size: 12))
                         .frame(width: 71, height: 31)
-                        .if(option == selection) {
-                            $0
-                                .foregroundColor(Color.customWhite)
-                                .background(Capsule().fill(Color.customBlue))
-                        } else: {
-                            $0
-                                .foregroundColor(Color.customText1)
-                                .background(Capsule().stroke(Color.customAccent1, lineWidth: 2))
-                        }
+                        .foregroundColor(option == selection ? Color.customWhite : Color.customText1)
+                        .background(Capsule().fill(option == selection ? Color.customBlue : Color.clear))
+                        .background(Capsule().stroke(option == selection ? Color.clear : Color.customBlue, lineWidth: 2))
                         .onTapGesture {
                             selection = option
                         }

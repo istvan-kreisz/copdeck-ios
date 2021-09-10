@@ -103,12 +103,8 @@ struct RoundedButton<V: View>: View {
             }
             .padding(.horizontal, accessoryView?.2 ?? padding)
             .frame(width: buttonWidth, height: buttonHeight)
-            .if(color != .clear) {
-                $0.background(Capsule().fill(color))
-            }
-            .if(borderColor != .clear) {
-                $0.background(Capsule().stroke(borderColor, lineWidth: 2))
-            }
+            .background(Capsule().fill(color))
+            .background(Capsule().stroke(borderColor, lineWidth: 2))
         })
     }
 }

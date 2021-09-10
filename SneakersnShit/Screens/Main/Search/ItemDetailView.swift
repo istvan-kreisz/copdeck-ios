@@ -63,18 +63,12 @@ struct ItemDetailView: View {
             }
 
             ForEach(row.prices) { (price: Item.PriceRow.Price) in
+                let overlayColor: Color = (price.store.id == row.lowest?.id && (feeType == .Buy || feeType == .None)) ? .customGreen :
+                    (price.store.id == row.highest?.id && (feeType == .Sell || feeType == .None) ? .customRed : .customAccent1)
                 Text(price.primaryText)
                     .frame(height: 32)
                     .frame(maxWidth: .infinity)
-                    .if(price.store.id == row.lowest?.id && (feeType == .Buy || feeType == .None)) {
-                        $0.overlay(Capsule().stroke(Color.customGreen, lineWidth: 2))
-                    } else: {
-                        $0.if(price.store.id == row.highest?.id && (feeType == .Sell || feeType == .None)) {
-                            $0.overlay(Capsule().stroke(Color.customRed, lineWidth: 2))
-                        } else: {
-                            $0.overlay(Capsule().stroke(Color.customAccent1, lineWidth: 2))
-                        }
-                    }
+                    .overlay(Capsule().stroke(overlayColor, lineWidth: 2))
                     .onTapGesture {
                         var link: String?
                         switch feeType {
@@ -173,15 +167,9 @@ struct ItemDetailView: View {
                                     ForEach(PriceType.allCases) { (priceType: PriceType) in
                                         Text(priceType.rawValue.capitalized)
                                             .frame(width: 60, height: 31)
-                                            .if(priceType == self.priceType) {
-                                                $0
-                                                    .foregroundColor(Color.customWhite)
-                                                    .background(Capsule().fill(Color.customBlue))
-                                            } else: {
-                                                $0
-                                                    .foregroundColor(Color.customText1)
-                                                    .background(Capsule().stroke(Color.customAccent1, lineWidth: 2))
-                                            }
+                                            .foregroundColor(priceType == self.priceType ? Color.customWhite : Color.customText1)
+                                            .background(Capsule().fill(priceType == self.priceType ? Color.customBlue : Color.clear))
+                                            .background(Capsule().stroke(priceType == self.priceType ? Color.clear : Color.customBlue, lineWidth: 2))
                                             .onTapGesture {
                                                 self.priceType = priceType
                                             }
@@ -199,15 +187,9 @@ struct ItemDetailView: View {
                                     ForEach(FeeType.allCases) { (feeType: FeeType) in
                                         Text(feeType.rawValue.capitalized)
                                             .frame(width: 60, height: 31)
-                                            .if(feeType == self.feeType) {
-                                                $0
-                                                    .foregroundColor(Color.customWhite)
-                                                    .background(Capsule().fill(Color.customPurple))
-                                            } else: {
-                                                $0
-                                                    .foregroundColor(Color.customText1)
-                                                    .background(Capsule().stroke(Color.customAccent1, lineWidth: 2))
-                                            }
+                                            .foregroundColor(feeType == self.feeType ? Color.customWhite : Color.customText1)
+                                            .background(Capsule().fill(feeType == self.feeType ? Color.customPurple : Color.clear))
+                                            .background(Capsule().stroke(feeType == self.feeType ? Color.clear : Color.customPurple, lineWidth: 2))
                                             .onTapGesture {
                                                 self.feeType = feeType
                                             }
@@ -287,19 +269,17 @@ struct ItemDetailView: View {
                     .onAppear { scrollViewProxy.scrollTo(0) }
                 }
             }
-            .if(item != nil) {
-                $0
-                    .withFloatingButton(button: NextButton(text: "Add to Inventory",
-                                                           size: .init(width: 260, height: 60),
-                                                           color: .customBlack,
-                                                           tapped: {
-                                                               addToInventory = (true, nil)
-                                                               addedInventoryItem = false
-                                                           })
-                            .disabled(loader.isLoading)
-                            .centeredHorizontally()
-                            .padding(.top, 20))
-            }
+            .withFloatingButton(button: NextButton(text: "Add to Inventory",
+                                                   size: .init(width: 260, height: 60),
+                                                   color: .customBlack,
+                                                   tapped: {
+                                                       addToInventory = (true, nil)
+                                                       addedInventoryItem = false
+                                                   })
+                    .disabled(loader.isLoading)
+                    .centeredHorizontally()
+                    .padding(.top, 20)
+                    .opacity(item != nil ? 1.0 : 0.0))
             .withSnackBar(text: "Added to inventory", shouldShow: $showSnackBar)
             .navigationbarHidden()
             .onAppear {
