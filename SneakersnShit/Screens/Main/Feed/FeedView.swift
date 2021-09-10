@@ -16,7 +16,7 @@ struct FeedView: View {
     @State private var selectedStack: Stack?
     @State private var selectedUser: ProfileData?
 
-    @State private var didStartFirstLoad = false
+    @State private var isFirstLoad = true
 
     @StateObject private var loader = Loader()
 
@@ -122,7 +122,10 @@ struct FeedView: View {
             }
         }
         .onAppear {
-            loadFeedPosts(loadMore: false)
+            if isFirstLoad {
+                loadFeedPosts(loadMore: false)
+                isFirstLoad = false
+            }
         }
     }
 

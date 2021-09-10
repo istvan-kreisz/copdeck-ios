@@ -94,39 +94,38 @@ struct InventoryItemDetailView: View {
                                     style: NewItemCard.Style.noBackground,
                                     sizes: item?.sortedSizes ?? ALLSHOESIZES)
 
-                        VStack(alignment: .leading, spacing: 9) {
-                            Text("Photos:".uppercased())
-                                .font(.bold(size: 12))
-                                .foregroundColor(.customText2)
-                                .leftAligned()
-
-                            if inventoryItem.photos.isEmpty {
-                                EmptyStateButton(title: "Your haven't added any photos", buttonTitle: "Start adding photos", style: .regular, showPlusIcon: false) {
-
-                                }
-                                .padding(.vertical, 20)
-                            } else {
-                                AccessoryButton(title: "Add Photos",
-                                                color: .customBlue,
-                                                textColor: .customBlue,
-                                                width: 170,
-                                                imageName: "plus",
-                                                tapped: {
-    //                                                    showItemSelector = true
-                                                })
-                                    .leftAligned()
-                                    .padding(.top, 5)
-                            }
-                        }
-                        .asCard()
-                        .padding(.top, 15)
+//                        VStack(alignment: .leading, spacing: 9) {
+//                            Text("Photos:".uppercased())
+//                                .font(.bold(size: 12))
+//                                .foregroundColor(.customText2)
+//                                .leftAligned()
+//
+//                            if inventoryItem.photos.isEmpty {
+//                                EmptyStateButton(title: "Your haven't added any photos", buttonTitle: "Start adding photos", style: .regular, showPlusIcon: false) {
+//
+//                                }
+//                                .padding(.vertical, 20)
+//                            } else {
+//                                AccessoryButton(title: "Add Photos",
+//                                                color: .customBlue,
+//                                                textColor: .customBlue,
+//                                                width: 170,
+//                                                imageName: "plus",
+//                                                tapped: {
+//    //                                                    showItemSelector = true
+//                                                })
+//                                    .leftAligned()
+//                                    .padding(.top, 5)
+//                            }
+//                        }
+//                        .asCard()
+//                        .padding(.top, 15)
 
                         TextFieldRounded(title: "notes (optional)",
                                          placeHolder: "add any notes here",
-                                         style: TextFieldRounded.Style.white,
-                                         size: TextFieldRounded.Size.large,
+                                         style: .white,
                                          text: $notes)
-                            .padding(.top, 15)
+                            .padding(.top, 11)
 
                         HStack(spacing: 10) {
                             RoundedButton<EmptyView>(text: "Delete item",

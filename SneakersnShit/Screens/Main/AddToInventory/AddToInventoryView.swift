@@ -134,9 +134,8 @@ struct AddToInventoryView: View {
                     TextFieldRounded(title: "notes (optional)",
                                      placeHolder: "add any notes here",
                                      style: .white,
-                                     size: .large,
                                      text: $notes)
-                        .padding(.top, 15)
+                        .padding(.top, 11)
 
                     RoundedButton<EmptyView>(text: "Add \(itemCount) item\(itemCount == 1 ? "" : "s")",
                                              width: 145,
