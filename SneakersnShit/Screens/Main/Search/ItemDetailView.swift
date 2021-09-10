@@ -273,7 +273,7 @@ struct ItemDetailView: View {
                                                    size: .init(width: 260, height: 60),
                                                    color: .customBlack,
                                                    tapped: {
-                                                       addToInventory = (true, nil)
+                                                       addToInventory = (true, store.state.settings.preferredShoeSize)
                                                        addedInventoryItem = false
                                                    })
                     .disabled(loader.isLoading)

@@ -134,7 +134,7 @@ struct StackView: View {
                 }
                 .id(inventoryItem.id)
             }
-            .padding(.vertical, 5)
+            .padding(.vertical, 4)
         }
     }
 }

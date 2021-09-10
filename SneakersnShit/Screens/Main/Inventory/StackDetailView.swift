@@ -32,6 +32,8 @@ struct StackDetailView: View {
     @State private var showSnackBar = false
     @State private var popupIndex: Int? = nil
 
+    @State private var showCaption: Bool
+
     var allStackItems: [InventoryItem] {
         stack.inventoryItems(allInventoryItems: inventoryItems, filters: filters, searchText: "")
     }
@@ -86,6 +88,7 @@ struct StackDetailView: View {
         self.deleteStack = deleteStack
         self._name = State<String>(initialValue: stack.wrappedValue.name)
         self._caption = State<String>(initialValue: stack.wrappedValue.caption ?? "")
+        self._showCaption = State(initialValue: (stack.isPublished.wrappedValue ?? false) || (stack.isPublic.wrappedValue ?? false))
     }
 
     var body: some View {
@@ -152,12 +155,14 @@ struct StackDetailView: View {
                     .withDefaultPadding(padding: .horizontal)
                     .padding(.vertical, 6)
 
-                TextFieldRounded(title: "caption (optional)",
-                                 placeHolder: "caption",
-                                 style: .white,
-                                 text: $caption) { _ in captionChanged() }
-                    .withDefaultPadding(padding: .horizontal)
-                    .padding(.vertical, 6)
+                if showCaption {
+                    TextFieldRounded(title: "caption (optional)",
+                                     placeHolder: "caption",
+                                     style: .white,
+                                     text: $caption) { _ in captionChanged() }
+                        .withDefaultPadding(padding: .horizontal)
+                        .padding(.vertical, 6)
+                }
 
                 StackShareSettingsView(linkURL: linkURL,
                                        stack: stack,
@@ -167,6 +172,7 @@ struct StackDetailView: View {
                 } showPopup: { title, subtitle in
                     popup = (title, subtitle)
                 } updateStack: { stack in
+                    showCaption = (stack.isPublished ?? false) || (stack.isPublic ?? false)
                     store.send(.main(action: .updateStack(stack: stack)))
                 }
                 .withDefaultPadding(padding: .horizontal)
