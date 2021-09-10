@@ -20,6 +20,7 @@ struct SearchView: View {
     @StateObject private var userSearchResultsLoader = Loader()
 
     @State private var showPopularItems = false
+    @State private var showFavoritedItems = false
 
     @State private var selectedTabIndex = 0
 
@@ -68,6 +69,13 @@ struct SearchView: View {
                                      favoritedItemIds: store.state.favoritedItems.map(\.id)),
                 isActive: $showPopularItems) { EmptyView() }
 
+            NavigationLink(destination:
+                PopularItemsListView(showView: $showFavoritedItems,
+                                     items: $store.state.favoritedItems,
+                                     requestInfo: store.state.requestInfo,
+                                     favoritedItemIds: store.state.favoritedItems.map(\.id)),
+                isActive: $showFavoritedItems) { EmptyView() }
+
             VStack(alignment: .leading, spacing: 19) {
                 Text("Search")
                     .foregroundColor(.customText1)
@@ -104,7 +112,7 @@ struct SearchView: View {
                                                   isLoading: .constant(false),
                                                   title: "Your favorites",
                                                   requestInfo: store.state.requestInfo,
-                                                  style: .square(.customRed))
+                                                  style: .square(.customRed)) { showFavoritedItems = true }
 
                             HorizontaltemListView(items: $store.state.recentlyViewed,
                                                   selectedItem: $selectedItem,

@@ -89,11 +89,10 @@ struct VerticalListItem<V1: View, V2: View>: View {
                 Text(ribbonText ?? "")
                     .foregroundColor(.customWhite)
                     .font(.bold(size: 12))
-                    .opacity(ribbonText != nil ? 1.0 : 0)
             }
             .rotationEffect(.degrees(-45))
-            .position(x: 12, y: 12))
-
+            .position(x: 12, y: 12)
+            .opacity(ribbonText != nil ? 1.0 : 0))
             .padding(12)
             .frame(height: 86)
             .background(selectionStyle == .checkmark || !isSelected ? Color.customWhite : Color.customBlue.opacity(0.07))
