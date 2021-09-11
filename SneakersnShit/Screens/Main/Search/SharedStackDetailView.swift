@@ -55,7 +55,7 @@ struct SharedStackDetailView: View {
 
                 ForEach(inventoryItems) { (inventoryItem: InventoryItem) in
                     InventoryListItem(inventoryItem: inventoryItem,
-                                      bestPrice: .init(price: 212, currencyCode: .usd),
+                                      bestPrice: inventoryItem.copdeckPrice.map { .init(price: $0.price.price, currencyCode: $0.price.currencyCode) },
                                       selectedInventoryItemId: $selectedInventoryItemId,
                                       isSelected: false,
                                       isEditing: .constant(false),
