@@ -78,13 +78,15 @@ struct AddToInventoryView: View {
                     NewItemCard(inventoryItem: $inventoryItem1,
                                 purchasePrice: priceWithCurrency,
                                 currency: store.state.currency,
-                                sizes: self.item.sortedSizes)
+                                sizes: self.item.sortedSizes,
+                                showCopDeckPrice: false)
                     if let inventoryItem2 = inventoryItem2 {
                         let item = Binding<InventoryItem>(get: { inventoryItem2 }, set: { self.inventoryItem2 = $0 })
                         NewItemCard(inventoryItem: item,
                                     purchasePrice: priceWithCurrency,
                                     currency: store.state.currency,
-                                    sizes: self.item.sortedSizes) {
+                                    sizes: self.item.sortedSizes,
+                                    showCopDeckPrice: false) {
                                 self.inventoryItem2 = self.inventoryItem3
                                 self.inventoryItem3 = self.inventoryItem4
                                 self.inventoryItem4 = self.inventoryItem5
@@ -96,7 +98,8 @@ struct AddToInventoryView: View {
                         NewItemCard(inventoryItem: item,
                                     purchasePrice: priceWithCurrency,
                                     currency: store.state.currency,
-                                    sizes: self.item.sortedSizes) {
+                                    sizes: self.item.sortedSizes,
+                                    showCopDeckPrice: false) {
                                 self.inventoryItem3 = self.inventoryItem4
                                 self.inventoryItem4 = self.inventoryItem5
                                 self.inventoryItem5 = nil
@@ -107,7 +110,8 @@ struct AddToInventoryView: View {
                         NewItemCard(inventoryItem: item,
                                     purchasePrice: priceWithCurrency,
                                     currency: store.state.currency,
-                                    sizes: self.item.sortedSizes) {
+                                    sizes: self.item.sortedSizes,
+                                    showCopDeckPrice: false) {
                                 self.inventoryItem4 = self.inventoryItem5
                                 self.inventoryItem5 = nil
                         }
@@ -117,7 +121,8 @@ struct AddToInventoryView: View {
                         NewItemCard(inventoryItem: item,
                                     purchasePrice: priceWithCurrency,
                                     currency: store.state.currency,
-                                    sizes: self.item.sortedSizes) {
+                                    sizes: self.item.sortedSizes,
+                                    showCopDeckPrice: false) {
                                 self.inventoryItem5 = nil
                         }
                     }

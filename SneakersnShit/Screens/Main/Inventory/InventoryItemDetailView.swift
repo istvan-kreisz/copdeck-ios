@@ -92,7 +92,8 @@ struct InventoryItemDetailView: View {
                                     purchasePrice: inventoryItem.purchasePrice,
                                     currency: Currency(code: .usd, symbol: .usd),
                                     style: NewItemCard.Style.noBackground,
-                                    sizes: item?.sortedSizes ?? ALLSHOESIZES)
+                                    sizes: item?.sortedSizes ?? ALLSHOESIZES,
+                                    showCopDeckPrice: true)
 
 //                        VStack(alignment: .leading, spacing: 9) {
 //                            Text("Photos:".uppercased())

@@ -111,7 +111,7 @@ struct StackDetailView: View {
                                                              }),
                            isActive: $showItemSelector) { EmptyView() }
 
-            VerticalListView(bottomPadding: Styles.tabScreenBottomPadding, spacing: 2, addHorizontalPadding: false) {
+            VerticalListView(bottomPadding: Styles.tabScreenBottomPadding, spacing: 6, addHorizontalPadding: false) {
                 NavigationBar(title: stack.name, isBackButtonVisible: true, style: .dark) { showView = false }
                     .withDefaultPadding(padding: .horizontal)
 
@@ -120,7 +120,6 @@ struct StackDetailView: View {
                         .font(.bold(size: 12))
                         .foregroundColor(.customText2)
                         .leftAligned()
-                        .withDefaultPadding(padding: .horizontal)
 
                     HStack {
                         VStack(spacing: 2) {
@@ -141,19 +140,16 @@ struct StackDetailView: View {
                                 .foregroundColor(.customText2)
                         }
                     }
-                    .withDefaultPadding(padding: .horizontal)
                     .padding(.top, 5)
                 }
                 .asCard()
                 .withDefaultPadding(padding: .horizontal)
-                .padding(.vertical, 6)
 
                 TextFieldRounded(title: "stack name",
                                  placeHolder: "name",
                                  style: .white,
                                  text: $name) { _ in nameChanged() }
                     .withDefaultPadding(padding: .horizontal)
-                    .padding(.vertical, 6)
 
                 if showCaption {
                     TextFieldRounded(title: "caption (optional)",
@@ -161,13 +157,13 @@ struct StackDetailView: View {
                                      style: .white,
                                      text: $caption) { _ in captionChanged() }
                         .withDefaultPadding(padding: .horizontal)
-                        .padding(.vertical, 6)
                 }
 
                 StackShareSettingsView(linkURL: linkURL,
                                        stack: stack,
                                        isPublic: stack.isPublic ?? false,
-                                       isPublished: stack.isPublished ?? false) { title in
+                                       isPublished: stack.isPublished ?? false,
+                                       includeTitle: true) { title in
                         showSnackBar = true
                 } showPopup: { title, subtitle in
                     popup = (title, subtitle)
@@ -175,6 +171,7 @@ struct StackDetailView: View {
                     showCaption = (stack.isPublished ?? false) || (stack.isPublic ?? false)
                     store.send(.main(action: .updateStack(stack: stack)))
                 }
+                .asCard()
                 .withDefaultPadding(padding: .horizontal)
 
                 ForEach(allStackItems) { (inventoryItem: InventoryItem) in

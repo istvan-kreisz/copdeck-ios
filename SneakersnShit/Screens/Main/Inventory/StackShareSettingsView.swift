@@ -8,14 +8,21 @@
 import SwiftUI
 
 struct StackShareSettingsView: View {
-    private static let popupTitles = ["Publish on Feed", "Make Public"]
-    private static let popupDescriptions = ["some text blah blah blah", "some text blah blah blah"]
+    private static let popupTitles = ["Publish on Feed",
+                                      "Make public",
+                                      "Share via Link"]
+    private static let popupDescriptions =
+        ["Publish your stack on the CopDeck feed. This will make your stack public so other users can see your items. They will also be able to visit your profile from the Feed and Search tabs.",
+         "Make your stack public so other users can see your items when they visit your profile. Note: making it public won't publish it on the CopDeck feed, you have to enable that separately.",
+         "Share your stack via a link. Note: the link will open a webpage so anyone can view your stack even if they don't have the CopDeck app."]
 
     let linkURL: String
 
     @State var stack: Stack
-    @State var isPublished: Bool
     @State var isPublic: Bool
+    @State var isPublished: Bool
+
+    let includeTitle: Bool
 
     @State private var showSnackBar = false
     @State private var popupIndex: Int? = nil
@@ -28,13 +35,15 @@ struct StackShareSettingsView: View {
          stack: Stack,
          isPublic: Bool,
          isPublished: Bool,
+         includeTitle: Bool,
          showSnackbar: @escaping (_ text: String) -> Void,
          showPopup: @escaping (_ title: String, _ subtitle: String) -> Void,
          updateStack: @escaping (_ stack: Stack) -> Void) {
         self.linkURL = linkURL
         self._stack = State(initialValue: stack)
-        self._isPublished = State<Bool>(initialValue: isPublished)
         self._isPublic = State<Bool>(initialValue: isPublic)
+        self._isPublished = State<Bool>(initialValue: isPublished)
+        self.includeTitle = includeTitle
         self.showSnackbar = showSnackbar
         self.showPopup = showPopup
         self.updateStack = updateStack
@@ -55,42 +64,52 @@ struct StackShareSettingsView: View {
         let isPublished = Binding<Bool>(get: { self.isPublished }, set: { didTogglePublished(newValue: $0) })
         let isPublic = Binding<Bool>(get: { self.isPublic }, set: { didTogglePublic(newValue: $0) })
 
-        toggleView(title: "Publish on Feed", isOn: isPublished) {
-            showPopup(Self.popupTitles[0], Self.popupDescriptions[0])
-        }
-        .buttonStyle(PlainButtonStyle())
-
-        toggleView(title: "Make Public", isOn: isPublic) {
-            showPopup(Self.popupTitles[1], Self.popupDescriptions[1])
-        }
-        .buttonStyle(PlainButtonStyle())
-
-        VStack(alignment: .leading, spacing: 4) {
-            Text("share link")
-                .font(.regular(size: 12))
-                .foregroundColor(.customText1)
-                .padding(.leading, 5)
-            ZStack {
-                Text(linkURL)
+        VStack(alignment: .leading, spacing: 12) {
+            if includeTitle {
+                Text("Share stack:".uppercased())
+                    .font(.bold(size: 12))
                     .foregroundColor(.customText2)
-                    .frame(height: Styles.inputFieldHeight)
-                    .padding(.horizontal, 17)
-                    .background(Color.customWhite)
-                    .cornerRadius(Styles.cornerRadius)
-                    .withDefaultShadow()
-                Button {
-                    copyLinkTapped()
-                } label: {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: Styles.cornerRadius)
-                            .fill(Color.customGreen)
-                            .frame(width: Styles.inputFieldHeight, height: Styles.inputFieldHeight)
-                        Image(systemName: "link")
-                            .font(.bold(size: 15))
-                            .foregroundColor(Color.customWhite)
+                    .leftAligned()
+            }
+
+            toggleView(title: "Publish on Feed", isOn: isPublished) {
+                showPopup(Self.popupTitles[0], Self.popupDescriptions[0])
+            }
+
+            toggleView(title: "Make Public", isOn: isPublic) {
+                showPopup(Self.popupTitles[1], Self.popupDescriptions[1])
+            }
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Share via Link")
+                    .font(.bold(size: 18))
+                    .foregroundColor(.customText1)
+//                .padding(.leading, 5)
+                    .withTellTip {
+                        showPopup(Self.popupTitles[2], Self.popupDescriptions[2])
                     }
+                ZStack {
+                    Text(linkURL)
+                        .foregroundColor(.customText2)
+                        .frame(height: Styles.inputFieldHeight)
+                        .padding(.horizontal, 17)
+                        .background(Color.customWhite)
+                        .cornerRadius(Styles.cornerRadius)
+                        .withDefaultShadow()
+                    Button {
+                        copyLinkTapped()
+                    } label: {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: Styles.cornerRadius)
+                                .fill(Color.customGreen)
+                                .frame(width: Styles.inputFieldHeight, height: Styles.inputFieldHeight)
+                            Image(systemName: "link")
+                                .font(.bold(size: 15))
+                                .foregroundColor(Color.customWhite)
+                        }
+                    }
+                    .rightAligned()
                 }
-                .rightAligned()
             }
         }
         .buttonStyle(PlainButtonStyle())

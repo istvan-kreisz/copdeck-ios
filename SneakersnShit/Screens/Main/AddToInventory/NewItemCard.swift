@@ -19,6 +19,7 @@ struct NewItemCard: View {
     let currency: Currency
     let style: Style
     let sizes: [String]
+    let showCopDeckPrice: Bool
     let didTapDelete: (() -> Void)?
 
     var textFieldStyle: TextFieldRounded.Style {
@@ -38,12 +39,14 @@ struct NewItemCard: View {
          currency: Currency,
          style: Style = .card,
          sizes: [String],
+         showCopDeckPrice: Bool,
          didTapDelete: (() -> Void)? = nil) {
         self._inventoryItem = inventoryItem ?? Binding.constant(InventoryItem.init(fromItem: .sample))
         self.purchasePrice = purchasePrice
         self.currency = currency
         self.style = style
         self.sizes = sizes
+        self.showCopDeckPrice = showCopDeckPrice
         self.didTapDelete = didTapDelete
     }
 
@@ -77,12 +80,12 @@ struct NewItemCard: View {
                                  style: textFieldStyle,
                                  keyboardType: .numberPad,
                                  text: purchasePrice) { isActive in
-                    if isActive && style == .card {
-                        if !didTapPurchasePrice {
-                            didTapPurchasePrice = true
-                            inventoryItem.purchasePrice = nil
+                        if isActive, style == .card {
+                            if !didTapPurchasePrice {
+                                didTapPurchasePrice = true
+                                inventoryItem.purchasePrice = nil
+                            }
                         }
-                    }
                 }
                 DropDownMenu(title: "size",
                              selectedItem: $inventoryItem.size,
@@ -93,6 +96,22 @@ struct NewItemCard: View {
                              options: InventoryItem.Condition.allCases.map { $0.rawValue },
                              style: dropdownStyle)
             }
+            if showCopDeckPrice {
+                let text =
+                    Binding<String>(get: { (inventoryItem.copdeckPrice?.price.price).asString() },
+                                    set: { new in
+                                        inventoryItem.copdeckPrice = InventoryItem.ListingPrice(storeId: "copdeck",
+                                                                                                price: .init(price: Double(new) ?? 0,
+                                                                                                             currencyCode: currency.code))
+                                    })
+
+                TextFieldRounded(title: "copdeck price (optional)",
+                                 placeHolder: "\(currency.symbol.rawValue)0",
+                                 style: textFieldStyle,
+                                 keyboardType: .numberPad,
+                                 text: text)
+            }
+
             let soldStatus = Binding<String>(get: { (inventoryItem.status ?? InventoryItem.SoldStatus.None).rawValue.uppercased() },
                                              set: { inventoryItem.status = .init(rawValue: $0.lowercased().capitalized) ?? InventoryItem.SoldStatus.None })
             ToggleButton(title: "status",
@@ -175,6 +194,7 @@ struct NewItemCard_Previews: PreviewProvider {
         NewItemCard(inventoryItem: .constant(InventoryItem.init(fromItem: Item.sample)),
                     purchasePrice: Item.sample.retailPrice.map { PriceWithCurrency(price: $0, currencyCode: .usd) },
                     currency: Currency(code: .usd, symbol: .usd),
-                    sizes: [])
+                    sizes: [],
+                    showCopDeckPrice: false)
     }
 }

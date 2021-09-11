@@ -33,6 +33,8 @@ struct InventoryView: View {
 
     @State var itemSelectorStack: Stack?
 
+    @State var popup: (String, String)? = nil
+
     var selectedStack: Stack? {
         stacks[safe: selectedStackIndex]
     }
@@ -91,6 +93,7 @@ struct InventoryView: View {
                                            set: { sharedStack = $0 ? sharedStack : nil })
         let showItemSelector = Binding<Bool>(get: { itemSelectorStack != nil },
                                              set: { itemSelectorStack = $0 ? itemSelectorStack : nil })
+        let showPopup = Binding<Bool>(get: { popup != nil }, set: { show in popup = show ? popup : nil })
 
         Group {
             let stackTitles = Binding<[String]>(get: { stacks.map { (stack: Stack) in stack.name } }, set: { _ in })
@@ -251,15 +254,23 @@ struct InventoryView: View {
                         StackShareSettingsView(linkURL: sharedStack?.linkURL(userId: store.state.user?.id ?? "") ?? "",
                                                stack: stack,
                                                isPublic: stack.isPublic ?? false,
-                                               isPublished: stack.isPublished ?? false) { title in
+                                               isPublished: stack.isPublished ?? false,
+                                               includeTitle: false) { title in
                                 showSnackBar = true
                         } showPopup: { title, subtitle in
-
+                            popup = (title, subtitle)
                         } updateStack: { stack in
                             store.send(.main(action: .updateStack(stack: stack)))
                         }
                 }
             }
+        }
+        .withPopup {
+            Popup<EmptyView>(isShowing: showPopup,
+                             title: popup.map { $0.0 } ?? "",
+                             subtitle: popup.map { $0.1 } ?? "",
+                             firstAction: .init(name: "Okay", tapped: { popup = nil }),
+                             secondAction: nil)
         }
         .withSnackBar(text: "Link Copied", shouldShow: $showSnackBar)
     }
