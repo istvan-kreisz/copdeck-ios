@@ -13,7 +13,6 @@ struct MainContainerView: View {
     @StateObject var viewRouter = ViewRouter()
 
     @State var shouldShowTabBar = true
-    @State var settingsPresented = false
 
     var body: some View {
         UITabBarWrapper(selectedIndex: $viewRouter.currentPage) {
@@ -28,7 +27,6 @@ struct MainContainerView: View {
             TabBarElement(tabBarElementItem: .init(title: "Third", systemImageName: "folder.fill")) {
                 InventoryView(username: store.state.user?.name ?? "",
                               shouldShowTabBar: $shouldShowTabBar,
-                              settingsPresented: $settingsPresented,
                               viewRouter: viewRouter)
                     .environmentObject(store)
             })

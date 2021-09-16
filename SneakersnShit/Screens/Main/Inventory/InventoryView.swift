@@ -9,31 +9,33 @@ import SwiftUI
 import Combine
 
 struct InventoryView: View {
+    enum Sheet {
+        case settings, filters, imagePicker
+    }
+
     @EnvironmentObject var store: AppStore
     @State private var selectedInventoryItemId: String?
-
     @State private var searchText = ""
     @State private var isEditing = false
-    @State private var showFilters = false
     @State private var selectedInventoryItems: [InventoryItem] = []
     @State private var selectedStackIndex = 0
     @State private var editedStack: Stack?
     @State private var showAddNewStackAlert = false
     @State private var bestPrices: [String: PriceWithCurrency] = [:]
     @State private var newStackId: String?
-    @State private var showImagePicker = false
     @State var username: String = ""
     @State private var sharedStack: Stack?
     @State private var showSnackBar = false
 
     @Binding var shouldShowTabBar: Bool
-    @Binding var settingsPresented: Bool
 
     @ObservedObject var viewRouter: ViewRouter
 
     @State var itemSelectorStack: Stack?
 
     @State var popup: (String, String)? = nil
+
+    @State private var presentedSheet: Sheet? = nil
 
     var selectedStack: Stack? {
         stacks[safe: selectedStackIndex]
@@ -94,6 +96,10 @@ struct InventoryView: View {
         let showItemSelector = Binding<Bool>(get: { itemSelectorStack != nil },
                                              set: { itemSelectorStack = $0 ? itemSelectorStack : nil })
         let showPopup = Binding<Bool>(get: { popup != nil }, set: { show in popup = show ? popup : nil })
+        let showSheet = Binding<Bool>(get: { presentedSheet != nil }, set: { show in presentedSheet = show ? presentedSheet : nil })
+        let settingsPresented = Binding<Bool>(get: { presentedSheet == .settings }, set: { show in presentedSheet = show ? presentedSheet : nil })
+        let showImagePicker = Binding<Bool>(get: { presentedSheet == .imagePicker }, set: { show in presentedSheet = show ? presentedSheet : nil })
+        let showFilters = Binding<Bool>(get: { presentedSheet == .filters }, set: { show in presentedSheet = show ? presentedSheet : nil })
 
         Group {
             let stackTitles = Binding<[String]>(get: { stacks.map { (stack: Stack) in stack.name } }, set: { _ in })
@@ -148,8 +154,8 @@ struct InventoryView: View {
                 isActive: showItemSelector) { EmptyView() }
 
             VerticalListView(bottomPadding: 0, spacing: 0, listRowStyling: .none) {
-                InventoryHeaderView(settingsPresented: $settingsPresented,
-                                    showImagePicker: $showImagePicker,
+                InventoryHeaderView(settingsPresented: settingsPresented,
+                                    showImagePicker: showImagePicker,
                                     profileImageURL: $store.state.profileImageURL,
                                     username: $username,
                                     textBox1: .init(title: "Inventory Value", text: inventoryValue?.asString ?? "-"),
@@ -172,7 +178,7 @@ struct InventoryView: View {
                               inventoryItems: $store.state.inventoryItems,
                               selectedInventoryItemId: $selectedInventoryItemId,
                               isEditing: $isEditing,
-                              showFilters: $showFilters,
+                              showFilters: showFilters,
                               selectedInventoryItems: $selectedInventoryItems,
                               isSelected: isSelected,
                               bestPrices: $bestPrices,
@@ -221,17 +227,20 @@ struct InventoryView: View {
             .onReceive(ItemCache.default.updatedPublisher.debounce(for: .milliseconds(500), scheduler: RunLoop.main).prepend(())) { _ in
                 updateBestPrices()
             }
-            .sheet(isPresented: $settingsPresented) {
-                SettingsView(settings: store.state.settings, isProfilePublic: store.state.user?.isPublic, isPresented: $settingsPresented)
-                    .environmentObject(store)
-            }
-            .sheet(isPresented: $showFilters) {
-                FiltersModal(settings: store.state.settings, isPresented: $showFilters)
-                    .environmentObject(store)
-            }
-            .sheet(isPresented: $showImagePicker) {
-                ImagePickerView(sourceType: .photoLibrary) { image in
-                    self.store.send(.main(action: .uploadProfileImage(image: image)))
+            .sheet(isPresented: showSheet) {
+                switch presentedSheet {
+                case .settings:
+                    SettingsView(settings: store.state.settings, isProfilePublic: store.state.user?.isPublic, isPresented: settingsPresented)
+                        .environmentObject(store)
+                case .filters:
+                    FiltersModal(settings: store.state.settings, isPresented: showFilters)
+                        .environmentObject(store)
+                case .imagePicker:
+                    ImagePickerView(sourceType: .photoLibrary) { image in
+                        self.store.send(.main(action: .uploadProfileImage(image: image)))
+                    }
+                case .none:
+                    EmptyView()
                 }
             }
         }
@@ -307,7 +316,7 @@ struct InventoryView: View {
 struct InventoryView_Previews: PreviewProvider {
     static var previews: some View {
         return Group {
-            InventoryView(username: "", shouldShowTabBar: .constant(true), settingsPresented: .constant(false), viewRouter: ViewRouter())
+            InventoryView(username: "", shouldShowTabBar: .constant(true), viewRouter: ViewRouter())
                 .environmentObject(AppStore.default)
         }
     }
