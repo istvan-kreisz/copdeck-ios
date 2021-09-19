@@ -63,15 +63,13 @@ struct SearchView: View {
             }
 
             NavigationLink(destination:
-                PopularItemsListView(showView: $showPopularItems,
-                                     items: $store.state.popularItems,
+                PopularItemsListView(items: $store.state.popularItems,
                                      requestInfo: store.state.requestInfo,
                                      favoritedItemIds: store.state.favoritedItems.map(\.id)),
                 isActive: $showPopularItems) { EmptyView() }
 
             NavigationLink(destination:
-                PopularItemsListView(showView: $showFavoritedItems,
-                                     items: $store.state.favoritedItems,
+                PopularItemsListView(items: $store.state.favoritedItems,
                                      requestInfo: store.state.requestInfo,
                                      favoritedItemIds: store.state.favoritedItems.map(\.id)),
                 isActive: $showFavoritedItems) { EmptyView() }

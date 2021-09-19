@@ -285,12 +285,8 @@ struct ItemDetailView: View {
             .onAppear {
                 if firstShow {
                     firstShow = false
-                    updateItem(newItem: store.state.selectedItem)
                     refreshPrices(fetchMode: .cacheOrRefresh)
                 }
-            }
-            .onChange(of: store.state.selectedItem) { item in
-                updateItem(newItem: item)
             }
             .onChange(of: addedInventoryItem) { new in
                 if new {
@@ -301,7 +297,7 @@ struct ItemDetailView: View {
     }
 
     private func refreshPrices(fetchMode: FetchMode) {
-        store.send(.main(action: .getItemDetails(item: item, itemId: itemId, fetchMode: fetchMode)), completed: loader.getLoader())
+        store.send(.main(action: .getItemDetails(item: item, itemId: itemId, fetchMode: fetchMode) { updateItem(newItem: $0) }), completed: loader.getLoader())
     }
 
     private func updateItem(newItem: Item?) {
@@ -319,7 +315,6 @@ struct ItemDetailView: View {
 
     private func didToggleFavorite(newValue: Bool) {
         guard let item = item else { return }
-//        log("didToggleFavorite \(newValue)")
         isFavorited = newValue
         if newValue {
             store.send(.main(action: .favorite(item: item)))

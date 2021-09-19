@@ -99,13 +99,11 @@ struct ProfileView: View {
         .navigationbarHidden()
         .onAppear {
             if isFirstLoad {
-                updateProfile(newProfile: store.state.selectedUserProfile)
-                store.send(.main(action: .getUserProfile(userId: profileData.user.id)), completed: loader.getLoader())
+                store.send(.main(action: .getUserProfile(userId: profileData.user.id) { profileData in
+                    updateProfile(newProfile: profileData)
+                }), completed: loader.getLoader())
                 isFirstLoad = false
             }
-        }
-        .onChange(of: store.state.selectedUserProfile) { profile in
-            updateProfile(newProfile: profile)
         }
     }
 
@@ -113,5 +111,4 @@ struct ProfileView: View {
         guard let newProfile = newProfile, newProfile.id == profileData.id else { return }
         self.profileData = newProfile
     }
-
 }

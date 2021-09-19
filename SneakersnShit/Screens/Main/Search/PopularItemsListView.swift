@@ -9,8 +9,9 @@ import SwiftUI
 import Combine
 
 struct PopularItemsListView: View {
-    @Binding var showView: Bool
+    @Environment(\.presentationMode) var presentationMode
     @Binding var items: [Item]
+
 
     let requestInfo: [ScraperRequestInfo]
     let favoritedItemIds: [String]
@@ -28,7 +29,7 @@ struct PopularItemsListView: View {
                                selection: convertToId(_selectedItem)) { EmptyView() }
             }
             VStack(alignment: .center, spacing: 8) {
-                NavigationBar(title: "Trending now", isBackButtonVisible: true, style: .dark) { showView = false }
+                NavigationBar(title: "Trending now", isBackButtonVisible: true, style: .dark) { presentationMode.wrappedValue.dismiss() }
                     .withDefaultPadding(padding: .horizontal)
 
                 VerticalItemListView(items: $items,

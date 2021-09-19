@@ -31,12 +31,12 @@ enum MainAction {
     case unfavorite(item: Item)
     case addRecentlyViewed(item: Item)
     // users
-    case getUserProfile(userId: String)
-    case setSelectedUser(user: ProfileData?)
+    case getUserProfile(userId: String, completion: (ProfileData?) -> Void)
+    case setSelectedUser(user: ProfileData?, completion: (ProfileData?) -> Void)
     // item details
-    case getItemDetails(item: Item?, itemId: String, fetchMode: FetchMode)
+    case getItemDetails(item: Item?, itemId: String, fetchMode: FetchMode, completion: ((Item?) -> Void))
     case refreshItemIfNeeded(itemId: String, fetchMode: FetchMode)
-    case setSelectedItem(item: Item?)
+    case setSelectedItem(item: Item?, completion: (Item?) -> Void)
     // inventory
     case addStack(stack: Stack)
     case deleteStack(stack: Stack)

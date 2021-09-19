@@ -103,29 +103,30 @@ func appReducer(state: inout AppState,
             environment.dataController.unfavorite(item: item)
         case let .addRecentlyViewed(item):
             environment.dataController.add(recentlyViewedItem: item)
-        case let .getUserProfile(userId):
+        case let .getUserProfile(userId, completion):
             return environment.dataController.getUserProfile(userId: userId)
-                .map { (user: ProfileData) in AppAction.main(action: .setSelectedUser(user: user)) }
+                .map { (user: ProfileData) in AppAction.main(action: .setSelectedUser(user: user, completion: completion)) }
                 .catchErrors()
-        case let .setSelectedUser(user):
+        case let .setSelectedUser(user, completion):
             var newUser = user
-            if state.selectedUserProfile?.user.imageURL != nil {
-                if state.selectedUserProfile?.user.id == user?.user.id {
-                    newUser?.user.imageURL = state.selectedUserProfile?.user.imageURL
-                }
-            } else {
-                if let user = state.userSearchResults.first(where: { $0.id == newUser?.user.id }), user.imageURL != nil {
-                    newUser?.user.imageURL = user.imageURL
-                }
-            }
-            state.selectedUserProfile = newUser
-        case let .getItemDetails(item, itemId, fetchMode):
+            #warning("fix")
+//            if state.selectedUserProfile?.user.imageURL != nil {
+//                if state.selectedUserProfile?.user.id == user?.user.id {
+//                    newUser?.user.imageURL = state.selectedUserProfile?.user.imageURL
+//                }
+//            } else {
+//                if let user = state.userSearchResults.first(where: { $0.id == newUser?.user.id }), user.imageURL != nil {
+//                    newUser?.user.imageURL = user.imageURL
+//                }
+//            }
+            completion(newUser)
+        case let .getItemDetails(item, itemId, fetchMode, completion):
             return environment.dataController.getItemDetails(for: item,
                                                              itemId: itemId,
                                                              fetchMode: fetchMode,
                                                              settings: state.settings,
                                                              exchangeRates: state.rates)
-                .map { AppAction.main(action: .setSelectedItem(item: $0)) }
+                .map { AppAction.main(action: .setSelectedItem(item: $0, completion: completion)) }
                 .catchErrors()
         case let .refreshItemIfNeeded(itemId, fetchMode):
             return environment.dataController.getItemDetails(for: nil,
@@ -135,11 +136,11 @@ func appReducer(state: inout AppState,
                                                              exchangeRates: state.rates)
                 .map { _ in AppAction.none }
                 .catchErrors()
-        case .setSelectedItem(let item):
-            state.selectedItem = item
+        case let .setSelectedItem(item, completion):
             if let item = item {
                 ItemCache.default.insert(item: item, settings: state.settings)
             }
+            completion(item)
         case let .addStack(stack):
             environment.dataController.update(stacks: [stack])
         case let .deleteStack(stack):

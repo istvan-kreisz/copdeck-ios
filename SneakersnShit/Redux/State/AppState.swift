@@ -14,7 +14,6 @@ struct AppState: Equatable {
     var feedPosts: PaginatedResult<[FeedPost]> = .init(data: [], isLastPage: false)
     var searchResults: [Item] = []
     var popularItems: [Item] = []
-    var selectedItem: Item?
     var favoritedItems: [Item] = []
     var recentlyViewed: [Item] = []
     var selectedInventoryItem: InventoryItem?
@@ -24,7 +23,6 @@ struct AppState: Equatable {
     var exchangeRates: ExchangeRates?
     var requestInfo: [ScraperRequestInfo] = []
     var profileImageURL: URL?
-    var selectedUserProfile: ProfileData?
     var userSearchResults: [User] = []
 
     var settings: CopDeckSettings {
@@ -56,7 +54,6 @@ struct AppState: Equatable {
         feedPosts = .init(data: [], isLastPage: false)
         didFetchItemPrices = false
         searchResults = []
-        selectedItem = nil
         selectedInventoryItem = nil
         favoritedItems = []
         recentlyViewed = []
