@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @EnvironmentObject var store: AppStore
+    @EnvironmentObject var store: DerivedGlobalStore
     @State private var navigationDestination: NavigationDestination?
 
     @State var profileData: ProfileData
@@ -52,8 +52,10 @@ struct ProfileView: View {
                                                            navigationDestination = stack.map { .stack($0) }
                                                        })
 
-            NavigationLink(destination: Destination(navigationDestination: $navigationDestination, profileData: profileData).navigationbarHidden()) {
-                EmptyView()
+            NavigationLink(destination: Destination(requestInfo: store.globalState.requestInfo,
+                                                    navigationDestination: $navigationDestination,
+                                                    profileData: profileData).navigationbarHidden()) {
+                    EmptyView()
             }
 
             VerticalListView(bottomPadding: 0, spacing: 0, listRowStyling: .none) {
@@ -88,7 +90,7 @@ struct ProfileView: View {
                                            selectedStack: selectedStackBinding,
                                            stack: stack,
                                            inventoryItems: stackItems(in: stack),
-                                           requestInfo: store.state.requestInfo,
+                                           requestInfo: store.globalState.requestInfo,
                                            profileInfo: (profileData.user.name ?? "", profileData.user.imageURL))
                         .buttonStyle(PlainButtonStyle())
                         .padding(.bottom, 4)
@@ -111,7 +113,6 @@ struct ProfileView: View {
         guard let newProfile = newProfile, newProfile.id == profileData.id else { return }
         self.profileData = newProfile
     }
-
 }
 
 extension ProfileView {
@@ -120,7 +121,7 @@ extension ProfileView {
     }
 
     struct Destination: View {
-        @EnvironmentObject var store: AppStore
+        let requestInfo: [ScraperRequestInfo]
         @Binding var navigationDestination: NavigationDestination?
         var profileData: ProfileData
 
@@ -133,12 +134,12 @@ extension ProfileView {
             case let .inventoryItem(inventoryItem):
                 SharedInventoryItemView(user: profileData.user,
                                         inventoryItem: inventoryItem,
-                                        requestInfo: store.state.requestInfo) { navigationDestination = nil }
+                                        requestInfo: requestInfo) { navigationDestination = nil }
             case let .stack(stack):
                 SharedStackDetailView(user: profileData.user,
                                       stack: stack,
                                       inventoryItems: stackItems(in: stack),
-                                      requestInfo: store.state.requestInfo) { navigationDestination = nil }
+                                      requestInfo: requestInfo) { navigationDestination = nil }
             case .none:
                 EmptyView()
             }

@@ -178,7 +178,7 @@ extension SearchView {
                 ItemDetailView(item: item,
                                itemId: item.id,
                                favoritedItemIds: store.state.favoritedItems.map(\.id)) { setNavigationDestination(nil) }
-                    .environmentObject(store.appStore)
+                    .environmentObject(AppStore.default)
             case let .profile(profileData):
                 ProfileView(profileData: profileData) { setNavigationDestination(nil) }
             case .none:

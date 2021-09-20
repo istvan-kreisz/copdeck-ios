@@ -17,6 +17,9 @@ struct CopDeckApp: App {
         WindowGroup {
             RootView()
                 .environmentObject(AppStore.default)
+                .environmentObject(DerivedGlobalStore.default)
+                .environmentObject(SearchStore.default)
+                .environmentObject(FeedStore.default)
         }
         .onChange(of: scenePhase) { phase in
             switch phase {

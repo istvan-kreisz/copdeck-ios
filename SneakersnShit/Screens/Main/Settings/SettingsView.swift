@@ -22,7 +22,7 @@ struct SettingsView: View {
         }
     }
 
-    @EnvironmentObject var store: AppStore
+    @EnvironmentObject var store: DerivedGlobalStore
     @State private var settings: CopDeckSettings
 
     // general

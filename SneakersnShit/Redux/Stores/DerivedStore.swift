@@ -8,26 +8,14 @@
 import Foundation
 import Combine
 
-class DerivedStore<T: Equatable>: ObservableObject {
+class DerivedGlobalStore: ObservableObject {
     let appStore: AppStore
     var effectCancellables: Set<AnyCancellable> = []
-    private let derivedState: (AppState) -> T
-    @Published var state: T
     @Published var globalState: GlobalState
 
-    init(appStore: AppStore, derivedState: @escaping (AppState) -> T) {
+    init(appStore: AppStore) {
         self.appStore = appStore
-        self.state = derivedState(appStore.state)
-        self.derivedState = derivedState
         self.globalState = appStore.state.globalState
-
-        appStore.$state
-            .compactMap { [weak self] in self?.derivedState($0) }
-            .removeDuplicates()
-            .sink { [weak self] state in
-                self?.state = state
-            }
-            .store(in: &effectCancellables)
 
         appStore.$state
             .map(\.globalState)
@@ -43,25 +31,36 @@ class DerivedStore<T: Equatable>: ObservableObject {
     }
 }
 
-typealias SearchStore = DerivedStore<SearchState>
-typealias FeedStore = DerivedStore<FeedState>
+class DerivedStore<T: Equatable>: DerivedGlobalStore {
+    @Published var state: T
+    let derivedState: (AppState) -> T
 
-extension FeedStore {
-    static func initWith(appStore: AppStore) -> FeedStore {
-        FeedStore(appStore: appStore, derivedState: { $0.feedState })
-    }
+    init(appStore: AppStore, derivedState: @escaping (AppState) -> T) {
+        self.state = derivedState(appStore.state)
+        self.derivedState = derivedState
+        super.init(appStore: appStore)
 
-    static func initWith<T>(derivedStore: DerivedStore<T>) -> FeedStore {
-        FeedStore.initWith(appStore: derivedStore.appStore)
+        appStore.$state
+            .compactMap { [weak self] in self?.derivedState($0) }
+            .removeDuplicates()
+            .sink { [weak self] state in
+                self?.state = state
+            }
+            .store(in: &effectCancellables)
     }
 }
 
-extension SearchStore {
-    static func initWith(appStore: AppStore) -> SearchStore {
-        SearchStore(appStore: appStore, derivedState: { $0.searchState })
-    }
+typealias SearchStore = DerivedStore<SearchState>
+typealias FeedStore = DerivedStore<FeedState>
 
-    static func initWith<T>(derivedStore: DerivedStore<T>) -> SearchStore {
-        SearchStore.initWith(appStore: derivedStore.appStore)
-    }
+extension DerivedGlobalStore {
+    static let `default`: DerivedGlobalStore = DerivedGlobalStore(appStore: AppStore.default)
+}
+
+extension FeedStore {
+    static let `default`: FeedStore = FeedStore(appStore: AppStore.default, derivedState: { $0.feedState })
+}
+
+extension SearchStore {
+    static let `default`: SearchStore = SearchStore(appStore: AppStore.default, derivedState: { $0.searchState })
 }

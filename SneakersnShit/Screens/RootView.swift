@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RootView: View {
-    @EnvironmentObject var store: AppStore
+    @EnvironmentObject var store: DerivedGlobalStore
     @State var user: User?
     @StateObject var viewState = ViewState()
 
@@ -21,18 +21,18 @@ struct RootView: View {
     var body: some View {
         let presentErrorAlert = Binding<Bool>(get: { error != nil }, set: { new in error = new ? error : nil })
         ZStack {
-            if store.state.firstLoadDone {
-                if store.state.user?.id.isEmpty ?? true {
+            if store.globalState.firstLoadDone {
+                if store.globalState.user?.id.isEmpty ?? true {
                     LoginView()
-                        .environmentObject(store)
+//                        .environmentObject(store)
                         .zIndex(1)
                 } else {
                     if user?.inited != true {
-                        CountrySelector(settings: store.state.settings)
+                        CountrySelector(settings: store.globalState.settings)
                     } else if user?.settings?.feeCalculation.stockx?.sellerFee == nil {
-                        StockXSellerFeeSelector(settings: store.state.settings)
+                        StockXSellerFeeSelector(settings: store.globalState.settings)
                     } else {
-                        MainContainerView(store: store)
+                        MainContainerView(store: store.appStore)
                             .zIndex(0)
                     }
                 }
@@ -46,16 +46,18 @@ struct RootView: View {
                     .edgesIgnoringSafeArea(.all)
             }
         }
-        .onReceive(store.$state) { state in
+        .onReceive(store.$globalState) { state in
             // user just logged in
             if state.user != nil && user == nil {
                 UIApplication.shared.endEditing()
             } else if state.user == nil {
                 UIApplication.shared.windows.first?.rootViewController?.dismiss(animated: true, completion: nil)
             }
-            user = state.user
+            if user != state.user {
+                user = state.user
+            }
         }
-        .onChange(of: store.state.error) { error in
+        .onChange(of: store.globalState.error) { error in
             if let title = error?.title, let message = error?.message {
                 self.error = (title, message)
             }

@@ -20,27 +20,50 @@ struct FeedState: Equatable {
 }
 
 struct GlobalState: Equatable {
-    var requestInfo: [ScraperRequestInfo] = []
-}
-
-struct AppState: Equatable {
     var user: User?
     var firstLoadDone = false
     var didFetchItemPrices = false
-    var inventoryItems: [InventoryItem] = []
-    var stacks: [Stack] = []
+    var requestInfo: [ScraperRequestInfo] = []
     var error: AppError?
     var exchangeRates: ExchangeRates?
+
+    var settings: CopDeckSettings {
+        user?.settings ?? .default
+    }
+}
+
+struct AppState: Equatable {
+    var inventoryItems: [InventoryItem] = []
+    var stacks: [Stack] = []
     var profileImageURL: URL?
 
     var globalState = GlobalState()
-
     var searchState = SearchState()
     var feedState = FeedState()
 
+    var user: User? {
+        get { globalState.user }
+        set { globalState.user = newValue }
+    }
+    var firstLoadDone: Bool {
+        get { globalState.firstLoadDone }
+        set { globalState.firstLoadDone = newValue }
+    }
+    var didFetchItemPrices: Bool {
+        get { globalState.didFetchItemPrices }
+        set { globalState.didFetchItemPrices = newValue }
+    }
     var requestInfo: [ScraperRequestInfo] {
         get { globalState.requestInfo }
         set { globalState.requestInfo = newValue }
+    }
+    var error: AppError? {
+        get { globalState.error }
+        set { globalState.error = newValue }
+    }
+    var exchangeRates: ExchangeRates? {
+        get { globalState.exchangeRates }
+        set { globalState.exchangeRates = newValue }
     }
 
     var searchResults: [Item] {

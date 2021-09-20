@@ -215,10 +215,10 @@ struct InventoryView: View {
                 switch presentedSheet {
                 case .settings:
                     SettingsView(settings: store.state.settings, isProfilePublic: store.state.user?.isPublic, isPresented: settingsPresented)
-                        .environmentObject(store)
+                        .environmentObject(DerivedGlobalStore.default)
                 case .filters:
                     FiltersModal(settings: store.state.settings, isPresented: showFilters)
-                        .environmentObject(store)
+                        .environmentObject(DerivedGlobalStore.default)
                 case .imagePicker:
                     ImagePickerView(sourceType: .photoLibrary) { image in
                         self.store.send(.main(action: .uploadProfileImage(image: image)))
@@ -323,6 +323,11 @@ extension InventoryView {
             }
         }
     }
+}
+
+struct Navigation<T> {
+    let destination: T
+    let show: Bool
 }
 
 extension InventoryView {

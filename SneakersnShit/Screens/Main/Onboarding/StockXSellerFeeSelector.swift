@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct StockXSellerFeeSelector: View {
-    @EnvironmentObject var store: AppStore
+    @EnvironmentObject var store: DerivedGlobalStore
 
     @State private var settings: CopDeckSettings
     @State private var stockxSellerFee: String

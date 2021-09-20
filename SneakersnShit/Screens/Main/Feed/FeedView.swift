@@ -51,10 +51,14 @@ struct FeedView: View {
                                                            if let feedPost = store.state.feedPosts.data.first(where: { $0.stack.id == stack?.id }) {
                                                                navigationDestination = .feedPost(feedPost)
                                                            } else {
-                                                                navigationDestination = nil
+                                                               navigationDestination = nil
                                                            }
                                                        })
-            NavigationLink(destination: Destination(navigationDestination: $navigationDestination).navigationbarHidden(), isActive: showDetail) { EmptyView() }
+            NavigationLink(destination: Destination(store: store,
+                                                    requestInfo: store.globalState.requestInfo,
+                                                    navigationDestination: $navigationDestination)
+                .navigationbarHidden(),
+                isActive: showDetail) { EmptyView() }
 
             VStack(alignment: .leading, spacing: 19) {
                 Text("Feed")
@@ -132,7 +136,8 @@ extension FeedView {
     }
 
     struct Destination: View {
-        @EnvironmentObject var store: FeedStore
+        var store: FeedStore
+        let requestInfo: [ScraperRequestInfo]
         @Binding var navigationDestination: NavigationDestination?
 
         var feedPosts: [FeedPost] {
@@ -149,7 +154,7 @@ extension FeedView {
                 if let user = user(for: inventoryItem) {
                     SharedInventoryItemView(user: user,
                                             inventoryItem: inventoryItem,
-                                            requestInfo: store.globalState.requestInfo) { navigationDestination = nil }
+                                            requestInfo: requestInfo) { navigationDestination = nil }
                 }
             case let .profile(profile):
                 ProfileView(profileData: profile) { navigationDestination = nil }
@@ -158,7 +163,7 @@ extension FeedView {
                     SharedStackDetailView(user: user,
                                           stack: feedPost.stack,
                                           inventoryItems: feedPost.inventoryItems,
-                                          requestInfo: store.globalState.requestInfo) { navigationDestination = nil }
+                                          requestInfo: requestInfo) { navigationDestination = nil }
                 }
             case .none:
                 EmptyView()

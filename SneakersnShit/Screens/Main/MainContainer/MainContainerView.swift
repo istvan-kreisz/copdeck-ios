@@ -18,11 +18,11 @@ struct MainContainerView: View {
         UITabBarWrapper(selectedIndex: $viewRouter.currentPage) {
             (TabBarElement(tabBarElementItem: .init(title: "First", systemImageName: "house.fill")) {
                 FeedView()
-                    .withTabViewWrapper(viewRouter: viewRouter, store: FeedStore.initWith(appStore: store), shouldShow: $shouldShowTabBar)
+                    .withTabViewWrapper(viewRouter: viewRouter, store: FeedStore.default, shouldShow: $shouldShowTabBar)
             },
             TabBarElement(tabBarElementItem: .init(title: "Second", systemImageName: "pencil.circle.fill")) {
                 SearchView()
-                    .withTabViewWrapper(viewRouter: viewRouter, store: SearchStore.initWith(appStore: store), shouldShow: $shouldShowTabBar)
+                    .withTabViewWrapper(viewRouter: viewRouter, store: SearchStore.default, shouldShow: $shouldShowTabBar)
             },
             TabBarElement(tabBarElementItem: .init(title: "Third", systemImageName: "folder.fill")) {
                 InventoryView(username: store.state.user?.name ?? "",
