@@ -22,7 +22,7 @@ struct StackDetailView: View {
     let saveChanges: ([StackItem]) -> Void
     let deleteStack: () -> Void
 
-    @State var navigationDestination: NavigationDestination?
+    @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
 
     @State var name: String
     @State var caption: String
@@ -51,7 +51,7 @@ struct StackDetailView: View {
     }
 
     var selectedInventoryItem: InventoryItem? {
-        guard case let .inventoryItem(inventoryItem) = navigationDestination else { return nil }
+        guard case let .inventoryItem(inventoryItem) = navigationDestination.destination else { return nil }
         return inventoryItem
     }
 
@@ -99,11 +99,15 @@ struct StackDetailView: View {
     var body: some View {
         let showPopup = Binding<Bool>(get: { popup != nil }, set: { show in popup = show ? popup : nil })
         Group {
-            let showDetail = Binding<Bool>(get: { navigationDestination != nil },
-                                           set: { show in navigationDestination = show ? navigationDestination : nil })
+            let showDetail = Binding<Bool>(get: { navigationDestination.show },
+                                           set: { show in show ? navigationDestination.display() : navigationDestination.hide() })
             let selectedInventoryItemBinding = Binding<InventoryItem?>(get: { selectedInventoryItem },
                                                                        set: { inventoryItem in
-                                                                           navigationDestination = inventoryItem.map { .inventoryItem($0) } ?? nil
+                                                                           if let inventoryItem = inventoryItem {
+                                                                               navigationDestination += .inventoryItem(inventoryItem)
+                                                                           } else {
+                                                                               navigationDestination.hide()
+                                                                           }
                                                                        })
 
             NavigationLink(destination: Destination(navigationDestination: $navigationDestination,
@@ -190,7 +194,7 @@ struct StackDetailView: View {
                                 textColor: .customBlue,
                                 width: 170,
                                 imageName: "plus",
-                                tapped: { navigationDestination = .itemSelector(stack) })
+                                tapped: { navigationDestination += .itemSelector(stack) })
                     .leftAligned()
                     .withDefaultPadding(padding: .horizontal)
                     .buttonStyle(PlainButtonStyle())
@@ -240,29 +244,29 @@ struct StackDetailView: View {
 
 extension StackDetailView {
     enum NavigationDestination {
-        case inventoryItem(InventoryItem), itemSelector(Stack)
+        case inventoryItem(InventoryItem), itemSelector(Stack), empty
     }
 
     struct Destination: View {
         @EnvironmentObject var store: AppStore
-        @Binding var navigationDestination: NavigationDestination?
+        @Binding var navigationDestination: Navigation<NavigationDestination>
         @Binding var inventoryItems: [InventoryItem]
 
         var body: some View {
-            switch navigationDestination {
+            switch navigationDestination.destination {
             case let .inventoryItem(inventoryItem):
-                InventoryItemDetailView(inventoryItem: inventoryItem) { navigationDestination = nil }
+                InventoryItemDetailView(inventoryItem: inventoryItem) { navigationDestination.hide() }
             case let .itemSelector(stack):
                 SelectStackItemsView(stack: stack,
                                      inventoryItems: inventoryItems,
                                      requestInfo: store.state.requestInfo,
-                                     shouldDismiss: { navigationDestination = nil },
+                                     shouldDismiss: { navigationDestination.hide() },
                                      saveChanges: { updatedStackItems in
                                          var updatedStack = stack
                                          updatedStack.items = updatedStackItems
                                          store.send(.main(action: .updateStack(stack: updatedStack)))
                                      })
-            case .none:
+            case .empty:
                 EmptyView()
             }
         }

@@ -10,8 +10,7 @@ import Combine
 
 struct SharedStackDetailView: View {
     private static let profileImageSize: CGFloat = 38
-
-    @State var navigationDestination: NavigationDestination?
+    @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
 
     let user: User
     let stack: Stack
@@ -21,17 +20,21 @@ struct SharedStackDetailView: View {
     let shouldDismiss: () -> Void
 
     var selectedInventoryItem: InventoryItem? {
-        guard case let .inventoryItem(inventoryItem) = navigationDestination else { return nil }
+        guard case let .inventoryItem(inventoryItem) = navigationDestination.destination else { return nil }
         return inventoryItem
     }
 
     var body: some View {
         Group {
-            let showDetail = Binding<Bool>(get: { navigationDestination != nil },
-                                           set: { show in navigationDestination = show ? navigationDestination : nil })
+            let showDetail = Binding<Bool>(get: { navigationDestination.show },
+                                           set: { show in show ? navigationDestination.display() : navigationDestination.hide() })
             let selectedInventoryItemBinding = Binding<InventoryItem?>(get: { selectedInventoryItem },
                                                                        set: { inventoryItem in
-                                                                           navigationDestination = inventoryItem.map { .inventoryItem($0) } ?? nil
+                                                                           if let inventoryItem = inventoryItem {
+                                                                               navigationDestination += .inventoryItem(inventoryItem)
+                                                                           } else {
+                                                                               navigationDestination.hide()
+                                                                           }
                                                                        })
             NavigationLink(destination: Destination(requestInfo: requestInfo,
                                                     user: user,
@@ -84,21 +87,21 @@ struct SharedStackDetailView: View {
 
 extension SharedStackDetailView {
     enum NavigationDestination {
-        case inventoryItem(InventoryItem)
+        case inventoryItem(InventoryItem), empty
     }
 
     struct Destination: View {
         let requestInfo: [ScraperRequestInfo]
         let user: User
-        @Binding var navigationDestination: NavigationDestination?
+        @Binding var navigationDestination: Navigation<NavigationDestination>
 
         var body: some View {
-            switch navigationDestination {
+            switch navigationDestination.destination {
             case let .inventoryItem(inventoryItem):
                 SharedInventoryItemView(user: user,
                                         inventoryItem: inventoryItem,
-                                        requestInfo: requestInfo) { navigationDestination = nil }
-            case .none:
+                                        requestInfo: requestInfo) { navigationDestination.hide() }
+            case .empty:
                 EmptyView()
             }
         }

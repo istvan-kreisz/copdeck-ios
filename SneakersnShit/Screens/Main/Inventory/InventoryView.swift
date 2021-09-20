@@ -14,7 +14,7 @@ struct InventoryView: View {
     }
 
     @EnvironmentObject var store: AppStore
-    @State private var navigationDestination: NavigationDestination?
+    @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
 
     @State private var searchText = ""
     @State private var isEditing = false
@@ -54,12 +54,12 @@ struct InventoryView: View {
     }
 
     var editedStack: Stack? {
-        guard case let .stack(stack) = navigationDestination else { return nil }
+        guard case let .stack(stack) = navigationDestination.destination else { return nil }
         return stack
     }
 
     var selectedInventoryItem: InventoryItem? {
-        guard case let .inventoryItem(inventoryItem) = navigationDestination else { return nil }
+        guard case let .inventoryItem(inventoryItem) = navigationDestination.destination else { return nil }
         return inventoryItem
     }
 
@@ -101,8 +101,8 @@ struct InventoryView: View {
     }
 
     var body: some View {
-        let showDetail = Binding<Bool>(get: { navigationDestination != nil },
-                                       set: { show in navigationDestination = show ? navigationDestination : nil })
+        let showDetail = Binding<Bool>(get: { navigationDestination.show },
+                                       set: { show in show ? navigationDestination.display() : navigationDestination.hide() })
         let showSharePopup = Binding<Bool>(get: { sharedStack != nil },
                                            set: { sharedStack = $0 ? sharedStack : nil })
         let showPopup = Binding<Bool>(get: { popup != nil }, set: { show in popup = show ? popup : nil })
@@ -112,7 +112,11 @@ struct InventoryView: View {
         let showFilters = Binding<Bool>(get: { presentedSheet == .filters }, set: { show in presentedSheet = show ? presentedSheet : nil })
         let selectedInventoryItemBinding = Binding<InventoryItem?>(get: { selectedInventoryItem },
                                                                    set: { inventoryItem in
-                                                                       navigationDestination = inventoryItem.map { .inventoryItem($0) } ?? nil
+                                                                       if let inventoryItem = inventoryItem {
+                                                                           navigationDestination += .inventoryItem(inventoryItem)
+                                                                       } else {
+                                                                           navigationDestination.hide()
+                                                                       }
                                                                    })
 
         Group {
@@ -165,7 +169,7 @@ struct InventoryView: View {
                               itemSelectorStack: $itemSelectorStack,
                               requestInfo: store.state.requestInfo,
                               didTapEditStack: stack.id == "all" ? nil : {
-                                  navigationDestination = .stack(stack)
+                                navigationDestination += .stack(stack)
                               }, didTapShareStack: stack.id == "all" ? nil : {
                                   sharedStack = stack
                               })
@@ -192,9 +196,9 @@ struct InventoryView: View {
                 if let updatedEditedStack = stacks.first(where: { $0.id == editedStack?.id }) {
                     if editedStack != updatedEditedStack {
                         if let stack = editedStack {
-                            navigationDestination = .stack(stack)
+                            navigationDestination += .stack(stack)
                         } else {
-                            navigationDestination = nil
+                            navigationDestination.hide()
                         }
                     }
                 }
@@ -325,33 +329,28 @@ extension InventoryView {
     }
 }
 
-struct Navigation<T> {
-    let destination: T
-    let show: Bool
-}
-
 extension InventoryView {
     enum NavigationDestination {
-        case inventoryItem(InventoryItem), stack(Stack), selectStackItems
+        case inventoryItem(InventoryItem), stack(Stack), selectStackItems, empty
     }
 
     struct Destination: View {
         @EnvironmentObject var store: AppStore
-        @Binding var navigationDestination: NavigationDestination?
+        @Binding var navigationDestination: Navigation<NavigationDestination>
         @Binding var bestPrices: [String: PriceWithCurrency]
         @Binding var itemSelectorStack: Stack?
 
         var editedStack: Stack? {
-            guard case let .stack(stack) = navigationDestination else { return nil }
+            guard case let .stack(stack) = navigationDestination.destination else { return nil }
             return stack
         }
 
         var body: some View {
             let filters = Binding<Filters>(get: { store.state.settings.filters }, set: { _ in })
 
-            switch navigationDestination {
+            switch navigationDestination.destination {
             case let .inventoryItem(inventoryItem):
-                InventoryItemDetailView(inventoryItem: inventoryItem) { navigationDestination = nil }
+                InventoryItemDetailView(inventoryItem: inventoryItem) { navigationDestination.hide() }
             case let .stack(stack):
                 StackDetailView(stack: .constant(stack),
                                 inventoryItems: $store.state.inventoryItems,
@@ -359,14 +358,14 @@ extension InventoryView {
                                 filters: filters,
                                 linkURL: editedStack?.linkURL(userId: store.state.user?.id ?? "") ?? "",
                                 requestInfo: store.state.requestInfo,
-                                shouldDismiss: { navigationDestination = nil },
+                                shouldDismiss: { navigationDestination.hide() },
                                 saveChanges: { updatedStackItems in
                                     if var updatedStack = editedStack {
                                         updatedStack.items = updatedStackItems
                                         store.send(.main(action: .updateStack(stack: updatedStack)))
                                     }
                                 }, deleteStack: {
-                                    navigationDestination = nil
+                                    navigationDestination.hide()
                                     if let editedStack = editedStack {
                                         store.send(.main(action: .deleteStack(stack: editedStack)))
                                     }
@@ -375,14 +374,14 @@ extension InventoryView {
                 SelectStackItemsView(stack: itemSelectorStack ?? Stack.empty,
                                      inventoryItems: store.state.inventoryItems,
                                      requestInfo: store.state.requestInfo,
-                                     shouldDismiss: { navigationDestination = nil },
+                                     shouldDismiss: { navigationDestination.hide() },
                                      saveChanges: { updatedStackItems in
                                          if var updatedStack = itemSelectorStack {
                                              updatedStack.items = updatedStackItems
                                              store.send(.main(action: .updateStack(stack: updatedStack)))
                                          }
                                      })
-            case .none:
+            case .empty:
                 EmptyView()
             }
         }

@@ -10,19 +10,19 @@ import Combine
 
 struct FeedView: View {
     @EnvironmentObject var store: FeedStore
-    @State private var navigationDestination: NavigationDestination?
+    @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
 
     @State private var isFirstLoad = true
 
     @StateObject private var loader = Loader()
 
     var selectedInventoryItem: InventoryItem? {
-        guard case let .inventoryItem(inventoryItem) = navigationDestination else { return nil }
+        guard case let .inventoryItem(inventoryItem) = navigationDestination.destination else { return nil }
         return inventoryItem
     }
 
     var selectedStack: Stack? {
-        guard case let .feedPost(feedPost) = navigationDestination else { return nil }
+        guard case let .feedPost(feedPost) = navigationDestination.destination else { return nil }
         return feedPost.stack
     }
 
@@ -40,24 +40,28 @@ struct FeedView: View {
 
     var body: some View {
         Group {
-            let showDetail = Binding<Bool>(get: { navigationDestination != nil },
-                                           set: { show in navigationDestination = show ? navigationDestination : nil })
+            let showDetail = Binding<Bool>(get: { navigationDestination.show },
+                                           set: { show in show ? navigationDestination.display() : navigationDestination.hide() })
             let selectedInventoryItemBinding = Binding<InventoryItem?>(get: { selectedInventoryItem },
                                                                        set: { inventoryItem in
-                                                                           navigationDestination = inventoryItem.map { .inventoryItem($0) } ?? nil
+                                                                           if let inventoryItem = inventoryItem {
+                                                                               navigationDestination += .inventoryItem(inventoryItem)
+                                                                           } else {
+                                                                               navigationDestination.hide()
+                                                                           }
                                                                        })
             let selectedStackBinding = Binding<Stack?>(get: { selectedStack },
                                                        set: { stack in
                                                            if let feedPost = store.state.feedPosts.data.first(where: { $0.stack.id == stack?.id }) {
-                                                               navigationDestination = .feedPost(feedPost)
+                                                               navigationDestination += .feedPost(feedPost)
                                                            } else {
-                                                               navigationDestination = nil
+                                                            navigationDestination.hide()
                                                            }
                                                        })
             NavigationLink(destination: Destination(store: store,
                                                     requestInfo: store.globalState.requestInfo,
                                                     navigationDestination: $navigationDestination)
-                .navigationbarHidden(),
+                    .navigationbarHidden(),
                 isActive: showDetail) { EmptyView() }
 
             VStack(alignment: .leading, spacing: 19) {
@@ -88,7 +92,7 @@ struct FeedView: View {
                                                    requestInfo: store.globalState.requestInfo,
                                                    profileInfo: (user.name ?? "", user.imageURL)) {
                                     if let profileData = feedPostData.profileData {
-                                        navigationDestination = .profile(profileData)
+                                        navigationDestination += .profile(profileData)
                                     }
                             }
                             .buttonStyle(PlainButtonStyle())
@@ -132,13 +136,13 @@ struct FeedView: View {
 
 extension FeedView {
     enum NavigationDestination {
-        case inventoryItem(InventoryItem), profile(ProfileData), feedPost(FeedPost)
+        case inventoryItem(InventoryItem), profile(ProfileData), feedPost(FeedPost), empty
     }
 
     struct Destination: View {
         var store: FeedStore
         let requestInfo: [ScraperRequestInfo]
-        @Binding var navigationDestination: NavigationDestination?
+        @Binding var navigationDestination: Navigation<NavigationDestination>
 
         var feedPosts: [FeedPost] {
             store.state.feedPosts.data
@@ -149,23 +153,23 @@ extension FeedView {
         }
 
         var body: some View {
-            switch navigationDestination {
+            switch navigationDestination.destination {
             case let .inventoryItem(inventoryItem):
                 if let user = user(for: inventoryItem) {
                     SharedInventoryItemView(user: user,
                                             inventoryItem: inventoryItem,
-                                            requestInfo: requestInfo) { navigationDestination = nil }
+                                            requestInfo: requestInfo) { navigationDestination.hide() }
                 }
             case let .profile(profile):
-                ProfileView(profileData: profile) { navigationDestination = nil }
+                ProfileView(profileData: profile) { navigationDestination.hide() }
             case let .feedPost(feedPost):
                 if let user = feedPost.user {
                     SharedStackDetailView(user: user,
                                           stack: feedPost.stack,
                                           inventoryItems: feedPost.inventoryItems,
-                                          requestInfo: requestInfo) { navigationDestination = nil }
+                                          requestInfo: requestInfo) { navigationDestination.hide() }
                 }
-            case .none:
+            case .empty:
                 EmptyView()
             }
         }

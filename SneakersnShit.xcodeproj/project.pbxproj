@@ -92,6 +92,7 @@
 		5D84875526E2E220006062DC /* PullToRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D84875426E2E220006062DC /* PullToRefresh.swift */; };
 		5D84875826E3BF60006062DC /* PaginatedResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D84875726E3BF60006062DC /* PaginatedResult.swift */; };
 		5D88261526F8A42D0006031D /* DerivedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D88261426F8A42D0006031D /* DerivedStore.swift */; };
+		5D88261726F8DCD20006031D /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D88261626F8DCD20006031D /* Navigation.swift */; };
 		5D8ABBBA26B0B51200AFD8CF /* Snackbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ABBB926B0B51200AFD8CF /* Snackbar.swift */; };
 		5D8ABBBF26B1C82500AFD8CF /* ScraperRequestInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ABBBE26B1C82500AFD8CF /* ScraperRequestInfo.swift */; };
 		5D8ABBC126B1D2E100AFD8CF /* ItemImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ABBC026B1D2E100AFD8CF /* ItemImageView.swift */; };
@@ -260,6 +261,7 @@
 		5D84875426E2E220006062DC /* PullToRefresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PullToRefresh.swift; sourceTree = "<group>"; };
 		5D84875726E3BF60006062DC /* PaginatedResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginatedResult.swift; sourceTree = "<group>"; };
 		5D88261426F8A42D0006031D /* DerivedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DerivedStore.swift; sourceTree = "<group>"; };
+		5D88261626F8DCD20006031D /* Navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
 		5D8ABBB926B0B51200AFD8CF /* Snackbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snackbar.swift; sourceTree = "<group>"; };
 		5D8ABBBB26B0DF4900AFD8CF /* SneakersnShit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SneakersnShit.entitlements; sourceTree = "<group>"; };
 		5D8ABBBE26B1C82500AFD8CF /* ScraperRequestInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScraperRequestInfo.swift; sourceTree = "<group>"; };
@@ -809,6 +811,7 @@
 				5DDEFDCB26D14095001B0F76 /* Filters.swift */,
 				5D9DFB0026D978F9005A575D /* ProfileData.swift */,
 				5DE4F22126E0FD790087077A /* FeedPostData.swift */,
+				5D88261626F8DCD20006031D /* Navigation.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1281,6 +1284,7 @@
 				5D9DFB0126D978F9005A575D /* ProfileData.swift in Sources */,
 				5D19B0AC26A6D76600A31F4E /* ErrorAction.swift in Sources */,
 				5DC2C105269E2BD800674756 /* View+Extensions.swift in Sources */,
+				5D88261726F8DCD20006031D /* Navigation.swift in Sources */,
 				5D90EDCC26DE6C66005AEA30 /* FireStoreListener.swift in Sources */,
 				5DDEFDC126CEE16F001B0F76 /* ListSelectorMenu.swift in Sources */,
 				5DDEFDCF26D2ADC2001B0F76 /* EnumCodable.swift in Sources */,

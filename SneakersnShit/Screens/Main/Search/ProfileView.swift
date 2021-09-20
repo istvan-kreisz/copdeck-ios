@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ProfileView: View {
     @EnvironmentObject var store: DerivedGlobalStore
-    @State private var navigationDestination: NavigationDestination?
+    @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
 
     @State var profileData: ProfileData
     @State private var isFirstLoad = true
@@ -28,12 +28,12 @@ struct ProfileView: View {
     }
 
     var selectedInventoryItem: InventoryItem? {
-        guard case let .inventoryItem(inventoryItem) = navigationDestination else { return nil }
+        guard case let .inventoryItem(inventoryItem) = navigationDestination.destination else { return nil }
         return inventoryItem
     }
 
     var selectedStack: Stack? {
-        guard case let .stack(stack) = navigationDestination else { return nil }
+        guard case let .stack(stack) = navigationDestination.destination else { return nil }
         return stack
     }
 
@@ -45,11 +45,19 @@ struct ProfileView: View {
         Group {
             let selectedInventoryItemBinding = Binding<InventoryItem?>(get: { selectedInventoryItem },
                                                                        set: { inventoryItem in
-                                                                           navigationDestination = inventoryItem.map { .inventoryItem($0) } ?? nil
+                                                                           if let inventoryItem = inventoryItem {
+                                                                               navigationDestination += .inventoryItem(inventoryItem)
+                                                                           } else {
+                                                                               navigationDestination.hide()
+                                                                           }
                                                                        })
             let selectedStackBinding = Binding<Stack?>(get: { selectedStack },
                                                        set: { stack in
-                                                           navigationDestination = stack.map { .stack($0) }
+                                                           if let stack = stack {
+                                                               navigationDestination += .stack(stack)
+                                                           } else {
+                                                               navigationDestination.hide()
+                                                           }
                                                        })
 
             NavigationLink(destination: Destination(requestInfo: store.globalState.requestInfo,
@@ -117,12 +125,12 @@ struct ProfileView: View {
 
 extension ProfileView {
     enum NavigationDestination {
-        case inventoryItem(InventoryItem), stack(Stack)
+        case inventoryItem(InventoryItem), stack(Stack), empty
     }
 
     struct Destination: View {
         let requestInfo: [ScraperRequestInfo]
-        @Binding var navigationDestination: NavigationDestination?
+        @Binding var navigationDestination: Navigation<NavigationDestination>
         var profileData: ProfileData
 
         func stackItems(in stack: Stack) -> [InventoryItem] {
@@ -130,17 +138,17 @@ extension ProfileView {
         }
 
         var body: some View {
-            switch navigationDestination {
+            switch navigationDestination.destination {
             case let .inventoryItem(inventoryItem):
                 SharedInventoryItemView(user: profileData.user,
                                         inventoryItem: inventoryItem,
-                                        requestInfo: requestInfo) { navigationDestination = nil }
+                                        requestInfo: requestInfo) { navigationDestination.hide() }
             case let .stack(stack):
                 SharedStackDetailView(user: profileData.user,
                                       stack: stack,
                                       inventoryItems: stackItems(in: stack),
-                                      requestInfo: requestInfo) { navigationDestination = nil }
-            case .none:
+                                      requestInfo: requestInfo) { navigationDestination.hide() }
+            case .empty:
                 EmptyView()
             }
         }

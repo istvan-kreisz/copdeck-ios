@@ -19,20 +19,15 @@ struct SearchView: View {
 
     @State private var selectedTabIndex = 0
 
-    @State private var navigationDestination: NavigationDestination?
-
-    private func setNavigationDestination(_ navigationDestination: NavigationDestination?) {
-        guard self.navigationDestination != navigationDestination else { return }
-        self.navigationDestination = navigationDestination
-    }
+    @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
 
     var selectedItem: Item? {
-        guard case let .itemDetail(item) = navigationDestination else { return nil }
+        guard case let .itemDetail(item) = navigationDestination.destination else { return nil }
         return item
     }
 
     var selectedUser: ProfileData? {
-        guard case let .profile(profile) = navigationDestination else { return nil }
+        guard case let .profile(profile) = navigationDestination.destination else { return nil }
         return profile
     }
 
@@ -59,17 +54,28 @@ struct SearchView: View {
 
     var body: some View {
         Group {
-            let showDetail = Binding<Bool>(get: { navigationDestination != nil },
-                                           set: { show in setNavigationDestination(show ? navigationDestination : nil) })
+            let showDetail = Binding<Bool>(get: { navigationDestination.show },
+                                           set: { show in show ? navigationDestination.display() : navigationDestination.hide() })
             let selectedItemBinding = Binding<Item?>(get: { selectedItem },
-                                                     set: { item in setNavigationDestination(item.map { .itemDetail($0) } ?? nil) })
+                                                     set: { item in
+                                                         if let item = item {
+                                                             navigationDestination += .itemDetail(item)
+                                                         } else {
+                                                             navigationDestination.hide()
+                                                         }
+                                                     })
             let selectedUserBinding = Binding<ProfileData?>(get: { selectedUser },
-                                                            set: { profile in navigationDestination = profile.map { .profile($0) } ?? nil })
+                                                            set: { profile in
+                                                                if let profile = profile {
+                                                                    navigationDestination += .profile(profile)
+                                                                } else {
+                                                                    navigationDestination.hide()
+                                                                }
+                                                            })
             NavigationLink(destination: Destination(store: store,
                                                     popularItems: $store.state.popularItems,
                                                     favoritedItems: $store.state.favoritedItems,
-                                                    navigationDestination: $navigationDestination,
-                                                    setNavigationDestination: setNavigationDestination)
+                                                    navigationDestination: $navigationDestination)
                     .navigationbarHidden(),
                 isActive: showDetail) { EmptyView() }
 
@@ -102,14 +108,14 @@ struct SearchView: View {
                                                   isLoading: $popularItemsLoader.isLoading,
                                                   title: "Trending now",
                                                   requestInfo: store.globalState.requestInfo,
-                                                  style: .round) { setNavigationDestination(.popularItems) }
+                                                  style: .round) { navigationDestination += .popularItems }
 
                             HorizontaltemListView(items: $store.state.favoritedItems,
                                                   selectedItem: selectedItemBinding,
                                                   isLoading: .constant(false),
                                                   title: "Your favorites",
                                                   requestInfo: store.globalState.requestInfo,
-                                                  style: .square(.customRed)) { setNavigationDestination(.favoritedItems) }
+                                                  style: .square(.customRed)) { navigationDestination += .favoritedItems }
 
                             HorizontaltemListView(items: $store.state.recentlyViewed,
                                                   selectedItem: selectedItemBinding,
@@ -154,18 +160,17 @@ struct SearchView: View {
 
 extension SearchView {
     enum NavigationDestination: Equatable {
-        case popularItems, favoritedItems, itemDetail(Item), profile(ProfileData)
+        case popularItems, favoritedItems, itemDetail(Item), profile(ProfileData), empty
     }
 
     struct Destination: View {
         var store: SearchStore
         @Binding var popularItems: [Item]
         @Binding var favoritedItems: [Item]
-        @Binding var navigationDestination: NavigationDestination?
-        var setNavigationDestination: (_ navigationDestination: NavigationDestination?) -> Void
+        @Binding var navigationDestination: Navigation<NavigationDestination>
 
         var body: some View {
-            switch navigationDestination {
+            switch navigationDestination.destination {
             case .popularItems:
                 PopularItemsListView(items: $popularItems,
                                      requestInfo: store.globalState.requestInfo,
@@ -177,11 +182,11 @@ extension SearchView {
             case let .itemDetail(item):
                 ItemDetailView(item: item,
                                itemId: item.id,
-                               favoritedItemIds: store.state.favoritedItems.map(\.id)) { setNavigationDestination(nil) }
+                               favoritedItemIds: store.state.favoritedItems.map(\.id)) { navigationDestination.hide() }
                     .environmentObject(AppStore.default)
             case let .profile(profileData):
-                ProfileView(profileData: profileData) { setNavigationDestination(nil) }
-            case .none:
+                ProfileView(profileData: profileData) { navigationDestination.hide() }
+            case .empty:
                 EmptyView()
             }
         }
