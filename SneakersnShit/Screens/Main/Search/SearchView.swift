@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct SearchView: View {
-    @EnvironmentObject var store: AppStore
+    @EnvironmentObject var store: SearchStore
 
     @State private var searchText = ""
 
@@ -20,6 +20,11 @@ struct SearchView: View {
     @State private var selectedTabIndex = 0
 
     @State private var navigationDestination: NavigationDestination?
+
+    private func setNavigationDestination(_ navigationDestination: NavigationDestination?) {
+        guard self.navigationDestination != navigationDestination else { return }
+        self.navigationDestination = navigationDestination
+    }
 
     var selectedItem: Item? {
         guard case let .itemDetail(item) = navigationDestination else { return nil }
@@ -55,12 +60,18 @@ struct SearchView: View {
     var body: some View {
         Group {
             let showDetail = Binding<Bool>(get: { navigationDestination != nil },
-                                           set: { show in navigationDestination = show ? navigationDestination : nil })
+                                           set: { show in setNavigationDestination(show ? navigationDestination : nil) })
             let selectedItemBinding = Binding<Item?>(get: { selectedItem },
-                                                     set: { item in navigationDestination = item.map { .itemDetail($0) } ?? nil })
+                                                     set: { item in setNavigationDestination(item.map { .itemDetail($0) } ?? nil) })
             let selectedUserBinding = Binding<ProfileData?>(get: { selectedUser },
                                                             set: { profile in navigationDestination = profile.map { .profile($0) } ?? nil })
-            NavigationLink(destination: Destination(navigationDestination: $navigationDestination).navigationbarHidden(), isActive: showDetail) { EmptyView() }
+            NavigationLink(destination: Destination(store: store,
+                                                    popularItems: $store.state.popularItems,
+                                                    favoritedItems: $store.state.favoritedItems,
+                                                    navigationDestination: $navigationDestination,
+                                                    setNavigationDestination: setNavigationDestination)
+                    .navigationbarHidden(),
+                isActive: showDetail) { EmptyView() }
 
             VStack(alignment: .leading, spacing: 19) {
                 Text("Search")
@@ -90,21 +101,21 @@ struct SearchView: View {
                                                   selectedItem: selectedItemBinding,
                                                   isLoading: $popularItemsLoader.isLoading,
                                                   title: "Trending now",
-                                                  requestInfo: store.state.requestInfo,
-                                                  style: .round) { navigationDestination = .popularItems }
+                                                  requestInfo: store.globalState.requestInfo,
+                                                  style: .round) { setNavigationDestination(.popularItems) }
 
                             HorizontaltemListView(items: $store.state.favoritedItems,
                                                   selectedItem: selectedItemBinding,
                                                   isLoading: .constant(false),
                                                   title: "Your favorites",
-                                                  requestInfo: store.state.requestInfo,
-                                                  style: .square(.customRed)) { navigationDestination = .favoritedItems }
+                                                  requestInfo: store.globalState.requestInfo,
+                                                  style: .square(.customRed)) { setNavigationDestination(.favoritedItems) }
 
                             HorizontaltemListView(items: $store.state.recentlyViewed,
                                                   selectedItem: selectedItemBinding,
                                                   isLoading: .constant(false),
                                                   title: "Recently viewed",
-                                                  requestInfo: store.state.requestInfo,
+                                                  requestInfo: store.globalState.requestInfo,
                                                   sortedBy: .created,
                                                   style: .square(.clear))
                             Spacer()
@@ -116,7 +127,7 @@ struct SearchView: View {
                                              title: nil,
                                              resultsLabelText: nil,
                                              bottomPadding: Styles.tabScreenBottomPadding,
-                                             requestInfo: store.state.requestInfo)
+                                             requestInfo: store.globalState.requestInfo)
                     }
                 } else {
                     VerticalProfileListView(profiles: $store.state.userSearchResults.asProfiles,
@@ -142,30 +153,34 @@ struct SearchView: View {
 }
 
 extension SearchView {
-    enum NavigationDestination {
+    enum NavigationDestination: Equatable {
         case popularItems, favoritedItems, itemDetail(Item), profile(ProfileData)
     }
 
     struct Destination: View {
-        @EnvironmentObject var store: AppStore
+        var store: SearchStore
+        @Binding var popularItems: [Item]
+        @Binding var favoritedItems: [Item]
         @Binding var navigationDestination: NavigationDestination?
+        var setNavigationDestination: (_ navigationDestination: NavigationDestination?) -> Void
 
         var body: some View {
             switch navigationDestination {
             case .popularItems:
-                PopularItemsListView(items: $store.state.popularItems,
-                                     requestInfo: store.state.requestInfo,
+                PopularItemsListView(items: $popularItems,
+                                     requestInfo: store.globalState.requestInfo,
                                      favoritedItemIds: store.state.favoritedItems.map(\.id))
             case .favoritedItems:
-                PopularItemsListView(items: $store.state.favoritedItems,
-                                     requestInfo: store.state.requestInfo,
+                PopularItemsListView(items: $favoritedItems,
+                                     requestInfo: store.globalState.requestInfo,
                                      favoritedItemIds: store.state.favoritedItems.map(\.id))
             case let .itemDetail(item):
                 ItemDetailView(item: item,
                                itemId: item.id,
-                               favoritedItemIds: store.state.favoritedItems.map(\.id)) { navigationDestination = nil }
+                               favoritedItemIds: store.state.favoritedItems.map(\.id)) { setNavigationDestination(nil) }
+                    .environmentObject(store.appStore)
             case let .profile(profileData):
-                ProfileView(profileData: profileData) { navigationDestination = nil }
+                ProfileView(profileData: profileData) { setNavigationDestination(nil) }
             case .none:
                 EmptyView()
             }

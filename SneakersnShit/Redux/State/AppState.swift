@@ -7,23 +7,66 @@
 
 import Foundation
 
-struct AppState: Equatable {
-    var user: User?
-    var firstLoadDone = false
-    var didFetchItemPrices = false
-    var feedPosts: PaginatedResult<[FeedPost]> = .init(data: [], isLastPage: false)
+struct SearchState: Equatable {
     var searchResults: [Item] = []
     var popularItems: [Item] = []
     var favoritedItems: [Item] = []
     var recentlyViewed: [Item] = []
-    var selectedInventoryItem: InventoryItem?
+    var userSearchResults: [User] = []
+}
+
+struct FeedState: Equatable {
+    var feedPosts: PaginatedResult<[FeedPost]> = .init(data: [], isLastPage: false)
+}
+
+struct GlobalState: Equatable {
+    var requestInfo: [ScraperRequestInfo] = []
+}
+
+struct AppState: Equatable {
+    var user: User?
+    var firstLoadDone = false
+    var didFetchItemPrices = false
     var inventoryItems: [InventoryItem] = []
     var stacks: [Stack] = []
     var error: AppError?
     var exchangeRates: ExchangeRates?
-    var requestInfo: [ScraperRequestInfo] = []
     var profileImageURL: URL?
-    var userSearchResults: [User] = []
+
+    var globalState = GlobalState()
+
+    var searchState = SearchState()
+    var feedState = FeedState()
+
+    var requestInfo: [ScraperRequestInfo] {
+        get { globalState.requestInfo }
+        set { globalState.requestInfo = newValue }
+    }
+
+    var searchResults: [Item] {
+        get { searchState.searchResults }
+        set { searchState.searchResults = newValue }
+    }
+    var popularItems: [Item] {
+        get { searchState.popularItems }
+        set { searchState.popularItems = newValue }
+    }
+    var favoritedItems: [Item] {
+        get { searchState.favoritedItems }
+        set { searchState.favoritedItems = newValue }
+    }
+    var recentlyViewed: [Item] {
+        get { searchState.recentlyViewed }
+        set { searchState.recentlyViewed = newValue }
+    }
+    var userSearchResults: [User] {
+        get { searchState.userSearchResults }
+        set { searchState.userSearchResults = newValue }
+    }
+    var feedPosts: PaginatedResult<[FeedPost]> {
+        get { feedState.feedPosts }
+        set { feedState.feedPosts = newValue }
+    }
 
     var settings: CopDeckSettings {
         user?.settings ?? .default
@@ -50,16 +93,12 @@ struct AppState: Equatable {
     }
 
     mutating func reset() {
+        searchState = SearchState()
+        feedState = FeedState()
         user = nil
-        feedPosts = .init(data: [], isLastPage: false)
         didFetchItemPrices = false
-        searchResults = []
-        selectedInventoryItem = nil
-        favoritedItems = []
-        recentlyViewed = []
         inventoryItems = []
         stacks = []
         error = nil
-        requestInfo = []
     }
 }

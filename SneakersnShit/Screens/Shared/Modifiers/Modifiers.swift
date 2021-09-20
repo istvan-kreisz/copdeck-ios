@@ -116,13 +116,13 @@ struct BottomAligned: ViewModifier {
     }
 }
 
-struct WrappedTabView: ViewModifier {
+struct WrappedTabView<S: ObservableObject>: ViewModifier {
     @ObservedObject var viewRouter: ViewRouter
-    let store: AppStore
+    let store: S
     let backgroundColor: Color
     @Binding var shouldShow: Bool
 
-    init(viewRouter: ViewRouter, store: AppStore, backgroundColor: Color, shouldShow: Binding<Bool> = .constant(true)) {
+    init(viewRouter: ViewRouter, store: S, backgroundColor: Color, shouldShow: Binding<Bool> = .constant(true)) {
         self.viewRouter = viewRouter
         self.store = store
         self.backgroundColor = backgroundColor

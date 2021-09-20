@@ -111,9 +111,9 @@ struct InventoryView: View {
         let showImagePicker = Binding<Bool>(get: { presentedSheet == .imagePicker }, set: { show in presentedSheet = show ? presentedSheet : nil })
         let showFilters = Binding<Bool>(get: { presentedSheet == .filters }, set: { show in presentedSheet = show ? presentedSheet : nil })
         let selectedInventoryItemBinding = Binding<InventoryItem?>(get: { selectedInventoryItem },
-                                                            set: { inventoryItem in
-                                                                navigationDestination = inventoryItem.map { .inventoryItem($0) } ?? nil
-                                                            })
+                                                                   set: { inventoryItem in
+                                                                       navigationDestination = inventoryItem.map { .inventoryItem($0) } ?? nil
+                                                                   })
 
         Group {
             let stackTitles = Binding<[String]>(get: { stacks.map { (stack: Stack) in stack.name } }, set: { _ in })

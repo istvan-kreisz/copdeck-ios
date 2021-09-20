@@ -95,10 +95,10 @@ extension View {
         ModifiedContent(content: self, modifier: WithBackgroundColor(color, ignoringSafeArea: edges))
     }
 
-    func withTabViewWrapper(viewRouter: ViewRouter,
-                            store: AppStore,
-                            backgroundColor: Color = .customBackground,
-                            shouldShow: Binding<Bool> = .constant(true)) -> some View {
+    func withTabViewWrapper<S: ObservableObject>(viewRouter: ViewRouter,
+                                                 store: S,
+                                                 backgroundColor: Color = .customBackground,
+                                                 shouldShow: Binding<Bool> = .constant(true)) -> some View {
         ModifiedContent(content: self, modifier: WrappedTabView(viewRouter: viewRouter, store: store, backgroundColor: backgroundColor, shouldShow: shouldShow))
     }
 
@@ -137,3 +137,14 @@ extension View {
         ModifiedContent(content: self, modifier: WithTellTip(text: text, didTap: didTap))
     }
 }
+
+ #if DEBUG
+private let rainbowDebugColors = [Color.purple, Color.blue, Color.green, Color.yellow, Color.orange, Color.red]
+
+extension View {
+    func rainbowDebug() -> some View {
+        self.background(rainbowDebugColors.randomElement()!)
+    }
+}
+
+ #endif

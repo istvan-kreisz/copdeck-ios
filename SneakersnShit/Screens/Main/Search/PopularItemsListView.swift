@@ -12,7 +12,6 @@ struct PopularItemsListView: View {
     @Environment(\.presentationMode) var presentationMode
     @Binding var items: [Item]
 
-
     let requestInfo: [ScraperRequestInfo]
     let favoritedItemIds: [String]
 

@@ -43,33 +43,3 @@ final class ReduxStore<State, Action: Identifiable, Environment>: ObservableObje
             .store(in: &effectCancellables)
     }
 }
-
-protocol RStore: ObservableObject {
-    associatedtype Action
-    associatedtype State
-    func send(_ action: Action, completed: ((Result<Void, AppError>) -> Void)?)
-    var state: State { get }
-}
-
-class SearchStore: ObservableObject {
-    let appStore: AppStore
-    @Published var searchResults: [Item]?
-    var effectCancellables: Set<AnyCancellable> = []
-
-    init(appStore: AppStore) {
-        self.appStore = appStore
-        self.searchResults = appStore.state.searchResults
-
-        appStore.$state
-            .map(\.searchResults)
-            .removeDuplicates()
-            .sink { [weak self] items in
-                self?.searchResults = items
-            }
-            .store(in: &effectCancellables)
-    }
-
-    func send(_ action: AppAction, debounceDelayMs: Int, completed: ((Result<Void, AppError>) -> Void)? = nil) {
-        appStore.send(action, debounceDelayMs: debounceDelayMs, completed: completed)
-    }
-}

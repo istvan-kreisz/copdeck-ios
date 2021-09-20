@@ -32,8 +32,7 @@ struct RootView: View {
                     } else if user?.settings?.feeCalculation.stockx?.sellerFee == nil {
                         StockXSellerFeeSelector(settings: store.state.settings)
                     } else {
-                        MainContainerView()
-                            .environmentObject(store)
+                        MainContainerView(store: store)
                             .zIndex(0)
                     }
                 }

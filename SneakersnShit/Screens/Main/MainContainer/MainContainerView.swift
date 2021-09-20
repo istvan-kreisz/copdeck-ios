@@ -9,7 +9,7 @@ import SwiftUI
 import FirebaseFunctions
 
 struct MainContainerView: View {
-    @EnvironmentObject var store: AppStore
+    var store: AppStore
     @StateObject var viewRouter = ViewRouter()
 
     @State var shouldShowTabBar = true
@@ -18,11 +18,11 @@ struct MainContainerView: View {
         UITabBarWrapper(selectedIndex: $viewRouter.currentPage) {
             (TabBarElement(tabBarElementItem: .init(title: "First", systemImageName: "house.fill")) {
                 FeedView()
-                    .withTabViewWrapper(viewRouter: viewRouter, store: store, shouldShow: $shouldShowTabBar)
+                    .withTabViewWrapper(viewRouter: viewRouter, store: FeedStore.initWith(appStore: store), shouldShow: $shouldShowTabBar)
             },
             TabBarElement(tabBarElementItem: .init(title: "Second", systemImageName: "pencil.circle.fill")) {
                 SearchView()
-                    .withTabViewWrapper(viewRouter: viewRouter, store: store, shouldShow: $shouldShowTabBar)
+                    .withTabViewWrapper(viewRouter: viewRouter, store: SearchStore.initWith(appStore: store), shouldShow: $shouldShowTabBar)
             },
             TabBarElement(tabBarElementItem: .init(title: "Third", systemImageName: "folder.fill")) {
                 InventoryView(username: store.state.user?.name ?? "",
@@ -33,13 +33,5 @@ struct MainContainerView: View {
         }
         .hideKeyboardOnScroll()
         .edgesIgnoringSafeArea(.all)
-    }
-}
-
-struct MainView_Previews: PreviewProvider {
-    static var previews: some View {
-        return
-            MainContainerView()
-                .environmentObject(AppStore.default)
     }
 }

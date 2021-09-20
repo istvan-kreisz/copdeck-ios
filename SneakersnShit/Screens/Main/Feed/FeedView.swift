@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct FeedView: View {
-    @EnvironmentObject var store: AppStore
+    @EnvironmentObject var store: FeedStore
     @State private var navigationDestination: NavigationDestination?
 
     @State private var isFirstLoad = true
@@ -81,7 +81,7 @@ struct FeedView: View {
                                                    selectedStack: selectedStackBinding,
                                                    stack: feedPostData.stack,
                                                    inventoryItems: feedPostData.inventoryItems,
-                                                   requestInfo: store.state.requestInfo,
+                                                   requestInfo: store.globalState.requestInfo,
                                                    profileInfo: (user.name ?? "", user.imageURL)) {
                                     if let profileData = feedPostData.profileData {
                                         navigationDestination = .profile(profileData)
@@ -132,7 +132,7 @@ extension FeedView {
     }
 
     struct Destination: View {
-        @EnvironmentObject var store: AppStore
+        @EnvironmentObject var store: FeedStore
         @Binding var navigationDestination: NavigationDestination?
 
         var feedPosts: [FeedPost] {
@@ -149,7 +149,7 @@ extension FeedView {
                 if let user = user(for: inventoryItem) {
                     SharedInventoryItemView(user: user,
                                             inventoryItem: inventoryItem,
-                                            requestInfo: store.state.requestInfo) { navigationDestination = nil }
+                                            requestInfo: store.globalState.requestInfo) { navigationDestination = nil }
                 }
             case let .profile(profile):
                 ProfileView(profileData: profile) { navigationDestination = nil }
@@ -158,7 +158,7 @@ extension FeedView {
                     SharedStackDetailView(user: user,
                                           stack: feedPost.stack,
                                           inventoryItems: feedPost.inventoryItems,
-                                          requestInfo: store.state.requestInfo) { navigationDestination = nil }
+                                          requestInfo: store.globalState.requestInfo) { navigationDestination = nil }
                 }
             case .none:
                 EmptyView()
