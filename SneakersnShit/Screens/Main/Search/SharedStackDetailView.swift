@@ -11,6 +11,8 @@ import Combine
 struct SharedStackDetailView: View {
     private static let profileImageSize: CGFloat = 38
 
+    @State var navigationDestination: NavigationDestination?
+
     let user: User
     let stack: Stack
     let inventoryItems: [InventoryItem]
@@ -18,17 +20,23 @@ struct SharedStackDetailView: View {
 
     let shouldDismiss: () -> Void
 
-    @State var selectedInventoryItemId: String?
+    var selectedInventoryItem: InventoryItem? {
+        guard case let .inventoryItem(inventoryItem) = navigationDestination else { return nil }
+        return inventoryItem
+    }
 
     var body: some View {
         Group {
-            ForEach(inventoryItems) { (inventoryItem: InventoryItem) in
-                NavigationLink(destination: SharedInventoryItemView(user: user,
-                                                                    inventoryItem: inventoryItem,
-                                                                    requestInfo: requestInfo) { selectedInventoryItemId = nil },
-                               tag: inventoryItem.id,
-                               selection: $selectedInventoryItemId) { EmptyView() }
-            }
+            let showDetail = Binding<Bool>(get: { navigationDestination != nil },
+                                           set: { show in navigationDestination = show ? navigationDestination : nil })
+            let selectedInventoryItemBinding = Binding<InventoryItem?>(get: { selectedInventoryItem },
+                                                                       set: { inventoryItem in
+                                                                           navigationDestination = inventoryItem.map { .inventoryItem($0) } ?? nil
+                                                                       })
+            NavigationLink(destination: Destination(requestInfo: requestInfo,
+                                                    user: user,
+                                                    navigationDestination: $navigationDestination),
+                           isActive: showDetail) { EmptyView() }
 
             VerticalListView(bottomPadding: 30, spacing: 2, addHorizontalPadding: false) {
                 NavigationBar(title: stack.name, isBackButtonVisible: true, style: .dark, shouldDismiss: shouldDismiss)
@@ -56,7 +64,7 @@ struct SharedStackDetailView: View {
                 ForEach(inventoryItems) { (inventoryItem: InventoryItem) in
                     InventoryListItem(inventoryItem: inventoryItem,
                                       bestPrice: inventoryItem.copdeckPrice.map { .init(price: $0.price.price, currencyCode: $0.price.currencyCode) },
-                                      selectedInventoryItemId: $selectedInventoryItemId,
+                                      selectedInventoryItem: selectedInventoryItemBinding,
                                       isSelected: false,
                                       isEditing: .constant(false),
                                       requestInfo: requestInfo) {}
@@ -71,5 +79,28 @@ struct SharedStackDetailView: View {
         .withDefaultPadding(padding: .top)
         .withBackgroundColor()
         .navigationbarHidden()
+    }
+}
+
+extension SharedStackDetailView {
+    enum NavigationDestination {
+        case inventoryItem(InventoryItem)
+    }
+
+    struct Destination: View {
+        let requestInfo: [ScraperRequestInfo]
+        let user: User
+        @Binding var navigationDestination: NavigationDestination?
+
+        var body: some View {
+            switch navigationDestination {
+            case let .inventoryItem(inventoryItem):
+                SharedInventoryItemView(user: user,
+                                        inventoryItem: inventoryItem,
+                                        requestInfo: requestInfo) { navigationDestination = nil }
+            case .none:
+                EmptyView()
+            }
+        }
     }
 }

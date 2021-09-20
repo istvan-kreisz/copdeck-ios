@@ -13,7 +13,7 @@ struct StackView: View {
     @Binding var searchText: String
     @Binding var filters: Filters
     @Binding var inventoryItems: [InventoryItem]
-    @Binding var selectedInventoryItemId: String?
+    @Binding var selectedInventoryItem: InventoryItem?
     @Binding var isEditing: Bool
     @Binding var showFilters: Bool
     @Binding var selectedInventoryItems: [InventoryItem]
@@ -122,7 +122,7 @@ struct StackView: View {
             ForEach(allStackItems) { (inventoryItem: InventoryItem) in
                 InventoryListItem(inventoryItem: inventoryItem,
                                   bestPrice: bestPrices[inventoryItem.id],
-                                  selectedInventoryItemId: $selectedInventoryItemId,
+                                  selectedInventoryItem: $selectedInventoryItem,
                                   isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }),
                                   isEditing: $isEditing,
                                   requestInfo: requestInfo) {

@@ -10,7 +10,7 @@ import SwiftUI
 struct InventoryListItem: View {
     var inventoryItem: InventoryItem
     let bestPrice: PriceWithCurrency?
-    @Binding var selectedInventoryItemId: String?
+    @Binding var selectedInventoryItem: InventoryItem?
     var isSelected: Bool
 
     @Binding var isEditing: Bool
@@ -38,7 +38,7 @@ struct InventoryListItem: View {
                          ribbonText: inventoryItem.status == .Sold ? "Sold" : nil,
                          accessoryView1: InventoryViewPills(inventoryItem: inventoryItem).leftAligned(),
                          accessoryView2: bestPriceStack()) {
-                selectedInventoryItemId = inventoryItem.id
+                selectedInventoryItem = inventoryItem
         } onSelectorTapped: {
             onSelectorTapped()
         }

@@ -9,22 +9,22 @@ import SwiftUI
 import Combine
 
 struct SelectStackItemsView: View {
-    @Binding var showView: Bool
     var inventoryItems: [InventoryItem]
     let requestInfo: [ScraperRequestInfo]
+    let shouldDismiss: () -> Void
     let saveChanges: ([StackItem]) -> Void
     let title: String
 
     @State var selectedStackItems: [StackItem]
 
-    init(showView: Binding<Bool>,
-         stack: Stack,
+    init(stack: Stack,
          inventoryItems: [InventoryItem],
          requestInfo: [ScraperRequestInfo],
+         shouldDismiss: @escaping () -> Void,
          saveChanges: @escaping ([StackItem]) -> Void) {
-        self._showView = showView
         self.inventoryItems = inventoryItems
         self.requestInfo = requestInfo
+        self.shouldDismiss = shouldDismiss
         self.saveChanges = saveChanges
         self.title = "Edit \(stack.name)"
         self._selectedStackItems = State<[StackItem]>(initialValue: stack.items)
@@ -32,7 +32,7 @@ struct SelectStackItemsView: View {
 
     var body: some View {
         VStack(alignment: .center, spacing: 8) {
-            NavigationBar(title: title, isBackButtonVisible: true, style: .dark) { showView = false }
+            NavigationBar(title: title, isBackButtonVisible: true, style: .dark, shouldDismiss: shouldDismiss)
                 .withDefaultPadding(padding: .horizontal)
 
             VerticalListView(bottomPadding: Styles.tabScreenBottomPadding) {
@@ -65,7 +65,7 @@ struct SelectStackItemsView: View {
                                                              color: .customBlack,
                                                              accessoryView: nil) {
                 saveChanges(selectedStackItems)
-                showView = false
+                shouldDismiss()
             }
             .centeredHorizontally()
             .padding(.top, 20))

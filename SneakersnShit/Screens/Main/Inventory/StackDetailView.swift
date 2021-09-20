@@ -14,21 +14,21 @@ struct StackDetailView: View {
     @Binding var stack: Stack
     @Binding var inventoryItems: [InventoryItem]
     @Binding var bestPrices: [String: PriceWithCurrency]
-    @Binding var showView: Bool
     @Binding var filters: Filters
 
     let linkURL: String
     let requestInfo: [ScraperRequestInfo]
+    var shouldDismiss: () -> Void
     let saveChanges: ([StackItem]) -> Void
     let deleteStack: () -> Void
 
-    @State var selectedInventoryItemId: String?
+    @State var navigationDestination: NavigationDestination?
+
     @State var name: String
     @State var caption: String
 
     @State var popup: (String, String)? = nil
 
-    @State private var showItemSelector = false
     @State private var showSnackBar = false
     @State private var popupIndex: Int? = nil
 
@@ -48,6 +48,11 @@ struct StackDetailView: View {
         } else {
             return nil
         }
+    }
+
+    var selectedInventoryItem: InventoryItem? {
+        guard case let .inventoryItem(inventoryItem) = navigationDestination else { return nil }
+        return inventoryItem
     }
 
     func toggleView(title: String, buttonTitle: String, isOn: Binding<Bool>, didTapButton: @escaping () -> Void) -> some View {
@@ -71,19 +76,19 @@ struct StackDetailView: View {
     init(stack: Binding<Stack>,
          inventoryItems: Binding<[InventoryItem]>,
          bestPrices: Binding<[String: PriceWithCurrency]>,
-         showView: Binding<Bool>,
          filters: Binding<Filters>,
          linkURL: String,
          requestInfo: [ScraperRequestInfo],
+         shouldDismiss: @escaping () -> Void,
          saveChanges: @escaping ([StackItem]) -> Void,
          deleteStack: @escaping () -> Void) {
         self._stack = stack
         self._inventoryItems = inventoryItems
         self._bestPrices = bestPrices
-        self._showView = showView
         self._filters = filters
         self.linkURL = linkURL
         self.requestInfo = requestInfo
+        self.shouldDismiss = shouldDismiss
         self.saveChanges = saveChanges
         self.deleteStack = deleteStack
         self._name = State<String>(initialValue: stack.wrappedValue.name)
@@ -94,25 +99,20 @@ struct StackDetailView: View {
     var body: some View {
         let showPopup = Binding<Bool>(get: { popup != nil }, set: { show in popup = show ? popup : nil })
         Group {
-            ForEach(inventoryItems) { (inventoryItem: InventoryItem) in
-                NavigationLink(destination: InventoryItemDetailView(inventoryItem: inventoryItem) { selectedInventoryItemId = nil },
-                               tag: inventoryItem.id,
-                               selection: $selectedInventoryItemId) { EmptyView() }
+            let showDetail = Binding<Bool>(get: { navigationDestination != nil },
+                                           set: { show in navigationDestination = show ? navigationDestination : nil })
+            let selectedInventoryItemBinding = Binding<InventoryItem?>(get: { selectedInventoryItem },
+                                                                       set: { inventoryItem in
+                                                                           navigationDestination = inventoryItem.map { .inventoryItem($0) } ?? nil
+                                                                       })
+
+            NavigationLink(destination: Destination(navigationDestination: $navigationDestination,
+                                                    inventoryItems: $inventoryItems), isActive: showDetail) {
+                    EmptyView()
             }
 
-            NavigationLink(destination: SelectStackItemsView(showView: $showItemSelector,
-                                                             stack: stack,
-                                                             inventoryItems: inventoryItems,
-                                                             requestInfo: store.state.requestInfo,
-                                                             saveChanges: { updatedStackItems in
-                                                                 var updatedStack = stack
-                                                                 updatedStack.items = updatedStackItems
-                                                                 store.send(.main(action: .updateStack(stack: updatedStack)))
-                                                             }),
-                           isActive: $showItemSelector) { EmptyView() }
-
             VerticalListView(bottomPadding: Styles.tabScreenBottomPadding, spacing: 6, addHorizontalPadding: false) {
-                NavigationBar(title: stack.name, isBackButtonVisible: true, style: .dark) { showView = false }
+                NavigationBar(title: stack.name, isBackButtonVisible: true, style: .dark, shouldDismiss: shouldDismiss)
                     .withDefaultPadding(padding: .horizontal)
 
                 VStack {
@@ -177,7 +177,7 @@ struct StackDetailView: View {
                 ForEach(allStackItems) { (inventoryItem: InventoryItem) in
                     InventoryListItem(inventoryItem: inventoryItem,
                                       bestPrice: bestPrices[inventoryItem.id],
-                                      selectedInventoryItemId: $selectedInventoryItemId,
+                                      selectedInventoryItem: selectedInventoryItemBinding,
                                       isSelected: false,
                                       isEditing: .constant(false),
                                       requestInfo: requestInfo) {}
@@ -190,9 +190,7 @@ struct StackDetailView: View {
                                 textColor: .customBlue,
                                 width: 170,
                                 imageName: "plus",
-                                tapped: {
-                                    showItemSelector = true
-                                })
+                                tapped: { navigationDestination = .itemSelector(stack) })
                     .leftAligned()
                     .withDefaultPadding(padding: .horizontal)
                     .buttonStyle(PlainButtonStyle())
@@ -237,5 +235,36 @@ struct StackDetailView: View {
         var updatedStack = stack
         updatedStack.caption = caption
         store.send(.main(action: .updateStack(stack: updatedStack)))
+    }
+}
+
+extension StackDetailView {
+    enum NavigationDestination {
+        case inventoryItem(InventoryItem), itemSelector(Stack)
+    }
+
+    struct Destination: View {
+        @EnvironmentObject var store: AppStore
+        @Binding var navigationDestination: NavigationDestination?
+        @Binding var inventoryItems: [InventoryItem]
+
+        var body: some View {
+            switch navigationDestination {
+            case let .inventoryItem(inventoryItem):
+                InventoryItemDetailView(inventoryItem: inventoryItem) { navigationDestination = nil }
+            case let .itemSelector(stack):
+                SelectStackItemsView(stack: stack,
+                                     inventoryItems: inventoryItems,
+                                     requestInfo: store.state.requestInfo,
+                                     shouldDismiss: { navigationDestination = nil },
+                                     saveChanges: { updatedStackItems in
+                                         var updatedStack = stack
+                                         updatedStack.items = updatedStackItems
+                                         store.send(.main(action: .updateStack(stack: updatedStack)))
+                                     })
+            case .none:
+                EmptyView()
+            }
+        }
     }
 }
