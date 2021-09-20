@@ -10,15 +10,21 @@ import Combine
 
 struct FeedView: View {
     @EnvironmentObject var store: AppStore
-    @State private var selectedInventoryItemId: String?
-    @State private var selectedStackId: String?
-
-    @State private var selectedStack: Stack?
-    @State private var selectedUser: ProfileData?
+    @State private var navigationDestination: NavigationDestination?
 
     @State private var isFirstLoad = true
 
     @StateObject private var loader = Loader()
+
+    var selectedInventoryItem: InventoryItem? {
+        guard case let .inventoryItem(inventoryItem) = navigationDestination else { return nil }
+        return inventoryItem
+    }
+
+    var selectedStack: Stack? {
+        guard case let .feedPost(feedPost) = navigationDestination else { return nil }
+        return feedPost.stack
+    }
 
     var feedPosts: [FeedPost] {
         store.state.feedPosts.data
@@ -32,38 +38,23 @@ struct FeedView: View {
         feedPosts.flatMap { $0.inventoryItems }
     }
 
-    func user(for inventoryItem: InventoryItem) -> User? {
-        feedPosts.first(where: { $0.stack.itemIds.contains(inventoryItem.id) })?.user
-    }
-
     var body: some View {
         Group {
-            ForEach(inventoryItems) { (inventoryItem: InventoryItem) in
-                if let user = user(for: inventoryItem) {
-                    NavigationLink(destination: SharedInventoryItemView(user: user,
-                                                                        inventoryItem: inventoryItem,
-                                                                        requestInfo: store.state.requestInfo) { selectedInventoryItemId = nil },
-                                   tag: inventoryItem.id,
-                                   selection: $selectedInventoryItemId) { EmptyView() }
-                }
-            }
-
-            ForEach(allProfiles) { (profileData: ProfileData) in
-                NavigationLink(destination: ProfileView(profileData: profileData) { selectedUser = nil },
-                               tag: profileData.user.id,
-                               selection: convertToId(_selectedUser)) { EmptyView() }
-            }
-
-            ForEach(feedPosts) { (feedPost: FeedPost) in
-                if let user = feedPost.user {
-                    NavigationLink(destination: SharedStackDetailView(user: user,
-                                                                      stack: feedPost.stack,
-                                                                      inventoryItems: feedPost.inventoryItems,
-                                                                      requestInfo: store.state.requestInfo) { selectedStackId = nil },
-                                   tag: feedPost.stack.id,
-                                   selection: $selectedStackId) { EmptyView() }
-                }
-            }
+            let showDetail = Binding<Bool>(get: { navigationDestination != nil },
+                                           set: { show in navigationDestination = show ? navigationDestination : nil })
+            let selectedInventoryItemBinding = Binding<InventoryItem?>(get: { selectedInventoryItem },
+                                                                       set: { inventoryItem in
+                                                                           navigationDestination = inventoryItem.map { .inventoryItem($0) } ?? nil
+                                                                       })
+            let selectedStackBinding = Binding<Stack?>(get: { selectedStack },
+                                                       set: { stack in
+                                                           if let feedPost = store.state.feedPosts.data.first(where: { $0.stack.id == stack?.id }) {
+                                                               navigationDestination = .feedPost(feedPost)
+                                                           } else {
+                                                                navigationDestination = nil
+                                                           }
+                                                       })
+            NavigationLink(destination: Destination(navigationDestination: $navigationDestination), isActive: showDetail) { EmptyView() }
 
             VStack(alignment: .leading, spacing: 19) {
                 Text("Feed")
@@ -86,13 +77,15 @@ struct FeedView: View {
 
                     ForEach(feedPosts) { (feedPostData: FeedPost) in
                         if let user = feedPostData.user {
-                            SharedStackSummaryView(selectedInventoryItemId: $selectedInventoryItemId,
-                                                   selectedStackId: $selectedStackId,
+                            SharedStackSummaryView(selectedInventoryItem: selectedInventoryItemBinding,
+                                                   selectedStack: selectedStackBinding,
                                                    stack: feedPostData.stack,
                                                    inventoryItems: feedPostData.inventoryItems,
                                                    requestInfo: store.state.requestInfo,
                                                    profileInfo: (user.name ?? "", user.imageURL)) {
-                                    selectedUser = feedPostData.profileData
+                                    if let profileData = feedPostData.profileData {
+                                        navigationDestination = .profile(profileData)
+                                    }
                             }
                             .buttonStyle(PlainButtonStyle())
                             .padding(.bottom, 4)
@@ -133,11 +126,43 @@ struct FeedView: View {
     }
 }
 
-struct FeedView_Previews: PreviewProvider {
-    static var previews: some View {
-        return Group {
-            FeedView()
-                .environmentObject(AppStore.default)
+extension FeedView {
+    enum NavigationDestination {
+        case inventoryItem(InventoryItem), profile(ProfileData), feedPost(FeedPost)
+    }
+
+    struct Destination: View {
+        @EnvironmentObject var store: AppStore
+        @Binding var navigationDestination: NavigationDestination?
+
+        var feedPosts: [FeedPost] {
+            store.state.feedPosts.data
+        }
+
+        func user(for inventoryItem: InventoryItem) -> User? {
+            feedPosts.first(where: { $0.stack.itemIds.contains(inventoryItem.id) })?.user
+        }
+
+        var body: some View {
+            switch navigationDestination {
+            case let .inventoryItem(inventoryItem):
+                if let user = user(for: inventoryItem) {
+                    SharedInventoryItemView(user: user,
+                                            inventoryItem: inventoryItem,
+                                            requestInfo: store.state.requestInfo) { navigationDestination = nil }
+                }
+            case let .profile(profile):
+                ProfileView(profileData: profile) { navigationDestination = nil }
+            case let .feedPost(feedPost):
+                if let user = feedPost.user {
+                    SharedStackDetailView(user: user,
+                                          stack: feedPost.stack,
+                                          inventoryItems: feedPost.inventoryItems,
+                                          requestInfo: store.state.requestInfo) { navigationDestination = nil }
+                }
+            case .none:
+                EmptyView()
+            }
         }
     }
 }

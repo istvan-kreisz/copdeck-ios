@@ -9,7 +9,7 @@ import SwiftUI
 
 struct StackSummaryListItem: View {
     var inventoryItem: InventoryItem
-    @Binding var selectedInventoryItemId: String?
+    @Binding var selectedInventoryItem: InventoryItem?
     var requestInfo: [ScraperRequestInfo]
 
     func priceStack() -> some View {
@@ -33,6 +33,6 @@ struct StackSummaryListItem: View {
                          ribbonText: inventoryItem.status == .Sold ? "Sold" : nil,
                          addShadow: false,
                          accessoryView1: InventoryViewPills(inventoryItem: inventoryItem, pillTypes: [.condition, .size]).leftAligned(),
-                         accessoryView2: priceStack()) { selectedInventoryItemId = inventoryItem.id }
+                         accessoryView2: priceStack()) { selectedInventoryItem = inventoryItem }
     }
 }

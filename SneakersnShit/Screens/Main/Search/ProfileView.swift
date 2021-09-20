@@ -83,17 +83,17 @@ struct ProfileView: View {
                         .listRow()
                 }
 
-                ForEach(profileData.stacks) { (stack: Stack) in
-                    SharedStackSummaryView(selectedInventoryItemId: $selectedInventoryItemId,
-                                           selectedStackId: $selectedStackId,
-                                           stack: stack,
-                                           inventoryItems: stackItems(in: stack),
-                                           requestInfo: store.state.requestInfo,
-                                           profileInfo: (profileData.user.name ?? "", profileData.user.imageURL))
-                        .buttonStyle(PlainButtonStyle())
-                        .padding(.bottom, 4)
-                        .listRow()
-                }
+//                ForEach(profileData.stacks) { (stack: Stack) in
+//                    SharedStackSummaryView(selectedInventoryItem: $selectedInventoryItem,
+//                                           selectedStack: selectedStack,
+//                                           stack: stack,
+//                                           inventoryItems: stackItems(in: stack),
+//                                           requestInfo: store.state.requestInfo,
+//                                           profileInfo: (profileData.user.name ?? "", profileData.user.imageURL))
+//                        .buttonStyle(PlainButtonStyle())
+//                        .padding(.bottom, 4)
+//                        .listRow()
+//                }
             }
         }
         .navigationbarHidden()

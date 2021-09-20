@@ -11,8 +11,8 @@ struct SharedStackSummaryView: View {
     private static let maxCount = 4
     private static let profileImageSize: CGFloat = 38
 
-    @Binding var selectedInventoryItemId: String?
-    @Binding var selectedStackId: String?
+    @Binding var selectedInventoryItem: InventoryItem?
+    @Binding var selectedStack: Stack?
 
     let stack: Stack
 
@@ -72,7 +72,7 @@ struct SharedStackSummaryView: View {
             }
             VStack {
                 ForEach(inventoryItems.first(n: Self.maxCount)) { (inventoryItem: InventoryItem) in
-                    StackSummaryListItem(inventoryItem: inventoryItem, selectedInventoryItemId: $selectedInventoryItemId, requestInfo: requestInfo)
+                    StackSummaryListItem(inventoryItem: inventoryItem, selectedInventoryItem: $selectedInventoryItem, requestInfo: requestInfo)
                 }
                 AccessoryButton(title: "See details \(notShownItemCount > 0 ? "(+\(notShownItemCount) more items)" : "")",
                                 color: .customAccent1,
@@ -81,7 +81,7 @@ struct SharedStackSummaryView: View {
                                 width: nil,
                                 imageName: "chevron.right",
                                 buttonPosition: .right,
-                                tapped: { selectedStackId = stack.id })
+                                tapped: { selectedStack = stack })
                     .leftAligned()
             }
             .padding(12)
