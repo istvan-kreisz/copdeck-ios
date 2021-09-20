@@ -96,11 +96,10 @@ struct ItemDetailView: View {
                                                        set: { addToInventory = $0 ? addToInventory : (false, nil) })
             let isFavorited = Binding<Bool>(get: { self.isFavorited }, set: { self.didToggleFavorite(newValue: $0) })
 
-            NavigationLink("",
-                           destination: item
-                               .map { item in AddToInventoryView(item: item, presented: $addToInventory, addedInvantoryItem: $addedInventoryItem) } ??
-                               nil,
-                           isActive: isAddToInventoryActive)
+            NavigationLink(destination: item
+                .map { item in AddToInventoryView(item: item, presented: $addToInventory, addedInvantoryItem: $addedInventoryItem) } ??
+                nil,
+                isActive: isAddToInventoryActive) { EmptyView() }
 
             ScrollView(.vertical, showsIndicators: false) {
                 ScrollViewReader { scrollViewProxy in
