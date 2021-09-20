@@ -35,7 +35,7 @@ struct SharedStackDetailView: View {
                                                                        })
             NavigationLink(destination: Destination(requestInfo: requestInfo,
                                                     user: user,
-                                                    navigationDestination: $navigationDestination),
+                                                    navigationDestination: $navigationDestination).navigationbarHidden(),
                            isActive: showDetail) { EmptyView() }
 
             VerticalListView(bottomPadding: 30, spacing: 2, addHorizontalPadding: false) {

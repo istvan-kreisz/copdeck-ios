@@ -107,7 +107,7 @@ struct StackDetailView: View {
                                                                        })
 
             NavigationLink(destination: Destination(navigationDestination: $navigationDestination,
-                                                    inventoryItems: $inventoryItems), isActive: showDetail) {
+                                                    inventoryItems: $inventoryItems).navigationbarHidden(), isActive: showDetail) {
                     EmptyView()
             }
 

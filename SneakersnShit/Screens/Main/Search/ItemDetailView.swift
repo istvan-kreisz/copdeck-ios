@@ -280,7 +280,6 @@ struct ItemDetailView: View {
                     .padding(.top, 20)
                     .opacity(item != nil ? 1.0 : 0.0))
             .withSnackBar(text: "Added to inventory", shouldShow: $showSnackBar)
-            .navigationbarHidden()
             .onAppear {
                 if firstShow {
                     firstShow = false
@@ -292,6 +291,7 @@ struct ItemDetailView: View {
                     showSnackBar = true
                 }
             }
+            .navigationbarHidden()
         }
     }
 

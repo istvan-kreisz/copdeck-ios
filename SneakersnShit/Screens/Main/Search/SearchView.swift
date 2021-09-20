@@ -60,7 +60,7 @@ struct SearchView: View {
                                                      set: { item in navigationDestination = item.map { .itemDetail($0) } ?? nil })
             let selectedUserBinding = Binding<ProfileData?>(get: { selectedUser },
                                                             set: { profile in navigationDestination = profile.map { .profile($0) } ?? nil })
-            NavigationLink(destination: Destination(navigationDestination: $navigationDestination), isActive: showDetail) { EmptyView() }
+            NavigationLink(destination: Destination(navigationDestination: $navigationDestination).navigationbarHidden(), isActive: showDetail) { EmptyView() }
 
             VStack(alignment: .leading, spacing: 19) {
                 Text("Search")

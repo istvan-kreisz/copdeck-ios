@@ -52,7 +52,7 @@ struct ProfileView: View {
                                                            navigationDestination = stack.map { .stack($0) }
                                                        })
 
-            NavigationLink(destination: Destination(navigationDestination: $navigationDestination, profileData: profileData)) {
+            NavigationLink(destination: Destination(navigationDestination: $navigationDestination, profileData: profileData).navigationbarHidden()) {
                 EmptyView()
             }
 

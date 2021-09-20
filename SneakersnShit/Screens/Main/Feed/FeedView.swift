@@ -54,7 +54,7 @@ struct FeedView: View {
                                                                 navigationDestination = nil
                                                            }
                                                        })
-            NavigationLink(destination: Destination(navigationDestination: $navigationDestination), isActive: showDetail) { EmptyView() }
+            NavigationLink(destination: Destination(navigationDestination: $navigationDestination).navigationbarHidden(), isActive: showDetail) { EmptyView() }
 
             VStack(alignment: .leading, spacing: 19) {
                 Text("Feed")

@@ -128,7 +128,7 @@ struct InventoryView: View {
 
             NavigationLink(destination: Destination(navigationDestination: $navigationDestination,
                                                     bestPrices: $bestPrices,
-                                                    itemSelectorStack: $itemSelectorStack),
+                                                    itemSelectorStack: $itemSelectorStack).navigationbarHidden(),
                            isActive: showDetail) {
                     EmptyView()
             }
