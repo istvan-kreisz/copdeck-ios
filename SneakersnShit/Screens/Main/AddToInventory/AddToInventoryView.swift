@@ -56,7 +56,10 @@ struct AddToInventoryView: View {
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .center, spacing: 20) {
-                ItemImageViewWithNavBar(imageURL: item.imageURL, requestInfo: store.state.requestInfo) { presented = (false, nil) }
+                ItemImageViewWithNavBar(source: imageSource(for: item),
+                                        requestInfo: store.state.requestInfo,
+                                        shouldDismiss: { presented = (false, nil) },
+                                        flipImage: item.imageURL?.store?.id == .klekt)
 
                 VStack(alignment: .center, spacing: 8) {
                     Text("Add To Inventory")

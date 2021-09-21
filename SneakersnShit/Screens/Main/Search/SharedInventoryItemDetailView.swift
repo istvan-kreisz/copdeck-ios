@@ -77,15 +77,14 @@ struct SharedInventoryItemView: View {
                             .leftAligned()
 
                         HStack(spacing: Styles.verticalPadding) {
-                            if let url = inventoryItem.imageURL?.URL {
-                                ImageView(withRequest: url,
-                                          size: imageSize,
-                                          aspectRatio: 1.0,
-                                          flipImage: false,
-                                          showPlaceholder: true)
-                                    .frame(width: imageSize, height: imageSize)
-                                    .cornerRadius(4)
-                            }
+                            ImageView(source: imageSource(for: inventoryItem),
+                                      size: imageSize,
+                                      aspectRatio: 1.0,
+                                      flipImage: false,
+                                      showPlaceholder: true)
+                                .frame(width: imageSize, height: imageSize)
+                                .cornerRadius(4)
+
                             Spacer()
                         }
                     }

@@ -65,13 +65,10 @@ protocol DatabaseManager {
     var userPublisher: AnyPublisher<User, Never> { get }
     var exchangeRatesPublisher: AnyPublisher<ExchangeRates, Never> { get }
     var errorsPublisher: AnyPublisher<AppError, Never> { get }
-    var imageURL: URL? { get }
-    var profileImagePublisher: AnyPublisher<URL?, Never> { get }
 
     // read
     func getUser(withId id: String) -> AnyPublisher<User, AppError>
     func getItem(withId id: String, settings: CopDeckSettings) -> AnyPublisher<Item, AppError>
-    func getImageURLs(for users: [User]) -> AnyPublisher<[User], AppError>
 
     // write
     func add(inventoryItems: [InventoryItem])
@@ -80,13 +77,24 @@ protocol DatabaseManager {
     func update(stacks: [Stack])
     func delete(stack: Stack)
     func update(user: User)
-    func uploadProfileImage(image: UIImage)
     func add(recentlyViewedItem: Item)
     func favorite(item: Item)
     func unfavorite(item: Item)
 }
 
-protocol DataController: LocalAPI, BackendAPI, DatabaseManager {
+protocol ImageService {
+    var profileImagePublisher: AnyPublisher<URL?, Never> { get }
+
+    func getImageURLs(for users: [User]) -> AnyPublisher<[User], AppError>
+    func uploadProfileImage(image: UIImage)
+    func setup(userId: String)
+    func reset()
+    func getImagePublisher(for itemId: String) -> AnyPublisher<URL?, Never>
+    func uploadItemImage(itemId: String, image: UIImage)
+}
+
+
+protocol DataController: LocalAPI, BackendAPI, DatabaseManager, ImageService {
     func stack(inventoryItems: [InventoryItem], stack: Stack)
     func unstack(inventoryItems: [InventoryItem], stack: Stack)
 }

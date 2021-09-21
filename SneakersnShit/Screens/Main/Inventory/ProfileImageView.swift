@@ -20,7 +20,7 @@ struct ProfileImageView: View {
             Color.customAccent1.frame(width: Self.profileImageSize, height: Self.profileImageSize)
 
             if let profileImageURL = profileImageURL {
-                ImageView(withRequest: profileImageURL,
+                ImageView(source: .url(profileImageURL),
                           size: Self.profileImageSize,
                           aspectRatio: 1.0,
                           flipImage: false,

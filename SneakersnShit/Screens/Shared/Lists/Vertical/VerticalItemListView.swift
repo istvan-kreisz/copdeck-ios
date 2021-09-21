@@ -45,11 +45,12 @@ struct VerticalItemListView: View {
             VerticalListView(bottomPadding: bottomPadding) {
                 ForEach(items) { (item: Item) in
                     VerticalListItemWithoutAccessoryView(title: item.name ?? "",
-                                                         imageURL: item.imageURL,
+                                                         source: imageSource(for: item),
                                                          flipImage: item.imageURL?.store?.id == .klekt,
                                                          requestInfo: requestInfo,
                                                          isEditing: .constant(false),
-                                                         isSelected: false) { selectedItem = item }
+                                                         isSelected: false,
+                                                         onTapped: { selectedItem = item })
                 }
             }
             .padding(.top, 5)

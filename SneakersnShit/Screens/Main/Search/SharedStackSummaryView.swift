@@ -40,7 +40,7 @@ struct SharedStackSummaryView: View {
         VStack(spacing: 0) {
             if let profileInfo = profileInfo {
                 HStack {
-                    ImageView(withRequest: profileInfo.imageURL,
+                    ImageView(source: .url(profileInfo.imageURL),
                               size: Self.profileImageSize,
                               aspectRatio: 1.0,
                               flipImage: false,
@@ -72,7 +72,9 @@ struct SharedStackSummaryView: View {
             }
             VStack {
                 ForEach(inventoryItems.first(n: Self.maxCount)) { (inventoryItem: InventoryItem) in
-                    StackSummaryListItem(inventoryItem: inventoryItem, selectedInventoryItem: $selectedInventoryItem, requestInfo: requestInfo)
+                    StackSummaryListItem(inventoryItem: inventoryItem,
+                                         selectedInventoryItem: $selectedInventoryItem,
+                                         requestInfo: requestInfo)
                 }
                 AccessoryButton(title: "See details \(notShownItemCount > 0 ? "(+\(notShownItemCount) more items)" : "")",
                                 color: .customAccent1,

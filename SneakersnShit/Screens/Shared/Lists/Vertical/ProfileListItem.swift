@@ -13,15 +13,14 @@ struct ProfileListItem: View {
 
     var body: some View {
         VerticalListItemWithAccessoryView1(title: profileData.user.name ?? "",
-                                           imageURL: .init(url: profileData.user.imageURL?.absoluteString ?? "", store: nil),
+                                           source: .url(profileData.user.imageURL),
                                            flipImage: false,
                                            requestInfo: [],
                                            isEditing: .constant(false),
                                            isSelected: false,
                                            ribbonText: nil,
                                            resizingMode: .aspectFill,
-                                           accessoryView: EmptyView()) {
-                selectedProfile = profileData
-        }
+                                           accessoryView: EmptyView(),
+                                           onTapped: { selectedProfile = profileData })
     }
 }

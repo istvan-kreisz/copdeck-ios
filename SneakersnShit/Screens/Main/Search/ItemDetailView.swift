@@ -104,8 +104,11 @@ struct ItemDetailView: View {
             ScrollView(.vertical, showsIndicators: false) {
                 ScrollViewReader { scrollViewProxy in
                     VStack(alignment: .center, spacing: 20) {
-                        ItemImageViewWithNavBar(imageURL: item?.imageURL, requestInfo: store.state.requestInfo, shouldDismiss: shouldDismiss,
-                                                isFavorited: isFavorited)
+                        ItemImageViewWithNavBar(source: imageSource(for: item),
+                                                requestInfo: store.state.requestInfo,
+                                                shouldDismiss: shouldDismiss,
+                                                isFavorited: isFavorited,
+                                                flipImage: item?.imageURL?.store?.id == .klekt)
                             .id(0)
 
                         ZStack {

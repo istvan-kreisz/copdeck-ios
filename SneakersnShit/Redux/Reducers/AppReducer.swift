@@ -128,6 +128,12 @@ func appReducer(state: inout AppState,
                                                              exchangeRates: state.rates)
                 .map { AppAction.main(action: .setSelectedItem(item: $0, completion: completion)) }
                 .catchErrors()
+        case let .getItemImage(itemId, completion):
+            return environment.dataController.getImagePublisher(for: itemId)
+                .map { AppAction.main(action: .setItemImage(url: $0, completion: completion)) }
+                .catchErrors()
+        case let .setItemImage(url, completion):
+            completion(url)
         case let .refreshItemIfNeeded(itemId, fetchMode):
             return environment.dataController.getItemDetails(for: nil,
                                                              itemId: itemId,

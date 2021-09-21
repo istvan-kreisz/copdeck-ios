@@ -20,7 +20,7 @@ struct OwnerCardView: View {
                 .leftAligned()
 
             HStack {
-                ImageView(withRequest: user.imageURL,
+                ImageView(source: .url(user.imageURL),
                           size: Self.profileImageSize,
                           aspectRatio: 1.0,
                           flipImage: false,

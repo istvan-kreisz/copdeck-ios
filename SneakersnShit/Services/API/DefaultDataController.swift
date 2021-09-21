@@ -13,6 +13,7 @@ class DefaultDataController: DataController {
     let backendAPI: BackendAPI
     let localScraper: LocalAPI
     let databaseManager: DatabaseManager
+    let imageService: ImageService
 
     lazy var inventoryItemsPublisher = databaseManager.inventoryItemsPublisher
     lazy var favoritesPublisher = databaseManager.favoritesPublisher
@@ -25,17 +26,17 @@ class DefaultDataController: DataController {
     lazy var cookiesPublisher = localScraper.cookiesPublisher
     lazy var imageDownloadHeadersPublisher = localScraper.imageDownloadHeadersPublisher
 
-    var imageURL: URL? { databaseManager.imageURL }
-    lazy var profileImagePublisher = databaseManager.profileImagePublisher
+    lazy var profileImagePublisher = imageService.profileImagePublisher
 
     private var cancellables: Set<AnyCancellable> = []
 
     private let imageCache = Cache<String, URL>(entryLifetimeMin: 60)
 
-    init(backendAPI: BackendAPI, localScraper: LocalAPI, databaseManager: DatabaseManager) {
+    init(backendAPI: BackendAPI, localScraper: LocalAPI, databaseManager: DatabaseManager, imageService: ImageService) {
         self.backendAPI = backendAPI
         self.localScraper = localScraper
         self.databaseManager = databaseManager
+        self.imageService = imageService
     }
 
     func reset() {
@@ -268,43 +269,6 @@ class DefaultDataController: DataController {
         backendAPI.getUserProfile(userId: userId)
     }
 
-    func getImageURLs(for users: [User]) -> AnyPublisher<[User], AppError> {
-        var cachedUsers: [User] = []
-        var nonCachedUsers: [User] = []
-        users
-            .forEach { (user: User) in
-                if user.imageURL == nil {
-                    if let cachedURL = imageCache.value(forKey: user.id) {
-                        var copy = user
-                        copy.imageURL = cachedURL
-                        cachedUsers.append(copy)
-                    } else {
-                        nonCachedUsers.append(user)
-                    }
-                } else {
-                    cachedUsers.append(user)
-                }
-            }
-        let cachedUsersPublisher = Just(cachedUsers).setFailureType(to: AppError.self)
-        let nonCachedUsersPublisher = databaseManager.getImageURLs(for: nonCachedUsers)
-            .handleEvents(receiveOutput: { [weak self] users in
-                users.forEach { [weak self] user in
-                    guard let imageURL = user.imageURL else { return }
-                    self?.imageCache.insert(imageURL, forKey: user.id)
-                }
-            })
-
-        if nonCachedUsers.isEmpty {
-            return cachedUsersPublisher.eraseToAnyPublisher()
-        } else if cachedUsers.isEmpty {
-            return nonCachedUsersPublisher.eraseToAnyPublisher()
-        } else {
-            return nonCachedUsersPublisher
-                .combineLatest(cachedUsersPublisher) { $0 + $1 }
-                .eraseToAnyPublisher()
-        }
-    }
-
     func searchUsers(searchTerm: String) -> AnyPublisher<[User], AppError> {
         backendAPI.searchUsers(searchTerm: searchTerm)
             .flatMap { [weak self] (users: [User]) -> AnyPublisher<[User], AppError> in
@@ -326,6 +290,66 @@ class DefaultDataController: DataController {
     }
 
     func uploadProfileImage(image: UIImage) {
-        databaseManager.uploadProfileImage(image: image)
+        imageService.uploadProfileImage(image: image)
+    }
+
+    func getImageURLs(for users: [User]) -> AnyPublisher<[User], AppError> {
+        var cachedUsers: [User] = []
+        var nonCachedUsers: [User] = []
+        users
+            .forEach { (user: User) in
+                if user.imageURL == nil {
+                    if let cachedURL = imageCache.value(forKey: user.id) {
+                        var copy = user
+                        copy.imageURL = cachedURL
+                        cachedUsers.append(copy)
+                    } else {
+                        nonCachedUsers.append(user)
+                    }
+                } else {
+                    cachedUsers.append(user)
+                }
+            }
+        let cachedUsersPublisher = Just(cachedUsers).setFailureType(to: AppError.self)
+        let nonCachedUsersPublisher = imageService.getImageURLs(for: nonCachedUsers)
+            .handleEvents(receiveOutput: { [weak self] users in
+                users.forEach { [weak self] user in
+                    guard let imageURL = user.imageURL else { return }
+                    self?.imageCache.insert(imageURL, forKey: user.id)
+                }
+            })
+
+        if nonCachedUsers.isEmpty {
+            return cachedUsersPublisher.eraseToAnyPublisher()
+        } else if cachedUsers.isEmpty {
+            return nonCachedUsersPublisher.eraseToAnyPublisher()
+        } else {
+            return nonCachedUsersPublisher
+                .combineLatest(cachedUsersPublisher) { $0 + $1 }
+                .eraseToAnyPublisher()
+        }
+    }
+
+    func getImagePublisher(for itemId: String) -> AnyPublisher<URL?, Never> {
+        imageCache.valuePublisher(forKey: itemId)
+            .flatMap { [weak self] url -> AnyPublisher<URL?, Never> in
+                guard let self = self else { return Just(nil).eraseToAnyPublisher() }
+                if let url = url {
+                    return Just(url).eraseToAnyPublisher()
+                } else {
+                    return self.imageService.getImagePublisher(for: itemId)
+                        .handleEvents(receiveOutput: { [weak self] url in
+                            guard let url = url else { return }
+                            self?.imageCache.insert(url, forKey: itemId)
+
+                        })
+                        .eraseToAnyPublisher()
+                }
+            }
+            .eraseToAnyPublisher()
+    }
+
+    func uploadItemImage(itemId: String, image: UIImage) {
+        imageService.uploadItemImage(itemId: itemId, image: image)
     }
 }

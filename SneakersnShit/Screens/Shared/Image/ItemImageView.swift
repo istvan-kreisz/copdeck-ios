@@ -10,7 +10,7 @@ import NukeUI
 import Nuke
 
 struct ItemImageView: View {
-    let imageURL: ImageURL?
+    let source: ImageViewSourceType
     let requestInfo: [ScraperRequestInfo]
     let size: CGFloat
     let aspectRatio: CGFloat?
@@ -18,14 +18,14 @@ struct ItemImageView: View {
     let showPlaceholder: Bool
     let resizingMode: ImageResizingMode
 
-    init(withImageURL imageURL: ImageURL?,
+    init(source: ImageViewSourceType,
          requestInfo: [ScraperRequestInfo],
          size: CGFloat,
          aspectRatio: CGFloat?,
          flipImage: Bool = false,
          showPlaceholder: Bool = true,
          resizingMode: ImageResizingMode = .aspectFit) {
-        self.imageURL = imageURL
+        self.source = source
         self.requestInfo = requestInfo
         self.size = size
         self.aspectRatio = aspectRatio
@@ -34,26 +34,7 @@ struct ItemImageView: View {
         self.resizingMode = resizingMode
     }
 
-    var request: ImageRequestConvertible {
-        if let imageURL = imageURL, let headers = requestInfo.first(where: { $0.storeId == imageURL.store?.id })?.imageDownloadHeaders,
-           let url = URL(string: imageURL.url) {
-            var request = URLRequest(url: url)
-            headers.forEach { name, value in
-                request.setValue(value, forHTTPHeaderField: name)
-            }
-            return ImageRequest(urlRequest: request)
-        } else {
-            return imageURL?.url ?? ""
-        }
-    }
-
     var body: some View {
-        ImageView(withRequest: request, size: size, aspectRatio: aspectRatio, flipImage: flipImage, showPlaceholder: showPlaceholder, resizingMode: resizingMode)
-    }
-}
-
-struct ItemImageView_Previews: PreviewProvider {
-    static var previews: some View {
-        ItemImageView(withImageURL: nil, requestInfo: [], size: 80, aspectRatio: 1)
+        ImageView(source: source, size: size, aspectRatio: aspectRatio, flipImage: flipImage, showPlaceholder: showPlaceholder, resizingMode: resizingMode)
     }
 }

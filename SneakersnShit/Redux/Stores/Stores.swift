@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import Combine
+import Nuke
 
 typealias AppStore = ReduxStore<AppState, AppAction, World>
 
@@ -139,4 +141,47 @@ extension AppStore {
                 }
             }
     }
+}
+
+private func imageRequest(for imageURL: ImageURL?) -> ImageRequestConvertible? {
+    if let imageURL = imageURL,
+       let headers = AppStore.default.state.requestInfo
+       .first(where: { $0.storeId == imageURL.store?.id })?.imageDownloadHeaders,
+       let url = URL(string: imageURL.url) {
+        var request = URLRequest(url: url)
+        headers.forEach { name, value in
+            request.setValue(value, forHTTPHeaderField: name)
+        }
+        return ImageRequest(urlRequest: request)
+    } else {
+        return imageURL?.URL
+    }
+}
+
+func imageSource(for item: Item?) -> ImageViewSourceType {
+    guard let item = item else { return .url(nil) }
+    return .publisher(Future { promise in
+        AppStore.default.send(.main(action: .getItemImage(itemId: item.id,
+                                                          completion: { url in
+                                                              if let url = url {
+                                                                  promise(.success(url))
+                                                              } else {
+                                                                  promise(.success(imageRequest(for: item.imageURL)))
+                                                              }
+                                                          })))
+    }.eraseToAnyPublisher())
+}
+
+func imageSource(for inventoryItem: InventoryItem) -> ImageViewSourceType {
+    guard let itemId = inventoryItem.itemId else { return .url(imageRequest(for: inventoryItem.imageURL)) }
+    return .publisher(Future { promise in
+        AppStore.default.send(.main(action: .getItemImage(itemId: itemId,
+                                                          completion: { url in
+                                                              if let url = url {
+                                                                  promise(.success(url))
+                                                              } else {
+                                                                  promise(.success(imageRequest(for: inventoryItem.imageURL)))
+                                                              }
+                                                          })))
+    }.eraseToAnyPublisher())
 }

@@ -57,7 +57,10 @@ struct InventoryItemDetailView: View {
 
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(alignment: .center, spacing: 20) {
-                    ItemImageViewWithNavBar(imageURL: inventoryItem.imageURL, requestInfo: [], shouldDismiss: shouldDismiss)
+                    ItemImageViewWithNavBar(source: imageSource(for: inventoryItem),
+                                            requestInfo: [],
+                                            shouldDismiss: shouldDismiss,
+                                            flipImage: inventoryItem.imageURL?.store?.id == .klekt)
 
                     VStack(alignment: .center, spacing: 8) {
                         Text("Edit Item")

@@ -20,7 +20,8 @@ class World {
     convenience init() {
         self.init(dataController: DefaultDataController(backendAPI: DefaultBackendAPI(),
                                                         localScraper: LocalScraper(),
-                                                        databaseManager: FirebaseService()),
+                                                        databaseManager: FirebaseService(),
+                                                        imageService: DefaultImageService()),
                   authenticator: DefaultAuthenticator())
     }
 }

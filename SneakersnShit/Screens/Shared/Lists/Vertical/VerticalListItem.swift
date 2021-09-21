@@ -15,7 +15,7 @@ enum VerticalListItemSelectionStyle {
 
 struct VerticalListItem<V1: View, V2: View>: View {
     var title: String
-    var imageURL: ImageURL?
+    let source: ImageViewSourceType
     var flipImage = false
     var requestInfo: [ScraperRequestInfo]
 
@@ -52,7 +52,7 @@ struct VerticalListItem<V1: View, V2: View>: View {
             }
 
             HStack(alignment: .center, spacing: 10) {
-                ItemImageView(withImageURL: imageURL,
+                ItemImageView(source: source,
                               requestInfo: requestInfo,
                               size: 62,
                               aspectRatio: nil,
@@ -108,21 +108,9 @@ struct VerticalListItem<V1: View, V2: View>: View {
     }
 }
 
-struct VerticalListItem_Previews: PreviewProvider {
-    static var previews: some View {
-        return VerticalListItem<EmptyView, EmptyView>(title: "yooo",
-                                                      imageURL: nil,
-                                                      requestInfo: AppStore.default.state.requestInfo,
-                                                      isEditing: .constant(false),
-                                                      isSelected: false,
-                                                      ribbonText: "Sold",
-                                                      onTapped: {})
-    }
-}
-
 struct VerticalListItemWithAccessoryView1<V: View>: View {
     var title: String
-    var imageURL: ImageURL?
+    let source: ImageViewSourceType
     var flipImage = false
     var requestInfo: [ScraperRequestInfo]
 
@@ -139,7 +127,7 @@ struct VerticalListItemWithAccessoryView1<V: View>: View {
 
     var body: some View {
         VerticalListItem<V, EmptyView>(title: title,
-                                       imageURL: imageURL,
+                                       source: source,
                                        flipImage: flipImage,
                                        requestInfo: requestInfo,
                                        isEditing: $isEditing,
@@ -157,7 +145,7 @@ struct VerticalListItemWithAccessoryView1<V: View>: View {
 
 struct VerticalListItemWithoutAccessoryView: View {
     var title: String
-    var imageURL: ImageURL?
+    let source: ImageViewSourceType
     var flipImage = false
     var requestInfo: [ScraperRequestInfo]
 
@@ -174,7 +162,7 @@ struct VerticalListItemWithoutAccessoryView: View {
 
     var body: some View {
         VerticalListItem<EmptyView, EmptyView>(title: title,
-                                               imageURL: imageURL,
+                                               source: source,
                                                flipImage: flipImage,
                                                requestInfo: requestInfo,
                                                isEditing: $isEditing,

@@ -14,15 +14,14 @@ struct SelectStackItemsListItem: View {
 
     var body: some View {
         VerticalListItemWithAccessoryView1(title: inventoryItem.name,
-                                           imageURL: inventoryItem.imageURL,
+                                           source: imageSource(for: inventoryItem),
                                            flipImage: inventoryItem.imageURL?.store?.id == .klekt,
                                            requestInfo: requestInfo,
                                            isEditing: .constant(false),
                                            isSelected: isSelected,
                                            selectionStyle: .highlight,
                                            ribbonText: inventoryItem.status == .Sold ? "Sold" : nil,
-                                           accessoryView: InventoryViewPills(inventoryItem: inventoryItem).leftAligned()) {
-                isSelected.toggle()
-        }
+                                           accessoryView: InventoryViewPills(inventoryItem: inventoryItem).leftAligned(),
+                                           onTapped: { isSelected.toggle() })
     }
 }

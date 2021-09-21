@@ -30,7 +30,7 @@ struct InventoryListItem: View {
 
     var body: some View {
         VerticalListItem(title: inventoryItem.name,
-                         imageURL: inventoryItem.imageURL,
+                         source: imageSource(for: inventoryItem),
                          flipImage: inventoryItem.imageURL?.store?.id == .klekt,
                          requestInfo: requestInfo,
                          isEditing: $isEditing,
@@ -42,16 +42,5 @@ struct InventoryListItem: View {
         } onSelectorTapped: {
             onSelectorTapped()
         }
-    }
-}
-
-struct InventoryListItem_Previews: PreviewProvider {
-    static var previews: some View {
-        return VerticalListItem<EmptyView, EmptyView>(title: "yooo",
-                                                      imageURL: nil,
-                                                      requestInfo: [],
-                                                      isEditing: .constant(false),
-                                                      isSelected: false,
-                                                      onTapped: {})
     }
 }

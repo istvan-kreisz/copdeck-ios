@@ -11,7 +11,7 @@ import SwiftUI
 
 struct HorizontalListItemSquare: View {
     var title: String
-    var imageURL: ImageURL?
+    let source: ImageViewSourceType
     var flipImage = false
     var requestInfo: [ScraperRequestInfo]
     var index: Int
@@ -31,7 +31,7 @@ struct HorizontalListItemSquare: View {
                     .background(Color.clear))
                 .withDefaultShadow()
 
-            ItemImageView(withImageURL: imageURL,
+            ItemImageView(source: source,
                           requestInfo: requestInfo,
                           size: Self.size * 0.66,
                           aspectRatio: nil,

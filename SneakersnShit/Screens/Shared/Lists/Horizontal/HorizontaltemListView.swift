@@ -59,17 +59,18 @@ struct HorizontaltemListView: View {
                             switch style {
                             case .round:
                                 HorizontalListItemRound(title: item.name ?? "",
-                                                        imageURL: item.imageURL,
+                                                        source: imageSource(for: item),
                                                         flipImage: item.imageURL?.store?.id == .klekt,
                                                         requestInfo: requestInfo,
-                                                        index: itemsToShow.firstIndex(where: { $0.id == item.id }) ?? 0) { selectedItem = item }
+                                                        index: itemsToShow.firstIndex(where: { $0.id == item.id }) ?? 0,
+                                                        onTapped: { selectedItem = item })
                             case let .square(color):
                                 HorizontalListItemSquare(title: item.name ?? "",
-                                                         imageURL: item.imageURL,
+                                                         source: imageSource(for: item),
                                                          flipImage: item.imageURL?.store?.id == .klekt,
                                                          requestInfo: requestInfo,
                                                          index: itemsToShow.firstIndex(where: { $0.id == item.id }) ?? 0,
-                                                         color: color) { selectedItem = item }
+                                                         color: color, onTapped: { selectedItem = item })
                             }
                         }
                         if let moreTapped = moreTapped, items.count > Self.maxHorizontalItemCount {

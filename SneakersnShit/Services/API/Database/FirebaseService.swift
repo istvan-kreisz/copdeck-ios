@@ -9,15 +9,11 @@
 import Firebase
 import Combine
 import UIKit
-import FirebaseStorage
-
-#warning("better error handling for image downloads")
 
 class FirebaseService: DatabaseManager {
     private static let recentlyViewedLimit = 20
 
     private let firestore: Firestore
-    private let storage: Storage
 
     private var userId: String?
 
@@ -35,7 +31,6 @@ class FirebaseService: DatabaseManager {
 
     private let errorsSubject = PassthroughSubject<AppError, Never>()
     private let popularItemsSubject = PassthroughSubject<[Item], Never>()
-    private let imageSubject = CurrentValueSubject<URL?, Never>(nil)
 
     private var dbListeners: [FireStoreListener] {
         let listeners: [FireStoreListener?] = [inventoryListener,
@@ -45,10 +40,6 @@ class FirebaseService: DatabaseManager {
                                                userListener,
                                                exchangeRatesListener]
         return listeners.compactMap { $0 }
-    }
-
-    var imageURL: URL? {
-        imageSubject.value
     }
 
     // collection publishers
@@ -85,18 +76,10 @@ class FirebaseService: DatabaseManager {
         popularItemsSubject.eraseToAnyPublisher()
     }
 
-    var profileImagePublisher: AnyPublisher<URL?, Never> {
-        imageSubject.eraseToAnyPublisher()
-    }
-
     private var itemsRef: CollectionReference?
-
-    private var imageRef: StorageReference?
-    private var uploadTask: StorageUploadTask?
 
     init() {
         firestore = Firestore.firestore()
-        storage = Storage.storage()
         let settings = firestore.settings
         settings.cacheSizeBytes = 200 * 1_000_000
         if DebugSettings.shared.isInDebugMode, DebugSettings.shared.useFirestoreEmulator {
@@ -113,12 +96,10 @@ class FirebaseService: DatabaseManager {
     func setup(userId: String) {
         guard userId != self.userId else { return }
 
-        imageRef = storage.reference().child("images/\(userId)/profilePicture.jpg")
         self.userId = userId
 
         reset()
         listenToChanges(userId: userId)
-        getUserProfileImage()
     }
 
     private func listenToChanges(userId: String) {
@@ -127,51 +108,6 @@ class FirebaseService: DatabaseManager {
         stacksListener.startListening(collectionName: "stacks", baseDocumentReference: userListener.documentRef)
         favoritesListener.startListening(collectionName: "favorites", baseDocumentReference: userListener.documentRef)
         recentlyViewedListener.startListening(collectionName: "recentlyViewed", baseDocumentReference: userListener.documentRef)
-    }
-
-    func getImageURLs(for users: [User]) -> AnyPublisher<[User], AppError> {
-        Future { [weak self] promise in
-            guard let self = self else {
-                promise(.success([]))
-                return
-            }
-            var usersWithImageURLs: [User] = []
-            let dispatchGroup = DispatchGroup()
-            for user in users {
-                dispatchGroup.enter()
-                let imageRef = self.storage.reference().child("images/\(user.id)/profilePicture.jpg")
-                self.getProfileImage(at: imageRef) { url, error in
-                    DispatchQueue.main.async {
-                        if let error = error {
-                            log("error downloading image \(error)", logType: .error)
-                            usersWithImageURLs.append(user)
-                        } else {
-                            var copy = user
-                            copy.imageURL = url
-                            usersWithImageURLs.append(copy)
-                        }
-                        dispatchGroup.leave()
-                    }
-                }
-            }
-            dispatchGroup.notify(queue: .main) {
-                promise(.success(usersWithImageURLs))
-            }
-        }.eraseToAnyPublisher()
-    }
-
-    private func getUserProfileImage() {
-        getProfileImage(at: imageRef) { [weak self] url, error in
-            if let error = error {
-                log("error downloading image \(error)", logType: .error)
-            } else {
-                self?.imageSubject.send(url)
-            }
-        }
-    }
-
-    private func getProfileImage(at storageRef: StorageReference?, completion: @escaping (URL?, Error?) -> Void) {
-        storageRef?.downloadURL(completion: completion)
     }
 
     private func addCollectionUpdatesListener<T: Codable>(collectionRef: CollectionReference?,
@@ -394,53 +330,6 @@ class FirebaseService: DatabaseManager {
     func unfavorite(item: Item) {
         guard let ref = favoritesListener.collectionRef?.document(Item.databaseId(itemId: item.id, settings: nil)) else { return }
         deleteDocument(atRef: ref)
-    }
-
-    func uploadProfileImage(image: UIImage) {
-        guard let data = image.resizeImage(300).jpegData(compressionQuality: 0.4),
-              let imageRef = imageRef
-        else { return }
-        uploadTask?.cancel()
-
-        imageRef.listAll { [weak self] result, error in
-            if result.items.isEmpty {
-                self?.uploadImageData(data)
-            } else {
-                imageRef.delete { error in
-                    if let error = error {
-                        self?.uploadImageData(data)
-                    } else {
-                        self?.uploadImageData(data)
-                    }
-                }
-            }
-        }
-    }
-
-//    func uploadItemImage(image: UIImage, inventoryItemId: String) {
-//        guard let data = image.resizeImage(500).jpegData(compressionQuality: 0.4),
-//              let imageRef = storage.reference().child("images/\(userId)/.jpg") else { return }
-////        uploadTask?.cancel()
-//
-//        imageRef.listAll { [weak self] result, error in
-//            if result.items.isEmpty {
-//                self?.uploadImageData(data)
-//            } else {
-//                imageRef.delete { error in
-//                    if let error = error {
-//                        self?.uploadImageData(data)
-//                    } else {
-//                        self?.uploadImageData(data)
-//                    }
-//                }
-//            }
-//        }
-//    }
-
-    private func uploadImageData(_ data: Data) {
-        uploadTask = imageRef?.putData(data, metadata: nil) { [weak self] metadata, error in
-            self?.getUserProfileImage()
-        }
     }
 
     private func setDocument(_ data: [String: Any], atRef ref: DocumentReference, using batch: WriteBatch? = nil) {

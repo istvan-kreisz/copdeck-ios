@@ -35,6 +35,8 @@ enum MainAction {
     case setSelectedUser(user: ProfileData?, completion: (ProfileData?) -> Void)
     // item details
     case getItemDetails(item: Item?, itemId: String, fetchMode: FetchMode, completion: ((Item?) -> Void))
+    case getItemImage(itemId: String, completion: ((URL?) -> Void))
+    case setItemImage(url: URL?, completion: ((URL?) -> Void))
     case refreshItemIfNeeded(itemId: String, fetchMode: FetchMode)
     case setSelectedItem(item: Item?, completion: (Item?) -> Void)
     // inventory
@@ -62,7 +64,11 @@ extension MainAction: Identifiable {
     var id: String {
         switch self {
         case let .refreshItemIfNeeded(itemId, fetchMode):
-            return "refreshItemIfNeeded \(itemId) \(fetchMode.rawValue)"
+            return "\(label) \(itemId) \(fetchMode.rawValue)"
+        case .getItemImage:
+            return UUID().uuidString
+        case .setItemImage:
+            return UUID().uuidString
         default:
             return label
         }

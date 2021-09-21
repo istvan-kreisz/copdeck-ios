@@ -8,27 +8,27 @@
 import SwiftUI
 
 struct ItemImageViewWithNavBar: View {
-    let imageURL: ImageURL?
+    let source: ImageViewSourceType
     let requestInfo: [ScraperRequestInfo]
     var shouldDismiss: () -> Void
     var isFavorited: Binding<Bool>?
+    let flipImage: Bool
 
     let size = UIScreen.main.bounds.width - 80
 
     var body: some View {
         ZStack {
             Color.customWhite.edgesIgnoringSafeArea(.all)
-            if let imageURL = self.imageURL {
-                ItemImageView(withImageURL: imageURL,
-                              requestInfo: requestInfo,
-                              size: size,
-                              aspectRatio: nil,
-                              flipImage: imageURL.store?.id == .klekt,
-                              showPlaceholder: false)
-            } else {
-                Color.clear
-                    .frame(width: UIScreen.main.bounds.width - 80, height: UIScreen.main.bounds.width - 80)
-            }
+
+            Color.clear
+                .frame(width: size, height: size)
+            ItemImageView(source: source,
+                          requestInfo: requestInfo,
+                          size: size,
+                          aspectRatio: nil,
+                          flipImage: flipImage,
+                          showPlaceholder: false)
+
             if let isFavorited = isFavorited {
                 Button {
                     isFavorited.wrappedValue.toggle()
@@ -45,11 +45,5 @@ struct ItemImageViewWithNavBar: View {
                 .withDefaultPadding(padding: .horizontal)
                 .topAligned()
         }
-    }
-}
-
-struct ItemImageViewWithNavBar_Previews: PreviewProvider {
-    static var previews: some View {
-        return ItemImageViewWithNavBar(imageURL: nil, requestInfo: []) {}
     }
 }
