@@ -104,7 +104,8 @@ struct ItemDetailView: View {
             ScrollView(.vertical, showsIndicators: false) {
                 ScrollViewReader { scrollViewProxy in
                     VStack(alignment: .center, spacing: 20) {
-                        ItemImageViewWithNavBar(source: imageSource(for: item),
+                        ItemImageViewWithNavBar(itemId: item?.id ?? "",
+                                                source: imageSource(for: item),
                                                 requestInfo: store.state.requestInfo,
                                                 shouldDismiss: shouldDismiss,
                                                 isFavorited: isFavorited,

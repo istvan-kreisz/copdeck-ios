@@ -12,7 +12,8 @@ struct ProfileListItem: View {
     @Binding var selectedProfile: ProfileData?
 
     var body: some View {
-        VerticalListItemWithAccessoryView1(title: profileData.user.name ?? "",
+        VerticalListItemWithAccessoryView1(itemId: "",
+            title: profileData.user.name ?? "",
                                            source: .url(profileData.user.imageURL),
                                            flipImage: false,
                                            requestInfo: [],

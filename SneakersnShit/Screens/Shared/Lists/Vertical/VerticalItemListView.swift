@@ -44,7 +44,8 @@ struct VerticalItemListView: View {
 
             VerticalListView(bottomPadding: bottomPadding) {
                 ForEach(items) { (item: Item) in
-                    VerticalListItemWithoutAccessoryView(title: item.name ?? "",
+                    VerticalListItemWithoutAccessoryView(itemId: item.id,
+                                                         title: item.name ?? "",
                                                          source: imageSource(for: item),
                                                          flipImage: item.imageURL?.store?.id == .klekt,
                                                          requestInfo: requestInfo,

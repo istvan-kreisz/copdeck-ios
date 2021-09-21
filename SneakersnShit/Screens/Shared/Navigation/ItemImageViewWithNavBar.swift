@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ItemImageViewWithNavBar: View {
+    let itemId: String
     let source: ImageViewSourceType
     let requestInfo: [ScraperRequestInfo]
     var shouldDismiss: () -> Void
@@ -22,7 +23,8 @@ struct ItemImageViewWithNavBar: View {
 
             Color.clear
                 .frame(width: size, height: size)
-            ItemImageView(source: source,
+            ItemImageView(itemId: itemId,
+                          source: source,
                           requestInfo: requestInfo,
                           size: size,
                           aspectRatio: nil,

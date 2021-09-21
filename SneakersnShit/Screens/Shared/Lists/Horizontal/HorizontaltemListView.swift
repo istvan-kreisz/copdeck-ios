@@ -58,14 +58,16 @@ struct HorizontaltemListView: View {
                         ForEach(itemsToShow) { (item: Item) in
                             switch style {
                             case .round:
-                                HorizontalListItemRound(title: item.name ?? "",
+                                HorizontalListItemRound(itemId: item.id,
+                                    title: item.name ?? "",
                                                         source: imageSource(for: item),
                                                         flipImage: item.imageURL?.store?.id == .klekt,
                                                         requestInfo: requestInfo,
                                                         index: itemsToShow.firstIndex(where: { $0.id == item.id }) ?? 0,
                                                         onTapped: { selectedItem = item })
                             case let .square(color):
-                                HorizontalListItemSquare(title: item.name ?? "",
+                                HorizontalListItemSquare(itemId: item.id,
+                                    title: item.name ?? "",
                                                          source: imageSource(for: item),
                                                          flipImage: item.imageURL?.store?.id == .klekt,
                                                          requestInfo: requestInfo,

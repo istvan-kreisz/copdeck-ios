@@ -10,6 +10,7 @@ import SwiftUI
 import SwiftUI
 
 struct HorizontalListItemSquare: View {
+    let itemId: String
     var title: String
     let source: ImageViewSourceType
     var flipImage = false
@@ -31,7 +32,8 @@ struct HorizontalListItemSquare: View {
                     .background(Color.clear))
                 .withDefaultShadow()
 
-            ItemImageView(source: source,
+            ItemImageView(itemId: itemId,
+                          source: source,
                           requestInfo: requestInfo,
                           size: Self.size * 0.66,
                           aspectRatio: nil,
@@ -42,6 +44,5 @@ struct HorizontalListItemSquare: View {
                 .onTapGesture(perform: onTapped)
         }
         .frame(width: Self.size, height: Self.size)
-        
     }
 }

@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HorizontalListItemRound: View {
+    let itemId: String
     var title: String
     let source: ImageViewSourceType
     var flipImage = false
@@ -19,7 +20,8 @@ struct HorizontalListItemRound: View {
     static let size: CGFloat = 62
 
     var body: some View {
-        ItemImageView(source: source,
+        ItemImageView(itemId: itemId,
+            source: source,
                       requestInfo: requestInfo,
                       size: Self.size * 0.66,
                       aspectRatio: nil,

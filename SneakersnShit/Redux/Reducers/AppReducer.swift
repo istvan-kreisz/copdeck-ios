@@ -134,6 +134,10 @@ func appReducer(state: inout AppState,
                 .catchErrors()
         case let .setItemImage(url, completion):
             completion(url)
+        case let .uploadItemImage(itemId, image):
+            DispatchQueue.main.async {
+                environment.dataController.uploadItemImage(itemId: itemId, image: image)
+            }
         case let .refreshItemIfNeeded(itemId, fetchMode):
             return environment.dataController.getItemDetails(for: nil,
                                                              itemId: itemId,
@@ -154,7 +158,7 @@ func appReducer(state: inout AppState,
         case let .updateStack(stack):
             if stack.id != "all" {
                 environment.dataController.update(stacks: [stack])
-                if state.user?.isPublic != true && (stack.isPublished == true || stack.isPublic == true) {
+                if state.user?.isPublic != true, stack.isPublished == true || stack.isPublic == true {
                     return Just(AppAction.main(action: .updateProfileVisibility(isPublic: true))).eraseToAnyPublisher()
                 }
             }

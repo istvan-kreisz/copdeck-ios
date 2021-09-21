@@ -14,6 +14,7 @@ enum VerticalListItemSelectionStyle {
 }
 
 struct VerticalListItem<V1: View, V2: View>: View {
+    let itemId: String
     var title: String
     let source: ImageViewSourceType
     var flipImage = false
@@ -52,7 +53,8 @@ struct VerticalListItem<V1: View, V2: View>: View {
             }
 
             HStack(alignment: .center, spacing: 10) {
-                ItemImageView(source: source,
+                ItemImageView(itemId: itemId,
+                              source: source,
                               requestInfo: requestInfo,
                               size: 62,
                               aspectRatio: nil,
@@ -109,6 +111,7 @@ struct VerticalListItem<V1: View, V2: View>: View {
 }
 
 struct VerticalListItemWithAccessoryView1<V: View>: View {
+    let itemId: String
     var title: String
     let source: ImageViewSourceType
     var flipImage = false
@@ -126,7 +129,8 @@ struct VerticalListItemWithAccessoryView1<V: View>: View {
     var onSelectorTapped: (() -> Void)? = nil
 
     var body: some View {
-        VerticalListItem<V, EmptyView>(title: title,
+        VerticalListItem<V, EmptyView>(itemId: itemId,
+                                       title: title,
                                        source: source,
                                        flipImage: flipImage,
                                        requestInfo: requestInfo,
@@ -144,6 +148,7 @@ struct VerticalListItemWithAccessoryView1<V: View>: View {
 }
 
 struct VerticalListItemWithoutAccessoryView: View {
+    let itemId: String
     var title: String
     let source: ImageViewSourceType
     var flipImage = false
@@ -161,7 +166,8 @@ struct VerticalListItemWithoutAccessoryView: View {
     var onSelectorTapped: (() -> Void)? = nil
 
     var body: some View {
-        VerticalListItem<EmptyView, EmptyView>(title: title,
+        VerticalListItem<EmptyView, EmptyView>(itemId: itemId,
+                                               title: title,
                                                source: source,
                                                flipImage: flipImage,
                                                requestInfo: requestInfo,

@@ -22,6 +22,7 @@ class DefaultImageService: ImageService {
 
     private var profileImageUploadTask: StorageUploadTask?
     private var itemImageUploadTasks: [String: StorageUploadTask] = [:]
+    private var itemImageUploadTasks2: [String: Int] = [:]
 
     var profileImagePublisher: AnyPublisher<URL?, Never> {
         imageSubject.receive(on: DispatchQueue.main).eraseToAnyPublisher()
@@ -89,30 +90,43 @@ class DefaultImageService: ImageService {
         let imageRef = profileImageRef(userId: userId)
         profileImageUploadTask?.cancel()
 
-        imageRef.listAll { [weak self] result, error in
-            if result.items.isEmpty {
-                self?.uploadProfileImageData(data)
-            } else {
-                imageRef.delete { error in
+        imageRef.getMetadata { [weak self] meta, error in
+            if meta != nil {
+                imageRef.delete { [weak self] error in
                     if let error = error {
                         self?.uploadProfileImageData(data)
                     } else {
                         self?.uploadProfileImageData(data)
                     }
                 }
+            } else {
+                self?.uploadProfileImageData(data)
             }
         }
     }
 
     func uploadItemImage(itemId: String, image: UIImage) {
-        guard itemImageUploadTasks[itemId] == nil else { return }
+        guard itemImageUploadTasks[itemId] == nil && itemImageUploadTasks2[itemId] == nil && !itemId.isEmpty else { return }
+        itemImageUploadTasks2[itemId] = 1
         let imageRef = itemImageRef(itemId: itemId)
 
-        imageRef.listAll { [weak self] result, error in
-            guard result.items.isEmpty else { return }
-            guard let data = image.resizeImage(500).jpegData(compressionQuality: 0.5) else { return }
-            self?.itemImageUploadTasks[itemId] = imageRef.putData(data, metadata: nil) { [weak self] metadata, error in
+        imageRef.getMetadata { [weak self] meta, error in
+            guard meta == nil else {
                 self?.itemImageUploadTasks[itemId] = nil
+                self?.itemImageUploadTasks2[itemId] = nil
+                return
+            }
+            DispatchQueue.global(qos: .background).async { [weak self] in
+                guard let data = image.resizeImage(500).jpegData(compressionQuality: 0.5) else {
+                    self?.itemImageUploadTasks[itemId] = nil
+                    self?.itemImageUploadTasks2[itemId] = nil
+                    return
+                }
+                log("uploading image \(itemId)")
+                self?.itemImageUploadTasks[itemId] = imageRef.putData(data, metadata: nil) { [weak self] metadata, error in
+                    self?.itemImageUploadTasks[itemId] = nil
+                    self?.itemImageUploadTasks2[itemId] = nil
+                }
             }
         }
     }

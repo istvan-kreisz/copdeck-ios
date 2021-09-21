@@ -24,7 +24,8 @@ struct StackSummaryListItem: View {
     }
 
     var body: some View {
-        VerticalListItem(title: inventoryItem.name,
+        VerticalListItem(itemId: inventoryItem.itemId ?? "",
+                         title: inventoryItem.name,
                          source: imageSource(for: inventoryItem),
                          flipImage: inventoryItem.imageURL?.store?.id == .klekt,
                          requestInfo: requestInfo,
