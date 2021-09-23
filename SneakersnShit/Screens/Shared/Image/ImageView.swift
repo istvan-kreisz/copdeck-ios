@@ -73,7 +73,11 @@ struct ImageView: View {
                         }
                     }
                 }
-                .onSuccess { didLoadImage?($0.image) }
+                .onSuccess {
+                    if source is ImageRequest {
+                        didLoadImage?($0.image)
+                    }
+                }
                 .background(Color.customWhite)
                 .frame(width: size, height: size)
                 .scaleEffect(CGSize(width: flipImage ? -1.0 : 1.0, height: 1.0))

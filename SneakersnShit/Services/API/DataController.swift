@@ -89,7 +89,7 @@ protocol ImageService {
     func uploadProfileImage(image: UIImage)
     func setup(userId: String)
     func reset()
-    func getImagePublisher(for itemId: String) -> AnyPublisher<URL?, Never>
+    func getImage(for itemId: String, completion: @escaping (URL?) -> Void)
     func uploadItemImage(itemId: String, image: UIImage)
 }
 

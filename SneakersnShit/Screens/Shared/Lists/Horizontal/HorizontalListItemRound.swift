@@ -21,7 +21,7 @@ struct HorizontalListItemRound: View {
 
     var body: some View {
         ItemImageView(itemId: itemId,
-            source: source,
+                      source: source,
                       requestInfo: requestInfo,
                       size: Self.size * 0.66,
                       aspectRatio: nil,

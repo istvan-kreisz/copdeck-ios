@@ -59,7 +59,7 @@ struct HorizontaltemListView: View {
                             switch style {
                             case .round:
                                 HorizontalListItemRound(itemId: item.id,
-                                    title: item.name ?? "",
+                                                        title: item.name ?? "",
                                                         source: imageSource(for: item),
                                                         flipImage: item.imageURL?.store?.id == .klekt,
                                                         requestInfo: requestInfo,
@@ -67,7 +67,7 @@ struct HorizontaltemListView: View {
                                                         onTapped: { selectedItem = item })
                             case let .square(color):
                                 HorizontalListItemSquare(itemId: item.id,
-                                    title: item.name ?? "",
+                                                         title: item.name ?? "",
                                                          source: imageSource(for: item),
                                                          flipImage: item.imageURL?.store?.id == .klekt,
                                                          requestInfo: requestInfo,

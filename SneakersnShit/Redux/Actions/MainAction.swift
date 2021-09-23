@@ -36,7 +36,6 @@ enum MainAction {
     // item details
     case getItemDetails(item: Item?, itemId: String, fetchMode: FetchMode, completion: ((Item?) -> Void))
     case getItemImage(itemId: String, completion: ((URL?) -> Void))
-    case setItemImage(url: URL?, completion: ((URL?) -> Void))
     case uploadItemImage(itemId: String, image: UIImage)
     case refreshItemIfNeeded(itemId: String, fetchMode: FetchMode)
     case setSelectedItem(item: Item?, completion: (Item?) -> Void)
@@ -67,9 +66,7 @@ extension MainAction: Identifiable {
         case let .refreshItemIfNeeded(itemId, fetchMode):
             return "\(label) \(itemId) \(fetchMode.rawValue)"
         case .getItemImage:
-            return UUID().uuidString
-        case .setItemImage:
-            return UUID().uuidString
+            return "\(label) \(UUID().uuidString)"
         case let .uploadItemImage(itemId, _):
             return "\(label) \(itemId)"
         default:

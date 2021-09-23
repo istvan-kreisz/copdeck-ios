@@ -129,11 +129,7 @@ func appReducer(state: inout AppState,
                 .map { AppAction.main(action: .setSelectedItem(item: $0, completion: completion)) }
                 .catchErrors()
         case let .getItemImage(itemId, completion):
-            return environment.dataController.getImagePublisher(for: itemId)
-                .map { AppAction.main(action: .setItemImage(url: $0, completion: completion)) }
-                .catchErrors()
-        case let .setItemImage(url, completion):
-            completion(url)
+            environment.dataController.getImage(for: itemId, completion: completion)
         case let .uploadItemImage(itemId, image):
             DispatchQueue.main.async {
                 environment.dataController.uploadItemImage(itemId: itemId, image: image)

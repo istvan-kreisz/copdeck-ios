@@ -13,8 +13,8 @@ struct SelectStackItemsListItem: View {
     var requestInfo: [ScraperRequestInfo]
 
     var body: some View {
-        VerticalListItemWithAccessoryView1(itemId: inventoryItem.id ?? "",
-            title: inventoryItem.name,
+        VerticalListItemWithAccessoryView1(itemId: inventoryItem.itemId ?? "",
+                                           title: inventoryItem.name,
                                            source: imageSource(for: inventoryItem),
                                            flipImage: inventoryItem.imageURL?.store?.id == .klekt,
                                            requestInfo: requestInfo,

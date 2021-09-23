@@ -272,8 +272,12 @@ extension Item {
         Item.databaseId(itemId: id, settings: settings)
     }
 
+    static func idWithoutForwardSlash(itemId: String) -> String {
+        itemId.replacingOccurrences(of: "/", with: ".")
+    }
+
     static func databaseId(itemId: String, settings: CopDeckSettings?) -> String {
-        let baseId = itemId.replacingOccurrences(of: "/", with: ".")
+        let baseId = idWithoutForwardSlash(itemId: itemId)
         if let settings = settings {
             return "\(baseId)-\(settings.feeCalculation.country.region)-\(settings.currency.code.rawValue)"
         } else {

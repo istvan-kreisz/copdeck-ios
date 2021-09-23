@@ -144,17 +144,17 @@ extension AppStore {
 }
 
 private func imageRequest(for imageURL: ImageURL?) -> ImageRequestConvertible? {
-    if let imageURL = imageURL,
-       let headers = AppStore.default.state.requestInfo
-       .first(where: { $0.storeId == imageURL.store?.id })?.imageDownloadHeaders,
-       let url = URL(string: imageURL.url) {
+    if let imageURL = imageURL, let url = URL(string: imageURL.url) {
         var request = URLRequest(url: url)
-        headers.forEach { name, value in
-            request.setValue(value, forHTTPHeaderField: name)
+
+        if let headers = AppStore.default.state.requestInfo.first(where: { $0.storeId == imageURL.store?.id })?.imageDownloadHeaders {
+            headers.forEach { name, value in
+                request.setValue(value, forHTTPHeaderField: name)
+            }
         }
         return ImageRequest(urlRequest: request)
     } else {
-        return imageURL?.URL
+        return nil
     }
 }
 

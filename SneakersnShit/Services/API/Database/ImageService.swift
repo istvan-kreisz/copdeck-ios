@@ -73,14 +73,10 @@ class DefaultImageService: ImageService {
         }.eraseToAnyPublisher()
     }
 
-    func getImagePublisher(for itemId: String) -> AnyPublisher<URL?, Never> {
-        let ref = itemImageRef(itemId: itemId)
-        return Future { [weak self] promise in
-            self?.getImage(at: ref) { url, error in
-                promise(.success(url))
-            }
+    func getImage(for itemId: String, completion: @escaping (URL?) -> Void) {
+        getImage(at: itemImageRef(itemId: itemId)) { url, error in
+            completion(url)
         }
-        .eraseToAnyPublisher()
     }
 
     func uploadProfileImage(image: UIImage) {
@@ -106,7 +102,7 @@ class DefaultImageService: ImageService {
     }
 
     func uploadItemImage(itemId: String, image: UIImage) {
-        guard itemImageUploadTasks[itemId] == nil && itemImageUploadTasks2[itemId] == nil && !itemId.isEmpty else { return }
+        guard itemImageUploadTasks[itemId] == nil, itemImageUploadTasks2[itemId] == nil, !itemId.isEmpty else { return }
         itemImageUploadTasks2[itemId] = 1
         let imageRef = itemImageRef(itemId: itemId)
 
@@ -117,7 +113,7 @@ class DefaultImageService: ImageService {
                 return
             }
             DispatchQueue.global(qos: .background).async { [weak self] in
-                guard let data = image.resizeImage(500).jpegData(compressionQuality: 0.5) else {
+                guard let data = image.resized(toWidth: 500)?.jpegData(compressionQuality: 0.5) else {
                     self?.itemImageUploadTasks[itemId] = nil
                     self?.itemImageUploadTasks2[itemId] = nil
                     return

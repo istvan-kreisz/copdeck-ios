@@ -29,7 +29,7 @@ struct InventoryListItem: View {
     }
 
     var body: some View {
-        VerticalListItem(itemId: inventoryItem.id ?? "",
+        VerticalListItem(itemId: inventoryItem.itemId ?? "",
                          title: inventoryItem.name,
                          source: imageSource(for: inventoryItem),
                          flipImage: inventoryItem.imageURL?.store?.id == .klekt,

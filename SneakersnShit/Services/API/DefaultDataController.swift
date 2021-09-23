@@ -330,23 +330,16 @@ class DefaultDataController: DataController {
         }
     }
 
-    func getImagePublisher(for itemId: String) -> AnyPublisher<URL?, Never> {
-        imageCache.valuePublisher(forKey: itemId)
-            .flatMap { [weak self] url -> AnyPublisher<URL?, Never> in
-                guard let self = self else { return Just(nil).eraseToAnyPublisher() }
-                if let url = url {
-                    return Just(url).eraseToAnyPublisher()
-                } else {
-                    return self.imageService.getImagePublisher(for: itemId)
-                        .handleEvents(receiveOutput: { [weak self] url in
-                            guard let url = url else { return }
-                            self?.imageCache.insert(url, forKey: itemId)
-
-                        })
-                        .eraseToAnyPublisher()
-                }
+    func getImage(for itemId: String, completion: @escaping (URL?) -> Void) {
+        if let cached = imageCache.value(forKey: itemId) {
+            completion(cached)
+        } else {
+            imageService.getImage(for: itemId) { [weak self] url in
+                guard let url = url else { return }
+                self?.imageCache.insert(url, forKey: itemId)
+                completion(url)
             }
-            .eraseToAnyPublisher()
+        }
     }
 
     func uploadItemImage(itemId: String, image: UIImage) {
