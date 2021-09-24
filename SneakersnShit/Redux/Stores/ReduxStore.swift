@@ -11,8 +11,15 @@ import Combine
 typealias Reducer<State, Action, Environment> =
     (inout State, Action, Environment, ((Result<Void, AppError>) -> Void)?) -> AnyPublisher<Action, Never>
 
-final class ReduxStore<State, Action: Identifiable, Environment>: ObservableObject where Action.ID == String {
-    @Published var state: State
+final class ReduxStore<State: Equatable, Action: Identifiable, Environment>: ObservableObject where Action.ID == String {
+    let stateSubject: CurrentValueSubject<State, Never>
+    var state: State {
+        willSet {
+            if state != newValue {
+                stateSubject.send(newValue)
+            }
+        }
+    }
 
     let environment: Environment
     private let reducer: Reducer<State, Action, Environment>
@@ -22,6 +29,12 @@ final class ReduxStore<State, Action: Identifiable, Environment>: ObservableObje
         self.state = state
         self.reducer = reducer
         self.environment = environment
+        self.stateSubject = CurrentValueSubject<State, Never>(state)
+        stateSubject
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+            .store(in: &effectCancellables)
     }
 
     func send(_ action: Action, debounceDelayMs: Int? = nil, completed: ((Result<Void, AppError>) -> Void)? = nil) {

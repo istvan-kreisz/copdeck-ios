@@ -17,9 +17,8 @@ class DerivedGlobalStore: ObservableObject {
         self.appStore = appStore
         self.globalState = appStore.state.globalState
 
-        appStore.$state
+        appStore.stateSubject
             .map(\.globalState)
-            .removeDuplicates()
             .sink { [weak self] state in
                 self?.globalState = state
             }
@@ -40,9 +39,8 @@ class DerivedStore<T: Equatable>: DerivedGlobalStore {
         self.derivedState = derivedState
         super.init(appStore: appStore)
 
-        appStore.$state
+        appStore.stateSubject
             .compactMap { [weak self] in self?.derivedState($0) }
-            .removeDuplicates()
             .sink { [weak self] state in
                 self?.state = state
             }
