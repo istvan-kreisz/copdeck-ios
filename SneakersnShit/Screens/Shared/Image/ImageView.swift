@@ -36,7 +36,7 @@ struct ImageView: View {
         switch source {
         case let .url(url):
             self._source = State(initialValue: url)
-            self.publisher = Empty<ImageRequestConvertible?, Never>().eraseToAnyPublisher()
+            self.publisher = Empty<ImageRequestConvertible?, Never>(completeImmediately: true).eraseToAnyPublisher()
         case let .publisher(publisher):
             self._source = State(initialValue: nil)
             self.publisher = publisher

@@ -57,7 +57,7 @@ struct AddToInventoryView: View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .center, spacing: 20) {
                 ItemImageViewWithNavBar(itemId: item.id,
-                    source: imageSource(for: item),
+                                        source: imageSource(for: item),
                                         requestInfo: store.state.requestInfo,
                                         shouldDismiss: { presented = (false, nil) },
                                         flipImage: item.imageURL?.store?.id == .klekt)

@@ -335,8 +335,9 @@ class DefaultDataController: DataController {
             completion(cached)
         } else {
             imageService.getImage(for: itemId) { [weak self] url in
-                guard let url = url else { return }
-                self?.imageCache.insert(url, forKey: itemId)
+                if let url = url {
+                    self?.imageCache.insert(url, forKey: itemId)
+                }
                 completion(url)
             }
         }
