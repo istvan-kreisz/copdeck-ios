@@ -218,7 +218,7 @@ struct InventoryView: View {
             .sheet(isPresented: showSheet) {
                 switch presentedSheet {
                 case .settings:
-                    SettingsView(settings: store.state.settings, isProfilePublic: store.state.user?.isPublic, isPresented: settingsPresented)
+                    SettingsView(settings: store.state.settings, isPresented: settingsPresented)
                         .environmentObject(DerivedGlobalStore.default)
                 case .filters:
                     FiltersModal(settings: store.state.settings, isPresented: showFilters)

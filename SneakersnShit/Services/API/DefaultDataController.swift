@@ -258,7 +258,9 @@ class DefaultDataController: DataController {
     }
 
     func update(user: User) {
-        databaseManager.update(user: user)
+        var updatedUser = user
+        updatedUser.nameInsensitive = updatedUser.name?.capitalized
+        databaseManager.update(user: updatedUser)
     }
 
     func deleteUser() {
@@ -267,6 +269,21 @@ class DefaultDataController: DataController {
 
     func getUserProfile(userId: String) -> AnyPublisher<ProfileData, AppError> {
         backendAPI.getUserProfile(userId: userId)
+            .flatMap { [weak self] profileData -> AnyPublisher<ProfileData, AppError> in
+                guard let self = self else { return Just(profileData).setFailureType(to: AppError.self).eraseToAnyPublisher() }
+                return self.getImageURLs(for: [profileData.user])
+                    .combineLatest(Just(profileData).setFailureType(to: AppError.self)) { users, profileData in
+                        if let imageURL = users.first?.imageURL, users.first?.id == profileData.user.id {
+                            var updatedProfile = profileData
+                            updatedProfile.user.imageURL = imageURL
+                            return updatedProfile
+                        } else {
+                            return profileData
+                        }
+                    }
+                    .eraseToAnyPublisher()
+            }
+            .eraseToAnyPublisher()
     }
 
     func searchUsers(searchTerm: String) -> AnyPublisher<[User], AppError> {

@@ -147,7 +147,7 @@ class DefaultImageService: ImageService {
     }
 
     private func itemImageRef(itemId: String) -> StorageReference {
-        storage.reference().child("items/\(itemId).jpg")
+        storage.reference().child("items/\(Item.idWithoutForwardSlash(itemId: itemId)).jpg")
     }
 
     private func uploadProfileImageData(_ data: Data) {

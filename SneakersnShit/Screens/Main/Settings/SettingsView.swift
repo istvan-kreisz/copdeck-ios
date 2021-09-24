@@ -33,7 +33,6 @@ struct SettingsView: View {
     @State private var bestPriceFeeType: String
     @State private var preferredShoeSize: String
 
-    @State private var isProfilePublic: Bool
     // stockx
     @State private var stockxSellerFee: String
     @State private var stockxBuyersTaxes: String
@@ -46,7 +45,7 @@ struct SettingsView: View {
 
     @Binding private var isPresented: Bool
 
-    init(settings: CopDeckSettings, isProfilePublic: Bool?, isPresented: Binding<Bool>) {
+    init(settings: CopDeckSettings, isPresented: Binding<Bool>) {
         self._settings = State(initialValue: settings)
 
         // general
@@ -57,7 +56,6 @@ struct SettingsView: View {
         self._bestPriceFeeType = State(initialValue: settings.bestPriceFeeType.rawValue.capitalized)
         self._preferredShoeSize = State(initialValue: settings.preferredShoeSize ?? "")
 
-        self._isProfilePublic = State(initialValue: isProfilePublic ?? false)
         // stockx
         self._stockxSellerFee = State(initialValue: (settings.feeCalculation.stockx?.sellerFee)?.rounded(toPlaces: 1) ?? "")
         self._stockxBuyersTaxes = State(initialValue: (settings.feeCalculation.stockx?.taxes)?.rounded(toPlaces: 1) ?? "")
@@ -241,13 +239,6 @@ struct SettingsView: View {
                                          options: ALLSHOESIZES.reversed(),
                                          selectedOption: $preferredShoeSize,
                                          buttonTapped: selectPreferredShoeSize)
-
-                        HStack {
-                            Text("Public profile")
-                                .layoutPriority(2)
-                            Spacer()
-                            Toggle("", isOn: $isProfilePublic)
-                        }
                     }
 
                     Section(header: Text("StockX")) {
@@ -339,9 +330,6 @@ struct SettingsView: View {
                 .onChange(of: settings) { value in
                     store.send(.main(action: .updateSettings(settings: value)))
                 }
-                .onChange(of: isProfilePublic) { newValue in
-                    store.send(.main(action: .updateProfileVisibility(isPublic: newValue)))
-                }
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())
@@ -352,7 +340,7 @@ struct SettingsView: View {
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         return Group {
-            SettingsView(settings: .default, isProfilePublic: false, isPresented: .constant(true))
+            SettingsView(settings: .default, isPresented: .constant(true))
                 .environmentObject(AppStore.default)
         }
     }

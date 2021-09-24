@@ -131,9 +131,9 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
 
     func getUserProfile(userId: String) -> AnyPublisher<ProfileData, AppError> {
         struct Wrapper: Encodable {
-            let userId: String
+            let profileId: String
         }
-        return callFirebaseFunction(functionName: "getUserProfile", model: Wrapper(userId: userId))
+        return callFirebaseFunction(functionName: "getUserProfile", model: Wrapper(profileId: userId))
     }
 
     func searchUsers(searchTerm: String) -> AnyPublisher<[User], AppError> {

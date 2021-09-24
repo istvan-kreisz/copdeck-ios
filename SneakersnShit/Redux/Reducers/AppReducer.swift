@@ -35,22 +35,6 @@ func appReducer(state: inout AppState,
                 updatedUser.name = username
                 environment.dataController.update(user: updatedUser)
             }
-        case let .updateProfileVisibility(isPublic):
-            if var updatedUser = state.user {
-                updatedUser.isPublic = isPublic
-                environment.dataController.update(user: updatedUser)
-                if !isPublic {
-                    let stacksToUpdate = state.stacks
-                        .filter { $0.isPublic == true || $0.isPublished == true }
-                        .map { (stack: Stack) -> Stack in
-                            var updatedStack = stack
-                            updatedStack.isPublished = false
-                            updatedStack.isPublic = false
-                            return updatedStack
-                        }
-                    environment.dataController.update(stacks: stacksToUpdate)
-                }
-            }
         case let .getFeedPosts(loadMore):
             return environment.dataController.getFeedPosts(loadMore: loadMore)
                 .map { (result: PaginatedResult<[FeedPost]>) in
@@ -154,9 +138,6 @@ func appReducer(state: inout AppState,
         case let .updateStack(stack):
             if stack.id != "all" {
                 environment.dataController.update(stacks: [stack])
-                if state.user?.isPublic != true, stack.isPublished == true || stack.isPublic == true {
-                    return Just(AppAction.main(action: .updateProfileVisibility(isPublic: true))).eraseToAnyPublisher()
-                }
             }
         case let .addToInventory(inventoryItems):
             environment.dataController.add(inventoryItems: inventoryItems)

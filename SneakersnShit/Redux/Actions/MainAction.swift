@@ -13,7 +13,6 @@ enum MainAction {
     // user - own
     case setUser(user: User)
     case updateUsername(username: String)
-    case updateProfileVisibility(isPublic: Bool)
     // feed
     case getFeedPosts(loadMore: Bool)
     case setFeedPosts(feedPosts: PaginatedResult<[FeedPost]>)
