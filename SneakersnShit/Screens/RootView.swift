@@ -30,9 +30,9 @@ struct RootView: View {
                         .zIndex(1)
                 } else {
 
-//                    if needsAppOnboarding {
-//                        OnboardingView()
-//                    } else
+                    if needsAppOnboarding {
+                        OnboardingView()
+                    } else
                     if user?.inited != true {
                         CountrySelector(settings: store.globalState.settings)
                     } else if user?.settings?.feeCalculation.stockx?.sellerFee == nil {

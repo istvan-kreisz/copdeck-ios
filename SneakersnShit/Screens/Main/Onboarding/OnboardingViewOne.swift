@@ -12,19 +12,12 @@ struct OnboardingViewOne: View {
 
     var body: some View {
         VStack(spacing: 20.0) {
-            ZStack {
-                Image("onboarding-bg-1")
-                    .resizable()
-                    .scaledToFit()
+            Image("onboarding-share")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+//                .frame(height: 300)
+                .scaleEffect(isAnimating ? 1 : 0.9)
 
-                Image("onboarding-object-1")
-                    .resizable()
-                    .scaledToFit()
-                    .offset(x: 0, y: 150)
-                    .scaleEffect(isAnimating ? 1 : 0.9)
-            }
-
-            Spacer()
             Spacer()
 
             Text("Get healthy and live peacfully")
@@ -38,8 +31,6 @@ struct OnboardingViewOne: View {
                 .frame(maxWidth: 250)
                 .foregroundColor(Color(red: 237 / 255, green: 203 / 255, blue: 150 / 255))
                 .shadow(color: Color.black.opacity(0.1), radius: 1, x: 2, y: 2)
-
-            Spacer()
 
             Button(action: {
 
@@ -62,7 +53,7 @@ struct OnboardingViewOne: View {
             })
             .shadow(radius: 10)
 
-            Spacer()
+            Spacer(minLength: 30)
         }
         .onAppear(perform: {
             isAnimating = false
