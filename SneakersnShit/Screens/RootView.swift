@@ -26,13 +26,11 @@ struct RootView: View {
             if store.globalState.firstLoadDone {
                 if store.globalState.user?.id.isEmpty ?? true {
                     LoginView()
-//                        .environmentObject(store)
                         .zIndex(1)
                 } else {
-
-                    if needsAppOnboarding {
-                        OnboardingView()
-                    } else
+//                    if needsAppOnboarding {
+//                        RootOnboardingView()
+//                    } else
                     if user?.inited != true {
                         CountrySelector(settings: store.globalState.settings)
                     } else if user?.settings?.feeCalculation.stockx?.sellerFee == nil {

@@ -169,10 +169,8 @@
 		5DEBC088269B24BA000EEADC /* ViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEBC087269B24BA000EEADC /* ViewRouter.swift */; };
 		5DEBC08A269B3DE8000EEADC /* Double+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEBC089269B3DE8000EEADC /* Double+Extensions.swift */; };
 		5DF03CAB25DA1CE7001856B5 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03CAA25DA1CE7001856B5 /* ImageView.swift */; };
-		5DF3595926FF724E0041A6C3 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF3595826FF724E0041A6C3 /* OnboardingView.swift */; };
-		5DF3595D26FF72570041A6C3 /* OnboardingViewThree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF3595A26FF72560041A6C3 /* OnboardingViewThree.swift */; };
-		5DF3595E26FF72570041A6C3 /* OnboardingViewTwo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF3595B26FF72560041A6C3 /* OnboardingViewTwo.swift */; };
-		5DF3595F26FF72570041A6C3 /* OnboardingViewOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF3595C26FF72570041A6C3 /* OnboardingViewOne.swift */; };
+		5DF3595926FF724E0041A6C3 /* RootOnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF3595826FF724E0041A6C3 /* RootOnboardingView.swift */; };
+		5DF3595F26FF72570041A6C3 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF3595C26FF72570041A6C3 /* OnboardingView.swift */; };
 		C0A401BBBC5AD2E508F6A578 /* Pods_SneakersnShit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE80E208C5DB6897B4D1B91A /* Pods_SneakersnShit.framework */; };
 /* End PBXBuildFile section */
 
@@ -340,10 +338,8 @@
 		5DEBC087269B24BA000EEADC /* ViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewRouter.swift; sourceTree = "<group>"; };
 		5DEBC089269B3DE8000EEADC /* Double+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extensions.swift"; sourceTree = "<group>"; };
 		5DF03CAA25DA1CE7001856B5 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
-		5DF3595826FF724E0041A6C3 /* OnboardingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
-		5DF3595A26FF72560041A6C3 /* OnboardingViewThree.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingViewThree.swift; sourceTree = "<group>"; };
-		5DF3595B26FF72560041A6C3 /* OnboardingViewTwo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingViewTwo.swift; sourceTree = "<group>"; };
-		5DF3595C26FF72570041A6C3 /* OnboardingViewOne.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingViewOne.swift; sourceTree = "<group>"; };
+		5DF3595826FF724E0041A6C3 /* RootOnboardingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootOnboardingView.swift; sourceTree = "<group>"; };
+		5DF3595C26FF72570041A6C3 /* OnboardingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		630E7DC56C63722AE2360C56 /* Pods-InfluTrader.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InfluTrader.release.xcconfig"; path = "Target Support Files/Pods-InfluTrader/Pods-InfluTrader.release.xcconfig"; sourceTree = "<group>"; };
 		6C337F3E851DD176F9F45E8E /* Pods-InfluTrader.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InfluTrader.debug.xcconfig"; path = "Target Support Files/Pods-InfluTrader/Pods-InfluTrader.debug.xcconfig"; sourceTree = "<group>"; };
 		780150CC93D4F13CFCC193B7 /* Pods-SneakersnShit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SneakersnShit.release.xcconfig"; path = "Target Support Files/Pods-SneakersnShit/Pods-SneakersnShit.release.xcconfig"; sourceTree = "<group>"; };
@@ -899,10 +895,8 @@
 		5DA4FE0526E75FC000084AEF /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
-				5DF3595826FF724E0041A6C3 /* OnboardingView.swift */,
-				5DF3595C26FF72570041A6C3 /* OnboardingViewOne.swift */,
-				5DF3595A26FF72560041A6C3 /* OnboardingViewThree.swift */,
-				5DF3595B26FF72560041A6C3 /* OnboardingViewTwo.swift */,
+				5DF3595826FF724E0041A6C3 /* RootOnboardingView.swift */,
+				5DF3595C26FF72570041A6C3 /* OnboardingView.swift */,
 				5D3DE37526AFAB54009E4D52 /* CountrySelector.swift */,
 				5DA4FE0026E6DA3900084AEF /* StockXSellerFeeSelector.swift */,
 			);
@@ -1181,8 +1175,7 @@
 				5DE4F21426DFCCF30087077A /* SharedStackSummaryView.swift in Sources */,
 				5D7B17CC26868CA60065D01C /* Scraper.swift in Sources */,
 				5D52E307261303AF00FA02B8 /* Publishers+Extensions.swift in Sources */,
-				5DF3595F26FF72570041A6C3 /* OnboardingViewOne.swift in Sources */,
-				5DF3595D26FF72570041A6C3 /* OnboardingViewThree.swift in Sources */,
+				5DF3595F26FF72570041A6C3 /* OnboardingView.swift in Sources */,
 				5D424D4225C509610008D6F4 /* Fonts.swift in Sources */,
 				5D696097258713760058BABE /* AppDelegate.swift in Sources */,
 				5D6B112C26A4660500B6B67A /* Styles.swift in Sources */,
@@ -1191,7 +1184,6 @@
 				5D54FE3726C3390F008CD05F /* PopularItemsListView.swift in Sources */,
 				5DCC466E26A8CEDE007671BC /* NewItemCard.swift in Sources */,
 				5D19B0AE26A6D7CA00A31F4E /* AuthenticationAction.swift in Sources */,
-				5DF3595E26FF72570041A6C3 /* OnboardingViewTwo.swift in Sources */,
 				5D63125026950CB400876D99 /* AppReducer.swift in Sources */,
 				5D84875826E3BF60006062DC /* PaginatedResult.swift in Sources */,
 				5D424D1D25C505450008D6F4 /* Modifiers.swift in Sources */,
@@ -1252,7 +1244,7 @@
 				5D424D0425C504510008D6F4 /* EmailValidator.swift in Sources */,
 				5D0E5A13269E60DB006D7E9C /* TextFieldRounded.swift in Sources */,
 				5D9D520026AE211900AB1F30 /* VerticalListItem.swift in Sources */,
-				5DF3595926FF724E0041A6C3 /* OnboardingView.swift in Sources */,
+				5DF3595926FF724E0041A6C3 /* RootOnboardingView.swift in Sources */,
 				5DB590E826C556ED006ECEBD /* ScrollableSegmentedControl.swift in Sources */,
 				5DE596E626C876790024F7D5 /* PagerView.swift in Sources */,
 				5D424CFB25C503F00008D6F4 /* UIApplication+Extensions.swift in Sources */,
