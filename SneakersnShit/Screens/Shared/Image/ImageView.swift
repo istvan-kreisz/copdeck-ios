@@ -50,7 +50,10 @@ struct ImageView: View {
     }
 
     var body: some View {
-        Group {
+        ZStack {
+            Rectangle()
+                .fill(Color.customAccent2)
+                .frame(width: size, height: size)
             if let source = source {
                 LazyImage(source: source) { state in
                     if let image = state.image {
@@ -83,6 +86,7 @@ struct ImageView: View {
                 .scaleEffect(CGSize(width: flipImage ? -1.0 : 1.0, height: 1.0))
             }
         }
+        .cornerRadius(Styles.cornerRadius)
         .onReceive(publisher) { source in
             self.source = source
         }

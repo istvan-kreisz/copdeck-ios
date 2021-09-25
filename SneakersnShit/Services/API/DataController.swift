@@ -90,6 +90,7 @@ protocol ImageService {
     func setup(userId: String)
     func reset()
     func getImage(for itemId: String, completion: @escaping (URL?) -> Void)
+//    func getItemImages(userId: String, inventoryItemId: String, completion: @escaping ([URL]) -> Void)
     func uploadItemImage(itemId: String, image: UIImage)
 }
 

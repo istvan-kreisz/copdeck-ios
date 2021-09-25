@@ -19,10 +19,10 @@ struct StackView: View {
     @Binding var selectedInventoryItems: [InventoryItem]
     @Binding var isSelected: Bool
     @Binding var bestPrices: [String: PriceWithCurrency]
-    @Binding var itemSelectorStack: Stack?
     let requestInfo: [ScraperRequestInfo]
     var didTapEditStack: (() -> Void)?
     var didTapShareStack: (() -> Void)?
+    var didTapAddItems: (() -> Void)?
 
     var allStackItems: [InventoryItem] {
         let sortedItems = stack.inventoryItems(allInventoryItems: inventoryItems, filters: filters, searchText: searchText)
@@ -113,11 +113,9 @@ struct StackView: View {
 
     var body: some View {
         toolbar()
-        if allStackItems.isEmpty {
-            EmptyStateButton(title: "Your stack is empty", buttonTitle: "Start adding items", style: .large, showPlusIcon: true) {
-                itemSelectorStack = stack
-            }
-            .padding(.top, 50)
+        if let didTapAddItems = didTapAddItems, allStackItems.isEmpty {
+            EmptyStateButton(title: "Your stack is empty", buttonTitle: "Start adding items", style: .large, showPlusIcon: true, action: didTapAddItems)
+                .padding(.top, 50)
         } else {
             ForEach(allStackItems) { (inventoryItem: InventoryItem) in
                 InventoryListItem(inventoryItem: inventoryItem,

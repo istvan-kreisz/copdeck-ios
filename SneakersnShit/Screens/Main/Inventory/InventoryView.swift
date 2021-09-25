@@ -31,8 +31,6 @@ struct InventoryView: View {
 
     @ObservedObject var viewRouter: ViewRouter
 
-    @State var itemSelectorStack: Stack?
-
     @State var popup: (String, String)? = nil
 
     @State private var presentedSheet: Sheet? = nil
@@ -55,7 +53,7 @@ struct InventoryView: View {
 
     var editedStack: Stack? {
         guard case let .stack(stack) = navigationDestination.destination else { return nil }
-        return stack
+        return stack.wrappedValue
     }
 
     var selectedInventoryItem: InventoryItem? {
@@ -118,6 +116,7 @@ struct InventoryView: View {
                                                                            navigationDestination.hide()
                                                                        }
                                                                    })
+        let selectedStackBinding = Binding<Stack>(get: { selectedStack ?? .empty }, set: { _ in })
 
         Group {
             let stackTitles = Binding<[String]>(get: { stacks.map { (stack: Stack) in stack.name } }, set: { _ in })
@@ -130,9 +129,7 @@ struct InventoryView: View {
                                                              set: { _ in })
             let filters = Binding<Filters>(get: { store.state.settings.filters }, set: { _ in })
 
-            NavigationLink(destination: Destination(navigationDestination: $navigationDestination,
-                                                    bestPrices: $bestPrices,
-                                                    itemSelectorStack: $itemSelectorStack).navigationbarHidden(),
+            NavigationLink(destination: Destination(navigationDestination: $navigationDestination, bestPrices: $bestPrices).navigationbarHidden(),
                            isActive: showDetail) {
                     EmptyView()
             }
@@ -166,12 +163,13 @@ struct InventoryView: View {
                               selectedInventoryItems: $selectedInventoryItems,
                               isSelected: isSelected,
                               bestPrices: $bestPrices,
-                              itemSelectorStack: $itemSelectorStack,
                               requestInfo: store.state.requestInfo,
                               didTapEditStack: stack.id == "all" ? nil : {
-                                navigationDestination += .stack(stack)
+                                  navigationDestination += .stack(selectedStackBinding)
                               }, didTapShareStack: stack.id == "all" ? nil : {
                                   sharedStack = stack
+                              }, didTapAddItems: stack.id == "all" ? nil : {
+                                  navigationDestination += .selectStackItems(stack)
                               })
                         .listRow()
                 }
@@ -195,8 +193,8 @@ struct InventoryView: View {
                 }
                 if let updatedEditedStack = stacks.first(where: { $0.id == editedStack?.id }) {
                     if editedStack != updatedEditedStack {
-                        if let stack = editedStack {
-                            navigationDestination += .stack(stack)
+                        if editedStack != nil {
+                            navigationDestination += .stack(selectedStackBinding)
                         } else {
                             navigationDestination.hide()
                         }
@@ -331,18 +329,17 @@ extension InventoryView {
 
 extension InventoryView {
     enum NavigationDestination {
-        case inventoryItem(InventoryItem), stack(Stack), selectStackItems, empty
+        case inventoryItem(InventoryItem), stack(Binding<Stack>), selectStackItems(Stack), empty
     }
 
     struct Destination: View {
         @EnvironmentObject var store: AppStore
         @Binding var navigationDestination: Navigation<NavigationDestination>
         @Binding var bestPrices: [String: PriceWithCurrency]
-        @Binding var itemSelectorStack: Stack?
 
         var editedStack: Stack? {
             guard case let .stack(stack) = navigationDestination.destination else { return nil }
-            return stack
+            return stack.wrappedValue
         }
 
         var body: some View {
@@ -352,7 +349,7 @@ extension InventoryView {
             case let .inventoryItem(inventoryItem):
                 InventoryItemDetailView(inventoryItem: inventoryItem) { navigationDestination.hide() }
             case let .stack(stack):
-                StackDetailView(stack: .constant(stack),
+                StackDetailView(stack: stack,
                                 inventoryItems: $store.state.inventoryItems,
                                 bestPrices: $bestPrices,
                                 filters: filters,
@@ -370,16 +367,15 @@ extension InventoryView {
                                         store.send(.main(action: .deleteStack(stack: editedStack)))
                                     }
                                 })
-            case .selectStackItems:
-                SelectStackItemsView(stack: itemSelectorStack ?? Stack.empty,
+            case let .selectStackItems(stack):
+                SelectStackItemsView(stack: stack,
                                      inventoryItems: store.state.inventoryItems,
                                      requestInfo: store.state.requestInfo,
                                      shouldDismiss: { navigationDestination.hide() },
                                      saveChanges: { updatedStackItems in
-                                         if var updatedStack = itemSelectorStack {
-                                             updatedStack.items = updatedStackItems
-                                             store.send(.main(action: .updateStack(stack: updatedStack)))
-                                         }
+                                         var updatedStack = stack
+                                         updatedStack.items = updatedStackItems
+                                         store.send(.main(action: .updateStack(stack: updatedStack)))
                                      })
             case .empty:
                 EmptyView()
