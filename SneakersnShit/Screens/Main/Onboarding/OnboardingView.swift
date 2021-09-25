@@ -20,28 +20,28 @@ struct OnboardingView: View {
             Image(imageName)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
+                .frame(height: UIScreen.isSmallScreen ? 350 : 480)
                 .scaleEffect(isAnimating ? 1 : 0.9)
 
             Spacer()
 
             Text(titleText)
-                .font(.title2)
-                .bold()
+                .font(.bold(size: 24))
                 .foregroundColor(.customText1)
 
             Text(subtitleText)
-                .font(.headline)
+                .font(.medium(size: 18))
                 .multilineTextAlignment(.center)
-                .frame(maxWidth: 250)
                 .foregroundColor(.customText2)
 
             NextButton(text: buttonText,
                        size: .init(width: 260, height: 60),
                        color: .customBlack,
                        tapped: buttonTapped)
-
-            Spacer(minLength: 30)
+                .padding(.bottom, 55)
+                .padding(.top, 10)
         }
+        .withDefaultPadding(padding: .horizontal)
         .onAppear(perform: {
             isAnimating = false
             withAnimation(.easeOut(duration: 0.5)) {

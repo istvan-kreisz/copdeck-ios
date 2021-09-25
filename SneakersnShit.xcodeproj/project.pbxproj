@@ -171,6 +171,7 @@
 		5DF03CAB25DA1CE7001856B5 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03CAA25DA1CE7001856B5 /* ImageView.swift */; };
 		5DF3595926FF724E0041A6C3 /* RootOnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF3595826FF724E0041A6C3 /* RootOnboardingView.swift */; };
 		5DF3595F26FF72570041A6C3 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF3595C26FF72570041A6C3 /* OnboardingView.swift */; };
+		5DF3596126FFB7DF0041A6C3 /* UserDefaults+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF3596026FFB7DF0041A6C3 /* UserDefaults+Extensions.swift */; };
 		C0A401BBBC5AD2E508F6A578 /* Pods_SneakersnShit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE80E208C5DB6897B4D1B91A /* Pods_SneakersnShit.framework */; };
 /* End PBXBuildFile section */
 
@@ -340,6 +341,7 @@
 		5DF03CAA25DA1CE7001856B5 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		5DF3595826FF724E0041A6C3 /* RootOnboardingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootOnboardingView.swift; sourceTree = "<group>"; };
 		5DF3595C26FF72570041A6C3 /* OnboardingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		5DF3596026FFB7DF0041A6C3 /* UserDefaults+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extensions.swift"; sourceTree = "<group>"; };
 		630E7DC56C63722AE2360C56 /* Pods-InfluTrader.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InfluTrader.release.xcconfig"; path = "Target Support Files/Pods-InfluTrader/Pods-InfluTrader.release.xcconfig"; sourceTree = "<group>"; };
 		6C337F3E851DD176F9F45E8E /* Pods-InfluTrader.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InfluTrader.debug.xcconfig"; path = "Target Support Files/Pods-InfluTrader/Pods-InfluTrader.debug.xcconfig"; sourceTree = "<group>"; };
 		780150CC93D4F13CFCC193B7 /* Pods-SneakersnShit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SneakersnShit.release.xcconfig"; path = "Target Support Files/Pods-SneakersnShit/Pods-SneakersnShit.release.xcconfig"; sourceTree = "<group>"; };
@@ -459,6 +461,7 @@
 				5D2726C726CAF3AF00887449 /* List+Extensions.swift */,
 				5DE4F21126DFBB7B0087077A /* State+Extensions.swift */,
 				5DE4F21726E022070087077A /* UIImage+Extensions.swift */,
+				5DF3596026FFB7DF0041A6C3 /* UserDefaults+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1308,6 +1311,7 @@
 				5DDEFDCA26D13695001B0F76 /* FiltersModal.swift in Sources */,
 				5D8ABBC126B1D2E100AFD8CF /* ItemImageView.swift in Sources */,
 				5DE4F21026DF1AD10087077A /* ProfileView.swift in Sources */,
+				5DF3596126FFB7DF0041A6C3 /* UserDefaults+Extensions.swift in Sources */,
 				5D52E31226130E7500FA02B8 /* InventoryItemDetailView.swift in Sources */,
 				5D6B112E26A46E3A00B6B67A /* NavigationBar.swift in Sources */,
 				5D9D520426AE359C00AB1F30 /* InventoryViewPills.swift in Sources */,

@@ -118,4 +118,8 @@ struct DebugSettings {
     var showErrorLogs: Bool {
         bool(for: "showErrorLogs")
     }
+
+    var clearUserDefaults: Bool {
+        bool(for: "clearUserDefaults")
+    }
 }

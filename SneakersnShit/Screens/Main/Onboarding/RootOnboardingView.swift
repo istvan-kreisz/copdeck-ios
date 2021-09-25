@@ -8,29 +8,56 @@
 import SwiftUI
 
 struct RootOnboardingView: View {
+    @EnvironmentObject var store: DerivedGlobalStore
+    @AppStorage(UserDefaults.Keys.needsAppOnboarding.rawValue) private var needsAppOnboarding: Bool = true
     @State private var currentTab = 0
 
     private func nextTapped() {
-        currentTab += 1
+        if currentTab == 6 {
+            needsAppOnboarding = false
+        } else {
+            currentTab += 1
+        }
     }
 
     var body: some View {
         TabView(selection: $currentTab) {
-            OnboardingView(imageName: "onboarding-share",
-                           titleText: "share bitches",
-                           subtitleText: "la la la la la la la la la la la la la la la la la la",
+            OnboardingView(imageName: "onboarding-feed",
+                           titleText: "Welcome to CopDeck!",
+                           subtitleText: "CopDeck helps you manage & share your sneaker inventory and compare prices on different reselling sites.",
                            buttonTapped: nextTapped)
                 .tag(0)
-            OnboardingView(imageName: "onboarding-share",
-                           titleText: "share bitches",
-                           subtitleText: "la la la la la la la la la la la la la la la la la la",
+            OnboardingView(imageName: "onboarding-search",
+                           titleText: "Search sneakers",
+                           subtitleText: "Use the search tab to find the sneaker you're looking for.",
                            buttonTapped: nextTapped)
                 .tag(1)
-            OnboardingView(imageName: "onboarding-share",
-                           titleText: "share bitches",
-                           subtitleText: "la la la la la la la la la la la la la la la la la la",
+            OnboardingView(imageName: "onboarding-prices",
+                           titleText: "Compare prices",
+                           subtitleText: "Tap on a sneaker to see how much it goes for on reselling sites like StockX, GOAT, Klekt and Restocks.",
+                           buttonTapped: nextTapped)
+                .tag(2)
+            OnboardingView(imageName: "onboarding-inventory",
+                           titleText: "Track your inventory",
+                           subtitleText: "Use our advanced inventory manager to track all your owned & sold kicks. Our algorithm automatically shows you the best price for all your pairs based on market data.",
                            buttonTapped: nextTapped)
                 .tag(3)
+            OnboardingView(imageName: "onboarding-share",
+                           titleText: "Share your sneaks",
+                           subtitleText: "Share your inventory on our in-app feed. You can also generate a shareable link, that lets anyone see them, even if they don't have the CopDeck app.",
+                           buttonTapped: nextTapped)
+                .tag(4)
+            OnboardingView(imageName: "onboarding-feed",
+                           titleText: "Browse the CopDeck feed",
+                           subtitleText: "Use our in-app feed to see what other users have on stock, or use it to share your own collections.",
+                           buttonTapped: nextTapped)
+                .tag(5)
+            OnboardingView(imageName: "onboarding-profile",
+                           titleText: "Follow other sneakerheads",
+                           subtitleText: "See what other people are up to in the sneaker game by checking out their CopDeck profiles.",
+                           buttonText: "Let's get started!",
+                           buttonTapped: nextTapped)
+                .tag(6)
         }
         .tabViewStyle(PageTabViewStyle())
         .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))

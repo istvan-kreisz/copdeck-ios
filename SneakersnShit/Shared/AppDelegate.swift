@@ -13,6 +13,9 @@ import Nuke
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        if DebugSettings.shared.clearUserDefaults {
+            UserDefaults.standard.reset()
+        }
         _ = IAPHelper.shared
         FirebaseApp.configure()
         ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
