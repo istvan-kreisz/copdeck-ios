@@ -269,7 +269,7 @@ struct ItemDetailView: View {
                                 }
                             }
                         }
-                        .withDefaultPadding(padding: .horizontal)
+                        .padding(.horizontal, 10)
                         .padding(.vertical, 10)
                         .padding(.bottom, 127)
                     }
