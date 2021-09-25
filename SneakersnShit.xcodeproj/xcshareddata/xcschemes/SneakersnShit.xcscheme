@@ -86,7 +86,7 @@
          <EnvironmentVariable
             key = "showScraperLogs"
             value = "true"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "showReduxLogs"
