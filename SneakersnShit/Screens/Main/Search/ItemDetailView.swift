@@ -49,6 +49,8 @@ struct ItemDetailView: View {
             }) {
                     ZStack(alignment: Alignment(horizontal: .trailing, vertical: .center)) {
                         Text(sizeNumberString(from: row.size))
+                            .font(.semiBold(size: 15))
+                            .padding(.trailing, 3)
                             .frame(height: 32)
                             .frame(maxWidth: 50)
                             .background(Color.customAccent2)
@@ -89,7 +91,6 @@ struct ItemDetailView: View {
                         }
                     }
             }
-            Spacer()
         }
         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0))
     }
@@ -163,113 +164,117 @@ struct ItemDetailView: View {
                                     .foregroundColor(.customText2)
                             }
                             .padding(.bottom, 20)
+                            .padding(.horizontal, 10)
 
                             VStack(alignment: .leading, spacing: 20) {
-                                HStack(spacing: 5) {
-                                    Text("Price type:")
-                                        .font(.semiBold(size: 19))
-                                        .foregroundColor(.customText2)
-                                        .multilineTextAlignment(.leading)
-                                        .frame(width: 98, alignment: .leading)
+                                VStack(alignment: .leading, spacing: 20) {
+                                    HStack(spacing: 5) {
+                                        Text("Price type:")
+                                            .font(.semiBold(size: 19))
+                                            .foregroundColor(.customText2)
+                                            .multilineTextAlignment(.leading)
+                                            .frame(width: 98, alignment: .leading)
 
-                                    ForEach(PriceType.allCases) { (priceType: PriceType) in
-                                        Text(priceType.rawValue.capitalized)
-                                            .frame(width: 60, height: 31)
-                                            .foregroundColor(priceType == self.priceType ? Color.customWhite : Color.customText1)
-                                            .background(Capsule().fill(priceType == self.priceType ? Color.customBlue : Color.clear))
-                                            .background(Capsule().stroke(priceType == self.priceType ? Color.clear : Color.customBlue, lineWidth: 2))
-                                            .onTapGesture {
-                                                self.priceType = priceType
-                                            }
-                                    }
-                                    Spacer()
-                                }
-
-                                HStack(spacing: 5) {
-                                    Text("Fee type:")
-                                        .font(.semiBold(size: 19))
-                                        .foregroundColor(.customText2)
-                                        .multilineTextAlignment(.leading)
-                                        .frame(width: 98, alignment: .leading)
-
-                                    ForEach(FeeType.allCases) { (feeType: FeeType) in
-                                        Text(feeType.rawValue.capitalized)
-                                            .frame(width: 60, height: 31)
-                                            .foregroundColor(feeType == self.feeType ? Color.customWhite : Color.customText1)
-                                            .background(Capsule().fill(feeType == self.feeType ? Color.customPurple : Color.clear))
-                                            .background(Capsule().stroke(feeType == self.feeType ? Color.clear : Color.customPurple, lineWidth: 2))
-                                            .onTapGesture {
-                                                self.feeType = feeType
-                                            }
-                                    }
-                                    Spacer()
-                                }
-                                .padding(.top, -10)
-
-                                HStack(alignment: .center, spacing: 3) {
-                                    Text("Refresh Prices")
-                                        .foregroundColor(.customOrange)
-                                        .font(.bold(size: 16))
-                                    Image(systemName: "arrow.clockwise")
-                                        .font(.bold(size: 13))
-                                        .foregroundColor(.customOrange)
-                                }
-                                .padding(.top, 3)
-                                .padding(.bottom, -5)
-                                .onTapGesture {
-                                    refreshPrices(fetchMode: .forcedRefresh)
-                                }
-
-                                HStack(spacing: 5) {
-                                    Text("Size")
-                                        .font(.semiBold(size: 16))
-                                        .foregroundColor(.customText2)
-                                        .frame(maxWidth: 50)
-                                    ForEach(store.state.settings.displayedStores.compactMap { Store.store(withId: $0) }) { (store: Store) in
-                                        Text(store.name.rawValue)
-                                            .font(.bold(size: 16))
-                                            .foregroundColor(.customText1)
-                                            .frame(maxWidth: .infinity)
-                                            .onTapGesture {
-                                                if let link = item?.storeInfo.first(where: { $0.store.id == store.id })?.url,
-                                                   let url = URL(string: link) {
-                                                    UIApplication.shared.open(url)
+                                        ForEach(PriceType.allCases) { (priceType: PriceType) in
+                                            Text(priceType.rawValue.capitalized)
+                                                .frame(width: 60, height: 31)
+                                                .foregroundColor(priceType == self.priceType ? Color.customWhite : Color.customText1)
+                                                .background(Capsule().fill(priceType == self.priceType ? Color.customBlue : Color.clear))
+                                                .background(Capsule().stroke(priceType == self.priceType ? Color.clear : Color.customBlue, lineWidth: 2))
+                                                .onTapGesture {
+                                                    self.priceType = priceType
                                                 }
-                                            }
+                                        }
+                                        Spacer()
                                     }
-                                    Spacer()
-                                }
-                                .padding(5)
 
-                                if loader.isLoading {
-                                    CustomSpinner(text: "Loading...", animate: true)
-                                        .padding(5)
-                                }
+                                    HStack(spacing: 5) {
+                                        Text("Fee type:")
+                                            .font(.semiBold(size: 19))
+                                            .foregroundColor(.customText2)
+                                            .multilineTextAlignment(.leading)
+                                            .frame(width: 98, alignment: .leading)
 
-                                if let preferredSize = store.state.settings.preferredShoeSize,
-                                   item?.sortedSizes.contains(preferredSize) == true,
-                                   let row = item?.priceRow(size: preferredSize,
-                                                            priceType: priceType,
-                                                            feeType: feeType,
-                                                            stores: store.state.settings.displayedStores) {
-                                    Text("Your size:")
-                                        .font(.semiBold(size: 14))
-                                        .foregroundColor(.customText1)
-                                        .padding(.top, -5)
-                                        .padding(.bottom, -10)
-                                    priceRow(row: row)
-                                    Text("All sizes:")
-                                        .font(.semiBold(size: 14))
-                                        .foregroundColor(.customText1)
-                                        .padding(.bottom, -10)
+                                        ForEach(FeeType.allCases) { (feeType: FeeType) in
+                                            Text(feeType.rawValue.capitalized)
+                                                .frame(width: 60, height: 31)
+                                                .foregroundColor(feeType == self.feeType ? Color.customWhite : Color.customText1)
+                                                .background(Capsule().fill(feeType == self.feeType ? Color.customPurple : Color.clear))
+                                                .background(Capsule().stroke(feeType == self.feeType ? Color.clear : Color.customPurple, lineWidth: 2))
+                                                .onTapGesture {
+                                                    self.feeType = feeType
+                                                }
+                                        }
+                                        Spacer()
+                                    }
+                                    .padding(.top, -10)
+
+                                    HStack(alignment: .center, spacing: 3) {
+                                        Text("Refresh Prices")
+                                            .foregroundColor(.customOrange)
+                                            .font(.bold(size: 16))
+                                        Image(systemName: "arrow.clockwise")
+                                            .font(.bold(size: 13))
+                                            .foregroundColor(.customOrange)
+                                    }
+                                    .padding(.top, 3)
+                                    .padding(.bottom, -5)
+                                    .onTapGesture {
+                                        refreshPrices(fetchMode: .forcedRefresh)
+                                    }
                                 }
-                                ForEach((item?.allPriceRows(priceType: priceType, feeType: feeType, stores: store.state.settings.displayedStores)) ??
-                                    []) { (row: Item.PriceRow) in
+                                .padding(.horizontal, 10)
+
+                                VStack(alignment: .leading, spacing: 20) {
+                                    HStack(spacing: 5) {
+                                        Text("Size (US)")
+                                            .font(.semiBold(size: 15))
+                                            .foregroundColor(.customText2)
+                                            .frame(maxWidth: 50)
+                                        ForEach(store.state.settings.displayedStores.compactMap { Store.store(withId: $0) }) { (store: Store) in
+                                            Text(store.name.rawValue)
+                                                .font(.bold(size: 16))
+                                                .foregroundColor(.customText1)
+                                                .frame(maxWidth: .infinity)
+                                                .onTapGesture {
+                                                    if let link = item?.storeInfo.first(where: { $0.store.id == store.id })?.url,
+                                                       let url = URL(string: link) {
+                                                        UIApplication.shared.open(url)
+                                                    }
+                                                }
+                                        }
+                                    }
+
+                                    if loader.isLoading {
+                                        CustomSpinner(text: "Loading...", animate: true)
+                                            .padding(5)
+                                    }
+
+                                    if let preferredSize = store.state.settings.preferredShoeSize,
+                                       item?.sortedSizes.contains(preferredSize) == true,
+                                       let row = item?.priceRow(size: preferredSize,
+                                                                priceType: priceType,
+                                                                feeType: feeType,
+                                                                stores: store.state.settings.displayedStores) {
+                                        Text("Your size:")
+                                            .font(.semiBold(size: 14))
+                                            .foregroundColor(.customText1)
+                                            .padding(.top, -5)
+                                            .padding(.bottom, -10)
                                         priceRow(row: row)
+                                        Text("All sizes:")
+                                            .font(.semiBold(size: 14))
+                                            .foregroundColor(.customText1)
+                                            .padding(.bottom, -10)
+                                    }
+                                    ForEach((item?.allPriceRows(priceType: priceType, feeType: feeType, stores: store.state.settings.displayedStores)) ??
+                                        []) { (row: Item.PriceRow) in
+                                            priceRow(row: row)
+                                    }
                                 }
+                                .padding(.horizontal, 10)
                             }
                         }
-                        .padding(.horizontal, 10)
                         .padding(.vertical, 10)
                         .padding(.bottom, 127)
                     }

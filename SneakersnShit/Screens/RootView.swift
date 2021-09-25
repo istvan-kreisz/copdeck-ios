@@ -15,7 +15,6 @@ struct RootView: View {
     @State private var error: (String, String)? = nil
 
     @AppStorage("needsAppOnboarding") private var needsAppOnboarding: Bool = true
-    @State private var appSetupState = "App NOT setup ☹️"
 
     class ViewState: ObservableObject {
         @Published var firstShow = true
@@ -31,9 +30,10 @@ struct RootView: View {
                         .zIndex(1)
                 } else {
 
-                    if needsAppOnboarding {
-                        OnboardingView()
-                    } else if user?.inited != true {
+//                    if needsAppOnboarding {
+//                        OnboardingView()
+//                    } else
+                    if user?.inited != true {
                         CountrySelector(settings: store.globalState.settings)
                     } else if user?.settings?.feeCalculation.stockx?.sellerFee == nil {
                         StockXSellerFeeSelector(settings: store.globalState.settings)
