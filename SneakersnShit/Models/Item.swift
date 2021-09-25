@@ -8,11 +8,11 @@
 import Foundation
 
 enum StoreId: String, Codable, CaseIterable, Hashable {
-    case stockx, klekt, goat
+    case stockx, klekt, goat, restocks
 }
 
 enum StoreName: String, Codable, CaseIterable, Hashable {
-    case StockX, Klekt, GOAT
+    case StockX, Klekt, GOAT, Restocks
 }
 
 let ALLSTORES: [Store] = zip(StoreId.allCases, StoreName.allCases).map { (id: StoreId, name: StoreName) in Store(id: id, name: name) }
@@ -112,11 +112,6 @@ struct Item: Codable, Equatable, Identifiable, Hashable, ModelWithDate {
             let boxCondition: String?
 
             var id: String { size }
-
-            var sizeTrimmed: String? {
-                let numString = size.trimmingCharacters(in: CharacterSet.letters.union(CharacterSet.whitespacesAndNewlines))
-                return Double(numString) != nil ? numString : nil
-            }
         }
     }
 }

@@ -37,15 +37,20 @@ struct ItemDetailView: View {
         self._isFavorited = State<Bool>(initialValue: favoritedItemIds.contains(itemId))
     }
 
+    func sizeNumberString(from string: String) -> String {
+        guard let number = string.number else { return "" }
+        return floor(number) == number ? number.rounded(toPlaces: 0) : number.rounded(toPlaces: 1)
+    }
+
     private func priceRow(row: Item.PriceRow) -> some View {
         HStack(spacing: 10) {
             Button(action: {
                 addToInventory = (true, row.size)
             }) {
                     ZStack(alignment: Alignment(horizontal: .trailing, vertical: .center)) {
-                        Text(row.size)
+                        Text(sizeNumberString(from: row.size))
                             .frame(height: 32)
-                            .frame(maxWidth: 90)
+                            .frame(maxWidth: 50)
                             .background(Color.customAccent2)
                             .clipShape(Capsule())
                             .overlay(Capsule().stroke(Color.customBlue, lineWidth: 2))
@@ -215,14 +220,14 @@ struct ItemDetailView: View {
                                     refreshPrices(fetchMode: .forcedRefresh)
                                 }
 
-                                HStack(spacing: 10) {
+                                HStack(spacing: 5) {
                                     Text("Size")
                                         .font(.semiBold(size: 16))
                                         .foregroundColor(.customText2)
-                                        .frame(maxWidth: 90)
+                                        .frame(maxWidth: 50)
                                     ForEach(store.state.settings.displayedStores.compactMap { Store.store(withId: $0) }) { (store: Store) in
                                         Text(store.name.rawValue)
-                                            .font(.bold(size: 18))
+                                            .font(.bold(size: 16))
                                             .foregroundColor(.customText1)
                                             .frame(maxWidth: .infinity)
                                             .onTapGesture {

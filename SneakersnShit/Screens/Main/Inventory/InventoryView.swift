@@ -107,9 +107,9 @@ struct InventoryView: View {
                                            set: { sharedStack = $0 ? sharedStack : nil })
         let showPopup = Binding<Bool>(get: { popup != nil }, set: { show in popup = show ? popup : nil })
         let showSheet = Binding<Bool>(get: { presentedSheet != nil }, set: { show in presentedSheet = show ? presentedSheet : nil })
-        let settingsPresented = Binding<Bool>(get: { presentedSheet == .settings }, set: { show in presentedSheet = show ? presentedSheet : nil })
-        let showImagePicker = Binding<Bool>(get: { presentedSheet == .imagePicker }, set: { show in presentedSheet = show ? presentedSheet : nil })
-        let showFilters = Binding<Bool>(get: { presentedSheet == .filters }, set: { show in presentedSheet = show ? presentedSheet : nil })
+        let settingsPresented = Binding<Bool>(get: { presentedSheet == .settings }, set: { show in presentedSheet = show ? .settings : nil })
+        let showImagePicker = Binding<Bool>(get: { presentedSheet == .imagePicker }, set: { show in presentedSheet = show ? .imagePicker : nil })
+        let showFilters = Binding<Bool>(get: { presentedSheet == .filters }, set: { show in presentedSheet = show ? .filters : nil })
         let selectedInventoryItemBinding = Binding<InventoryItem?>(get: { selectedInventoryItem },
                                                                    set: { inventoryItem in
                                                                        if let inventoryItem = inventoryItem {

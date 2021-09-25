@@ -76,7 +76,7 @@
          <EnvironmentVariable
             key = "useFunctionsEmulator"
             value = "true"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "useFirestoreEmulator"
@@ -86,17 +86,17 @@
          <EnvironmentVariable
             key = "showScraperLogs"
             value = "true"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "showReduxLogs"
             value = "true"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "showDatabaseLogs"
             value = "true"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "showScrapingLogs"
@@ -106,7 +106,7 @@
          <EnvironmentVariable
             key = "showErrorLogs"
             value = "true"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>
       <AdditionalOptions>
