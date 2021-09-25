@@ -43,6 +43,7 @@ class DefaultDataController: DataController {
         backendAPI.reset()
         databaseManager.reset()
         localScraper.reset()
+        imageService.reset()
     }
 
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
@@ -210,6 +211,7 @@ class DefaultDataController: DataController {
     func setup(userId: String) {
         databaseManager.setup(userId: userId)
         backendAPI.setup(userId: userId)
+        imageService.setup(userId: userId)
     }
 
     func update(item: Item, settings: CopDeckSettings) {
