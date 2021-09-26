@@ -237,4 +237,13 @@ class DefaultImageService: ImageService {
             completion(error == nil)
         }
     }
+
+    func deleteInventoryItemImages(inventoryItem: InventoryItem) {
+        guard let userId = userId else { return }
+        storage.reference().child("inventoryItems/\(userId)/\(inventoryItem.id)")
+            .listAll { result, error in
+                guard !result.items.isEmpty else { return }
+                result.items.forEach { $0.delete() }
+            }
+    }
 }

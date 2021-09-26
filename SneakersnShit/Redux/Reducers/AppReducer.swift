@@ -134,6 +134,9 @@ func appReducer(state: inout AppState,
             environment.dataController.update(inventoryItem: InventoryItem)
         case let .removeFromInventory(inventoryItems):
             environment.dataController.delete(inventoryItems: inventoryItems)
+            inventoryItems.forEach { inventoryItem in
+                environment.dataController.deleteInventoryItemImages(inventoryItem: inventoryItem)
+            }
         case let .stack(inventoryItems, stack):
             environment.dataController.stack(inventoryItems: inventoryItems, stack: stack)
         case let .unstack(inventoryItems, stack):
@@ -146,6 +149,8 @@ func appReducer(state: inout AppState,
             environment.dataController.uploadInventoryItemImages(inventoryItem: inventoryItem, images: images, completion: completion)
         case let .deleteInventoryItemImage(imageURL, completion):
             environment.dataController.deleteInventoryItemImage(imageURL: imageURL, completion: completion)
+        case let .deleteInventoryItemImages(inventoryItem):
+            environment.dataController.deleteInventoryItemImages(inventoryItem: inventoryItem)
         }
     case let .authentication(action: action):
         return environment.authenticator.handle(action)

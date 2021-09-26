@@ -97,6 +97,7 @@ protocol ImageService {
     func getInventoryItemImages(userId: String, inventoryItem: InventoryItem, completion: @escaping ([URL]) -> Void)
     func uploadInventoryItemImages(inventoryItem: InventoryItem, images: [UIImage], completion: @escaping ([String]) -> Void)
     func deleteInventoryItemImage(imageURL: URL, completion: @escaping (Bool) -> Void)
+    func deleteInventoryItemImages(inventoryItem: InventoryItem)
 }
 
 
