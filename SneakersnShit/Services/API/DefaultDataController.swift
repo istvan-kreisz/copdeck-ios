@@ -21,7 +21,7 @@ class DefaultDataController: DataController {
     lazy var stacksPublisher = databaseManager.stacksPublisher
     lazy var userPublisher = databaseManager.userPublisher
     lazy var exchangeRatesPublisher = databaseManager.exchangeRatesPublisher
-    lazy var errorsPublisher = databaseManager.errorsPublisher.merge(with: backendAPI.errorsPublisher).eraseToAnyPublisher()
+    lazy var errorsPublisher = databaseManager.errorsPublisher.merge(with: backendAPI.errorsPublisher, imageService.errorsPublisher).eraseToAnyPublisher()
     lazy var popularItemsPublisher = databaseManager.popularItemsPublisher
     lazy var cookiesPublisher = localScraper.cookiesPublisher
     lazy var imageDownloadHeadersPublisher = localScraper.imageDownloadHeadersPublisher
@@ -364,5 +364,17 @@ class DefaultDataController: DataController {
 
     func uploadItemImage(itemId: String, image: UIImage) {
         imageService.uploadItemImage(itemId: itemId, image: image)
+    }
+
+    func getInventoryItemImages(userId: String, inventoryItem: InventoryItem, completion: @escaping ([URL]) -> Void) {
+        imageService.getInventoryItemImages(userId: userId, inventoryItem: inventoryItem, completion: completion)
+    }
+
+    func uploadInventoryItemImages(userId: String, inventoryItem: InventoryItem, images: [UIImage], completion: @escaping ([String]) -> Void) {
+        imageService.uploadInventoryItemImages(userId: userId, inventoryItem: inventoryItem, images: images, completion: completion)
+    }
+
+    func deleteInventoryItemImages(userId: String, inventoryItem: InventoryItem, imageIds: [String], completion: @escaping ([String]) -> Void) {
+        imageService.deleteInventoryItemImages(userId: userId, inventoryItem: inventoryItem, imageIds: imageIds, completion: completion)
     }
 }

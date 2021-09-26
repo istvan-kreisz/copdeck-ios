@@ -83,6 +83,8 @@ protocol DatabaseManager {
 }
 
 protocol ImageService {
+    var errorsPublisher: AnyPublisher<AppError, Never> { get }
+
     var profileImagePublisher: AnyPublisher<URL?, Never> { get }
 
     func getImageURLs(for users: [User]) -> AnyPublisher<[User], AppError>
@@ -90,8 +92,11 @@ protocol ImageService {
     func setup(userId: String)
     func reset()
     func getImage(for itemId: String, completion: @escaping (URL?) -> Void)
-//    func getItemImages(userId: String, inventoryItemId: String, completion: @escaping ([URL]) -> Void)
     func uploadItemImage(itemId: String, image: UIImage)
+
+    func getInventoryItemImages(userId: String, inventoryItem: InventoryItem, completion: @escaping ([URL]) -> Void)
+    func uploadInventoryItemImages(userId: String, inventoryItem: InventoryItem, images: [UIImage], completion: @escaping ([String]) -> Void)
+    func deleteInventoryItemImages(userId: String, inventoryItem: InventoryItem, imageIds: [String], completion: @escaping ([String]) -> Void)
 }
 
 

@@ -342,8 +342,6 @@
 		5DF3595826FF724E0041A6C3 /* RootOnboardingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootOnboardingView.swift; sourceTree = "<group>"; };
 		5DF3595C26FF72570041A6C3 /* OnboardingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		5DF3596026FFB7DF0041A6C3 /* UserDefaults+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extensions.swift"; sourceTree = "<group>"; };
-		630E7DC56C63722AE2360C56 /* Pods-InfluTrader.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InfluTrader.release.xcconfig"; path = "Target Support Files/Pods-InfluTrader/Pods-InfluTrader.release.xcconfig"; sourceTree = "<group>"; };
-		6C337F3E851DD176F9F45E8E /* Pods-InfluTrader.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InfluTrader.debug.xcconfig"; path = "Target Support Files/Pods-InfluTrader/Pods-InfluTrader.debug.xcconfig"; sourceTree = "<group>"; };
 		780150CC93D4F13CFCC193B7 /* Pods-SneakersnShit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SneakersnShit.release.xcconfig"; path = "Target Support Files/Pods-SneakersnShit/Pods-SneakersnShit.release.xcconfig"; sourceTree = "<group>"; };
 		8C15B2644BB4E9FA2D184B0B /* Pods-SneakersnShit.release staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SneakersnShit.release staging.xcconfig"; path = "Target Support Files/Pods-SneakersnShit/Pods-SneakersnShit.release staging.xcconfig"; sourceTree = "<group>"; };
 		DE80E208C5DB6897B4D1B91A /* Pods_SneakersnShit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SneakersnShit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1028,8 +1026,6 @@
 		FF1EEF4427F49F1DF04ADF63 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				6C337F3E851DD176F9F45E8E /* Pods-InfluTrader.debug.xcconfig */,
-				630E7DC56C63722AE2360C56 /* Pods-InfluTrader.release.xcconfig */,
 				10F05964238EC7800C0C5A21 /* Pods-SneakersnShit.debug.xcconfig */,
 				780150CC93D4F13CFCC193B7 /* Pods-SneakersnShit.release.xcconfig */,
 				569D9ED09F3A9EE7E6A213A0 /* Pods-SneakersnShit.debug staging.xcconfig */,

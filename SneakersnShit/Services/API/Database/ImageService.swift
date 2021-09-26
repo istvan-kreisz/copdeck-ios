@@ -23,9 +23,14 @@ class DefaultImageService: ImageService {
     private var profileImageUploadTask: StorageUploadTask?
     private var itemImageUploadTasks: [String: StorageUploadTask] = [:]
     private var itemImageUploadTasks2: [String: Int] = [:]
+    private let errorsSubject = PassthroughSubject<AppError, Never>()
 
     var profileImagePublisher: AnyPublisher<URL?, Never> {
         imageSubject.receive(on: DispatchQueue.main).eraseToAnyPublisher()
+    }
+
+    var errorsPublisher: AnyPublisher<AppError, Never> {
+        errorsSubject.eraseToAnyPublisher()
     }
 
     init() {
@@ -89,11 +94,7 @@ class DefaultImageService: ImageService {
         imageRef.getMetadata { [weak self] meta, error in
             if meta != nil {
                 imageRef.delete { [weak self] error in
-                    if let error = error {
-                        self?.uploadProfileImageData(data)
-                    } else {
-                        self?.uploadProfileImageData(data)
-                    }
+                    self?.uploadProfileImageData(data)
                 }
             } else {
                 self?.uploadProfileImageData(data)
@@ -153,7 +154,108 @@ class DefaultImageService: ImageService {
     private func uploadProfileImageData(_ data: Data) {
         guard let userId = userId else { return }
         profileImageUploadTask = profileImageRef(userId: userId).putData(data, metadata: nil) { [weak self] metadata, error in
-            self?.getUserProfileImage()
+            if let error = error {
+                self?.errorsSubject.send(AppError(error: error))
+            } else {
+                self?.getUserProfileImage()
+            }
+        }
+    }
+
+    #warning("fix caching")
+    func getInventoryItemImages(userId: String, inventoryItem: InventoryItem, completion: @escaping ([URL]) -> Void) {
+        guard let ids = inventoryItem.photos, !ids.isEmpty else {
+            completion([])
+            return
+        }
+        let references = ids.map {
+            storage.reference().child("inventoryItems/\(userId)/\(inventoryItem.id)/\($0)")
+        }
+        var urls: [URL] = []
+        let dispatchGroup = DispatchGroup()
+
+        for ref in references {
+            getImage(at: ref) { url, error in
+                guard let url = url else {
+                    dispatchGroup.leave()
+                    return
+                }
+                DispatchQueue.main.async {
+                    urls.append(url)
+                    dispatchGroup.leave()
+                }
+            }
+        }
+        dispatchGroup.notify(queue: .main) {
+            completion(urls)
+        }
+    }
+
+    func uploadInventoryItemImages(userId: String, inventoryItem: InventoryItem, images: [UIImage], completion: @escaping ([String]) -> Void) {
+        guard !images.isEmpty else {
+            completion([])
+            return
+        }
+        let dispatchGroup = DispatchGroup()
+        var imageIds: [String] = []
+
+        images
+            .map { image -> (UIImage, String, StorageReference) in
+                let imageId = UUID().uuidString
+                return (image, imageId, storage.reference().child("inventoryItems/\(userId)/\(inventoryItem.id)/\(imageId)"))
+            }
+            .forEach { (image: UIImage, imageId: String, ref: StorageReference) in
+                dispatchGroup.enter()
+                DispatchQueue.global(qos: .background).async {
+                    guard let data = image.resized(toWidth: 500)?.jpegData(compressionQuality: 0.5) else {
+                        dispatchGroup.leave()
+                        return
+                    }
+                    ref.putData(data, metadata: nil) { metadata, error in
+                        guard error == nil else {
+                            dispatchGroup.leave()
+                            return
+                        }
+                        DispatchQueue.main.async {
+                            imageIds.append(imageId)
+                            dispatchGroup.leave()
+                        }
+                    }
+                }
+            }
+        dispatchGroup.notify(queue: .main) {
+            completion(imageIds)
+        }
+    }
+
+    func deleteInventoryItemImages(userId: String, inventoryItem: InventoryItem, imageIds: [String], completion: @escaping ([String]) -> Void) {
+        guard !imageIds.isEmpty else {
+            completion([])
+            return
+        }
+
+        let dispatchGroup = DispatchGroup()
+        var imageIds: [String] = []
+
+        imageIds
+            .map { (imageId: String) -> (String, StorageReference) in
+                (imageId, storage.reference().child("inventoryItems/\(userId)/\(inventoryItem.id)/\(imageId)"))
+            }
+            .forEach { (imageId: String, ref: StorageReference) in
+                dispatchGroup.enter()
+                ref.delete { error in
+                    if error == nil {
+                        DispatchQueue.main.async {
+                            imageIds.append(imageId)
+                            dispatchGroup.leave()
+                        }
+                    } else {
+                        dispatchGroup.leave()
+                    }
+                }
+            }
+        dispatchGroup.notify(queue: .main) {
+            completion(imageIds)
         }
     }
 }
