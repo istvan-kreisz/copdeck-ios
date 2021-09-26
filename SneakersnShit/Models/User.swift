@@ -39,6 +39,12 @@ extension User {
     init(id: String) {
         self.init(id: id, name: nil, nameInsensitive: nil, isPublic: true, created: nil, updated: nil, settings: nil)
     }
+
+    func withImageURL(_ url: URL?) -> User {
+        var copy = self
+        copy.imageURL = url
+        return copy
+    }
 }
 
 extension Array where Element == User {

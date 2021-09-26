@@ -59,6 +59,11 @@
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "showCacheLogs"
+            value = "true"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "clearUserDefaults"
             value = "true"
             isEnabled = "NO">
@@ -96,7 +101,7 @@
          <EnvironmentVariable
             key = "showReduxLogs"
             value = "true"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "showDatabaseLogs"

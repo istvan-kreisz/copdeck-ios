@@ -16,7 +16,7 @@ enum AppEnvironment: String {
 }
 
 enum LogType {
-    case reduxAction, database, scraping, error
+    case reduxAction, database, cache, scraping, error
 }
 
 func log(_ value: Any, logType: LogType? = nil) {
@@ -27,6 +27,8 @@ func log(_ value: Any, logType: LogType? = nil) {
             shouldPrint = DebugSettings.shared.showReduxLogs
         case .database:
             shouldPrint = DebugSettings.shared.showDatabaseLogs
+        case .cache:
+            shouldPrint = DebugSettings.shared.showCacheLogs
         case .scraping:
             shouldPrint = DebugSettings.shared.showScrapingLogs
         case .error:
@@ -105,6 +107,10 @@ struct DebugSettings {
 
     var showDatabaseLogs: Bool {
         bool(for: "showDatabaseLogs")
+    }
+
+    var showCacheLogs: Bool {
+        bool(for: "showCacheLogs")
     }
 
     var showReduxLogs: Bool {

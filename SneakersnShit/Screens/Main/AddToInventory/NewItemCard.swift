@@ -97,11 +97,17 @@ struct NewItemCard: View {
                                                                                                              currencyCode: currency.code))
                                     })
 
-                TextFieldRounded(title: "copdeck price (optional)",
-                                 placeHolder: "\(currency.symbol.rawValue)0",
-                                 style: textFieldStyle,
-                                 keyboardType: .numberPad,
-                                 text: text)
+                HStack(spacing: 11) {
+                    TextFieldRounded(title: "copdeck price (optional)",
+                                     placeHolder: "\(currency.symbol.rawValue)0",
+                                     style: textFieldStyle,
+                                     keyboardType: .numberPad,
+                                     text: text)
+//                    DropDownMenu(title: "size",
+//                                 selectedItem: $inventoryItem.size,
+//                                 options: sizes,
+//                                 style: dropdownStyle)
+                }
             }
 
             let soldStatus = Binding<String>(get: { (inventoryItem.status ?? InventoryItem.SoldStatus.None).rawValue.uppercased() },

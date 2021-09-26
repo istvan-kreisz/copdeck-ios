@@ -104,9 +104,7 @@ func appReducer(state: inout AppState,
         case let .getItemImage(itemId, completion):
             environment.dataController.getImage(for: itemId, completion: completion)
         case let .uploadItemImage(itemId, image):
-            DispatchQueue.main.async {
-                environment.dataController.uploadItemImage(itemId: itemId, image: image)
-            }
+            environment.dataController.uploadItemImage(itemId: itemId, image: image)
         case let .refreshItemIfNeeded(itemId, fetchMode):
             return environment.dataController.getItemDetails(for: nil,
                                                              itemId: itemId,

@@ -14,14 +14,17 @@ import FirebaseStorage
 class DefaultImageService: ImageService {
     private let storage: Storage
     private var userId: String?
-    private let profileImagesQueue = DispatchQueue(label: "profile.images")
+    private let imagesQueue = DispatchQueue(label: "profile.images")
+    private let imageUploadQueue = DispatchQueue(label: "image.upload", qos: .background)
 
     private let imageSubject = CurrentValueSubject<URL?, Never>(nil)
 
     private var profileImageUploadTask: StorageUploadTask?
-    private var itemImageUploadTasks: [String: StorageUploadTask] = [:]
-    private var itemImageUploadTasks2: [String: Int] = [:]
+    private var itemImageUploadTasks: [String: Int] = [:]
+    private var uploadedItems: [String] = []
     private let errorsSubject = PassthroughSubject<AppError, Never>()
+
+    private let imageCache = Cache<String, URL>(entryLifetimeMin: 60)
 
     var profileImagePublisher: AnyPublisher<URL?, Never> {
         imageSubject.receive(on: DispatchQueue.main).eraseToAnyPublisher()
@@ -39,7 +42,7 @@ class DefaultImageService: ImageService {
         guard userId != self.userId else { return }
 
         self.userId = userId
-        getUserProfileImage()
+        refreshUserProfileImage()
     }
 
     func reset() {
@@ -54,20 +57,12 @@ class DefaultImageService: ImageService {
             }
             var usersWithImageURLs: [User] = []
             let dispatchGroup = DispatchGroup()
+
             for user in users {
                 dispatchGroup.enter()
-                self.getImage(at: self.profileImageRef(userId: user.id)) { [weak self] url, error in
-                    self?.profileImagesQueue.async {
-                        if let error = error {
-                            log("error downloading image \(error)", logType: .error)
-                            usersWithImageURLs.append(user)
-                        } else {
-                            var copy = user
-                            copy.imageURL = url
-                            usersWithImageURLs.append(copy)
-                        }
-                        dispatchGroup.leave()
-                    }
+                self.getImage(imageId: user.id, reference: self.profileImageRef(userId: user.id), callbackQueue: self.imagesQueue) { url in
+                    usersWithImageURLs.append(user.withImageURL(url))
+                    dispatchGroup.leave()
                 }
             }
             dispatchGroup.notify(queue: .main) {
@@ -77,9 +72,7 @@ class DefaultImageService: ImageService {
     }
 
     func getImage(for itemId: String, completion: @escaping (URL?) -> Void) {
-        getImage(at: itemImageRef(itemId: itemId)) { url, error in
-            completion(url)
-        }
+        getImage(imageId: itemId, reference: itemImageRef(itemId: itemId), callbackQueue: .main, completion: completion)
     }
 
     func uploadProfileImage(image: UIImage) {
@@ -101,44 +94,41 @@ class DefaultImageService: ImageService {
     }
 
     func uploadItemImage(itemId: String, image: UIImage) {
-        guard itemImageUploadTasks[itemId] == nil, itemImageUploadTasks2[itemId] == nil, !itemId.isEmpty else { return }
-        itemImageUploadTasks2[itemId] = 1
+        guard itemImageUploadTasks[itemId] == nil, !itemId.isEmpty else { return }
+        itemImageUploadTasks[itemId] = 1
         let imageRef = itemImageRef(itemId: itemId)
 
         imageRef.getMetadata { [weak self] meta, error in
-            guard meta == nil else {
-                self?.itemImageUploadTasks[itemId] = nil
-                self?.itemImageUploadTasks2[itemId] = nil
-                return
-            }
-            DispatchQueue.global(qos: .background).async { [weak self] in
+            guard let self = self, meta == nil else { return }
+            self.imageUploadQueue.async { [weak self] in
                 guard let data = image.resized(toWidth: 500)?.jpegData(compressionQuality: 0.5) else {
-                    self?.itemImageUploadTasks[itemId] = nil
-                    self?.itemImageUploadTasks2[itemId] = nil
+                    DispatchQueue.main.async {
+                        self?.itemImageUploadTasks[itemId] = nil
+                    }
                     return
                 }
-                log("uploading image \(itemId)")
-                self?.itemImageUploadTasks[itemId] = imageRef.putData(data, metadata: nil) { [weak self] metadata, error in
-                    self?.itemImageUploadTasks[itemId] = nil
-                    self?.itemImageUploadTasks2[itemId] = nil
+                DispatchQueue.main.async {
+                    imageRef.putData(data, metadata: nil) { [weak self] metadata, error in
+                        if metadata == nil {
+                            DispatchQueue.main.async {
+                                self?.itemImageUploadTasks[itemId] = nil
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 
-    private func getUserProfileImage() {
+    private func refreshUserProfileImage() {
         guard let userId = userId else { return }
-        getImage(at: profileImageRef(userId: userId)) { [weak self] url, error in
+        profileImageRef(userId: userId).downloadURL { [weak self] url, error in
             if let error = error {
                 log("error downloading image \(error)", logType: .error)
             } else {
                 self?.imageSubject.send(url)
             }
         }
-    }
-
-    private func getImage(at storageRef: StorageReference?, completion: @escaping (URL?, Error?) -> Void) {
-        storageRef?.downloadURL(completion: completion)
     }
 
     private func profileImageRef(userId: String) -> StorageReference {
@@ -155,12 +145,11 @@ class DefaultImageService: ImageService {
             if let error = error {
                 self?.errorsSubject.send(AppError(error: error))
             } else {
-                self?.getUserProfileImage()
+                self?.refreshUserProfileImage()
             }
         }
     }
 
-    #warning("fix caching")
     func getInventoryItemImages(userId: String, inventoryItem: InventoryItem, completion: @escaping ([URL]) -> Void) {
         var urls: [URL] = []
         let dispatchGroup = DispatchGroup()
@@ -175,15 +164,11 @@ class DefaultImageService: ImageService {
                 result.items.forEach { [weak self] ref in
                     guard let self = self else { return }
                     dispatchGroup.enter()
-                    self.getImage(at: ref) { url, error in
-                        guard let url = url else {
-                            dispatchGroup.leave()
-                            return
-                        }
-                        DispatchQueue.main.async {
+                    self.getImage(imageId: ref.fullPath, reference: ref, callbackQueue: self.imagesQueue) { url in
+                        if let url = url {
                             urls.append(url)
-                            dispatchGroup.leave()
                         }
+                        dispatchGroup.leave()
                     }
                 }
 
@@ -243,5 +228,25 @@ class DefaultImageService: ImageService {
                 guard !result.items.isEmpty else { return }
                 result.items.forEach { $0.delete() }
             }
+    }
+
+    private func getImage(imageId: String, reference: StorageReference, callbackQueue: DispatchQueue, completion: @escaping (URL?) -> Void) {
+        if let cached = imageCache.value(forKey: imageId) {
+            log("cache image load - id: \(imageId)", logType: .cache)
+            completion(cached)
+        } else {
+            reference.downloadURL { [weak self] url, error in
+                if let url = url {
+                    log("storage image load - id: \(imageId)", logType: .cache)
+                    self?.imageCache.insert(url, forKey: imageId)
+                }
+                if let error = error {
+                    log("error downloading image \(error)", logType: .error)
+                }
+                callbackQueue.async {
+                    completion(url)
+                }
+            }
+        }
     }
 }

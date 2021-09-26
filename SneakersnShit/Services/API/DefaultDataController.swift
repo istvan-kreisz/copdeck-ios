@@ -30,8 +30,6 @@ class DefaultDataController: DataController {
 
     private var cancellables: Set<AnyCancellable> = []
 
-    private let imageCache = Cache<String, URL>(entryLifetimeMin: 60)
-
     init(backendAPI: BackendAPI, localScraper: LocalAPI, databaseManager: DatabaseManager, imageService: ImageService) {
         self.backendAPI = backendAPI
         self.localScraper = localScraper
@@ -313,53 +311,11 @@ class DefaultDataController: DataController {
     }
 
     func getImageURLs(for users: [User]) -> AnyPublisher<[User], AppError> {
-        var cachedUsers: [User] = []
-        var nonCachedUsers: [User] = []
-        users
-            .forEach { (user: User) in
-                if user.imageURL == nil {
-                    if let cachedURL = imageCache.value(forKey: user.id) {
-                        var copy = user
-                        copy.imageURL = cachedURL
-                        cachedUsers.append(copy)
-                    } else {
-                        nonCachedUsers.append(user)
-                    }
-                } else {
-                    cachedUsers.append(user)
-                }
-            }
-        let cachedUsersPublisher = Just(cachedUsers).setFailureType(to: AppError.self)
-        let nonCachedUsersPublisher = imageService.getImageURLs(for: nonCachedUsers)
-            .handleEvents(receiveOutput: { [weak self] users in
-                users.forEach { [weak self] user in
-                    guard let imageURL = user.imageURL else { return }
-                    self?.imageCache.insert(imageURL, forKey: user.id)
-                }
-            })
-
-        if nonCachedUsers.isEmpty {
-            return cachedUsersPublisher.eraseToAnyPublisher()
-        } else if cachedUsers.isEmpty {
-            return nonCachedUsersPublisher.eraseToAnyPublisher()
-        } else {
-            return nonCachedUsersPublisher
-                .combineLatest(cachedUsersPublisher) { $0 + $1 }
-                .eraseToAnyPublisher()
-        }
+        imageService.getImageURLs(for: users)
     }
 
     func getImage(for itemId: String, completion: @escaping (URL?) -> Void) {
-        if let cached = imageCache.value(forKey: itemId) {
-            completion(cached)
-        } else {
-            imageService.getImage(for: itemId) { [weak self] url in
-                if let url = url {
-                    self?.imageCache.insert(url, forKey: itemId)
-                }
-                completion(url)
-            }
-        }
+        imageService.getImage(for: itemId, completion: completion)
     }
 
     func uploadItemImage(itemId: String, image: UIImage) {
