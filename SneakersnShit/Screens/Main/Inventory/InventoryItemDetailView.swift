@@ -237,7 +237,7 @@ struct InventoryItemDetailView: View {
     }
 
     private func deletePhoto(at url: URL) {
-        try? photoURLs.removeAll(where: { $0 == url })
+        photoURLs.removeAll(where: { $0 == url })
         store.send(.main(action: .deleteInventoryItemImage(imageURL: url) { _ in }))
     }
 
