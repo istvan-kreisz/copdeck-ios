@@ -12,8 +12,6 @@ import FirebaseFunctions
 class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
     private var feedPagination = PaginationState<FeedPost>(lastLoaded: nil, isLastPage: false)
 
-    #warning("fix")
-
     func getFeedPosts(loadMore: Bool) -> AnyPublisher<PaginatedResult<[FeedPost]>, AppError> {
         struct Wrapper: Encodable {
             let userId: String?

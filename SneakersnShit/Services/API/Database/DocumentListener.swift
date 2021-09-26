@@ -10,8 +10,6 @@ import Combine
 import UIKit
 import FirebaseStorage
 
-#warning("handle errors")
-
 class DocumentListener<T: Codable>: FireStoreListener {
     var documentRef: DocumentReference?
     var listener: ListenerRegistration?
@@ -36,7 +34,7 @@ class DocumentListener<T: Codable>: FireStoreListener {
         documentRef?
             .addSnapshotListener { snapshot, error in
                 if let error = error {
-                    print("Error fetching document: \(error)")
+                    log("Error fetching document: \(error)")
                     return
                 }
                 if let document = snapshot?.data(), let result = T(from: document) {

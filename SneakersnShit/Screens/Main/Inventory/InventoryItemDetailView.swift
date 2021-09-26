@@ -17,6 +17,18 @@ struct InventoryItemDetailView: View {
     @State var notes: String
 
     @State var showItemDetails = false
+    @State var showPhotoSelector = false
+
+    @State var didLoadPhotos = false
+    @State var photoURLs: [URL] = []
+
+    var photoURLsChunked: [(Int, [URL])] {
+        Array(photoURLs.chunked(into: 3).enumerated())
+    }
+
+    var imageSize: CGFloat {
+        (UIScreen.screenWidth - (Styles.horizontalPadding * 4.0) - (Styles.horizontalMargin * 2.0)) / 3
+    }
 
     var item: Item? {
         guard let itemId = inventoryItem.itemId,
@@ -99,32 +111,50 @@ struct InventoryItemDetailView: View {
                                     sizes: item?.sortedSizes ?? ALLSHOESIZES,
                                     showCopDeckPrice: true)
 
-//                        VStack(alignment: .leading, spacing: 9) {
-//                            Text("Photos:".uppercased())
-//                                .font(.bold(size: 12))
-//                                .foregroundColor(.customText2)
-//                                .leftAligned()
-//
-//                            if inventoryItem.photos.isEmpty {
-//                                EmptyStateButton(title: "Your haven't added any photos", buttonTitle: "Start adding photos", style: .regular, showPlusIcon: false) {
-//
-//                                }
-//                                .padding(.vertical, 20)
-//                            } else {
-//                                AccessoryButton(title: "Add Photos",
-//                                                color: .customBlue,
-//                                                textColor: .customBlue,
-//                                                width: 170,
-//                                                imageName: "plus",
-//                                                tapped: {
-//    //                                                    showItemSelector = true
-//                                                })
-//                                    .leftAligned()
-//                                    .padding(.top, 5)
-//                            }
-//                        }
-//                        .asCard()
-//                        .padding(.top, 15)
+                        VStack(alignment: .leading, spacing: 9) {
+                            Text("Photos:".uppercased())
+                                .font(.bold(size: 12))
+                                .foregroundColor(.customText2)
+                                .leftAligned()
+
+                            ForEach(photoURLsChunked, id: \.0) { (index: Int, urls: [URL]) in
+                                HStack(spacing: Styles.verticalPadding) {
+                                    ForEach(urls, id: \.absoluteString) { (url: URL) in
+                                        ImageView(source: .url(url),
+                                                  size: imageSize,
+                                                  aspectRatio: 1.0,
+                                                  flipImage: false,
+                                                  showPlaceholder: true,
+                                                  background: Color.customAccent1.opacity(0.1))
+                                            .frame(width: imageSize, height: imageSize)
+                                            .cornerRadius(4)
+                                    }
+                                }
+                                .padding(.vertical, 6)
+                            }
+
+                            if didLoadPhotos {
+                                if photoURLs.isEmpty {
+                                    EmptyStateButton(title: "Your haven't added any photos", buttonTitle: "Start adding photos", style: .regular,
+                                                     showPlusIcon: false) {
+                                            showPhotoSelector = true
+                                    }
+                                    .padding(.top, 20)
+                                    .padding(.bottom, 30)
+                                } else {
+                                    AccessoryButton(title: "Add Photos",
+                                                    color: .customBlue,
+                                                    textColor: .customBlue,
+                                                    width: 140,
+                                                    imageName: "plus",
+                                                    tapped: { showPhotoSelector = true })
+                                        .leftAligned()
+                                        .padding(.top, 5)
+                                }
+                            }
+                        }
+                        .asCard()
+                        .padding(.top, 15)
 
                         TextFieldRounded(title: "notes (optional)",
                                          placeHolder: "add any notes here",
@@ -165,8 +195,28 @@ struct InventoryItemDetailView: View {
                         .edgesIgnoringSafeArea(.all))
                 }
             }
+            .sheet(isPresented: $showPhotoSelector) {
+                ImagePickerView(showPicker: $showPhotoSelector, selectionLimit: 5) { (images: [UIImage]) in
+                    store.send(.main(action: .uploadInventoryItemImages(inventoryItem: inventoryItem, images: images, completion: { _ in
+                        loadImages()
+                    })))
+                }
+            }
+            .onAppear {
+                loadImages()
+            }
             .navigationbarHidden()
         }
+    }
+
+    private func loadImages() {
+        guard let userId = store.state.user?.id else { return }
+        store.send(.main(action: .getInventoryItemImages(userId: userId, inventoryItem: inventoryItem, completion: { urls in
+            if !didLoadPhotos {
+                didLoadPhotos = true
+            }
+            photoURLs = urls
+        })))
     }
 
     private func deleteInventoryItem() {

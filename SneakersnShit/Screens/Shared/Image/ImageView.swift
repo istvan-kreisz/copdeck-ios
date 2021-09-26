@@ -22,6 +22,7 @@ struct ImageView: View {
     let aspectRatio: CGFloat?
     let flipImage: Bool
     let showPlaceholder: Bool
+    let background: Color
     let resizingMode: ImageResizingMode
 
     var didLoadImage: ((UIImage) -> Void)?
@@ -32,6 +33,7 @@ struct ImageView: View {
          flipImage: Bool = false,
          showPlaceholder: Bool = true,
          resizingMode: ImageResizingMode = .aspectFit,
+         background: Color = .customWhite,
          didLoadImage: ((UIImage) -> Void)? = nil) {
         switch source {
         case let .url(url):
@@ -46,6 +48,7 @@ struct ImageView: View {
         self.flipImage = flipImage
         self.showPlaceholder = showPlaceholder
         self.resizingMode = resizingMode
+        self.background = background
         self.didLoadImage = didLoadImage
     }
 
@@ -81,7 +84,7 @@ struct ImageView: View {
                         didLoadImage?($0.image)
                     }
                 }
-                .background(Color.customWhite)
+                .background(background)
                 .frame(width: size, height: size)
                 .scaleEffect(CGSize(width: flipImage ? -1.0 : 1.0, height: 1.0))
             }

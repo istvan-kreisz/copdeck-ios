@@ -8,22 +8,19 @@
 import Foundation
 import Combine
 
-#warning("set max size")
 final class Cache<Key: Hashable, Value> {
     private let wrapped = NSCache<WrappedKey, Entry>()
-    private let dateProvider: () -> Date
     private let entryLifetime: TimeInterval
 
     private let updatedSubject = PassthroughSubject<Void, Never>()
     lazy var updatedPublisher = updatedSubject.eraseToAnyPublisher()
 
-    init(dateProvider: @escaping () -> Date = Date.init, entryLifetimeMin: TimeInterval) {
-        self.dateProvider = dateProvider
+    init(entryLifetimeMin: TimeInterval) {
         self.entryLifetime = entryLifetimeMin * 60
     }
 
     func insert(_ value: Value, forKey key: Key) {
-        let date = dateProvider().addingTimeInterval(entryLifetime)
+        let date = Date().addingTimeInterval(entryLifetime)
         let entry = Entry(value: value, expirationDate: date)
         wrapped.setObject(entry, forKey: WrappedKey(key))
         updatedSubject.send()
@@ -34,18 +31,16 @@ final class Cache<Key: Hashable, Value> {
             return nil
         }
 
-//        guard dateProvider() < entry.expirationDate else {
-//            removeValue(forKey: key)
-//            return nil
-//        }
+        guard Date() < entry.expirationDate else {
+            removeValue(forKey: key)
+            return nil
+        }
 
         return entry.value
     }
 
     func valuePublisher(forKey key: Key) -> AnyPublisher<Value?, Never> {
-        Future { [weak self] promise in
-            promise(.success(self?.value(forKey: key)))
-        }.eraseToAnyPublisher()
+        return Just<Value?>(value(forKey: key)).eraseToAnyPublisher()
     }
 
     func removeValue(forKey key: Key) {

@@ -164,35 +164,39 @@ class DefaultImageService: ImageService {
 
     #warning("fix caching")
     func getInventoryItemImages(userId: String, inventoryItem: InventoryItem, completion: @escaping ([URL]) -> Void) {
-        guard let ids = inventoryItem.photos, !ids.isEmpty else {
-            completion([])
-            return
-        }
-        let references = ids.map {
-            storage.reference().child("inventoryItems/\(userId)/\(inventoryItem.id)/\($0)")
-        }
         var urls: [URL] = []
         let dispatchGroup = DispatchGroup()
 
-        for ref in references {
-            getImage(at: ref) { url, error in
-                guard let url = url else {
-                    dispatchGroup.leave()
+        storage.reference().child("inventoryItems/\(userId)/\(inventoryItem.id)")
+            .listAll { result, error in
+                guard !result.items.isEmpty else {
+                    completion([])
                     return
                 }
-                DispatchQueue.main.async {
-                    urls.append(url)
-                    dispatchGroup.leave()
+
+                result.items.forEach { [weak self] ref in
+                    guard let self = self else { return }
+                    dispatchGroup.enter()
+                    self.getImage(at: ref) { url, error in
+                        guard let url = url else {
+                            dispatchGroup.leave()
+                            return
+                        }
+                        DispatchQueue.main.async {
+                            urls.append(url)
+                            dispatchGroup.leave()
+                        }
+                    }
+                }
+
+                dispatchGroup.notify(queue: .main) {
+                    completion(urls)
                 }
             }
-        }
-        dispatchGroup.notify(queue: .main) {
-            completion(urls)
-        }
     }
 
-    func uploadInventoryItemImages(userId: String, inventoryItem: InventoryItem, images: [UIImage], completion: @escaping ([String]) -> Void) {
-        guard !images.isEmpty else {
+    func uploadInventoryItemImages(inventoryItem: InventoryItem, images: [UIImage], completion: @escaping ([String]) -> Void) {
+        guard let userId = userId, !images.isEmpty else {
             completion([])
             return
         }
@@ -228,8 +232,8 @@ class DefaultImageService: ImageService {
         }
     }
 
-    func deleteInventoryItemImages(userId: String, inventoryItem: InventoryItem, imageIds: [String], completion: @escaping ([String]) -> Void) {
-        guard !imageIds.isEmpty else {
+    func deleteInventoryItemImages(inventoryItem: InventoryItem, imageIds: [String], completion: @escaping ([String]) -> Void) {
+        guard let userId = userId, !imageIds.isEmpty else {
             completion([])
             return
         }

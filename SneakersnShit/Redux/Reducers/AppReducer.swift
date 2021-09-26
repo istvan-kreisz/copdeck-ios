@@ -92,18 +92,7 @@ func appReducer(state: inout AppState,
                 .map { (user: ProfileData) in AppAction.main(action: .setSelectedUser(user: user, completion: completion)) }
                 .catchErrors()
         case let .setSelectedUser(user, completion):
-            var newUser = user
-            #warning("fix")
-//            if state.selectedUserProfile?.user.imageURL != nil {
-//                if state.selectedUserProfile?.user.id == user?.user.id {
-//                    newUser?.user.imageURL = state.selectedUserProfile?.user.imageURL
-//                }
-//            } else {
-//                if let user = state.userSearchResults.first(where: { $0.id == newUser?.user.id }), user.imageURL != nil {
-//                    newUser?.user.imageURL = user.imageURL
-//                }
-//            }
-            completion(newUser)
+            completion(user)
         case let .getItemDetails(item, itemId, fetchMode, completion):
             return environment.dataController.getItemDetails(for: item,
                                                              itemId: itemId,
@@ -151,6 +140,12 @@ func appReducer(state: inout AppState,
             environment.dataController.unstack(inventoryItems: inventoryItems, stack: stack)
         case let .uploadProfileImage(profileImage):
             environment.dataController.uploadProfileImage(image: profileImage)
+        case let .getInventoryItemImages(userId, inventoryItem, completion):
+            environment.dataController.getInventoryItemImages(userId: userId, inventoryItem: inventoryItem, completion: completion)
+        case let .uploadInventoryItemImages(inventoryItem, images, completion):
+            environment.dataController.uploadInventoryItemImages(inventoryItem: inventoryItem, images: images, completion: completion)
+        case let .deleteInventoryItemImages(inventoryItem, imageIds, completion):
+            environment.dataController.deleteInventoryItemImages(inventoryItem: inventoryItem, imageIds: imageIds, completion: completion)
         }
     case let .authentication(action: action):
         return environment.authenticator.handle(action)

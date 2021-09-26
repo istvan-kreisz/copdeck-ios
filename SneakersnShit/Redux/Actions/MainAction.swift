@@ -48,6 +48,10 @@ enum MainAction {
     case stack(inventoryItems: [InventoryItem], stack: Stack)
     case unstack(inventoryItems: [InventoryItem], stack: Stack)
     case uploadProfileImage(image: UIImage)
+
+    case getInventoryItemImages(userId: String, inventoryItem: InventoryItem, completion: ([URL]) -> Void)
+    case uploadInventoryItemImages(inventoryItem: InventoryItem, images: [UIImage], completion: ([String]) -> Void)
+    case deleteInventoryItemImages(inventoryItem: InventoryItem, imageIds: [String], completion: ([String]) -> Void)
 }
 
 extension MainAction: Identifiable {
@@ -68,6 +72,12 @@ extension MainAction: Identifiable {
             return "\(label) \(UUID().uuidString)"
         case let .uploadItemImage(itemId, _):
             return "\(label) \(itemId)"
+        case let .getInventoryItemImages(userId, inventoryItem, _):
+            return "\(label) \(userId) \(inventoryItem.id)"
+        case let .uploadInventoryItemImages(inventoryItem, _, _):
+            return "\(label) \(inventoryItem.id)"
+        case let .deleteInventoryItemImages(inventoryItem, imageIds, _):
+            return "\(label) \(inventoryItem.id) \(imageIds.joined(separator: ","))"
         default:
             return label
         }

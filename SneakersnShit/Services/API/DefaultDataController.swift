@@ -370,11 +370,11 @@ class DefaultDataController: DataController {
         imageService.getInventoryItemImages(userId: userId, inventoryItem: inventoryItem, completion: completion)
     }
 
-    func uploadInventoryItemImages(userId: String, inventoryItem: InventoryItem, images: [UIImage], completion: @escaping ([String]) -> Void) {
-        imageService.uploadInventoryItemImages(userId: userId, inventoryItem: inventoryItem, images: images, completion: completion)
+    func uploadInventoryItemImages(inventoryItem: InventoryItem, images: [UIImage], completion: @escaping ([String]) -> Void) {
+        imageService.uploadInventoryItemImages(inventoryItem: inventoryItem, images: images, completion: completion)
     }
 
-    func deleteInventoryItemImages(userId: String, inventoryItem: InventoryItem, imageIds: [String], completion: @escaping ([String]) -> Void) {
-        imageService.deleteInventoryItemImages(userId: userId, inventoryItem: inventoryItem, imageIds: imageIds, completion: completion)
+    func deleteInventoryItemImages(inventoryItem: InventoryItem, imageIds: [String], completion: @escaping ([String]) -> Void) {
+        imageService.deleteInventoryItemImages(inventoryItem: inventoryItem, imageIds: imageIds, completion: completion)
     }
 }
