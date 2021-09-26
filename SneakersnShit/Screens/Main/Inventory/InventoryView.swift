@@ -247,7 +247,7 @@ struct InventoryView: View {
                       firstAction: .init(name: "Done", tapped: { sharedStack = nil }),
                       secondAction: nil) {
                         StackShareSettingsView(linkURL: sharedStack?.linkURL(userId: store.state.user?.id ?? "") ?? "",
-                                               stack: stack,
+                                               stack: .constant(stack),
                                                isPublic: stack.isPublic ?? false,
                                                isPublished: stack.isPublished ?? false,
                                                includeTitle: false) { title in

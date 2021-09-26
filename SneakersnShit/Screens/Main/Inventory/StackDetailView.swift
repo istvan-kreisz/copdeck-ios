@@ -55,24 +55,6 @@ struct StackDetailView: View {
         return inventoryItem
     }
 
-    func toggleView(title: String, buttonTitle: String, isOn: Binding<Bool>, didTapButton: @escaping () -> Void) -> some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 3) {
-                Text(title)
-                    .font(.bold(size: 16))
-                    .foregroundColor(.customText1)
-                Button(action: didTapButton) {
-                    Text(buttonTitle)
-                        .underline()
-                        .font(.bold(size: 12))
-                        .foregroundColor(.customText2)
-                }
-            }
-            Spacer()
-            Toggle("", isOn: isOn)
-        }
-    }
-
     init(stack: Binding<Stack>,
          inventoryItems: Binding<[InventoryItem]>,
          bestPrices: Binding<[String: PriceWithCurrency]>,
@@ -164,7 +146,7 @@ struct StackDetailView: View {
                 }
 
                 StackShareSettingsView(linkURL: linkURL,
-                                       stack: stack,
+                                       stack: $stack,
                                        isPublic: stack.isPublic ?? false,
                                        isPublished: stack.isPublished ?? false,
                                        includeTitle: true) { title in

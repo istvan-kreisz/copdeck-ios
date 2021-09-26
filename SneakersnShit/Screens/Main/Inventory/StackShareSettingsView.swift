@@ -18,7 +18,7 @@ struct StackShareSettingsView: View {
 
     let linkURL: String
 
-    @State var stack: Stack
+    @Binding var stack: Stack
     @State var isPublic: Bool
     @State var isPublished: Bool
 
@@ -32,7 +32,7 @@ struct StackShareSettingsView: View {
     var updateStack: (_ stack: Stack) -> Void
 
     init(linkURL: String,
-         stack: Stack,
+         stack: Binding<Stack>,
          isPublic: Bool,
          isPublished: Bool,
          includeTitle: Bool,
@@ -40,7 +40,7 @@ struct StackShareSettingsView: View {
          showPopup: @escaping (_ title: String, _ subtitle: String) -> Void,
          updateStack: @escaping (_ stack: Stack) -> Void) {
         self.linkURL = linkURL
-        self._stack = State(initialValue: stack)
+        self._stack = stack
         self._isPublic = State<Bool>(initialValue: isPublic)
         self._isPublished = State<Bool>(initialValue: isPublished)
         self.includeTitle = includeTitle
