@@ -55,7 +55,7 @@ struct RootOnboardingView: View {
             OnboardingView(imageName: "onboarding-profile",
                            titleText: "Follow other sneakerheads",
                            subtitleText: "See what other people are up to in the sneaker game by checking out their CopDeck profiles.",
-                           buttonText: "Let's get started!",
+                           buttonText: "Get started!",
                            buttonTapped: nextTapped)
                 .tag(6)
         }

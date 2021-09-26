@@ -40,7 +40,7 @@ class DefaultAuthenticator: NSObject, Authenticator {
         case .signIn(userName: let username, password: let password):
             signIn(email: username, password: password)
         case .signInWithApple:
-            startSignInWithAppleFlow()
+            signInWithApple()
         case .signInWithGoogle:
             signInWithGoogle()
         case .signInWithFacebook:
@@ -55,14 +55,14 @@ class DefaultAuthenticator: NSObject, Authenticator {
 
     #warning("refactor")
     private func restoreState() {
-        if GIDSignIn.sharedInstance.hasPreviousSignIn() {
+        if let user = Self.auth.currentUser {
+            sendResultWithDelay(user.uid)
+        } else if GIDSignIn.sharedInstance.hasPreviousSignIn() {
             GIDSignIn.sharedInstance.restorePreviousSignIn { [weak self] user, error in
                 self?.handleGoogleSignInResult(user: user, error: error, isRestore: true)
             }
         } else if let fbAccessToken = AccessToken.current?.tokenString {
             handleFacebookSignInResult(accessToken: fbAccessToken)
-        } else if let user = Self.auth.currentUser {
-            sendResultWithDelay(user.uid)
         } else {
             signOut()
         }
@@ -119,8 +119,7 @@ class DefaultAuthenticator: NSObject, Authenticator {
 
         guard let authentication = user?.authentication, let idToken = authentication.idToken
         else { return }
-        let credential = GoogleAuthProvider.credential(withIDToken: idToken,
-                                                       accessToken: authentication.accessToken)
+        let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: authentication.accessToken)
         signIn(credential: credential)
     }
 
@@ -198,7 +197,20 @@ extension DefaultAuthenticator: LoginButtonDelegate {
 // MARK: - Sign in with Apple
 
 extension DefaultAuthenticator {
-    // Adapted from https://auth0.com/docs/api-auth/tutorials/nonce#generate-a-cryptographically-random-nonce
+    func signInWithApple() {
+        let nonce = randomNonceString()
+        currentNonce = nonce
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = [.fullName, .email]
+        request.nonce = sha256(nonce)
+
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = self
+        authorizationController.presentationContextProvider = self
+        authorizationController.performRequests()
+    }
+
     private func sha256(_ input: String) -> String {
         let inputData = Data(input.utf8)
         let hashedData = SHA256.hash(data: inputData)
@@ -229,29 +241,13 @@ extension DefaultAuthenticator {
                 if remainingLength == 0 {
                     return
                 }
-
                 if random < charset.count {
                     result.append(charset[Int(random)])
                     remainingLength -= 1
                 }
             }
         }
-
         return result
-    }
-
-    func startSignInWithAppleFlow() {
-        let nonce = randomNonceString()
-        currentNonce = nonce
-        let appleIDProvider = ASAuthorizationAppleIDProvider()
-        let request = appleIDProvider.createRequest()
-        request.requestedScopes = [.fullName, .email]
-        request.nonce = sha256(nonce)
-
-        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
-        authorizationController.delegate = self
-        authorizationController.presentationContextProvider = self
-        authorizationController.performRequests()
     }
 }
 
@@ -269,26 +265,14 @@ extension DefaultAuthenticator: ASAuthorizationControllerDelegate, ASAuthorizati
                 print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
                 return
             }
-            // Initialize a Firebase credential.
             let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idTokenString, rawNonce: nonce)
-            // Sign in with Firebase.
-            Auth.auth().signIn(with: credential) { authResult, error in
-                if let error = error {
-                    // Error. If error.code == .MissingOrInvalidNonce, make sure
-                    // you're sending the SHA256-hashed nonce as a hex string with
-                    // your request to Apple.
-                    print(error.localizedDescription)
-                    return
-                }
-                // User is signed in to Firebase with Apple.
-
-            }
+            signIn(credential: credential)
         }
     }
 
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-        // Handle error.
-        print("Sign in with Apple errored: \(error)")
+        userChangesSubject.send(completion: .failure(error))
+        log("Sign in with Apple errored: \(error)", logType: .error)
     }
 
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {

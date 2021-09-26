@@ -122,6 +122,7 @@ struct AppState: Equatable {
         didFetchItemPrices = false
         inventoryItems = []
         stacks = []
+        profileImageURL = nil
         error = nil
     }
 }
