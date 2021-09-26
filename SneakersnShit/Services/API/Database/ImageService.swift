@@ -232,34 +232,9 @@ class DefaultImageService: ImageService {
         }
     }
 
-    func deleteInventoryItemImages(inventoryItem: InventoryItem, imageIds: [String], completion: @escaping ([String]) -> Void) {
-        guard let userId = userId, !imageIds.isEmpty else {
-            completion([])
-            return
-        }
-
-        let dispatchGroup = DispatchGroup()
-        var imageIds: [String] = []
-
-        imageIds
-            .map { (imageId: String) -> (String, StorageReference) in
-                (imageId, storage.reference().child("inventoryItems/\(userId)/\(inventoryItem.id)/\(imageId)"))
-            }
-            .forEach { (imageId: String, ref: StorageReference) in
-                dispatchGroup.enter()
-                ref.delete { error in
-                    if error == nil {
-                        DispatchQueue.main.async {
-                            imageIds.append(imageId)
-                            dispatchGroup.leave()
-                        }
-                    } else {
-                        dispatchGroup.leave()
-                    }
-                }
-            }
-        dispatchGroup.notify(queue: .main) {
-            completion(imageIds)
+    func deleteInventoryItemImage(imageURL: URL, completion: @escaping (Bool) -> Void) {
+        storage.reference(forURL: imageURL.absoluteString).delete { error in
+            completion(error == nil)
         }
     }
 }

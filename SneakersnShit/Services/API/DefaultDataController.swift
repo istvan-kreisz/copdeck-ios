@@ -374,7 +374,7 @@ class DefaultDataController: DataController {
         imageService.uploadInventoryItemImages(inventoryItem: inventoryItem, images: images, completion: completion)
     }
 
-    func deleteInventoryItemImages(inventoryItem: InventoryItem, imageIds: [String], completion: @escaping ([String]) -> Void) {
-        imageService.deleteInventoryItemImages(inventoryItem: inventoryItem, imageIds: imageIds, completion: completion)
+    func deleteInventoryItemImage(imageURL: URL, completion: @escaping (Bool) -> Void) {
+        imageService.deleteInventoryItemImage(imageURL: imageURL, completion: completion)
     }
 }

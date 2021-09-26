@@ -21,6 +21,8 @@ struct PriceWithCurrency: Codable, Equatable {
 }
 
 struct InventoryItem: Codable, Equatable, Identifiable {
+    static let maxPhotoCount = 6
+
     enum Condition: String, Codable, CaseIterable {
         case new, used
     }

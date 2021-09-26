@@ -53,19 +53,11 @@ struct NewItemCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 11) {
             if didTapDelete != nil {
-                Button(action: { didTapDelete?() }, label: {
-                    ZStack {
-                        Color.clear.frame(width: 22, height: 22)
-                        Circle()
-                            .stroke(Color.customRed, lineWidth: 2)
-                            .frame(width: 18, height: 18)
-                        Image(systemName: "xmark")
-                            .font(.bold(size: 11))
-                            .foregroundColor(Color.customRed)
-                    }.frame(width: 18, height: 18)
-                })
-                    .rightAligned()
-                    .padding(.bottom, -12)
+                SmallDeleteButton(style: .line) {
+                    didTapDelete?()
+                }
+                .rightAligned()
+                .padding(.bottom, -12)
             }
 
             HStack(alignment: .top, spacing: 11) {

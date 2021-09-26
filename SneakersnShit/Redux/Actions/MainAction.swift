@@ -51,7 +51,7 @@ enum MainAction {
 
     case getInventoryItemImages(userId: String, inventoryItem: InventoryItem, completion: ([URL]) -> Void)
     case uploadInventoryItemImages(inventoryItem: InventoryItem, images: [UIImage], completion: ([String]) -> Void)
-    case deleteInventoryItemImages(inventoryItem: InventoryItem, imageIds: [String], completion: ([String]) -> Void)
+    case deleteInventoryItemImage(imageURL: URL, completion: (Bool) -> Void)
 }
 
 extension MainAction: Identifiable {
@@ -76,8 +76,8 @@ extension MainAction: Identifiable {
             return "\(label) \(userId) \(inventoryItem.id)"
         case let .uploadInventoryItemImages(inventoryItem, _, _):
             return "\(label) \(inventoryItem.id)"
-        case let .deleteInventoryItemImages(inventoryItem, imageIds, _):
-            return "\(label) \(inventoryItem.id) \(imageIds.joined(separator: ","))"
+        case let .deleteInventoryItemImage(url, _):
+            return "\(label) \(url.absoluteString)"
         default:
             return label
         }

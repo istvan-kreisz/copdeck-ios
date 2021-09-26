@@ -144,8 +144,8 @@ func appReducer(state: inout AppState,
             environment.dataController.getInventoryItemImages(userId: userId, inventoryItem: inventoryItem, completion: completion)
         case let .uploadInventoryItemImages(inventoryItem, images, completion):
             environment.dataController.uploadInventoryItemImages(inventoryItem: inventoryItem, images: images, completion: completion)
-        case let .deleteInventoryItemImages(inventoryItem, imageIds, completion):
-            environment.dataController.deleteInventoryItemImages(inventoryItem: inventoryItem, imageIds: imageIds, completion: completion)
+        case let .deleteInventoryItemImage(imageURL, completion):
+            environment.dataController.deleteInventoryItemImage(imageURL: imageURL, completion: completion)
         }
     case let .authentication(action: action):
         return environment.authenticator.handle(action)

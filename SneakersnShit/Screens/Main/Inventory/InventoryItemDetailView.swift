@@ -120,14 +120,27 @@ struct InventoryItemDetailView: View {
                             ForEach(photoURLsChunked, id: \.0) { (index: Int, urls: [URL]) in
                                 HStack(spacing: Styles.verticalPadding) {
                                     ForEach(urls, id: \.absoluteString) { (url: URL) in
-                                        ImageView(source: .url(url),
-                                                  size: imageSize,
-                                                  aspectRatio: 1.0,
-                                                  flipImage: false,
-                                                  showPlaceholder: true,
-                                                  background: Color.customAccent1.opacity(0.1))
-                                            .frame(width: imageSize, height: imageSize)
-                                            .cornerRadius(4)
+                                        ZStack {
+                                            ImageView(source: .url(url),
+                                                      size: imageSize,
+                                                      aspectRatio: 1.0,
+                                                      flipImage: false,
+                                                      showPlaceholder: true,
+                                                      background: Color.customAccent1.opacity(0.07))
+                                                .frame(width: imageSize, height: imageSize)
+                                                .cornerRadius(4)
+                                            SmallDeleteButton(style: .fill) {
+                                                deletePhoto(at: url)
+                                            }
+                                            .topAligned()
+                                            .rightAligned()
+                                            .padding(.top, 5)
+                                            .padding(.trailing, 5)
+                                        }
+                                        .frame(width: imageSize, height: imageSize)
+                                    }
+                                    if urls.count < 3 {
+                                        Spacer()
                                     }
                                 }
                                 .padding(.vertical, 6)
@@ -141,7 +154,7 @@ struct InventoryItemDetailView: View {
                                     }
                                     .padding(.top, 20)
                                     .padding(.bottom, 30)
-                                } else {
+                                } else if photoURLs.count < InventoryItem.maxPhotoCount {
                                     AccessoryButton(title: "Add Photos",
                                                     color: .customBlue,
                                                     textColor: .customBlue,
@@ -150,6 +163,10 @@ struct InventoryItemDetailView: View {
                                                     tapped: { showPhotoSelector = true })
                                         .leftAligned()
                                         .padding(.top, 5)
+                                } else {
+                                    Text("Max photos limit (\(InventoryItem.maxPhotoCount)) reached")
+                                        .font(.semiBold(size: 12))
+                                        .foregroundColor(.customRed)
                                 }
                             }
                         }
@@ -196,20 +213,20 @@ struct InventoryItemDetailView: View {
                 }
             }
             .sheet(isPresented: $showPhotoSelector) {
-                ImagePickerView(showPicker: $showPhotoSelector, selectionLimit: 5) { (images: [UIImage]) in
+                ImagePickerView(showPicker: $showPhotoSelector, selectionLimit: InventoryItem.maxPhotoCount - photoURLs.count) { (images: [UIImage]) in
                     store.send(.main(action: .uploadInventoryItemImages(inventoryItem: inventoryItem, images: images, completion: { _ in
-                        loadImages()
+                        loadPhotos()
                     })))
                 }
             }
             .onAppear {
-                loadImages()
+                loadPhotos()
             }
             .navigationbarHidden()
         }
     }
 
-    private func loadImages() {
+    private func loadPhotos() {
         guard let userId = store.state.user?.id else { return }
         store.send(.main(action: .getInventoryItemImages(userId: userId, inventoryItem: inventoryItem, completion: { urls in
             if !didLoadPhotos {
@@ -217,6 +234,11 @@ struct InventoryItemDetailView: View {
             }
             photoURLs = urls
         })))
+    }
+
+    private func deletePhoto(at url: URL) {
+        try? photoURLs.removeAll(where: { $0 == url })
+        store.send(.main(action: .deleteInventoryItemImage(imageURL: url) { _ in }))
     }
 
     private func deleteInventoryItem() {
