@@ -11,8 +11,6 @@ import Combine
 import UIKit
 import FirebaseStorage
 
-#warning("better error handling for image downloads")
-
 class DefaultImageService: ImageService {
     private let storage: Storage
     private var userId: String?
