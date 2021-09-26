@@ -27,6 +27,7 @@ struct ProfileImageView: View {
                           showPlaceholder: true,
                           resizingMode: .aspectFill)
                     .frame(width: Self.profileImageSize, height: Self.profileImageSize)
+                    .id(profileImageURL.absoluteString)
             } else {
                 Image("profileLarge")
                     .resizable()

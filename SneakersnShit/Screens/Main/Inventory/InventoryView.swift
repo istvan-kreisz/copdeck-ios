@@ -222,8 +222,8 @@ struct InventoryView: View {
                     FiltersModal(settings: store.state.settings, isPresented: showFilters)
                         .environmentObject(DerivedGlobalStore.default)
                 case .imagePicker:
-                    ImagePickerView(sourceType: .photoLibrary) { image in
-                        self.store.send(.main(action: .uploadProfileImage(image: image)))
+                    ImagePickerView(showPicker: showSheet, selectionLimit: 1) { (images: [UIImage]) in
+                        images.first.map { self.store.send(.main(action: .uploadProfileImage(image: $0))) }
                     }
                 case .none:
                     EmptyView()
