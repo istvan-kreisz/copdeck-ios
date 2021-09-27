@@ -91,7 +91,13 @@ struct NewItemCard: View {
                              style: dropdownStyle)
             }
             if showCopDeckPrice {
-                let price = Binding<String>(get: { (inventoryItem.copdeckPrice?.price.price).asString() },
+                let price = Binding<String>(get: {
+                                                if let price = inventoryItem.copdeckPrice?.price.price, price > 0 {
+                                                    return price.rounded(toPlaces: 0)
+                                                } else {
+                                                    return ""
+                                                }
+                                            },
                                             set: { new in
                                                 inventoryItem.copdeckPrice = ListingPrice(storeId: "copdeck",
                                                                                           price: .init(price: Double(new) ?? 0,
@@ -99,18 +105,18 @@ struct NewItemCard: View {
                                                                                                            .currencyCode ?? self.currency.code))
                                             })
                 let currency =
-                    Binding<String>(get: { inventoryItem.copdeckPrice?.price.currencyCode.rawValue ?? self.currency.symbol.rawValue },
+                    Binding<String>(get: { inventoryItem.copdeckPrice?.price.currencySymbol.rawValue ?? self.currency.symbol.rawValue },
                                     set: { currency in
                                         if let currency = Currency.currrency(withSymbol: currency) {
+                                            let price = inventoryItem.copdeckPrice?.price.price ?? 0
                                             inventoryItem.copdeckPrice = ListingPrice(storeId: "copdeck",
-                                                                                      price: .init(price: inventoryItem.copdeckPrice?.price.price ?? 0,
-                                                                                                   currencyCode: currency.code))
+                                                                                      price: .init(price: price, currencyCode: currency.code))
                                         }
                                     })
 
                 HStack(spacing: 11) {
                     TextFieldRounded(title: "copdeck price (optional)",
-                                     placeHolder: "\(currency.wrappedValue)",
+                                     placeHolder: "0",
                                      style: textFieldStyle,
                                      keyboardType: .numberPad,
                                      text: price)
@@ -118,6 +124,7 @@ struct NewItemCard: View {
                                  selectedItem: currency,
                                  options: ALLSELECTABLECURRENCYSYMBOLS.map(\.rawValue),
                                  style: .white)
+                        .frame(width: 75)
                 }
             }
 
@@ -143,7 +150,10 @@ struct NewItemCard: View {
                                                 },
                                                 set: { new in
                                                     if let index = inventoryItem.listingPrices.firstIndex(where: { $0.storeId == store.id }) {
-                                                        inventoryItem.listingPrices[index] = ListingPrice(storeId: store.id, price: .init(price: Double(new) ?? 0, currencyCode: self.currency.code))
+                                                        inventoryItem
+                                                            .listingPrices[index] = ListingPrice(storeId: store.id,
+                                                                                                 price: .init(price: Double(new) ?? 0,
+                                                                                                              currencyCode: self.currency.code))
                                                     } else {
                                                         inventoryItem.listingPrices
                                                             .append(.init(storeId: store.id,

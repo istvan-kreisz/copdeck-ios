@@ -8,7 +8,7 @@
 import Foundation
 
 extension Optional where Wrapped == Double {
-    func asString(defaultValue: String = "", decimalPlaces: Int = 0) -> String {
+    func asString(defaultValue: String = "") -> String {
         map { String(Int($0)) } ?? defaultValue
     }
 
