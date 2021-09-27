@@ -15,5 +15,3 @@ protocol Authenticator {
     func handle(_ authAction: AuthenticationAction) -> AnyPublisher<String, Error>
     static var user: FirebaseAuth.User? { get }
 }
-
-//extension Authenticator: LoginButtonDelegate {}

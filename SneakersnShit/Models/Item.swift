@@ -231,9 +231,9 @@ extension Item {
         sortedSizes.map { priceRow(size: $0, priceType: priceType, feeType: feeType, stores: stores) }
     }
 
-    func bestPrice(for size: String, feeType: FeeType, priceType: PriceType, stores: [StoreId]) -> PriceWithCurrency? {
-        if let bestPrice = priceRow(size: size, priceType: priceType, feeType: feeType, stores: stores).prices.map(\.price).max() {
-            return .init(price: bestPrice, currencyCode: currency.code)
+    func bestPrice(for size: String, feeType: FeeType, priceType: PriceType, stores: [StoreId]) -> ListingPrice? {
+        if let bestPrice = priceRow(size: size, priceType: priceType, feeType: feeType, stores: stores).prices.max(by: { $0.price < $1.price }) {
+            return ListingPrice(storeId: bestPrice.store.id.rawValue, price: PriceWithCurrency(price: bestPrice.price, currencyCode: currency.code))
         } else {
             return nil
         }

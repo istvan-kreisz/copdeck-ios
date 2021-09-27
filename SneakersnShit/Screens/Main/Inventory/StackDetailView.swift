@@ -13,7 +13,7 @@ struct StackDetailView: View {
 
     @Binding var stack: Stack
     @Binding var inventoryItems: [InventoryItem]
-    @Binding var bestPrices: [String: PriceWithCurrency]
+    @Binding var bestPrices: [String: ListingPrice]
     @Binding var filters: Filters
 
     let linkURL: String
@@ -39,10 +39,10 @@ struct StackDetailView: View {
     }
 
     var stackValue: PriceWithCurrency? {
-        if let currencyCode = bestPrices.values.first?.currencyCode {
+        if let currencyCode = bestPrices.values.first?.price.currencyCode {
             let sum = allStackItems
                 .filter { $0.status != .Sold }
-                .compactMap { bestPrices[$0.id]?.price }
+                .compactMap { bestPrices[$0.id]?.price.price }
                 .sum()
             return PriceWithCurrency(price: sum, currencyCode: currencyCode)
         } else {
@@ -57,7 +57,7 @@ struct StackDetailView: View {
 
     init(stack: Binding<Stack>,
          inventoryItems: Binding<[InventoryItem]>,
-         bestPrices: Binding<[String: PriceWithCurrency]>,
+         bestPrices: Binding<[String: ListingPrice]>,
          filters: Binding<Filters>,
          linkURL: String,
          requestInfo: [ScraperRequestInfo],

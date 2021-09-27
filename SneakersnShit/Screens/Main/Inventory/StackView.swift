@@ -18,7 +18,7 @@ struct StackView: View {
     @Binding var showFilters: Bool
     @Binding var selectedInventoryItems: [InventoryItem]
     @Binding var isSelected: Bool
-    @Binding var bestPrices: [String: PriceWithCurrency]
+    @Binding var bestPrices: [String: ListingPrice]
     let requestInfo: [ScraperRequestInfo]
     var didTapEditStack: (() -> Void)?
     var didTapShareStack: (() -> Void)?

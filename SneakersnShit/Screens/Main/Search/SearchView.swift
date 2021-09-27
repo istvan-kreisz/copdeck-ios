@@ -12,6 +12,7 @@ struct SearchView: View {
     @EnvironmentObject var store: SearchStore
 
     @State private var searchText = ""
+    @State private var isFirstLoad = true
 
     @StateObject private var searchResultsLoader = Loader()
     @StateObject private var popularItemsLoader = Loader()
@@ -153,8 +154,16 @@ struct SearchView: View {
                 if store.state.popularItems.isEmpty {
                     store.send(.main(action: .getPopularItems), completed: popularItemsLoader.getLoader())
                 }
+                if isFirstLoad {
+                    loadFeedPosts(loadMore: false)
+                    isFirstLoad = false
+                }
             }
         }
+    }
+
+    private func loadFeedPosts(loadMore: Bool) {
+        store.send(.main(action: .getFeedPosts(loadMore: loadMore)), debounceDelayMs: 2000)
     }
 }
 

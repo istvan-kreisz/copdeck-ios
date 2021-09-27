@@ -93,7 +93,9 @@ class DefaultAuthenticator: NSObject, Authenticator {
     }
 
     private func signInWithFacebook() {
+        #warning("yo")
         loginButton.delegate = self
+        loginButton.permissions = ["email", "user_link"]
         loginButton.sendActions(for: .touchUpInside)
     }
 

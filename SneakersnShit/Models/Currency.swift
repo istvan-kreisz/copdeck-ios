@@ -41,6 +41,15 @@ struct Currency: Codable, Equatable {
             return .chf
         }
     }
+
+    static func currrency(withSymbol symbol: String) -> Currency? {
+        if let symbol = Currency.CurrencySymbol(rawValue: symbol),
+           let currency = ALLCURRENCIES.first(where: { $0.symbol == symbol }) {
+            return currency
+        } else {
+            return nil
+        }
+    }
 }
 
 let ALLSELECTABLECURRENCYCODES: [Currency.CurrencyCode] = [.eur, .usd, .gbp]

@@ -123,7 +123,9 @@ struct FeedView: View {
         }
         .onAppear {
             if isFirstLoad {
-                loadFeedPosts(loadMore: false)
+                if feedPosts.isEmpty {
+                    loadFeedPosts(loadMore: false)
+                }
                 isFirstLoad = false
             }
         }

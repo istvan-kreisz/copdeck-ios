@@ -21,7 +21,7 @@ struct InventoryView: View {
     @State private var selectedInventoryItems: [InventoryItem] = []
     @State private var selectedStackIndex = 0
     @State private var showAddNewStackAlert = false
-    @State private var bestPrices: [String: PriceWithCurrency] = [:]
+    @State private var bestPrices: [String: ListingPrice] = [:]
     @State private var newStackId: String?
     @State var username: String = ""
     @State private var sharedStack: Stack?
@@ -63,8 +63,8 @@ struct InventoryView: View {
 
     func updateBestPrices() {
         bestPrices = store.state.inventoryItems
-            .map { (inventoryItem: InventoryItem) -> (String, PriceWithCurrency?) in (inventoryItem.id, bestPrice(for: inventoryItem)) }
-            .reduce([:]) { (dict: [String: PriceWithCurrency], element: (String, PriceWithCurrency?)) in
+            .map { (inventoryItem: InventoryItem) -> (String, ListingPrice?) in (inventoryItem.id, bestPrice(for: inventoryItem)) }
+            .reduce([:]) { (dict: [String: ListingPrice], element: (String, ListingPrice?)) in
                 if let price = element.1 {
                     var newDict = dict
                     newDict[element.0] = price
@@ -76,10 +76,10 @@ struct InventoryView: View {
     }
 
     var inventoryValue: PriceWithCurrency? {
-        if let currencyCode = bestPrices.values.first?.currencyCode {
+        if let currencyCode = bestPrices.values.first?.price.currencyCode {
             let sum = inventoryItems
                 .filter { (inventoryItem: InventoryItem) -> Bool in inventoryItem.status != .Sold }
-                .compactMap { (inventoryItem: InventoryItem) -> Double? in bestPrices[inventoryItem.id]?.price }
+                .compactMap { (inventoryItem: InventoryItem) -> Double? in bestPrices[inventoryItem.id]?.price.price }
                 .sum()
             return PriceWithCurrency(price: sum, currencyCode: currencyCode)
         } else {
@@ -87,7 +87,7 @@ struct InventoryView: View {
         }
     }
 
-    private func bestPrice(for inventoryItem: InventoryItem) -> PriceWithCurrency? {
+    private func bestPrice(for inventoryItem: InventoryItem) -> ListingPrice? {
         if let itemId = inventoryItem.itemId, let item = ItemCache.default.value(itemId: itemId, settings: store.state.settings) {
             return item.bestPrice(for: inventoryItem.size,
                                   feeType: store.state.settings.bestPriceFeeType,
@@ -335,7 +335,7 @@ extension InventoryView {
     struct Destination: View {
         @EnvironmentObject var store: AppStore
         @Binding var navigationDestination: Navigation<NavigationDestination>
-        @Binding var bestPrices: [String: PriceWithCurrency]
+        @Binding var bestPrices: [String: ListingPrice]
 
         var editedStack: Stack? {
             guard case let .stack(stack) = navigationDestination.destination else { return nil }

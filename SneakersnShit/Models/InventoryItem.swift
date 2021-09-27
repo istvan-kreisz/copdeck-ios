@@ -7,6 +7,11 @@
 
 import Foundation
 
+struct ListingPrice: Codable, Equatable {
+    let storeId: String
+    var price: PriceWithCurrency
+}
+
 struct PriceWithCurrency: Codable, Equatable {
     let price: Double
     let currencyCode: Currency.CurrencyCode
@@ -25,11 +30,6 @@ struct InventoryItem: Codable, Equatable, Identifiable {
 
     enum Condition: String, Codable, CaseIterable {
         case new, used
-    }
-
-    struct ListingPrice: Codable, Equatable {
-        let storeId: String
-        var price: PriceWithCurrency
     }
 
     struct SoldPrice: Codable, Equatable {

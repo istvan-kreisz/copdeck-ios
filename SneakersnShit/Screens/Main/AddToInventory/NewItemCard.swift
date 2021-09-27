@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+#warning("currrencyyyyyyy")
+
 struct NewItemCard: View {
     enum Style {
         case card, noBackground
@@ -72,12 +74,12 @@ struct NewItemCard: View {
                                  style: textFieldStyle,
                                  keyboardType: .numberPad,
                                  text: purchasePrice) { isActive in
-                        if isActive, style == .card {
-                            if !didTapPurchasePrice {
-                                didTapPurchasePrice = true
-                                inventoryItem.purchasePrice = nil
-                            }
+                    if isActive, style == .card {
+                        if !didTapPurchasePrice {
+                            didTapPurchasePrice = true
+                            inventoryItem.purchasePrice = nil
                         }
+                    }
                 }
                 DropDownMenu(title: "size",
                              selectedItem: $inventoryItem.size,
@@ -89,24 +91,33 @@ struct NewItemCard: View {
                              style: dropdownStyle)
             }
             if showCopDeckPrice {
-                let text =
-                    Binding<String>(get: { (inventoryItem.copdeckPrice?.price.price).asString() },
-                                    set: { new in
-                                        inventoryItem.copdeckPrice = InventoryItem.ListingPrice(storeId: "copdeck",
-                                                                                                price: .init(price: Double(new) ?? 0,
-                                                                                                             currencyCode: currency.code))
+                let price = Binding<String>(get: { (inventoryItem.copdeckPrice?.price.price).asString() },
+                                            set: { new in
+                                                inventoryItem.copdeckPrice = ListingPrice(storeId: "copdeck",
+                                                                                          price: .init(price: Double(new) ?? 0,
+                                                                                                       currencyCode: inventoryItem.copdeckPrice?.price
+                                                                                                           .currencyCode ?? self.currency.code))
+                                            })
+                let currency =
+                    Binding<String>(get: { inventoryItem.copdeckPrice?.price.currencyCode.rawValue ?? self.currency.symbol.rawValue },
+                                    set: { currency in
+                                        if let currency = Currency.currrency(withSymbol: currency) {
+                                            inventoryItem.copdeckPrice = ListingPrice(storeId: "copdeck",
+                                                                                      price: .init(price: inventoryItem.copdeckPrice?.price.price ?? 0,
+                                                                                                   currencyCode: currency.code))
+                                        }
                                     })
 
                 HStack(spacing: 11) {
                     TextFieldRounded(title: "copdeck price (optional)",
-                                     placeHolder: "\(currency.symbol.rawValue)0",
+                                     placeHolder: "\(currency.wrappedValue)",
                                      style: textFieldStyle,
                                      keyboardType: .numberPad,
-                                     text: text)
-//                    DropDownMenu(title: "size",
-//                                 selectedItem: $inventoryItem.size,
-//                                 options: sizes,
-//                                 style: dropdownStyle)
+                                     text: price)
+                    DropDownMenu(title: "currency",
+                                 selectedItem: currency,
+                                 options: ALLSELECTABLECURRENCYSYMBOLS.map(\.rawValue),
+                                 style: .white)
                 }
             }
 
@@ -132,8 +143,7 @@ struct NewItemCard: View {
                                                 },
                                                 set: { new in
                                                     if let index = inventoryItem.listingPrices.firstIndex(where: { $0.storeId == store.id }) {
-                                                        inventoryItem.listingPrices[index] = InventoryItem
-                                                            .ListingPrice(storeId: store.id, price: .init(price: Double(new) ?? 0, currencyCode: currency.code))
+                                                        inventoryItem.listingPrices[index] = ListingPrice(storeId: store.id, price: .init(price: Double(new) ?? 0, currencyCode: self.currency.code))
                                                     } else {
                                                         inventoryItem.listingPrices
                                                             .append(.init(storeId: store.id,
