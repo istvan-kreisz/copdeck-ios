@@ -132,9 +132,6 @@ func appReducer(state: inout AppState,
             environment.dataController.update(inventoryItem: InventoryItem)
         case let .removeFromInventory(inventoryItems):
             environment.dataController.delete(inventoryItems: inventoryItems)
-            inventoryItems.forEach { inventoryItem in
-                environment.dataController.deleteInventoryItemImages(inventoryItem: inventoryItem)
-            }
         case let .stack(inventoryItems, stack):
             environment.dataController.stack(inventoryItems: inventoryItems, stack: stack)
         case let .unstack(inventoryItems, stack):
