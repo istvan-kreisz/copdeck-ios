@@ -10,8 +10,8 @@ import UIKit
 
 public struct ImageViewer: View {
     @Binding var viewerShown: Bool
-    @Binding var image: Image
-    @Binding var imageOpt: Image?
+    @Binding var image: UIImage
+    @Binding var imageOpt: UIImage?
     @State var caption: Text?
     @State var closeButtonTopRight: Bool?
 
@@ -20,7 +20,7 @@ public struct ImageViewer: View {
     @State var dragOffset: CGSize = CGSize.zero
     @State var dragOffsetPredicted: CGSize = CGSize.zero
 
-    public init(image: Binding<Image>, viewerShown: Binding<Bool>, aspectRatio: Binding<CGFloat>? = nil, caption: Text? = nil,
+    public init(image: Binding<UIImage>, viewerShown: Binding<Bool>, aspectRatio: Binding<CGFloat>? = nil, caption: Text? = nil,
                 closeButtonTopRight: Bool? = false) {
         _image = image
         _viewerShown = viewerShown
@@ -30,10 +30,10 @@ public struct ImageViewer: View {
         _closeButtonTopRight = State(initialValue: closeButtonTopRight)
     }
 
-    public init(image: Binding<Image?>, viewerShown: Binding<Bool>, aspectRatio: Binding<CGFloat>? = nil, caption: Text? = nil,
+    public init(image_: Binding<UIImage?>, viewerShown: Binding<Bool>, aspectRatio: Binding<CGFloat>? = nil, caption: Text? = nil,
                 closeButtonTopRight: Bool? = false) {
-        _image = .constant(Image(systemName: ""))
-        _imageOpt = image
+        _image = .constant(UIImage())
+        _imageOpt = image_
         _viewerShown = viewerShown
         self.aspectRatio = aspectRatio
         _caption = State(initialValue: caption)
@@ -42,9 +42,9 @@ public struct ImageViewer: View {
 
     func getImage() -> Image {
         if self.imageOpt == nil {
-            return self.image
+            return Image(uiImage: self.image)
         } else {
-            return self.imageOpt ?? Image(systemName: "questionmark.diamond")
+            return self.imageOpt.map { Image(uiImage: $0) } ?? Image(systemName: "questionmark.diamond")
         }
     }
 
