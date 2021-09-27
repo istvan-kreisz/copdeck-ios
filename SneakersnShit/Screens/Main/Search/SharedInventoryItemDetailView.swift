@@ -19,6 +19,7 @@ struct SharedInventoryItemView: View {
     let shouldDismiss: () -> Void
 
     @State var photoURLs: [URL] = []
+    @State var shownImageURL: URL?
 
     var photoURLsChunked: [(Int, [URL])] {
         Array(photoURLs.chunked(into: 3).enumerated())
@@ -123,6 +124,7 @@ struct SharedInventoryItemView: View {
                                           background: Color.customAccent1.opacity(0.07))
                                     .frame(width: imageSize, height: imageSize)
                                     .cornerRadius(4)
+                                    .onTapGesture { shownImageURL = url }
                             }
                             if urls.count < 3 {
                                 Spacer()
@@ -144,6 +146,7 @@ struct SharedInventoryItemView: View {
         .onAppear {
             loadPhotos()
         }
+        .withImageViewer(shownImageURL: $shownImageURL)
         .navigationbarHidden()
     }
 

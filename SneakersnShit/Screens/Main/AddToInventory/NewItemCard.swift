@@ -55,7 +55,7 @@ struct NewItemCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 11) {
             if didTapDelete != nil {
-                SmallDeleteButton(style: .line) {
+                DeleteButton(style: .line) {
                     didTapDelete?()
                 }
                 .rightAligned()

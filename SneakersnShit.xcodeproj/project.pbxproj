@@ -65,7 +65,7 @@
 		5D54FE2826C30931008CD05F /* VerticalItemListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D54FE2726C30931008CD05F /* VerticalItemListView.swift */; };
 		5D54FE2A26C312BF008CD05F /* HorizontaltemListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D54FE2926C312BF008CD05F /* HorizontaltemListView.swift */; };
 		5D54FE3726C3390F008CD05F /* PopularItemsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D54FE3626C3390F008CD05F /* PopularItemsListView.swift */; };
-		5D56B7B2270097EC001357E0 /* SmallDeleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D56B7B1270097EC001357E0 /* SmallDeleteButton.swift */; };
+		5D56B7B2270097EC001357E0 /* DeleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D56B7B1270097EC001357E0 /* DeleteButton.swift */; };
 		5D56B7B42700A6BE001357E0 /* TestImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D56B7B32700A6BE001357E0 /* TestImageView.swift */; };
 		5D5D4C4426D50EB100A7C61A /* ModelWithDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D5D4C4326D50EB100A7C61A /* ModelWithDate.swift */; };
 		5D5D4C4726D5F20900A7C61A /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D5D4C4626D5F20900A7C61A /* ImagePickerView.swift */; };
@@ -239,7 +239,7 @@
 		5D54FE2726C30931008CD05F /* VerticalItemListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalItemListView.swift; sourceTree = "<group>"; };
 		5D54FE2926C312BF008CD05F /* HorizontaltemListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontaltemListView.swift; sourceTree = "<group>"; };
 		5D54FE3626C3390F008CD05F /* PopularItemsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularItemsListView.swift; sourceTree = "<group>"; };
-		5D56B7B1270097EC001357E0 /* SmallDeleteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallDeleteButton.swift; sourceTree = "<group>"; };
+		5D56B7B1270097EC001357E0 /* DeleteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButton.swift; sourceTree = "<group>"; };
 		5D56B7B32700A6BE001357E0 /* TestImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestImageView.swift; sourceTree = "<group>"; };
 		5D5D4C4326D50EB100A7C61A /* ModelWithDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelWithDate.swift; sourceTree = "<group>"; };
 		5D5D4C4626D5F20900A7C61A /* ImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
@@ -610,7 +610,7 @@
 				5DCC467126A8EBB9007671BC /* ToggleButton.swift */,
 				5D9C8E3E269FAB8B008538D6 /* NextButton.swift */,
 				5D53A1F126AF2A61001DAA8D /* AccessoryButton.swift */,
-				5D56B7B1270097EC001357E0 /* SmallDeleteButton.swift */,
+				5D56B7B1270097EC001357E0 /* DeleteButton.swift */,
 			);
 			path = Buttons;
 			sourceTree = "<group>";
@@ -1204,7 +1204,7 @@
 				5DEBC088269B24BA000EEADC /* ViewRouter.swift in Sources */,
 				5D53A1F526AF5649001DAA8D /* SettingsView.swift in Sources */,
 				5DE596F426C8D64F0024F7D5 /* Popup.swift in Sources */,
-				5D56B7B2270097EC001357E0 /* SmallDeleteButton.swift in Sources */,
+				5D56B7B2270097EC001357E0 /* DeleteButton.swift in Sources */,
 				5DE4F21E26E052570087077A /* OwnerCardView.swift in Sources */,
 				5D5D4C4426D50EB100A7C61A /* ModelWithDate.swift in Sources */,
 				5D30BA42269C3EAD0062F6AB /* CustomSpinner.swift in Sources */,

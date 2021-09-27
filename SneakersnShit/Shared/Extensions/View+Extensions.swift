@@ -109,6 +109,10 @@ extension View {
     func withPopup<Popup: View>(@ViewBuilder _ popup: () -> Popup) -> some View {
         ModifiedContent(content: self, modifier: WithPopup(popup))
     }
+    
+    func withImageViewer(shownImageURL: Binding<URL?>) -> some View {
+        ModifiedContent(content: self, modifier: WithImageViewer(shownImageURL: shownImageURL))
+    }
 
     func withTextFieldPopup(isShowing: Binding<Bool>,
                             title: String,

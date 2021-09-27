@@ -21,7 +21,7 @@ struct InventoryItemDetailView: View {
 
     @State var didLoadPhotos = false
     @State var photoURLs: [URL] = []
-    @State var shownImage: UIImage?
+    @State var shownImageURL: URL?
 
     var photoURLsChunked: [(Int, [URL])] {
         Array(photoURLs.chunked(into: 3).enumerated())
@@ -58,185 +58,174 @@ struct InventoryItemDetailView: View {
     }
 
     var body: some View {
-        ZStack {
-            let viewerShown = Binding<Bool>(get: { shownImage != nil },
-                                            set: { shownImage = $0 ? shownImage : nil })
-            VStack {
-                NavigationLink(destination: inventoryItem.itemId.map { (itemId: String) in
-                    ItemDetailView(item: nil,
-                                   itemId: itemId,
-                                   favoritedItemIds: store.state.favoritedItems.map(\.id)) {
-                        showItemDetails = false
-                    }
-                },
-                isActive: $showItemDetails) { EmptyView() }
+        VStack {
+            NavigationLink(destination: inventoryItem.itemId.map { (itemId: String) in
+                ItemDetailView(item: nil,
+                               itemId: itemId,
+                               favoritedItemIds: store.state.favoritedItems.map(\.id)) {
+                    showItemDetails = false
+                }
+            },
+            isActive: $showItemDetails) { EmptyView() }
 
-                ScrollView(.vertical, showsIndicators: false) {
-                    VStack(alignment: .center, spacing: 20) {
-                        ItemImageViewWithNavBar(itemId: inventoryItem.itemId ?? "",
-                                                source: imageSource(for: inventoryItem),
-                                                requestInfo: [],
-                                                shouldDismiss: shouldDismiss,
-                                                flipImage: inventoryItem.imageURL?.store?.id == .klekt)
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(alignment: .center, spacing: 20) {
+                    ItemImageViewWithNavBar(itemId: inventoryItem.itemId ?? "",
+                                            source: imageSource(for: inventoryItem),
+                                            requestInfo: [],
+                                            shouldDismiss: shouldDismiss,
+                                            flipImage: inventoryItem.imageURL?.store?.id == .klekt)
 
-                        VStack(alignment: .center, spacing: 8) {
-                            Text("Edit Item")
-                                .font(.bold(size: 30))
-                                .foregroundColor(.customText1)
-                                .padding(.bottom, 8)
+                    VStack(alignment: .center, spacing: 8) {
+                        Text("Edit Item")
+                            .font(.bold(size: 30))
+                            .foregroundColor(.customText1)
+                            .padding(.bottom, 8)
 
-                            if inventoryItem.itemId != nil {
-                                AccessoryButton(title: "View Prices",
-                                                color: .customAccent1,
-                                                textColor: .customText1,
-                                                width: 125,
-                                                imageName: "chevron.right",
-                                                buttonPosition: .right,
-                                                tapped: { showItemDetails = true })
-                            }
-
-                            HStack(spacing: 10) {
-                                TextFieldRounded(title: "name",
-                                                 placeHolder: "name",
-                                                 style: .white,
-                                                 text: $name)
-                                TextFieldRounded(title: "styleid (optional)",
-                                                 placeHolder: "styleid",
-                                                 style: .white,
-                                                 text: $styleId,
-                                                 width: 100)
-                            }
-                            .padding(.top, 15)
-
-                            NewItemCard(inventoryItem: $inventoryItem,
-                                        purchasePrice: inventoryItem.purchasePrice,
-                                        currency: Currency(code: .usd, symbol: .usd),
-                                        style: NewItemCard.Style.noBackground,
-                                        sizes: item?.sortedSizes ?? ALLSHOESIZES,
-                                        showCopDeckPrice: true)
-
-                            VStack(alignment: .leading, spacing: 9) {
-                                Text("Photos:".uppercased())
-                                    .font(.bold(size: 12))
-                                    .foregroundColor(.customText2)
-                                    .leftAligned()
-
-                                ForEach(photoURLsChunked, id: \.0) { (index: Int, urls: [URL]) in
-                                    HStack(spacing: Styles.verticalPadding) {
-                                        ForEach(urls, id: \.absoluteString) { (url: URL) in
-                                            ZStack {
-                                                ImageView(source: .url(url),
-                                                          size: imageSize,
-                                                          aspectRatio: 1.0,
-                                                          flipImage: false,
-                                                          showPlaceholder: true,
-                                                          background: Color.customAccent1.opacity(0.07))
-                                                    .frame(width: imageSize, height: imageSize)
-                                                    .cornerRadius(4)
-                                                    .onTapGesture {
-                                                        URLSession.shared.dataTask(with: url, completionHandler: { data, _, error in
-                                                            guard let data = data, error == nil else { return }
-                                                            DispatchQueue.main.async {
-                                                                self.shownImage = UIImage(data: data)
-                                                            }
-                                                        }).resume()
-                                                    }
-                                                SmallDeleteButton(style: .fill) {
-                                                    deletePhoto(at: url)
-                                                }
-                                                .topAligned()
-                                                .rightAligned()
-                                                .padding(.top, 5)
-                                                .padding(.trailing, 5)
-                                            }
-                                            .frame(width: imageSize, height: imageSize)
-                                        }
-                                        if urls.count < 3 {
-                                            Spacer()
-                                        }
-                                    }
-                                    .padding(.vertical, 6)
-                                }
-
-                                if didLoadPhotos {
-                                    if photoURLs.isEmpty {
-                                        EmptyStateButton(title: "Your haven't added any photos", buttonTitle: "Start adding photos", style: .regular,
-                                                         showPlusIcon: false) {
-                                            showPhotoSelector = true
-                                        }
-                                        .padding(.top, 20)
-                                        .padding(.bottom, 30)
-                                    } else if photoURLs.count < InventoryItem.maxPhotoCount {
-                                        AccessoryButton(title: "Add Photos",
-                                                        color: .customBlue,
-                                                        textColor: .customBlue,
-                                                        width: 140,
-                                                        imageName: "plus",
-                                                        tapped: { showPhotoSelector = true })
-                                            .leftAligned()
-                                            .padding(.top, 5)
-                                    } else {
-                                        Text("Max photos limit (\(InventoryItem.maxPhotoCount)) reached")
-                                            .font(.semiBold(size: 12))
-                                            .foregroundColor(.customRed)
-                                    }
-                                }
-                            }
-                            .asCard()
-                            .padding(.top, 15)
-
-                            TextFieldRounded(title: "notes (optional)",
-                                             placeHolder: "add any notes here",
-                                             style: .white,
-                                             text: $notes)
-                                .padding(.top, 11)
-
-                            HStack(spacing: 10) {
-                                RoundedButton<EmptyView>(text: "Delete item",
-                                                         width: 180,
-                                                         height: 60,
-                                                         maxSize: CGSize(width: (UIScreen.screenWidth - Styles.horizontalMargin * 2 - 10) / 2,
-                                                                         height: UIScreen.isSmallScreen ? 50 : 60),
-                                                         fontSize: UIScreen.isSmallScreen ? 14 : 16,
-                                                         color: .clear,
-                                                         borderColor: .customRed,
-                                                         textColor: .customRed,
-                                                         accessoryView: nil,
-                                                         tapped: { deleteInventoryItem() })
-
-                                RoundedButton<EmptyView>(text: "Save changes",
-                                                         width: 180,
-                                                         height: 60,
-                                                         maxSize: CGSize(width: (UIScreen.screenWidth - Styles.horizontalMargin * 2 - 10) / 2,
-                                                                         height: UIScreen.isSmallScreen ? 50 : 60),
-                                                         fontSize: UIScreen.isSmallScreen ? 14 : 16,
-                                                         color: .customBlack,
-                                                         accessoryView: nil,
-                                                         tapped: { updateInventoryItem() })
-                            }
-                            .padding(.top, 40)
+                        if inventoryItem.itemId != nil {
+                            AccessoryButton(title: "View Prices",
+                                            color: .customAccent1,
+                                            textColor: .customText1,
+                                            width: 125,
+                                            imageName: "chevron.right",
+                                            buttonPosition: .right,
+                                            tapped: { showItemDetails = true })
                         }
-                        .padding(.horizontal, Styles.horizontalMargin)
-                        .padding(.top, 14)
-                        .padding(.bottom, 20)
-                        .background(Color.customBackground
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .edgesIgnoringSafeArea(.all))
+
+                        HStack(spacing: 10) {
+                            TextFieldRounded(title: "name",
+                                             placeHolder: "name",
+                                             style: .white,
+                                             text: $name)
+                            TextFieldRounded(title: "styleid (optional)",
+                                             placeHolder: "styleid",
+                                             style: .white,
+                                             text: $styleId,
+                                             width: 100)
+                        }
+                        .padding(.top, 15)
+
+                        NewItemCard(inventoryItem: $inventoryItem,
+                                    purchasePrice: inventoryItem.purchasePrice,
+                                    currency: Currency(code: .usd, symbol: .usd),
+                                    style: NewItemCard.Style.noBackground,
+                                    sizes: item?.sortedSizes ?? ALLSHOESIZES,
+                                    showCopDeckPrice: true)
+
+                        VStack(alignment: .leading, spacing: 9) {
+                            Text("Photos:".uppercased())
+                                .font(.bold(size: 12))
+                                .foregroundColor(.customText2)
+                                .leftAligned()
+
+                            ForEach(photoURLsChunked, id: \.0) { (index: Int, urls: [URL]) in
+                                HStack(spacing: Styles.verticalPadding) {
+                                    ForEach(urls, id: \.absoluteString) { (url: URL) in
+                                        ZStack {
+                                            ImageView(source: .url(url),
+                                                      size: imageSize,
+                                                      aspectRatio: 1.0,
+                                                      flipImage: false,
+                                                      showPlaceholder: true,
+                                                      background: Color.customAccent1.opacity(0.07))
+                                                .frame(width: imageSize, height: imageSize)
+                                                .cornerRadius(4)
+                                                .onTapGesture { shownImageURL = url }
+                                            DeleteButton(style: .fill) {
+                                                deletePhoto(at: url)
+                                            }
+                                            .topAligned()
+                                            .rightAligned()
+                                            .padding(.top, 5)
+                                            .padding(.trailing, 5)
+                                        }
+                                        .frame(width: imageSize, height: imageSize)
+                                    }
+                                    if urls.count < 3 {
+                                        Spacer()
+                                    }
+                                }
+                                .padding(.vertical, 6)
+                            }
+
+                            if didLoadPhotos {
+                                if photoURLs.isEmpty {
+                                    EmptyStateButton(title: "Your haven't added any photos", buttonTitle: "Start adding photos", style: .regular,
+                                                     showPlusIcon: false) {
+                                        showPhotoSelector = true
+                                    }
+                                    .padding(.top, 20)
+                                    .padding(.bottom, 30)
+                                } else if photoURLs.count < InventoryItem.maxPhotoCount {
+                                    AccessoryButton(title: "Add Photos",
+                                                    color: .customBlue,
+                                                    textColor: .customBlue,
+                                                    width: 140,
+                                                    imageName: "plus",
+                                                    tapped: { showPhotoSelector = true })
+                                        .leftAligned()
+                                        .padding(.top, 5)
+                                } else {
+                                    Text("Max photos limit (\(InventoryItem.maxPhotoCount)) reached")
+                                        .font(.semiBold(size: 12))
+                                        .foregroundColor(.customRed)
+                                }
+                            }
+                        }
+                        .asCard()
+                        .padding(.top, 15)
+
+                        TextFieldRounded(title: "notes (optional)",
+                                         placeHolder: "add any notes here",
+                                         style: .white,
+                                         text: $notes)
+                            .padding(.top, 11)
+
+                        HStack(spacing: 10) {
+                            RoundedButton<EmptyView>(text: "Delete item",
+                                                     width: 180,
+                                                     height: 60,
+                                                     maxSize: CGSize(width: (UIScreen.screenWidth - Styles.horizontalMargin * 2 - 10) / 2,
+                                                                     height: UIScreen.isSmallScreen ? 50 : 60),
+                                                     fontSize: UIScreen.isSmallScreen ? 14 : 16,
+                                                     color: .clear,
+                                                     borderColor: .customRed,
+                                                     textColor: .customRed,
+                                                     accessoryView: nil,
+                                                     tapped: { deleteInventoryItem() })
+
+                            RoundedButton<EmptyView>(text: "Save changes",
+                                                     width: 180,
+                                                     height: 60,
+                                                     maxSize: CGSize(width: (UIScreen.screenWidth - Styles.horizontalMargin * 2 - 10) / 2,
+                                                                     height: UIScreen.isSmallScreen ? 50 : 60),
+                                                     fontSize: UIScreen.isSmallScreen ? 14 : 16,
+                                                     color: .customBlack,
+                                                     accessoryView: nil,
+                                                     tapped: { updateInventoryItem() })
+                        }
+                        .padding(.top, 40)
                     }
-                }
-                .sheet(isPresented: $showPhotoSelector) {
-                    ImagePickerView(showPicker: $showPhotoSelector, selectionLimit: InventoryItem.maxPhotoCount - photoURLs.count) { (images: [UIImage]) in
-                        store.send(.main(action: .uploadInventoryItemImages(inventoryItem: inventoryItem, images: images, completion: { _ in
-                            loadPhotos()
-                        })))
-                    }
-                }
-                .onAppear {
-                    loadPhotos()
+                    .padding(.horizontal, Styles.horizontalMargin)
+                    .padding(.top, 14)
+                    .padding(.bottom, 20)
+                    .background(Color.customBackground
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .edgesIgnoringSafeArea(.all))
                 }
             }
-            ImageViewer(image_: $shownImage, viewerShown: viewerShown)
+            .sheet(isPresented: $showPhotoSelector) {
+                ImagePickerView(showPicker: $showPhotoSelector, selectionLimit: InventoryItem.maxPhotoCount - photoURLs.count) { (images: [UIImage]) in
+                    store.send(.main(action: .uploadInventoryItemImages(inventoryItem: inventoryItem, images: images, completion: { _ in
+                        loadPhotos()
+                    })))
+                }
+            }
+            .onAppear {
+                loadPhotos()
+            }
         }
+        .withImageViewer(shownImageURL: $shownImageURL)
         .navigationbarHidden()
     }
 

@@ -248,8 +248,8 @@ struct WithTextFieldPopup: ViewModifier {
                            subtitle: subtitle,
                            placeholder: placeHolder,
                            actionTitle: actionTitle) {
-                    action($0)
-                    isShowing = false
+                action($0)
+                isShowing = false
             }
         }
     }
@@ -277,6 +277,18 @@ struct WithTellTip: ViewModifier {
             }
             .layoutPriority(1)
             Spacer()
+        }
+    }
+}
+
+struct WithImageViewer: ViewModifier {
+    @Binding var shownImageURL: URL?
+
+    func body(content: Content) -> some View {
+        ZStack {
+            content
+            ImageViewer(image: $shownImageURL)
+                .edgesIgnoringSafeArea(.all)
         }
     }
 }

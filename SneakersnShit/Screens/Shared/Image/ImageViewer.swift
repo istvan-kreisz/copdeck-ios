@@ -7,117 +7,73 @@
 
 import SwiftUI
 import UIKit
+import NukeUI
 
 public struct ImageViewer: View {
-    @Binding var viewerShown: Bool
-    @Binding var image: UIImage
-    @Binding var imageOpt: UIImage?
+    @Binding var image: URL?
     @State var caption: Text?
-    @State var closeButtonTopRight: Bool?
-
-    var aspectRatio: Binding<CGFloat>?
 
     @State var dragOffset: CGSize = CGSize.zero
     @State var dragOffsetPredicted: CGSize = CGSize.zero
 
-    public init(image: Binding<UIImage>, viewerShown: Binding<Bool>, aspectRatio: Binding<CGFloat>? = nil, caption: Text? = nil,
-                closeButtonTopRight: Bool? = false) {
+    public init(image: Binding<URL?>, caption: Text? = nil) {
         _image = image
-        _viewerShown = viewerShown
-        _imageOpt = .constant(nil)
-        self.aspectRatio = aspectRatio
         _caption = State(initialValue: caption)
-        _closeButtonTopRight = State(initialValue: closeButtonTopRight)
     }
 
-    public init(image_: Binding<UIImage?>, viewerShown: Binding<Bool>, aspectRatio: Binding<CGFloat>? = nil, caption: Text? = nil,
-                closeButtonTopRight: Bool? = false) {
-        _image = .constant(UIImage())
-        _imageOpt = image_
-        _viewerShown = viewerShown
-        self.aspectRatio = aspectRatio
-        _caption = State(initialValue: caption)
-        _closeButtonTopRight = State(initialValue: closeButtonTopRight)
-    }
-
-    func getImage() -> Image {
-        if self.imageOpt == nil {
-            return Image(uiImage: self.image)
-        } else {
-            return self.imageOpt.map { Image(uiImage: $0) } ?? Image(systemName: "questionmark.diamond")
-        }
-    }
-
-    @ViewBuilder
     public var body: some View {
         VStack {
-            if viewerShown {
+            if let imageURL = image {
                 ZStack {
-                    VStack {
-                        HStack {
-                            if self.closeButtonTopRight == true {
-                                Spacer()
-                            }
-
-                            Button(action: { self.viewerShown = false }) {
-                                Image(systemName: "xmark")
-                                    .foregroundColor(Color(UIColor.white))
-                                    .font(.system(size: UIFontMetrics.default.scaledValue(for: 24)))
-                            }
-
-                            if self.closeButtonTopRight != true {
-                                Spacer()
-                            }
-                        }
-
-                        Spacer()
+                    DeleteButton(style: .fill, size: .large, color: .customBlack) {
+                        self.image = nil
                     }
-                    .padding()
+                    .topAligned()
+                    .rightAligned()
+                    .padding(.top, UIApplication.shared.safeAreaInsets().top + 20)
+                    .padding(.trailing, 20)
                     .zIndex(2)
 
                     VStack {
                         ZStack {
-                            self.getImage()
-                                .resizable()
-                                .aspectRatio(self.aspectRatio?.wrappedValue, contentMode: .fit)
-                                .offset(x: self.dragOffset.width, y: self.dragOffset.height)
-                                .rotationEffect(.init(degrees: Double(self.dragOffset.width / 30)))
-                                .pinchToZoom()
-                                .gesture(DragGesture()
-                                    .onChanged { value in
-                                        self.dragOffset = value.translation
-                                        self.dragOffsetPredicted = value.predictedEndTranslation
+                            LazyImage(source: imageURL) { state in
+                                if let image = state.image {
+                                    image.resizingMode(.aspectFit)
+                                }
+                            }
+                            .offset(x: dragOffset.width, y: dragOffset.height)
+                            .rotationEffect(Angle(degrees: Double(dragOffset.width / 30)))
+                            .pinchToZoom()
+                            .gesture(DragGesture()
+                                .onChanged { value in
+                                    self.dragOffset = value.translation
+                                    self.dragOffsetPredicted = value.predictedEndTranslation
+                                }
+                                .onEnded { value in
+                                    if (abs(self.dragOffset.height) + abs(self.dragOffset.width) > 570) ||
+                                        (abs(self.dragOffsetPredicted.height) / abs(self.dragOffset.height) > 3) ||
+                                        (abs(self.dragOffsetPredicted.width) / abs(self.dragOffset.width)) > 3 {
+                                        withAnimation(.spring()) {
+                                            self.dragOffset = self.dragOffsetPredicted
+                                        }
+                                        self.image = nil
+                                        return
                                     }
-                                    .onEnded { value in
-                                        if (abs(self.dragOffset.height) + abs(self.dragOffset.width) > 570) ||
-                                            (abs(self.dragOffsetPredicted.height) / abs(self.dragOffset.height) > 3) ||
-                                            (abs(self.dragOffsetPredicted.width) / abs(self.dragOffset.width)) > 3 {
-                                            withAnimation(.spring()) {
-                                                self.dragOffset = self.dragOffsetPredicted
-                                            }
-                                            self.viewerShown = false
-
-                                            return
-                                        }
-                                        withAnimation(.interactiveSpring()) {
-                                            self.dragOffset = .zero
-                                        }
-                                    })
+                                    withAnimation(.interactiveSpring()) {
+                                        self.dragOffset = .zero
+                                    }
+                                })
 
                             if self.caption != nil {
                                 VStack {
                                     Spacer()
-
                                     VStack {
                                         Spacer()
-
                                         HStack {
                                             Spacer()
-
                                             self.caption
                                                 .foregroundColor(.white)
                                                 .multilineTextAlignment(.center)
-
                                             Spacer()
                                         }
                                     }
