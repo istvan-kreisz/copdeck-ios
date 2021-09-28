@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct AppError: Identifiable, Error, Equatable {
+struct AppError: Identifiable, LocalizedError, Equatable {
     let id = UUID().uuidString
     let title: String
     let message: String
@@ -18,6 +18,10 @@ struct AppError: Identifiable, Error, Equatable {
         self.message = message
         self.error = error
     }
+    
+    var errorDescription: String? {
+        message
+    }    
 }
 
 extension AppError {

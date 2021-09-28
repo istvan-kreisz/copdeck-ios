@@ -313,6 +313,23 @@ struct SettingsView: View {
                                 .keyboardType(.numberPad)
                         }
                     }
+                    
+                    Section(header: Text("Spreadsheet import")) {
+                        NavigationLink(destination: SpreadsheetImportView()) {
+                            Text("Import your inventory")
+                                .leftAligned()
+                        }
+                    }
+                    
+                    if store.globalState.user?.id == "s80wQjTNqXRlRzirFlgY3MF9BxJ3" || store.globalState.user?.id == "U5VMyc8UNsN1JvDlWYOxQUmL6uE2" {
+                        Section(header: Text("ADMIN")) {
+                            NavigationLink(destination: AdminView()) {
+                                Text("Spreadsheet import requests")
+                                    .leftAligned()
+                            }
+                        }
+                    }
+
 
                     Button(action: {
                         store.send(.authentication(action: .signOut))

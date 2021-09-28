@@ -140,4 +140,20 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
         }
         return callFirebaseFunctionArray(functionName: "searchUsers", model: Wrapper(searchTerm: searchTerm))
     }
+
+    func startSpreadsheetImport(urlString: String, completion: @escaping (Error?) -> Void) {
+        struct Wrapper: Encodable {
+            let urlString: String
+        }
+        callFirebaseFunction(functionName: "startSpreadsheetImport", model: Wrapper(urlString: urlString))
+            .sink { result in
+                switch result {
+                case let .failure(error):
+                    completion(error)
+                default:
+                    break
+                }
+            } receiveValue: { _ in completion(nil) }
+            .store(in: &cancellables)
+    }
 }

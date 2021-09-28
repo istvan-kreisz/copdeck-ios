@@ -53,6 +53,8 @@ enum MainAction {
     case uploadInventoryItemImages(inventoryItem: InventoryItem, images: [UIImage], completion: ([String]) -> Void)
     case deleteInventoryItemImage(imageURL: URL, completion: (Bool) -> Void)
     case deleteInventoryItemImages(inventoryItem: InventoryItem)
+    // spreadsheet import
+    case startSpreadsheetImport(urlString: String, completion: (Error?) -> Void)
 }
 
 extension MainAction: Identifiable {

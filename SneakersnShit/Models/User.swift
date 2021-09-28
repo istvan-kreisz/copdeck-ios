@@ -8,6 +8,14 @@
 import Foundation
 
 struct User: Codable, Equatable, Identifiable {
+    struct SpreadsheetImport: Codable, Equatable {
+        enum SpreadSheetImportStatus: String, Equatable, Codable {
+            case Pending, Processing, Done, Error
+        }
+        let url: String?
+        let status: SpreadSheetImportStatus?
+    }
+
     let id: String
     var inited: Bool?
     var name: String?
@@ -17,9 +25,10 @@ struct User: Codable, Equatable, Identifiable {
     let updated: Double?
     var settings: CopDeckSettings?
     var imageURL: URL?
+    let spreadSheetImport: SpreadsheetImport?
 
     enum CodingKeys: String, CodingKey {
-        case id, inited, name, nameInsensitive, isPublic, created, updated, settings
+        case id, inited, name, nameInsensitive, isPublic, created, updated, settings, spreadSheetImport
     }
 }
 
@@ -34,10 +43,11 @@ extension User {
         created = try container.decodeIfPresent(Double.self, forKey: .created)
         updated = try container.decodeIfPresent(Double.self, forKey: .updated)
         settings = try container.decodeIfPresent(CopDeckSettings.self, forKey: .settings)
+        spreadSheetImport = try container.decodeIfPresent(SpreadsheetImport.self, forKey: .spreadSheetImport)
     }
 
     init(id: String) {
-        self.init(id: id, name: nil, nameInsensitive: nil, isPublic: true, created: nil, updated: nil, settings: nil)
+        self.init(id: id, name: nil, nameInsensitive: nil, isPublic: true, created: nil, updated: nil, settings: nil, spreadSheetImport: nil)
     }
 
     func withImageURL(_ url: URL?) -> User {

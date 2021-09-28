@@ -337,4 +337,8 @@ class DefaultDataController: DataController {
     func deleteInventoryItemImages(inventoryItem: InventoryItem) {
         imageService.deleteInventoryItemImages(inventoryItem: inventoryItem)
     }
+    
+    func startSpreadsheetImport(urlString: String, completion: @escaping (Error?) -> Void) {
+        backendAPI.startSpreadsheetImport(urlString: urlString, completion: completion)
+    }
 }

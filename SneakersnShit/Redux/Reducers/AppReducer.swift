@@ -146,6 +146,8 @@ func appReducer(state: inout AppState,
             environment.dataController.deleteInventoryItemImage(imageURL: imageURL, completion: completion)
         case let .deleteInventoryItemImages(inventoryItem):
             environment.dataController.deleteInventoryItemImages(inventoryItem: inventoryItem)
+        case let .startSpreadsheetImport(urlString, completion):
+            environment.dataController.startSpreadsheetImport(urlString: urlString, completion: completion)
         }
     case let .authentication(action: action):
         return environment.authenticator.handle(action)

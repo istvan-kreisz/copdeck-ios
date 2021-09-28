@@ -49,6 +49,8 @@ protocol BackendAPI {
     func deleteUser()
     func getUserProfile(userId: String) -> AnyPublisher<ProfileData, AppError>
     func searchUsers(searchTerm: String) -> AnyPublisher<[User], AppError>
+    // spreadsheet import
+    func startSpreadsheetImport(urlString: String, completion: @escaping (Error?) -> Void)
 }
 
 protocol DatabaseManager {

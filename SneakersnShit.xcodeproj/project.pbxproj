@@ -65,6 +65,8 @@
 		5D54FE2826C30931008CD05F /* VerticalItemListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D54FE2726C30931008CD05F /* VerticalItemListView.swift */; };
 		5D54FE2A26C312BF008CD05F /* HorizontaltemListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D54FE2926C312BF008CD05F /* HorizontaltemListView.swift */; };
 		5D54FE3726C3390F008CD05F /* PopularItemsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D54FE3626C3390F008CD05F /* PopularItemsListView.swift */; };
+		5D564E3D2703584100190CF4 /* SpreadsheetImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D564E3C2703584100190CF4 /* SpreadsheetImport.swift */; };
+		5D564E3F2703592E00190CF4 /* AdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D564E3E2703592E00190CF4 /* AdminView.swift */; };
 		5D56B7B2270097EC001357E0 /* DeleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D56B7B1270097EC001357E0 /* DeleteButton.swift */; };
 		5D56B7B42700A6BE001357E0 /* TestImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D56B7B32700A6BE001357E0 /* TestImageView.swift */; };
 		5D5D4C4426D50EB100A7C61A /* ModelWithDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D5D4C4326D50EB100A7C61A /* ModelWithDate.swift */; };
@@ -239,6 +241,8 @@
 		5D54FE2726C30931008CD05F /* VerticalItemListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalItemListView.swift; sourceTree = "<group>"; };
 		5D54FE2926C312BF008CD05F /* HorizontaltemListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontaltemListView.swift; sourceTree = "<group>"; };
 		5D54FE3626C3390F008CD05F /* PopularItemsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularItemsListView.swift; sourceTree = "<group>"; };
+		5D564E3C2703584100190CF4 /* SpreadsheetImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpreadsheetImport.swift; sourceTree = "<group>"; };
+		5D564E3E2703592E00190CF4 /* AdminView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminView.swift; sourceTree = "<group>"; };
 		5D56B7B1270097EC001357E0 /* DeleteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButton.swift; sourceTree = "<group>"; };
 		5D56B7B32700A6BE001357E0 /* TestImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestImageView.swift; sourceTree = "<group>"; };
 		5D5D4C4326D50EB100A7C61A /* ModelWithDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelWithDate.swift; sourceTree = "<group>"; };
@@ -570,6 +574,8 @@
 			isa = PBXGroup;
 			children = (
 				5D53A1F426AF5649001DAA8D /* SettingsView.swift */,
+				5D564E3C2703584100190CF4 /* SpreadsheetImport.swift */,
+				5D564E3E2703592E00190CF4 /* AdminView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1215,6 +1221,7 @@
 				5DE596EA26C878280024F7D5 /* StackView.swift in Sources */,
 				5D9D51F226AC0E8F00AB1F30 /* Optional+Extensions.swift in Sources */,
 				5D631253269668FE00876D99 /* JSNativeBridge.swift in Sources */,
+				5D564E3D2703584100190CF4 /* SpreadsheetImport.swift in Sources */,
 				5D9D520226AE29DB00AB1F30 /* InventoryListItem.swift in Sources */,
 				5D90EDC826DE6254005AEA30 /* CollectionListener.swift in Sources */,
 				5D3DE37626AFAB54009E4D52 /* CountrySelector.swift in Sources */,
@@ -1329,6 +1336,7 @@
 				5D631257269669A600876D99 /* DefaultDataController.swift in Sources */,
 				5D6960AD2587149A0058BABE /* ReduxStore.swift in Sources */,
 				5D9D520A26AF17C900AB1F30 /* ItemImageViewWithNavBar.swift in Sources */,
+				5D564E3F2703592E00190CF4 /* AdminView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
