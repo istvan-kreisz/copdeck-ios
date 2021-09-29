@@ -313,23 +313,28 @@ struct SettingsView: View {
                                 .keyboardType(.numberPad)
                         }
                     }
-                    
+
                     Section(header: Text("Spreadsheet import")) {
                         NavigationLink(destination: SpreadsheetImportView()) {
                             Text("Import your inventory")
                                 .leftAligned()
                         }
                     }
-                    
+
                     if DebugSettings.shared.isAdmin {
                         Section(header: Text("ADMIN")) {
-                            NavigationLink(destination: AdminView()) {
-                                Text("Spreadsheet import requests")
+                            if DebugSettings.shared.isSuperAdmin {
+                                NavigationLink(destination: SpreadsheetImportAdminView()) {
+                                    Text("Spreadsheet import requests")
+                                        .leftAligned()
+                                }
+                            }
+                            NavigationLink(destination: AffiliateLinksView()) {
+                                Text("Affilate links")
                                     .leftAligned()
                             }
                         }
                     }
-
 
                     Button(action: {
                         store.send(.authentication(action: .signOut))

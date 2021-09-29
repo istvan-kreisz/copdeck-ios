@@ -1,5 +1,5 @@
 //
-//  AdminView.swift
+//  SpreadsheetImportAdminView.swift
 //  SneakersnShit
 //
 //  Created by István Kreisz on 9/28/21.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AdminView: View {
+struct SpreadsheetImportAdminView: View {
     @EnvironmentObject var store: DerivedGlobalStore
     @Environment(\.presentationMode) var presentationMode
     @State var waitlist: [User] = []
@@ -37,34 +37,6 @@ struct AdminView: View {
     var filteredUsers: [User] {
         waitlist.filter { (user: User) in
             spreadSheetImportStatusFilter == "All" || user.spreadSheetImportStatus?.rawValue == spreadSheetImportStatusFilter
-        }
-    }
-
-    @ViewBuilder private func userDetailView(name: String, value: String, showCopyButton: Bool = true, color: Color = .customText1) -> some View {
-        HStack(spacing: 3) {
-            Text("\(name):")
-                .font(.bold(size: 15))
-                .foregroundColor(.customText1)
-                .lineLimit(1)
-                .layoutPriority(3)
-            Text(value)
-                .font(.regular(size: 15))
-                .foregroundColor(color)
-                .lineLimit(1)
-                .layoutPriority(2)
-            Spacer()
-                .layoutPriority(1)
-            if showCopyButton {
-                Button {
-                    UIPasteboard.general.string = value
-                } label: {
-                    Text("Copy")
-                        .font(.bold(size: 15))
-                        .foregroundColor(.customBlue)
-                        .lineLimit(1)
-                }
-                .layoutPriority(3)
-            }
         }
     }
 
@@ -102,29 +74,29 @@ struct AdminView: View {
                 ForEach(filteredUsers) { (user: User) in
                     VStack(spacing: 10) {
                         if let spreadSheetImportDate = user.spreadSheetImportDate {
-                            userDetailView(name: "submitted", value: spreadSheetImportDate.asDateFormat1, showCopyButton: false)
+                            UserDetailView(name: "submitted", value: spreadSheetImportDate.asDateFormat1, showCopyButton: false)
                         }
                         if let username = user.name {
-                            userDetailView(name: "username", value: username)
+                            UserDetailView(name: "username", value: username)
                         }
-                        userDetailView(name: "user id", value: user.id)
+                        UserDetailView(name: "user id", value: user.id)
                         if let spreadSheetImportUrl = user.spreadSheetImportUrl {
-                            userDetailView(name: "spreadsheet url", value: spreadSheetImportUrl)
+                            UserDetailView(name: "spreadsheet url", value: spreadSheetImportUrl)
                         }
                         if let spreadSheetImporter = user.spreadSheetImporter {
-                            userDetailView(name: "imported by",
+                            UserDetailView(name: "imported by",
                                            value: DebugSettings.shared.adminName(for: spreadSheetImporter) ?? "",
                                            showCopyButton: false,
                                            color: spreadSheetImporter == DebugSettings.shared.istvanId ? .customBlue : .customOrange)
                         }
                         if let spreadSheetImportStatus = user.spreadSheetImportStatus {
-                            userDetailView(name: "import status",
+                            UserDetailView(name: "import status",
                                            value: spreadSheetImportStatus.rawValue,
                                            showCopyButton: false,
                                            color: statusColor(for: spreadSheetImportStatus))
                         }
                         if let spreadSheetImportError = user.spreadSheetImportError {
-                            userDetailView(name: "error message", value: spreadSheetImportError, showCopyButton: false, color: .customRed)
+                            UserDetailView(name: "error message", value: spreadSheetImportError, showCopyButton: false, color: .customRed)
                         }
 
                         HStack(spacing: 10) {

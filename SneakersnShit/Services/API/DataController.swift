@@ -92,6 +92,7 @@ protocol DatabaseManager {
     
     // admin
     func getSpreadsheetImportWaitlist(completion: @escaping (Result<[User], Error>) -> Void)
+    func getAffiliateList(completion: @escaping (Result<[User], Error>) -> Void)
 }
 
 protocol ImageService {

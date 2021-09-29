@@ -13,11 +13,12 @@ struct User: Codable, Equatable, Identifiable {
 
         var id: String { rawValue }
     }
-
+    
     let id: String
     var inited: Bool?
     var name: String?
     var nameInsensitive: String?
+    let email: String?
     var isPublic: Bool? = true
     let created: Double?
     let updated: Double?
@@ -29,10 +30,11 @@ struct User: Codable, Equatable, Identifiable {
     let spreadSheetImportDate: Double?
     let spreadSheetImporter: String?
     let spreadSheetImportError: String?
+    let affiliatePromoCode: String?
 
     enum CodingKeys: String, CodingKey {
-        case id, inited, name, nameInsensitive, isPublic, created, updated, settings, spreadSheetImportUrl, spreadSheetImportStatus, spreadSheetImportDate,
-             spreadSheetImporter, spreadSheetImportError
+        case id, inited, name, nameInsensitive, email, isPublic, created, updated, settings, spreadSheetImportUrl, spreadSheetImportStatus, spreadSheetImportDate,
+             spreadSheetImporter, spreadSheetImportError, affiliatePromoCode
     }
 }
 
@@ -43,6 +45,7 @@ extension User {
         inited = try container.decodeIfPresent(Bool.self, forKey: .inited)
         name = try container.decodeIfPresent(String.self, forKey: .name)
         nameInsensitive = try container.decodeIfPresent(String.self, forKey: .nameInsensitive)
+        email = try container.decodeIfPresent(String.self, forKey: .email)
         isPublic = true
         created = try container.decodeIfPresent(Double.self, forKey: .created)
         updated = try container.decodeIfPresent(Double.self, forKey: .updated)
@@ -52,12 +55,14 @@ extension User {
         spreadSheetImportDate = try container.decodeIfPresent(Double.self, forKey: .spreadSheetImportDate)
         spreadSheetImporter = try container.decodeIfPresent(String.self, forKey: .spreadSheetImporter)
         spreadSheetImportError = try container.decodeIfPresent(String.self, forKey: .spreadSheetImportError)
+        affiliatePromoCode = try container.decodeIfPresent(String.self, forKey: .affiliatePromoCode)
     }
 
     init(id: String) {
         self.init(id: id,
                   name: nil,
                   nameInsensitive: nil,
+                  email: nil,
                   isPublic: true,
                   created: nil,
                   updated: nil,
@@ -66,7 +71,8 @@ extension User {
                   spreadSheetImportStatus: nil,
                   spreadSheetImportDate: nil,
                   spreadSheetImporter: nil,
-                  spreadSheetImportError: nil)
+                  spreadSheetImportError: nil,
+                  affiliatePromoCode: nil)
     }
 
     func withImageURL(_ url: URL?) -> User {

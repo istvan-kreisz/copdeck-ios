@@ -339,17 +339,31 @@ class FirebaseService: DatabaseManager {
             .collection("users")
             .whereField("spreadSheetImportStatus", in: User.SpreadSheetImportStatus.allCases.map(\.rawValue))
             .order(by: "spreadSheetImportDate", descending: true)
-            .getDocuments { snapshot, error in
-                if let error = error {
-                    completion(.failure(error))
-                } else {
-                    if let users = snapshot?.documents.compactMap({ User(from: $0.data()) }) {
-                        completion(.success(users))
-                    } else {
-                        completion(.failure(AppError.unknown))
-                    }
-                }
+            .getDocuments { [weak self] snapshot, error in
+                self?.parseUsers(snapshot: snapshot, error: error, completion: completion)
             }
+    }
+
+    func getAffiliateList(completion: @escaping (Result<[User], Error>) -> Void) {
+        guard DebugSettings.shared.isAdmin else { return }
+        firestore
+            .collection("users")
+            .whereField("affiliatePromoCode", isGreaterThan: "")
+            .getDocuments { [weak self] snapshot, error in
+                self?.parseUsers(snapshot: snapshot, error: error, completion: completion)
+            }
+    }
+
+    private func parseUsers(snapshot: QuerySnapshot?, error: Error?, completion: @escaping (Result<[User], Error>) -> Void) {
+        if let error = error {
+            completion(.failure(error))
+        } else {
+            if let users = snapshot?.documents.compactMap({ User(from: $0.data()) }) {
+                completion(.success(users))
+            } else {
+                completion(.failure(AppError.unknown))
+            }
+        }
     }
 
     private func setDocument(_ data: [String: Any], atRef ref: DocumentReference, using batch: WriteBatch? = nil) {

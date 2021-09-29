@@ -159,6 +159,8 @@ func appReducer(state: inout AppState,
                                                                      completion: completion)
         case let .runImport(importedUserId, completion):
             environment.dataController.runImport(importedUserId: importedUserId, completion: completion)
+        case let .getAffiliateList(completion):
+            environment.dataController.getAffiliateList(completion: completion)
         }
     case let .authentication(action: action):
         return environment.authenticator.handle(action)
