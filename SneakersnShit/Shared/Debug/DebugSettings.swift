@@ -46,7 +46,9 @@ func log(_ value: Any, logType: LogType? = nil) {
 struct DebugSettings {
     let isInDebugMode: Bool
     let ipAddress: String = "192.168.0.199"
-//    let ipAddress: String = "10.112.208.225"
+    
+    let istvanId = "s80wQjTNqXRlRzirFlgY3MF9BxJ3"
+    let milanId = "U5VMyc8UNsN1JvDlWYOxQUmL6uE2"
 
     lazy var environment: AppEnvironment? = {
         guard let currentConfiguration = Bundle.main.object(forInfoDictionaryKey: "Configuration") as? String,
@@ -54,6 +56,21 @@ struct DebugSettings {
         else { return nil }
         return environment
     }()
+        
+    func adminName(for userId: String) -> String? {
+        switch userId {
+        case milanId:
+            return "Milan"
+        case istvanId:
+            return "Istvan"
+        default:
+            return nil
+        }
+    }
+
+    var isAdmin: Bool {
+        DefaultAuthenticator.user?.uid == istvanId || DefaultAuthenticator.user?.uid == milanId
+    }
 
     private init() {
         #if DEBUG

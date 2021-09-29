@@ -8,17 +8,22 @@
 import SwiftUI
 
 #warning("add import description")
+#warning("add revert button")
 
 struct SpreadsheetImportView: View {
     @EnvironmentObject var store: DerivedGlobalStore
     @Environment(\.presentationMode) var presentationMode
-    @State var spreadsheetURL: String = ""
+    @State var spreadsheetURL: String
     @StateObject private var loader = Loader()
 
     @State private var error: (String, String, String?)? = nil
+    
+    init() {
+        _spreadsheetURL = State(initialValue: AppStore.default.state.user?.spreadSheetImportUrl ?? "")
+    }
 
     var statusColor: Color {
-        switch store.globalState.user?.spreadSheetImport?.status {
+        switch store.globalState.user?.spreadSheetImportStatus {
         case .none:
             return .customText1
         case .Pending:
@@ -32,7 +37,7 @@ struct SpreadsheetImportView: View {
         }
     }
 
-    @ViewBuilder func statusDescriptionText(for status: User.SpreadsheetImport.SpreadSheetImportStatus) -> some View {
+    @ViewBuilder func statusDescriptionText(for status: User.SpreadSheetImportStatus) -> some View {
         switch status {
         case .Pending:
             Text("We received your import request and will start processing it shortly.")
@@ -87,8 +92,8 @@ struct SpreadsheetImportView: View {
                     TextFieldRounded(placeHolder: "Spreadsheet url", style: .gray, text: $spreadsheetURL)
                         .layoutPriority(1)
                     Button {
-                        if let currentImport = store.globalState.user?.spreadSheetImport, let url = currentImport.url, let status = currentImport.status {
-                            if currentImport.url == url {
+                        if let url = store.globalState.user?.spreadSheetImportUrl, let status = store.globalState.user?.spreadSheetImportStatus {
+                            if spreadsheetURL == url {
                                 self.error = ("Error", "You already submitted an import request with this url.", nil)
                                 return
                             }
@@ -128,12 +133,12 @@ struct SpreadsheetImportView: View {
                         Text("Your spreadsheet import status:")
                             .foregroundColor(.customText2)
                             .font(.regular(size: 14))
-                        Text(store.globalState.user?.spreadSheetImport?.status?.rawValue ?? "Not started")
+                        Text(store.globalState.user?.spreadSheetImportStatus?.rawValue ?? "Not started")
                             .foregroundColor(statusColor)
                             .font(.bold(size: 14))
                         Spacer()
                     }
-                    if let status = store.globalState.user?.spreadSheetImport?.status {
+                    if let status = store.globalState.user?.spreadSheetImportStatus {
                         statusDescriptionText(for: status)
                     }
                 }

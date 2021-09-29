@@ -332,6 +332,26 @@ class FirebaseService: DatabaseManager {
         deleteDocument(atRef: ref)
     }
 
+    #warning("indexxx")
+    func getSpreadsheetImportWaitlist(completion: @escaping (Result<[User], Error>) -> Void) {
+        guard DebugSettings.shared.isAdmin else { return }
+        firestore
+            .collection("users")
+            .whereField("spreadSheetImportStatus", in: User.SpreadSheetImportStatus.allCases.map(\.rawValue))
+            .order(by: "spreadSheetImportDate", descending: true)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    completion(.failure(error))
+                } else {
+                    if let users = snapshot?.documents.compactMap({ User(from: $0.data()) }) {
+                        completion(.success(users))
+                    } else {
+                        completion(.failure(AppError.unknown))
+                    }
+                }
+            }
+    }
+
     private func setDocument(_ data: [String: Any], atRef ref: DocumentReference, using batch: WriteBatch? = nil) {
         let data = dataWithUpdatedDates(data)
         if let batch = batch {

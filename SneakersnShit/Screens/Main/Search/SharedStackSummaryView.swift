@@ -27,13 +27,8 @@ struct SharedStackSummaryView: View {
         inventoryItems.count - Self.maxCount
     }
 
-//    https://stackoverflow.com/questions/35700281/date-format-in-swift
     var publishedDate: String {
-        guard let published = stack.publishedDate else { return "" }
-        let publishedDate = Date(timeIntervalSince1970: published / 1000)
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM d, h:mm a"
-        return dateFormatter.string(from: publishedDate)
+        stack.publishedDate?.asDateFormat1 ?? ""
     }
 
     var body: some View {

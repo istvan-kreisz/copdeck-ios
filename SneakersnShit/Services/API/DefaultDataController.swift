@@ -341,4 +341,19 @@ class DefaultDataController: DataController {
     func startSpreadsheetImport(urlString: String, completion: @escaping (Error?) -> Void) {
         backendAPI.startSpreadsheetImport(urlString: urlString, completion: completion)
     }
+    
+    func getSpreadsheetImportWaitlist(completion: @escaping (Result<[User], Error>) -> Void) {
+        databaseManager.getSpreadsheetImportWaitlist(completion: completion)
+    }
+
+    func updateSpreadsheetImportStatus(importedUserId: String,
+                                       spreadSheetImportStatus: User.SpreadSheetImportStatus,
+                                       spreadSheetImportError: String?,
+                                       completion: @escaping (Result<User, Error>) -> Void) {
+        backendAPI.updateSpreadsheetImportStatus(importedUserId: importedUserId,
+                                                 spreadSheetImportStatus: spreadSheetImportStatus,
+                                                 spreadSheetImportError: spreadSheetImportError,
+                                                 completion: completion)
+    }
+
 }

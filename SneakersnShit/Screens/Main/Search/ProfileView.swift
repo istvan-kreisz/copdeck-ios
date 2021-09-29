@@ -19,12 +19,7 @@ struct ProfileView: View {
     var shouldDismiss: () -> Void
 
     var joinedDate: String {
-        guard let joined = profileData.user.created else { return "" }
-        let joinedDate = Date(timeIntervalSince1970: joined / 1000)
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMMM yyyy"
-
-        return dateFormatter.string(from: joinedDate)
+        profileData.user.created?.asDateFormat2 ?? ""
     }
 
     var selectedInventoryItem: InventoryItem? {
@@ -63,7 +58,7 @@ struct ProfileView: View {
             NavigationLink(destination: Destination(requestInfo: store.globalState.requestInfo,
                                                     navigationDestination: $navigationDestination,
                                                     profileData: profileData).navigationbarHidden()) {
-                    EmptyView()
+                EmptyView()
             }
 
             VerticalListView(bottomPadding: 0, spacing: 0, listRowStyling: .none) {

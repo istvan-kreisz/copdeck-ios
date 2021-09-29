@@ -321,7 +321,7 @@ struct SettingsView: View {
                         }
                     }
                     
-                    if store.globalState.user?.id == "s80wQjTNqXRlRzirFlgY3MF9BxJ3" || store.globalState.user?.id == "U5VMyc8UNsN1JvDlWYOxQUmL6uE2" {
+                    if DebugSettings.shared.isAdmin {
                         Section(header: Text("ADMIN")) {
                             NavigationLink(destination: AdminView()) {
                                 Text("Spreadsheet import requests")

@@ -16,8 +16,12 @@ import GoogleSignIn
 import CryptoKit
 import AuthenticationServices
 
-enum AuthError: Error {
+enum AuthError: LocalizedError {
     case userNotFound
+    
+    var errorDescription: String? {
+        "User not found"
+    }
 }
 
 class DefaultAuthenticator: NSObject, Authenticator {
@@ -93,9 +97,8 @@ class DefaultAuthenticator: NSObject, Authenticator {
     }
 
     private func signInWithFacebook() {
-        #warning("yo")
         loginButton.delegate = self
-        loginButton.permissions = ["email", "user_link"]
+        loginButton.permissions = ["email"]
         loginButton.sendActions(for: .touchUpInside)
     }
 

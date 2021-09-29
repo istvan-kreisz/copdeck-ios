@@ -148,6 +148,13 @@ func appReducer(state: inout AppState,
             environment.dataController.deleteInventoryItemImages(inventoryItem: inventoryItem)
         case let .startSpreadsheetImport(urlString, completion):
             environment.dataController.startSpreadsheetImport(urlString: urlString, completion: completion)
+        case let .getSpreadsheetImportWaitlist(completion):
+            environment.dataController.getSpreadsheetImportWaitlist(completion: completion)
+        case let .updateSpreadsheetImportStatus(importedUserId, spreadSheetImportStatus, spreadSheetImportError, completion):
+            environment.dataController.updateSpreadsheetImportStatus(importedUserId: importedUserId,
+                                                                     spreadSheetImportStatus: spreadSheetImportStatus,
+                                                                     spreadSheetImportError: spreadSheetImportError,
+                                                                     completion: completion)
         }
     case let .authentication(action: action):
         return environment.authenticator.handle(action)

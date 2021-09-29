@@ -51,6 +51,11 @@ protocol BackendAPI {
     func searchUsers(searchTerm: String) -> AnyPublisher<[User], AppError>
     // spreadsheet import
     func startSpreadsheetImport(urlString: String, completion: @escaping (Error?) -> Void)
+    // admin
+    func updateSpreadsheetImportStatus(importedUserId: String,
+                                       spreadSheetImportStatus: User.SpreadSheetImportStatus,
+                                       spreadSheetImportError: String?,
+                                       completion: @escaping (Result<User, Error>) -> Void)
 }
 
 protocol DatabaseManager {
@@ -82,6 +87,9 @@ protocol DatabaseManager {
     func add(recentlyViewedItem: Item)
     func favorite(item: Item)
     func unfavorite(item: Item)
+    
+    // admin
+    func getSpreadsheetImportWaitlist(completion: @escaping (Result<[User], Error>) -> Void)
 }
 
 protocol ImageService {

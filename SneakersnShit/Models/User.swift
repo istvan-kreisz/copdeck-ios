@@ -8,12 +8,10 @@
 import Foundation
 
 struct User: Codable, Equatable, Identifiable {
-    struct SpreadsheetImport: Codable, Equatable {
-        enum SpreadSheetImportStatus: String, Equatable, Codable {
-            case Pending, Processing, Done, Error
-        }
-        let url: String?
-        let status: SpreadSheetImportStatus?
+    enum SpreadSheetImportStatus: String, Equatable, Codable, CaseIterable, Identifiable {
+        case Pending, Processing, Done, Error
+
+        var id: String { rawValue }
     }
 
     let id: String
@@ -25,10 +23,16 @@ struct User: Codable, Equatable, Identifiable {
     let updated: Double?
     var settings: CopDeckSettings?
     var imageURL: URL?
-    let spreadSheetImport: SpreadsheetImport?
+    #warning("refactor into object")
+    let spreadSheetImportUrl: String?
+    let spreadSheetImportStatus: SpreadSheetImportStatus?
+    let spreadSheetImportDate: Double?
+    let spreadSheetImporter: String?
+    let spreadSheetImportError: String?
 
     enum CodingKeys: String, CodingKey {
-        case id, inited, name, nameInsensitive, isPublic, created, updated, settings, spreadSheetImport
+        case id, inited, name, nameInsensitive, isPublic, created, updated, settings, spreadSheetImportUrl, spreadSheetImportStatus, spreadSheetImportDate,
+             spreadSheetImporter, spreadSheetImportError
     }
 }
 
@@ -43,11 +47,26 @@ extension User {
         created = try container.decodeIfPresent(Double.self, forKey: .created)
         updated = try container.decodeIfPresent(Double.self, forKey: .updated)
         settings = try container.decodeIfPresent(CopDeckSettings.self, forKey: .settings)
-        spreadSheetImport = try container.decodeIfPresent(SpreadsheetImport.self, forKey: .spreadSheetImport)
+        spreadSheetImportUrl = try container.decodeIfPresent(String.self, forKey: .spreadSheetImportUrl)
+        spreadSheetImportStatus = try container.decodeIfPresent(SpreadSheetImportStatus.self, forKey: .spreadSheetImportStatus)
+        spreadSheetImportDate = try container.decodeIfPresent(Double.self, forKey: .spreadSheetImportDate)
+        spreadSheetImporter = try container.decodeIfPresent(String.self, forKey: .spreadSheetImporter)
+        spreadSheetImportError = try container.decodeIfPresent(String.self, forKey: .spreadSheetImportError)
     }
 
     init(id: String) {
-        self.init(id: id, name: nil, nameInsensitive: nil, isPublic: true, created: nil, updated: nil, settings: nil, spreadSheetImport: nil)
+        self.init(id: id,
+                  name: nil,
+                  nameInsensitive: nil,
+                  isPublic: true,
+                  created: nil,
+                  updated: nil,
+                  settings: nil,
+                  spreadSheetImportUrl: nil,
+                  spreadSheetImportStatus: nil,
+                  spreadSheetImportDate: nil,
+                  spreadSheetImporter: nil,
+                  spreadSheetImportError: nil)
     }
 
     func withImageURL(_ url: URL?) -> User {

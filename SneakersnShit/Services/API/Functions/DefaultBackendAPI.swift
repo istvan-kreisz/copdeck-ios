@@ -156,4 +156,27 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
             } receiveValue: { _ in completion(nil) }
             .store(in: &cancellables)
     }
+
+    func updateSpreadsheetImportStatus(importedUserId: String,
+                                       spreadSheetImportStatus: User.SpreadSheetImportStatus,
+                                       spreadSheetImportError: String?,
+                                       completion: @escaping (Result<User, Error>) -> Void) {
+        struct Wrapper: Encodable {
+            let importedUserId: String
+            let spreadSheetImportStatus: User.SpreadSheetImportStatus
+            let spreadSheetImportError: String?
+        }
+        let model = Wrapper(importedUserId: importedUserId, spreadSheetImportStatus: spreadSheetImportStatus, spreadSheetImportError: spreadSheetImportError)
+        let result: AnyPublisher<User, AppError> = callFirebaseFunction(functionName: "updateSpreadsheetImportStatus", model: model)
+        result
+            .sink { result in
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                default:
+                    break
+                }
+            } receiveValue: { (user: User) in completion(.success(user)) }
+            .store(in: &cancellables)
+    }
 }
