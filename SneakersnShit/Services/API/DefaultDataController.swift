@@ -342,6 +342,10 @@ class DefaultDataController: DataController {
         backendAPI.startSpreadsheetImport(urlString: urlString, completion: completion)
     }
     
+    func revertLastImport(completion: @escaping (Error?) -> Void) {
+        backendAPI.revertLastImport(completion: completion)
+    }
+    
     func getSpreadsheetImportWaitlist(completion: @escaping (Result<[User], Error>) -> Void) {
         databaseManager.getSpreadsheetImportWaitlist(completion: completion)
     }
@@ -355,5 +359,4 @@ class DefaultDataController: DataController {
                                                  spreadSheetImportError: spreadSheetImportError,
                                                  completion: completion)
     }
-
 }

@@ -157,6 +157,23 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
             .store(in: &cancellables)
     }
 
+    func revertLastImport(completion: @escaping (Error?) -> Void) {
+        guard let userId = userId else { return }
+        struct Wrapper: Encodable {
+            let userId: String
+        }
+        callFirebaseFunction(functionName: "revertLastImport", model: Wrapper(userId: userId))
+            .sink { result in
+                switch result {
+                case let .failure(error):
+                    completion(error)
+                default:
+                    break
+                }
+            } receiveValue: { completion(nil) }
+            .store(in: &cancellables)
+    }
+
     func updateSpreadsheetImportStatus(importedUserId: String,
                                        spreadSheetImportStatus: User.SpreadSheetImportStatus,
                                        spreadSheetImportError: String?,

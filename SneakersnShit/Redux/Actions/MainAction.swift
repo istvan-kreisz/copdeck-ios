@@ -55,6 +55,7 @@ enum MainAction {
     case deleteInventoryItemImages(inventoryItem: InventoryItem)
     // spreadsheet import
     case startSpreadsheetImport(urlString: String, completion: (Error?) -> Void)
+    case revertLastImport(completion: (Error?) -> Void)
     // admin
     case getSpreadsheetImportWaitlist(completion: (Result<[User], Error>) -> Void)
     case updateSpreadsheetImportStatus(importedUserId: String,

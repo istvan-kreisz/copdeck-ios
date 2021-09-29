@@ -17,7 +17,8 @@ struct SpreadsheetImportView: View {
     @StateObject private var loader = Loader()
 
     @State private var error: (String, String, String?)? = nil
-    
+    @State private var revertImportTapped = false
+
     init() {
         _spreadsheetURL = State(initialValue: AppStore.default.state.user?.spreadSheetImportUrl ?? "")
     }
@@ -48,34 +49,57 @@ struct SpreadsheetImportView: View {
                 .foregroundColor(.customText1)
                 .font(.regular(size: 14))
         case .Done:
-            Text("Spreadsheet import is done. The imported items have been added to your inventory.")
-                .foregroundColor(.customText1)
-                .font(.regular(size: 14))
+            VStack(alignment: .leading, spacing: 5) {
+                Text("Spreadsheet import is done. The imported items have been added to your inventory.")
+                    .foregroundColor(.customText1)
+                    .font(.regular(size: 14))
+                HStack(spacing: 5) {
+                    Text("Don't like the result?")
+                        .foregroundColor(.customText1)
+                        .font(.regular(size: 14))
+                    Button {
+                        revertImportTapped = true
+                    } label: {
+                        Text("Revert import")
+                            .foregroundColor(.customRed)
+                            .font(.bold(size: 14))
+                            .underline()
+                    }
+                    Spacer()
+                }
+            }
         case .Error:
-            VStack(spacing: 0) {
+            VStack(alignment: .leading, spacing: 15) {
                 Text("We had trouble importing your spreadsheet. Please send us a message at: ")
                     .foregroundColor(.customText1)
                     .font(.regular(size: 14))
                 HStack(spacing: 0) {
-                    Link("Discord", destination: URL(string: "https://discord.gg/cQh6VTvXas")!)
-                        .foregroundColor(.customText1)
-                        .font(.regular(size: 14))
+                    Link("Discord,", destination: URL(string: "https://discord.gg/cQh6VTvXas")!)
+                        .foregroundColor(.customBlue)
+                        .font(.bold(size: 16))
                     Link(" Twitter ", destination: URL(string: "https://twitter.com/Cop_Deck")!)
-                        .foregroundColor(.customText1)
-                        .font(.regular(size: 14))
+                        .foregroundColor(.customBlue)
+                        .font(.bold(size: 16))
                     Text("or")
                         .foregroundColor(.customText1)
-                        .font(.regular(size: 14))
+                        .font(.regular(size: 16))
                     Link(" contact@copdeck.com", destination: URL(string: "mailto:contact@copdeck.com")!)
-                        .foregroundColor(.customText1)
-                        .font(.regular(size: 14))
+                        .foregroundColor(.customBlue)
+                        .font(.bold(size: 16))
+                    Spacer()
                 }
             }
         }
     }
 
     var body: some View {
-        let presentErrorAlert = Binding<Bool>(get: { error != nil }, set: { new in error = new ? error : nil })
+        let presentAlert = Binding<Bool>(get: { error != nil || revertImportTapped },
+                                         set: { new in
+                                             if !new {
+                                                 error = nil
+                                                 revertImportTapped = false
+                                             }
+                                         })
 
         VStack(spacing: 8) {
             NavigationBar(title: "Spreadsheet import", isBackButtonVisible: true, style: .dark) {
@@ -146,10 +170,15 @@ struct SpreadsheetImportView: View {
             Spacer()
         }
         .withDefaultPadding(padding: .horizontal)
-        .alert(isPresented: presentErrorAlert) {
+        .alert(isPresented: presentAlert) {
             let title = error?.0 ?? ""
             let description = error?.1 ?? ""
-            if let buttonText = error?.2 {
+            if revertImportTapped {
+                return Alert(title: Text("Are you sure?"),
+                             message: Text("This will delete all your items from the last import."),
+                             primaryButton: Alert.Button.destructive(Text("Revert"), action: { revertLastImport() }),
+                             secondaryButton: .cancel())
+            } else if let buttonText = error?.2 {
                 return Alert(title: Text(title), message: Text(description), primaryButton: Alert.Button.destructive(Text(buttonText), action: {
                     sendImportRequest()
                 }), secondaryButton: .cancel())
@@ -158,6 +187,18 @@ struct SpreadsheetImportView: View {
             }
         }
         .navigationbarHidden()
+    }
+
+    private func revertLastImport() {
+        let loader = loader.getLoader()
+        store.send(.main(action: .revertLastImport(completion: { error in
+            if let error = error {
+                self.error = ("Error", error.localizedDescription, nil)
+            } else {
+                spreadsheetURL = ""
+            }
+            loader(.success(()))
+        })))
     }
 
     private func sendImportRequest() {
