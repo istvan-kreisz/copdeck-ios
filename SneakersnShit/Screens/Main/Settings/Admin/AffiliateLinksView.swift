@@ -44,8 +44,14 @@ struct AffiliateLinksView: View {
                         }
                         UserDetailView(name: "userid", value: user.id, showCopyButton: false)
                         UserDetailView(name: "email", value: user.email ?? "-")
-                        if let promoCode = user.affiliatePromoCode {
+                        if let promoCode = user.affiliateData?.promoCode {
                             UserDetailView(name: "promo code", value: promoCode)
+                        }
+                        if let invitesSignedUp = user.affiliateData?.invitesSignedUp {
+                            UserDetailView(name: "invite count (signed up)", value: "\(invitesSignedUp)", showCopyButton: false)
+                        }
+                        if let invitesSubscribed = user.affiliateData?.invitesSubscribed {
+                            UserDetailView(name: "invite count (subscribed)", value: "\(invitesSubscribed)", showCopyButton: false)
                         }
                     }
                     .padding(.vertical, 5)

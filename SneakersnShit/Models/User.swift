@@ -13,6 +13,11 @@ struct User: Codable, Equatable, Identifiable {
 
         var id: String { rawValue }
     }
+    struct AffiliateData: Equatable, Codable {
+        let promoCode: String?
+        let invitesSignedUp: Int?
+        let invitesSubscribed: Int?
+    }
     
     let id: String
     var inited: Bool?
@@ -30,11 +35,11 @@ struct User: Codable, Equatable, Identifiable {
     let spreadSheetImportDate: Double?
     let spreadSheetImporter: String?
     let spreadSheetImportError: String?
-    let affiliatePromoCode: String?
+    let affiliateData: AffiliateData?
 
     enum CodingKeys: String, CodingKey {
         case id, inited, name, nameInsensitive, email, isPublic, created, updated, settings, spreadSheetImportUrl, spreadSheetImportStatus, spreadSheetImportDate,
-             spreadSheetImporter, spreadSheetImportError, affiliatePromoCode
+             spreadSheetImporter, spreadSheetImportError, affiliateData
     }
 }
 
@@ -55,7 +60,7 @@ extension User {
         spreadSheetImportDate = try container.decodeIfPresent(Double.self, forKey: .spreadSheetImportDate)
         spreadSheetImporter = try container.decodeIfPresent(String.self, forKey: .spreadSheetImporter)
         spreadSheetImportError = try container.decodeIfPresent(String.self, forKey: .spreadSheetImportError)
-        affiliatePromoCode = try container.decodeIfPresent(String.self, forKey: .affiliatePromoCode)
+        affiliateData = try container.decodeIfPresent(AffiliateData.self, forKey: .affiliateData)
     }
 
     init(id: String) {
@@ -72,7 +77,7 @@ extension User {
                   spreadSheetImportDate: nil,
                   spreadSheetImporter: nil,
                   spreadSheetImportError: nil,
-                  affiliatePromoCode: nil)
+                  affiliateData: nil)
     }
 
     func withImageURL(_ url: URL?) -> User {
