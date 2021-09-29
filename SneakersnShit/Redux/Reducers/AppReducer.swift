@@ -157,6 +157,8 @@ func appReducer(state: inout AppState,
                                                                      spreadSheetImportStatus: spreadSheetImportStatus,
                                                                      spreadSheetImportError: spreadSheetImportError,
                                                                      completion: completion)
+        case let .runImport(importedUserId, completion):
+            environment.dataController.runImport(importedUserId: importedUserId, completion: completion)
         }
     case let .authentication(action: action):
         return environment.authenticator.handle(action)

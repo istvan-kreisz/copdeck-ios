@@ -359,4 +359,8 @@ class DefaultDataController: DataController {
                                                  spreadSheetImportError: spreadSheetImportError,
                                                  completion: completion)
     }
+    
+    func runImport(importedUserId: String, completion: @escaping (Result<User, Error>) -> Void) {
+        backendAPI.runImport(importedUserId: importedUserId, completion: completion)
+    }
 }

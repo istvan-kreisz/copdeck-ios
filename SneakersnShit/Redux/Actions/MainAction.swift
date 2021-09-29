@@ -62,7 +62,7 @@ enum MainAction {
                                        spreadSheetImportStatus: User.SpreadSheetImportStatus,
                                        spreadSheetImportError: String?,
                                        completion: (Result<User, Error>) -> Void)
-
+    case runImport(importedUserId: String, completion: (Result<User, Error>) -> Void)
 }
 
 extension MainAction: Identifiable {

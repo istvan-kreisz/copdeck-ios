@@ -148,6 +148,14 @@ struct AdminView: View {
                                 }
                             case .Processing:
                                 Button {
+                                    runImport(userId: user.id)
+                                } label: {
+                                    Text("Run import")
+                                        .font(.bold(size: 18))
+                                        .foregroundColor(.customBlue)
+                                }
+                                Spacer()
+                                Button {
                                     userToMarkAsFailed = user
                                 } label: {
                                     Text("Mark as failed")
@@ -190,16 +198,22 @@ struct AdminView: View {
         store.send(.main(action: .updateSpreadsheetImportStatus(importedUserId: userId,
                                                                 spreadSheetImportStatus: newStatus,
                                                                 spreadSheetImportError: errorMessage,
-                                                                completion: { result in
-                                                                    switch result {
-                                                                    case let .success(user):
-                                                                        if let userIndex = waitlist.firstIndex(where: { $0.id == user.id }) {
-                                                                            waitlist[userIndex] = user
-                                                                        }
-                                                                    case let .failure(error):
-                                                                        self.error = ("Error", error.localizedDescription)
-                                                                    }
-                                                                })))
+                                                                completion: updateWaitlist)))
+    }
+
+    private func runImport(userId: String) {
+        store.send(.main(action: .runImport(importedUserId: userId, completion: updateWaitlist)))
+    }
+
+    private func updateWaitlist(result: Result<User, Error>) {
+        switch result {
+        case let .success(user):
+            if let userIndex = waitlist.firstIndex(where: { $0.id == user.id }) {
+                waitlist[userIndex] = user
+            }
+        case let .failure(error):
+            self.error = ("Error", error.localizedDescription)
+        }
     }
 
     private func refreshWaitlist() {

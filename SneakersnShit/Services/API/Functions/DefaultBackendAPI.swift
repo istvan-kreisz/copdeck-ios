@@ -174,6 +174,7 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
             .store(in: &cancellables)
     }
 
+    #warning("refactor")
     func updateSpreadsheetImportStatus(importedUserId: String,
                                        spreadSheetImportStatus: User.SpreadSheetImportStatus,
                                        spreadSheetImportError: String?,
@@ -185,6 +186,23 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
         }
         let model = Wrapper(importedUserId: importedUserId, spreadSheetImportStatus: spreadSheetImportStatus, spreadSheetImportError: spreadSheetImportError)
         let result: AnyPublisher<User, AppError> = callFirebaseFunction(functionName: "updateSpreadsheetImportStatus", model: model)
+        result
+            .sink { result in
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                default:
+                    break
+                }
+            } receiveValue: { (user: User) in completion(.success(user)) }
+            .store(in: &cancellables)
+    }
+    
+    func runImport(importedUserId: String, completion: @escaping (Result<User, Error>) -> Void) {
+        struct Wrapper: Encodable {
+            let importedUserId: String
+        }
+        let result: AnyPublisher<User, AppError> = callFirebaseFunction(functionName: "runImport", model: Wrapper(importedUserId: importedUserId))
         result
             .sink { result in
                 switch result {

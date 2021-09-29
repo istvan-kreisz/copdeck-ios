@@ -57,6 +57,7 @@ protocol BackendAPI {
                                        spreadSheetImportStatus: User.SpreadSheetImportStatus,
                                        spreadSheetImportError: String?,
                                        completion: @escaping (Result<User, Error>) -> Void)
+    func runImport(importedUserId: String, completion: @escaping (Result<User, Error>) -> Void)
 }
 
 protocol DatabaseManager {
