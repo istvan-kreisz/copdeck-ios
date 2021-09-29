@@ -189,6 +189,11 @@ func appReducer(state: inout AppState,
         case let .setError(error: error):
             state.error = error
         }
+    case let .paymentAction(action):
+        switch action {
+        case let .applyPromoCode(code, completion):
+            environment.dataController.applyPromoCode(code, completion: completion)
+        }
     }
     return Empty(completeImmediately: true).eraseToAnyPublisher()
 }

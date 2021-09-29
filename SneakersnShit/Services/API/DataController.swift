@@ -58,6 +58,8 @@ protocol BackendAPI {
                                        spreadSheetImportError: String?,
                                        completion: @escaping (Result<User, Error>) -> Void)
     func runImport(importedUserId: String, completion: @escaping (Result<User, Error>) -> Void)
+    // membership
+    func applyPromoCode(_ code: String, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 protocol DatabaseManager {

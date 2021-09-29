@@ -24,6 +24,8 @@ struct SettingsView: View {
 
     @EnvironmentObject var store: DerivedGlobalStore
     @State private var settings: CopDeckSettings
+    
+    @State private var error: (String, String)? = nil
 
     // general
     @State private var currency: String
@@ -175,6 +177,7 @@ struct SettingsView: View {
 
     var body: some View {
         NavigationView {
+            let presentErrorAlert = Binding<Bool>(get: { error != nil }, set: { new in error = new ? error : nil })
             VStack(spacing: 20) {
                 Form {
                     HStack {
@@ -314,6 +317,16 @@ struct SettingsView: View {
                         }
                     }
 
+                    #warning("enable")
+                    if DebugSettings.shared.isAdmin {
+                        Section(header: Text("Membership")) {
+                            NavigationLink(destination: PromoCodeView()) {
+                                Text("Apply promo code")
+                                    .leftAligned()
+                            }
+                        }
+                    }
+
                     Section(header: Text("Spreadsheet import")) {
                         NavigationLink(destination: SpreadsheetImportView()) {
                             Text("Import your inventory")
@@ -349,6 +362,14 @@ struct SettingsView: View {
                 .navigationbarHidden()
                 .onChange(of: settings) { value in
                     store.send(.main(action: .updateSettings(settings: value)))
+                }
+                .onChange(of: store.globalState.error) { error in
+                    if let title = error?.title, let message = error?.message {
+                        self.error = (title, message)
+                    }
+                }
+                .alert(isPresented: presentErrorAlert) {
+                    Alert(title: Text(error?.0 ?? "Ooops"), message: Text(error?.1 ?? "Unknown Error"), dismissButton: .default(Text("OK")))
                 }
             }
         }

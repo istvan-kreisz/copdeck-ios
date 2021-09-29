@@ -8,7 +8,6 @@
 import SwiftUI
 
 #warning("add import description")
-#warning("add revert button")
 
 struct SpreadsheetImportView: View {
     @EnvironmentObject var store: DerivedGlobalStore
@@ -108,7 +107,7 @@ struct SpreadsheetImportView: View {
             .withDefaultPadding(padding: .top)
             Text("asdsad a d ad as d asd asd as d")
                 .foregroundColor(.customText2)
-                .font(.regular(size: 14))
+                .font(.regular(size: 15))
                 .multilineTextAlignment(.center)
             Spacer()
             VStack(spacing: 20) {

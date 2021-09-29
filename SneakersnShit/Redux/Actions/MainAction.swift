@@ -33,8 +33,8 @@ enum MainAction {
     case getUserProfile(userId: String, completion: (ProfileData?) -> Void)
     case setSelectedUser(user: ProfileData?, completion: (ProfileData?) -> Void)
     // item details
-    case getItemDetails(item: Item?, itemId: String, fetchMode: FetchMode, completion: ((Item?) -> Void))
-    case getItemImage(itemId: String, completion: ((URL?) -> Void))
+    case getItemDetails(item: Item?, itemId: String, fetchMode: FetchMode, completion: (Item?) -> Void)
+    case getItemImage(itemId: String, completion: (URL?) -> Void)
     case uploadItemImage(itemId: String, image: UIImage)
     case refreshItemIfNeeded(itemId: String, fetchMode: FetchMode)
     case setSelectedItem(item: Item?, completion: (Item?) -> Void)
@@ -66,16 +66,7 @@ enum MainAction {
     case getAffiliateList(completion: (Result<[User], Error>) -> Void)
 }
 
-extension MainAction: Identifiable {
-    var label: String {
-        let mirror = Mirror(reflecting: self)
-        if let label = mirror.children.first?.label {
-            return label
-        } else {
-            return String(describing: self)
-        }
-    }
-
+extension MainAction: Identifiable, StringRepresentable {
     var id: String {
         switch self {
         case let .refreshItemIfNeeded(itemId, fetchMode):

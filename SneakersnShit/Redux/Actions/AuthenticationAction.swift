@@ -18,25 +18,4 @@ enum AuthenticationAction {
     case passwordReset(username: String)
 }
 
-extension AuthenticationAction: Identifiable {
-    var id: String {
-        switch self {
-        case .restoreState:
-            return "restoreState"
-        case .signUp:
-            return "signUp"
-        case .signIn:
-            return "signIn"
-        case .signInWithApple:
-            return "signInWithApple"
-        case .signInWithGoogle:
-            return "signInWithGoogle"
-        case .signInWithFacebook:
-            return "signInWithFacebook"
-        case .signOut:
-            return "signOut"
-        case .passwordReset:
-            return "passwordReset"
-        }
-    }
-}
+extension AuthenticationAction: StringRepresentable {}

@@ -12,6 +12,7 @@ enum AppAction {
     case main(action: MainAction)
     case error(action: ErrorAction)
     case authentication(action: AuthenticationAction)
+    case paymentAction(action: PaymentAction)
 }
 
 extension AppAction: Identifiable {
@@ -23,9 +24,11 @@ extension AppAction: Identifiable {
         case let .main(action):
             actionName += action.id
         case let .error(action):
-            actionName += action.id
+            actionName += action.label
         case let .authentication(action):
-            actionName += action.id
+            actionName += action.label
+        case let .paymentAction(action):
+            actionName += action.label
         }
         return actionName
     }

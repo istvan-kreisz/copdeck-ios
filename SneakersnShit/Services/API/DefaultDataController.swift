@@ -78,6 +78,7 @@ class DefaultDataController: DataController {
             .eraseToAnyPublisher()
     }
 
+    #warning("ensure saved data is always returned if fetching fails")
     func getItemDetails(for item: Item?,
                         itemId: String,
                         fetchMode: FetchMode,
@@ -366,5 +367,9 @@ class DefaultDataController: DataController {
     
     func getAffiliateList(completion: @escaping (Result<[User], Error>) -> Void) {
         databaseManager.getAffiliateList(completion: completion)
+    }
+    
+    func applyPromoCode(_ code: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        backendAPI.applyPromoCode(code, completion: completion)
     }
 }

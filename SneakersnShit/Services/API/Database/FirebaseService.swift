@@ -348,7 +348,7 @@ class FirebaseService: DatabaseManager {
         guard DebugSettings.shared.isAdmin else { return }
         firestore
             .collection("users")
-            .whereField("affiliateData.promoCode", isGreaterThan: "")
+            .whereField("affiliateInfo.promoCode", isGreaterThan: "")
             .getDocuments { [weak self] snapshot, error in
                 self?.parseUsers(snapshot: snapshot, error: error, completion: completion)
             }

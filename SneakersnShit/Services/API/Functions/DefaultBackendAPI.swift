@@ -174,7 +174,7 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
             .store(in: &cancellables)
     }
 
-    #warning("refactor")
+    #warning("refactor - more uniform error handling too")
     func updateSpreadsheetImportStatus(importedUserId: String,
                                        spreadSheetImportStatus: User.SpreadSheetImportStatus,
                                        spreadSheetImportError: String?,
@@ -212,6 +212,22 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
                     break
                 }
             } receiveValue: { (user: User) in completion(.success(user)) }
+            .store(in: &cancellables)
+    }
+    
+    func applyPromoCode(_ code: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        struct Wrapper: Encodable {
+            let promoCode: String
+        }
+        callFirebaseFunction(functionName: "applyPromoCode", model: Wrapper(promoCode: code))
+            .sink { result in
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                default:
+                    break
+                }
+            } receiveValue: { completion(.success(())) }
             .store(in: &cancellables)
     }
 }

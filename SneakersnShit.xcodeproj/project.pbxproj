@@ -69,6 +69,9 @@
 		5D564E3F2703592E00190CF4 /* SpreadsheetImportAdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D564E3E2703592E00190CF4 /* SpreadsheetImportAdminView.swift */; };
 		5D564E432704C7EE00190CF4 /* AffiliateLinksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D564E422704C7EE00190CF4 /* AffiliateLinksView.swift */; };
 		5D564E462704C8CA00190CF4 /* UserDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D564E452704C8CA00190CF4 /* UserDetailView.swift */; };
+		5D564E482704F66700190CF4 /* StringRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D564E472704F66700190CF4 /* StringRepresentable.swift */; };
+		5D564E4A2704F6C800190CF4 /* PaymentAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D564E492704F6C800190CF4 /* PaymentAction.swift */; };
+		5D564E4C2704F9D100190CF4 /* PromoCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D564E4B2704F9D100190CF4 /* PromoCodeView.swift */; };
 		5D56B7B2270097EC001357E0 /* DeleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D56B7B1270097EC001357E0 /* DeleteButton.swift */; };
 		5D56B7B42700A6BE001357E0 /* TestImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D56B7B32700A6BE001357E0 /* TestImageView.swift */; };
 		5D5D4C4426D50EB100A7C61A /* ModelWithDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D5D4C4326D50EB100A7C61A /* ModelWithDate.swift */; };
@@ -247,6 +250,9 @@
 		5D564E3E2703592E00190CF4 /* SpreadsheetImportAdminView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpreadsheetImportAdminView.swift; sourceTree = "<group>"; };
 		5D564E422704C7EE00190CF4 /* AffiliateLinksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffiliateLinksView.swift; sourceTree = "<group>"; };
 		5D564E452704C8CA00190CF4 /* UserDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailView.swift; sourceTree = "<group>"; };
+		5D564E472704F66700190CF4 /* StringRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringRepresentable.swift; sourceTree = "<group>"; };
+		5D564E492704F6C800190CF4 /* PaymentAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentAction.swift; sourceTree = "<group>"; };
+		5D564E4B2704F9D100190CF4 /* PromoCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PromoCodeView.swift; sourceTree = "<group>"; };
 		5D56B7B1270097EC001357E0 /* DeleteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButton.swift; sourceTree = "<group>"; };
 		5D56B7B32700A6BE001357E0 /* TestImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestImageView.swift; sourceTree = "<group>"; };
 		5D5D4C4326D50EB100A7C61A /* ModelWithDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelWithDate.swift; sourceTree = "<group>"; };
@@ -579,6 +585,7 @@
 			children = (
 				5D53A1F426AF5649001DAA8D /* SettingsView.swift */,
 				5D564E3C2703584100190CF4 /* SpreadsheetImport.swift */,
+				5D564E4B2704F9D100190CF4 /* PromoCodeView.swift */,
 				5D564E442704C8A700190CF4 /* Admin */,
 			);
 			path = Settings;
@@ -742,6 +749,7 @@
 				5D19B0A926A6D76600A31F4E /* MainAction.swift */,
 				5D19B0AD26A6D7CA00A31F4E /* AuthenticationAction.swift */,
 				5D63124326950B2900876D99 /* AppAction.swift */,
+				5D564E492704F6C800190CF4 /* PaymentAction.swift */,
 			);
 			path = Actions;
 			sourceTree = "<group>";
@@ -1022,6 +1030,7 @@
 			children = (
 				5DDEFDCE26D2ADC2001B0F76 /* EnumCodable.swift */,
 				5D5D4C4326D50EB100A7C61A /* ModelWithDate.swift */,
+				5D564E472704F66700190CF4 /* StringRepresentable.swift */,
 			);
 			path = Types;
 			sourceTree = "<group>";
@@ -1203,6 +1212,7 @@
 				5DE4F21426DFCCF30087077A /* SharedStackSummaryView.swift in Sources */,
 				5D7B17CC26868CA60065D01C /* Scraper.swift in Sources */,
 				5D52E307261303AF00FA02B8 /* Publishers+Extensions.swift in Sources */,
+				5D564E4C2704F9D100190CF4 /* PromoCodeView.swift in Sources */,
 				5DF3595F26FF72570041A6C3 /* OnboardingView.swift in Sources */,
 				5D424D4225C509610008D6F4 /* Fonts.swift in Sources */,
 				5D696097258713760058BABE /* AppDelegate.swift in Sources */,
@@ -1249,6 +1259,7 @@
 				5D9C8E3D269F2F31008538D6 /* RoundedButton.swift in Sources */,
 				5DE4F21A26E02C430087077A /* SharedStackDetailView.swift in Sources */,
 				5D2D5AAF25C552B0009598AA /* DefaultBackendAPI.swift in Sources */,
+				5D564E482704F66700190CF4 /* StringRepresentable.swift in Sources */,
 				5D424CFF25C5041E0008D6F4 /* DebugSettings.swift in Sources */,
 				5D69609B258713760058BABE /* LoginView.swift in Sources */,
 				5D56B7B42700A6BE001357E0 /* TestImageView.swift in Sources */,
@@ -1347,6 +1358,7 @@
 				5D6B112E26A46E3A00B6B67A /* NavigationBar.swift in Sources */,
 				5D9D520426AE359C00AB1F30 /* InventoryViewPills.swift in Sources */,
 				5DA4FE0426E6DCA700084AEF /* SettingMenu.swift in Sources */,
+				5D564E4A2704F6C800190CF4 /* PaymentAction.swift in Sources */,
 				5D63124426950B2900876D99 /* AppAction.swift in Sources */,
 				5D41174526E9765C0048D122 /* StackShareSettingsView.swift in Sources */,
 				5D631257269669A600876D99 /* DefaultDataController.swift in Sources */,

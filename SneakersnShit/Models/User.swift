@@ -13,10 +13,14 @@ struct User: Codable, Equatable, Identifiable {
 
         var id: String { rawValue }
     }
-    struct AffiliateData: Equatable, Codable {
+    struct AffiliateInfo: Equatable, Codable {
         let promoCode: String?
         let invitesSignedUp: Int?
         let invitesSubscribed: Int?
+    }
+    struct MembershipInfo: Equatable, Codable {
+        let group: String?
+        let promoCodeUsed: String?
     }
     
     let id: String
@@ -35,11 +39,12 @@ struct User: Codable, Equatable, Identifiable {
     let spreadSheetImportDate: Double?
     let spreadSheetImporter: String?
     let spreadSheetImportError: String?
-    let affiliateData: AffiliateData?
+    let affiliateInfo: AffiliateInfo?
+    let membershipInfo: MembershipInfo?
 
     enum CodingKeys: String, CodingKey {
         case id, inited, name, nameInsensitive, email, isPublic, created, updated, settings, spreadSheetImportUrl, spreadSheetImportStatus, spreadSheetImportDate,
-             spreadSheetImporter, spreadSheetImportError, affiliateData
+             spreadSheetImporter, spreadSheetImportError, affiliateInfo, membershipInfo
     }
 }
 
@@ -60,7 +65,8 @@ extension User {
         spreadSheetImportDate = try container.decodeIfPresent(Double.self, forKey: .spreadSheetImportDate)
         spreadSheetImporter = try container.decodeIfPresent(String.self, forKey: .spreadSheetImporter)
         spreadSheetImportError = try container.decodeIfPresent(String.self, forKey: .spreadSheetImportError)
-        affiliateData = try container.decodeIfPresent(AffiliateData.self, forKey: .affiliateData)
+        affiliateInfo = try container.decodeIfPresent(AffiliateInfo.self, forKey: .affiliateInfo)
+        membershipInfo = try container.decodeIfPresent(MembershipInfo.self, forKey: .membershipInfo)
     }
 
     init(id: String) {
@@ -77,7 +83,8 @@ extension User {
                   spreadSheetImportDate: nil,
                   spreadSheetImporter: nil,
                   spreadSheetImportError: nil,
-                  affiliateData: nil)
+                  affiliateInfo: nil,
+                  membershipInfo: nil)
     }
 
     func withImageURL(_ url: URL?) -> User {

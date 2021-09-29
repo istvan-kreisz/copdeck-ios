@@ -44,13 +44,13 @@ struct AffiliateLinksView: View {
                         }
                         UserDetailView(name: "userid", value: user.id, showCopyButton: false)
                         UserDetailView(name: "email", value: user.email ?? "-")
-                        if let promoCode = user.affiliateData?.promoCode {
+                        if let promoCode = user.affiliateInfo?.promoCode {
                             UserDetailView(name: "promo code", value: promoCode)
                         }
-                        if let invitesSignedUp = user.affiliateData?.invitesSignedUp {
+                        if let invitesSignedUp = user.affiliateInfo?.invitesSignedUp {
                             UserDetailView(name: "invite count (signed up)", value: "\(invitesSignedUp)", showCopyButton: false)
                         }
-                        if let invitesSubscribed = user.affiliateData?.invitesSubscribed {
+                        if let invitesSubscribed = user.affiliateInfo?.invitesSubscribed {
                             UserDetailView(name: "invite count (subscribed)", value: "\(invitesSubscribed)", showCopyButton: false)
                         }
                     }
