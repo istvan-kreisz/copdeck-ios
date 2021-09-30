@@ -76,7 +76,7 @@ class DefaultImageService: ImageService {
     }
 
     func uploadProfileImage(image: UIImage) {
-        guard let data = image.resizeImage(300).jpegData(compressionQuality: 0.4),
+        guard let data = image.scaledToSafeUploadSize?.jpegData(compressionQuality: 0.4),
               let userId = userId
         else { return }
         let imageRef = profileImageRef(userId: userId)
@@ -101,7 +101,7 @@ class DefaultImageService: ImageService {
         imageRef.getMetadata { [weak self] meta, error in
             guard let self = self, meta == nil else { return }
             self.imageUploadQueue.async { [weak self] in
-                guard let data = image.resized(toWidth: 500)?.jpegData(compressionQuality: 0.5) else {
+                guard let data = image.scaledToSafeUploadSize?.jpegData(compressionQuality: 0.5) else {
                     DispatchQueue.main.async {
                         self?.itemImageUploadTasks[itemId] = nil
                     }
@@ -194,7 +194,7 @@ class DefaultImageService: ImageService {
             .forEach { (image: UIImage, imageId: String, ref: StorageReference) in
                 dispatchGroup.enter()
                 DispatchQueue.global(qos: .background).async {
-                    guard let data = image.resized(toWidth: 500)?.jpegData(compressionQuality: 0.5) else {
+                    guard let data = image.scaledToSafeUploadSize?.jpegData(compressionQuality: 0.5) else {
                         dispatchGroup.leave()
                         return
                     }

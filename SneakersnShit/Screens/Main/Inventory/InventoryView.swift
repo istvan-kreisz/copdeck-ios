@@ -40,7 +40,7 @@ struct InventoryView: View {
     }
 
     var supportedTrayActions: [TrayAction] {
-        ((selectedStackIndex == 0) ? [TrayAction.deleteItems] : [TrayAction.deleteItems, TrayAction.deleteStack, TrayAction.unstackItems])
+        (selectedStackIndex == 0) ? [TrayAction.deleteItems] : [TrayAction.deleteItems, TrayAction.deleteStack, TrayAction.unstackItems]
     }
 
     var inventoryItems: [InventoryItem] {
@@ -131,7 +131,7 @@ struct InventoryView: View {
 
             NavigationLink(destination: Destination(navigationDestination: $navigationDestination, bestPrices: $bestPrices).navigationbarHidden(),
                            isActive: showDetail) {
-                    EmptyView()
+                EmptyView()
             }
 
             VerticalListView(bottomPadding: 0, spacing: 0, listRowStyling: .none) {
@@ -164,12 +164,19 @@ struct InventoryView: View {
                               isSelected: isSelected,
                               bestPrices: $bestPrices,
                               requestInfo: store.state.requestInfo,
+                              emptyStateConfig: (stack.id == "all" ?
+                                  StackView.EmptyStateConfig.init(title: "Your inventory is empty",
+                                                                  buttonTitle: "Use the search tab to add items") {
+                                      viewRouter.currentPage = .search
+                                  } :
+                                  StackView.EmptyStateConfig.init(title: "Your stack is empty",
+                                                                  buttonTitle: "Start adding items") {
+                                      navigationDestination += .selectStackItems(stack)
+                                  }),
                               didTapEditStack: stack.id == "all" ? nil : {
                                   navigationDestination += .stack(selectedStackBinding)
                               }, didTapShareStack: stack.id == "all" ? nil : {
                                   sharedStack = stack
-                              }, didTapAddItems: stack.id == "all" ? nil : {
-                                  navigationDestination += .selectStackItems(stack)
                               })
                         .listRow()
                 }
@@ -236,8 +243,8 @@ struct InventoryView: View {
                             subtitle: nil,
                             placeholder: "Enter your stack's name",
                             actionTitle: "Add Stack") { stackName in
-                guard !stackName.isEmpty else { return }
-                addNewStack(withName: stackName)
+            guard !stackName.isEmpty else { return }
+            addNewStack(withName: stackName)
         }
         .withPopup {
             if let stack = sharedStack {
@@ -246,17 +253,17 @@ struct InventoryView: View {
                       subtitle: "Share this link with anyone to show them what's in your stack. The link opens a webpage so whoever you share it with doesn't need to have the app downloaded.",
                       firstAction: .init(name: "Done", tapped: { sharedStack = nil }),
                       secondAction: nil) {
-                        StackShareSettingsView(linkURL: sharedStack?.linkURL(userId: store.state.user?.id ?? "") ?? "",
-                                               stack: .constant(stack),
-                                               isPublic: stack.isPublic ?? false,
-                                               isPublished: stack.isPublished ?? false,
-                                               includeTitle: false) { title in
-                                showSnackBar = true
-                        } showPopup: { title, subtitle in
-                            popup = (title, subtitle)
-                        } updateStack: { stack in
-                            store.send(.main(action: .updateStack(stack: stack)))
-                        }
+                    StackShareSettingsView(linkURL: sharedStack?.linkURL(userId: store.state.user?.id ?? "") ?? "",
+                                           stack: .constant(stack),
+                                           isPublic: stack.isPublic ?? false,
+                                           isPublished: stack.isPublished ?? false,
+                                           includeTitle: false) { title in
+                        showSnackBar = true
+                    } showPopup: { title, subtitle in
+                        popup = (title, subtitle)
+                    } updateStack: { stack in
+                        store.send(.main(action: .updateStack(stack: stack)))
+                    }
                 }
             }
         }
@@ -296,15 +303,6 @@ struct InventoryView: View {
 
     private func updateUsername() {
         store.send(.main(action: .updateUsername(username: username)))
-    }
-}
-
-struct InventoryView_Previews: PreviewProvider {
-    static var previews: some View {
-        return Group {
-            InventoryView(username: "", shouldShowTabBar: .constant(true), viewRouter: ViewRouter())
-                .environmentObject(AppStore.default)
-        }
     }
 }
 

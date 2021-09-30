@@ -8,11 +8,11 @@
 import Foundation
 
 class ViewRouter: ObservableObject {
-    @Published var currentPage = 1
+    @Published var currentPage: Page = .search
 }
 
-enum Page {
-    case home
+enum Page: Int {
+    case feed = 0
     case search
     case inventory
 }

@@ -15,7 +15,8 @@ struct MainContainerView: View {
     @State var shouldShowTabBar = true
 
     var body: some View {
-        UITabBarWrapper(selectedIndex: $viewRouter.currentPage) {
+        let selectedIndex = Binding<Int>(get: { viewRouter.currentPage.rawValue }, set: { viewRouter.currentPage = Page(rawValue: $0) ?? .search })
+        UITabBarWrapper(selectedIndex: selectedIndex) {
             (TabBarElement(tabBarElementItem: .init(title: "First", systemImageName: "house.fill")) {
                 FeedView()
                     .withTabViewWrapper(viewRouter: viewRouter, store: FeedStore.default, shouldShow: $shouldShowTabBar)

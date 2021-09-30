@@ -9,6 +9,11 @@ import SwiftUI
 import Combine
 
 struct StackView: View {
+    struct EmptyStateConfig {
+        let title: String
+        let buttonTitle: String
+        let action: (() -> Void)
+    }
     var stack: Stack
     @Binding var searchText: String
     @Binding var filters: Filters
@@ -20,9 +25,9 @@ struct StackView: View {
     @Binding var isSelected: Bool
     @Binding var bestPrices: [String: ListingPrice]
     let requestInfo: [ScraperRequestInfo]
+    let emptyStateConfig: EmptyStateConfig
     var didTapEditStack: (() -> Void)?
     var didTapShareStack: (() -> Void)?
-    var didTapAddItems: (() -> Void)?
 
     var allStackItems: [InventoryItem] {
         let sortedItems = stack.inventoryItems(allInventoryItems: inventoryItems, filters: filters, searchText: searchText)
@@ -113,8 +118,8 @@ struct StackView: View {
 
     var body: some View {
         toolbar()
-        if let didTapAddItems = didTapAddItems, allStackItems.isEmpty {
-            EmptyStateButton(title: "Your stack is empty", buttonTitle: "Start adding items", style: .large, showPlusIcon: true, action: didTapAddItems)
+        if allStackItems.isEmpty {
+            EmptyStateButton(title: emptyStateConfig.title, buttonTitle: emptyStateConfig.buttonTitle, style: .large, showPlusIcon: true, action: emptyStateConfig.action)
                 .padding(.top, 50)
         } else {
             ForEach(allStackItems) { (inventoryItem: InventoryItem) in
