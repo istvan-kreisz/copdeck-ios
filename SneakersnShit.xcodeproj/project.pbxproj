@@ -271,7 +271,7 @@
 		5D631252269668FE00876D99 /* JSNativeBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSNativeBridge.swift; sourceTree = "<group>"; };
 		5D6312542696696500876D99 /* JSLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSLogger.swift; sourceTree = "<group>"; };
 		5D631256269669A600876D99 /* DefaultDataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultDataController.swift; sourceTree = "<group>"; };
-		5D696093258713760058BABE /* SneakersnShit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SneakersnShit.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D696093258713760058BABE /* CopDeck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CopDeck.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5D696096258713760058BABE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5D69609A258713760058BABE /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		5D69609C258713770058BABE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -791,7 +791,7 @@
 		5D696094258713760058BABE /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5D696093258713760058BABE /* SneakersnShit.app */,
+				5D696093258713760058BABE /* CopDeck.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1078,9 +1078,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5D696092258713760058BABE /* SneakersnShit */ = {
+		5D696092258713760058BABE /* CopDeck */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5D6960A7258713770058BABE /* Build configuration list for PBXNativeTarget "SneakersnShit" */;
+			buildConfigurationList = 5D6960A7258713770058BABE /* Build configuration list for PBXNativeTarget "CopDeck" */;
 			buildPhases = (
 				48226E9C78C6C5FDB1043EDA /* [CP] Check Pods Manifest.lock */,
 				5D69608F258713760058BABE /* Sources */,
@@ -1092,7 +1092,7 @@
 			);
 			dependencies = (
 			);
-			name = SneakersnShit;
+			name = CopDeck;
 			packageProductDependencies = (
 				5DCC466726A7A96C007671BC /* FacebookCore */,
 				5DCC466926A7A96C007671BC /* FacebookLogin */,
@@ -1100,7 +1100,7 @@
 				5D9D51FD26AE1C0B00AB1F30 /* NukeUI */,
 			);
 			productName = InfluTrader;
-			productReference = 5D696093258713760058BABE /* SneakersnShit.app */;
+			productReference = 5D696093258713760058BABE /* CopDeck.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1135,7 +1135,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5D696092258713760058BABE /* SneakersnShit */,
+				5D696092258713760058BABE /* CopDeck */,
 			);
 		};
 /* End PBXProject section */
@@ -1735,7 +1735,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5D6960A7258713770058BABE /* Build configuration list for PBXNativeTarget "SneakersnShit" */ = {
+		5D6960A7258713770058BABE /* Build configuration list for PBXNativeTarget "CopDeck" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5D6960A8258713770058BABE /* Debug */,

@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5D696092258713760058BABE"
                BuildableName = "SneakersnShit.app"
-               BlueprintName = "SneakersnShit"
+               BlueprintName = "CopDeck"
                ReferencedContainer = "container:SneakersnShit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -48,7 +48,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5D696092258713760058BABE"
             BuildableName = "SneakersnShit.app"
-            BlueprintName = "SneakersnShit"
+            BlueprintName = "CopDeck"
             ReferencedContainer = "container:SneakersnShit.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -119,7 +119,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5D696092258713760058BABE"
             BuildableName = "SneakersnShit.app"
-            BlueprintName = "SneakersnShit"
+            BlueprintName = "CopDeck"
             ReferencedContainer = "container:SneakersnShit.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
