@@ -7,10 +7,6 @@
 
 import SwiftUI
 
-#warning("add import description ")
-#warning("new service account")
-#warning("import summary views")
-
 struct SpreadsheetImportView: View {
     @EnvironmentObject var store: DerivedGlobalStore
     @Environment(\.presentationMode) var presentationMode
@@ -107,18 +103,31 @@ struct SpreadsheetImportView: View {
                 presentationMode.wrappedValue.dismiss()
             }
             .withDefaultPadding(padding: .top)
-            Text("""
-            1. Use your promo code to get a discount on subscription fees.
-            
-            2. Paste your promo code in the field below and tap "Send".
-            
-            3. You can only use one promo code per account and you can't change it once you've added one.
-            """)
-                .foregroundColor(.customText2)
-                .font(.regular(size: 18))
-                .multilineTextAlignment(.leading)
+            VStack(alignment: .leading, spacing: 12) {
+                Text("1. Copy your spreadsheets into a new Google Sheet document.")
+                    .foregroundColor(.customText2)
+                    .font(.regular(size: 18))
+                    .multilineTextAlignment(.leading)
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("2. In the share menu change the sharing permissions to \"Anyone with the link\" with \"Viewer\" access. ")
+                        .foregroundColor(.customText2)
+                        .font(.regular(size: 18))
+                        .multilineTextAlignment(.leading)
+                    if let url = URL(string: "https://help.tillerhq.com/en/articles/432685-sharing-and-permissions-in-google-sheets") {
+                        Link("More info", destination: url)
+                    }
+                }
+                Text("3. Copy & paste the share link below and tap \"Start Import\".")
+                    .foregroundColor(.customText2)
+                    .font(.regular(size: 18))
+                    .multilineTextAlignment(.leading)
+                Text("4. That's it! Since the actual import requires some manual work from us, your items won't appear immediately but it's usually done within 1-2 days.")
+                    .foregroundColor(.customText2)
+                    .font(.regular(size: 18))
+                    .multilineTextAlignment(.leading)
+            }
+            .padding(.bottom, 8)
 
-            Spacer()
             VStack(spacing: 20) {
                 HStack(spacing: 5) {
                     TextFieldRounded(placeHolder: "Spreadsheet url", style: .gray, text: $spreadsheetURL)
@@ -174,6 +183,7 @@ struct SpreadsheetImportView: View {
                         statusDescriptionText(for: status)
                     }
                 }
+                Spacer()
             }
             Spacer()
         }

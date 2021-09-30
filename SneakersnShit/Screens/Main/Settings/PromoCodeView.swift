@@ -23,17 +23,21 @@ struct PromoCodeView: View {
                 presentationMode.wrappedValue.dismiss()
             }
             .withDefaultPadding(padding: .top)
-            Text("""
-            1. Use your promo code to get a discount on subscription fees.
-            
-            2. Paste your promo code in the field below and tap "Send".
-            
-            3. You can only use one promo code per account and you can't change it once you've added one.
-            """)
-                .foregroundColor(.customText2)
-                .font(.regular(size: 18))
-                .multilineTextAlignment(.leading)
-            Spacer()
+            VStack(alignment: .leading, spacing: 12) {
+                Text("1. Use your promo code to get a discount on subscription fees.")
+                    .foregroundColor(.customText2)
+                    .font(.regular(size: 18))
+                    .multilineTextAlignment(.leading)
+                Text("2. Paste your promo code in the field below and tap \"Send\".")
+                    .foregroundColor(.customText2)
+                    .font(.regular(size: 18))
+                    .multilineTextAlignment(.leading)
+                Text("3. You can only use one promo code per account and you can't change it once you've added one.")
+                    .foregroundColor(.customText2)
+                    .font(.regular(size: 18))
+                    .multilineTextAlignment(.leading)
+            }
+            .padding(.bottom, 8)
             VStack(spacing: 20) {
                 if loader.isLoading {
                     CustomSpinner(text: "Updating account", animate: true)
