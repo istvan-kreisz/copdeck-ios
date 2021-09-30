@@ -43,6 +43,7 @@ extension AppStore {
             .store(in: &effectCancellables)
 
         environment.dataController.inventoryItemsPublisher
+            .map { inventoryItems in inventoryItems.filter { $0.pendingImport == nil } }
             .sink { [weak self] inventoryItems in
                 self?.state.inventoryItems = inventoryItems
                 self?.updateAllStack(withInventoryItems: inventoryItems)

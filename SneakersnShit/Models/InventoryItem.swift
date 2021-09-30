@@ -53,11 +53,13 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     var soldPrice: SoldPrice?
     var status: SoldStatus? = .None
     var notes: String?
+    let pendingImport: Bool?
     let created: Double?
     let updated: Double?
 
+
     enum CodingKeys: String, CodingKey {
-        case id, itemId, name, purchasePrice, imageURL, size, condition, copdeckPrice, listingPrices, soldPrice, status, notes, created, updated
+        case id, itemId, name, purchasePrice, imageURL, size, condition, copdeckPrice, listingPrices, soldPrice, status, notes, pendingImport, created, updated
     }
 }
 
@@ -72,6 +74,7 @@ extension InventoryItem {
                   condition: .new,
                   soldPrice: nil,
                   notes: nil,
+                  pendingImport: nil,
                   created: Date().timeIntervalSince1970 * 1000,
                   updated: Date().timeIntervalSince1970 * 1000)
     }

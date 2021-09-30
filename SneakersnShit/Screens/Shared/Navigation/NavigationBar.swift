@@ -11,9 +11,13 @@ struct NavigationBar: View {
     enum Style {
         case light, dark, clear
     }
+    enum TitleSize {
+        case small, large
+    }
 
     let title: String?
     let isBackButtonVisible: Bool
+    var titleFontSize: TitleSize = .small
     let style: Style
     var shouldDismiss: () -> Void
 
@@ -63,7 +67,7 @@ struct NavigationBar: View {
             Spacer()
             if let title = title {
                 Text(title.uppercased())
-                    .font(.bold(size: 12))
+                    .font(.bold(size: titleFontSize == .small ? 12 : 16))
                     .foregroundColor(backgroundColor)
                     .padding(.leading, isBackButtonVisible ? -38 : 0)
                     .frame(maxWidth: UIScreen.screenWidth - 180 - Self.titlePadding * 2 + (isBackButtonVisible ? 0 : 130))

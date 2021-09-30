@@ -215,6 +215,24 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
             .store(in: &cancellables)
     }
     
+    func finishImport(importedUserId: String, completion: @escaping (Result<User, Error>) -> Void) {
+        struct Wrapper: Encodable {
+            let importedUserId: String
+        }
+        let result: AnyPublisher<User, AppError> = callFirebaseFunction(functionName: "finishImport", model: Wrapper(importedUserId: importedUserId))
+        result
+            .sink { result in
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                default:
+                    break
+                }
+            } receiveValue: { (user: User) in completion(.success(user)) }
+            .store(in: &cancellables)
+    }
+
+    
     func applyPromoCode(_ code: String, completion: @escaping (Result<Void, Error>) -> Void) {
         struct Wrapper: Encodable {
             let promoCode: String

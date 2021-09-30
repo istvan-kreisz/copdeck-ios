@@ -7,7 +7,9 @@
 
 import SwiftUI
 
-#warning("add import description")
+#warning("add import description ")
+#warning("new service account")
+#warning("import summary views")
 
 struct SpreadsheetImportView: View {
     @EnvironmentObject var store: DerivedGlobalStore
@@ -19,11 +21,11 @@ struct SpreadsheetImportView: View {
     @State private var revertImportTapped = false
 
     init() {
-        _spreadsheetURL = State(initialValue: AppStore.default.state.user?.spreadSheetImportUrl ?? "")
+        _spreadsheetURL = State(initialValue: AppStore.default.state.user?.spreadsheetImport?.url ?? "")
     }
 
     var statusColor: Color {
-        switch store.globalState.user?.spreadSheetImportStatus {
+        switch store.globalState.user?.spreadsheetImport?.status {
         case .none:
             return .customText1
         case .Pending:
@@ -101,21 +103,28 @@ struct SpreadsheetImportView: View {
                                          })
 
         VStack(spacing: 8) {
-            NavigationBar(title: "Spreadsheet import", isBackButtonVisible: true, style: .dark) {
+            NavigationBar(title: "Spreadsheet import", isBackButtonVisible: true, titleFontSize: .large, style: .dark) {
                 presentationMode.wrappedValue.dismiss()
             }
             .withDefaultPadding(padding: .top)
-            Text("asdsad a d ad as d asd asd as d")
+            Text("""
+            1. Use your promo code to get a discount on subscription fees.
+            
+            2. Paste your promo code in the field below and tap "Send".
+            
+            3. You can only use one promo code per account and you can't change it once you've added one.
+            """)
                 .foregroundColor(.customText2)
-                .font(.regular(size: 15))
-                .multilineTextAlignment(.center)
+                .font(.regular(size: 18))
+                .multilineTextAlignment(.leading)
+
             Spacer()
             VStack(spacing: 20) {
                 HStack(spacing: 5) {
                     TextFieldRounded(placeHolder: "Spreadsheet url", style: .gray, text: $spreadsheetURL)
                         .layoutPriority(1)
                     Button {
-                        if let url = store.globalState.user?.spreadSheetImportUrl, let status = store.globalState.user?.spreadSheetImportStatus {
+                        if let url = store.globalState.user?.spreadsheetImport?.url, let status = store.globalState.user?.spreadsheetImport?.status {
                             if spreadsheetURL == url {
                                 self.error = ("Error", "You already submitted an import request with this url.", nil)
                                 return
@@ -156,12 +165,12 @@ struct SpreadsheetImportView: View {
                         Text("Your spreadsheet import status:")
                             .foregroundColor(.customText2)
                             .font(.regular(size: 14))
-                        Text(store.globalState.user?.spreadSheetImportStatus?.rawValue ?? "Not started")
+                        Text(store.globalState.user?.spreadsheetImport?.status?.rawValue ?? "Not started")
                             .foregroundColor(statusColor)
                             .font(.bold(size: 14))
                         Spacer()
                     }
-                    if let status = store.globalState.user?.spreadSheetImportStatus {
+                    if let status = store.globalState.user?.spreadsheetImport?.status {
                         statusDescriptionText(for: status)
                     }
                 }

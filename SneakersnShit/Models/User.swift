@@ -13,16 +13,35 @@ struct User: Codable, Equatable, Identifiable {
 
         var id: String { rawValue }
     }
+
+    struct SpreadsheetImport: Equatable, Codable {
+        struct Summary: Equatable, Codable {
+            let importCount: Int
+            let errorCount: Int
+            let description: String
+        }
+
+        let url: String?
+        let status: SpreadSheetImportStatus?
+        let pendingImport: Bool?
+        let date: Double?
+        let importer: String?
+        let error: String?
+        let summary: Summary?
+        let spreadsheetId: String?
+    }
+
     struct AffiliateInfo: Equatable, Codable {
         let promoCode: String?
         let invitesSignedUp: Int?
         let invitesSubscribed: Int?
     }
+
     struct MembershipInfo: Equatable, Codable {
         let group: String?
         let promoCodeUsed: String?
     }
-    
+
     let id: String
     var inited: Bool?
     var name: String?
@@ -33,18 +52,12 @@ struct User: Codable, Equatable, Identifiable {
     let updated: Double?
     var settings: CopDeckSettings?
     var imageURL: URL?
-    #warning("refactor into object")
-    let spreadSheetImportUrl: String?
-    let spreadSheetImportStatus: SpreadSheetImportStatus?
-    let spreadSheetImportDate: Double?
-    let spreadSheetImporter: String?
-    let spreadSheetImportError: String?
+    let spreadsheetImport: SpreadsheetImport?
     let affiliateInfo: AffiliateInfo?
     let membershipInfo: MembershipInfo?
 
     enum CodingKeys: String, CodingKey {
-        case id, inited, name, nameInsensitive, email, isPublic, created, updated, settings, spreadSheetImportUrl, spreadSheetImportStatus, spreadSheetImportDate,
-             spreadSheetImporter, spreadSheetImportError, affiliateInfo, membershipInfo
+        case id, inited, name, nameInsensitive, email, isPublic, created, updated, settings, spreadsheetImport, affiliateInfo, membershipInfo
     }
 }
 
@@ -60,11 +73,7 @@ extension User {
         created = try container.decodeIfPresent(Double.self, forKey: .created)
         updated = try container.decodeIfPresent(Double.self, forKey: .updated)
         settings = try container.decodeIfPresent(CopDeckSettings.self, forKey: .settings)
-        spreadSheetImportUrl = try container.decodeIfPresent(String.self, forKey: .spreadSheetImportUrl)
-        spreadSheetImportStatus = try container.decodeIfPresent(SpreadSheetImportStatus.self, forKey: .spreadSheetImportStatus)
-        spreadSheetImportDate = try container.decodeIfPresent(Double.self, forKey: .spreadSheetImportDate)
-        spreadSheetImporter = try container.decodeIfPresent(String.self, forKey: .spreadSheetImporter)
-        spreadSheetImportError = try container.decodeIfPresent(String.self, forKey: .spreadSheetImportError)
+        spreadsheetImport = try container.decodeIfPresent(SpreadsheetImport.self, forKey: .spreadsheetImport)
         affiliateInfo = try container.decodeIfPresent(AffiliateInfo.self, forKey: .affiliateInfo)
         membershipInfo = try container.decodeIfPresent(MembershipInfo.self, forKey: .membershipInfo)
     }
@@ -78,11 +87,7 @@ extension User {
                   created: nil,
                   updated: nil,
                   settings: nil,
-                  spreadSheetImportUrl: nil,
-                  spreadSheetImportStatus: nil,
-                  spreadSheetImportDate: nil,
-                  spreadSheetImporter: nil,
-                  spreadSheetImportError: nil,
+                  spreadsheetImport: nil,
                   affiliateInfo: nil,
                   membershipInfo: nil)
     }

@@ -16,19 +16,23 @@ struct PromoCodeView: View {
     @State var promoCode = ""
 
     var body: some View {
+        let presentErrorAlert = Binding<Bool>(get: { error != nil }, set: { new in error = new ? error : nil })
+
         VStack(spacing: 8) {
-            NavigationBar(title: "Apply promo code", isBackButtonVisible: true, style: .dark) {
+            NavigationBar(title: "Promo code", isBackButtonVisible: true, titleFontSize: .large, style: .dark) {
                 presentationMode.wrappedValue.dismiss()
             }
             .withDefaultPadding(padding: .top)
             Text("""
-            • Use your promo code to get a discount on subscription fees.
-            • Paste your promo code in the field below and tap "Send".
-            • You can only use one promo code per account and you can't change it once you've applied one.
+            1. Use your promo code to get a discount on subscription fees.
+            
+            2. Paste your promo code in the field below and tap "Send".
+            
+            3. You can only use one promo code per account and you can't change it once you've added one.
             """)
                 .foregroundColor(.customText2)
-                .font(.regular(size: 15))
-                .multilineTextAlignment(.center)
+                .font(.regular(size: 18))
+                .multilineTextAlignment(.leading)
             Spacer()
             VStack(spacing: 20) {
                 if loader.isLoading {
@@ -39,12 +43,13 @@ struct PromoCodeView: View {
                     HStack(spacing: 5) {
                         Text("Your promo code:")
                             .foregroundColor(.customText2)
-                            .font(.regular(size: 14))
+                            .font(.regular(size: 18))
                         Text(promoCode)
                             .foregroundColor(.customBlue)
-                            .font(.bold(size: 14))
+                            .font(.bold(size: 20))
                         Spacer()
                     }
+                    .padding(.top, 5)
                 } else {
                     HStack(spacing: 5) {
                         TextFieldRounded(placeHolder: "Enter promo code", style: .gray, text: $promoCode)
@@ -56,22 +61,32 @@ struct PromoCodeView: View {
                                 applyPromoCode(promoCode)
                             }
                         } label: {
-                            Text("Start import")
+                            Text("Send")
                                 .font(.bold(size: 14))
                                 .foregroundColor(.customWhite)
-                                .frame(width: 110, height: Styles.inputFieldHeight)
+                                .frame(width: 80, height: Styles.inputFieldHeight)
                                 .background(RoundedRectangle(cornerRadius: Styles.cornerRadius)
                                     .fill(Color.customBlue))
                         }
                     }
                 }
+                Spacer()
             }
         }
         .withDefaultPadding(padding: .horizontal)
+        .alert(isPresented: presentErrorAlert) {
+            let title = error?.0 ?? ""
+            let description = error?.1 ?? ""
+            return Alert(title: Text(title), message: Text(description), dismissButton: Alert.Button.cancel(Text("Okay")))
+        }
         .navigationbarHidden()
     }
 
     private func applyPromoCode(_ promoCode: String) {
+        guard !promoCode.isEmpty else {
+            self.error = ("Error", "Invalid Promo code")
+            return
+        }
         let loader = loader.getLoader()
         store.send(.paymentAction(action: .applyPromoCode(promoCode, completion: { result in
             if case let .failure(error) = result {

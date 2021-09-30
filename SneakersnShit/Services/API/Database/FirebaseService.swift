@@ -337,8 +337,8 @@ class FirebaseService: DatabaseManager {
         guard DebugSettings.shared.isAdmin else { return }
         firestore
             .collection("users")
-            .whereField("spreadSheetImportStatus", in: User.SpreadSheetImportStatus.allCases.map(\.rawValue))
-            .order(by: "spreadSheetImportDate", descending: true)
+            .whereField("spreadsheetImport.status", in: User.SpreadSheetImportStatus.allCases.map(\.rawValue))
+            .order(by: "spreadsheetImport.date", descending: true)
             .getDocuments { [weak self] snapshot, error in
                 self?.parseUsers(snapshot: snapshot, error: error, completion: completion)
             }
