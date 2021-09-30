@@ -57,7 +57,6 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     let created: Double?
     let updated: Double?
 
-
     enum CodingKeys: String, CodingKey {
         case id, itemId, name, purchasePrice, imageURL, size, condition, copdeckPrice, listingPrices, soldPrice, status, notes, pendingImport, created, updated
     }
@@ -86,4 +85,20 @@ extension InventoryItem {
         copy.notes = notes
         return copy
     }
+
+    static let empty = InventoryItem(id: "",
+                                     itemId: "",
+                                     name: "",
+                                     purchasePrice: nil,
+                                     imageURL: nil,
+                                     size: "",
+                                     condition: .new,
+                                     listingPrices: [],
+                                     copdeckPrice: nil,
+                                     soldPrice: nil,
+                                     status: nil,
+                                     notes: nil,
+                                     pendingImport: nil,
+                                     created: nil,
+                                     updated: nil)
 }

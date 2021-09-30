@@ -48,7 +48,7 @@ struct SpreadsheetImportAdminView: View {
 
         VStack(spacing: 8) {
             NavigationLink(destination: (selectedUser?.spreadsheetImport?.summary?.description).map { (text: String) in
-                SpreadsheetImportDetailView(text: text)
+                SpreadsheetImportDetailView(text: text, userId: selectedUser?.id ?? "")
             },
             isActive: showImportDetails) { EmptyView() }
 
@@ -109,7 +109,7 @@ struct SpreadsheetImportAdminView: View {
                                 Button {
                                     selectedUser = user
                                 } label: {
-                                    Text("See More")
+                                    Text("See Details")
                                         .font(.bold(size: 15))
                                         .foregroundColor(.customBlue)
                                         .lineLimit(1)
@@ -171,7 +171,7 @@ struct SpreadsheetImportAdminView: View {
                             }
                             Spacer()
                         }
-                        .padding(.top, 10)
+                        .padding(.top, 20)
                     }
                     .padding(.vertical, 5)
                     .buttonStyle(PlainButtonStyle())

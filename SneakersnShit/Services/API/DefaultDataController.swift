@@ -369,6 +369,10 @@ class DefaultDataController: DataController {
         backendAPI.finishImport(importedUserId: importedUserId, completion: completion)
     }
     
+    func getImportedInventoryItems(importedUserId: String, completion: @escaping (Result<[InventoryItem], Error>) -> Void) {
+        backendAPI.getImportedInventoryItems(importedUserId: importedUserId, completion: completion)
+    }
+    
     func getAffiliateList(completion: @escaping (Result<[User], Error>) -> Void) {
         databaseManager.getAffiliateList(completion: completion)
     }

@@ -161,6 +161,8 @@ func appReducer(state: inout AppState,
             environment.dataController.runImport(importedUserId: importedUserId, completion: completion)
         case let .finishImport(importedUserId, completion):
             environment.dataController.finishImport(importedUserId: importedUserId, completion: completion)
+        case let .getImportedInventoryItems(importedUserId, completion):
+            environment.dataController.getImportedInventoryItems(importedUserId: importedUserId, completion: completion)
         case let .getAffiliateList(completion):
             environment.dataController.getAffiliateList(completion: completion)
         }
