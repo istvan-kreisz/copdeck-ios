@@ -9,14 +9,12 @@ import Foundation
 
 struct CopDeckSettings: Codable, Equatable {
     var currency: Currency
-//    var updateInterval: Double
-//    var notificationFrequency: Double
-//    var darkModeOn: Bool
     var feeCalculation: FeeCalculation
     var bestPricePriceType: PriceType
     var bestPriceFeeType: FeeType
     var preferredShoeSize: String?
     var displayedStores: [StoreId]
+    var shoeSize: ShoeSize
     var filters: Filters
 
     struct FeeCalculation: Codable, Equatable {
@@ -53,22 +51,16 @@ extension CopDeckSettings {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         currency = try container.decode(Currency.self, forKey: .currency)
-//        updateInterval = try container.decode(Double.self, forKey: .updateInterval)
-//        notificationFrequency = try container.decode(Double.self, forKey: .notificationFrequency)
-//        darkModeOn = try container.decode(Bool.self, forKey: .darkModeOn)
-
         feeCalculation = try container.decode(FeeCalculation.self, forKey: .feeCalculation)
         bestPricePriceType = try container.decodeIfPresent(PriceType.self, forKey: .bestPricePriceType) ?? .Ask
         bestPriceFeeType = try container.decodeIfPresent(FeeType.self, forKey: .bestPriceFeeType) ?? .None
         preferredShoeSize = try container.decodeIfPresent(String.self, forKey: .preferredShoeSize)
         displayedStores = try container.decodeIfPresent([StoreId].self, forKey: .displayedStores) ?? ALLSTORES.map(\.id)
+        shoeSize = try container.decodeIfPresent(ShoeSize.self, forKey: .shoeSize) ?? .US
         filters = try container.decodeIfPresent(Filters.self, forKey: .filters) ?? Filters.default
     }
 
     static let `default` = CopDeckSettings(currency: Currency(code: .eur, symbol: .eur),
-//                                           updateInterval: 60,
-//                                           notificationFrequency: 24,
-//                                           darkModeOn: false,
                                            feeCalculation: .init(country: .US,
                                                                  stockx: .init(sellerFee: nil, taxes: 0),
                                                                  goat: .init(commissionPercentage: .low,
@@ -79,5 +71,6 @@ extension CopDeckSettings {
                                            bestPriceFeeType: .None,
                                            preferredShoeSize: nil,
                                            displayedStores: ALLSTORES.map(\.id),
+                                           shoeSize: .US,
                                            filters: .default)
 }

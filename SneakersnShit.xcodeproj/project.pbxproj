@@ -180,6 +180,7 @@
 		5DEBC088269B24BA000EEADC /* ViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEBC087269B24BA000EEADC /* ViewRouter.swift */; };
 		5DEBC08A269B3DE8000EEADC /* Double+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEBC089269B3DE8000EEADC /* Double+Extensions.swift */; };
 		5DECB57C27068AA50017748C /* SocialLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DECB57B27068AA50017748C /* SocialLoginView.swift */; };
+		5DECB57E2707849F0017748C /* WithVariableShoeSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DECB57D2707849E0017748C /* WithVariableShoeSize.swift */; };
 		5DF03CAB25DA1CE7001856B5 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03CAA25DA1CE7001856B5 /* ImageView.swift */; };
 		5DF3595926FF724E0041A6C3 /* RootOnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF3595826FF724E0041A6C3 /* RootOnboardingView.swift */; };
 		5DF3595F26FF72570041A6C3 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF3595C26FF72570041A6C3 /* OnboardingView.swift */; };
@@ -362,6 +363,7 @@
 		5DEBC087269B24BA000EEADC /* ViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewRouter.swift; sourceTree = "<group>"; };
 		5DEBC089269B3DE8000EEADC /* Double+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extensions.swift"; sourceTree = "<group>"; };
 		5DECB57B27068AA50017748C /* SocialLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialLoginView.swift; sourceTree = "<group>"; };
+		5DECB57D2707849E0017748C /* WithVariableShoeSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithVariableShoeSize.swift; sourceTree = "<group>"; };
 		5DF03CAA25DA1CE7001856B5 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		5DF3595826FF724E0041A6C3 /* RootOnboardingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootOnboardingView.swift; sourceTree = "<group>"; };
 		5DF3595C26FF72570041A6C3 /* OnboardingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -1037,6 +1039,7 @@
 				5DDEFDCE26D2ADC2001B0F76 /* EnumCodable.swift */,
 				5D5D4C4326D50EB100A7C61A /* ModelWithDate.swift */,
 				5D564E472704F66700190CF4 /* StringRepresentable.swift */,
+				5DECB57D2707849E0017748C /* WithVariableShoeSize.swift */,
 			);
 			path = Types;
 			sourceTree = "<group>";
@@ -1372,6 +1375,7 @@
 				5D631257269669A600876D99 /* DefaultDataController.swift in Sources */,
 				5D6960AD2587149A0058BABE /* ReduxStore.swift in Sources */,
 				5D9D520A26AF17C900AB1F30 /* ItemImageViewWithNavBar.swift in Sources */,
+				5DECB57E2707849F0017748C /* WithVariableShoeSize.swift in Sources */,
 				5D564E3F2703592E00190CF4 /* SpreadsheetImportAdminView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

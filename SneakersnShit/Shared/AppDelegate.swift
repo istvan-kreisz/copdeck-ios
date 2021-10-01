@@ -22,6 +22,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         StoreReviewHelper.incrementAppOpenedCount()
         setupNuke()
         setupUI()
+        
+        print(ALLSHOESIZESUS)
+        print(ALLSHOESIZESUS)
+        print(ALLSHOESIZESUS)
         return true
     }
 

@@ -20,7 +20,11 @@ let ALLSTORES: [Store] = zip(StoreId.allCases, StoreName.allCases).map { (id: St
 let ALLSTORESWITHOTHER: [GenericStore] = ALLSTORES
     .map { (store: Store) in GenericStore(id: store.id.rawValue, name: store.name.rawValue) } + [GenericStore(id: "other", name: "Other")]
 
-let ALLSHOESIZES = (2 ... 40).reversed().map { "US \((Double($0) * 0.5).rounded(toPlaces: $0 % 2 == 1 ? 1 : 0))" }
+let ALLSHOESIZESUS = (3 ... 36)
+    .reversed()
+    .filter { $0 > 26 ? $0.isMultiple(of: 2) : true }
+    .map { "US \((Double($0) * 0.5).rounded(toPlaces: $0 % 2 == 1 ? 1 : 0))" }
+var ALLSHOESIZES: [String] { ALLSHOESIZESUS.map { convertSize(from: .US, to: AppStore.default.state.settings.shoeSize, size: $0) }.uniqued() }
 
 struct GenericStore: Codable, Equatable, Identifiable {
     let id: String
@@ -100,7 +104,7 @@ struct Item: Codable, Equatable, Identifiable, Hashable, ModelWithDate {
         let currencyCode: Currency.CurrencyCode?
 
         struct StoreInventoryItem: Codable, Equatable, Identifiable, Hashable {
-            let size: String
+            var usSize: String
             let lowestAsk: Double?
             let lowestAskWithSellerFees: Double?
             let lowestAskWithBuyerFees: Double?
@@ -312,7 +316,7 @@ extension Item.StorePrice.StoreInventoryItem {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        size = try container.decode(String.self, forKey: .size)
+        usSize = try container.decode(String.self, forKey: .size)
         lowestAsk = try container.decodeIfPresent(Double.self, forKey: .lowestAsk)
         lowestAskWithSellerFees = try container.decodeIfPresent(Double.self, forKey: .lowestAskWithSellerFees)
         lowestAskWithBuyerFees = try container.decodeIfPresent(Double.self, forKey: .lowestAskWithBuyerFees)
@@ -325,10 +329,12 @@ extension Item.StorePrice.StoreInventoryItem {
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(size, forKey: .size)
+        try container.encode(usSize, forKey: .size)
         try container.encode(lowestAsk, forKey: .lowestAsk)
         try container.encode(highestBid, forKey: .highestBid)
         try container.encode(shoeCondition, forKey: .shoeCondition)
         try container.encode(boxCondition, forKey: .boxCondition)
     }
 }
+
+extension Item.StorePrice.StoreInventoryItem: WithVariableShoeSize {}

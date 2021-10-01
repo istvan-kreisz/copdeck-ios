@@ -24,7 +24,7 @@ struct SettingsView: View {
 
     @EnvironmentObject var store: DerivedGlobalStore
     @State private var settings: CopDeckSettings
-    
+
     @State private var error: (String, String)? = nil
 
     // general
@@ -33,6 +33,7 @@ struct SettingsView: View {
     @State private var country: String
     @State private var bestPricePriceType: String
     @State private var bestPriceFeeType: String
+    @State private var shoeSizeRegion: String
     @State private var preferredShoeSize: String
 
     // stockx
@@ -56,6 +57,7 @@ struct SettingsView: View {
         self._country = State(initialValue: settings.feeCalculation.country.name)
         self._bestPricePriceType = State(initialValue: settings.bestPricePriceType.rawValue.capitalized)
         self._bestPriceFeeType = State(initialValue: settings.bestPriceFeeType.rawValue.capitalized)
+        self._shoeSizeRegion = State(initialValue: settings.shoeSize.rawValue)
         self._preferredShoeSize = State(initialValue: settings.preferredShoeSize ?? "")
 
         // stockx
@@ -100,6 +102,13 @@ struct SettingsView: View {
         if let feeType = FeeType.allCases.first(where: { $0.rawValue == bestPriceFeeType }),
            settings.bestPriceFeeType != feeType {
             settings.bestPriceFeeType = feeType
+        }
+    }
+
+    private func selectShoeSizeRegion() {
+        if let shoeSize = ShoeSize.allCases.first(where: { $0.rawValue == shoeSizeRegion }),
+           settings.shoeSize != shoeSize {
+            settings.shoeSize = shoeSize
         }
     }
 
@@ -233,6 +242,13 @@ struct SettingsView: View {
                                          options: FeeType.allCases.map { (feeType: FeeType) in feeType.rawValue.capitalized },
                                          selectedOption: $bestPriceFeeType,
                                          buttonTapped: selectBestPriceFeeType)
+
+                        ListSelectorMenu(title: "Shoe size region",
+                                         selectorScreenTitle: "Shoe size region",
+                                         buttonTitle: "Select region",
+                                         options: ShoeSize.allCases.map(\.rawValue),
+                                         selectedOption: $shoeSizeRegion,
+                                         buttonTapped: selectShoeSizeRegion)
 
                         ListSelectorMenu(title: "Preferred shoe size",
                                          selectorScreenTitle: "Preferred shoe size",

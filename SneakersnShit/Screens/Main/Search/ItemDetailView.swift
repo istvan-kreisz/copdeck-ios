@@ -227,7 +227,7 @@ struct ItemDetailView: View {
 
                                 VStack(alignment: .leading, spacing: 20) {
                                     HStack(spacing: 5) {
-                                        Text("Size (US)")
+                                        Text("Size (\(AppStore.default.state.settings.shoeSize.rawValue))")
                                             .font(.semiBold(size: 15))
                                             .foregroundColor(.customText2)
                                             .frame(maxWidth: 50)
