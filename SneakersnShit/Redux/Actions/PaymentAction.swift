@@ -9,7 +9,7 @@ import Foundation
 
 
 enum PaymentAction {
-    case applyPromoCode(_ code: String, completion: (Result<Void, Error>) -> Void)
+    case applyPromoCode(_ code: String, completion: ((Result<Void, AppError>) -> Void)?)
 }
 
 extension PaymentAction: StringRepresentable {}

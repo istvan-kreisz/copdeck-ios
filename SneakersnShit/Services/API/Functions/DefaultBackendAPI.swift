@@ -250,19 +250,10 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
             .store(in: &cancellables)
     }
 
-    func applyPromoCode(_ code: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    func applyPromoCode(_ code: String, completion: ((Result<Void, AppError>) -> Void)?) {
         struct Wrapper: Encodable {
             let promoCode: String
         }
-        callFirebaseFunction(functionName: "applyPromoCode", model: Wrapper(promoCode: code))
-            .sink { result in
-                switch result {
-                case let .failure(error):
-                    completion(.failure(error))
-                default:
-                    break
-                }
-            } receiveValue: { completion(.success(())) }
-            .store(in: &cancellables)
+        handlePublisherResult(publisher: callFirebaseFunction(functionName: "applyPromoCode", model: Wrapper(promoCode: code)), completion: completion)
     }
 }

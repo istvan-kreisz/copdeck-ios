@@ -166,15 +166,46 @@ func appReducer(state: inout AppState,
         case let .getAffiliateList(completion):
             environment.dataController.getAffiliateList(completion: completion)
         }
-    case let .authentication(action: action):
-        return environment.authenticator.handle(action)
+    case let .authentication(action):
+        let result: AnyPublisher<String, Error>
+        var refCode: String? = nil
+        switch action {
+        case .restoreState:
+            result = environment.authenticator.restoreState()
+        case let .signUp(username, password, referralCode):
+            refCode = referralCode
+            result = environment.authenticator.signUp(email: username, password: password)
+        case let .signIn(username, password):
+            result = environment.authenticator.signIn(email: username, password: password)
+        case let .signInWithApple(referralCode):
+            refCode = referralCode
+            result = environment.authenticator.signInWithApple()
+        case let .signInWithGoogle(referralCode):
+            refCode = referralCode
+            result = environment.authenticator.signInWithGoogle()
+        case let .signInWithFacebook(referralCode):
+            refCode = referralCode
+            result = environment.authenticator.signInWithFacebook()
+        case let .passwordReset(email):
+            result = environment.authenticator.resetPassword(email: email)
+        case .signOut:
+            result = environment.authenticator.signOut()
+        }
+        return result
             .flatMap { userId -> AnyPublisher<AppAction, Never> in
                 if userId.isEmpty {
                     return Just(AppAction.main(action: .signOut)).eraseToAnyPublisher()
                 } else {
                     return environment.dataController.getUser(withId: userId)
-                        .flatMap {
-                            Just(AppAction.main(action: .setUser(user: $0)))
+                        .flatMap { (user: User) -> AnyPublisher<AppAction, Never> in
+                            if let referralCode = refCode, user.membershipInfo?.promoCodeUsed == nil {
+                                return Just(AppAction.main(action: .setUser(user: user)))
+                                    .merge(with: Just(AppAction.paymentAction(action: .applyPromoCode(referralCode, completion: nil))))
+                                    .eraseToAnyPublisher()
+
+                            } else {
+                                return Just(AppAction.main(action: .setUser(user: user))).eraseToAnyPublisher()
+                            }
                         }
                         .tryCatch {
                             Just(AppAction.main(action: .signOut)).merge(with: Just(AppAction.error(action: .setError(error: AppError(error: $0)))))

@@ -16,6 +16,10 @@ struct SignUpView: View {
     @State var password1 = ""
     @State var password2 = ""
     @State var referralCode = ""
+    
+    private var refCode: String? {
+        referralCode.isEmpty ? nil : referralCode
+    }
 
     @State var errorMessage: String?
     @State var resetPasswordPresented = false
@@ -38,7 +42,7 @@ struct SignUpView: View {
                     .font(.regular(size: 16))
                     .foregroundColor(.customText2)
                     .leftAligned()
-                SocialLoginView()
+                SocialLoginView(referralCode: $referralCode)
                     .padding(.top, 17)
                 Spacer()
 
@@ -124,11 +128,11 @@ struct SignUpView: View {
             return
         }
         errorMessage = nil
-        store.send(.authentication(action: .signUp(userName: email, password: password1)))
+        store.send(.authentication(action: .signUp(userName: email, password: password1, referralCode: refCode)))
     }
 
     private func resetPassword(email: String) {
-        store.send(.authentication(action: .passwordReset(username: email)))
+        store.send(.authentication(action: .passwordReset(email: email)))
     }
 }
 

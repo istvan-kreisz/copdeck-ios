@@ -61,7 +61,7 @@ protocol BackendAPI {
     func finishImport(importedUserId: String, completion: @escaping (Result<User, Error>) -> Void)
     func getImportedInventoryItems(importedUserId: String, completion: @escaping (Result<[InventoryItem], Error>) -> Void)
     // membership
-    func applyPromoCode(_ code: String, completion: @escaping (Result<Void, Error>) -> Void)
+    func applyPromoCode(_ code: String, completion: ((Result<Void, AppError>) -> Void)?)
 }
 
 protocol DatabaseManager {

@@ -12,6 +12,14 @@ import Combine
 import FirebaseAuth
 
 protocol Authenticator {
-    func handle(_ authAction: AuthenticationAction) -> AnyPublisher<String, Error>
     static var user: FirebaseAuth.User? { get }
+    
+    func restoreState() -> AnyPublisher<String, Error>
+    func signUp(email: String, password: String) -> AnyPublisher<String, Error>
+    func signIn(email: String, password: String) -> AnyPublisher<String, Error>
+    func signInWithApple() -> AnyPublisher<String, Error>
+    func signInWithGoogle() -> AnyPublisher<String, Error>
+    func signInWithFacebook() -> AnyPublisher<String, Error>
+    func resetPassword(email: String) -> AnyPublisher<String, Error>
+    func signOut() ->  AnyPublisher<String, Error>
 }

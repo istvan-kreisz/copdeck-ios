@@ -377,7 +377,7 @@ class DefaultDataController: DataController {
         databaseManager.getAffiliateList(completion: completion)
     }
     
-    func applyPromoCode(_ code: String, completion: @escaping (Result<Void, Error>) -> Void) {
+    func applyPromoCode(_ code: String, completion: ((Result<Void, AppError>) -> Void)?) {
         backendAPI.applyPromoCode(code, completion: completion)
     }
 }

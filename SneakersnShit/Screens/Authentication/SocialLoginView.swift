@@ -9,6 +9,11 @@ import SwiftUI
 
 struct SocialLoginView: View {
     @EnvironmentObject var store: AppStore
+    @Binding var referralCode: String
+    
+    private var refCode: String? {
+        referralCode.isEmpty ? nil : referralCode
+    }
 
     var body: some View {
         HStack(spacing: 10) {
@@ -16,19 +21,19 @@ struct SocialLoginView: View {
                          text: "Sign in with Apple",
                          imageColor: .customWhite,
                          backgroundColor: .customBlack,
-                         action: { store.send(.authentication(action: .signInWithApple)) },
+                         action: { store.send(.authentication(action: .signInWithApple(referralCode: refCode))) },
                          initBlock: {})
             SignInButton(imageName: "google",
                          text: "Sign in with Google",
                          imageColor: nil,
                          backgroundColor: .customWhite,
-                         action: { store.send(.authentication(action: .signInWithGoogle)) },
+                         action: { store.send(.authentication(action: .signInWithGoogle(referralCode: refCode))) },
                          initBlock: {})
             SignInButton(imageName: "facebook",
                          text: "Sign in with Facebook",
                          imageColor: nil,
                          backgroundColor: Color(r: 66, g: 103, b: 178),
-                         action: { store.send(.authentication(action: .signInWithFacebook)) },
+                         action: { store.send(.authentication(action: .signInWithFacebook(referralCode: refCode))) },
                          initBlock: {})
             Spacer()
         }

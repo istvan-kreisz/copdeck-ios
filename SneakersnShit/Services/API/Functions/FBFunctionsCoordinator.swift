@@ -34,16 +34,20 @@ class FBFunctionsCoordinator {
         self.userId = nil
     }
 
-    func handlePublisherResult<Model>(publisher: AnyPublisher<Model, AppError>) {
+    func handlePublisherResult<Model>(publisher: AnyPublisher<Model, AppError>, completion: ((Result<Model, AppError>) -> Void)? = nil) {
         publisher
             .sink { [weak self] result in
                 switch result {
                 case let .failure(error):
-                    self?.errorsSubject.send(error)
+                    if let completion = completion {
+                        completion(.failure(error))
+                    } else {
+                        self?.errorsSubject.send(error)
+                    }
                 case .finished:
                     break
                 }
-            } receiveValue: { _ in }
+            } receiveValue: { value in completion?(.success(value)) }
             .store(in: &cancellables)
     }
 

@@ -43,7 +43,7 @@ struct LoginView: View {
                             .foregroundColor(.customText2)
                             .leftAligned()
                     }
-                    SocialLoginView()
+                    SocialLoginView(referralCode: .constant(""))
                         .padding(.top, 17)
                     
                     Spacer()
@@ -114,7 +114,7 @@ struct LoginView: View {
     }
 
     private func resetPassword(email: String) {
-        store.send(.authentication(action: .passwordReset(username: email)))
+        store.send(.authentication(action: .passwordReset(email: email)))
     }
 }
 

@@ -18,7 +18,7 @@ import AuthenticationServices
 
 enum AuthError: LocalizedError {
     case userNotFound
-    
+
     var errorDescription: String? {
         "User not found"
     }
@@ -33,54 +33,43 @@ class DefaultAuthenticator: NSObject, Authenticator {
     fileprivate var currentNonce: String?
     private let loginButton = FBLoginButton()
 
-    func handle(_ authAction: AuthenticationAction) -> AnyPublisher<String, Error> {
+    private func withPublisher(block: () -> Void) -> AnyPublisher<String, Error> {
         userChangesSubject.send(completion: .finished)
         userChangesSubject = PassthroughSubject<String, Error>()
-        switch authAction {
-        case .restoreState:
-            restoreState()
-        case .signUp(userName: let username, password: let password):
-            signUp(email: username, password: password)
-        case .signIn(userName: let username, password: let password):
-            signIn(email: username, password: password)
-        case .signInWithApple:
-            signInWithApple()
-        case .signInWithGoogle:
-            signInWithGoogle()
-        case .signInWithFacebook:
-            signInWithFacebook()
-        case .passwordReset(username: let email):
-            resetPassword(email: email)
-        case .signOut:
-            signOut()
-        }
-        return userChangesSubject.eraseToAnyPublisher()
+        block()
+        return userChangesSubject.prefix(1).eraseToAnyPublisher()
     }
 
-    #warning("refactor")
-    private func restoreState() {
-        if let user = Self.auth.currentUser {
-            sendResultWithDelay(user.uid)
-        } else if GIDSignIn.sharedInstance.hasPreviousSignIn() {
-            GIDSignIn.sharedInstance.restorePreviousSignIn { [weak self] user, error in
-                self?.handleGoogleSignInResult(user: user, error: error, isRestore: true)
+    func restoreState() -> AnyPublisher<String, Error> {
+        return withPublisher { [weak self] in
+            guard let self = self else { return }
+            if let user = Self.auth.currentUser {
+                self.sendResultWithDelay(user.uid)
+            } else if GIDSignIn.sharedInstance.hasPreviousSignIn() {
+                GIDSignIn.sharedInstance.restorePreviousSignIn { [weak self] user, error in
+                    self?.handleGoogleSignInResult(user: user, error: error, isRestore: true)
+                }
+            } else if let fbAccessToken = AccessToken.current?.tokenString {
+                self.handleFacebookSignInResult(accessToken: fbAccessToken)
+            } else {
+                self.signOutUser()
             }
-        } else if let fbAccessToken = AccessToken.current?.tokenString {
-            handleFacebookSignInResult(accessToken: fbAccessToken)
-        } else {
-            signOut()
         }
     }
 
-    private func signUp(email: String, password: String) {
-        Self.auth.createUser(withEmail: email, password: password) { [weak self] authResult, error in
-            self?.handleAuthResponse(result: authResult, error: error)
+    func signUp(email: String, password: String) -> AnyPublisher<String, Error> {
+        return withPublisher { [weak self] in
+            Self.auth.createUser(withEmail: email, password: password) { [weak self] authResult, error in
+                self?.handleAuthResponse(result: authResult, error: error)
+            }
         }
     }
 
-    private func signIn(email: String, password: String) {
-        Self.auth.signIn(withEmail: email, password: password) { [weak self] authResult, error in
-            self?.handleAuthResponse(result: authResult, error: error)
+    func signIn(email: String, password: String) -> AnyPublisher<String, Error> {
+        return withPublisher { [weak self] in
+            Self.auth.signIn(withEmail: email, password: password) { [weak self] authResult, error in
+                self?.handleAuthResponse(result: authResult, error: error)
+            }
         }
     }
 
@@ -96,18 +85,22 @@ class DefaultAuthenticator: NSObject, Authenticator {
         }
     }
 
-    private func signInWithFacebook() {
-        loginButton.delegate = self
-        loginButton.permissions = ["email"]
-        loginButton.sendActions(for: .touchUpInside)
+    func signInWithFacebook() -> AnyPublisher<String, Error> {
+        return withPublisher { [weak self] in
+            self?.loginButton.delegate = self
+            self?.loginButton.permissions = ["email"]
+            self?.loginButton.sendActions(for: .touchUpInside)
+        }
     }
 
-    private func signInWithGoogle() {
-        if let viewController = UIApplication.shared.windows.first?.rootViewController {
-            guard let clientID = FirebaseApp.app()?.options.clientID else { return }
-            let config = GIDConfiguration(clientID: clientID)
-            GIDSignIn.sharedInstance.signIn(with: config, presenting: viewController) { [weak self] user, error in
-                self?.handleGoogleSignInResult(user: user, error: error, isRestore: false)
+    func signInWithGoogle() -> AnyPublisher<String, Error> {
+        return withPublisher { [weak self] in
+            if let viewController = UIApplication.shared.windows.first?.rootViewController {
+                guard let clientID = FirebaseApp.app()?.options.clientID else { return }
+                let config = GIDConfiguration(clientID: clientID)
+                GIDSignIn.sharedInstance.signIn(with: config, presenting: viewController) { [weak self] user, error in
+                    self?.handleGoogleSignInResult(user: user, error: error, isRestore: false)
+                }
             }
         }
     }
@@ -119,7 +112,6 @@ class DefaultAuthenticator: NSObject, Authenticator {
             } else {
                 userChangesSubject.send(completion: .failure(error))
             }
-            return
         }
 
         guard let authentication = user?.authentication, let idToken = authentication.idToken
@@ -128,7 +120,13 @@ class DefaultAuthenticator: NSObject, Authenticator {
         signIn(credential: credential)
     }
 
-    private func signOut() {
+    func signOut() -> AnyPublisher<String, Error> {
+        return withPublisher { [weak self] in
+            self?.signOutUser()
+        }
+    }
+    
+    private func signOutUser() {
         do {
             var signoutGoogle = false
             var signoutFacebook = false
@@ -157,12 +155,14 @@ class DefaultAuthenticator: NSObject, Authenticator {
         }
     }
 
-    private func resetPassword(email: String) {
-        Self.auth.sendPasswordReset(withEmail: email) { [weak self] error in
-            if let error = error {
-                self?.userChangesSubject.send(completion: .failure(error))
-            } else {
-                self?.userChangesSubject.send(completion: .finished)
+    func resetPassword(email: String) -> AnyPublisher<String, Error> {
+        return withPublisher { [weak self] in
+            Self.auth.sendPasswordReset(withEmail: email) { [weak self] error in
+                if let error = error {
+                    self?.userChangesSubject.send(completion: .failure(error))
+                } else {
+                    self?.userChangesSubject.send(completion: .finished)
+                }
             }
         }
     }
@@ -202,18 +202,20 @@ extension DefaultAuthenticator: LoginButtonDelegate {
 // MARK: - Sign in with Apple
 
 extension DefaultAuthenticator {
-    func signInWithApple() {
-        let nonce = randomNonceString()
-        currentNonce = nonce
-        let appleIDProvider = ASAuthorizationAppleIDProvider()
-        let request = appleIDProvider.createRequest()
-        request.requestedScopes = [.fullName, .email]
-        request.nonce = sha256(nonce)
+    func signInWithApple() -> AnyPublisher<String, Error> {
+        return withPublisher { [weak self] in
+            let nonce = randomNonceString()
+            self?.currentNonce = nonce
+            let appleIDProvider = ASAuthorizationAppleIDProvider()
+            let request = appleIDProvider.createRequest()
+            request.requestedScopes = [.fullName, .email]
+            request.nonce = sha256(nonce)
 
-        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
-        authorizationController.delegate = self
-        authorizationController.presentationContextProvider = self
-        authorizationController.performRequests()
+            let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+            authorizationController.delegate = self
+            authorizationController.presentationContextProvider = self
+            authorizationController.performRequests()
+        }
     }
 
     private func sha256(_ input: String) -> String {

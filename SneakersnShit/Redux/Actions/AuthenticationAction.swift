@@ -9,13 +9,13 @@ import Foundation
 
 enum AuthenticationAction {
     case restoreState
-    case signUp(userName: String, password: String)
+    case signUp(userName: String, password: String, referralCode: String?)
     case signIn(userName: String, password: String)
-    case signInWithApple
-    case signInWithGoogle
-    case signInWithFacebook
+    case signInWithApple(referralCode: String?)
+    case signInWithGoogle(referralCode: String?)
+    case signInWithFacebook(referralCode: String?)
     case signOut
-    case passwordReset(username: String)
+    case passwordReset(email: String)
 }
 
 extension AuthenticationAction: StringRepresentable {}
