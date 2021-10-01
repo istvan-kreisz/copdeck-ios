@@ -88,7 +88,7 @@ class DefaultAuthenticator: NSObject, Authenticator {
     func signInWithFacebook() -> AnyPublisher<String, Error> {
         return withPublisher { [weak self] in
             self?.loginButton.delegate = self
-            self?.loginButton.permissions = ["email"]
+            self?.loginButton.permissions = ["email", "user_link"]
             self?.loginButton.sendActions(for: .touchUpInside)
         }
     }

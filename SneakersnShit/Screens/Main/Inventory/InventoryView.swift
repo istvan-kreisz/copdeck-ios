@@ -182,6 +182,14 @@ struct InventoryView: View {
                 }
                 Color.clear.padding(.bottom, Styles.tabScreenBottomPadding)
                     .listRow()
+                GeometryReader { proxy in
+                    if proxy.frame(in: .global).minY < UIScreen.screenHeight {
+                        Color.customBackground.frame(width: UIScreen.screenWidth + 30, height: UIScreen.screenHeight - proxy.frame(in: .global).minY)
+                            .listRow()
+                    }
+                }
+                .offset(x: -30)
+                .listRow()
             }
             .withFloatingButton(button: EditInventoryTray(actions: actionsTrayActions)
                 .padding(.bottom, UIApplication.shared.safeAreaInsets().bottom)
