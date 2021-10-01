@@ -19,20 +19,20 @@ struct PromoCodeView: View {
         let presentErrorAlert = Binding<Bool>(get: { error != nil }, set: { new in error = new ? error : nil })
 
         VStack(spacing: 8) {
-            NavigationBar(title: "Promo code", isBackButtonVisible: true, titleFontSize: .large, style: .dark) {
+            NavigationBar(title: "Referral code", isBackButtonVisible: true, titleFontSize: .large, style: .dark) {
                 presentationMode.wrappedValue.dismiss()
             }
             .withDefaultPadding(padding: .top)
             VStack(alignment: .leading, spacing: 12) {
-                Text("1. Use your promo code to get a discount on subscription fees.")
+                Text("1. Use a referral code to get a discount on subscription fees.")
                     .foregroundColor(.customText2)
                     .font(.regular(size: 18))
                     .multilineTextAlignment(.leading)
-                Text("2. Paste your promo code in the field below and tap \"Send\".")
+                Text("2. Paste your referral code in the field below and tap \"Send\".")
                     .foregroundColor(.customText2)
                     .font(.regular(size: 18))
                     .multilineTextAlignment(.leading)
-                Text("3. You can only use one promo code per account and you can't change it once you've added one.")
+                Text("3. You can only use one referral code per account and you can't change it once you've added one.")
                     .foregroundColor(.customText2)
                     .font(.regular(size: 18))
                     .multilineTextAlignment(.leading)
@@ -45,7 +45,7 @@ struct PromoCodeView: View {
 
                 if let promoCode = store.globalState.user?.membershipInfo?.promoCodeUsed {
                     HStack(spacing: 5) {
-                        Text("Your promo code:")
+                        Text("Your referral code:")
                             .foregroundColor(.customText2)
                             .font(.regular(size: 18))
                         Text(promoCode)
@@ -56,11 +56,11 @@ struct PromoCodeView: View {
                     .padding(.top, 5)
                 } else {
                     HStack(spacing: 5) {
-                        TextFieldRounded(placeHolder: "Enter promo code", style: .gray, text: $promoCode)
+                        TextFieldRounded(placeHolder: "Enter referral code", style: .gray, text: $promoCode)
                             .layoutPriority(1)
                         Button {
                             if let promoCode = store.globalState.user?.membershipInfo?.promoCodeUsed {
-                                self.error = ("Error", "You've already applied the promo code: \(promoCode).")
+                                self.error = ("Error", "Your account already has the \"\(promoCode)\" referral code associated with it.")
                             } else {
                                 applyPromoCode(promoCode)
                             }

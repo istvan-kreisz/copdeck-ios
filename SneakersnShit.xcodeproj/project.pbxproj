@@ -179,6 +179,7 @@
 		5DE596F626C9355C0024F7D5 /* ActionConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE596F526C9355C0024F7D5 /* ActionConfig.swift */; };
 		5DEBC088269B24BA000EEADC /* ViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEBC087269B24BA000EEADC /* ViewRouter.swift */; };
 		5DEBC08A269B3DE8000EEADC /* Double+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEBC089269B3DE8000EEADC /* Double+Extensions.swift */; };
+		5DECB57C27068AA50017748C /* SocialLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DECB57B27068AA50017748C /* SocialLoginView.swift */; };
 		5DF03CAB25DA1CE7001856B5 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03CAA25DA1CE7001856B5 /* ImageView.swift */; };
 		5DF3595926FF724E0041A6C3 /* RootOnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF3595826FF724E0041A6C3 /* RootOnboardingView.swift */; };
 		5DF3595F26FF72570041A6C3 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF3595C26FF72570041A6C3 /* OnboardingView.swift */; };
@@ -360,6 +361,7 @@
 		5DE596F526C9355C0024F7D5 /* ActionConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionConfig.swift; sourceTree = "<group>"; };
 		5DEBC087269B24BA000EEADC /* ViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewRouter.swift; sourceTree = "<group>"; };
 		5DEBC089269B3DE8000EEADC /* Double+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extensions.swift"; sourceTree = "<group>"; };
+		5DECB57B27068AA50017748C /* SocialLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialLoginView.swift; sourceTree = "<group>"; };
 		5DF03CAA25DA1CE7001856B5 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		5DF3595826FF724E0041A6C3 /* RootOnboardingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootOnboardingView.swift; sourceTree = "<group>"; };
 		5DF3595C26FF72570041A6C3 /* OnboardingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -533,6 +535,7 @@
 				5D424D4625C509AD0008D6F4 /* SignUpView.swift */,
 				5D424D4A25C509D20008D6F4 /* PasswordResetView.swift */,
 				5D424CAB25C4FDCC0008D6F4 /* SignInButton.swift */,
+				5DECB57B27068AA50017748C /* SocialLoginView.swift */,
 			);
 			path = Authentication;
 			sourceTree = "<group>";
@@ -1241,6 +1244,7 @@
 				5D56B7B2270097EC001357E0 /* DeleteButton.swift in Sources */,
 				5DE4F21E26E052570087077A /* OwnerCardView.swift in Sources */,
 				5D5D4C4426D50EB100A7C61A /* ModelWithDate.swift in Sources */,
+				5DECB57C27068AA50017748C /* SocialLoginView.swift in Sources */,
 				5D30BA42269C3EAD0062F6AB /* CustomSpinner.swift in Sources */,
 				5D488E8925C8D54E00624FEF /* AppError.swift in Sources */,
 				5D5D4C4726D5F20900A7C61A /* ImagePickerView.swift in Sources */,

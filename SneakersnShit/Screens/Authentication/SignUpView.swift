@@ -15,6 +15,7 @@ struct SignUpView: View {
     @State var email = ""
     @State var password1 = ""
     @State var password2 = ""
+    @State var referralCode = ""
 
     @State var errorMessage: String?
     @State var resetPasswordPresented = false
@@ -37,6 +38,8 @@ struct SignUpView: View {
                     .font(.regular(size: 16))
                     .foregroundColor(.customText2)
                     .leftAligned()
+                SocialLoginView()
+                    .padding(.top, 17)
                 Spacer()
 
                 Group {
@@ -63,6 +66,14 @@ struct SignUpView: View {
                                         icon: Image("lock"),
                                         keyboardType: .default,
                                         isSecureField: true,
+                                        onFinishedEditing: signUp)
+                    TextFieldUnderlined(text: $referralCode,
+                                        placeHolder: "Referral code (optional)",
+                                        color: .customText1,
+                                        dismissKeyboardOnReturn: false,
+                                        icon: Image("profiles"),
+                                        keyboardType: .default,
+                                        isSecureField: false,
                                         onFinishedEditing: signUp)
                 }
 

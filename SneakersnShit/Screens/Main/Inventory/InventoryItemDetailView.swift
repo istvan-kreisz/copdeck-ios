@@ -10,6 +10,7 @@ import SwiftUI
 struct InventoryItemDetailView: View {
     @EnvironmentObject var store: AppStore
     @State var inventoryItem: InventoryItem
+    let importSummaryMode: Bool
     var shouldDismiss: () -> Void
 
     @State var name: String
@@ -48,8 +49,9 @@ struct InventoryItemDetailView: View {
         }
     }
 
-    init(inventoryItem: InventoryItem, shouldDismiss: @escaping () -> Void) {
+    init(inventoryItem: InventoryItem, importSummaryMode: Bool = false, shouldDismiss: @escaping () -> Void) {
         self._inventoryItem = State(initialValue: inventoryItem)
+        self.importSummaryMode = importSummaryMode
         self.shouldDismiss = shouldDismiss
 
         self._name = State(initialValue: inventoryItem.name)
@@ -82,7 +84,7 @@ struct InventoryItemDetailView: View {
                             .foregroundColor(.customText1)
                             .padding(.bottom, 8)
 
-                        if inventoryItem.itemId != nil {
+                        if inventoryItem.itemId != nil && !importSummaryMode {
                             AccessoryButton(title: "View Prices",
                                             color: .customAccent1,
                                             textColor: .customText1,
@@ -181,30 +183,32 @@ struct InventoryItemDetailView: View {
                                          text: $notes)
                             .padding(.top, 11)
 
-                        HStack(spacing: 10) {
-                            RoundedButton<EmptyView>(text: "Delete item",
-                                                     width: 180,
-                                                     height: 60,
-                                                     maxSize: CGSize(width: (UIScreen.screenWidth - Styles.horizontalMargin * 2 - 10) / 2,
-                                                                     height: UIScreen.isSmallScreen ? 50 : 60),
-                                                     fontSize: UIScreen.isSmallScreen ? 14 : 16,
-                                                     color: .clear,
-                                                     borderColor: .customRed,
-                                                     textColor: .customRed,
-                                                     accessoryView: nil,
-                                                     tapped: { deleteInventoryItem() })
+                        if !importSummaryMode {
+                            HStack(spacing: 10) {
+                                RoundedButton<EmptyView>(text: "Delete item",
+                                                         width: 180,
+                                                         height: 60,
+                                                         maxSize: CGSize(width: (UIScreen.screenWidth - Styles.horizontalMargin * 2 - 10) / 2,
+                                                                         height: UIScreen.isSmallScreen ? 50 : 60),
+                                                         fontSize: UIScreen.isSmallScreen ? 14 : 16,
+                                                         color: .clear,
+                                                         borderColor: .customRed,
+                                                         textColor: .customRed,
+                                                         accessoryView: nil,
+                                                         tapped: { deleteInventoryItem() })
 
-                            RoundedButton<EmptyView>(text: "Save changes",
-                                                     width: 180,
-                                                     height: 60,
-                                                     maxSize: CGSize(width: (UIScreen.screenWidth - Styles.horizontalMargin * 2 - 10) / 2,
-                                                                     height: UIScreen.isSmallScreen ? 50 : 60),
-                                                     fontSize: UIScreen.isSmallScreen ? 14 : 16,
-                                                     color: .customBlack,
-                                                     accessoryView: nil,
-                                                     tapped: { updateInventoryItem() })
+                                RoundedButton<EmptyView>(text: "Save changes",
+                                                         width: 180,
+                                                         height: 60,
+                                                         maxSize: CGSize(width: (UIScreen.screenWidth - Styles.horizontalMargin * 2 - 10) / 2,
+                                                                         height: UIScreen.isSmallScreen ? 50 : 60),
+                                                         fontSize: UIScreen.isSmallScreen ? 14 : 16,
+                                                         color: .customBlack,
+                                                         accessoryView: nil,
+                                                         tapped: { updateInventoryItem() })
+                            }
+                            .padding(.top, 40)
                         }
-                        .padding(.top, 40)
                     }
                     .padding(.horizontal, Styles.horizontalMargin)
                     .padding(.top, 14)

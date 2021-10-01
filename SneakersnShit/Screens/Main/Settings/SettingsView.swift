@@ -321,7 +321,7 @@ struct SettingsView: View {
                     if DebugSettings.shared.isAdmin {
                         Section(header: Text("Membership")) {
                             NavigationLink(destination: PromoCodeView()) {
-                                Text("Apply promo code")
+                                Text("Apply referral code")
                                     .leftAligned()
                             }
                         }
