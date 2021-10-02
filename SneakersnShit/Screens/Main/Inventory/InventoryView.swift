@@ -10,7 +10,7 @@ import Combine
 
 struct InventoryView: View {
     enum Sheet {
-        case settings, filters, imagePicker
+        case settings, filters, imagePicker, sellerStats
     }
 
     @EnvironmentObject var store: AppStore
@@ -107,6 +107,7 @@ struct InventoryView: View {
         let showSheet = Binding<Bool>(get: { presentedSheet != nil }, set: { show in presentedSheet = show ? presentedSheet : nil })
         let settingsPresented = Binding<Bool>(get: { presentedSheet == .settings }, set: { show in presentedSheet = show ? .settings : nil })
         let showImagePicker = Binding<Bool>(get: { presentedSheet == .imagePicker }, set: { show in presentedSheet = show ? .imagePicker : nil })
+        let showSellerStats = Binding<Bool>(get: { presentedSheet == .sellerStats }, set: { show in presentedSheet = show ? .sellerStats : nil })
         let showFilters = Binding<Bool>(get: { presentedSheet == .filters }, set: { show in presentedSheet = show ? .filters : nil })
         let selectedInventoryItemBinding = Binding<InventoryItem?>(get: { selectedInventoryItem },
                                                                    set: { inventoryItem in
@@ -137,6 +138,7 @@ struct InventoryView: View {
             VerticalListView(bottomPadding: 0, spacing: 0, listRowStyling: .none) {
                 InventoryHeaderView(settingsPresented: settingsPresented,
                                     showImagePicker: showImagePicker,
+                                    showSellerStats: showSellerStats,
                                     profileImageURL: $store.state.profileImageURL,
                                     username: $username,
                                     textBox1: .init(title: "Inventory Value", text: inventoryValue?.asString ?? "-"),
@@ -240,6 +242,8 @@ struct InventoryView: View {
                     ImagePickerView(showPicker: showSheet, selectionLimit: 1) { (images: [UIImage]) in
                         images.first.map { self.store.send(.main(action: .uploadProfileImage(image: $0))) }
                     }
+                case .sellerStats:
+                    SellerStatsView(inventoryItems: inventoryItems)
                 case .none:
                     EmptyView()
                 }

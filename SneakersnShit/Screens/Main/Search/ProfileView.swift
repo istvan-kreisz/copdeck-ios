@@ -68,6 +68,7 @@ struct ProfileView: View {
 
                 InventoryHeaderView(settingsPresented: .constant(false),
                                     showImagePicker: .constant(false),
+                                    showSellerStats: .constant(false),
                                     profileImageURL: .constant(profileData.user.imageURL),
                                     username: .constant(profileData.user.name ?? ""),
                                     textBox1: .init(title: "Joined", text: joinedDate),

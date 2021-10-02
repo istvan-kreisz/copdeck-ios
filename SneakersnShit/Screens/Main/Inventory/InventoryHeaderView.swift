@@ -15,6 +15,7 @@ struct TextBox {
 struct InventoryHeaderView: View {
     @Binding var settingsPresented: Bool
     @Binding var showImagePicker: Bool
+    @Binding var showSellerStats: Bool
     @Binding var profileImageURL: URL?
     @Binding var username: String
 
@@ -51,6 +52,9 @@ struct InventoryHeaderView: View {
             VStack(spacing: 15) {
                 ProfileImageView(showImagePicker: $showImagePicker, profileImageURL: $profileImageURL, isEditable: isOwnProfile)
                 if let updateUsername = updateUsername {
+                    VStack(alignment: .center, spacing: 10) {
+                        
+                    
                     TextFieldUnderlined(text: $username,
                                         placeHolder: "username",
                                         color: .customText1,
@@ -63,6 +67,14 @@ struct InventoryHeaderView: View {
                                         addLeadingPadding: false,
                                         onFinishedEditing: updateUsername)
                         .frame(width: 150)
+                        AccessoryButton(title: "See seller stats",
+                                        color: .customAccent1,
+                                        textColor: .customText1,
+                                        width: 125,
+                                        imageName: "chevron.right",
+                                        buttonPosition: .right,
+                                        tapped: { showSellerStats = true })
+                    }
                 } else {
                     Text(username)
                         .foregroundColor(.customText1)

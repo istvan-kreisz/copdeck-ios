@@ -183,6 +183,7 @@
 		5DECB57E2707849F0017748C /* WithVariableShoeSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DECB57D2707849E0017748C /* WithVariableShoeSize.swift */; };
 		5DECB5802708C28C0017748C /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DECB57F2708C28B0017748C /* Date+Extensions.swift */; };
 		5DECB5822708DC4F0017748C /* MonthlyStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DECB5812708DC4F0017748C /* MonthlyStatistics.swift */; };
+		5DECB5842708E1A00017748C /* SellerStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DECB5832708E1A00017748C /* SellerStatsView.swift */; };
 		5DF03CAB25DA1CE7001856B5 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03CAA25DA1CE7001856B5 /* ImageView.swift */; };
 		5DF3595926FF724E0041A6C3 /* RootOnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF3595826FF724E0041A6C3 /* RootOnboardingView.swift */; };
 		5DF3595F26FF72570041A6C3 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF3595C26FF72570041A6C3 /* OnboardingView.swift */; };
@@ -368,6 +369,7 @@
 		5DECB57D2707849E0017748C /* WithVariableShoeSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithVariableShoeSize.swift; sourceTree = "<group>"; };
 		5DECB57F2708C28B0017748C /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		5DECB5812708DC4F0017748C /* MonthlyStatistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyStatistics.swift; sourceTree = "<group>"; };
+		5DECB5832708E1A00017748C /* SellerStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellerStatsView.swift; sourceTree = "<group>"; };
 		5DF03CAA25DA1CE7001856B5 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		5DF3595826FF724E0041A6C3 /* RootOnboardingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootOnboardingView.swift; sourceTree = "<group>"; };
 		5DF3595C26FF72570041A6C3 /* OnboardingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -588,6 +590,7 @@
 				5D8CD46526DA69BC00318CC1 /* StackDetailView.swift */,
 				5DD01E5326DD78480054F6F1 /* InventoryHeaderView.swift */,
 				5D41174426E9765C0048D122 /* StackShareSettingsView.swift */,
+				5DECB5832708E1A00017748C /* SellerStatsView.swift */,
 			);
 			path = Inventory;
 			sourceTree = "<group>";
@@ -1291,6 +1294,7 @@
 				5D19B0D426A6F0DC00A31F4E /* CopDeckApp.swift in Sources */,
 				5D6312552696696500876D99 /* JSLogger.swift in Sources */,
 				5D424CAE25C4FDCC0008D6F4 /* SignInButton.swift in Sources */,
+				5DECB5842708E1A00017748C /* SellerStatsView.swift in Sources */,
 				5DA5140426A614530067C4A2 /* FirebaseService.swift in Sources */,
 				5D6312222694797300876D99 /* Item.swift in Sources */,
 				5D424D2125C505450008D6F4 /* DimView.swift in Sources */,

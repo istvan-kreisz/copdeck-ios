@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MonthlyStatistics {
+struct MonthlyStatistics: Identifiable {
     let year: Int
     let month: Int
     var purchasPrices: [Double]
@@ -18,4 +18,6 @@ struct MonthlyStatistics {
     var revenue: Double { soldPrices.sum() }
     var cost: Double { purchasPrices.sum() }
     var profit: Double { revenue - cost }
+    
+    var id: String { "\(year) \(month)" }
 }
