@@ -17,6 +17,14 @@ struct DropDownMenu: View {
     @Binding var selectedItem: String
     var options: [String]
     var style: Style = .gray
+    
+    var leadingPadding: CGFloat {
+        if #available(iOS 15.0, *) {
+            return 1
+        } else {
+            return 10
+        }
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -24,16 +32,22 @@ struct DropDownMenu: View {
                 .font(.regular(size: 12))
                 .foregroundColor(style == .white ? .customText1 : .customText2)
                 .padding(.leading, 5)
+            
+
 
             GeometryReader { geo in
-                Picker(selection: $selectedItem,
-                       label: Text(selectedItem).leftAligned()) {
-                    ForEach(options.reversed(), id: \.self) { (option: String) in
-                            Text(option)
+                Menu {
+                    ForEach(options.reversed(), id: \.self) { option in
+                        Button(option) {
+                            selectedItem = option
                         }
+                    }
+                } label: { Text(selectedItem)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
                 }
-                .padding(.leading, 10)
-                .pickerStyle(MenuPickerStyle())
+                .padding(.leading, 0)
+                .pickerStyle(.menu)
                 .frame(width: geo.frame(in: .local).width)
                 .foregroundColor(.customText2)
                 .overlay(Image(systemName: "chevron.down")
