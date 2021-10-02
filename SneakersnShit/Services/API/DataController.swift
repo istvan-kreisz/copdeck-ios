@@ -20,9 +20,9 @@ protocol LocalAPI {
     var imageDownloadHeadersPublisher: AnyPublisher<[HeadersWithStoreId], Never> { get }
 
     func reset()
+    func refreshHeadersAndCookie()
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError>
-    func getItemDetails(for item: Item?, itemId: String, fetchMode: FetchMode, settings: CopDeckSettings, exchangeRates: ExchangeRates)
-        -> AnyPublisher<Item, AppError>
+    func getItemDetails(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError>
     func getCalculatedPrices(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError>
     func getPopularItems(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError>
 }
@@ -36,6 +36,8 @@ protocol BackendAPI {
     func getFeedPosts(loadMore: Bool) -> AnyPublisher<PaginatedResult<[FeedPost]>, AppError>
     // search
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError>
+    func getItemDetails(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError>
+    func getPopularItems(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError>
     // item
     func update(item: Item, settings: CopDeckSettings)
     // inventory
@@ -120,4 +122,9 @@ protocol ImageService {
 protocol DataController: LocalAPI, BackendAPI, DatabaseManager, ImageService {
     func stack(inventoryItems: [InventoryItem], stack: Stack)
     func unstack(inventoryItems: [InventoryItem], stack: Stack)
+    func getItemDetails(for item: Item?,
+                        itemId: String,
+                        fetchMode: FetchMode,
+                        settings: CopDeckSettings,
+                        exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError>
 }

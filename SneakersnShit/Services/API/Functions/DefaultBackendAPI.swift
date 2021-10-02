@@ -73,6 +73,27 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
         handlePublisherResult(publisher: callFirebaseFunction(functionName: "updateItem", model: Wrapper(userId: userId, item: item, settings: settings)))
     }
 
+    func getPopularItems(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
+        struct Wrapper: Encodable {
+            let apiConfig: APIConfig
+            let requestId: String
+        }
+        let model = Wrapper(apiConfig: DefaultDataController.config(from: settings, exchangeRates: exchangeRates), requestId: "1")
+        let result: AnyPublisher<WrappedResult<[Item]>, AppError> = callFirebaseFunction(functionName: "getPopularItems", model: model)
+        return result.map(\.res).eraseToAnyPublisher()
+    }
+
+    func getItemDetails(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
+        struct Wrapper: Encodable {
+            let item: Item
+            let apiConfig: APIConfig
+            let requestId: String
+        }
+        let model = Wrapper(item: item, apiConfig: DefaultDataController.config(from: settings, exchangeRates: exchangeRates), requestId: "1")
+        let result: AnyPublisher<WrappedResult<Item>, AppError> = callFirebaseFunction(functionName: "getItemDetails", model: model)
+        return result.map(\.res).eraseToAnyPublisher()
+    }
+
     func add(inventoryItems: [InventoryItem]) {
         struct Wrapper: Encodable {
             let userId: String?

@@ -110,33 +110,7 @@ class LocalScraper {
 }
 
 extension LocalScraper: LocalAPI {
-    func getItemDetails(for item: Item?,
-                        itemId: String,
-                        fetchMode: FetchMode,
-                        settings: CopDeckSettings,
-                        exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
-        if let item = item {
-            return getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates)
-                .handleEvents(receiveOutput: { [weak self] _ in self?.refreshHeadersAndCookie() }).eraseToAnyPublisher()
-        } else {
-            return getItemDetails(forItemWithId: itemId, settings: settings, exchangeRates: exchangeRates)
-                .handleEvents(receiveOutput: { [weak self] _ in self?.refreshHeadersAndCookie() }).eraseToAnyPublisher()
-        }
-    }
-
-    private func getItemDetails(forItemWithId id: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
-        search(searchTerm: id, settings: settings, exchangeRates: exchangeRates)
-            .compactMap { items in items.first(where: { $0.id == id }) }
-            .flatMap { [weak self] item -> AnyPublisher<Item, AppError> in
-                guard let self = self else {
-                    return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
-                }
-                return self.getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates).eraseToAnyPublisher()
-            }
-            .eraseToAnyPublisher()
-    }
-
-    private func getItemDetails(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
+    func getItemDetails(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
         guard let itemJSON = item.asJSON else {
             return Fail(outputType: Item.self, failure: AppError(title: "Error", message: "Invalid Item object", error: nil)).eraseToAnyPublisher()
         }
@@ -205,7 +179,7 @@ extension LocalScraper: LocalAPI {
             .eraseToAnyPublisher()
     }
 
-    private func refreshHeadersAndCookie() {
+    func refreshHeadersAndCookie() {
         getCookies()
         getImageDownloadHeaders()
     }
