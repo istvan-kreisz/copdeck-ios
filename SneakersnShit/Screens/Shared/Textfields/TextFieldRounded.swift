@@ -40,8 +40,8 @@ struct TextFieldRounded: View {
                 })
                     .keyboardType(keyboardType)
                     .foregroundColor(.customText2)
-                    .frame(width: width, height: Styles.inputFieldHeight)
                     .padding(.horizontal, 17)
+                    .frame(width: width, height: Styles.inputFieldHeight)
                     .background(style == .white ? Color.customWhite : Color.customAccent4)
                     .cornerRadius(Styles.cornerRadius)
                     .if(style == .white) { $0.withDefaultShadow() }
@@ -49,8 +49,8 @@ struct TextFieldRounded: View {
                 TextEditor(text: $text)
                     .keyboardType(keyboardType)
                     .foregroundColor(.customText2)
-                    .frame(width: width, height: Styles.inputFieldHeightLarge)
                     .padding(.horizontal, 17)
+                    .frame(width: width, height: Styles.inputFieldHeightLarge)
                     .background(style == .white ? Color.customWhite : Color.customAccent4)
                     .cornerRadius(Styles.cornerRadius)
                     .if(style == .white) { $0.withDefaultShadow() }

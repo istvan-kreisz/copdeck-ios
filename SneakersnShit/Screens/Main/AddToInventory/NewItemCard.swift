@@ -35,6 +35,10 @@ struct NewItemCard: View {
     var toggleButtonStyle: ToggleButton.Style {
         style == .card ? .gray : .white
     }
+    
+    let listingPricesItem = [
+        GridItem(.adaptive(minimum: 70, maximum: 70)),
+    ]
 
     init(inventoryItem: Binding<InventoryItem>?,
          purchasePrice: PriceWithCurrency?,
@@ -141,7 +145,7 @@ struct NewItemCard: View {
                         .foregroundColor(.customBlack)
                         .padding(.leading, 5)
 
-                    HStack(alignment: .top, spacing: 11) {
+                    LazyVGrid(columns: listingPricesItem, alignment: .leading, spacing: 10) {
                         ForEach(ALLSTORESWITHOTHER) { (store: GenericStore) in
                             let text =
                                 Binding<String>(get: {
@@ -164,7 +168,8 @@ struct NewItemCard: View {
                                              placeHolder: "\(currency.symbol.rawValue)0",
                                              style: textFieldStyle,
                                              keyboardType: .numberPad,
-                                             text: text)
+                                             text: text,
+                                             width: 70)
                         }
                     }
                 }

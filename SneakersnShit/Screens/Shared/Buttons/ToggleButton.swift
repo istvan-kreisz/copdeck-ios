@@ -16,6 +16,10 @@ struct ToggleButton: View {
     @Binding var selection: String
     var options: [String]
     var style: Style = .gray
+    
+    let rows = [
+        GridItem(.adaptive(minimum: 71, maximum: 71)),
+    ]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -24,7 +28,8 @@ struct ToggleButton: View {
                 .foregroundColor(style == .white ? .customText1 : .customText2)
                 .padding(.leading, 5)
 
-            HStack(spacing: 10) {
+            
+            LazyVGrid(columns: rows, alignment: .leading, spacing: 10) {
                 ForEach(options, id: \.self) { (option: String) in
                     Text(option)
                         .font(.bold(size: 12))
