@@ -230,6 +230,7 @@ struct SettingsView: View {
                                          buttonTapped: selectCountry)
 
                         ListSelectorMenu(title: "Best price type",
+                                         description: "We show the best (highest) price for all your inventory items for the selected shoe size. Here you can configure what the displayed best price should be based on: ask or bid prices.",
                                          selectorScreenTitle: "Best price type",
                                          buttonTitle: "Select option",
                                          options: PriceType.allCases.map { (priceType: PriceType) in priceType.rawValue.capitalized },
@@ -237,6 +238,7 @@ struct SettingsView: View {
                                          buttonTapped: selectBestPricePriceType)
 
                         ListSelectorMenu(title: "Best price fees",
+                                         description: "We show the best (highest) price for all your inventory items for the selected shoe size. Here you can configure if you want to include seller or buyer fees included in the displayed best price.",
                                          selectorScreenTitle: "Best price fees",
                                          buttonTitle: "Select option",
                                          options: FeeType.allCases.map { (feeType: FeeType) in feeType.rawValue.capitalized },
@@ -345,7 +347,7 @@ struct SettingsView: View {
 
                     Section(header: Text("Spreadsheet import")) {
                         NavigationLink(destination: SpreadsheetImportView()) {
-                            Text("Import your inventory")
+                            Text("Spreadsheet import")
                                 .leftAligned()
                         }
                     }

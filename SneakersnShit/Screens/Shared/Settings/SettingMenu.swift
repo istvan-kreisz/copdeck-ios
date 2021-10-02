@@ -11,14 +11,16 @@ struct SettingMenu<Content: View>: View {
     @Environment(\.presentationMode) var presentationMode
 
     let title: String
+    let description: String?
     let buttonTitle: String
     let popBackOnSelect: Bool
     let buttonTapped: () -> Void
     let content: Content
 
 
-    init(title: String, buttonTitle: String, popBackOnSelect: Bool, buttonTapped: @escaping () -> Void, @ViewBuilder _ content: () -> Content) {
+    init(title: String, description: String? = nil, buttonTitle: String, popBackOnSelect: Bool, buttonTapped: @escaping () -> Void, @ViewBuilder _ content: () -> Content) {
         self.title = title
+        self.description = description
         self.buttonTitle = buttonTitle
         self.popBackOnSelect = popBackOnSelect
         self.buttonTapped = buttonTapped
@@ -32,6 +34,15 @@ struct SettingMenu<Content: View>: View {
                 .font(.bold(size: 28))
                 .leftAligned()
                 .padding(.leading, 12)
+            
+            if let description = description {
+                Text(description)
+                    .foregroundColor(.customText2)
+                    .font(.regular(size: 18))
+                    .leftAligned()
+                    .padding(.leading, 12)
+                    .padding(.top, 8)
+            }
 
             List {
                 content

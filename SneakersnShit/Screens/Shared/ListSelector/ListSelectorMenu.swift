@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ListSelectorMenu: View {
     let title: String
+    let description: String?
     let selectorScreenTitle: String
     let buttonTitle: String
     let options: [String]
@@ -17,12 +18,14 @@ struct ListSelectorMenu: View {
     let buttonTapped: () -> Void
 
     init(title: String,
+         description: String? = nil,
          selectorScreenTitle: String,
          buttonTitle: String,
          options: [String],
          selectedOption: Binding<String>,
          buttonTapped: @escaping () -> Void) {
         self.title = title
+        self.description = description
         self.selectorScreenTitle = selectorScreenTitle
         self.buttonTitle = buttonTitle
         self.options = options
@@ -32,12 +35,14 @@ struct ListSelectorMenu: View {
     }
 
     init(title: String,
+         description: String? = nil,
          selectorScreenTitle: String,
          buttonTitle: String,
          options: [String],
          selectedOptions: Binding<[String]>,
          buttonTapped: @escaping () -> Void) {
         self.title = title
+        self.description = description
         self.selectorScreenTitle = selectorScreenTitle
         self.buttonTitle = buttonTitle
         self.options = options
@@ -61,6 +66,7 @@ struct ListSelectorMenu: View {
             options.first.map { self.selectedOption?.wrappedValue = $0 }
         })
         NavigationLink(destination: ListSelector(title: selectorScreenTitle,
+                                                 description: description,
                                                  buttonTitle: buttonTitle,
                                                  enableMultipleSelection: selectedOptions != nil,
                                                  popBackOnSelect: true,

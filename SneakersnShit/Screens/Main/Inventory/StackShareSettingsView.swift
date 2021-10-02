@@ -12,7 +12,7 @@ struct StackShareSettingsView: View {
                                       "Make public",
                                       "Share via Link"]
     private static let popupDescriptions =
-        ["Publish your stack on the CopDeck feed. This will make your stack public so other users can see your items. They will also be able to visit your profile from the Feed and Search tabs.",
+        ["Publish your stack on the CopDeck feed. This will make your stack public so other users can see its contents.",
          "Make your stack public so other users can see your items when they visit your profile. Note: making it public won't publish it on the CopDeck feed, you have to enable that separately.",
          "Share your stack via a link. Note: the link will open a webpage so anyone can view your stack even if they don't have the CopDeck app."]
 

@@ -11,6 +11,7 @@ struct ListSelector: View {
     @Environment(\.presentationMode) var presentationMode
 
     let title: String
+    var description: String?
     let buttonTitle: String
     let enableMultipleSelection: Bool
     let popBackOnSelect: Bool
@@ -19,7 +20,7 @@ struct ListSelector: View {
     let buttonTapped: () -> Void
 
     var body: some View {
-        SettingMenu(title: title, buttonTitle: buttonTitle, popBackOnSelect: popBackOnSelect, buttonTapped: buttonTapped) {
+        SettingMenu(title: title, description: description, buttonTitle: buttonTitle, popBackOnSelect: popBackOnSelect, buttonTapped: buttonTapped) {
             ForEach(options, id: \.self) { option in
                 Button(action: {
                     if enableMultipleSelection {
