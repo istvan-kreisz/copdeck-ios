@@ -44,24 +44,6 @@ class LocalScraper {
         return interpreter
     }()
 
-    func config(from settings: CopDeckSettings, exchangeRates: ExchangeRates) -> Any {
-        let feeCalculation = APIConfig.FeeCalculation(countryName: settings.feeCalculation.country.name,
-                                                      stockx: .init(sellerFee: settings.feeCalculation.stockx?.sellerFee ?? 0,
-                                                                    taxes: (settings.feeCalculation.stockx?.taxes) ?? 0),
-                                                      goat: .init(commissionPercentage: (settings.feeCalculation.goat?.commissionPercentage.rawValue) ?? 0,
-                                                                  cashOutFee: (settings.feeCalculation.goat?.cashOutFee == true) ? 0.029 : 0,
-                                                                  taxes: (settings.feeCalculation.goat?.taxes) ?? 0),
-                                                      klekt: .init(taxes: (settings.feeCalculation.klekt?.taxes) ?? 0))
-        var showLogs = false
-        if DebugSettings.shared.isInDebugMode {
-            showLogs = true && DebugSettings.shared.showScraperLogs
-        }
-        return APIConfig(currency: settings.currency,
-                         isLoggingEnabled: showLogs,
-                         exchangeRates: exchangeRates,
-                         feeCalculation: feeCalculation).asJSON!
-    }
-
     private func isOlderThan(date: Double, minutes: Double) -> Bool {
         (Date().timeIntervalSince1970 - date) / 60 > minutes
     }
@@ -162,7 +144,7 @@ extension LocalScraper: LocalAPI {
         let id = id
         interpreter.call(object: nil,
                          functionName: "scraper.api.getItemPrices",
-                         arguments: [itemJSON, config(from: settings, exchangeRates: exchangeRates), id.1],
+                         arguments: [itemJSON, DefaultDataController.config(from: settings, exchangeRates: exchangeRates).asJSON!, id.1],
                          completion: { _ in })
         let itemSubject = PassthroughSubject<Item, AppError>()
         itemSubjects[id.0] = itemSubject
@@ -176,7 +158,7 @@ extension LocalScraper: LocalAPI {
         let id = id
         interpreter.call(object: nil,
                          functionName: "scraper.api.searchItems",
-                         arguments: [searchTerm, config(from: settings, exchangeRates: exchangeRates), id.1],
+                         arguments: [searchTerm, DefaultDataController.config(from: settings, exchangeRates: exchangeRates).asJSON!, id.1],
                          completion: { _ in })
         let itemsSubject = PassthroughSubject<[Item], AppError>()
         itemsSubjects[id.0] = itemsSubject
@@ -195,7 +177,7 @@ extension LocalScraper: LocalAPI {
         let id = id
         interpreter.call(object: nil,
                          functionName: "scraper.api.calculatePrices",
-                         arguments: [itemJSON, config(from: settings, exchangeRates: exchangeRates), id.1],
+                         arguments: [itemJSON, DefaultDataController.config(from: settings, exchangeRates: exchangeRates).asJSON!, id.1],
                          completion: { _ in })
         let itemWithCalculatedPricesSubject = PassthroughSubject<Item, AppError>()
         itemWithCalculatedPricesSubjects[id.0] = itemWithCalculatedPricesSubject
@@ -211,7 +193,7 @@ extension LocalScraper: LocalAPI {
 
         interpreter.call(object: nil,
                          functionName: "scraper.api.getPopularItems",
-                         arguments: [config(from: settings, exchangeRates: exchangeRates), id.1],
+                         arguments: [DefaultDataController.config(from: settings, exchangeRates: exchangeRates).asJSON!, id.1],
                          completion: { _ in })
 
         let popularItemsSubject = PassthroughSubject<[Item], AppError>()

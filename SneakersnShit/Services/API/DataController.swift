@@ -93,7 +93,7 @@ protocol DatabaseManager {
     func add(recentlyViewedItem: Item)
     func favorite(item: Item)
     func unfavorite(item: Item)
-    
+
     // admin
     func getSpreadsheetImportWaitlist(completion: @escaping (Result<[User], Error>) -> Void)
     func getAffiliateList(completion: @escaping (Result<[User], Error>) -> Void)
@@ -116,7 +116,6 @@ protocol ImageService {
     func deleteInventoryItemImage(imageURL: URL, completion: @escaping (Bool) -> Void)
     func deleteInventoryItemImages(inventoryItem: InventoryItem)
 }
-
 
 protocol DataController: LocalAPI, BackendAPI, DatabaseManager, ImageService {
     func stack(inventoryItems: [InventoryItem], stack: Stack)

@@ -45,6 +45,7 @@ class DefaultDataController: DataController {
     }
 
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
+//        backendAPI.search(searchTerm: searchTerm, settings: settings, exchangeRates: exchangeRates)
         localScraper.search(searchTerm: searchTerm, settings: settings, exchangeRates: exchangeRates)
     }
 
@@ -338,15 +339,15 @@ class DefaultDataController: DataController {
     func deleteInventoryItemImages(inventoryItem: InventoryItem) {
         imageService.deleteInventoryItemImages(inventoryItem: inventoryItem)
     }
-    
+
     func startSpreadsheetImport(urlString: String, completion: @escaping (Error?) -> Void) {
         backendAPI.startSpreadsheetImport(urlString: urlString, completion: completion)
     }
-    
+
     func revertLastImport(completion: @escaping (Error?) -> Void) {
         backendAPI.revertLastImport(completion: completion)
     }
-    
+
     func getSpreadsheetImportWaitlist(completion: @escaping (Result<[User], Error>) -> Void) {
         databaseManager.getSpreadsheetImportWaitlist(completion: completion)
     }
@@ -360,24 +361,44 @@ class DefaultDataController: DataController {
                                                  spreadSheetImportError: spreadSheetImportError,
                                                  completion: completion)
     }
-    
+
     func runImport(importedUserId: String, completion: @escaping (Result<User, Error>) -> Void) {
         backendAPI.runImport(importedUserId: importedUserId, completion: completion)
     }
-    
+
     func finishImport(importedUserId: String, completion: @escaping (Result<User, Error>) -> Void) {
         backendAPI.finishImport(importedUserId: importedUserId, completion: completion)
     }
-    
+
     func getImportedInventoryItems(importedUserId: String, completion: @escaping (Result<[InventoryItem], Error>) -> Void) {
         backendAPI.getImportedInventoryItems(importedUserId: importedUserId, completion: completion)
     }
-    
+
     func getAffiliateList(completion: @escaping (Result<[User], Error>) -> Void) {
         databaseManager.getAffiliateList(completion: completion)
     }
-    
+
     func applyPromoCode(_ code: String, completion: ((Result<Void, AppError>) -> Void)?) {
         backendAPI.applyPromoCode(code, completion: completion)
+    }
+}
+
+extension DefaultDataController {
+    static func config(from settings: CopDeckSettings, exchangeRates: ExchangeRates) -> APIConfig {
+        let feeCalculation = APIConfig.FeeCalculation(countryName: settings.feeCalculation.country.name,
+                                                      stockx: .init(sellerFee: settings.feeCalculation.stockx?.sellerFee ?? 0,
+                                                                    taxes: (settings.feeCalculation.stockx?.taxes) ?? 0),
+                                                      goat: .init(commissionPercentage: (settings.feeCalculation.goat?.commissionPercentage.rawValue) ?? 0,
+                                                                  cashOutFee: (settings.feeCalculation.goat?.cashOutFee == true) ? 0.029 : 0,
+                                                                  taxes: (settings.feeCalculation.goat?.taxes) ?? 0),
+                                                      klekt: .init(taxes: (settings.feeCalculation.klekt?.taxes) ?? 0))
+        var showLogs = false
+        if DebugSettings.shared.isInDebugMode {
+            showLogs = true && DebugSettings.shared.showScraperLogs
+        }
+        return APIConfig(currency: settings.currency,
+                         isLoggingEnabled: showLogs,
+                         exchangeRates: exchangeRates,
+                         feeCalculation: feeCalculation)
     }
 }
