@@ -56,10 +56,20 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     let pendingImport: Bool?
     let created: Double?
     let updated: Double?
+    let purchasedDate: Double?
+    let soldDate: Double?
+
+    var purchasedDateComponents: DateComponents? {
+        purchasedDate.serverDate.map { Calendar.current.dateComponents([.year, .month], from: $0) }
+    }
+
+    var soldDateComponents: DateComponents? {
+        soldDate.serverDate.map { Calendar.current.dateComponents([.year, .month], from: $0) }
+    }
 
     enum CodingKeys: String, CodingKey {
         case id, itemId, name, purchasePrice, imageURL, usSize = "size", condition, copdeckPrice, listingPrices, soldPrice, status, notes, pendingImport,
-             created, updated
+             created, updated, purchasedDate, soldDate
     }
 }
 
@@ -78,7 +88,9 @@ extension InventoryItem {
          notes: String?,
          pendingImport: Bool?,
          created: Double?,
-         updated: Double?) {
+         updated: Double?,
+         purchasedDate: Double?,
+         soldDate: Double?) {
         self.init(id: id,
                   itemId: itemId,
                   name: name,
@@ -90,7 +102,9 @@ extension InventoryItem {
                   notes: notes,
                   pendingImport: pendingImport,
                   created: created,
-                  updated: updated)
+                  updated: updated,
+                  purchasedDate: purchasedDate,
+                  soldDate: soldDate)
     }
 
     init(fromItem item: Item, size: String? = nil) {
@@ -105,8 +119,10 @@ extension InventoryItem {
                   soldPrice: nil,
                   notes: nil,
                   pendingImport: nil,
-                  created: Date().timeIntervalSince1970 * 1000,
-                  updated: Date().timeIntervalSince1970 * 1000)
+                  created: Date.serverDate,
+                  updated: Date.serverDate,
+                  purchasedDate: Date.serverDate,
+                  soldDate: nil)
     }
 
     func copy(withName name: String, itemId: String?, notes: String?) -> InventoryItem {
@@ -131,7 +147,57 @@ extension InventoryItem {
                                      notes: nil,
                                      pendingImport: nil,
                                      created: nil,
-                                     updated: nil)
+                                     updated: nil,
+                                     purchasedDate: nil,
+                                     soldDate: nil)
 }
 
 extension InventoryItem: WithVariableShoeSize {}
+
+extension InventoryItem {
+    static func purchaseSummary(forMonth month: Int, andYear year: Int, inventoryItems: [InventoryItem]) -> MonthlyStatistics {
+        let soldInventoryItems = inventoryItems.filter { $0.soldDateComponents?.year == year && $0.soldDateComponents?.month == month }
+        let purchasedInventoryItems = inventoryItems.filter { $0.purchasedDateComponents?.year == year && $0.purchasedDateComponents?.month == month }
+
+        let purchasedPrices = purchasedInventoryItems.compactMap(\.purchasePrice?.price)
+        let soldPrices = soldInventoryItems.compactMap(\.soldPrice?.price?.price)
+        return MonthlyStatistics(year: year, month: month, purchasPrices: purchasedPrices, soldPrices: soldPrices)
+    }
+
+    static func monthlyStatistics(for inventoryItems: [InventoryItem]) -> [MonthlyStatistics] {
+        let dates = inventoryItems.compactMap(\.purchasedDate) + inventoryItems.compactMap(\.soldDate)
+
+        guard let dateMin = dates.min().map({ Date(timeIntervalSince1970: $0 / 1000) }),
+              let dateMax = dates.max().map({ Date(timeIntervalSince1970: $0 / 1000) })
+        else { return [] }
+        let dateMinComponents = Calendar.current.dateComponents([.year, .month], from: dateMin)
+        let dateMaxComponents = Calendar.current.dateComponents([.year, .month], from: dateMax)
+
+        guard let minYear = dateMinComponents.year, let minMonth = dateMinComponents.month,
+              let maxYear = dateMaxComponents.year, let maxMonth = dateMaxComponents.month
+        else { return [] }
+        var monthlySummaries: [MonthlyStatistics] = []
+
+        if minYear == maxYear {
+            for month in stride(from: minMonth, to: maxMonth, by: 1) {
+                let summary = purchaseSummary(forMonth: month, andYear: minYear, inventoryItems: inventoryItems)
+                monthlySummaries.append(summary)
+            }
+        } else {
+            for year in stride(from: minYear, to: maxYear, by: 1) {
+                var startMonth: Int = 1
+                var endMonth: Int = 12
+                if year == minYear {
+                    startMonth = minMonth
+                } else if year == maxYear {
+                    endMonth = maxMonth
+                }
+                for month in stride(from: startMonth, to: endMonth, by: 1) {
+                    let summary = purchaseSummary(forMonth: month, andYear: year, inventoryItems: inventoryItems)
+                    monthlySummaries.append(summary)
+                }
+            }
+        }
+        return monthlySummaries
+    }
+}

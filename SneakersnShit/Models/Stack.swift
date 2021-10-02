@@ -69,8 +69,8 @@ struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
               isPublic: nil,
               isSharedViaLink: nil,
               items: [],
-              created: Date().timeIntervalSince1970 * 1000,
-              updated: Date().timeIntervalSince1970 * 1000,
+              created: Date.serverDate,
+              updated: Date.serverDate,
               publishedDate: nil)
     }
 }

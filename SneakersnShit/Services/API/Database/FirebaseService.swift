@@ -223,7 +223,7 @@ class FirebaseService: DatabaseManager {
             .map { stack in
                 var updatedStack = stack
                 if updatedStack.isPublished ?? false, updatedStack.publishedDate == nil {
-                    updatedStack.publishedDate = Date().timeIntervalSince1970 * 1000
+                    updatedStack.publishedDate = Date.serverDate
                 }
                 return updatedStack
             }
@@ -407,9 +407,9 @@ class FirebaseService: DatabaseManager {
     private func dataWithUpdatedDates(_ data: [String: Any]) -> [String: Any] {
         var copy = data
         if copy["created"] == nil {
-            copy["created"] = Date().timeIntervalSince1970 * 1000
+            copy["created"] = Date.serverDate
         }
-        copy["updated"] = Date().timeIntervalSince1970 * 1000
+        copy["updated"] = Date.serverDate
         return copy
     }
 }

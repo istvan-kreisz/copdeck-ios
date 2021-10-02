@@ -304,8 +304,8 @@ struct InventoryView: View {
                                                         name: name,
                                                         isPublished: false,
                                                         items: [],
-                                                        created: Date().timeIntervalSince1970 * 1000,
-                                                        updated: Date().timeIntervalSince1970 * 1000,
+                                                        created: Date.serverDate,
+                                                        updated: Date.serverDate,
                                                         publishedDate: nil))))
     }
 

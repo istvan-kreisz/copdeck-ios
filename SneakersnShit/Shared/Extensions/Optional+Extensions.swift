@@ -15,6 +15,10 @@ extension Optional where Wrapped == Double {
     func asPriceWithCurrency(currency: Currency) -> PriceWithCurrency? {
         map { (value: Double) in value.asPriceWithCurrency(currency: currency) }
     }
+    
+    var serverDate: Date? {
+        map { Date(timeIntervalSince1970: $0 / 1000) }
+    }
 }
 
 extension Optional where Wrapped == Int {

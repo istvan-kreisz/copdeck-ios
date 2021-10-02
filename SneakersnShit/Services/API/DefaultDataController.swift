@@ -49,18 +49,18 @@ class DefaultDataController: DataController {
     }
 
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
-        backendAPI.search(searchTerm: searchTerm, settings: settings, exchangeRates: exchangeRates)
-//        localScraper.search(searchTerm: searchTerm, settings: settings, exchangeRates: exchangeRates)
+//        backendAPI.search(searchTerm: searchTerm, settings: settings, exchangeRates: exchangeRates)
+        localScraper.search(searchTerm: searchTerm, settings: settings, exchangeRates: exchangeRates)
     }
 
     func getItemDetails(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
-        backendAPI.getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates)
-//        localScraper.getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates)
+//        backendAPI.getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates)
+        localScraper.getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates)
     }
 
     func getPopularItems(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
-        backendAPI.getPopularItems(settings: settings, exchangeRates: exchangeRates)
-//        localScraper.getPopularItems(settings: settings, exchangeRates: exchangeRates)
+//        backendAPI.getPopularItems(settings: settings, exchangeRates: exchangeRates)
+        localScraper.getPopularItems(settings: settings, exchangeRates: exchangeRates)
     }
 
     private func fetchPrices(for item: Item?, itemId: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {

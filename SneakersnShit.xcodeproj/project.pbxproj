@@ -181,6 +181,8 @@
 		5DEBC08A269B3DE8000EEADC /* Double+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEBC089269B3DE8000EEADC /* Double+Extensions.swift */; };
 		5DECB57C27068AA50017748C /* SocialLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DECB57B27068AA50017748C /* SocialLoginView.swift */; };
 		5DECB57E2707849F0017748C /* WithVariableShoeSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DECB57D2707849E0017748C /* WithVariableShoeSize.swift */; };
+		5DECB5802708C28C0017748C /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DECB57F2708C28B0017748C /* Date+Extensions.swift */; };
+		5DECB5822708DC4F0017748C /* MonthlyStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DECB5812708DC4F0017748C /* MonthlyStatistics.swift */; };
 		5DF03CAB25DA1CE7001856B5 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF03CAA25DA1CE7001856B5 /* ImageView.swift */; };
 		5DF3595926FF724E0041A6C3 /* RootOnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF3595826FF724E0041A6C3 /* RootOnboardingView.swift */; };
 		5DF3595F26FF72570041A6C3 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF3595C26FF72570041A6C3 /* OnboardingView.swift */; };
@@ -364,6 +366,8 @@
 		5DEBC089269B3DE8000EEADC /* Double+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extensions.swift"; sourceTree = "<group>"; };
 		5DECB57B27068AA50017748C /* SocialLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialLoginView.swift; sourceTree = "<group>"; };
 		5DECB57D2707849E0017748C /* WithVariableShoeSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithVariableShoeSize.swift; sourceTree = "<group>"; };
+		5DECB57F2708C28B0017748C /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
+		5DECB5812708DC4F0017748C /* MonthlyStatistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyStatistics.swift; sourceTree = "<group>"; };
 		5DF03CAA25DA1CE7001856B5 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		5DF3595826FF724E0041A6C3 /* RootOnboardingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootOnboardingView.swift; sourceTree = "<group>"; };
 		5DF3595C26FF72570041A6C3 /* OnboardingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -486,6 +490,7 @@
 				5DE4F21126DFBB7B0087077A /* State+Extensions.swift */,
 				5DE4F21726E022070087077A /* UIImage+Extensions.swift */,
 				5DF3596026FFB7DF0041A6C3 /* UserDefaults+Extensions.swift */,
+				5DECB57F2708C28B0017748C /* Date+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -864,6 +869,7 @@
 				5D9DFB0026D978F9005A575D /* ProfileData.swift */,
 				5DE4F22126E0FD790087077A /* FeedPostData.swift */,
 				5D88261626F8DCD20006031D /* Navigation.swift */,
+				5DECB5812708DC4F0017748C /* MonthlyStatistics.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1335,6 +1341,7 @@
 				5D19B0AB26A6D76600A31F4E /* MainAction.swift in Sources */,
 				5D6960BA258717430058BABE /* World.swift in Sources */,
 				5D54FE2626C2C84F008CD05F /* HorizontalListItemRound.swift in Sources */,
+				5DECB5802708C28C0017748C /* Date+Extensions.swift in Sources */,
 				5DDEFDC426D042C5001B0F76 /* StaticButtonStyle.swift in Sources */,
 				5D8ABBBF26B1C82500AFD8CF /* ScraperRequestInfo.swift in Sources */,
 				5D2726CA26CB2CE400887449 /* VerticalListView.swift in Sources */,
@@ -1359,6 +1366,7 @@
 				5D2D5AA325C52E9B009598AA /* AppState.swift in Sources */,
 				5D36AA0B269E46300049640A /* TabBar.swift in Sources */,
 				5D9DFB0326D97990005A575D /* FBFunctionsCoordinator.swift in Sources */,
+				5DECB5822708DC4F0017748C /* MonthlyStatistics.swift in Sources */,
 				5DE4F21826E022070087077A /* UIImage+Extensions.swift in Sources */,
 				5DDEFDCA26D13695001B0F76 /* FiltersModal.swift in Sources */,
 				5D8ABBC126B1D2E100AFD8CF /* ItemImageView.swift in Sources */,

@@ -296,7 +296,7 @@ extension Item {
         copy.storeInfo = []
         copy.storePrices = []
         copy.retailPrice = nil
-        copy.created = Date().timeIntervalSince1970 * 1000
+        copy.created = Date.serverDate
         return copy
     }
 }
