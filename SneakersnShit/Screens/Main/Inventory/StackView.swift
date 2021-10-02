@@ -100,7 +100,7 @@ struct StackView: View {
                         .buttonStyle(PlainButtonStyle())
                         .layoutPriority(1)
                     if let didTapShareStack = didTapShareStack {
-                        AccessoryButton(title: "Share Stack",
+                        AccessoryButton(title: "Share",
                                         color: .customOrange,
                                         textColor: .customOrange,
                                         width: nil,

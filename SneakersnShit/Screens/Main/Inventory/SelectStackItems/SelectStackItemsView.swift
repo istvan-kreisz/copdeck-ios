@@ -31,31 +31,28 @@ struct SelectStackItemsView: View {
     }
 
     var body: some View {
-        VStack(alignment: .center, spacing: 8) {
+        VerticalListView(bottomPadding: Styles.tabScreenBottomPadding) {
             NavigationBar(title: title, isBackButtonVisible: true, style: .dark, shouldDismiss: shouldDismiss)
-                .withDefaultPadding(padding: .horizontal)
 
-            VerticalListView(bottomPadding: Styles.tabScreenBottomPadding) {
-                ForEach(inventoryItems) { (inventoryItem: InventoryItem) in
-                    let isSelected = Binding<Bool>(get: { selectedStackItems.map(\.inventoryItemId).contains(inventoryItem.id) },
-                                                   set: { selected in
-                                                       if selected {
-                                                           if !selectedStackItems.map(\.inventoryItemId).contains(inventoryItem.id) {
-                                                               selectedStackItems.append(.init(inventoryItemId: inventoryItem.id))
-                                                           }
-                                                       } else {
-                                                           selectedStackItems.removeAll(where: { $0.inventoryItemId == inventoryItem.id })
+            ForEach(inventoryItems) { (inventoryItem: InventoryItem) in
+                let isSelected = Binding<Bool>(get: { selectedStackItems.map(\.inventoryItemId).contains(inventoryItem.id) },
+                                               set: { selected in
+                                                   if selected {
+                                                       if !selectedStackItems.map(\.inventoryItemId).contains(inventoryItem.id) {
+                                                           selectedStackItems.append(.init(inventoryItemId: inventoryItem.id))
                                                        }
-                                                   })
-                    SelectStackItemsListItem(inventoryItem: inventoryItem,
-                                             isSelected: isSelected,
-                                             requestInfo: requestInfo)
-                }
-                .padding(.vertical, 2)
+                                                   } else {
+                                                       selectedStackItems.removeAll(where: { $0.inventoryItemId == inventoryItem.id })
+                                                   }
+                                               })
+                SelectStackItemsListItem(inventoryItem: inventoryItem,
+                                         isSelected: isSelected,
+                                         requestInfo: requestInfo)
             }
-            Spacer()
+            .padding(.vertical, 2)
+            Color.clear.padding(.bottom, 130)
         }
-        .edgesIgnoringSafeArea(.bottom)
+//        .edgesIgnoringSafeArea(.bottom)
         .frame(maxWidth: UIScreen.main.bounds.width)
         .withDefaultPadding(padding: .top)
         .withBackgroundColor()
