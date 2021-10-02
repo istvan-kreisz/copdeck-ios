@@ -11,6 +11,7 @@ import GoogleSignIn
 import FBSDKCoreKit
 import Nuke
 
+///Users/istvankreisz/Workspace/CopDeck/App/Code/Pods/FirebaseCrashlytics/upload-symbols -gsp /Users/istvankreisz/Workspace/CopDeck/App/Code/SneakersnShit/Shared/GoogleService-Info.plist -p ios /Users/istvankreisz/Desktop/appDsyms
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         if DebugSettings.shared.clearUserDefaults {
@@ -22,10 +23,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         StoreReviewHelper.incrementAppOpenedCount()
         setupNuke()
         setupUI()
-        
-        print(ALLSHOESIZESUS)
-        print(ALLSHOESIZESUS)
-        print(ALLSHOESIZESUS)
         return true
     }
 
