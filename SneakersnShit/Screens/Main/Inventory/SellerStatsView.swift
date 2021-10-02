@@ -56,5 +56,7 @@ struct SellerStatsView: View {
                 .withDefaultPadding(padding: .horizontal)
             }
         }
+        .withBackgroundColor()
+        .preferredColorScheme(.light)
     }
 }
