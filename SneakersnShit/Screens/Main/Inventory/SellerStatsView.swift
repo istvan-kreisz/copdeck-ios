@@ -8,8 +8,6 @@
 import Foundation
 import SwiftUI
 
-#warning("add sell / purchase date selector")
-
 struct SellerStatsView: View {
     let inventoryItems: [InventoryItem]
 

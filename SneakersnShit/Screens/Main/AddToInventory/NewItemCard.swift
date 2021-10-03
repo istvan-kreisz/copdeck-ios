@@ -15,6 +15,7 @@ struct NewItemCard: View {
     }
 
     @State var didTapPurchasePrice = false
+    @State private var date = Date()
 
     @Binding var inventoryItem: InventoryItem
     let purchasePrice: PriceWithCurrency?
@@ -35,10 +36,8 @@ struct NewItemCard: View {
     var toggleButtonStyle: ToggleButton.Style {
         style == .card ? .gray : .white
     }
-    
-    let listingPricesItem = [
-        GridItem(.adaptive(minimum: 70, maximum: 70)),
-    ]
+
+    let listingPricesItem = [GridItem(.adaptive(minimum: 63, maximum: 80))]
 
     init(inventoryItem: Binding<InventoryItem>?,
          purchasePrice: PriceWithCurrency?,
@@ -55,8 +54,40 @@ struct NewItemCard: View {
         self.showCopDeckPrice = showCopDeckPrice
         self.didTapDelete = didTapDelete
     }
+    
+    @ViewBuilder func datePicker(title: String, date: Binding<Date>) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title)
+                .font(.regular(size: 12))
+                .foregroundColor(.customText1)
+                .padding(.leading, 5)
+
+            VStack {
+                Spacer()
+                DatePicker(selection: date, displayedComponents: .date) {
+                    EmptyView().frame(width: 0, alignment: .leading)
+                }
+                .labelsHidden()
+                .accentColor(.customText2)
+                .layoutPriority(2)
+                Spacer()
+            }
+            .frame(height: Styles.inputFieldHeight)
+        }
+    }
 
     var body: some View {
+        let soldStatus = Binding<String>(get: { (inventoryItem.status ?? InventoryItem.SoldStatus.None).rawValue.uppercased() },
+                                         set: { new in
+            let newValue =  .init(rawValue: new.lowercased().capitalized) ?? InventoryItem.SoldStatus.None
+            inventoryItem.status = newValue
+            if newValue == .Sold && inventoryItem.soldDate == nil {
+                inventoryItem.soldDate = Date.serverDate
+            } else {
+                inventoryItem.soldDate = nil
+            }
+        })
+
         VStack(alignment: .leading, spacing: 11) {
             if didTapDelete != nil {
                 DeleteButton(style: .line) {
@@ -67,12 +98,13 @@ struct NewItemCard: View {
             }
 
             HStack(alignment: .top, spacing: 11) {
-                let condition = Binding<String>(get: { inventoryItem.condition.rawValue },
-                                                set: { inventoryItem.condition = .init(rawValue: $0) ?? .new })
                 let purchasePrice = Binding<String>(get: { (inventoryItem.purchasePrice?.price).asString() },
                                                     set: { new in
                                                         inventoryItem.purchasePrice = PriceWithCurrency(price: Double(new) ?? 0, currencyCode: currency.code)
                                                     })
+                let purchasedDate = Binding<Date>(get: { inventoryItem.purchasedDate.serverDate ?? Date() },
+                                                  set: { new in inventoryItem.purchasedDate = new.timeIntervalSince1970 * 1000 })
+
                 TextFieldRounded(title: "purchase price",
                                  placeHolder: (self.purchasePrice?.price).asString(),
                                  style: textFieldStyle,
@@ -85,6 +117,13 @@ struct NewItemCard: View {
                         }
                     }
                 }
+
+                datePicker(title: "purchased", date: purchasedDate)
+            }
+
+            HStack(alignment: .top, spacing: 11) {
+                let condition = Binding<String>(get: { inventoryItem.condition.rawValue },
+                                                set: { inventoryItem.condition = .init(rawValue: $0) ?? .new })
                 DropDownMenu(title: "size",
                              selectedItem: $inventoryItem.size,
                              options: sizes,
@@ -94,6 +133,7 @@ struct NewItemCard: View {
                              options: InventoryItem.Condition.allCases.map { $0.rawValue },
                              style: dropdownStyle)
             }
+
             if showCopDeckPrice {
                 let price = Binding<String>(get: {
                                                 if let price = inventoryItem.copdeckPrice?.price.price, price > 0 {
@@ -124,16 +164,14 @@ struct NewItemCard: View {
                                      style: textFieldStyle,
                                      keyboardType: .numberPad,
                                      text: price)
-                    DropDownMenu(title: "currency",
-                                 selectedItem: currency,
-                                 options: ALLSELECTABLECURRENCYSYMBOLS.map(\.rawValue),
-                                 style: .white)
-                        .frame(width: 75)
+//                    DropDownMenu(title: "currency",
+//                                 selectedItem: currency,
+//                                 options: ALLSELECTABLECURRENCYSYMBOLS.map(\.rawValue),
+//                                 style: .white)
+//                        .frame(width: 75)
                 }
             }
 
-            let soldStatus = Binding<String>(get: { (inventoryItem.status ?? InventoryItem.SoldStatus.None).rawValue.uppercased() },
-                                             set: { inventoryItem.status = .init(rawValue: $0.lowercased().capitalized) ?? InventoryItem.SoldStatus.None })
             ToggleButton(title: "status",
                          selection: soldStatus,
                          options: ["NONE", "LISTED", "SOLD"],
@@ -187,14 +225,18 @@ struct NewItemCard: View {
                                     set: { inventoryItem.soldPrice = .init(storeId: $0.lowercased(), price: inventoryItem.soldPrice?.price) })
 
                 VStack(alignment: .leading, spacing: 11) {
-                    HStack {
+                    HStack(alignment: .top, spacing: 11) {
+                        let soldDate = Binding<Date>(get: { inventoryItem.soldDate.serverDate ?? Date() },
+                                                     set: { new in inventoryItem.soldDate = new.timeIntervalSince1970 * 1000 })
+
                         TextFieldRounded(title: "selling price (optional)",
                                          placeHolder: "\(currency.symbol.rawValue)0",
                                          style: textFieldStyle,
                                          keyboardType: .numberPad,
                                          text: text)
-                        Rectangle().fill(Color.clear).frame(height: 1)
+                        datePicker(title: "sold on", date: soldDate)
                     }
+
                     ToggleButton(title: "sold on (optional)",
                                  selection: soldOn,
                                  options: ALLSTORESWITHOTHER.map { (store: GenericStore) in store.id.uppercased() },

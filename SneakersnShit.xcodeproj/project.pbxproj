@@ -24,6 +24,7 @@
 		5D2D5AAF25C552B0009598AA /* DefaultBackendAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5AAE25C552B0009598AA /* DefaultBackendAPI.swift */; };
 		5D2ED124270152BC002A5E12 /* ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2ED123270152BC002A5E12 /* ImageViewer.swift */; };
 		5D30BA42269C3EAD0062F6AB /* CustomSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D30BA41269C3EAD0062F6AB /* CustomSpinner.swift */; };
+		5D32C2F42709CBDC003257C6 /* Overlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D32C2F32709CBDC003257C6 /* Overlay.swift */; };
 		5D36AA0B269E46300049640A /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D36AA0A269E46300049640A /* TabBar.swift */; };
 		5D3769762611709C00F9ED72 /* Debouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D3769752611709C00F9ED72 /* Debouncer.swift */; };
 		5D3DE37426AFA96D009E4D52 /* UINavigationController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D3DE37326AFA96D009E4D52 /* UINavigationController+Extensions.swift */; };
@@ -211,6 +212,7 @@
 		5D2D5AAE25C552B0009598AA /* DefaultBackendAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultBackendAPI.swift; sourceTree = "<group>"; };
 		5D2ED123270152BC002A5E12 /* ImageViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewer.swift; sourceTree = "<group>"; };
 		5D30BA41269C3EAD0062F6AB /* CustomSpinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSpinner.swift; sourceTree = "<group>"; };
+		5D32C2F32709CBDC003257C6 /* Overlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Overlay.swift; sourceTree = "<group>"; };
 		5D36AA0A269E46300049640A /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
 		5D3769752611709C00F9ED72 /* Debouncer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debouncer.swift; sourceTree = "<group>"; };
 		5D3DE37326AFA96D009E4D52 /* UINavigationController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+Extensions.swift"; sourceTree = "<group>"; };
@@ -717,6 +719,7 @@
 				5DCC466F26A8D759007671BC /* DropDownMenu.swift */,
 				5D9D520526AE361900AB1F30 /* PillView.swift */,
 				5D8ABBB926B0B51200AFD8CF /* Snackbar.swift */,
+				5D32C2F32709CBDC003257C6 /* Overlay.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -1232,6 +1235,7 @@
 				5D52E307261303AF00FA02B8 /* Publishers+Extensions.swift in Sources */,
 				5D564E4C2704F9D100190CF4 /* PromoCodeView.swift in Sources */,
 				5DF3595F26FF72570041A6C3 /* OnboardingView.swift in Sources */,
+				5D32C2F42709CBDC003257C6 /* Overlay.swift in Sources */,
 				5D424D4225C509610008D6F4 /* Fonts.swift in Sources */,
 				5D696097258713760058BABE /* AppDelegate.swift in Sources */,
 				5D6B112C26A4660500B6B67A /* Styles.swift in Sources */,

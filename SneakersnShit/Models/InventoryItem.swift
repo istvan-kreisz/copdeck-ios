@@ -56,8 +56,8 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     let pendingImport: Bool?
     let created: Double?
     let updated: Double?
-    let purchasedDate: Double?
-    let soldDate: Double?
+    var purchasedDate: Double?
+    var soldDate: Double?
 
     var purchasedDateComponents: DateComponents? {
         purchasedDate.serverDate.map { Calendar.current.dateComponents([.year, .month], from: $0) }
@@ -165,7 +165,7 @@ extension InventoryItem {
     }
 
     static func monthlyStatistics(for inventoryItems: [InventoryItem]) -> [MonthlyStatistics] {
-        let dates = inventoryItems.compactMap(\.purchasedDate) + inventoryItems.compactMap(\.soldDate)
+        let dates = inventoryItems.compactMap(\.purchasedDate) + inventoryItems.filter { $0.status == .Sold }.compactMap(\.soldDate)
 
         guard let dateMin = dates.min().map({ Date(timeIntervalSince1970: $0 / 1000) }),
               let dateMax = dates.max().map({ Date(timeIntervalSince1970: $0 / 1000) })
