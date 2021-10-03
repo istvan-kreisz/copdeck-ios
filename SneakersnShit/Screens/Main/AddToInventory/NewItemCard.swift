@@ -164,11 +164,11 @@ struct NewItemCard: View {
                                      style: textFieldStyle,
                                      keyboardType: .numberPad,
                                      text: price)
-//                    DropDownMenu(title: "currency",
-//                                 selectedItem: currency,
-//                                 options: ALLSELECTABLECURRENCYSYMBOLS.map(\.rawValue),
-//                                 style: .white)
-//                        .frame(width: 75)
+                    DropDownMenu(title: "currency",
+                                 selectedItem: currency,
+                                 options: ALLSELECTABLECURRENCYSYMBOLS.map(\.rawValue),
+                                 style: .white)
+                        .frame(width: 75)
                 }
             }
 
