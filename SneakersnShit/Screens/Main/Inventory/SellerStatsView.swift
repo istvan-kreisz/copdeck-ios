@@ -8,6 +8,8 @@
 import Foundation
 import SwiftUI
 
+#warning("add sell / purchase date selector")
+
 struct SellerStatsView: View {
     let inventoryItems: [InventoryItem]
 
@@ -28,10 +30,16 @@ struct SellerStatsView: View {
 
     var body: some View {
         VerticalListView(bottomPadding: 20, spacing: 10, addHorizontalPadding: false) {
-            ForEach(monthlyStats) { stats in
+            Text("Seller Stats")
+                .font(.bold(size: 28))
+                .foregroundColor(.customText1)
+                .padding(.bottom, 18)
+                .padding(.top, 8)
+                .centeredHorizontally()
 
+            ForEach(monthlyStats) { stats in
                 VStack {
-                    Text("Stack Stats".uppercased())
+                    Text("\(Calendar.current.monthSymbols[stats.month]) \(stats.year):".uppercased())
                         .font(.bold(size: 12))
                         .foregroundColor(.customText2)
                         .leftAligned()
