@@ -182,6 +182,12 @@ struct SpreadsheetImportView: View {
                             .font(.bold(size: 14))
                         Spacer()
                     }
+                    if let errorMessage = store.globalState.user?.spreadsheetImport?.error {
+                        Text("Error message: " + errorMessage)
+                            .foregroundColor(.customRed)
+                            .font(.bold(size: 14))
+                            .padding(.bottom, 10)
+                    }
                     if let status = store.globalState.user?.spreadsheetImport?.status {
                         statusDescriptionText(for: status)
                     }

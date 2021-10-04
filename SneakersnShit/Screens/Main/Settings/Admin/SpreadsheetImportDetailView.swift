@@ -16,6 +16,8 @@ struct SpreadsheetImportDetailView: View {
 
     @State var selectedInventoryItem: InventoryItem?
     @State private var error: (String, String)? = nil
+    
+    @State private var isFirstShow = true
 
     @StateObject private var loader = Loader()
 
@@ -66,7 +68,10 @@ struct SpreadsheetImportDetailView: View {
         }
         .withDefaultPadding(padding: .horizontal)
         .onAppear {
-            refreshInventoryItems()
+            if isFirstShow {
+                isFirstShow = false
+                refreshInventoryItems()
+            }
         }
         .alert(isPresented: presentErrorAlert) {
             let title = error?.0 ?? ""
