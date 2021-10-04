@@ -38,6 +38,7 @@ struct PromoCodeView: View {
                     .multilineTextAlignment(.leading)
             }
             .padding(.bottom, 8)
+            .layoutPriority(2)
             VStack(spacing: 20) {
                 if loader.isLoading {
                     CustomSpinner(text: "Updating account", animate: true)
@@ -54,6 +55,7 @@ struct PromoCodeView: View {
                         Spacer()
                     }
                     .padding(.top, 5)
+                    .layoutPriority(2)
                 } else {
                     HStack(spacing: 5) {
                         TextFieldRounded(placeHolder: "Enter referral code", style: .gray, text: $promoCode)
@@ -73,6 +75,7 @@ struct PromoCodeView: View {
                                     .fill(Color.customBlue))
                         }
                     }
+                    .layoutPriority(2)
                 }
                 Spacer()
             }

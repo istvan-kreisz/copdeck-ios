@@ -156,7 +156,7 @@ extension InventoryItem: WithVariableShoeSize {}
 
 extension InventoryItem {
     static func purchaseSummary(forMonth month: Int, andYear year: Int, inventoryItems: [InventoryItem]) -> MonthlyStatistics {
-        let soldInventoryItems = inventoryItems.filter { $0.soldDateComponents?.year == year && $0.soldDateComponents?.month == month }
+        let soldInventoryItems = inventoryItems.filter { $0.soldDateComponents?.year == year && $0.soldDateComponents?.month == month && $0.status == .Sold }
         let purchasedInventoryItems = inventoryItems.filter { $0.purchasedDateComponents?.year == year && $0.purchasedDateComponents?.month == month }
 
         let purchasedPrices = purchasedInventoryItems.compactMap(\.purchasePrice?.price)
@@ -165,7 +165,9 @@ extension InventoryItem {
     }
 
     static func monthlyStatistics(for inventoryItems: [InventoryItem]) -> [MonthlyStatistics] {
-        let dates = inventoryItems.compactMap(\.purchasedDate) + inventoryItems.filter { $0.status == .Sold }.compactMap(\.soldDate)
+        let soldDates = inventoryItems.filter { $0.status == .Sold }.compactMap(\.soldDate)
+        let purchasedDates = inventoryItems.compactMap(\.purchasedDate)
+        let dates = soldDates + purchasedDates
 
         guard let dateMin = dates.min().map({ Date(timeIntervalSince1970: $0 / 1000) }),
               let dateMax = dates.max().map({ Date(timeIntervalSince1970: $0 / 1000) })
@@ -179,12 +181,12 @@ extension InventoryItem {
         var monthlySummaries: [MonthlyStatistics] = []
 
         if minYear == maxYear {
-            for month in stride(from: minMonth, to: maxMonth, by: 1) {
+            for month in stride(from: minMonth, to: maxMonth + 1, by: 1) {
                 let summary = purchaseSummary(forMonth: month, andYear: minYear, inventoryItems: inventoryItems)
                 monthlySummaries.append(summary)
             }
         } else {
-            for year in stride(from: minYear, to: maxYear, by: 1) {
+            for year in stride(from: minYear, to: maxYear + 1, by: 1) {
                 var startMonth: Int = 1
                 var endMonth: Int = 12
                 if year == minYear {
@@ -192,7 +194,7 @@ extension InventoryItem {
                 } else if year == maxYear {
                     endMonth = maxMonth
                 }
-                for month in stride(from: startMonth, to: endMonth, by: 1) {
+                for month in stride(from: startMonth, to: endMonth + 1, by: 1) {
                     let summary = purchaseSummary(forMonth: month, andYear: year, inventoryItems: inventoryItems)
                     monthlySummaries.append(summary)
                 }

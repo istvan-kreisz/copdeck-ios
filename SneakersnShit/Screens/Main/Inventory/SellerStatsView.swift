@@ -37,7 +37,7 @@ struct SellerStatsView: View {
 
             ForEach(monthlyStats) { stats in
                 VStack {
-                    Text("\(Calendar.current.monthSymbols[stats.month]) \(stats.year):".uppercased())
+                    Text("\(Calendar.current.monthSymbols[stats.month - 1]) \(stats.year):".uppercased())
                         .font(.bold(size: 12))
                         .foregroundColor(.customText2)
                         .leftAligned()

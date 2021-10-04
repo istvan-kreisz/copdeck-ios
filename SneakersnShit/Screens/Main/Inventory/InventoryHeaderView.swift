@@ -70,7 +70,7 @@ struct InventoryHeaderView: View {
                         AccessoryButton(title: "See seller stats",
                                         color: .customAccent1,
                                         textColor: .customText1,
-                                        width: 125,
+                                        width: 155,
                                         imageName: "chevron.right",
                                         buttonPosition: .right,
                                         tapped: { showSellerStats = true })

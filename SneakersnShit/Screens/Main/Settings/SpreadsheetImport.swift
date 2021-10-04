@@ -127,11 +127,12 @@ struct SpreadsheetImportView: View {
                     .multilineTextAlignment(.leading)
             }
             .padding(.bottom, 8)
+            .layoutPriority(2)
 
             VStack(spacing: 20) {
                 HStack(spacing: 5) {
                     TextFieldRounded(placeHolder: "Spreadsheet url", style: .gray, text: $spreadsheetURL)
-                        .layoutPriority(1)
+                        .layoutPriority(2)
                     Button {
                         if let url = store.globalState.user?.spreadsheetImport?.url, let status = store.globalState.user?.spreadsheetImport?.status {
                             if spreadsheetURL == url {
@@ -163,7 +164,9 @@ struct SpreadsheetImportView: View {
                             .background(RoundedRectangle(cornerRadius: Styles.cornerRadius)
                                 .fill(Color.customBlue))
                     }
+                    .layoutPriority(2)
                 }
+                .layoutPriority(2)
 
                 VStack(alignment: .leading, spacing: 15) {
                     if loader.isLoading {
@@ -183,8 +186,10 @@ struct SpreadsheetImportView: View {
                         statusDescriptionText(for: status)
                     }
                 }
+                .layoutPriority(2)
                 Spacer()
             }
+            .layoutPriority(2)
             Spacer()
         }
         .withDefaultPadding(padding: .horizontal)
