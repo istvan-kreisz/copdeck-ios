@@ -246,6 +246,7 @@ struct SettingsView: View {
                                          buttonTapped: selectBestPriceFeeType)
 
                         ListSelectorMenu(title: "Shoe size region",
+                                         description: "Please note that this is beta feature and using non-US sizing may not always give accurate results.",
                                          selectorScreenTitle: "Shoe size region",
                                          buttonTitle: "Select region",
                                          options: ShoeSize.allCases.map(\.rawValue),
