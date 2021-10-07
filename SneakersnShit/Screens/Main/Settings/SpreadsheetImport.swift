@@ -98,36 +98,58 @@ struct SpreadsheetImportView: View {
                                              }
                                          })
 
-        VStack(spacing: 8) {
+        VerticalListView(bottomPadding: 0, spacing: 8, listRowStyling: .color(.customWhite)) {
             NavigationBar(title: "Spreadsheet import", isBackButtonVisible: true, titleFontSize: .large, style: .dark) {
                 presentationMode.wrappedValue.dismiss()
             }
             .withDefaultPadding(padding: .top)
+
+            Text("Please note that the imported items won't replace your inventory, but will be added on top of it, so you won't lose any data. You'll also have the option to revert the import if you don't like the result.")
+                .foregroundColor(.customText2)
+                .font(.regular(size: 18))
+                .multilineTextAlignment(.leading)
+                .padding()
+                .overlay(RoundedRectangle(cornerRadius: Styles.cornerRadius)
+                    .stroke(Color.customBlue, lineWidth: 2)
+                    .background(Color.customBlue.opacity(0.1).cornerRadius(Styles.cornerRadius)))
+
+                .padding(.bottom, 5)
+                .layoutPriority(2)
+
             VStack(alignment: .leading, spacing: 12) {
-                Text("1. Copy your spreadsheets into a new Google Sheet document.")
+                Text("1. If you're spreadhsheet is not in Google Sheet: Copy your spreadsheets into a new Google Sheet document.")
                     .foregroundColor(.customText2)
                     .font(.regular(size: 18))
                     .multilineTextAlignment(.leading)
+                    .layoutPriority(2)
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("2. In the share menu change the sharing permissions to \"Anyone with the link\" with \"Viewer\" access. ")
+                    Text("2. In the share menu change the sharing permissions to \"Anyone with the link\" with \"Viewer\" access.")
                         .foregroundColor(.customText2)
                         .font(.regular(size: 18))
                         .multilineTextAlignment(.leading)
+                        .lineLimit(3)
+                        .layoutPriority(3)
                     if let url = URL(string: "https://help.tillerhq.com/en/articles/432685-sharing-and-permissions-in-google-sheets") {
                         Link("More info", destination: url)
+                            .foregroundColor(.customBlue)
+                            .layoutPriority(2)
                     }
                 }
+                .layoutPriority(3)
                 Text("3. Copy & paste the share link below and tap \"Start Import\".")
                     .foregroundColor(.customText2)
                     .font(.regular(size: 18))
                     .multilineTextAlignment(.leading)
-                Text("4. That's it! Since the actual import requires some manual work from us, your items won't appear immediately but it's usually done within 1-2 days.")
+                    .layoutPriority(2)
+                Text("4. That's it! Since the actual import requires some manual work from us, your items won't appear immediately but it should be done within 1-2 days.")
                     .foregroundColor(.customText2)
                     .font(.regular(size: 18))
                     .multilineTextAlignment(.leading)
+                    .layoutPriority(2)
             }
+            .buttonStyle(.plain)
             .padding(.bottom, 8)
-            .layoutPriority(2)
+            .layoutPriority(3)
 
             VStack(spacing: 20) {
                 HStack(spacing: 5) {
@@ -193,12 +215,11 @@ struct SpreadsheetImportView: View {
                     }
                 }
                 .layoutPriority(2)
-                Spacer()
             }
+            .buttonStyle(.plain)
             .layoutPriority(2)
             Spacer()
         }
-        .withDefaultPadding(padding: .horizontal)
         .alert(isPresented: presentAlert) {
             let title = error?.0 ?? ""
             let description = error?.1 ?? ""
