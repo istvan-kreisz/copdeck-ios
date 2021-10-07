@@ -104,7 +104,7 @@ struct SpreadsheetImportView: View {
             }
             .withDefaultPadding(padding: .top)
 
-            Text("Please note that the imported items won't replace your inventory, but will be added on top of it, so you won't lose any data. You'll also have the option to revert the import if you don't like the result.")
+            Text("Please note that the imported items won't replace your current inventory, but will be added to it, so you won't lose any data. You'll also have the option to revert the import if you don't like the result.")
                 .foregroundColor(.customText2)
                 .font(.regular(size: 18))
                 .multilineTextAlignment(.leading)
