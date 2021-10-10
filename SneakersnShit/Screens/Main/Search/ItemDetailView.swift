@@ -20,6 +20,8 @@ struct ItemDetailView: View {
     @State var showSnackBar = false
     @State var isFavorited: Bool
 
+    @State private var restocksPriceType: Item.StorePrice.StoreInventoryItem.RestocksPriceType = .regular
+
     var shouldDismiss: () -> Void
 
     private let itemId: String
@@ -47,26 +49,26 @@ struct ItemDetailView: View {
             Button(action: {
                 addToInventory = (true, row.size)
             }) {
-                    ZStack(alignment: Alignment(horizontal: .trailing, vertical: .center)) {
-                        Text(sizeNumberString(from: row.size))
-                            .font(.semiBold(size: 15))
-                            .padding(.trailing, 3)
-                            .frame(height: 32)
-                            .frame(maxWidth: 50)
-                            .background(Color.customAccent2)
-                            .clipShape(Capsule())
-                            .overlay(Capsule().stroke(Color.customBlue, lineWidth: 2))
-                        ZStack {
-                            Circle()
-                                .fill(Color.customBlue)
-                                .frame(width: 18, height: 18)
-                            Image(systemName: "plus")
-                                .font(.bold(size: 9))
-                                .foregroundColor(Color.customWhite)
-                        }
-                        .frame(width: 18, height: 18)
-                        .offset(x: 7, y: 0)
+                ZStack(alignment: Alignment(horizontal: .trailing, vertical: .center)) {
+                    Text(sizeNumberString(from: row.size))
+                        .font(.semiBold(size: 15))
+                        .padding(.trailing, 3)
+                        .frame(height: 32)
+                        .frame(maxWidth: 50)
+                        .background(Color.customAccent2)
+                        .clipShape(Capsule())
+                        .overlay(Capsule().stroke(Color.customBlue, lineWidth: 2))
+                    ZStack {
+                        Circle()
+                            .fill(Color.customBlue)
+                            .frame(width: 18, height: 18)
+                        Image(systemName: "plus")
+                            .font(.bold(size: 9))
+                            .foregroundColor(Color.customWhite)
                     }
+                    .frame(width: 18, height: 18)
+                    .offset(x: 7, y: 0)
+                }
             }
 
             ForEach(row.prices) { (price: Item.PriceRow.Price) in
@@ -226,22 +228,40 @@ struct ItemDetailView: View {
                                 .padding(.horizontal, 10)
 
                                 VStack(alignment: .leading, spacing: 20) {
-                                    HStack(spacing: 5) {
-                                        Text("Size (\(AppStore.default.state.settings.shoeSize.rawValue))")
+                                    HStack(alignment: .top, spacing: 5) {
+                                        Text("Size\n(\(AppStore.default.state.settings.shoeSize.rawValue))")
                                             .font(.semiBold(size: 15))
+                                            .lineLimit(2)
                                             .foregroundColor(.customText2)
+                                            .frame(height: 36)
                                             .frame(maxWidth: 50)
+
                                         ForEach(store.state.settings.displayedStores.compactMap { Store.store(withId: $0) }) { (store: Store) in
-                                            Text(store.name.rawValue)
-                                                .font(.bold(size: 16))
-                                                .foregroundColor(.customText1)
-                                                .frame(maxWidth: .infinity)
-                                                .onTapGesture {
-                                                    if let link = item?.storeInfo.first(where: { $0.store.id == store.id })?.url,
-                                                       let url = URL(string: link) {
-                                                        UIApplication.shared.open(url)
+                                            VStack(alignment: .center, spacing: 5) {
+                                                Text(store.name.rawValue)
+                                                    .font(.bold(size: 16))
+                                                    .foregroundColor(.customText1)
+                                                    .frame(maxWidth: .infinity)
+                                                    .onTapGesture {
+                                                        if let link = item?.storeInfo.first(where: { $0.store.id == store.id })?.url,
+                                                           let url = URL(string: link) {
+                                                            UIApplication.shared.open(url)
+                                                        }
+                                                    }
+                                                if store.id == .restocks {
+                                                    Button {
+                                                        restocksPriceType = restocksPriceType == .regular ? .consign : .regular
+                                                    } label: {
+                                                        Text(restocksPriceType.rawValue)
+                                                            .font(.semiBold(size: 12))
+                                                            .foregroundColor(restocksPriceType == .regular ? .customText1 : .customWhite)
+                                                            .padding(.horizontal, 5)
+                                                            .padding(.vertical, 3)
+                                                            .background(Capsule().fill(Color.customBlue.opacity(restocksPriceType == .regular ? 0.0 : 1.0)))
+                                                            .overlay(Capsule().stroke(Color.customBlue, lineWidth: 2))
                                                     }
                                                 }
+                                            }
                                         }
                                     }
 
@@ -255,7 +275,8 @@ struct ItemDetailView: View {
                                        let row = item?.priceRow(size: preferredSize,
                                                                 priceType: priceType,
                                                                 feeType: feeType,
-                                                                stores: store.state.settings.displayedStores) {
+                                                                stores: store.state.settings.displayedStores,
+                                                                restocksPriceType: restocksPriceType) {
                                         Text("Your size:")
                                             .font(.semiBold(size: 14))
                                             .foregroundColor(.customText1)
@@ -267,9 +288,11 @@ struct ItemDetailView: View {
                                             .foregroundColor(.customText1)
                                             .padding(.bottom, -10)
                                     }
-                                    ForEach((item?.allPriceRows(priceType: priceType, feeType: feeType, stores: store.state.settings.displayedStores)) ??
-                                        []) { (row: Item.PriceRow) in
-                                            priceRow(row: row)
+                                    ForEach((item?.allPriceRows(priceType: priceType,
+                                                                feeType: feeType,
+                                                                stores: store.state.settings.displayedStores,
+                                                                restocksPriceType: restocksPriceType)) ?? []) { (row: Item.PriceRow) in
+                                        priceRow(row: row)
                                     }
                                 }
                                 .padding(.horizontal, 10)

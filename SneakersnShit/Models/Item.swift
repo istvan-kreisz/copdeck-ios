@@ -104,6 +104,10 @@ struct Item: Codable, Equatable, Identifiable, Hashable, ModelWithDate {
         let currencyCode: Currency.CurrencyCode?
 
         struct StoreInventoryItem: Codable, Equatable, Identifiable, Hashable {
+            enum RestocksPriceType: String, Codable {
+                case regular, consign
+            }
+
             var usSize: String
             let lowestAsk: Double?
             let lowestAskWithSellerFees: Double?
@@ -111,6 +115,7 @@ struct Item: Codable, Equatable, Identifiable, Hashable, ModelWithDate {
             let highestBid: Double?
             let highestBidWithSellerFees: Double?
             let highestBidWithBuyerFees: Double?
+            let restocksPriceType: RestocksPriceType?
 
             let shoeCondition: String?
             let boxCondition: String?
@@ -186,15 +191,23 @@ extension Item {
         }
     }
 
-    private func price(size: String, storeId: StoreId, feeType: FeeType, currency: Currency) -> PriceItem {
-        let prices = allStorePrices.first(where: { $0.store.id == storeId })?.inventory.first(where: { $0.size == size })
+    private func price(size: String,
+                       storeId: StoreId,
+                       feeType: FeeType,
+                       currency: Currency,
+                       restocksPriceType: StorePrice.StoreInventoryItem.RestocksPriceType?) -> PriceItem {
+        let prices = allStorePrices.first(where: { $0.store.id == storeId })?.inventory.filter { $0.size == size }
         let storeInfo = storeInfo.first(where: { $0.store.id == storeId })
 
-        var askPrice = prices?.lowestAsk
-        var bidPrice = prices?.highestBid
+        var price = prices?.first
+        if let restocksPriceType = restocksPriceType, storeId == .restocks {
+            price = prices?.first(where: { $0.restocksPriceType == restocksPriceType })
+        }
+        var askPrice = price?.lowestAsk
+        var bidPrice = price?.highestBid
         if feeType != .None {
-            askPrice = feeType == .Buy ? prices?.lowestAskWithBuyerFees : prices?.lowestAskWithSellerFees
-            bidPrice = feeType == .Buy ? prices?.highestBidWithBuyerFees : prices?.highestBidWithSellerFees
+            askPrice = feeType == .Buy ? price?.lowestAskWithBuyerFees : price?.lowestAskWithSellerFees
+            bidPrice = feeType == .Buy ? price?.highestBidWithBuyerFees : price?.highestBidWithSellerFees
         }
         let priceMissing = PriceItem.PriceInfo(text: "-", num: 0)
         let askInfo: PriceItem.PriceInfo = askPrice.map { price in
@@ -211,9 +224,13 @@ extension Item {
         return PriceItem(ask: askInfo, bid: bidInfo, sellLink: storeInfo?.sellUrl, buyLink: (storeInfo?.buyUrl).map { $0 + sizeQuery })
     }
 
-    func priceRow(size: String, priceType: PriceType, feeType: FeeType, stores: [StoreId]) -> PriceRow {
+    func priceRow(size: String,
+                  priceType: PriceType,
+                  feeType: FeeType,
+                  stores: [StoreId],
+                  restocksPriceType: StorePrice.StoreInventoryItem.RestocksPriceType?) -> PriceRow {
         let prices = stores.compactMap { Store.store(withId: $0) }.map { store -> PriceRow.Price in
-            let p = price(size: size, storeId: store.id, feeType: feeType, currency: currency)
+            let p = price(size: size, storeId: store.id, feeType: feeType, currency: currency, restocksPriceType: restocksPriceType)
             return PriceRow.Price(primaryText: priceType == .Ask ? p.ask.text : p.bid.text,
                                   secondaryText: priceType == .Ask ? p.bid.text : p.ask.text,
                                   price: priceType == .Ask ? p.ask.num : p.bid.num,
@@ -231,12 +248,15 @@ extension Item {
         return PriceRow(size: size, lowest: lowest, highest: highest, prices: prices)
     }
 
-    func allPriceRows(priceType: PriceType, feeType: FeeType, stores: [StoreId]) -> [PriceRow] {
-        sortedSizes.map { priceRow(size: $0, priceType: priceType, feeType: feeType, stores: stores) }
+    func allPriceRows(priceType: PriceType,
+                      feeType: FeeType,
+                      stores: [StoreId],
+                      restocksPriceType: StorePrice.StoreInventoryItem.RestocksPriceType?) -> [PriceRow] {
+        sortedSizes.map { priceRow(size: $0, priceType: priceType, feeType: feeType, stores: stores, restocksPriceType: restocksPriceType) }
     }
 
     func bestPrice(for size: String, feeType: FeeType, priceType: PriceType, stores: [StoreId]) -> ListingPrice? {
-        if let bestPrice = priceRow(size: size, priceType: priceType, feeType: feeType, stores: stores).prices.max(by: { $0.price < $1.price }) {
+        if let bestPrice = priceRow(size: size, priceType: priceType, feeType: feeType, stores: stores, restocksPriceType: nil).prices.max(by: { $0.price < $1.price }) {
             return ListingPrice(storeId: bestPrice.store.id.rawValue, price: PriceWithCurrency(price: bestPrice.price, currencyCode: currency.code))
         } else {
             return nil
@@ -312,6 +332,7 @@ extension Item.StorePrice.StoreInventoryItem {
         case highestBidWithBuyerFees
         case shoeCondition
         case boxCondition
+        case restocksPriceType
     }
 
     init(from decoder: Decoder) throws {
@@ -325,6 +346,7 @@ extension Item.StorePrice.StoreInventoryItem {
         highestBidWithBuyerFees = try container.decodeIfPresent(Double.self, forKey: .highestBidWithBuyerFees)
         shoeCondition = try container.decodeIfPresent(String.self, forKey: .shoeCondition)
         boxCondition = try container.decodeIfPresent(String.self, forKey: .boxCondition)
+        restocksPriceType = try container.decodeIfPresent(RestocksPriceType.self, forKey: .restocksPriceType)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -334,6 +356,7 @@ extension Item.StorePrice.StoreInventoryItem {
         try container.encode(highestBid, forKey: .highestBid)
         try container.encode(shoeCondition, forKey: .shoeCondition)
         try container.encode(boxCondition, forKey: .boxCondition)
+        try container.encode(restocksPriceType, forKey: .restocksPriceType)
     }
 }
 
