@@ -93,6 +93,7 @@ struct Item: Codable, Equatable, Identifiable, Hashable, ModelWithDate {
         let sellUrl: String
         let buyUrl: String
         let productId: String?
+        let gender: Gender?
 
         var id: String { name }
     }
@@ -277,7 +278,8 @@ extension Item {
                                         url: "",
                                         sellUrl: "",
                                         buyUrl: "",
-                                        productId: "")],
+                                        productId: "",
+                                        gender: .Men)],
              storePrices: [],
              created: 0,
              updated: 0,

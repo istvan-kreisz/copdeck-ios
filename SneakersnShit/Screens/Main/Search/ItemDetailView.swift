@@ -39,18 +39,13 @@ struct ItemDetailView: View {
         self._isFavorited = State<Bool>(initialValue: favoritedItemIds.contains(itemId))
     }
 
-    func sizeNumberString(from string: String) -> String {
-        guard let number = string.number else { return "" }
-        return floor(number) == number ? number.rounded(toPlaces: 0) : number.rounded(toPlaces: 1)
-    }
-
     private func priceRow(row: Item.PriceRow) -> some View {
         HStack(spacing: 10) {
             Button(action: {
                 addToInventory = (true, row.size)
             }) {
                 ZStack(alignment: Alignment(horizontal: .trailing, vertical: .center)) {
-                    Text(sizeNumberString(from: row.size))
+                    Text(row.size.replacingOccurrences(of: "US ", with: ""))
                         .font(.semiBold(size: 15))
                         .padding(.trailing, 3)
                         .frame(height: 32)
@@ -357,31 +352,5 @@ struct ItemDetailView: View {
         } else {
             store.send(.main(action: .unfavorite(item: item)))
         }
-    }
-}
-
-struct ItemDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        let storeInfo = Item.StoreInfo(name: "Stockx",
-                                       sku: "GHVDY45",
-                                       slug: "",
-                                       retailPrice: 234,
-                                       brand: "Adidas",
-                                       store: Store(id: .stockx, name: .StockX),
-                                       imageURL: "",
-                                       url: "",
-                                       sellUrl: "",
-                                       buyUrl: "",
-                                       productId: "")
-        return ItemDetailView(item: .init(id: "GHVDY45",
-                                          storeInfo: [storeInfo],
-                                          storePrices: [],
-                                          created: 0,
-                                          updated: 0,
-                                          name: "yolo",
-                                          retailPrice: 12,
-                                          imageURL: nil),
-                              itemId: "GHVDY45",
-                              favoritedItemIds: []) {}
     }
 }

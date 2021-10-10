@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		5D0E5A11269E4EDE006D7E9C /* AddToInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0E5A10269E4EDE006D7E9C /* AddToInventoryView.swift */; };
 		5D0E5A13269E60DB006D7E9C /* TextFieldRounded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0E5A12269E60DB006D7E9C /* TextFieldRounded.swift */; };
+		5D117EAD271310E5000D1E43 /* SizeConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D117EAC271310E5000D1E43 /* SizeConversion.swift */; };
+		5D117EB12713287C000D1E43 /* sizes.json in Resources */ = {isa = PBXBuildFile; fileRef = 5D117EB02713287B000D1E43 /* sizes.json */; };
 		5D19B0AB26A6D76600A31F4E /* MainAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D19B0A926A6D76600A31F4E /* MainAction.swift */; };
 		5D19B0AC26A6D76600A31F4E /* ErrorAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D19B0AA26A6D76600A31F4E /* ErrorAction.swift */; };
 		5D19B0AE26A6D7CA00A31F4E /* AuthenticationAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D19B0AD26A6D7CA00A31F4E /* AuthenticationAction.swift */; };
@@ -197,6 +199,8 @@
 		569D9ED09F3A9EE7E6A213A0 /* Pods-SneakersnShit.debug staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SneakersnShit.debug staging.xcconfig"; path = "Target Support Files/Pods-SneakersnShit/Pods-SneakersnShit.debug staging.xcconfig"; sourceTree = "<group>"; };
 		5D0E5A10269E4EDE006D7E9C /* AddToInventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToInventoryView.swift; sourceTree = "<group>"; };
 		5D0E5A12269E60DB006D7E9C /* TextFieldRounded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldRounded.swift; sourceTree = "<group>"; };
+		5D117EAC271310E5000D1E43 /* SizeConversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeConversion.swift; sourceTree = "<group>"; };
+		5D117EB02713287B000D1E43 /* sizes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sizes.json; sourceTree = "<group>"; };
 		5D19B0A926A6D76600A31F4E /* MainAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainAction.swift; sourceTree = "<group>"; };
 		5D19B0AA26A6D76600A31F4E /* ErrorAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorAction.swift; sourceTree = "<group>"; };
 		5D19B0AD26A6D7CA00A31F4E /* AuthenticationAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationAction.swift; sourceTree = "<group>"; };
@@ -876,6 +880,7 @@
 				5DE4F22126E0FD790087077A /* FeedPostData.swift */,
 				5D88261626F8DCD20006031D /* Navigation.swift */,
 				5DECB5812708DC4F0017748C /* MonthlyStatistics.swift */,
+				5D117EAC271310E5000D1E43 /* SizeConversion.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1013,6 +1018,7 @@
 				5D424CE625C501BA0008D6F4 /* Fonts */,
 				5D696096258713760058BABE /* AppDelegate.swift */,
 				5D2119E025DB0EFA001FE5E5 /* GoogleService-Info.plist */,
+				5D117EB02713287B000D1E43 /* sizes.json */,
 				5D69609C258713770058BABE /* Assets.xcassets */,
 				5D19B0D326A6F0DC00A31F4E /* CopDeckApp.swift */,
 				5DBDDE202702046300804DF6 /* LaunchScreen.storyboard */,
@@ -1169,6 +1175,7 @@
 				5D424D3025C5095B0008D6F4 /* Karla-ExtraLight.ttf in Resources */,
 				5D424D3E25C509610008D6F4 /* Karla-Medium.ttf in Resources */,
 				5D2119E125DB0EFA001FE5E5 /* GoogleService-Info.plist in Resources */,
+				5D117EB12713287C000D1E43 /* sizes.json in Resources */,
 				5D424D4125C509610008D6F4 /* Karla-Light.ttf in Resources */,
 				5D424D3F25C509610008D6F4 /* Karla-Bold.ttf in Resources */,
 				5D424D4025C509610008D6F4 /* Karla-Regular.ttf in Resources */,
@@ -1316,6 +1323,7 @@
 				5DE596E626C876790024F7D5 /* PagerView.swift in Sources */,
 				5D424CFB25C503F00008D6F4 /* UIApplication+Extensions.swift in Sources */,
 				5D9DFB0526D998A8005A575D /* ProfileImageView.swift in Sources */,
+				5D117EAD271310E5000D1E43 /* SizeConversion.swift in Sources */,
 				5DE596E826C877120024F7D5 /* Stack.swift in Sources */,
 				5D63122B2695066500876D99 /* ExchangeRates.swift in Sources */,
 				5D88261526F8A42D0006031D /* DerivedStore.swift in Sources */,
