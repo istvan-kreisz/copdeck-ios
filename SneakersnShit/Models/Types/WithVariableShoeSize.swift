@@ -173,11 +173,29 @@ let conversionChart = [["32", "13", "1"],
                        ["51½", "16", "17"],
                        ["52½", "17", "18"]]
 
+let conversionChartWomen = [["35.5", "2.5", "5"],
+                            ["36", "3", "5.5"],
+                            ["36.5", "3.5", "6"],
+                            ["37.5", "4", "6.5"],
+                            ["38", "4.5", "7"],
+                            ["38.5", "5", "7.5"],
+                            ["39", "5.5", "8"],
+                            ["40", "6", "8.5"],
+                            ["40.5", "6.5", "9"],
+                            ["41", "7", "9.5"],
+                            ["42", "7.5", "10"],
+                            ["42.5", "8", "10.5"],
+                            ["43", "8.5", "11"],
+                            ["44", "9", "11.5"],
+                            ["44.5", "9.5", "12"]]
+
 func convertSize(from fromSize: ShoeSize,
                  to toSize: ShoeSize,
                  size: String,
                  gender: Gender? = .Men,
                  brand: Brand? = ADIDAS) -> String {
+    guard fromSize != toSize else { return size }
+
     var sizeNormalized = size
         .replacingOccurrences(of: " ", with: "")
         .replacingOccurrences(of: "US", with: "")
@@ -228,15 +246,12 @@ func convertSize(from fromSize: ShoeSize,
         }
     }
 
-    guard fromSize != toSize else { return size }
     let indexes: [ShoeSize: Int] = [.EU: 0, .UK: 1, .US: 2]
 
     guard let fromIndex = indexes[fromSize], let toIndex = indexes[toSize] else { return "" }
 
-    guard let row = conversionChart.first(where: { row in
-        size == row[fromIndex]
-    })
-    else { return "" }
+    let chart = gender == .Women ? conversionChartWomen : conversionChart
+    guard let row = chart.first(where: { size == $0[fromIndex] }) else { return "" }
 
     let sizeNum = row[toIndex]
     return "\(toSize.rawValue) \(sizeNum)"

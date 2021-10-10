@@ -20,7 +20,7 @@ let ALLSTORES: [Store] = zip(StoreId.allCases, StoreName.allCases).map { (id: St
 let ALLSTORESWITHOTHER: [GenericStore] = ALLSTORES
     .map { (store: Store) in GenericStore(id: store.id.rawValue, name: store.name.rawValue) } + [GenericStore(id: "other", name: "Other")]
 
-let ALLSHOESIZESUS = (3 ... 36)
+let ALLSHOESIZESUS = (6 ... 36)
     .reversed()
     .filter { $0 > 26 ? $0.isMultiple(of: 2) : true }
     .map { "US \((Double($0) * 0.5).rounded(toPlaces: $0 % 2 == 1 ? 1 : 0))" }
