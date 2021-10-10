@@ -247,13 +247,18 @@ struct ItemDetailView: View {
                                                     Button {
                                                         restocksPriceType = restocksPriceType == .regular ? .consign : .regular
                                                     } label: {
-                                                        Text(restocksPriceType.rawValue)
-                                                            .font(.semiBold(size: 12))
-                                                            .foregroundColor(restocksPriceType == .regular ? .customText1 : .customWhite)
-                                                            .padding(.horizontal, 5)
-                                                            .padding(.vertical, 3)
-                                                            .background(Capsule().fill(Color.customBlue.opacity(restocksPriceType == .regular ? 0.0 : 1.0)))
-                                                            .overlay(Capsule().stroke(Color.customBlue, lineWidth: 2))
+                                                        VStack(alignment: .center, spacing: 1) {
+                                                            Text(restocksPriceType == .regular ? "Show All" : "Show Consign")
+                                                                .font(.bold(size: 13))
+                                                                .foregroundColor(.customBlue)
+                                                                .underline()
+                                                            Image(systemName: "arrow.up.arrow.down")
+                                                                .font(.semiBold(size: 7))
+                                                                .foregroundColor(.customText2)
+                                                            Text(restocksPriceType == .regular ? "Show Consign" : "Show All")
+                                                                .font(.regular(size: 10))
+                                                                .foregroundColor(.customText2)
+                                                        }
                                                     }
                                                 }
                                             }
@@ -275,7 +280,7 @@ struct ItemDetailView: View {
                                         Text("Your size:")
                                             .font(.semiBold(size: 14))
                                             .foregroundColor(.customText1)
-                                            .padding(.top, -5)
+                                            .padding(.top, -8)
                                             .padding(.bottom, -10)
                                         priceRow(row: row)
                                         Text("All sizes:")
