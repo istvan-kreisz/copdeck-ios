@@ -189,26 +189,32 @@ let conversionChartWomen = [["35.5", "2.5", "5"],
                             ["44", "9", "11.5"],
                             ["44.5", "9.5", "12"]]
 
-func convertSize(from fromSize: ShoeSize,
-                 to toSize: ShoeSize,
-                 size: String,
-                 gender: Gender?,
-                 brand: Brand?) -> String {
-    var sizeNormalized = size
-        .replacingOccurrences(of: " ", with: "")
-        .replacingOccurrences(of: "US", with: "")
-
-    guard fromSize != toSize else { return sizeNormalized }
-
-    if fromSize == .EU {
-        sizeNormalized = size
+func convertSizes(from fromSize: ShoeSize,
+                  to toSize: ShoeSize,
+                  sizes: [String],
+                  gender: Gender?,
+                  brand: Brand?) -> [String] {
+    var sizesNormalized = sizes.map {
+        $0
             .replacingOccurrences(of: " ", with: "")
             .replacingOccurrences(of: "US", with: "")
-            .replacingOccurrences(of: "1/2", with: "½")
-            .replacingOccurrences(of: "1/3", with: "⅓")
-            .replacingOccurrences(of: "2/3", with: "⅔")
-            .replacingOccurrences(of: ".5", with: "½")
     }
+
+    guard fromSize != toSize else { return sizesNormalized }
+
+    if fromSize == .EU {
+        sizesNormalized = sizes.map {
+            $0
+                .replacingOccurrences(of: " ", with: "")
+                .replacingOccurrences(of: "US", with: "")
+                .replacingOccurrences(of: "1/2", with: "½")
+                .replacingOccurrences(of: "1/3", with: "⅓")
+                .replacingOccurrences(of: "2/3", with: "⅔")
+                .replacingOccurrences(of: ".5", with: "½")
+        }
+    }
+
+    var sizesConverted: [String] = []
 
     if let brand = brand, let gender = gender {
         var charts: [SizeConversion.Sizes.Sizetables.Chart] = []
@@ -222,37 +228,57 @@ func convertSize(from fromSize: ShoeSize,
                 charts = conversionCharts.kids ?? []
             }
         }
-        for chart in charts {
-            if let row = chart.values.first(where: { val in
-                switch fromSize {
-                case .EU:
-                    return val.eur == sizeNormalized
-                case .UK:
-                    return val.uk == sizeNormalized
-                case .US:
-                    return val.us == sizeNormalized
-                }
-            }) {
-                switch toSize {
-                case .EU:
-                    return row.eur
-                case .UK:
-                    return row.uk
-                case .US:
-                    return row.us
+        sizesNormalized.forEach { sizeNormalized in
+            for chart in charts {
+                if let row = chart.values.first(where: { val in
+                    switch fromSize {
+                    case .EU:
+                        return val.eur == sizeNormalized
+                    case .UK:
+                        return val.uk == sizeNormalized
+                    case .US:
+                        return val.us == sizeNormalized
+                    }
+                }) {
+                    switch toSize {
+                    case .EU:
+                        sizesConverted.append(row.eur)
+                    case .UK:
+                        sizesConverted.append(row.uk)
+                    case .US:
+                        sizesConverted.append(row.us)
+                    }
                 }
             }
         }
     }
+    if sizesConverted.count == sizes.count {
+        return sizesConverted
+    } else {
+        sizesConverted = []
+        let indexes: [ShoeSize: Int] = [.EU: 0, .UK: 1, .US: 2]
 
-    let indexes: [ShoeSize: Int] = [.EU: 0, .UK: 1, .US: 2]
+        guard let fromIndex = indexes[fromSize], let toIndex = indexes[toSize] else { return sizesNormalized }
 
-    guard let fromIndex = indexes[fromSize], let toIndex = indexes[toSize] else { return "" }
+        let chart = gender == .Women ? conversionChartWomen : conversionChart
+        sizesNormalized.forEach { sizeNormalized in
+            guard let row = chart.first(where: { sizeNormalized == $0[fromIndex] }) else {
+                sizesConverted.append("")
+                return
+            }
 
-    let chart = gender == .Women ? conversionChartWomen : conversionChart
-    guard let row = chart.first(where: { sizeNormalized == $0[fromIndex] }) else { return "" }
+            sizesConverted.append(row[toIndex])
+        }
+        return sizesConverted
+    }
+}
 
-    return row[toIndex]
+func convertSize(from fromSize: ShoeSize,
+                 to toSize: ShoeSize,
+                 size: String,
+                 gender: Gender?,
+                 brand: Brand?) -> String {
+    convertSizes(from: fromSize, to: toSize, sizes: [size], gender: gender, brand: brand).first ?? ""
 }
 
 enum ShoeSize: String, Codable, Equatable, CaseIterable {
@@ -264,9 +290,6 @@ enum ShoeSize: String, Codable, Equatable, CaseIterable {
         .map { "US \((Double($0) * 0.5).rounded(toPlaces: $0 % 2 == 1 ? 1 : 0))" }
 
     static var ALLSHOESIZESCONVERTED: [String] {
-        ALLSHOESIZESUS.map {
-            let size = convertSize(from: .US, to: AppStore.default.state.settings.shoeSize, size: $0, gender: .Men, brand: nil)
-            return size
-        }.uniqued()
+        convertSizes(from: .US, to: AppStore.default.state.settings.shoeSize, sizes: ALLSHOESIZESUS, gender: .Men, brand: nil).uniqued()
     }
 }

@@ -40,20 +40,38 @@ extension String {
     mutating func capitalizeFirstLetter() {
         self = self.capitalizingFirstLetter()
     }
-    
+
     func asSize(gender: Gender?, brand: Brand?) -> String {
         convertSize(from: .US,
                     to: AppStore.default.state.settings.shoeSize,
-                    size: self.replacingOccurrences(of: "US", with: "").replacingOccurrences(of: " ", with: ""),
+                    size: self,
                     gender: gender,
                     brand: brand)
     }
-    
+
     func asSize(of item: Item?) -> String {
         asSize(gender: item?.genderCalculated, brand: item?.brandCalculated)
     }
-    
+
     func asSize(of inventoryItem: InventoryItem?) -> String {
         asSize(gender: inventoryItem?.genderCalculated, brand: inventoryItem?.brandCalculated)
+    }
+}
+
+extension Array where Element == String {
+    func asSizes(gender: Gender?, brand: Brand?) -> [String] {
+        convertSizes(from: .US,
+                     to: AppStore.default.state.settings.shoeSize,
+                     sizes: self,
+                     gender: gender,
+                     brand: brand)
+    }
+
+    func asSizes(of item: Item?) -> [String] {
+        asSizes(gender: item?.genderCalculated, brand: item?.brandCalculated)
+    }
+
+    func asSizes(of inventoryItem: InventoryItem?) -> [String] {
+        asSizes(gender: inventoryItem?.genderCalculated, brand: inventoryItem?.brandCalculated)
     }
 }

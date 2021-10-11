@@ -26,7 +26,7 @@ struct NewItemCard: View {
     let didTapDelete: (() -> Void)?
     
     var sizesConverted: [String] {
-        sizes.map { $0.asSize(of: inventoryItem) }
+        sizes.asSizes(of: inventoryItem)
     }
 
     var textFieldStyle: TextFieldRounded.Style {
