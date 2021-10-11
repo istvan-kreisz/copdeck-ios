@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum BrandId: String, Codable {
+enum BrandId: String, Codable, Equatable {
     case adidas
     case jordan
     case nike
@@ -32,7 +32,7 @@ enum BrandId: String, Codable {
     case underarmour
 }
 
-struct Brand {
+struct Brand: Codable, Equatable, Hashable {
     let id: BrandId
     let stockx: String
     let goat: String
@@ -40,7 +40,7 @@ struct Brand {
 }
 
 let ADIDAS = Brand(id: .adidas, stockx: "adidas", goat: "adidas", klekt: "Adidas")
-let JORDAN = Brand(id: .jordan, stockx: "Jordan", goat: "Air Jordan", klekt: "Air Jordan")
+let JORDAN = Brand(id: .nike, stockx: "Jordan", goat: "Air Jordan", klekt: "Air Jordan")
 let NIKE = Brand(id: .nike, stockx: "Nike", goat: "Nike", klekt: "Nike")
 let NEWBALANCE = Brand(id: .newbalance, stockx: "New Balance", goat: "New Balance", klekt: "New Balance")
 let ASICS = Brand(id: .asics, stockx: "ASICS", goat: "ASICS", klekt: "Asics")
@@ -107,7 +107,7 @@ func getBrand(storeInfoArray: [Item.StoreInfo]) -> Brand? {
     return nil
 }
 
-enum Gender: String, Codable {
+enum Gender: String, Codable, Equatable {
     case Men, Women, Kids
 }
 
@@ -192,13 +192,13 @@ let conversionChartWomen = [["35.5", "2.5", "5"],
 func convertSize(from fromSize: ShoeSize,
                  to toSize: ShoeSize,
                  size: String,
-                 gender: Gender? = .Men,
-                 brand: Brand? = ADIDAS) -> String {
-    guard fromSize != toSize else { return size }
-
+                 gender: Gender?,
+                 brand: Brand?) -> String {
     var sizeNormalized = size
         .replacingOccurrences(of: " ", with: "")
         .replacingOccurrences(of: "US", with: "")
+
+    guard fromSize != toSize else { return sizeNormalized }
 
     if fromSize == .EU {
         sizeNormalized = size
@@ -235,7 +235,6 @@ func convertSize(from fromSize: ShoeSize,
             }) {
                 switch toSize {
                 case .EU:
-                    print(row.eur)
                     return row.eur
                 case .UK:
                     return row.uk
@@ -251,23 +250,23 @@ func convertSize(from fromSize: ShoeSize,
     guard let fromIndex = indexes[fromSize], let toIndex = indexes[toSize] else { return "" }
 
     let chart = gender == .Women ? conversionChartWomen : conversionChart
-    guard let row = chart.first(where: { size == $0[fromIndex] }) else { return "" }
+    guard let row = chart.first(where: { sizeNormalized == $0[fromIndex] }) else { return "" }
 
-    let sizeNum = row[toIndex]
-    return "\(toSize.rawValue) \(sizeNum)"
+    return row[toIndex]
 }
 
 enum ShoeSize: String, Codable, Equatable, CaseIterable {
     case EU, UK, US
-}
 
-protocol WithVariableShoeSize {
-    var usSize: String { get set }
-}
+    static let ALLSHOESIZESUS = (6 ... 36)
+        .reversed()
+        .filter { $0 > 26 ? $0.isMultiple(of: 2) : true }
+        .map { "US \((Double($0) * 0.5).rounded(toPlaces: $0 % 2 == 1 ? 1 : 0))" }
 
-extension WithVariableShoeSize {
-    var size: String {
-        get { convertSize(from: .US, to: AppStore.default.state.settings.shoeSize, size: usSize) }
-        set { self.usSize = convertSize(from: AppStore.default.state.settings.shoeSize, to: .US, size: newValue) }
+    static var ALLSHOESIZESCONVERTED: [String] {
+        ALLSHOESIZESUS.map {
+            let size = convertSize(from: .US, to: AppStore.default.state.settings.shoeSize, size: $0, gender: .Men, brand: nil)
+            return size
+        }.uniqued()
     }
 }

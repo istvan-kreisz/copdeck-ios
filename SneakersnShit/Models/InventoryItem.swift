@@ -46,7 +46,7 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     var name: String
     var purchasePrice: PriceWithCurrency?
     let imageURL: ImageURL?
-    var usSize: String
+    var size: String
     var condition: Condition
     var listingPrices: [ListingPrice] = []
     var copdeckPrice: ListingPrice?
@@ -58,6 +58,15 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     let updated: Double?
     var purchasedDate: Double?
     var soldDate: Double?
+    var gender: Gender?
+    var brand: Brand?
+    var brandCalculated: Brand? { brand ?? item?.brandCalculated }
+    var genderCalculated: Gender? { gender ?? item?.genderCalculated }
+
+    var convertedSize: String {
+        get { size.asSize(of: self) }
+        set { size = convertSize(from: AppStore.default.state.settings.shoeSize, to: .US, size: newValue, gender: genderCalculated, brand: brandCalculated) }
+    }
 
     var purchasedDateComponents: DateComponents? {
         purchasedDate.serverDate.map { Calendar.current.dateComponents([.year, .month], from: $0) }
@@ -67,46 +76,18 @@ struct InventoryItem: Codable, Equatable, Identifiable {
         soldDate.serverDate.map { Calendar.current.dateComponents([.year, .month], from: $0) }
     }
 
+    var item: Item? {
+        guard let itemId = itemId, let item = ItemCache.default.value(itemId: itemId, settings: AppStore.default.state.settings) else { return nil }
+        return item
+    }
+
     enum CodingKeys: String, CodingKey {
-        case id, itemId, name, purchasePrice, imageURL, usSize = "size", condition, copdeckPrice, listingPrices, soldPrice, status, notes, pendingImport,
-             created, updated, purchasedDate, soldDate
+        case id, itemId, name, purchasePrice, imageURL, size, condition, copdeckPrice, listingPrices, soldPrice, status, notes, pendingImport,
+             created, updated, purchasedDate, soldDate, gender, brand
     }
 }
 
 extension InventoryItem {
-    init(id: String,
-         itemId: String?,
-         name: String,
-         purchasePrice: PriceWithCurrency?,
-         imageURL: ImageURL?,
-         size: String,
-         condition: Condition,
-         listingPrices: [ListingPrice] = [],
-         copdeckPrice: ListingPrice?,
-         soldPrice: SoldPrice?,
-         status: SoldStatus? = .None,
-         notes: String?,
-         pendingImport: Bool?,
-         created: Double?,
-         updated: Double?,
-         purchasedDate: Double?,
-         soldDate: Double?) {
-        self.init(id: id,
-                  itemId: itemId,
-                  name: name,
-                  purchasePrice: purchasePrice,
-                  imageURL: imageURL,
-                  usSize: convertSize(from: AppStore.default.state.settings.shoeSize, to: .US, size: size),
-                  condition: condition,
-                  soldPrice: soldPrice,
-                  notes: notes,
-                  pendingImport: pendingImport,
-                  created: created,
-                  updated: updated,
-                  purchasedDate: purchasedDate,
-                  soldDate: soldDate)
-    }
-
     init(fromItem item: Item, size: String? = nil) {
         self.init(id: UUID().uuidString,
                   itemId: item.id,
@@ -122,7 +103,9 @@ extension InventoryItem {
                   created: Date.serverDate,
                   updated: Date.serverDate,
                   purchasedDate: Date.serverDate,
-                  soldDate: nil)
+                  soldDate: nil,
+                  gender: item.gender,
+                  brand: item.brand)
     }
 
     func copy(withName name: String, itemId: String?, notes: String?) -> InventoryItem {
@@ -151,8 +134,6 @@ extension InventoryItem {
                                      purchasedDate: nil,
                                      soldDate: nil)
 }
-
-extension InventoryItem: WithVariableShoeSize {}
 
 extension InventoryItem {
     static func purchaseSummary(forMonth month: Int, andYear year: Int, inventoryItems: [InventoryItem]) -> MonthlyStatistics {

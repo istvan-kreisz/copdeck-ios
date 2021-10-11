@@ -70,7 +70,7 @@ struct SettingsView: View {
         // klekt
         self._klektBuyersTaxes = State(initialValue: (settings.feeCalculation.klekt?.taxes)?.rounded(toPlaces: 1) ?? "")
 
-        self._isPresented = isPresented
+        self._isPresented = isPresented        
     }
 
     // general
@@ -253,11 +253,19 @@ struct SettingsView: View {
                                          selectedOption: $shoeSizeRegion,
                                          buttonTapped: selectShoeSizeRegion)
 
+                        let preferredSize = Binding<String>(get: { preferredShoeSize.asSize(gender: .Men, brand: nil) },
+                                                            set: { preferredShoeSize = convertSize(from: AppStore.default.state.settings.shoeSize,
+                                                                                                   to: .US,
+                                                                                                   size: $0,
+                                                                                                   gender: .Men,
+                                                                                                   brand: nil)
+                                                            })
+
                         ListSelectorMenu(title: "Preferred shoe size",
                                          selectorScreenTitle: "Preferred shoe size",
                                          buttonTitle: "Select size",
-                                         options: ALLSHOESIZES.reversed(),
-                                         selectedOption: $preferredShoeSize,
+                                         options: ShoeSize.ALLSHOESIZESCONVERTED.reversed(),
+                                         selectedOption: preferredSize,
                                          buttonTapped: selectPreferredShoeSize)
                     }
 

@@ -45,7 +45,7 @@ struct ItemDetailView: View {
                 addToInventory = (true, row.size)
             }) {
                 ZStack(alignment: Alignment(horizontal: .trailing, vertical: .center)) {
-                    Text(row.size.replacingOccurrences(of: "US ", with: ""))
+                    Text(row.size.asSize(of: item))
                         .font(.semiBold(size: 15))
                         .padding(.trailing, 3)
                         .frame(height: 32)
@@ -249,9 +249,8 @@ struct ItemDetailView: View {
                                                     } label: {
                                                         VStack(alignment: .center, spacing: 1) {
                                                             Text(restocksPriceType == .regular ? "Show All" : "Show Consign")
-                                                                .font(.bold(size: 13))
+                                                                .font(.bold(size: 12))
                                                                 .foregroundColor(.customBlue)
-                                                                .underline()
                                                             Image(systemName: "arrow.up.arrow.down")
                                                                 .font(.semiBold(size: 7))
                                                                 .foregroundColor(.customText2)
@@ -264,6 +263,7 @@ struct ItemDetailView: View {
                                             }
                                         }
                                     }
+                                    .padding(.bottom, -15)
 
                                     if loader.isLoading {
                                         CustomSpinner(text: "Loading...", animate: true)
@@ -271,7 +271,7 @@ struct ItemDetailView: View {
                                     }
 
                                     if let preferredSize = store.state.settings.preferredShoeSize,
-                                       item?.sortedSizes.contains(preferredSize) == true,
+                                       item?.sortedSizes.contains(where: { $0.number == preferredSize.number }) == true,
                                        let row = item?.priceRow(size: preferredSize,
                                                                 priceType: priceType,
                                                                 feeType: feeType,
@@ -280,7 +280,6 @@ struct ItemDetailView: View {
                                         Text("Your size:")
                                             .font(.semiBold(size: 14))
                                             .foregroundColor(.customText1)
-                                            .padding(.top, -8)
                                             .padding(.bottom, -10)
                                         priceRow(row: row)
                                         Text("All sizes:")

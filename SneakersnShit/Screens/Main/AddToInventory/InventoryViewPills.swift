@@ -19,7 +19,7 @@ struct InventoryViewPills: View {
 
     var details: [(String, Int)] {
         [inventoryItem.condition.rawValue,
-         inventoryItem.size,
+         inventoryItem.convertedSize,
          inventoryItem.purchasePrice?.asString].enumerated()
             .compactMap { item in item.element.map { ($0, item.offset) } ?? nil }
     }

@@ -9,7 +9,13 @@ import Foundation
 
 extension String {
     var number: Double? {
-        Double(components(separatedBy: CharacterSet.decimalDigits.inverted)
+        let sanitized = self
+            .replacingOccurrences(of: " ", with: "")
+            .replacingOccurrences(of: "US", with: "")
+            .replacingOccurrences(of: "⅓", with: ".33")
+            .replacingOccurrences(of: "⅔", with: ".66")
+            .replacingOccurrences(of: "½", with: ".5")
+        return Double(sanitized.components(separatedBy: CharacterSet.decimalDigits.inverted)
             .filter { Double($0) != nil }
             .joined(separator: "."))
     }
@@ -33,5 +39,21 @@ extension String {
 
     mutating func capitalizeFirstLetter() {
         self = self.capitalizingFirstLetter()
+    }
+    
+    func asSize(gender: Gender?, brand: Brand?) -> String {
+        convertSize(from: .US,
+                    to: AppStore.default.state.settings.shoeSize,
+                    size: self.replacingOccurrences(of: "US", with: "").replacingOccurrences(of: " ", with: ""),
+                    gender: gender,
+                    brand: brand)
+    }
+    
+    func asSize(of item: Item?) -> String {
+        asSize(gender: item?.genderCalculated, brand: item?.brandCalculated)
+    }
+    
+    func asSize(of inventoryItem: InventoryItem?) -> String {
+        asSize(gender: inventoryItem?.genderCalculated, brand: inventoryItem?.brandCalculated)
     }
 }

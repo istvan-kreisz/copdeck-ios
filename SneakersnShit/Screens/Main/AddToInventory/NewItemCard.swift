@@ -24,6 +24,10 @@ struct NewItemCard: View {
     let sizes: [String]
     let showCopDeckPrice: Bool
     let didTapDelete: (() -> Void)?
+    
+    var sizesConverted: [String] {
+        sizes.map { $0.asSize(of: inventoryItem) }
+    }
 
     var textFieldStyle: TextFieldRounded.Style {
         style == .card ? .gray : .white
@@ -54,7 +58,7 @@ struct NewItemCard: View {
         self.showCopDeckPrice = showCopDeckPrice
         self.didTapDelete = didTapDelete
     }
-    
+
     @ViewBuilder func datePicker(title: String, date: Binding<Date>) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title)
@@ -79,14 +83,14 @@ struct NewItemCard: View {
     var body: some View {
         let soldStatus = Binding<String>(get: { (inventoryItem.status ?? InventoryItem.SoldStatus.None).rawValue.uppercased() },
                                          set: { new in
-            let newValue =  .init(rawValue: new.lowercased().capitalized) ?? InventoryItem.SoldStatus.None
-            inventoryItem.status = newValue
-            if newValue == .Sold && inventoryItem.soldDate == nil {
-                inventoryItem.soldDate = Date.serverDate
-            } else {
-                inventoryItem.soldDate = nil
-            }
-        })
+                                             let newValue = .init(rawValue: new.lowercased().capitalized) ?? InventoryItem.SoldStatus.None
+                                             inventoryItem.status = newValue
+                                             if newValue == .Sold, inventoryItem.soldDate == nil {
+                                                 inventoryItem.soldDate = Date.serverDate
+                                             } else {
+                                                 inventoryItem.soldDate = nil
+                                             }
+                                         })
 
         VStack(alignment: .leading, spacing: 11) {
             if didTapDelete != nil {
@@ -124,9 +128,12 @@ struct NewItemCard: View {
             HStack(alignment: .top, spacing: 11) {
                 let condition = Binding<String>(get: { inventoryItem.condition.rawValue },
                                                 set: { inventoryItem.condition = .init(rawValue: $0) ?? .new })
+                let size = Binding<String>(get: { inventoryItem.convertedSize },
+                                           set: { inventoryItem.convertedSize = $0 })
+
                 DropDownMenu(title: "size",
-                             selectedItem: $inventoryItem.size,
-                             options: sizes,
+                             selectedItem: size,
+                             options: sizesConverted,
                              style: dropdownStyle)
                 DropDownMenu(title: "condition",
                              selectedItem: condition,

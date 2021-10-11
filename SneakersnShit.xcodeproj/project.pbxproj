@@ -183,7 +183,7 @@
 		5DEBC088269B24BA000EEADC /* ViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEBC087269B24BA000EEADC /* ViewRouter.swift */; };
 		5DEBC08A269B3DE8000EEADC /* Double+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEBC089269B3DE8000EEADC /* Double+Extensions.swift */; };
 		5DECB57C27068AA50017748C /* SocialLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DECB57B27068AA50017748C /* SocialLoginView.swift */; };
-		5DECB57E2707849F0017748C /* WithVariableShoeSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DECB57D2707849E0017748C /* WithVariableShoeSize.swift */; };
+		5DECB57E2707849F0017748C /* ShoeSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DECB57D2707849E0017748C /* ShoeSize.swift */; };
 		5DECB5802708C28C0017748C /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DECB57F2708C28B0017748C /* Date+Extensions.swift */; };
 		5DECB5822708DC4F0017748C /* MonthlyStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DECB5812708DC4F0017748C /* MonthlyStatistics.swift */; };
 		5DECB5842708E1A00017748C /* SellerStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DECB5832708E1A00017748C /* SellerStatsView.swift */; };
@@ -372,7 +372,7 @@
 		5DEBC087269B24BA000EEADC /* ViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewRouter.swift; sourceTree = "<group>"; };
 		5DEBC089269B3DE8000EEADC /* Double+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extensions.swift"; sourceTree = "<group>"; };
 		5DECB57B27068AA50017748C /* SocialLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialLoginView.swift; sourceTree = "<group>"; };
-		5DECB57D2707849E0017748C /* WithVariableShoeSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithVariableShoeSize.swift; sourceTree = "<group>"; };
+		5DECB57D2707849E0017748C /* ShoeSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoeSize.swift; sourceTree = "<group>"; };
 		5DECB57F2708C28B0017748C /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		5DECB5812708DC4F0017748C /* MonthlyStatistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyStatistics.swift; sourceTree = "<group>"; };
 		5DECB5832708E1A00017748C /* SellerStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SellerStatsView.swift; sourceTree = "<group>"; };
@@ -867,6 +867,7 @@
 				5D63121F269330B900876D99 /* APIConfig.swift */,
 				5D488E8825C8D54E00624FEF /* AppError.swift */,
 				5D6312212694797300876D99 /* Item.swift */,
+				5DECB57D2707849E0017748C /* ShoeSize.swift */,
 				5D63122A2695066500876D99 /* ExchangeRates.swift */,
 				5D63122C2695068300876D99 /* Currency.swift */,
 				5D63122E269506AE00876D99 /* User.swift */,
@@ -1057,7 +1058,6 @@
 				5DDEFDCE26D2ADC2001B0F76 /* EnumCodable.swift */,
 				5D5D4C4326D50EB100A7C61A /* ModelWithDate.swift */,
 				5D564E472704F66700190CF4 /* StringRepresentable.swift */,
-				5DECB57D2707849E0017748C /* WithVariableShoeSize.swift */,
 			);
 			path = Types;
 			sourceTree = "<group>";
@@ -1399,7 +1399,7 @@
 				5D631257269669A600876D99 /* DefaultDataController.swift in Sources */,
 				5D6960AD2587149A0058BABE /* ReduxStore.swift in Sources */,
 				5D9D520A26AF17C900AB1F30 /* ItemImageViewWithNavBar.swift in Sources */,
-				5DECB57E2707849F0017748C /* WithVariableShoeSize.swift in Sources */,
+				5DECB57E2707849F0017748C /* ShoeSize.swift in Sources */,
 				5D564E3F2703592E00190CF4 /* SpreadsheetImportAdminView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

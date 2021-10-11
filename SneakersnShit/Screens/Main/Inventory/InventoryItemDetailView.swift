@@ -32,15 +32,6 @@ struct InventoryItemDetailView: View {
         (UIScreen.screenWidth - (Styles.horizontalPadding * 4.0) - (Styles.horizontalMargin * 2.0)) / 3
     }
 
-    var item: Item? {
-        guard let itemId = inventoryItem.itemId,
-              let item = ItemCache.default.value(itemId: itemId, settings: .default)
-        else {
-            return nil
-        }
-        return item
-    }
-
     var imageDownloadHeaders: [String: String] {
         if let imageURLStoreId = inventoryItem.imageURL?.store?.id, let requestInfo = store.state.requestInfo(for: imageURLStoreId) {
             return requestInfo.imageDownloadHeaders
@@ -111,7 +102,7 @@ struct InventoryItemDetailView: View {
                                     purchasePrice: inventoryItem.purchasePrice,
                                     currency: Currency(code: .usd, symbol: .usd),
                                     style: NewItemCard.Style.noBackground,
-                                    sizes: item?.sortedSizes ?? ALLSHOESIZES,
+                                    sizes: inventoryItem.item?.sortedSizes ?? ShoeSize.ALLSHOESIZESUS,
                                     showCopDeckPrice: true)
 
                         VStack(alignment: .leading, spacing: 9) {
