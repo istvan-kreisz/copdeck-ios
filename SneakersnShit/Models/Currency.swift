@@ -42,13 +42,20 @@ struct Currency: Codable, Equatable {
         }
     }
 
-    static func currrency(withSymbol symbol: String) -> Currency? {
+    static func currency(withSymbol symbol: String) -> Currency? {
         if let symbol = Currency.CurrencySymbol(rawValue: symbol),
            let currency = ALLCURRENCIES.first(where: { $0.symbol == symbol }) {
             return currency
         } else {
             return nil
         }
+    }
+    
+    static func convert(from currency1: CurrencyCode, to currency2: CurrencyCode, exchangeRates: ExchangeRates) -> Double? {
+        if currency1 == currency2 { return 1 }
+        let rates: [CurrencyCode: Double] = [.gbp: exchangeRates.gbp, .usd: exchangeRates.usd, .eur: 1, .nok: exchangeRates.nok, .chf: exchangeRates.chf]
+        guard let fromRate = rates[currency1], let toRate = rates[currency2] else { return nil }
+        return toRate / fromRate
     }
 }
 

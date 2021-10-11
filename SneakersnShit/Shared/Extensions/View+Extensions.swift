@@ -32,8 +32,8 @@ extension View {
         ModifiedContent(content: self, modifier: CenteredHorizontally())
     }
 
-    func withDefaultShadow() -> some View {
-        ModifiedContent(content: self, modifier: DefaultShadow())
+    func withDefaultShadow(color: Color = .customAccent3) -> some View {
+        ModifiedContent(content: self, modifier: DefaultShadow(color: color))
     }
 
     func withDefaultPadding(padding: DefaultPadding.Padding = .all) -> some View {

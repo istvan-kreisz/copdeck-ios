@@ -10,9 +10,11 @@ import SwiftUI
 
 struct SellerStatsView: View {
     let inventoryItems: [InventoryItem]
+    let currency: Currency
+    let exchangeRates: ExchangeRates
 
     var monthlyStats: [MonthlyStatistics] {
-        InventoryItem.monthlyStatistics(for: inventoryItems)
+        InventoryItem.monthlyStatistics(for: inventoryItems, currency: currency, exchangeRates: exchangeRates)
     }
 
     @ViewBuilder func infoStack(title: String, value: String) -> some View {

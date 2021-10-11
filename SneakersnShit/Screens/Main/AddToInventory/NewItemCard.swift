@@ -24,7 +24,7 @@ struct NewItemCard: View {
     let sizes: [String]
     let showCopDeckPrice: Bool
     let didTapDelete: (() -> Void)?
-    
+
     var sizesConverted: [String] {
         sizes.asSizes(of: inventoryItem)
     }
@@ -41,7 +41,7 @@ struct NewItemCard: View {
         style == .card ? .gray : .white
     }
 
-    let listingPricesItem = [GridItem(.adaptive(minimum: 63, maximum: 80))]
+    let listingPricesItem = [GridItem(.flexible())]
 
     init(inventoryItem: Binding<InventoryItem>?,
          purchasePrice: PriceWithCurrency?,
@@ -103,17 +103,18 @@ struct NewItemCard: View {
 
             HStack(alignment: .top, spacing: 11) {
                 let purchasePrice = Binding<String>(get: { (inventoryItem.purchasePrice?.price).asString() },
-                                                    set: { new in
-                                                        inventoryItem.purchasePrice = PriceWithCurrency(price: Double(new) ?? 0, currencyCode: currency.code)
-                                                    })
+                                                    set: { inventoryItem.setPurchasePrice(price: $0, defaultCurrency: currency) })
+                let purchaseCurrency =
+                    Binding<String>(get: { inventoryItem.purchasePrice?.currencySymbol.rawValue ?? currency.symbol.rawValue },
+                                    set: { inventoryItem.setPurchaseCurrency(currency: $0) })
                 let purchasedDate = Binding<Date>(get: { inventoryItem.purchasedDate.serverDate ?? Date() },
                                                   set: { new in inventoryItem.purchasedDate = new.timeIntervalSince1970 * 1000 })
 
-                TextFieldRounded(title: "purchase price",
-                                 placeHolder: (self.purchasePrice?.price).asString(),
-                                 style: textFieldStyle,
-                                 keyboardType: .numberPad,
-                                 text: purchasePrice) { isActive in
+                PriceFieldWithCurrency(title: "purchase price",
+                                       textFieldStyle: textFieldStyle,
+                                       dropDownStyle: dropdownStyle,
+                                       price: purchasePrice,
+                                       currency: purchaseCurrency) { isActive in
                     if isActive, style == .card {
                         if !didTapPurchasePrice {
                             didTapPurchasePrice = true
@@ -121,8 +122,7 @@ struct NewItemCard: View {
                         }
                     }
                 }
-
-                datePicker(title: "purchased", date: purchasedDate)
+                datePicker(title: "purchased date", date: purchasedDate)
             }
 
             HStack(alignment: .top, spacing: 11) {
@@ -142,41 +142,17 @@ struct NewItemCard: View {
             }
 
             if showCopDeckPrice {
-                let price = Binding<String>(get: {
-                                                if let price = inventoryItem.copdeckPrice?.price.price, price > 0 {
-                                                    return price.rounded(toPlaces: 0)
-                                                } else {
-                                                    return ""
-                                                }
-                                            },
-                                            set: { new in
-                                                inventoryItem.copdeckPrice = ListingPrice(storeId: "copdeck",
-                                                                                          price: .init(price: Double(new) ?? 0,
-                                                                                                       currencyCode: inventoryItem.copdeckPrice?.price
-                                                                                                           .currencyCode ?? self.currency.code))
-                                            })
+                let price = Binding<String>(get: { (inventoryItem.copdeckPrice?.price.price).map { $0.rounded(toPlaces: 0) } ?? "" },
+                                            set: { inventoryItem.setCopDeckPrice(price: $0, defaultCurrency: self.currency) })
                 let currency =
                     Binding<String>(get: { inventoryItem.copdeckPrice?.price.currencySymbol.rawValue ?? self.currency.symbol.rawValue },
-                                    set: { currency in
-                                        if let currency = Currency.currrency(withSymbol: currency) {
-                                            let price = inventoryItem.copdeckPrice?.price.price ?? 0
-                                            inventoryItem.copdeckPrice = ListingPrice(storeId: "copdeck",
-                                                                                      price: .init(price: price, currencyCode: currency.code))
-                                        }
-                                    })
+                                    set: { inventoryItem.setCopDeckCurrency(currency: $0) })
 
-                HStack(spacing: 11) {
-                    TextFieldRounded(title: "copdeck price (optional)",
-                                     placeHolder: "0",
-                                     style: textFieldStyle,
-                                     keyboardType: .numberPad,
-                                     text: price)
-                    DropDownMenu(title: "currency",
-                                 selectedItem: currency,
-                                 options: ALLSELECTABLECURRENCYSYMBOLS.map(\.rawValue),
-                                 style: .white)
-                        .frame(width: 75)
-                }
+                PriceFieldWithCurrency(title: "copdeck price (optional)",
+                                       textFieldStyle: textFieldStyle,
+                                       dropDownStyle: dropdownStyle,
+                                       price: price,
+                                       currency: currency)
             }
 
             ToggleButton(title: "status",
@@ -192,60 +168,54 @@ struct NewItemCard: View {
 
                     LazyVGrid(columns: listingPricesItem, alignment: .leading, spacing: 10) {
                         ForEach(ALLSTORESWITHOTHER) { (store: GenericStore) in
-                            let text =
+                            let price =
+                                Binding<String>(get: { (inventoryItem.listingPrices.first(where: { $0.storeId == store.id })?.price.price).asString() },
+                                                set: { inventoryItem.setListingPrice(price: $0, defaultCurrency: self.currency, storeId: store.id) })
+
+                            let currency =
                                 Binding<String>(get: {
-                                                    (inventoryItem.listingPrices
-                                                        .first(where: { $0.storeId == store.id })?.price.price).asString()
+                                                    inventoryItem.listingPrices.first(where: { $0.storeId == store.id })?.price.currencySymbol.rawValue ?? self
+                                                        .currency.symbol
+                                                        .rawValue
                                                 },
-                                                set: { new in
-                                                    if let index = inventoryItem.listingPrices.firstIndex(where: { $0.storeId == store.id }) {
-                                                        inventoryItem
-                                                            .listingPrices[index] = ListingPrice(storeId: store.id,
-                                                                                                 price: .init(price: Double(new) ?? 0,
-                                                                                                              currencyCode: self.currency.code))
-                                                    } else {
-                                                        inventoryItem.listingPrices
-                                                            .append(.init(storeId: store.id,
-                                                                          price: .init(price: Double(new) ?? 0, currencyCode: currency.code)))
-                                                    }
-                                                })
-                            TextFieldRounded(title: store.id.lowercased(),
-                                             placeHolder: "\(currency.symbol.rawValue)0",
-                                             style: textFieldStyle,
-                                             keyboardType: .numberPad,
-                                             text: text,
-                                             width: 70)
+                                                set: { inventoryItem.setListingCurrency(currency: $0, storeId: store.id) })
+
+                            PriceFieldWithCurrency(title: "\(store.id) price",
+                                                   textFieldStyle: textFieldStyle,
+                                                   dropDownStyle: dropdownStyle,
+                                                   price: price,
+                                                   currency: currency)
                         }
                     }
                 }
                 .padding(.top, 5)
             } else if inventoryItem.status == .Sold {
-                let text =
+                let soldPrice =
                     Binding<String>(get: { (inventoryItem.soldPrice?.price?.price).asString() },
-                                    set: {
-                                        inventoryItem
-                                            .soldPrice = .init(storeId: inventoryItem.soldPrice?.storeId,
-                                                               price: Double($0).asPriceWithCurrency(currency: currency))
-                                    })
-                let soldOn =
+                                    set: { inventoryItem.setSoldPrice(price: $0, defaultCurrency: self.currency) })
+                let soldCurrency =
+                    Binding<String>(get: { inventoryItem.soldPrice?.price?.currencySymbol.rawValue ?? self.currency.symbol.rawValue },
+                                    set: { inventoryItem.setSoldPriceCurrency(currency: $0) })
+                let soldStore =
                     Binding<String>(get: { inventoryItem.soldPrice?.storeId?.uppercased() ?? "OTHER" },
-                                    set: { inventoryItem.soldPrice = .init(storeId: $0.lowercased(), price: inventoryItem.soldPrice?.price) })
+                                    set: { inventoryItem.setSoldStore(storeId: $0.lowercased()) })
 
                 VStack(alignment: .leading, spacing: 11) {
                     HStack(alignment: .top, spacing: 11) {
                         let soldDate = Binding<Date>(get: { inventoryItem.soldDate.serverDate ?? Date() },
                                                      set: { new in inventoryItem.soldDate = new.timeIntervalSince1970 * 1000 })
 
-                        TextFieldRounded(title: "selling price (optional)",
-                                         placeHolder: "\(currency.symbol.rawValue)0",
-                                         style: textFieldStyle,
-                                         keyboardType: .numberPad,
-                                         text: text)
-                        datePicker(title: "sold on", date: soldDate)
+                        PriceFieldWithCurrency(title: "selling price (optional)",
+                                               textFieldStyle: textFieldStyle,
+                                               dropDownStyle: dropdownStyle,
+                                               price: soldPrice,
+                                               currency: soldCurrency)
+
+                        datePicker(title: "sold date", date: soldDate)
                     }
 
                     ToggleButton(title: "sold on (optional)",
-                                 selection: soldOn,
+                                 selection: soldStore,
                                  options: ALLSTORESWITHOTHER.map { (store: GenericStore) in store.id.uppercased() },
                                  style: toggleButtonStyle)
                 }
@@ -258,15 +228,5 @@ struct NewItemCard: View {
                 .cornerRadius(12)
                 .withDefaultShadow()
         }
-    }
-}
-
-struct NewItemCard_Previews: PreviewProvider {
-    static var previews: some View {
-        NewItemCard(inventoryItem: .constant(InventoryItem.init(fromItem: Item.sample)),
-                    purchasePrice: Item.sample.retailPrice.map { PriceWithCurrency(price: $0, currencyCode: .usd) },
-                    currency: Currency(code: .usd, symbol: .usd),
-                    sizes: [],
-                    showCopDeckPrice: false)
     }
 }

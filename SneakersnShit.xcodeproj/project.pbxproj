@@ -11,6 +11,7 @@
 		5D0E5A13269E60DB006D7E9C /* TextFieldRounded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0E5A12269E60DB006D7E9C /* TextFieldRounded.swift */; };
 		5D117EAD271310E5000D1E43 /* SizeConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D117EAC271310E5000D1E43 /* SizeConversion.swift */; };
 		5D117EB12713287C000D1E43 /* sizes.json in Resources */ = {isa = PBXBuildFile; fileRef = 5D117EB02713287B000D1E43 /* sizes.json */; };
+		5D117EB3271468B7000D1E43 /* PriceFieldWithCurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D117EB2271468B7000D1E43 /* PriceFieldWithCurrency.swift */; };
 		5D19B0AB26A6D76600A31F4E /* MainAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D19B0A926A6D76600A31F4E /* MainAction.swift */; };
 		5D19B0AC26A6D76600A31F4E /* ErrorAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D19B0AA26A6D76600A31F4E /* ErrorAction.swift */; };
 		5D19B0AE26A6D7CA00A31F4E /* AuthenticationAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D19B0AD26A6D7CA00A31F4E /* AuthenticationAction.swift */; };
@@ -201,6 +202,7 @@
 		5D0E5A12269E60DB006D7E9C /* TextFieldRounded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldRounded.swift; sourceTree = "<group>"; };
 		5D117EAC271310E5000D1E43 /* SizeConversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeConversion.swift; sourceTree = "<group>"; };
 		5D117EB02713287B000D1E43 /* sizes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sizes.json; sourceTree = "<group>"; };
+		5D117EB2271468B7000D1E43 /* PriceFieldWithCurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceFieldWithCurrency.swift; sourceTree = "<group>"; };
 		5D19B0A926A6D76600A31F4E /* MainAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainAction.swift; sourceTree = "<group>"; };
 		5D19B0AA26A6D76600A31F4E /* ErrorAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorAction.swift; sourceTree = "<group>"; };
 		5D19B0AD26A6D7CA00A31F4E /* AuthenticationAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationAction.swift; sourceTree = "<group>"; };
@@ -408,6 +410,7 @@
 				5DCC466D26A8CEDE007671BC /* NewItemCard.swift */,
 				5D9D520326AE359C00AB1F30 /* InventoryViewPills.swift */,
 				5D9D520726AE4CF400AB1F30 /* EditInventoryTray.swift */,
+				5D117EB2271468B7000D1E43 /* PriceFieldWithCurrency.swift */,
 			);
 			path = AddToInventory;
 			sourceTree = "<group>";
@@ -1278,6 +1281,7 @@
 				5D631253269668FE00876D99 /* JSNativeBridge.swift in Sources */,
 				5D564E3D2703584100190CF4 /* SpreadsheetImport.swift in Sources */,
 				5D9D520226AE29DB00AB1F30 /* InventoryListItem.swift in Sources */,
+				5D117EB3271468B7000D1E43 /* PriceFieldWithCurrency.swift in Sources */,
 				5D90EDC826DE6254005AEA30 /* CollectionListener.swift in Sources */,
 				5D3DE37626AFAB54009E4D52 /* CountrySelector.swift in Sources */,
 				5D54FE2826C30931008CD05F /* VerticalItemListView.swift in Sources */,
@@ -1542,7 +1546,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.11.3;
+				MARKETING_VERSION = 0.11.4;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xfrontend -debug-time-function-bodies";
 				PRODUCT_BUNDLE_IDENTIFIER = istvankreisz.SneakersnShit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1570,7 +1574,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.11.3;
+				MARKETING_VERSION = 0.11.4;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xfrontend -debug-time-function-bodies";
 				PRODUCT_BUNDLE_IDENTIFIER = istvankreisz.SneakersnShit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1660,7 +1664,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.11.3;
+				MARKETING_VERSION = 0.11.4;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xfrontend -debug-time-function-bodies";
 				PRODUCT_BUNDLE_IDENTIFIER = istvankreisz.SneakersnShit.staging;
 				PRODUCT_NAME = "$(TARGET_NAME)-Staging";
@@ -1743,7 +1747,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.11.3;
+				MARKETING_VERSION = 0.11.4;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xfrontend -debug-time-function-bodies";
 				PRODUCT_BUNDLE_IDENTIFIER = istvankreisz.SneakersnShit.staging;
 				PRODUCT_NAME = "$(TARGET_NAME)-Staging";

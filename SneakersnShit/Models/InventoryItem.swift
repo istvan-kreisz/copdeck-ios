@@ -23,6 +23,10 @@ struct PriceWithCurrency: Codable, Equatable {
     var asString: String {
         "\(currencySymbol.rawValue)\(price.rounded(toPlaces: 0))"
     }
+    
+    func convertedPrice(currency: Currency, exchangeRates: ExchangeRates) -> Double {
+        Currency.convert(from: currencyCode, to: currency.code, exchangeRates: exchangeRates).map { $0 * price } ?? 0
+    }
 }
 
 struct InventoryItem: Codable, Equatable, Identifiable {
@@ -85,6 +89,61 @@ struct InventoryItem: Codable, Equatable, Identifiable {
         case id, itemId, name, purchasePrice, imageURL, size, condition, copdeckPrice, listingPrices, soldPrice, status, notes, pendingImport,
              created, updated, purchasedDate, soldDate, gender, brand
     }
+
+    // purchase price
+    mutating func setPurchaseCurrency(currency: String) {
+        guard let currency = Currency.currency(withSymbol: currency) else { return }
+        purchasePrice = PriceWithCurrency(price: purchasePrice?.price ?? 0, currencyCode: currency.code)
+    }
+
+    mutating func setPurchasePrice(price: String, defaultCurrency: Currency) {
+        purchasePrice = PriceWithCurrency(price: Double(price) ?? 0, currencyCode: purchasePrice?.currencyCode ?? defaultCurrency.code)
+    }
+
+    // copdeck price
+    mutating func setCopDeckCurrency(currency: String) {
+        guard let currency = Currency.currency(withSymbol: currency) else { return }
+        copdeckPrice = ListingPrice(storeId: "copdeck", price: .init(price: copdeckPrice?.price.price ?? 0, currencyCode: currency.code))
+    }
+
+    mutating func setCopDeckPrice(price: String, defaultCurrency: Currency) {
+        copdeckPrice = ListingPrice(storeId: "copdeck",
+                                    price: .init(price: Double(price) ?? 0, currencyCode: copdeckPrice?.price.currencyCode ?? defaultCurrency.code))
+    }
+
+    // listing price
+    mutating func setListingCurrency(currency: String, storeId: String) {
+        guard let currency = Currency.currency(withSymbol: currency) else { return }
+        if let index = listingPrices.firstIndex(where: { $0.storeId == storeId }) {
+            listingPrices[index] = ListingPrice(storeId: storeId, price: .init(price: listingPrices[index].price.price, currencyCode: currency.code))
+        } else {
+            listingPrices.append(ListingPrice(storeId: storeId, price: .init(price: 0, currencyCode: currency.code)))
+        }
+    }
+
+    mutating func setListingPrice(price: String, defaultCurrency: Currency, storeId: String) {
+        if let index = listingPrices.firstIndex(where: { $0.storeId == storeId }) {
+            listingPrices[index] = ListingPrice(storeId: storeId,
+                                                price: .init(price: Double(price) ?? 0, currencyCode: listingPrices[index].price.currencyCode))
+        } else {
+            listingPrices.append(ListingPrice(storeId: storeId, price: .init(price: Double(price) ?? 0, currencyCode: defaultCurrency.code)))
+        }
+    }
+    
+    // sold price
+    mutating func setSoldPriceCurrency(currency: String) {
+        guard let currency = Currency.currency(withSymbol: currency) else { return }
+        soldPrice = SoldPrice(storeId: soldPrice?.storeId, price: .init(price: soldPrice?.price?.price ?? 0, currencyCode: currency.code))
+    }
+
+    mutating func setSoldPrice(price: String, defaultCurrency: Currency) {
+        soldPrice = SoldPrice(storeId: soldPrice?.storeId,
+                                    price: .init(price: Double(price) ?? 0, currencyCode: soldPrice?.price?.currencyCode ?? defaultCurrency.code))
+    }
+    
+    mutating func setSoldStore(storeId: String) {
+        soldPrice = SoldPrice(storeId: storeId, price: soldPrice?.price)
+    }
 }
 
 extension InventoryItem {
@@ -136,16 +195,16 @@ extension InventoryItem {
 }
 
 extension InventoryItem {
-    static func purchaseSummary(forMonth month: Int, andYear year: Int, inventoryItems: [InventoryItem]) -> MonthlyStatistics {
+    static func purchaseSummary(forMonth month: Int, andYear year: Int, inventoryItems: [InventoryItem], currency: Currency, exchangeRates: ExchangeRates) -> MonthlyStatistics {
         let soldInventoryItems = inventoryItems.filter { $0.soldDateComponents?.year == year && $0.soldDateComponents?.month == month && $0.status == .Sold }
         let purchasedInventoryItems = inventoryItems.filter { $0.purchasedDateComponents?.year == year && $0.purchasedDateComponents?.month == month }
 
-        let purchasedPrices = purchasedInventoryItems.compactMap(\.purchasePrice?.price)
-        let soldPrices = soldInventoryItems.compactMap(\.soldPrice?.price?.price)
+        let purchasedPrices = purchasedInventoryItems.compactMap { $0.purchasePrice?.convertedPrice(currency: currency, exchangeRates: exchangeRates) }
+        let soldPrices = soldInventoryItems.compactMap { $0.soldPrice?.price?.convertedPrice(currency: currency, exchangeRates: exchangeRates) }
         return MonthlyStatistics(year: year, month: month, purchasPrices: purchasedPrices, soldPrices: soldPrices)
     }
 
-    static func monthlyStatistics(for inventoryItems: [InventoryItem]) -> [MonthlyStatistics] {
+    static func monthlyStatistics(for inventoryItems: [InventoryItem], currency: Currency, exchangeRates: ExchangeRates) -> [MonthlyStatistics] {
         let soldDates = inventoryItems.filter { $0.status == .Sold }.compactMap(\.soldDate)
         let purchasedDates = inventoryItems.compactMap(\.purchasedDate)
         let dates = soldDates + purchasedDates
@@ -163,7 +222,7 @@ extension InventoryItem {
 
         if minYear == maxYear {
             for month in stride(from: minMonth, to: maxMonth + 1, by: 1) {
-                let summary = purchaseSummary(forMonth: month, andYear: minYear, inventoryItems: inventoryItems)
+                let summary = purchaseSummary(forMonth: month, andYear: minYear, inventoryItems: inventoryItems, currency: currency, exchangeRates: exchangeRates)
                 monthlySummaries.append(summary)
             }
         } else {
@@ -176,7 +235,7 @@ extension InventoryItem {
                     endMonth = maxMonth
                 }
                 for month in stride(from: startMonth, to: endMonth + 1, by: 1) {
-                    let summary = purchaseSummary(forMonth: month, andYear: year, inventoryItems: inventoryItems)
+                    let summary = purchaseSummary(forMonth: month, andYear: year, inventoryItems: inventoryItems, currency: currency, exchangeRates: exchangeRates)
                     monthlySummaries.append(summary)
                 }
             }

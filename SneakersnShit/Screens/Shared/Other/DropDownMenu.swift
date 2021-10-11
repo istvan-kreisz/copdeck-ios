@@ -63,6 +63,7 @@ struct DropDownMenu: View {
             }
             .frame(height: Styles.inputFieldHeight)
         }
+        .withDefaultShadow(color: style == .white ? .customAccent3 : .clear)
     }
 }
 

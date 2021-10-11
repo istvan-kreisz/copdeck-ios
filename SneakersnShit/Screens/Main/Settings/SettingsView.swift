@@ -75,7 +75,7 @@ struct SettingsView: View {
 
     // general
     private func selectCurrency() {
-        if let currency = Currency.currrency(withSymbol: currency), settings.currency != currency {
+        if let currency = Currency.currency(withSymbol: currency), settings.currency != currency {
             settings.currency = currency
         }
     }

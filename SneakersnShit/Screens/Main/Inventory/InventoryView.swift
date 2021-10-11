@@ -243,7 +243,7 @@ struct InventoryView: View {
                         images.first.map { self.store.send(.main(action: .uploadProfileImage(image: $0))) }
                     }
                 case .sellerStats:
-                    SellerStatsView(inventoryItems: inventoryItems)
+                    SellerStatsView(inventoryItems: inventoryItems, currency: store.state.currency, exchangeRates: store.state.exchangeRates ?? .default)
                 case .none:
                     EmptyView()
                 }

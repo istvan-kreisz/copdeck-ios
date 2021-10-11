@@ -47,9 +47,10 @@ struct DefaultPadding: ViewModifier {
 }
 
 struct DefaultShadow: ViewModifier {
+    var color: Color = .customAccent3
+    
     func body(content: Content) -> some View {
-        content
-            .shadow(color: Color.customAccent3, radius: 5, x: 0, y: 0)
+        content.shadow(color: color, radius: 5, x: 0, y: 0)
     }
 }
 

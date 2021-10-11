@@ -100,7 +100,7 @@ struct InventoryItemDetailView: View {
 
                         NewItemCard(inventoryItem: $inventoryItem,
                                     purchasePrice: inventoryItem.purchasePrice,
-                                    currency: Currency(code: .usd, symbol: .usd),
+                                    currency: store.state.currency,
                                     style: NewItemCard.Style.noBackground,
                                     sizes: inventoryItem.item?.sortedSizes ?? ShoeSize.ALLSHOESIZESUS,
                                     showCopDeckPrice: true)

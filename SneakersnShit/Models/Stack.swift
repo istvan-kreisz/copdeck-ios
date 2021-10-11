@@ -18,6 +18,7 @@ struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
     let created: Double?
     let updated: Double?
     var publishedDate: Double?
+    var likes: [String]?
 
     var itemIds: [String] {
         items.map(\.inventoryItemId)
@@ -59,7 +60,8 @@ struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
               items: inventoryItems.map { .init(inventoryItemId: $0.id) },
               created: 0,
               updated: 0,
-              publishedDate: nil)
+              publishedDate: nil,
+              likes: nil)
     }
 
     static var empty: Stack {
@@ -71,7 +73,8 @@ struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
               items: [],
               created: Date.serverDate,
               updated: Date.serverDate,
-              publishedDate: nil)
+              publishedDate: nil,
+              likes: nil)
     }
 }
 
