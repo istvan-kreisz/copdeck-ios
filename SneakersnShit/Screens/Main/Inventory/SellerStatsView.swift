@@ -27,6 +27,10 @@ struct SellerStatsView: View {
                 .foregroundColor(.customText2)
         }
     }
+    
+    private func amountWithCurrency(_ number: Double) -> String {
+        "\(currency.symbol.rawValue)\(Int(number))"
+    }
 
     var body: some View {
         VerticalListView(bottomPadding: 20, spacing: 10, addHorizontalPadding: false) {
@@ -52,11 +56,11 @@ struct SellerStatsView: View {
                     .padding(.top, 5)
 
                     HStack {
-                        infoStack(title: "Revenue", value: "\(Int(stats.revenue))")
+                        infoStack(title: "Revenue", value: amountWithCurrency(stats.revenue))
                         Spacer()
-                        infoStack(title: "Cost", value: "\(Int(stats.cost))")
+                        infoStack(title: "Cost", value: amountWithCurrency(stats.cost))
                         Spacer()
-                        infoStack(title: "Profit", value: "\(Int(stats.profit))")
+                        infoStack(title: "Profit", value: amountWithCurrency(stats.profit))
                     }
                     .padding(.top, 5)
                 }

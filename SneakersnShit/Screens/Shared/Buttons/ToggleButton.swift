@@ -17,12 +17,16 @@ struct ToggleButton: View {
     var options: [String]
     var style: Style = .gray
     
-    static var size: CGFloat {
-        UIScreen.isSmallScreen ? 60 : 71
+    static var width: CGFloat {
+        UIScreen.isSmallScreen ? 60 : 68
+    }
+    
+    static var height: CGFloat {
+        UIScreen.isSmallScreen ? 26 : 28
     }
     
     let rows = [
-        GridItem(.adaptive(minimum: Self.size, maximum: Self.size))
+        GridItem(.adaptive(minimum: Self.width, maximum: Self.width))
     ]
 
     var body: some View {
@@ -33,11 +37,11 @@ struct ToggleButton: View {
                 .padding(.leading, 5)
 
             
-            LazyVGrid(columns: rows, alignment: .leading, spacing: 10) {
+            LazyVGrid(columns: rows, alignment: .leading, spacing: 3) {
                 ForEach(options, id: \.self) { (option: String) in
                     Text(option)
-                        .font(.bold(size: UIScreen.isSmallScreen ? 10 : 12))
-                        .frame(width: Self.size, height: 31)
+                        .font(.bold(size: UIScreen.isSmallScreen ? 10 : 11))
+                        .frame(width: Self.width, height: Self.height)
                         .foregroundColor(option == selection ? Color.customWhite : Color.customText1)
                         .background(Capsule().fill(option == selection ? Color.customBlue : Color.clear))
                         .background(Capsule().stroke(option == selection ? Color.clear : Color.customBlue, lineWidth: 2))
