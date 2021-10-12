@@ -52,11 +52,12 @@ func appReducer(state: inout AppState,
             state.feedPosts.data += postsData.data
             state.feedPosts.isLastPage = postsData.isLastPage
         case let .toggleLike(stack):
-            if stack.likes?.contains(state.user.id) == true {
-                
-            } else {
-                
-            }
+            break
+//            if stack.likes?.contains(state.user.id) == true {
+//
+//            } else {
+//
+//            }
         case let .updateSettings(settings):
             if var updatedUser = state.user {
                 updatedUser.settings = settings
