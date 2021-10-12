@@ -87,8 +87,6 @@ struct NewItemCard: View {
                                              inventoryItem.status = newValue
                                              if newValue == .Sold, inventoryItem.soldDate == nil {
                                                  inventoryItem.soldDate = Date.serverDate
-                                             } else {
-                                                 inventoryItem.soldDate = nil
                                              }
                                          })
 
