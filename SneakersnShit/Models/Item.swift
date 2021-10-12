@@ -200,8 +200,8 @@ extension Item {
 
         var price = prices?.first
         if storeId == .restocks {
-            if restocksPriceType == .consign {
-                price = prices?.first(where: { $0.restocksPriceType == .consign })
+            if let restocksPriceType = restocksPriceType {
+                price = prices?.first(where: { $0.restocksPriceType == restocksPriceType })
             } else {
                 price = prices?.min(by: { ($0.lowestAsk ?? 0) < ($1.lowestAsk ?? 0) })
             }

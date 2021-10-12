@@ -248,13 +248,13 @@ struct ItemDetailView: View {
                                                         restocksPriceType = restocksPriceType == .regular ? .consign : .regular
                                                     } label: {
                                                         VStack(alignment: .center, spacing: 1) {
-                                                            Text(restocksPriceType == .regular ? "Show All" : "Show Consign")
+                                                            Text(restocksPriceType == .regular ? "Regular" : "Consign")
                                                                 .font(.bold(size: 12))
                                                                 .foregroundColor(.customBlue)
                                                             Image(systemName: "arrow.up.arrow.down")
                                                                 .font(.semiBold(size: 7))
                                                                 .foregroundColor(.customText2)
-                                                            Text(restocksPriceType == .regular ? "Show Consign" : "Show All")
+                                                            Text(restocksPriceType == .regular ? "Consign" : "Regular")
                                                                 .font(.regular(size: 10))
                                                                 .foregroundColor(.customText2)
                                                         }
