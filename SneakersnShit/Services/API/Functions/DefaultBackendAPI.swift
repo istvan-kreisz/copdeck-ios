@@ -70,7 +70,7 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
             let item: Item
             let settings: CopDeckSettings
         }
-        handlePublisherResult(publisher: callFirebaseFunction(functionName: "updateItem", model: Wrapper(userId: userId, item: item, settings: settings)))
+        handlePublisherResult(publisher: callFirebaseFunction(functionName: "updateItem", model: Wrapper(userId: userId, item: item, settings: settings)), showAlert: false)
     }
 
     func getPopularItems(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {

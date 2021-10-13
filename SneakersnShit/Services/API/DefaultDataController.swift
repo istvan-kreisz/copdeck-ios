@@ -421,7 +421,7 @@ extension DefaultDataController {
                                                       klekt: .init(taxes: (settings.feeCalculation.klekt?.taxes) ?? 0))
         var showLogs = false
         if DebugSettings.shared.isInDebugMode {
-            showLogs = true && DebugSettings.shared.showScraperLogs
+            showLogs = DebugSettings.shared.showScraperLogs
         }
         return APIConfig(currency: settings.currency,
                          isLoggingEnabled: showLogs,

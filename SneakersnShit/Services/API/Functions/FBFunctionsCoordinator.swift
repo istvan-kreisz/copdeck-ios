@@ -34,7 +34,7 @@ class FBFunctionsCoordinator {
         self.userId = nil
     }
 
-    func handlePublisherResult<Model>(publisher: AnyPublisher<Model, AppError>, completion: ((Result<Model, AppError>) -> Void)? = nil) {
+    func handlePublisherResult<Model>(publisher: AnyPublisher<Model, AppError>, showAlert: Bool = true, completion: ((Result<Model, AppError>) -> Void)? = nil) {
         publisher
             .sink { [weak self] result in
                 switch result {
@@ -42,7 +42,9 @@ class FBFunctionsCoordinator {
                     if let completion = completion {
                         completion(.failure(error))
                     } else {
-                        self?.errorsSubject.send(error)
+                        if DebugSettings.shared.isInDebugMode || showAlert {
+                            self?.errorsSubject.send(error)                            
+                        }
                     }
                 case .finished:
                     break
