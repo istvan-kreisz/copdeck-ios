@@ -8,13 +8,18 @@
 import SwiftUI
 
 struct SharedStackSummaryView: View {
+    @EnvironmentObject var store: FeedStore
+
     private static let maxCount = 4
     private static let profileImageSize: CGFloat = 38
 
     @Binding var selectedInventoryItem: InventoryItem?
     @Binding var selectedStack: Stack?
 
-    let stack: Stack
+    @State var stack: Stack
+
+    let stackOwnerId: String
+    let userId: String
 
     let inventoryItems: [InventoryItem]
     let requestInfo: [ScraperRequestInfo]
@@ -29,6 +34,10 @@ struct SharedStackSummaryView: View {
 
     var publishedDate: String {
         stack.publishedDate?.asDateFormat1 ?? ""
+    }
+    
+    var isLikedByUser: Bool {
+        stack.likes?.contains(userId) == true
     }
 
     var body: some View {
@@ -83,7 +92,41 @@ struct SharedStackSummaryView: View {
             }
             .padding(12)
             .background(RoundedRectangle(cornerRadius: Styles.cornerRadius).fill(Color.customWhite).withDefaultShadow())
+            
+            HStack(spacing: 4) {
+                Button {
+                    toggleLike()
+                } label: {
+                    if isLikedByUser {
+                        Image(systemName: "heart.fill")
+                            .renderingMode(.template)
+                            .font(.semiBold(size: 17))
+                            .foregroundColor(.customRed)
+                    } else {
+                        Image(systemName: "heart")
+                            .font(.semiBold(size: 17))
+                            .foregroundColor(Color.customText1)
+                    }
+                }
+                Text((stack.likes?.count).map { "\($0)" } ?? "")
+                    .font(.regular(size: 14))
+                    .foregroundColor(.customText1)
+                Spacer()
+            }
+            .padding(.leading, 10)
+            .padding(.top, 10)
         }
         .padding(.top, 22)
+    }
+
+    private func toggleLike() {
+        var likes = stack.likes ?? []
+        if isLikedByUser {
+            likes.removeAll(where: { $0 == userId })
+        } else {
+            likes.append(userId)
+        }
+        stack.likes = likes
+        store.send(.main(action: .toggleLike(stack: stack, stackOwnerId: stackOwnerId)))
     }
 }

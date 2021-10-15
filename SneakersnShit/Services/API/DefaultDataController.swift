@@ -238,6 +238,10 @@ class DefaultDataController: DataController {
             }
             .eraseToAnyPublisher()
     }
+    
+    func updateLike(onStack stack: Stack, addLike: Bool, stackOwnerId: String) {
+        backendAPI.updateLike(onStack: stack, addLike: addLike, stackOwnerId: stackOwnerId)
+    }
 
     func setup(userId: String) {
         databaseManager.setup(userId: userId)

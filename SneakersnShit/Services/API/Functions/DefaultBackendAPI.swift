@@ -53,6 +53,15 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
             .eraseToAnyPublisher()
     }
 
+    func updateLike(onStack stack: Stack, addLike: Bool, stackOwnerId: String) {
+        struct Wrapper: Encodable {
+            let stackId: String
+            let addLike: Bool
+            let stackOwnerId: String
+        }
+        handlePublisherResult(publisher: callFirebaseFunction(functionName: "updateLike", model: Wrapper(stackId: stack.id, addLike: addLike, stackOwnerId: stackOwnerId)))
+    }
+
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
         struct Wrapper: Encodable {
             let searchTerm: String
@@ -70,7 +79,8 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
             let item: Item
             let settings: CopDeckSettings
         }
-        handlePublisherResult(publisher: callFirebaseFunction(functionName: "updateItem", model: Wrapper(userId: userId, item: item, settings: settings)), showAlert: false)
+        handlePublisherResult(publisher: callFirebaseFunction(functionName: "updateItem", model: Wrapper(userId: userId, item: item, settings: settings)),
+                              showAlert: false)
     }
 
     func getPopularItems(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {

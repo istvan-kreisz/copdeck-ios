@@ -17,7 +17,7 @@ enum MainAction {
     case getFeedPosts(loadMore: Bool)
     case setFeedPosts(feedPosts: PaginatedResult<[FeedPost]>)
     case addFeedPosts(feedPosts: PaginatedResult<[FeedPost]>)
-    case toggleLike(stack: Stack)
+    case toggleLike(stack: Stack, stackOwnerId: String)
     // settings
     case updateSettings(settings: CopDeckSettings)
     // search

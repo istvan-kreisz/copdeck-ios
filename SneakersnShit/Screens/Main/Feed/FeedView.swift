@@ -16,6 +16,8 @@ struct FeedView: View {
 
     @StateObject private var loader = Loader()
 
+    let userId: String
+
     var selectedInventoryItem: InventoryItem? {
         guard case let .inventoryItem(inventoryItem) = navigationDestination.destination else { return nil }
         return inventoryItem
@@ -55,7 +57,7 @@ struct FeedView: View {
                                                            if let feedPost = store.state.feedPosts.data.first(where: { $0.stack.id == stack?.id }) {
                                                                navigationDestination += .feedPost(feedPost)
                                                            } else {
-                                                            navigationDestination.hide()
+                                                               navigationDestination.hide()
                                                            }
                                                        })
             NavigationLink(destination: Destination(store: store,
@@ -88,12 +90,14 @@ struct FeedView: View {
                             SharedStackSummaryView(selectedInventoryItem: selectedInventoryItemBinding,
                                                    selectedStack: selectedStackBinding,
                                                    stack: feedPostData.stack,
+                                                   stackOwnerId: feedPostData.userId,
+                                                   userId: userId,
                                                    inventoryItems: feedPostData.inventoryItems,
                                                    requestInfo: store.globalState.requestInfo,
                                                    profileInfo: (user.name ?? "", user.imageURL)) {
-                                    if let profileData = feedPostData.profileData {
-                                        navigationDestination += .profile(profileData)
-                                    }
+                                if let profileData = feedPostData.profileData {
+                                    navigationDestination += .profile(profileData)
+                                }
                             }
                             .buttonStyle(PlainButtonStyle())
                             .padding(.bottom, 4)

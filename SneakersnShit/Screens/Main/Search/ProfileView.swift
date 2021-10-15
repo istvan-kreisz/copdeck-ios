@@ -93,6 +93,8 @@ struct ProfileView: View {
                     SharedStackSummaryView(selectedInventoryItem: selectedInventoryItemBinding,
                                            selectedStack: selectedStackBinding,
                                            stack: stack,
+                                           stackOwnerId: profileData.user.id,
+                                           userId: store.globalState.user?.id ?? "",
                                            inventoryItems: stackItems(in: stack),
                                            requestInfo: store.globalState.requestInfo,
                                            profileInfo: (profileData.user.name ?? "", profileData.user.imageURL))
@@ -100,7 +102,7 @@ struct ProfileView: View {
                         .padding(.bottom, 4)
                         .listRow()
                 }
-                
+
                 GeometryReader { proxy in
                     if proxy.frame(in: .global).minY < UIScreen.screenHeight {
                         Color.customBackground.frame(width: UIScreen.screenWidth + 30, height: UIScreen.screenHeight - proxy.frame(in: .global).minY)

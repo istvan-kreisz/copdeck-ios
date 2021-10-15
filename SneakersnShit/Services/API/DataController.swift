@@ -34,6 +34,7 @@ protocol BackendAPI {
     func reset()
     // feed
     func getFeedPosts(loadMore: Bool) -> AnyPublisher<PaginatedResult<[FeedPost]>, AppError>
+    func updateLike(onStack stack: Stack, addLike: Bool, stackOwnerId: String)
     // search
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError>
     func getItemDetails(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError>
