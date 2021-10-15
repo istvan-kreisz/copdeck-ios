@@ -55,9 +55,10 @@ struct User: Codable, Equatable, Identifiable {
     let spreadsheetImport: SpreadsheetImport?
     let affiliateInfo: AffiliateInfo?
     let membershipInfo: MembershipInfo?
+    let country: String?
 
     enum CodingKeys: String, CodingKey {
-        case id, inited, name, nameInsensitive, email, isPublic, created, updated, settings, spreadsheetImport, affiliateInfo, membershipInfo
+        case id, inited, name, nameInsensitive, email, isPublic, created, updated, settings, spreadsheetImport, affiliateInfo, membershipInfo, country
     }
 }
 
@@ -76,6 +77,7 @@ extension User {
         spreadsheetImport = try container.decodeIfPresent(SpreadsheetImport.self, forKey: .spreadsheetImport)
         affiliateInfo = try container.decodeIfPresent(AffiliateInfo.self, forKey: .affiliateInfo)
         membershipInfo = try container.decodeIfPresent(MembershipInfo.self, forKey: .membershipInfo)
+        country = try container.decodeIfPresent(String.self, forKey: .country)
     }
 
     init(id: String) {
@@ -89,7 +91,8 @@ extension User {
                   settings: nil,
                   spreadsheetImport: nil,
                   affiliateInfo: nil,
-                  membershipInfo: nil)
+                  membershipInfo: nil,
+                  country: nil)
     }
 
     func withImageURL(_ url: URL?) -> User {

@@ -12,6 +12,7 @@ struct InventoryListItem: View {
     let bestPrice: ListingPrice?
     @Binding var selectedInventoryItem: InventoryItem?
     var isSelected: Bool
+    let isInSharedStack: Bool
 
     @Binding var isEditing: Bool
     var requestInfo: [ScraperRequestInfo]
@@ -34,19 +35,32 @@ struct InventoryListItem: View {
     }
 
     var body: some View {
-        VerticalListItem(itemId: inventoryItem.itemId ?? "",
-                         title: inventoryItem.name,
-                         source: imageSource(for: inventoryItem),
-                         flipImage: inventoryItem.imageURL?.store?.id == .klekt,
-                         requestInfo: requestInfo,
-                         isEditing: $isEditing,
-                         isSelected: isSelected,
-                         ribbonText: inventoryItem.status == .Sold ? "Sold" : nil,
-                         accessoryView1: InventoryViewPills(inventoryItem: inventoryItem).leftAligned(),
-                         accessoryView2: bestPriceStack()) {
+        VStack(spacing: 1) {
+            if isInSharedStack && inventoryItem.copdeckPrice == nil {
+                HStack {
+                    Image(systemName: "exclamationmark.circle")
+                        .font(.medium(size: 12))
+                        .foregroundColor(.customRed)
+                    Text("Missing CopDeck price")
+                        .font(.medium(size: 12))
+                        .foregroundColor(.customRed)
+                    Spacer()
+                }
+            }
+            VerticalListItem(itemId: inventoryItem.itemId ?? "",
+                             title: inventoryItem.name,
+                             source: imageSource(for: inventoryItem),
+                             flipImage: inventoryItem.imageURL?.store?.id == .klekt,
+                             requestInfo: requestInfo,
+                             isEditing: $isEditing,
+                             isSelected: isSelected,
+                             ribbonText: inventoryItem.status == .Sold ? "Sold" : nil,
+                             accessoryView1: InventoryViewPills(inventoryItem: inventoryItem).leftAligned(),
+                             accessoryView2: bestPriceStack()) {
                 selectedInventoryItem = inventoryItem
-        } onSelectorTapped: {
-            onSelectorTapped()
+            } onSelectorTapped: {
+                onSelectorTapped()
+            }
         }
     }
 }

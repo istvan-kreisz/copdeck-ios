@@ -95,6 +95,7 @@ struct ProfileView: View {
                                            stack: stack,
                                            stackOwnerId: profileData.user.id,
                                            userId: store.globalState.user?.id ?? "",
+                                           userCountry: profileData.user.country,
                                            inventoryItems: stackItems(in: stack),
                                            requestInfo: store.globalState.requestInfo,
                                            profileInfo: (profileData.user.name ?? "", profileData.user.imageURL))

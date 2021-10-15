@@ -92,6 +92,7 @@ struct FeedView: View {
                                                    stack: feedPostData.stack,
                                                    stackOwnerId: feedPostData.userId,
                                                    userId: userId,
+                                                   userCountry: feedPostData.user?.country,
                                                    inventoryItems: feedPostData.inventoryItems,
                                                    requestInfo: store.globalState.requestInfo,
                                                    profileInfo: (user.name ?? "", user.imageURL)) {

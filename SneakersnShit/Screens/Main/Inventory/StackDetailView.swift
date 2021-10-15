@@ -165,6 +165,7 @@ struct StackDetailView: View {
                                       bestPrice: bestPrices[inventoryItem.id],
                                       selectedInventoryItem: selectedInventoryItemBinding,
                                       isSelected: false,
+                                      isInSharedStack: (stack.isSharedViaLink ?? false) || (stack.isPublished ?? false),
                                       isEditing: .constant(false),
                                       requestInfo: requestInfo) {}
                 }

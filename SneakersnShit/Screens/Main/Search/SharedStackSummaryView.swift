@@ -20,6 +20,15 @@ struct SharedStackSummaryView: View {
 
     let stackOwnerId: String
     let userId: String
+    let userCountry: String?
+    
+    var countryIcon: String {
+        if let countryName = userCountry {
+            return Country(rawValue: countryName)?.icon ?? ""
+        } else {
+            return ""
+        }
+    }
 
     let inventoryItems: [InventoryItem]
     let requestInfo: [ScraperRequestInfo]
@@ -35,7 +44,7 @@ struct SharedStackSummaryView: View {
     var publishedDate: String {
         stack.publishedDate?.asDateFormat1 ?? ""
     }
-    
+
     var isLikedByUser: Bool {
         stack.likes?.contains(userId) == true
     }
@@ -53,9 +62,10 @@ struct SharedStackSummaryView: View {
                         .frame(width: Self.profileImageSize, height: Self.profileImageSize)
                         .cornerRadius(Self.profileImageSize / 2)
                     VStack(alignment: .leading) {
-                        Text(profileInfo.username)
+                        Text("\(profileInfo.username) \(countryIcon)")
                             .font(.bold(size: 14))
                             .foregroundColor(.customText1)
+
                         Text(publishedDate)
                             .font(.regular(size: 12))
                             .foregroundColor(.customText2)
@@ -92,7 +102,7 @@ struct SharedStackSummaryView: View {
             }
             .padding(12)
             .background(RoundedRectangle(cornerRadius: Styles.cornerRadius).fill(Color.customWhite).withDefaultShadow())
-            
+
             HStack(spacing: 4) {
                 Button {
                     toggleLike()
@@ -108,7 +118,7 @@ struct SharedStackSummaryView: View {
                             .foregroundColor(Color.customText1)
                     }
                 }
-                Text((stack.likes?.count).map { "\($0)" } ?? "")
+                Text((stack.likes?.count).map { $0 > 0 ? "\($0)" : "" } ?? "")
                     .font(.regular(size: 14))
                     .foregroundColor(.customText1)
                 Spacer()

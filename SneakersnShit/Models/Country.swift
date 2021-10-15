@@ -142,6 +142,98 @@ enum Country: String, Codable, CaseIterable {
             return "Vietnam"
         }
     }
+    
+    var icon: String {
+        switch self {
+        case .AT:
+            return "🇦🇹"
+        case .BE:
+            return "🇧🇪"
+        case .BG:
+            return "🇧🇬"
+        case .HR:
+            return "🇭🇷"
+        case .CY:
+            return "🇨🇾"
+        case .CZ:
+            return "🇨🇿"
+        case .DK:
+            return "🇩🇰"
+        case .EE:
+            return "🇪🇪"
+        case .FI:
+            return "🇫🇮"
+        case .FR:
+            return "🇫🇷"
+        case .DE:
+            return "🇩🇪"
+        case .GR:
+            return "🇬🇷"
+        case .HU:
+            return "🇭🇺"
+        case .IS:
+            return "🇮🇸"
+        case .IE:
+            return "🇮🇪"
+        case .IT:
+            return "🇮🇹"
+        case .LV:
+            return "🇱🇻"
+        case .LI:
+            return "🇱🇮"
+        case .LT:
+            return "🇱🇹"
+        case .LU:
+            return "🇱🇺"
+        case .MT:
+            return "🇲🇹"
+        case .NL:
+            return "🇳🇱"
+        case .NO:
+            return "🇳🇴"
+        case .PL:
+            return "🇵🇱"
+        case .PT:
+            return "🇵🇹"
+        case .RO:
+            return "🇷🇴"
+        case .SK:
+            return "🇸🇰"
+        case .SI:
+            return "🇸🇮"
+        case .ES:
+            return "🇪🇸"
+        case .SE:
+            return "🇸🇪"
+        case .CH:
+            return "🇨🇭"
+        case .GB:
+            return "🇬🇧"
+        case .US:
+            return "🇺🇸"
+        case .USE:
+            return "🇺🇸"
+        case .MY:
+            return "🇲🇾"
+        case .ID:
+            return "🇮🇩"
+        case .PH:
+            return "🇵🇭"
+        case .SG:
+            return "🇸🇬"
+        case .TH:
+            return "🇹🇭"
+        case .CN:
+            return "🇨🇳"
+        case .KR:
+            return "🇰🇷"
+        case .TW:
+            return "🇹🇼"
+        case .VN:
+            return "🇻🇳"
+        }
+    }
+
 
     var code: String {
         switch self {

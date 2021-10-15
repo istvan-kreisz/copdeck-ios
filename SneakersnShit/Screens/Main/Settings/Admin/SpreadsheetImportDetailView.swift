@@ -60,6 +60,7 @@ struct SpreadsheetImportDetailView: View {
                                   bestPrice: nil,
                                   selectedInventoryItem: $selectedInventoryItem,
                                   isSelected: false,
+                                  isInSharedStack: false,
                                   isEditing: .constant(false),
                                   requestInfo: store.globalState.requestInfo) {}
             }

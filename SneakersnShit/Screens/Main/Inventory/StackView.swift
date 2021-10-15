@@ -127,6 +127,7 @@ struct StackView: View {
                                   bestPrice: bestPrices[inventoryItem.id],
                                   selectedInventoryItem: $selectedInventoryItem,
                                   isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }),
+                                  isInSharedStack: (stack.isSharedViaLink ?? false) || (stack.isPublished ?? false),
                                   isEditing: $isEditing,
                                   requestInfo: requestInfo) {
                         if selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }) {
