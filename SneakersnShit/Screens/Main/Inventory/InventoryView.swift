@@ -130,7 +130,9 @@ struct InventoryView: View {
                                                              set: { _ in })
             let filters = Binding<Filters>(get: { store.state.settings.filters }, set: { _ in })
 
-            NavigationLink(destination: Destination(navigationDestination: $navigationDestination, bestPrices: $bestPrices).navigationbarHidden(),
+            NavigationLink(destination: Destination(navigationDestination: $navigationDestination,
+                                                    bestPrices: $bestPrices,
+                                                    selectedStack: selectedStackBinding).navigationbarHidden(),
                            isActive: showDetail) {
                 EmptyView()
             }
@@ -346,6 +348,7 @@ extension InventoryView {
         @EnvironmentObject var store: AppStore
         @Binding var navigationDestination: Navigation<NavigationDestination>
         @Binding var bestPrices: [String: ListingPrice]
+        @Binding var selectedStack: Stack
 
         var editedStack: Stack? {
             guard case let .stack(stack) = navigationDestination.destination else { return nil }
@@ -357,7 +360,7 @@ extension InventoryView {
 
             switch navigationDestination.destination {
             case let .inventoryItem(inventoryItem):
-                InventoryItemDetailView(inventoryItem: inventoryItem) { navigationDestination.hide() }
+                InventoryItemDetailView(inventoryItem: inventoryItem, isInSharedStack: selectedStack.isShared) { navigationDestination.hide() }
             case let .stack(stack):
                 StackDetailView(stack: stack,
                                 inventoryItems: $store.state.inventoryItems,

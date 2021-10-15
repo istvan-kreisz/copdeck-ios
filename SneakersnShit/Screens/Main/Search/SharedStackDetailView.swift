@@ -69,7 +69,7 @@ struct SharedStackDetailView: View {
                                       bestPrice: inventoryItem.copdeckPrice,
                                       selectedInventoryItem: selectedInventoryItemBinding,
                                       isSelected: false,
-                                      isInSharedStack: (stack.isSharedViaLink ?? false) || (stack.isPublished ?? false),
+                                      isInSharedStack: false,
                                       isEditing: .constant(false),
                                       requestInfo: requestInfo) {}
                 }

@@ -28,7 +28,7 @@ struct SpreadsheetImportDetailView: View {
         })
         VStack(alignment: .leading, spacing: 8) {
             NavigationLink("", isActive: showInventoryItemDetail) {
-                InventoryItemDetailView(inventoryItem: selectedInventoryItem ?? .empty, importSummaryMode: true) {
+                InventoryItemDetailView(inventoryItem: selectedInventoryItem ?? .empty, importSummaryMode: true, isInSharedStack: false) {
                     selectedInventoryItem = nil
                 }
             }

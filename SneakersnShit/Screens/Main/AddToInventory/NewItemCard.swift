@@ -23,6 +23,7 @@ struct NewItemCard: View {
     let style: Style
     let sizes: [String]
     let showCopDeckPrice: Bool
+    let highlightCopDeckPrice: Bool
     let didTapDelete: (() -> Void)?
 
     var sizesConverted: [String] {
@@ -49,6 +50,7 @@ struct NewItemCard: View {
          style: Style = .card,
          sizes: [String],
          showCopDeckPrice: Bool,
+         highlightCopDeckPrice: Bool,
          didTapDelete: (() -> Void)? = nil) {
         self._inventoryItem = inventoryItem ?? Binding.constant(InventoryItem.init(fromItem: .sample))
         self.purchasePrice = purchasePrice
@@ -56,6 +58,7 @@ struct NewItemCard: View {
         self.style = style
         self.sizes = sizes
         self.showCopDeckPrice = showCopDeckPrice
+        self.highlightCopDeckPrice = highlightCopDeckPrice
         self.didTapDelete = didTapDelete
     }
 
@@ -147,6 +150,7 @@ struct NewItemCard: View {
                                     set: { inventoryItem.setCopDeckCurrency(currency: $0) })
 
                 PriceFieldWithCurrency(title: "copdeck price (optional)",
+                                       titleColor: highlightCopDeckPrice ? .customRed : nil,
                                        textFieldStyle: textFieldStyle,
                                        dropDownStyle: dropdownStyle,
                                        price: price,

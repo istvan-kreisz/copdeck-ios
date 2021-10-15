@@ -10,6 +10,7 @@ import SwiftUI
 
 struct PriceFieldWithCurrency: View {
     let title: String
+    var titleColor: Color? = nil
     let textFieldStyle: TextFieldRounded.Style
     let dropDownStyle: DropDownMenu.Style
     @Binding var price: String
@@ -19,6 +20,7 @@ struct PriceFieldWithCurrency: View {
     var body: some View {
         HStack(spacing: 11) {
             TextFieldRounded(title: title,
+                             titleColor: titleColor,
                              placeHolder: "0",
                              style: textFieldStyle,
                              keyboardType: .numberPad,

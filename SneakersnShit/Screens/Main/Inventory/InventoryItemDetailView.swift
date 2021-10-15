@@ -11,6 +11,7 @@ struct InventoryItemDetailView: View {
     @EnvironmentObject var store: AppStore
     @State var inventoryItem: InventoryItem
     let importSummaryMode: Bool
+    let isInSharedStack: Bool
     var shouldDismiss: () -> Void
 
     @State var name: String
@@ -40,9 +41,10 @@ struct InventoryItemDetailView: View {
         }
     }
 
-    init(inventoryItem: InventoryItem, importSummaryMode: Bool = false, shouldDismiss: @escaping () -> Void) {
+    init(inventoryItem: InventoryItem, importSummaryMode: Bool = false, isInSharedStack: Bool, shouldDismiss: @escaping () -> Void) {
         self._inventoryItem = State(initialValue: inventoryItem)
         self.importSummaryMode = importSummaryMode
+        self.isInSharedStack = isInSharedStack
         self.shouldDismiss = shouldDismiss
 
         self._name = State(initialValue: inventoryItem.name)
@@ -103,7 +105,8 @@ struct InventoryItemDetailView: View {
                                     currency: store.state.currency,
                                     style: NewItemCard.Style.noBackground,
                                     sizes: inventoryItem.item?.sortedSizes ?? ShoeSize.ALLSHOESIZESUS,
-                                    showCopDeckPrice: true)
+                                    showCopDeckPrice: true,
+                                    highlightCopDeckPrice: isInSharedStack)
 
                         VStack(alignment: .leading, spacing: 9) {
                             Text("Photos:".uppercased())
@@ -248,11 +251,5 @@ struct InventoryItemDetailView: View {
         let updatedInventoryItem = inventoryItem.copy(withName: name, itemId: styleId, notes: notes)
         store.send(.main(action: .updateInventoryItem(inventoryItem: updatedInventoryItem)))
         shouldDismiss()
-    }
-}
-
-struct InventoryItemDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        return InventoryItemDetailView(inventoryItem: .init(fromItem: .sample)) {}
     }
 }

@@ -35,9 +35,9 @@ struct InventoryListItem: View {
     }
 
     var body: some View {
-        VStack(spacing: 1) {
+        VStack(spacing: 3) {
             if isInSharedStack && inventoryItem.copdeckPrice == nil {
-                HStack {
+                HStack(spacing: 2) {
                     Image(systemName: "exclamationmark.circle")
                         .font(.medium(size: 12))
                         .foregroundColor(.customRed)

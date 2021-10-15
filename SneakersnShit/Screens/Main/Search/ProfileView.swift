@@ -36,6 +36,14 @@ struct ProfileView: View {
         stack.inventoryItems(allInventoryItems: profileData.inventoryItems, filters: .default, searchText: "")
     }
 
+    var countryIcon: String {
+        if let countryName = profileData.user.country {
+            return Country(rawValue: countryName)?.icon ?? ""
+        } else {
+            return ""
+        }
+    }
+
     var body: some View {
         Group {
             let selectedInventoryItemBinding = Binding<InventoryItem?>(get: { selectedInventoryItem },
@@ -70,7 +78,7 @@ struct ProfileView: View {
                                     showImagePicker: .constant(false),
                                     showSellerStats: .constant(false),
                                     profileImageURL: .constant(profileData.user.imageURL),
-                                    username: .constant(profileData.user.name ?? ""),
+                                    username: .constant("\(profileData.user.name ?? "") \(countryIcon)"),
                                     textBox1: .init(title: "Joined", text: joinedDate),
                                     textBox2: .init(title: "Shared Stacks", text: "\(profileData.stacks.count)"),
                                     isOwnProfile: false)

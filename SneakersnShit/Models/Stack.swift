@@ -19,6 +19,10 @@ struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
     let updated: Double?
     var publishedDate: Double?
     var likes: [String]?
+    
+    var isShared: Bool {
+        (isPublic ?? false) || (isPublished ?? false)
+    }
 
     var itemIds: [String] {
         items.map(\.inventoryItemId)
@@ -65,7 +69,7 @@ struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
     }
 
     static var empty: Stack {
-        Stack(id: UUID().uuidString,
+        Stack(id: "empty",
               name: "",
               isPublished: false,
               isPublic: nil,

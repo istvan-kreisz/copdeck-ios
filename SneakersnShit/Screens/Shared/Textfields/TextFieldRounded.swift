@@ -17,6 +17,7 @@ struct TextFieldRounded: View {
     }
 
     var title: String?
+    var titleColor: Color? = nil
     var placeHolder: String
     let style: Style
     var keyboardType: UIKeyboardType = .default
@@ -30,7 +31,7 @@ struct TextFieldRounded: View {
             if let title = title {
                 Text(title)
                     .font(.regular(size: 12))
-                    .foregroundColor(style == .white ? .customText1 : .customText2)
+                    .foregroundColor(titleColor ?? (style == .white ? .customText1 : .customText2))
                     .padding(.leading, 5)
             }
 
@@ -56,11 +57,5 @@ struct TextFieldRounded: View {
                     .if(style == .white) { $0.withDefaultShadow() }
             }
         }
-    }
-}
-
-struct TextFieldRounded_Previews: PreviewProvider {
-    static var previews: some View {
-        return TextFieldRounded(placeHolder: "heey", style: .gray, text: .constant(""))
     }
 }

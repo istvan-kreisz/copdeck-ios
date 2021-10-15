@@ -75,7 +75,7 @@ struct StackDetailView: View {
         self.deleteStack = deleteStack
         self._name = State<String>(initialValue: stack.wrappedValue.name)
         self._caption = State<String>(initialValue: stack.wrappedValue.caption ?? "")
-        self._showCaption = State(initialValue: (stack.isPublished.wrappedValue ?? false) || (stack.isPublic.wrappedValue ?? false))
+        self._showCaption = State(initialValue: stack.wrappedValue.isShared)
     }
 
     var body: some View {
@@ -93,7 +93,8 @@ struct StackDetailView: View {
                                                                        })
 
             NavigationLink(destination: Destination(navigationDestination: $navigationDestination,
-                                                    inventoryItems: $inventoryItems).navigationbarHidden(), isActive: showDetail) {
+                                                    inventoryItems: $inventoryItems,
+                                                    stack: $stack).navigationbarHidden(), isActive: showDetail) {
                     EmptyView()
             }
 
@@ -154,7 +155,7 @@ struct StackDetailView: View {
                 } showPopup: { title, subtitle in
                     popup = (title, subtitle)
                 } updateStack: { stack in
-                    showCaption = (stack.isPublished ?? false) || (stack.isPublic ?? false)
+                    showCaption = stack.isShared
                     store.send(.main(action: .updateStack(stack: stack)))
                 }
                 .asCard()
@@ -165,7 +166,7 @@ struct StackDetailView: View {
                                       bestPrice: bestPrices[inventoryItem.id],
                                       selectedInventoryItem: selectedInventoryItemBinding,
                                       isSelected: false,
-                                      isInSharedStack: (stack.isSharedViaLink ?? false) || (stack.isPublished ?? false),
+                                      isInSharedStack: stack.isShared,
                                       isEditing: .constant(false),
                                       requestInfo: requestInfo) {}
                 }
@@ -234,11 +235,12 @@ extension StackDetailView {
         @EnvironmentObject var store: AppStore
         @Binding var navigationDestination: Navigation<NavigationDestination>
         @Binding var inventoryItems: [InventoryItem]
+        @Binding var stack: Stack
 
         var body: some View {
             switch navigationDestination.destination {
             case let .inventoryItem(inventoryItem):
-                InventoryItemDetailView(inventoryItem: inventoryItem) { navigationDestination.hide() }
+                InventoryItemDetailView(inventoryItem: inventoryItem, isInSharedStack: stack.isShared) { navigationDestination.hide() }
             case let .itemSelector(stack):
                 SelectStackItemsView(stack: stack,
                                      inventoryItems: inventoryItems,
