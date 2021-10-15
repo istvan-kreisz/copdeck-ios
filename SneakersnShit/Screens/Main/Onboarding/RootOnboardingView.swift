@@ -13,7 +13,7 @@ struct RootOnboardingView: View {
     @State private var currentTab = 0
 
     private func nextTapped() {
-        if currentTab == 6 {
+        if currentTab == 7 {
             needsAppOnboarding = false
         } else {
             currentTab += 1
@@ -55,9 +55,14 @@ struct RootOnboardingView: View {
             OnboardingView(imageName: "onboarding-profile",
                            titleText: "Follow other sneakerheads",
                            subtitleText: "See what other people are up to in the sneaker game by checking out their CopDeck profiles.",
-                           buttonText: "Get started!",
                            buttonTapped: nextTapped)
                 .tag(6)
+            OnboardingView(imageName: "onboarding-import",
+                           titleText: "Spreadsheet import",
+                           subtitleText: "Import your sneaker reseller spreadsheet with just a single click.",
+                           buttonText: "Get started!",
+                           buttonTapped: nextTapped)
+                .tag(7)
         }
         .tabViewStyle(PageTabViewStyle())
         .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
