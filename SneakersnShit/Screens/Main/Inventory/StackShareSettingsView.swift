@@ -17,7 +17,7 @@ struct StackShareSettingsView: View {
          "Share your stack via a link. Note: the link will open a webpage so anyone can view your stack even if they don't have the CopDeck app."]
 
     let linkURL: String
-    
+
     @AppStorage(UserDefaults.Keys.didPublish.rawValue) private var didPublish: Bool = false
 
     @Binding var stack: Stack
@@ -119,12 +119,13 @@ struct StackShareSettingsView: View {
         .buttonStyle(PlainButtonStyle())
         .padding(.vertical, 8)
     }
-    
+
     private func showCopDeckPriceWarning(isSharing: Bool) {
-        if isSharing && !didPublish {
+        if isSharing, !didPublish {
             didPublish = true
+            showPopup("Stack sharing",
+                      "When you share your stack to sell your items, make sure to specify a price in the \"CopDeck\" price field. That's the price others will see when they see your shared stack.")
         }
-        showPopup("Stack sharing", "When you share your stack to sell your items, make sure to specify a price in the \"CopDeck\" price field. That's the price others will see when they see your shared stack.")
     }
 
     func copyLinkTapped() {
