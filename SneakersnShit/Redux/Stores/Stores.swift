@@ -102,6 +102,8 @@ extension AppStore {
             state.stacks = [.allStack(inventoryItems: inventoryItems)]
         } else if let allStackIndex = state.allStackIndex {
             state.stacks[allStackIndex].items = inventoryItems.map { (inventoryItem: InventoryItem) in StackItem(inventoryItemId: inventoryItem.id) }
+        } else {
+            state.stacks.insert(.allStack(inventoryItems: inventoryItems), at: 0)
         }
     }
 

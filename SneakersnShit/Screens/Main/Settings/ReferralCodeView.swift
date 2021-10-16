@@ -1,5 +1,5 @@
 //
-//  PromoCodeView.swift
+//  ReferralCodeView.swift
 //  SneakersnShit
 //
 //  Created by István Kreisz on 9/29/21.
@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-struct PromoCodeView: View {
+struct ReferralCodeView: View {
     @EnvironmentObject var store: DerivedGlobalStore
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var loader = Loader()
 
     @State private var error: (String, String)? = nil
-    @State var promoCode = ""
+    @State var referralCode = ""
 
     var body: some View {
         let presentErrorAlert = Binding<Bool>(get: { error != nil }, set: { new in error = new ? error : nil })
@@ -44,12 +44,12 @@ struct PromoCodeView: View {
                     CustomSpinner(text: "Updating account", animate: true)
                 }
 
-                if let promoCode = store.globalState.user?.membershipInfo?.promoCodeUsed {
+                if let referralCode = store.globalState.user?.membershipInfo?.referralCodeUsed {
                     HStack(spacing: 5) {
                         Text("Your referral code:")
                             .foregroundColor(.customText2)
                             .font(.regular(size: 18))
-                        Text(promoCode)
+                        Text(referralCode)
                             .foregroundColor(.customBlue)
                             .font(.bold(size: 20))
                         Spacer()
@@ -58,13 +58,13 @@ struct PromoCodeView: View {
                     .layoutPriority(2)
                 } else {
                     HStack(spacing: 5) {
-                        TextFieldRounded(placeHolder: "Enter referral code", style: .gray, text: $promoCode)
+                        TextFieldRounded(placeHolder: "Enter referral code", style: .gray, text: $referralCode)
                             .layoutPriority(1)
                         Button {
-                            if let promoCode = store.globalState.user?.membershipInfo?.promoCodeUsed {
-                                self.error = ("Error", "Your account already has the \"\(promoCode)\" referral code associated with it.")
+                            if let referralCode = store.globalState.user?.membershipInfo?.referralCodeUsed {
+                                self.error = ("Error", "Your account already has the \"\(referralCode)\" referral code associated with it.")
                             } else {
-                                applyPromoCode(promoCode)
+                                applyReferralCode(referralCode)
                             }
                         } label: {
                             Text("Send")
@@ -89,13 +89,13 @@ struct PromoCodeView: View {
         .navigationbarHidden()
     }
 
-    private func applyPromoCode(_ promoCode: String) {
-        guard !promoCode.isEmpty else {
+    private func applyReferralCode(_ referralCode: String) {
+        guard !referralCode.isEmpty else {
             self.error = ("Error", "Invalid Promo code")
             return
         }
         let loader = loader.getLoader()
-        store.send(.paymentAction(action: .applyPromoCode(promoCode, completion: { result in
+        store.send(.paymentAction(action: .applyReferralCode(referralCode, completion: { result in
             if case let .failure(error) = result {
                 self.error = ("Error", error.localizedDescription)
             }

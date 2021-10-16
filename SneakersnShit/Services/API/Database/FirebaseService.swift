@@ -344,16 +344,6 @@ class FirebaseService: DatabaseManager {
             }
     }
 
-    func getAffiliateList(completion: @escaping (Result<[User], Error>) -> Void) {
-        guard DebugSettings.shared.isAdmin else { return }
-        firestore
-            .collection("users")
-            .whereField("affiliateInfo.promoCode", isGreaterThan: "")
-            .getDocuments { [weak self] snapshot, error in
-                self?.parseUsers(snapshot: snapshot, error: error, completion: completion)
-            }
-    }
-
     private func parseUsers(snapshot: QuerySnapshot?, error: Error?, completion: @escaping (Result<[User], Error>) -> Void) {
         if let error = error {
             completion(.failure(error))

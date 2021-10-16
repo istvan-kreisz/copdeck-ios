@@ -347,7 +347,7 @@ struct SettingsView: View {
                     #warning("enable")
                     if DebugSettings.shared.isAdmin || DebugSettings.shared.isInDebugMode {
                         Section(header: Text("Membership")) {
-                            NavigationLink(destination: PromoCodeView()) {
+                            NavigationLink(destination: ReferralCodeView()) {
                                 Text("Apply referral code")
                                     .leftAligned()
                             }

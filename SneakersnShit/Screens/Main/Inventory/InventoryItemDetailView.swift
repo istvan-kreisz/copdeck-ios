@@ -106,7 +106,8 @@ struct InventoryItemDetailView: View {
                                     style: NewItemCard.Style.noBackground,
                                     sizes: inventoryItem.item?.sortedSizes ?? ShoeSize.ALLSHOESIZESUS,
                                     showCopDeckPrice: true,
-                                    highlightCopDeckPrice: isInSharedStack)
+                                    highlightCopDeckPrice: isInSharedStack,
+                                    addQuantitySelector: false)
 
                         VStack(alignment: .leading, spacing: 9) {
                             Text("Photos:".uppercased())

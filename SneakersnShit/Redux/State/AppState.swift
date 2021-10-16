@@ -32,14 +32,17 @@ struct GlobalState: Equatable {
     }
 }
 
-struct AppState: Equatable {
+struct InventoryState: Equatable {
     var inventoryItems: [InventoryItem] = []
     var stacks: [Stack] = []
     var profileImageURL: URL?
+}
 
+struct AppState: Equatable {
     var globalState = GlobalState()
     var searchState = SearchState()
     var feedState = FeedState()
+    var inventoryState = InventoryState()
 
     var user: User? {
         get { globalState.user }
@@ -89,6 +92,18 @@ struct AppState: Equatable {
     var feedPosts: PaginatedResult<[FeedPost]> {
         get { feedState.feedPosts }
         set { feedState.feedPosts = newValue }
+    }
+    var inventoryItems: [InventoryItem] {
+        get { inventoryState.inventoryItems }
+        set { inventoryState.inventoryItems = newValue }
+    }
+    var stacks: [Stack] {
+        get { inventoryState.stacks }
+        set { inventoryState.stacks = newValue }
+    }
+    var profileImageURL: URL? {
+        get { inventoryState.profileImageURL }
+        set { inventoryState.profileImageURL = newValue }
     }
 
     var settings: CopDeckSettings {

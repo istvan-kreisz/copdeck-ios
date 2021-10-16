@@ -45,7 +45,7 @@ struct InventoryItem: Codable, Equatable, Identifiable {
         case None, Listed, Sold
     }
 
-    let id: String
+    var id: String
     var itemId: String?
     var name: String
     var purchasePrice: PriceWithCurrency?
@@ -66,6 +66,7 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     var brand: Brand?
     var brandCalculated: Brand? { brand ?? item?.brandCalculated }
     var genderCalculated: Gender? { gender ?? item?.genderCalculated }
+    var count = 1
 
     var convertedSize: String {
         get { size.asSize(of: self) }

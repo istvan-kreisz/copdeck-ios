@@ -24,6 +24,7 @@ struct NewItemCard: View {
     let sizes: [String]
     let showCopDeckPrice: Bool
     let highlightCopDeckPrice: Bool
+    let addQuantitySelector: Bool
     let didTapDelete: (() -> Void)?
 
     var sizesConverted: [String] {
@@ -51,6 +52,7 @@ struct NewItemCard: View {
          sizes: [String],
          showCopDeckPrice: Bool,
          highlightCopDeckPrice: Bool,
+         addQuantitySelector: Bool,
          didTapDelete: (() -> Void)? = nil) {
         self._inventoryItem = inventoryItem ?? Binding.constant(InventoryItem.init(fromItem: .sample))
         self.purchasePrice = purchasePrice
@@ -59,6 +61,7 @@ struct NewItemCard: View {
         self.sizes = sizes
         self.showCopDeckPrice = showCopDeckPrice
         self.highlightCopDeckPrice = highlightCopDeckPrice
+        self.addQuantitySelector = addQuantitySelector
         self.didTapDelete = didTapDelete
     }
 
@@ -131,11 +134,18 @@ struct NewItemCard: View {
                                                 set: { inventoryItem.condition = .init(rawValue: $0) ?? .new })
                 let size = Binding<String>(get: { inventoryItem.convertedSize },
                                            set: { inventoryItem.convertedSize = $0 })
+                let quantity = Binding<String>(get: { "\(inventoryItem.count)" }, set: { inventoryItem.count = Int($0) ?? 1 })
 
                 DropDownMenu(title: "size",
                              selectedItem: size,
                              options: sizesConverted,
                              style: dropdownStyle)
+                if addQuantitySelector {
+                    DropDownMenu(title: "quantity",
+                                 selectedItem: quantity,
+                                 options: Array(0 ... 10).map { "\($0)" },
+                                 style: dropdownStyle)
+                }
                 DropDownMenu(title: "condition",
                              selectedItem: condition,
                              options: InventoryItem.Condition.allCases.map { $0.rawValue },

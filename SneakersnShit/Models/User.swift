@@ -31,15 +31,10 @@ struct User: Codable, Equatable, Identifiable {
         let spreadsheetId: String?
     }
 
-    struct AffiliateInfo: Equatable, Codable {
-        let promoCode: String?
-        let invitesSignedUp: Int?
-        let invitesSubscribed: Int?
-    }
-
     struct MembershipInfo: Equatable, Codable {
         let group: String?
-        let promoCodeUsed: String?
+        let referralCodeUsed: String?
+        let referralCodeDiscount: String?
     }
 
     let id: String
@@ -53,12 +48,11 @@ struct User: Codable, Equatable, Identifiable {
     var settings: CopDeckSettings?
     var imageURL: URL?
     let spreadsheetImport: SpreadsheetImport?
-    let affiliateInfo: AffiliateInfo?
     let membershipInfo: MembershipInfo?
     let country: String?
 
     enum CodingKeys: String, CodingKey {
-        case id, inited, name, nameInsensitive, email, isPublic, created, updated, settings, spreadsheetImport, affiliateInfo, membershipInfo, country
+        case id, inited, name, nameInsensitive, email, isPublic, created, updated, settings, spreadsheetImport, membershipInfo, country
     }
 }
 
@@ -75,7 +69,6 @@ extension User {
         updated = try container.decodeIfPresent(Double.self, forKey: .updated)
         settings = try container.decodeIfPresent(CopDeckSettings.self, forKey: .settings)
         spreadsheetImport = try container.decodeIfPresent(SpreadsheetImport.self, forKey: .spreadsheetImport)
-        affiliateInfo = try container.decodeIfPresent(AffiliateInfo.self, forKey: .affiliateInfo)
         membershipInfo = try container.decodeIfPresent(MembershipInfo.self, forKey: .membershipInfo)
         country = try container.decodeIfPresent(String.self, forKey: .country)
     }
@@ -90,7 +83,6 @@ extension User {
                   updated: nil,
                   settings: nil,
                   spreadsheetImport: nil,
-                  affiliateInfo: nil,
                   membershipInfo: nil,
                   country: nil)
     }

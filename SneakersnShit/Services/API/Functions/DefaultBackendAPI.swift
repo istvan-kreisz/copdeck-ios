@@ -53,13 +53,32 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
             .eraseToAnyPublisher()
     }
 
+    func getAffiliateList(completion: @escaping (Result<[ReferralCode], Error>) -> Void) {
+        struct Wrapper: Encodable {
+            let userId: String?
+        }
+        let result: AnyPublisher<[ReferralCode], AppError> = callFirebaseFunctionArray(functionName: "getReferralCodes", model: Wrapper(userId: userId))
+
+        result
+            .sink { result in
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                default:
+                    break
+                }
+            } receiveValue: { completion(.success($0)) }
+            .store(in: &cancellables)
+    }
+
     func updateLike(onStack stack: Stack, addLike: Bool, stackOwnerId: String) {
         struct Wrapper: Encodable {
             let stackId: String
             let addLike: Bool
             let stackOwnerId: String
         }
-        handlePublisherResult(publisher: callFirebaseFunction(functionName: "updateLike", model: Wrapper(stackId: stack.id, addLike: addLike, stackOwnerId: stackOwnerId)))
+        handlePublisherResult(publisher: callFirebaseFunction(functionName: "updateLike",
+                                                              model: Wrapper(stackId: stack.id, addLike: addLike, stackOwnerId: stackOwnerId)))
     }
 
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
@@ -288,10 +307,10 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
             .store(in: &cancellables)
     }
 
-    func applyPromoCode(_ code: String, completion: ((Result<Void, AppError>) -> Void)?) {
+    func applyReferralCode(_ code: String, completion: ((Result<Void, AppError>) -> Void)?) {
         struct Wrapper: Encodable {
-            let promoCode: String
+            let referralCode: String
         }
-        handlePublisherResult(publisher: callFirebaseFunction(functionName: "applyPromoCode", model: Wrapper(promoCode: code)), completion: completion)
+        handlePublisherResult(publisher: callFirebaseFunction(functionName: "applyReferralCode", model: Wrapper(referralCode: code)), completion: completion)
     }
 }

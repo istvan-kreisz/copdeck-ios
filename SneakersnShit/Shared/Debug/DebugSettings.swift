@@ -45,8 +45,8 @@ func log(_ value: Any, logType: LogType? = nil) {
 
 struct DebugSettings {
     let isInDebugMode: Bool
-    let ipAddress: String = "192.168.0.199"
-//    let ipAddress: String = "172.20.10.2"
+//    let ipAddress: String = "192.168.0.199"
+    let ipAddress: String = "172.20.10.2"
 
     let istvanId = "s80wQjTNqXRlRzirFlgY3MF9BxJ3"
     let milanId = "U5VMyc8UNsN1JvDlWYOxQUmL6uE2"

@@ -20,6 +20,7 @@ struct CopDeckApp: App {
                 .environmentObject(DerivedGlobalStore.default)
                 .environmentObject(SearchStore.default)
                 .environmentObject(FeedStore.default)
+                .environmentObject(InventoryStore.default)
         }
         .onChange(of: scenePhase) { phase in
             switch phase {

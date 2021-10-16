@@ -203,11 +203,10 @@ func appReducer(state: inout AppState,
                 } else {
                     return environment.dataController.getUser(withId: userId)
                         .flatMap { (user: User) -> AnyPublisher<AppAction, Never> in
-                            if let referralCode = refCode, user.membershipInfo?.promoCodeUsed == nil {
+                            if let referralCode = refCode, user.membershipInfo?.referralCodeUsed == nil {
                                 return Just(AppAction.main(action: .setUser(user: user)))
-                                    .merge(with: Just(AppAction.paymentAction(action: .applyPromoCode(referralCode, completion: nil))))
+                                    .merge(with: Just(AppAction.paymentAction(action: .applyReferralCode(referralCode, completion: nil))))
                                     .eraseToAnyPublisher()
-
                             } else {
                                 return Just(AppAction.main(action: .setUser(user: user))).eraseToAnyPublisher()
                             }
@@ -231,8 +230,8 @@ func appReducer(state: inout AppState,
         }
     case let .paymentAction(action):
         switch action {
-        case let .applyPromoCode(code, completion):
-            environment.dataController.applyPromoCode(code, completion: completion)
+        case let .applyReferralCode(code, completion):
+            environment.dataController.applyReferralCode(code, completion: completion)
         }
     }
     return Empty(completeImmediately: true).eraseToAnyPublisher()

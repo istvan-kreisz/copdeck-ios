@@ -85,7 +85,8 @@ struct AddToInventoryView: View {
                                 currency: store.state.currency,
                                 sizes: self.item.sortedSizes,
                                 showCopDeckPrice: false,
-                                highlightCopDeckPrice: false)
+                                highlightCopDeckPrice: false,
+                                addQuantitySelector: true)
                     if let inventoryItem2 = inventoryItem2 {
                         let item = Binding<InventoryItem>(get: { inventoryItem2 }, set: { self.inventoryItem2 = $0 })
                         NewItemCard(inventoryItem: item,
@@ -93,11 +94,12 @@ struct AddToInventoryView: View {
                                     currency: store.state.currency,
                                     sizes: self.item.sortedSizes,
                                     showCopDeckPrice: false,
-                                    highlightCopDeckPrice: false) {
-                                self.inventoryItem2 = self.inventoryItem3
-                                self.inventoryItem3 = self.inventoryItem4
-                                self.inventoryItem4 = self.inventoryItem5
-                                self.inventoryItem5 = nil
+                                    highlightCopDeckPrice: false,
+                                    addQuantitySelector: true) {
+                            self.inventoryItem2 = self.inventoryItem3
+                            self.inventoryItem3 = self.inventoryItem4
+                            self.inventoryItem4 = self.inventoryItem5
+                            self.inventoryItem5 = nil
                         }
                     }
                     if let inventoryItem3 = inventoryItem3 {
@@ -107,10 +109,11 @@ struct AddToInventoryView: View {
                                     currency: store.state.currency,
                                     sizes: self.item.sortedSizes,
                                     showCopDeckPrice: false,
-                                    highlightCopDeckPrice: false) {
-                                self.inventoryItem3 = self.inventoryItem4
-                                self.inventoryItem4 = self.inventoryItem5
-                                self.inventoryItem5 = nil
+                                    highlightCopDeckPrice: false,
+                                    addQuantitySelector: true) {
+                            self.inventoryItem3 = self.inventoryItem4
+                            self.inventoryItem4 = self.inventoryItem5
+                            self.inventoryItem5 = nil
                         }
                     }
                     if let inventoryItem4 = inventoryItem4 {
@@ -120,9 +123,10 @@ struct AddToInventoryView: View {
                                     currency: store.state.currency,
                                     sizes: self.item.sortedSizes,
                                     showCopDeckPrice: false,
-                                    highlightCopDeckPrice: false) {
-                                self.inventoryItem4 = self.inventoryItem5
-                                self.inventoryItem5 = nil
+                                    highlightCopDeckPrice: false,
+                                    addQuantitySelector: true) {
+                            self.inventoryItem4 = self.inventoryItem5
+                            self.inventoryItem5 = nil
                         }
                     }
                     if let inventoryItem5 = inventoryItem5 {
@@ -132,8 +136,9 @@ struct AddToInventoryView: View {
                                     currency: store.state.currency,
                                     sizes: self.item.sortedSizes,
                                     showCopDeckPrice: false,
-                                    highlightCopDeckPrice: false) {
-                                self.inventoryItem5 = nil
+                                    highlightCopDeckPrice: false,
+                                    addQuantitySelector: true) {
+                            self.inventoryItem5 = nil
                         }
                     }
                     if itemCount != allInventoryItems.count {
@@ -188,8 +193,12 @@ struct AddToInventoryView: View {
     private func addItems() {
         let inventoryItems = allInventoryItems
             .compactMap { $0 }
-            .map { inventoryItem -> InventoryItem in
-                inventoryItem.copy(withName: name, itemId: styleId, notes: notes)
+            .flatMap { inventoryItem -> [InventoryItem] in
+                Array.init(repeating: 0, count: inventoryItem.count).map { _ in
+                    var copy = inventoryItem.copy(withName: name, itemId: styleId, notes: notes)
+                    copy.id = UUID().uuidString
+                    return copy
+                }
             }
         store.send(.main(action: .addToInventory(inventoryItems: inventoryItems)))
         presented = (false, nil)

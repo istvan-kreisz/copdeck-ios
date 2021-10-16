@@ -13,7 +13,8 @@ struct InventoryView: View {
         case settings, filters, imagePicker, sellerStats
     }
 
-    @EnvironmentObject var store: AppStore
+    @EnvironmentObject var store: InventoryStore
+    @EnvironmentObject var globalStore: DerivedGlobalStore
     @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
 
     @State private var searchText = ""
@@ -88,11 +89,11 @@ struct InventoryView: View {
     }
 
     private func bestPrice(for inventoryItem: InventoryItem) -> ListingPrice? {
-        if let itemId = inventoryItem.itemId, let item = ItemCache.default.value(itemId: itemId, settings: store.state.settings) {
+        if let itemId = inventoryItem.itemId, let item = ItemCache.default.value(itemId: itemId, settings: globalStore.globalState.settings) {
             return item.bestPrice(for: inventoryItem.size,
-                                  feeType: store.state.settings.bestPriceFeeType,
-                                  priceType: store.state.settings.bestPricePriceType,
-                                  stores: store.state.settings.displayedStores)
+                                  feeType: globalStore.globalState.settings.bestPriceFeeType,
+                                  priceType: globalStore.globalState.settings.bestPricePriceType,
+                                  stores: globalStore.globalState.settings.displayedStores)
         } else {
             return nil
         }
@@ -128,7 +129,7 @@ struct InventoryView: View {
                                                                      }
                                                              },
                                                              set: { _ in })
-            let filters = Binding<Filters>(get: { store.state.settings.filters }, set: { _ in })
+            let filters = Binding<Filters>(get: { globalStore.globalState.settings.filters }, set: { _ in })
 
             NavigationLink(destination: Destination(navigationDestination: $navigationDestination,
                                                     bestPrices: $bestPrices,
@@ -167,7 +168,7 @@ struct InventoryView: View {
                               selectedInventoryItems: $selectedInventoryItems,
                               isSelected: isSelected,
                               bestPrices: $bestPrices,
-                              requestInfo: store.state.requestInfo,
+                              requestInfo: globalStore.globalState.requestInfo,
                               emptyStateConfig: (stack.id == "all" ?
                                   StackView.EmptyStateConfig.init(title: "Your inventory is empty",
                                                                   buttonTitle: "Use the search tab to add items") {
@@ -223,10 +224,10 @@ struct InventoryView: View {
             .onChange(of: store.state.inventoryItems) { _ in
                 updateBestPrices()
             }
-            .onChange(of: store.state.user?.name) { newValue in
+            .onChange(of: globalStore.globalState.user?.name) { newValue in
                 self.username = newValue ?? ""
             }
-            .onChange(of: store.state.user?.settings) { _ in
+            .onChange(of: globalStore.globalState.user?.settings) { _ in
                 updateBestPrices()
             }
             .onReceive(ItemCache.default.updatedPublisher.debounce(for: .milliseconds(500), scheduler: RunLoop.main).prepend(())) { _ in
@@ -235,17 +236,17 @@ struct InventoryView: View {
             .sheet(isPresented: showSheet) {
                 switch presentedSheet {
                 case .settings:
-                    SettingsView(settings: store.state.settings, isPresented: settingsPresented)
+                    SettingsView(settings: globalStore.globalState.settings, isPresented: settingsPresented)
                         .environmentObject(DerivedGlobalStore.default)
                 case .filters:
-                    FiltersModal(settings: store.state.settings, isPresented: showFilters)
+                    FiltersModal(settings: globalStore.globalState.settings, isPresented: showFilters)
                         .environmentObject(DerivedGlobalStore.default)
                 case .imagePicker:
                     ImagePickerView(showPicker: showSheet, selectionLimit: 1) { (images: [UIImage]) in
                         images.first.map { self.store.send(.main(action: .uploadProfileImage(image: $0))) }
                     }
                 case .sellerStats:
-                    SellerStatsView(inventoryItems: inventoryItems, currency: store.state.currency, exchangeRates: store.state.exchangeRates ?? .default)
+                    SellerStatsView(inventoryItems: inventoryItems, currency: globalStore.globalState.currency, exchangeRates: globalStore.globalState.exchangeRates ?? .default)
                 case .none:
                     EmptyView()
                 }
@@ -267,7 +268,7 @@ struct InventoryView: View {
                       subtitle: "Share this link with anyone to show them what's in your stack. The link opens a webpage so whoever you share it with doesn't need to have the app downloaded.",
                       firstAction: .init(name: "Done", tapped: { sharedStack = nil }),
                       secondAction: nil) {
-                    StackShareSettingsView(linkURL: sharedStack?.linkURL(userId: store.state.user?.id ?? "") ?? "",
+                    StackShareSettingsView(linkURL: sharedStack?.linkURL(userId: globalStore.globalState.user?.id ?? "") ?? "",
                                            stack: .constant(stack),
                                            isPublic: stack.isPublic ?? false,
                                            isPublished: stack.isPublished ?? false,
@@ -345,7 +346,9 @@ extension InventoryView {
     }
 
     struct Destination: View {
-        @EnvironmentObject var store: AppStore
+        @EnvironmentObject var store: InventoryStore
+        @EnvironmentObject var globalStore: DerivedGlobalStore
+
         @Binding var navigationDestination: Navigation<NavigationDestination>
         @Binding var bestPrices: [String: ListingPrice]
         @Binding var selectedStack: Stack
@@ -356,7 +359,7 @@ extension InventoryView {
         }
 
         var body: some View {
-            let filters = Binding<Filters>(get: { store.state.settings.filters }, set: { _ in })
+            let filters = Binding<Filters>(get: { globalStore.globalState.settings.filters }, set: { _ in })
 
             switch navigationDestination.destination {
             case let .inventoryItem(inventoryItem):
@@ -366,8 +369,8 @@ extension InventoryView {
                                 inventoryItems: $store.state.inventoryItems,
                                 bestPrices: $bestPrices,
                                 filters: filters,
-                                linkURL: editedStack?.linkURL(userId: store.state.user?.id ?? "") ?? "",
-                                requestInfo: store.state.requestInfo,
+                                linkURL: editedStack?.linkURL(userId: globalStore.globalState.user?.id ?? "") ?? "",
+                                requestInfo: globalStore.globalState.requestInfo,
                                 shouldDismiss: { navigationDestination.hide() },
                                 saveChanges: { updatedStackItems in
                                     if var updatedStack = editedStack {
@@ -383,7 +386,7 @@ extension InventoryView {
             case let .selectStackItems(stack):
                 SelectStackItemsView(stack: stack,
                                      inventoryItems: store.state.inventoryItems,
-                                     requestInfo: store.state.requestInfo,
+                                     requestInfo: globalStore.globalState.requestInfo,
                                      shouldDismiss: { navigationDestination.hide() },
                                      saveChanges: { updatedStackItems in
                                          var updatedStack = stack

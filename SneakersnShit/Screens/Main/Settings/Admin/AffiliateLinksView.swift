@@ -7,12 +7,10 @@
 
 import SwiftUI
 
-#warning("hide email?")
-
 struct AffiliateLinksView: View {
     @EnvironmentObject var store: DerivedGlobalStore
     @Environment(\.presentationMode) var presentationMode
-    @State var promoters: [User] = []
+    @State var referralCodes: [ReferralCode] = []
     @State private var error: (String, String)? = nil
 
     @StateObject private var loader = Loader()
@@ -37,20 +35,16 @@ struct AffiliateLinksView: View {
                     CustomSpinner(text: "Loading", animate: true)
                 }
 
-                ForEach(promoters) { (user: User) in
+                ForEach(referralCodes) { (referralCode: ReferralCode) in
                     VStack(spacing: 10) {
-                        if let username = user.name {
-                            UserDetailView(name: "username", value: username, showCopyButton: false)
+                        UserDetailView(name: "code", value: referralCode.code)
+                        if let name = referralCode.name {
+                            UserDetailView(name: "name", value: name, showCopyButton: false)
                         }
-                        UserDetailView(name: "userid", value: user.id, showCopyButton: false)
-                        UserDetailView(name: "email", value: user.email ?? "-")
-                        if let promoCode = user.affiliateInfo?.promoCode {
-                            UserDetailView(name: "referral code", value: promoCode)
-                        }
-                        if let invitesSignedUp = user.affiliateInfo?.invitesSignedUp {
+                        if let invitesSignedUp = referralCode.signedUpCount {
                             UserDetailView(name: "invite count (signed up)", value: "\(invitesSignedUp)", showCopyButton: false)
                         }
-                        if let invitesSubscribed = user.affiliateInfo?.invitesSubscribed {
+                        if let invitesSubscribed = referralCode.subscribedCount {
                             UserDetailView(name: "invite count (subscribed)", value: "\(invitesSubscribed)", showCopyButton: false)
                         }
                     }
@@ -74,8 +68,8 @@ struct AffiliateLinksView: View {
         let loader = loader.getLoader()
         store.send(.main(action: .getAffiliateList(completion: { result in
             switch result {
-            case let .success(users):
-                promoters = users
+            case let .success(referralCodes):
+                self.referralCodes = referralCodes
             case let .failure(error):
                 self.error = ("Error", error.localizedDescription)
             }

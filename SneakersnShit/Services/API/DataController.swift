@@ -64,7 +64,8 @@ protocol BackendAPI {
     func finishImport(importedUserId: String, completion: @escaping (Result<User, Error>) -> Void)
     func getImportedInventoryItems(importedUserId: String, completion: @escaping (Result<[InventoryItem], Error>) -> Void)
     // membership
-    func applyPromoCode(_ code: String, completion: ((Result<Void, AppError>) -> Void)?)
+    func applyReferralCode(_ code: String, completion: ((Result<Void, AppError>) -> Void)?)
+    func getAffiliateList(completion: @escaping (Result<[ReferralCode], Error>) -> Void)
 }
 
 protocol DatabaseManager {
@@ -99,7 +100,6 @@ protocol DatabaseManager {
 
     // admin
     func getSpreadsheetImportWaitlist(completion: @escaping (Result<[User], Error>) -> Void)
-    func getAffiliateList(completion: @escaping (Result<[User], Error>) -> Void)
 }
 
 protocol ImageService {

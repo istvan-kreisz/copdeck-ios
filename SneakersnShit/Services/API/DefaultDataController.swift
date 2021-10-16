@@ -405,12 +405,12 @@ class DefaultDataController: DataController {
         backendAPI.getImportedInventoryItems(importedUserId: importedUserId, completion: completion)
     }
 
-    func getAffiliateList(completion: @escaping (Result<[User], Error>) -> Void) {
-        databaseManager.getAffiliateList(completion: completion)
+    func getAffiliateList(completion: @escaping (Result<[ReferralCode], Error>) -> Void) {
+        backendAPI.getAffiliateList(completion: completion)
     }
 
-    func applyPromoCode(_ code: String, completion: ((Result<Void, AppError>) -> Void)?) {
-        backendAPI.applyPromoCode(code, completion: completion)
+    func applyReferralCode(_ code: String, completion: ((Result<Void, AppError>) -> Void)?) {
+        backendAPI.applyReferralCode(code, completion: completion)
     }
 }
 
