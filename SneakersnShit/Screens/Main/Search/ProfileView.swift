@@ -46,6 +46,9 @@ struct ProfileView: View {
 
     var body: some View {
         Group {
+            let showDetail = Binding<Bool>(get: { navigationDestination.show },
+                                           set: { show in show ? navigationDestination.display() : navigationDestination.hide() })
+
             let selectedInventoryItemBinding = Binding<InventoryItem?>(get: { selectedInventoryItem },
                                                                        set: { inventoryItem in
                                                                            if let inventoryItem = inventoryItem {
@@ -63,12 +66,10 @@ struct ProfileView: View {
                                                            }
                                                        })
 
-
             NavigationLink(destination: Destination(requestInfo: store.globalState.requestInfo,
                                                     navigationDestination: $navigationDestination,
-                                                    profileData: profileData).navigationbarHidden()) {
-                EmptyView()
-            }
+                                                    profileData: profileData).navigationbarHidden(),
+                           isActive: showDetail) { EmptyView() }
 
             VerticalListView(bottomPadding: 0, spacing: 0, listRowStyling: .none) {
                 NavigationBar(title: nil, isBackButtonVisible: true, style: .dark, shouldDismiss: shouldDismiss)
