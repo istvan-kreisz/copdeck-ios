@@ -124,6 +124,7 @@ struct StackView: View {
         } else {
             ForEach(allStackItems) { (inventoryItem: InventoryItem) in
                 InventoryListItem(inventoryItem: inventoryItem,
+                                  priceName: "Best Price",
                                   bestPrice: bestPrices[inventoryItem.id],
                                   selectedInventoryItem: $selectedInventoryItem,
                                   isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }),

@@ -50,11 +50,9 @@ struct DebugSettings {
 
     let istvanId = "s80wQjTNqXRlRzirFlgY3MF9BxJ3"
     let milanId = "U5VMyc8UNsN1JvDlWYOxQUmL6uE2"
-    let yeId = "askffhasfs;kdfjasd;askdjsald"
     
     var isIstvan: Bool { DefaultAuthenticator.user?.uid == istvanId }
     var isMilan: Bool { DefaultAuthenticator.user?.uid == milanId }
-    var isYe: Bool { DefaultAuthenticator.user?.uid == yeId }
 
     lazy var environment: AppEnvironment? = {
         guard let currentConfiguration = Bundle.main.object(forInfoDictionaryKey: "Configuration") as? String,
@@ -75,7 +73,7 @@ struct DebugSettings {
     }
 
     var isAdmin: Bool {
-        isIstvan || isMilan || isYe
+        isIstvan || isMilan
     }
     
     var isSuperAdmin: Bool {

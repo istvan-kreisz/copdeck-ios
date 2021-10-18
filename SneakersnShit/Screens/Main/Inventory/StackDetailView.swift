@@ -163,6 +163,7 @@ struct StackDetailView: View {
 
                 ForEach(allStackItems) { (inventoryItem: InventoryItem) in
                     InventoryListItem(inventoryItem: inventoryItem,
+                                      priceName: "Best price",
                                       bestPrice: bestPrices[inventoryItem.id],
                                       selectedInventoryItem: selectedInventoryItemBinding,
                                       isSelected: false,

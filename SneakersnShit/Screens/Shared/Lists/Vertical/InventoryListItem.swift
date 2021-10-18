@@ -9,6 +9,7 @@ import SwiftUI
 
 struct InventoryListItem: View {
     var inventoryItem: InventoryItem
+    let priceName: String?
     let bestPrice: ListingPrice?
     @Binding var selectedInventoryItem: InventoryItem?
     var isSelected: Bool
@@ -20,7 +21,7 @@ struct InventoryListItem: View {
 
     func bestPriceStack() -> some View {
         VStack(alignment: .center, spacing: 2) {
-            Text("Best price".uppercased())
+            Text(priceName?.uppercased() ?? "")
                 .foregroundColor(.customText2)
                 .font(.bold(size: 9))
             Text(bestPrice?.price.asString ?? "-")

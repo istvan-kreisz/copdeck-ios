@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-#warning("currrencyyyyyyy")
-
 struct NewItemCard: View {
     enum Style {
         case card, noBackground

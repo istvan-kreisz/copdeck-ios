@@ -246,13 +246,13 @@ struct InventoryView: View {
                         images.first.map { self.store.send(.main(action: .uploadProfileImage(image: $0))) }
                     }
                 case .sellerStats:
-                    SellerStatsView(inventoryItems: inventoryItems, currency: globalStore.globalState.currency, exchangeRates: globalStore.globalState.exchangeRates ?? .default)
+                    SellerStatsView(inventoryItems: inventoryItems, currency: globalStore.globalState.settings.currency, exchangeRates: globalStore.globalState.exchangeRates ?? .default)
                 case .none:
                     EmptyView()
                 }
             }
         }
-        .withTabViewWrapper(viewRouter: viewRouter, store: InventoryStore.default, backgroundColor: .customWhite, shouldShow: $shouldShowTabBar)
+//        .withTabViewWrapper(viewRouter: viewRouter, store: InventoryStore.default, backgroundColor: .customWhite, shouldShow: $shouldShowTabBar)
         .withTextFieldPopup(isShowing: $showAddNewStackAlert,
                             title: "Add new stack",
                             subtitle: nil,

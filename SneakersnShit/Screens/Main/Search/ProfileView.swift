@@ -63,6 +63,7 @@ struct ProfileView: View {
                                                            }
                                                        })
 
+
             NavigationLink(destination: Destination(requestInfo: store.globalState.requestInfo,
                                                     navigationDestination: $navigationDestination,
                                                     profileData: profileData).navigationbarHidden()) {
