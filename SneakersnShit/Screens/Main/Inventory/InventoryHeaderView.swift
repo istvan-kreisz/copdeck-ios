@@ -23,6 +23,9 @@ struct InventoryHeaderView: View {
     var textBox2: TextBox
     var isOwnProfile: Bool = true
     var updateUsername: (() -> Void)?
+    var linkFacebookProfile: (() -> Void)?
+
+    let facebookLogoSize: CGFloat = 18
 
     var body: some View {
         VStack(alignment: .center, spacing: 30) {
@@ -49,24 +52,46 @@ struct InventoryHeaderView: View {
                 }
             }
 
-            VStack(spacing: 15) {
+            VStack(spacing: 10) {
                 ProfileImageView(showImagePicker: $showImagePicker, profileImageURL: $profileImageURL, isEditable: isOwnProfile)
                 if let updateUsername = updateUsername {
-                    VStack(alignment: .center, spacing: 10) {
-                        
-                    
-                    TextFieldUnderlined(text: $username,
-                                        placeHolder: "username",
-                                        color: .customText1,
-                                        dismissKeyboardOnReturn: false,
-                                        icon: nil,
-                                        keyboardType: .default,
-                                        isSecureField: false,
-                                        textAlignment: TextAlignment.center,
-                                        trailingPadding: 0,
-                                        addLeadingPadding: false,
-                                        onFinishedEditing: updateUsername)
-                        .frame(width: 150)
+                    VStack(alignment: .center, spacing: 5) {
+                        TextFieldUnderlined(text: $username,
+                                            placeHolder: "username",
+                                            color: .customText1,
+                                            dismissKeyboardOnReturn: false,
+                                            icon: nil,
+                                            keyboardType: .default,
+                                            isSecureField: false,
+                                            textAlignment: TextAlignment.center,
+                                            trailingPadding: 0,
+                                            addLeadingPadding: false,
+                                            height: nil,
+                                            onFinishedEditing: updateUsername)
+                            .frame(width: 150)
+                        if let linkFacebookProfile = linkFacebookProfile, isOwnProfile {
+                            Button {
+                                linkFacebookProfile()
+                            } label: {
+                                HStack(spacing: 5) {
+                                    Text("Link your facebook account")
+                                        .font(.medium(size: 14))
+                                        .foregroundColor(.customText2)
+                                        .underline()
+                                    Image("facebook")
+                                        .renderingMode(.template)
+                                        .resizable()
+                                        .foregroundColor(.customWhite)
+                                        .scaledToFit()
+                                        .frame(width: facebookLogoSize * 0.6, height: facebookLogoSize * 0.6)
+                                        .centeredVertically()
+                                        .frame(width: facebookLogoSize, height: facebookLogoSize)
+                                        .background(Color(r: 66, g: 103, b: 178))
+                                        .cornerRadius(facebookLogoSize / 2)
+                                }
+                            }
+                        }
+
                         AccessoryButton(title: "See seller stats",
                                         color: .customAccent1,
                                         textColor: .customText1,
@@ -74,6 +99,7 @@ struct InventoryHeaderView: View {
                                         imageName: "chevron.right",
                                         buttonPosition: .right,
                                         tapped: { showSellerStats = true })
+                            .padding(.top, 15)
                     }
                 } else {
                     Text(username)

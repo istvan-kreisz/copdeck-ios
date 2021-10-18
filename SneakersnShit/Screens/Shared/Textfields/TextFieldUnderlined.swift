@@ -19,6 +19,7 @@ struct TextFieldUnderlined: View {
     var textAlignment: TextAlignment = .leading
     var trailingPadding: CGFloat = 15
     var addLeadingPadding: Bool = true
+    var height: CGFloat? = 45
     let onFinishedEditing: () -> Void
 
     var body: some View {
@@ -52,7 +53,7 @@ struct TextFieldUnderlined: View {
                 .frame(height: 1)
                 .frame(maxWidth: .infinity)
         }
-        .frame(height: 45)
+        .frame(height: height)
         .padding(.trailing, trailingPadding)
     }
 }

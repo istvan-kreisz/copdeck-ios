@@ -85,12 +85,14 @@ class DefaultAuthenticator: NSObject, Authenticator {
         }
     }
 
-    func signInWithFacebook() -> AnyPublisher<String, Error> {
+    func signInWithFacebook() -> AnyPublisher<(userId: String, url: String?), Error> {
         return withPublisher { [weak self] in
             self?.loginButton.delegate = self
             self?.loginButton.permissions = ["email", "user_link"]
             self?.loginButton.sendActions(for: .touchUpInside)
         }
+        .map { (userId: $0, url: Profile.current?.linkURL?.absoluteString) }
+        .eraseToAnyPublisher()
     }
 
     func signInWithGoogle() -> AnyPublisher<String, Error> {
@@ -125,7 +127,7 @@ class DefaultAuthenticator: NSObject, Authenticator {
             self?.signOutUser()
         }
     }
-    
+
     private func signOutUser() {
         do {
             var signoutGoogle = false

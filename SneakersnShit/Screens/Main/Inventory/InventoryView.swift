@@ -146,7 +146,8 @@ struct InventoryView: View {
                                     username: $username,
                                     textBox1: .init(title: "Inventory Value", text: inventoryValue?.asString ?? "-"),
                                     textBox2: .init(title: "Inventory Size", text: "\(inventoryItems.count)"),
-                                    updateUsername: updateUsername)
+                                    updateUsername: updateUsername,
+                                    linkFacebookProfile: globalStore.globalState.user?.facebookProfileURL == nil ? linkFacebookProfile : nil)
 
                 ScrollableSegmentedControl(selectedIndex: $selectedStackIndex,
                                            titles: stackTitles,
@@ -246,7 +247,8 @@ struct InventoryView: View {
                         images.first.map { self.store.send(.main(action: .uploadProfileImage(image: $0))) }
                     }
                 case .sellerStats:
-                    SellerStatsView(inventoryItems: inventoryItems, currency: globalStore.globalState.settings.currency, exchangeRates: globalStore.globalState.exchangeRates ?? .default)
+                    SellerStatsView(inventoryItems: inventoryItems, currency: globalStore.globalState.settings.currency,
+                                    exchangeRates: globalStore.globalState.exchangeRates ?? .default)
                 case .none:
                     EmptyView()
                 }
@@ -318,6 +320,10 @@ struct InventoryView: View {
 
     private func updateUsername() {
         store.send(.main(action: .updateUsername(username: username)))
+    }
+
+    private func linkFacebookProfile() {
+        store.send(.authentication(action: .signInWithFacebook(referralCode: nil)))
     }
 }
 

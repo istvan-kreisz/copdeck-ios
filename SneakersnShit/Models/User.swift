@@ -50,9 +50,10 @@ struct User: Codable, Equatable, Identifiable {
     let spreadsheetImport: SpreadsheetImport?
     let membershipInfo: MembershipInfo?
     let country: String?
+    var facebookProfileURL: String?
 
     enum CodingKeys: String, CodingKey {
-        case id, inited, name, nameInsensitive, email, isPublic, created, updated, settings, spreadsheetImport, membershipInfo, country
+        case id, inited, name, nameInsensitive, email, isPublic, created, updated, settings, spreadsheetImport, membershipInfo, country, facebookProfileURL
     }
 }
 
@@ -71,6 +72,7 @@ extension User {
         spreadsheetImport = try container.decodeIfPresent(SpreadsheetImport.self, forKey: .spreadsheetImport)
         membershipInfo = try container.decodeIfPresent(MembershipInfo.self, forKey: .membershipInfo)
         country = try container.decodeIfPresent(String.self, forKey: .country)
+        facebookProfileURL = try container.decodeIfPresent(String.self, forKey: .facebookProfileURL)
     }
 
     init(id: String) {
@@ -84,7 +86,8 @@ extension User {
                   settings: nil,
                   spreadsheetImport: nil,
                   membershipInfo: nil,
-                  country: nil)
+                  country: nil,
+                  facebookProfileURL: nil)
     }
 
     func withImageURL(_ url: URL?) -> User {

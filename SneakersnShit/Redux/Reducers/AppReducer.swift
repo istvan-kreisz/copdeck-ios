@@ -190,7 +190,17 @@ func appReducer(state: inout AppState,
             result = environment.authenticator.signInWithGoogle()
         case let .signInWithFacebook(referralCode):
             refCode = referralCode
-            result = environment.authenticator.signInWithFacebook()
+            let user = state.user
+            let publisher = environment.authenticator.signInWithFacebook()
+                .handleEvents(receiveOutput: { [weak environment] _, profileURL in
+                    if var profile = user {
+                        profile.facebookProfileURL = profileURL
+                        environment?.dataController.update(user: profile)
+                    }
+                })
+                .map(\.userId)
+                .eraseToAnyPublisher()
+            result = publisher
         case let .passwordReset(email):
             result = environment.authenticator.resetPassword(email: email)
         case .signOut:
