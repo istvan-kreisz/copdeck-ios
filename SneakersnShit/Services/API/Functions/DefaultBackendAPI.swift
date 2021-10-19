@@ -313,4 +313,12 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
         }
         handlePublisherResult(publisher: callFirebaseFunction(functionName: "applyReferralCode", model: Wrapper(referralCode: code)), completion: completion)
     }
+    
+    func sendMessage(email: String, message: String, completion: ((Result<Void, AppError>) -> Void)?) {
+        struct Wrapper: Encodable {
+            let email: String
+            let message: String
+        }
+        handlePublisherResult(publisher: callFirebaseFunction(functionName: "sendMessage", model: Wrapper(email: email, message: message)), completion: completion)
+    }
 }

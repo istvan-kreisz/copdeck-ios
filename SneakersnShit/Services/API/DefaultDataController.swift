@@ -412,6 +412,10 @@ class DefaultDataController: DataController {
     func applyReferralCode(_ code: String, completion: ((Result<Void, AppError>) -> Void)?) {
         backendAPI.applyReferralCode(code, completion: completion)
     }
+    
+    func sendMessage(email: String, message: String, completion: ((Result<Void, AppError>) -> Void)?) {
+        backendAPI.sendMessage(email: email, message: message, completion: completion)
+    }
 }
 
 extension DefaultDataController {
