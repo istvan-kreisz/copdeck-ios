@@ -10,8 +10,9 @@ import Firebase
 import GoogleSignIn
 import FBSDKCoreKit
 import Nuke
+import Purchases
 
-///Users/istvankreisz/Workspace/CopDeck/App/Code/Pods/FirebaseCrashlytics/upload-symbols -gsp /Users/istvankreisz/Workspace/CopDeck/App/Code/SneakersnShit/Shared/GoogleService-Info.plist -p ios /Users/istvankreisz/Desktop/appDsyms
+/// Users/istvankreisz/Workspace/CopDeck/App/Code/Pods/FirebaseCrashlytics/upload-symbols -gsp /Users/istvankreisz/Workspace/CopDeck/App/Code/SneakersnShit/Shared/GoogleService-Info.plist -p ios /Users/istvankreisz/Desktop/appDsyms
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         if DebugSettings.shared.clearUserDefaults {
@@ -23,6 +24,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         StoreReviewHelper.incrementAppOpenedCount()
         setupNuke()
         setupUI()
+        setupRevenueCat()
         return true
     }
 
@@ -51,5 +53,23 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         UITableView.appearance().showsVerticalScrollIndicator = false
         UITableViewCell.appearance().selectionStyle = .none
         UINavigationBar.appearance().backgroundColor = UIColor.clear
+    }
+
+    private func setupRevenueCat() {
+        Purchases.debugLogsEnabled = DebugSettings.shared.isInDebugMode
+        Purchases.configure(withAPIKey: "vkJAtxOkCMEORPnQDmuEwtoUBuHDUMSu")
+
+        Purchases.shared.offerings { offerings, error in
+            if let package = offerings?.current?.monthly?.product {
+                print("--package--")
+                print(package.productIdentifier)
+
+                Purchases.shared.purchasePackage(package) { transaction, purchaserInfo, error, userCancelled in
+                    if purchaserInfo.entitlements[""]?.isActive == true {
+                        // Unlock that great "pro" content
+                    }
+                }
+            }
+        }
     }
 }
