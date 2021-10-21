@@ -14,7 +14,7 @@ struct ContactView: View {
     @StateObject private var loader = Loader()
 
     @State private var alert: (String, String)? = nil
-    
+
     @State var email = ""
     @State var message: String?
     @State var didFinishLoading = false
@@ -54,10 +54,15 @@ struct ContactView: View {
             let description = alert?.1 ?? ""
             return Alert(title: Text(title), message: Text(description), dismissButton: Alert.Button.cancel(Text("Okay")))
         }
+        .onAppear {
+            if email.isEmpty {
+                email = store.globalState.user?.email ?? ""
+            }
+        }
         .withDefaultPadding(padding: .horizontal)
         .navigationbarHidden()
     }
-    
+
     private func sendMessage() {
         guard isValidEmail(email) else {
             self.alert = ("Error", "Invalid Email")
@@ -80,6 +85,5 @@ struct ContactView: View {
         })))
     }
 }
-
 
 extension ContactView: EmailValidator {}

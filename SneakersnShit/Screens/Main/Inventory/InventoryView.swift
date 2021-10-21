@@ -146,6 +146,7 @@ struct InventoryView: View {
                                     username: $username,
                                     textBox1: .init(title: "Inventory Value", text: inventoryValue?.asString ?? "-"),
                                     textBox2: .init(title: "Inventory Size", text: "\(inventoryItems.count)"),
+                                    facebookURL: nil,
                                     updateUsername: updateUsername,
                                     linkFacebookProfile: globalStore.globalState.user?.facebookProfileURL == nil ? linkFacebookProfile : nil)
 
@@ -254,7 +255,7 @@ struct InventoryView: View {
                 }
             }
         }
-//        .withTabViewWrapper(viewRouter: viewRouter, store: InventoryStore.default, backgroundColor: .customWhite, shouldShow: $shouldShowTabBar)
+        .withTabViewWrapper(viewRouter: viewRouter, store: InventoryStore.default, backgroundColor: .customWhite, shouldShow: $shouldShowTabBar)
         .withTextFieldPopup(isShowing: $showAddNewStackAlert,
                             title: "Add new stack",
                             subtitle: nil,

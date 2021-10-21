@@ -83,6 +83,7 @@ struct ProfileView: View {
                                     username: .constant("\(profileData.user.name ?? "") \(countryIcon)"),
                                     textBox1: .init(title: "Joined", text: joinedDate),
                                     textBox2: .init(title: "Shared Stacks", text: "\(profileData.stacks.count)"),
+                                    facebookURL: profileData.user.facebookProfileURL,
                                     isOwnProfile: false)
 
                 Text(profileData.user.name.map { "\($0)'s Stacks" } ?? "Stacks")

@@ -21,6 +21,7 @@ struct InventoryHeaderView: View {
 
     var textBox1: TextBox
     var textBox2: TextBox
+    let facebookURL: String?
     var isOwnProfile: Bool = true
     var updateUsername: (() -> Void)?
     var linkFacebookProfile: (() -> Void)?
@@ -69,12 +70,19 @@ struct InventoryHeaderView: View {
                                             height: nil,
                                             onFinishedEditing: updateUsername)
                             .frame(width: 150)
-                        if let linkFacebookProfile = linkFacebookProfile, isOwnProfile {
+
+                        if (linkFacebookProfile != nil && isOwnProfile) || facebookURL != nil {
                             Button {
-                                linkFacebookProfile()
+                                if let linkFacebookProfile = linkFacebookProfile, isOwnProfile {
+                                    linkFacebookProfile()
+                                } else if let facebookURL = facebookURL {
+                                    if let url = URL(string: facebookURL) {
+                                        UIApplication.shared.open(url)
+                                    }
+                                }
                             } label: {
                                 HStack(spacing: 5) {
-                                    Text("Link your facebook account")
+                                    Text(facebookURL != nil ? "Visit facebook account" : "Link your facebook account")
                                         .font(.medium(size: 14))
                                         .foregroundColor(.customText2)
                                         .underline()

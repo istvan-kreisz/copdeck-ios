@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension Binding where Value: Equatable {
     init(_ source: Binding<Value?>, replacingNilWith nilProxy: Value) {

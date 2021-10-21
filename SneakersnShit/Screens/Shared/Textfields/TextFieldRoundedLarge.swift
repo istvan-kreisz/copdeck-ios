@@ -43,8 +43,9 @@ struct TextFieldRoundedLarge: View {
                     .if(style == .white) { $0.withDefaultShadow() }
 
                 Text(text ?? placeHolder)
-                    .padding(.leading, 5)
-                    .foregroundColor(Color.customAccent2)
+                    .padding(.leading, 10)
+                    .padding(.top, 8)
+                    .foregroundColor(Color.customText2.opacity(0.6))
                     .opacity(text == nil ? 1 : 0)
             }
         }
