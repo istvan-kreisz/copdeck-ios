@@ -27,7 +27,7 @@ struct PaymentView: View {
     }
 
     var body: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 30) {
                 HStack(alignment: .center, spacing: 5) {
                     #warning("make bold logo")
@@ -131,41 +131,41 @@ struct PaymentView: View {
                             .foregroundColor(.customText1)
                             .font(.regular(size: 14))
                         HStack(spacing: 0) {
-                            Link("Privacy Policy", destination: URL(string: "https://discord.gg/cQh6VTvXas")!)
+                            Link("Privacy Policy", destination: URL(string: "https://copdeck.com/privacy")!)
                                 .foregroundColor(.customBlue)
                                 .font(.regular(size: 14))
                             Text(" and ")
                                 .foregroundColor(.customText1)
                                 .font(.regular(size: 14))
-                            Link(" Terms & Conditions ", destination: URL(string: "https://twitter.com/Cop_Deck")!)
+                            Link(" Terms & Conditions ", destination: URL(string: "https://copdeck.com/termsandconditions")!)
                                 .foregroundColor(.customBlue)
                                 .font(.regular(size: 14))
                             Spacer()
                         }
                     }
                 }
-
-                #warning("make this into a floating buttton")
-                Button {
-                    subscribe()
-                } label: {
-                    VStack(alignment: .center, spacing: 7) {
-                        Text("Start your 14 day free trial")
-                            .font(.semiBold(size: 20))
-                            .foregroundColor(.customWhite)
-                            .padding(15)
-                            .frame(width: UIScreen.screenWidth - Styles.horizontalMargin * 2)
-                            .background(RoundedRectangle(cornerRadius: Styles.cornerRadius).fill(Color.customBlue))
-                        
-                        Text("Then only $9.99 per month, billed monthly")
-                            .font(.regular(size: 16))
-                            .foregroundColor(.customText2)
-                    }
-                }
-                .padding(.vertical, 10)
             }
         }
         .withDefaultPadding(padding: .horizontal)
+        .withFloatingButton(button: VStack(alignment: .center, spacing: 7, content: {
+            Button {
+                subscribe()
+            } label: {
+                Text("Start your 14 day free trial")
+                    .font(.semiBold(size: 20))
+                    .foregroundColor(.customWhite)
+                    .padding(15)
+                    .frame(width: UIScreen.screenWidth - Styles.horizontalMargin * 2)
+                    .background(RoundedRectangle(cornerRadius: Styles.cornerRadius).fill(Color.customBlue))
+            }
+
+            Text("Then only $9.99 per month, billed monthly")
+                .font(.regular(size: 16))
+                .foregroundColor(.customText2)
+        })
+                                .padding(10)
+                                .background(Color.customWhite)
+        )
         .withDefaultPadding(padding: .top)
         .navigationbarHidden()
     }
