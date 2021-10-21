@@ -170,6 +170,8 @@ func appReducer(state: inout AppState,
             environment.dataController.getImportedInventoryItems(importedUserId: importedUserId, completion: completion)
         case let .getAffiliateList(completion):
             environment.dataController.getAffiliateList(completion: completion)
+        case let .sendMessage(email, message, completion):
+            environment.dataController.sendMessage(email: email, message: message, completion: completion)
         }
     case let .authentication(action):
         let result: AnyPublisher<String, Error>

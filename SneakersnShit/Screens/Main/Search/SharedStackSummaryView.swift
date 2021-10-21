@@ -10,6 +10,7 @@ import SwiftUI
 struct SharedStackSummaryView: View {
     @EnvironmentObject var store: FeedStore
 
+
     private static let maxCount = 4
     private static let profileImageSize: CGFloat = 38
 
@@ -136,6 +137,7 @@ struct SharedStackSummaryView: View {
         } else {
             likes.append(userId)
         }
+        AppStore.default.environment.feedbackGenerator.selectionChanged()
         stack.likes = likes
         store.send(.main(action: .toggleLike(stack: stack, stackOwnerId: stackOwnerId)))
     }

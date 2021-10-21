@@ -18,6 +18,7 @@ struct InventoryHeaderView: View {
     @Binding var showSellerStats: Bool
     @Binding var profileImageURL: URL?
     @Binding var username: String
+    @Binding var facebookURL: String?
 
     var textBox1: TextBox
     var textBox2: TextBox
@@ -26,6 +27,35 @@ struct InventoryHeaderView: View {
     var linkFacebookProfile: (() -> Void)?
 
     let facebookLogoSize: CGFloat = 18
+
+    private func facebookAccountButton() -> some View {
+        Button {
+            if let linkFacebookProfile = linkFacebookProfile, isOwnProfile {
+                linkFacebookProfile()
+            } else if let facebookURL = facebookURL {
+                if let url = URL(string: facebookURL) {
+                    UIApplication.shared.open(url)
+                }
+            }
+        } label: {
+            HStack(spacing: 5) {
+                Text(facebookURL != nil ? "View facebook account" : "Link your facebook account")
+                    .font(.medium(size: 14))
+                    .foregroundColor(.customText2)
+                    .underline()
+                Image("facebook")
+                    .renderingMode(.template)
+                    .resizable()
+                    .foregroundColor(.customWhite)
+                    .scaledToFit()
+                    .frame(width: facebookLogoSize * 0.6, height: facebookLogoSize * 0.6)
+                    .centeredVertically()
+                    .frame(width: facebookLogoSize, height: facebookLogoSize)
+                    .background(Color(r: 66, g: 103, b: 178))
+                    .cornerRadius(facebookLogoSize / 2)
+            }
+        }
+    }
 
     var body: some View {
         VStack(alignment: .center, spacing: 30) {
@@ -69,27 +99,9 @@ struct InventoryHeaderView: View {
                                             height: nil,
                                             onFinishedEditing: updateUsername)
                             .frame(width: 150)
-                        if let linkFacebookProfile = linkFacebookProfile, isOwnProfile {
-                            Button {
-                                linkFacebookProfile()
-                            } label: {
-                                HStack(spacing: 5) {
-                                    Text("Link your facebook account")
-                                        .font(.medium(size: 14))
-                                        .foregroundColor(.customText2)
-                                        .underline()
-                                    Image("facebook")
-                                        .renderingMode(.template)
-                                        .resizable()
-                                        .foregroundColor(.customWhite)
-                                        .scaledToFit()
-                                        .frame(width: facebookLogoSize * 0.6, height: facebookLogoSize * 0.6)
-                                        .centeredVertically()
-                                        .frame(width: facebookLogoSize, height: facebookLogoSize)
-                                        .background(Color(r: 66, g: 103, b: 178))
-                                        .cornerRadius(facebookLogoSize / 2)
-                                }
-                            }
+
+                        if linkFacebookProfile != nil, isOwnProfile {
+                            facebookAccountButton()
                         }
 
                         AccessoryButton(title: "See seller stats",
@@ -102,9 +114,14 @@ struct InventoryHeaderView: View {
                             .padding(.top, 15)
                     }
                 } else {
-                    Text(username)
-                        .foregroundColor(.customText1)
-                        .font(.bold(size: 22))
+                    VStack(alignment: .center, spacing: 5) {
+                        Text(username)
+                            .foregroundColor(.customText1)
+                            .font(.bold(size: 22))
+                        if facebookURL != nil {
+                            facebookAccountButton()
+                        }
+                    }
                 }
 
                 HStack {

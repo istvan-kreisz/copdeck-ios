@@ -1,19 +1,15 @@
 //
-//  TextFieldRounded.swift
+//  TextFieldRoundedLarrge.swift
 //  CopDeck
 //
-//  Created by István Kreisz on 7/14/21.
+//  Created by István Kreisz on 10/19/21.
 //
 
 import SwiftUI
 
-struct TextFieldRounded: View {
+struct TextFieldRoundedLarge: View {
     enum Style {
         case white, gray
-    }
-
-    enum Size {
-        case regular, large
     }
 
     var title: String?
@@ -21,8 +17,7 @@ struct TextFieldRounded: View {
     var placeHolder: String
     let style: Style
     var keyboardType: UIKeyboardType = .default
-    var size: Size = .regular
-    @Binding var text: String
+    @Binding var text: String?
     var width: CGFloat? = nil
     var onEdited: ((Bool) -> Void)?
 
@@ -35,20 +30,10 @@ struct TextFieldRounded: View {
                     .padding(.leading, 5)
             }
 
-            if size == .regular {
-                TextField(placeHolder, text: $text, onEditingChanged: { isActive in
-                    onEdited?(isActive)
-                })
+            ZStack(alignment: .topLeading) {
+                TextEditor(text: Binding($text, replacingNilWith: ""))
                     .keyboardType(keyboardType)
-                    .foregroundColor(.customText2)
-                    .padding(.horizontal, 8)
-                    .frame(width: width, height: Styles.inputFieldHeight)
-                    .background(style == .white ? Color.customWhite : Color.customAccent4)
-                    .cornerRadius(Styles.cornerRadius)
-                    .if(style == .white) { $0.withDefaultShadow() }
-            } else {
-                TextEditor(text: $text)
-                    .keyboardType(keyboardType)
+                    .multilineTextAlignment(.leading)
                     .foregroundColor(.customText2)
                     .background(style == .white ? Color.customWhite : Color.customAccent4)
                     .padding(.horizontal, 8)
@@ -56,6 +41,12 @@ struct TextFieldRounded: View {
                     .background(style == .white ? Color.customWhite : Color.customAccent4)
                     .cornerRadius(Styles.cornerRadius)
                     .if(style == .white) { $0.withDefaultShadow() }
+
+                Text(text ?? placeHolder)
+                    .padding(.leading, 10)
+                    .padding(.top, 8)
+                    .foregroundColor(Color.customText2.opacity(0.6))
+                    .opacity(text == nil ? 1 : 0)
             }
         }
     }

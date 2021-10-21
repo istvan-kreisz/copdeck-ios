@@ -360,6 +360,13 @@ struct SettingsView: View {
                                 .leftAligned()
                         }
                     }
+                    
+                    Section(header: Text("Contact Support")) {
+                        NavigationLink(destination: ContactView()) {
+                            Text("Send us a message")
+                                .leftAligned()
+                        }
+                    }
 
                     if DebugSettings.shared.isAdmin {
                         Section(header: Text("ADMIN")) {

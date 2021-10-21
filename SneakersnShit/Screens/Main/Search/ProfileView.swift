@@ -79,8 +79,9 @@ struct ProfileView: View {
                 InventoryHeaderView(settingsPresented: .constant(false),
                                     showImagePicker: .constant(false),
                                     showSellerStats: .constant(false),
-                                    profileImageURL: .constant(profileData.user.imageURL),
+                                    profileImageURL: $profileData.user.imageURL,
                                     username: .constant("\(profileData.user.name ?? "") \(countryIcon)"),
+                                    facebookURL: $profileData.user.facebookProfileURL,
                                     textBox1: .init(title: "Joined", text: joinedDate),
                                     textBox2: .init(title: "Shared Stacks", text: "\(profileData.stacks.count)"),
                                     isOwnProfile: false)

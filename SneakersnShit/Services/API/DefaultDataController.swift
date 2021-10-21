@@ -292,7 +292,7 @@ class DefaultDataController: DataController {
 
     func update(user: User) {
         var updatedUser = user
-        updatedUser.nameInsensitive = updatedUser.name?.capitalized
+        updatedUser.nameInsensitive = updatedUser.name?.uppercased()
         databaseManager.update(user: updatedUser)
     }
 
@@ -411,6 +411,10 @@ class DefaultDataController: DataController {
 
     func applyReferralCode(_ code: String, completion: ((Result<Void, AppError>) -> Void)?) {
         backendAPI.applyReferralCode(code, completion: completion)
+    }
+    
+    func sendMessage(email: String, message: String, completion: ((Result<Void, AppError>) -> Void)?) {
+        backendAPI.sendMessage(email: email, message: message, completion: completion)
     }
 }
 

@@ -184,6 +184,9 @@
 		5DE596F026C8CD600024F7D5 /* SelectStackItemsListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE596EF26C8CD600024F7D5 /* SelectStackItemsListItem.swift */; };
 		5DE596F426C8D64F0024F7D5 /* Popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE596F326C8D64F0024F7D5 /* Popup.swift */; };
 		5DE596F626C9355C0024F7D5 /* ActionConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE596F526C9355C0024F7D5 /* ActionConfig.swift */; };
+		5DEB42B1271EE16900895766 /* ContactView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEB42B0271EE16900895766 /* ContactView.swift */; };
+		5DEB42B3271EEB7C00895766 /* TextFieldRoundedLarge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEB42B2271EEB7C00895766 /* TextFieldRoundedLarge.swift */; };
+		5DEB42B5271F1CD200895766 /* Binding+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEB42B4271F1CD200895766 /* Binding+Extensions.swift */; };
 		5DEBC088269B24BA000EEADC /* ViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEBC087269B24BA000EEADC /* ViewRouter.swift */; };
 		5DEBC08A269B3DE8000EEADC /* Double+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEBC089269B3DE8000EEADC /* Double+Extensions.swift */; };
 		5DECB57C27068AA50017748C /* SocialLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DECB57B27068AA50017748C /* SocialLoginView.swift */; };
@@ -376,6 +379,9 @@
 		5DE596EF26C8CD600024F7D5 /* SelectStackItemsListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectStackItemsListItem.swift; sourceTree = "<group>"; };
 		5DE596F326C8D64F0024F7D5 /* Popup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Popup.swift; sourceTree = "<group>"; };
 		5DE596F526C9355C0024F7D5 /* ActionConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionConfig.swift; sourceTree = "<group>"; };
+		5DEB42B0271EE16900895766 /* ContactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactView.swift; sourceTree = "<group>"; };
+		5DEB42B2271EEB7C00895766 /* TextFieldRoundedLarge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldRoundedLarge.swift; sourceTree = "<group>"; };
+		5DEB42B4271F1CD200895766 /* Binding+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Binding+Extensions.swift"; sourceTree = "<group>"; };
 		5DEBC087269B24BA000EEADC /* ViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewRouter.swift; sourceTree = "<group>"; };
 		5DEBC089269B3DE8000EEADC /* Double+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Extensions.swift"; sourceTree = "<group>"; };
 		5DECB57B27068AA50017748C /* SocialLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialLoginView.swift; sourceTree = "<group>"; };
@@ -509,6 +515,7 @@
 				5DE4F21726E022070087077A /* UIImage+Extensions.swift */,
 				5DF3596026FFB7DF0041A6C3 /* UserDefaults+Extensions.swift */,
 				5DECB57F2708C28B0017748C /* Date+Extensions.swift */,
+				5DEB42B4271F1CD200895766 /* Binding+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -617,6 +624,7 @@
 				5D53A1F426AF5649001DAA8D /* SettingsView.swift */,
 				5D564E3C2703584100190CF4 /* SpreadsheetImport.swift */,
 				5D564E4B2704F9D100190CF4 /* ReferralCodeView.swift */,
+				5DEB42B0271EE16900895766 /* ContactView.swift */,
 				5D564E442704C8A700190CF4 /* Admin */,
 			);
 			path = Settings;
@@ -647,6 +655,7 @@
 			children = (
 				5D424D1525C505450008D6F4 /* TextFieldUnderlined.swift */,
 				5D0E5A12269E60DB006D7E9C /* TextFieldRounded.swift */,
+				5DEB42B2271EEB7C00895766 /* TextFieldRoundedLarge.swift */,
 			);
 			path = Textfields;
 			sourceTree = "<group>";
@@ -1355,10 +1364,12 @@
 				5D3769762611709C00F9ED72 /* Debouncer.swift in Sources */,
 				5D424D4B25C509D20008D6F4 /* PasswordResetView.swift in Sources */,
 				5D424D2025C505450008D6F4 /* TextFieldUnderlined.swift in Sources */,
+				5DEB42B3271EEB7C00895766 /* TextFieldRoundedLarge.swift in Sources */,
 				5D9D520826AE4CF400AB1F30 /* EditInventoryTray.swift in Sources */,
 				5D2ED124270152BC002A5E12 /* ImageViewer.swift in Sources */,
 				5D4E19BC26C9404E00FCF780 /* TextFieldPopup.swift in Sources */,
 				5D2726D026CC59CC00887449 /* Cache.swift in Sources */,
+				5DEB42B5271F1CD200895766 /* Binding+Extensions.swift in Sources */,
 				5DC3538F26117C7F00294DF0 /* ItemDetailView.swift in Sources */,
 				5DD01E5426DD78480054F6F1 /* InventoryHeaderView.swift in Sources */,
 				5DA4FE0126E6DA3900084AEF /* StockXSellerFeeSelector.swift in Sources */,
@@ -1383,6 +1394,7 @@
 				5DBCB6DD25C90A510025BC23 /* StoreReviewHelper.swift in Sources */,
 				5D90EDCA26DE6C37005AEA30 /* DocumentListener.swift in Sources */,
 				5D424D4725C509AD0008D6F4 /* SignUpView.swift in Sources */,
+				5DEB42B1271EE16900895766 /* ContactView.swift in Sources */,
 				5DE4F22026E0C9AA0087077A /* HorizontalListItemSquare.swift in Sources */,
 				5D54FE2A26C312BF008CD05F /* HorizontaltemListView.swift in Sources */,
 				5D631220269330B900876D99 /* APIConfig.swift in Sources */,

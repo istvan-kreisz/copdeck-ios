@@ -53,6 +53,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         UITableView.appearance().showsVerticalScrollIndicator = false
         UITableViewCell.appearance().selectionStyle = .none
         UINavigationBar.appearance().backgroundColor = UIColor.clear
+        UITextView.appearance().backgroundColor = UIColor(red: 243 / 255, green: 246 / 255, blue: 248 / 255, alpha: 1.0)
     }
 
     private func setupRevenueCat() {

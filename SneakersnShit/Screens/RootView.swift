@@ -59,6 +59,7 @@ struct RootView: View {
             }
         }
         .onChange(of: store.globalState.error) { error in
+            print(error)
             if let title = error?.title, let message = error?.message {
                 self.error = (title, message)
             }
