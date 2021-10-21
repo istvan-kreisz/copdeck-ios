@@ -52,14 +52,3 @@ struct ListSelector: View {
         }
     }
 }
-
-struct ListSelector_Previews: PreviewProvider {
-    static var previews: some View {
-        ListSelector(title: "title",
-                     buttonTitle: "buttonTitle",
-                     enableMultipleSelection: true,
-                     popBackOnSelect: true,
-                     options: ["first", "second", "third"],
-                     selectedOptions: .constant(["first", "second"])) { print("hey") }
-    }
-}

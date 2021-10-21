@@ -12,7 +12,6 @@ import FBSDKCoreKit
 import Nuke
 import Purchases
 
-/// Users/istvankreisz/Workspace/CopDeck/App/Code/Pods/FirebaseCrashlytics/upload-symbols -gsp /Users/istvankreisz/Workspace/CopDeck/App/Code/SneakersnShit/Shared/GoogleService-Info.plist -p ios /Users/istvankreisz/Desktop/appDsyms
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         if DebugSettings.shared.clearUserDefaults {
@@ -65,11 +64,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                 print("--package--")
                 print(package.productIdentifier)
 
-                Purchases.shared.purchasePackage(package) { transaction, purchaserInfo, error, userCancelled in
-                    if purchaserInfo.entitlements[""]?.isActive == true {
-                        // Unlock that great "pro" content
-                    }
-                }
+//                Purchases.shared.purchasePackage(package) { transaction, purchaserInfo, error, userCancelled in
+//                    if purchaserInfo.entitlements[""]?.isActive == true {
+//                        // Unlock that great "pro" content
+//                    }
+//                }
             }
         }
     }

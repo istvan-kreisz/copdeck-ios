@@ -26,6 +26,7 @@ struct GlobalState: Equatable {
     var requestInfo: [ScraperRequestInfo] = []
     var error: AppError?
     var exchangeRates: ExchangeRates?
+    var showPaymentView = true
 
     var settings: CopDeckSettings {
         user?.settings ?? .default

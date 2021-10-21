@@ -33,8 +33,12 @@ struct RootView: View {
                     } else if user?.inited != true {
                         CountrySelector(settings: store.globalState.settings)
                     } else {
-                        MainContainerView(store: store.appStore)
-                            .zIndex(0)
+                        if store.globalState.showPaymentView {
+                            PaymentView()
+                        } else {
+                            MainContainerView(store: store.appStore)
+                                .zIndex(0)
+                        }
                     }
                 }
             } else {
@@ -59,7 +63,6 @@ struct RootView: View {
             }
         }
         .onChange(of: store.globalState.error) { error in
-            print(error)
             if let title = error?.title, let message = error?.message {
                 self.error = (title, message)
             }
