@@ -183,6 +183,16 @@ struct SettingsView: View {
             }
         }
     }
+    
+    private func socialMediaLink(name: String, link: String) -> some View {
+        HStack {
+            Text("Follow us on \(name)")
+                .layoutPriority(2)
+            Spacer()
+            Link("Link", destination: URL(string: link)!)
+                .foregroundColor(.customBlue)
+        }
+    }
 
     var body: some View {
         NavigationView {
@@ -361,11 +371,14 @@ struct SettingsView: View {
                         }
                     }
                     
-                    Section(header: Text("Contact Support")) {
+                    Section(header: Text("More")) {
                         NavigationLink(destination: ContactView()) {
                             Text("Send us a message")
                                 .leftAligned()
                         }
+                        socialMediaLink(name: "Twitter", link: "https://twitter.com/Cop_Deck")
+                        socialMediaLink(name: "Instagram", link: "https://www.instagram.com/copdeck/")
+                        socialMediaLink(name: "Discord", link: "https://discord.gg/cQh6VTvXas")
                     }
 
                     if DebugSettings.shared.isAdmin {
