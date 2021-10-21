@@ -146,7 +146,7 @@ struct PaymentView: View {
                             }
                         }
                     }
-                    Spacer(minLength: UIApplication.shared.safeAreaInsets().bottom + 50)
+                    Spacer(minLength: UIApplication.shared.safeAreaInsets().bottom + 55)
                 }
             }
             .withDefaultPadding(padding: .horizontal)
@@ -171,7 +171,7 @@ struct PaymentView: View {
                         .font(.regular(size: 16))
                         .foregroundColor(.customText2)
                 })
-                    .padding(.top, 20)
+                    .padding(.top, 15)
                     .padding(.bottom, UIApplication.shared.safeAreaInsets().bottom + 10)
                     .frame(width: UIScreen.screenWidth)
                     .background(Color.customWhite)
