@@ -292,7 +292,7 @@ class DefaultDataController: DataController {
 
     func update(user: User) {
         var updatedUser = user
-        updatedUser.nameInsensitive = updatedUser.name?.capitalized
+        updatedUser.nameInsensitive = updatedUser.name?.uppercased()
         databaseManager.update(user: updatedUser)
     }
 
