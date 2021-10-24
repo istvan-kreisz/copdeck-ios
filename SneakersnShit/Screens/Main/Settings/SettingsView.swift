@@ -405,8 +405,8 @@ struct SettingsView: View {
                             .font(.bold(size: 18))
                             .foregroundColor(.customRed)
                     })
-                        .listRow()
                         .centeredHorizontally()
+                        .listRow(backgroundColor: .customWhite)
 
                     VStack(alignment: .center, spacing: 5) {
                         Text("CopDeck \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")")
