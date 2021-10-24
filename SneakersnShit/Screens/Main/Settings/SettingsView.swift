@@ -70,7 +70,7 @@ struct SettingsView: View {
         // klekt
         self._klektBuyersTaxes = State(initialValue: (settings.feeCalculation.klekt?.taxes)?.rounded(toPlaces: 1) ?? "")
 
-        self._isPresented = isPresented        
+        self._isPresented = isPresented
     }
 
     // general
@@ -183,10 +183,10 @@ struct SettingsView: View {
             }
         }
     }
-    
+
     private func socialMediaLink(name: String, link: String) -> some View {
         HStack {
-            Text("Follow us on \(name)")
+            Text(name)
                 .layoutPriority(2)
             Spacer()
             Link("Link", destination: URL(string: link)!)
@@ -370,15 +370,15 @@ struct SettingsView: View {
                                 .leftAligned()
                         }
                     }
-                    
+
                     Section(header: Text("More")) {
                         NavigationLink(destination: ContactView()) {
                             Text("Send us a message")
                                 .leftAligned()
                         }
-                        socialMediaLink(name: "Twitter", link: "https://twitter.com/Cop_Deck")
-                        socialMediaLink(name: "Instagram", link: "https://www.instagram.com/copdeck/")
-                        socialMediaLink(name: "Discord", link: "https://discord.gg/cQh6VTvXas")
+                        socialMediaLink(name: "Follow us on Twitter", link: "https://twitter.com/Cop_Deck")
+                        socialMediaLink(name: "Follow us on Instagram", link: "https://www.instagram.com/copdeck/")
+                        socialMediaLink(name: "Follow us on Discord", link: "https://discord.gg/cQh6VTvXas")
                     }
 
                     if DebugSettings.shared.isAdmin {
@@ -396,14 +396,46 @@ struct SettingsView: View {
                         }
                     }
 
-                    Button(action: {
-                        store.send(.authentication(action: .signOut))
-                    }, label: {
-                        Text("Sign Out")
-                            .font(.bold(size: 18))
-                            .foregroundColor(.customRed)
-                    })
-                        .centeredHorizontally()
+                    VStack(alignment: .center, spacing: 45) {
+                        Button(action: {
+                            store.send(.authentication(action: .signOut))
+                        }, label: {
+                            Text("Sign Out")
+                                .font(.bold(size: 18))
+                                .foregroundColor(.customRed)
+                        })
+                            .centeredHorizontally()
+
+                        VStack(alignment: .center, spacing: 5) {
+                            Text("CopDeck \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")")
+                                .font(.regular(size: 16))
+                                .foregroundColor(.customText2)
+
+                            HStack {
+                                Button {
+                                    if let url = URL(string: "https://copdeck.com/privacy") {
+                                        UIApplication.shared.open(url)
+                                    }
+                                } label: {
+                                    Text("Privacy Policy")
+                                        .font(.regular(size: 14))
+                                        .foregroundColor(.customText2)
+                                        .underline()
+                                }
+                                Button {
+                                    if let url = URL(string: "https://copdeck.com/termsandconditions") {
+                                        UIApplication.shared.open(url)
+                                    }
+                                } label: {
+                                    Text("Terms & Conditions")
+                                        .font(.regular(size: 14))
+                                        .foregroundColor(.customText2)
+                                        .underline()
+                                }
+                            }
+                        }
+                    }
+                    .padding(.top, -10)
                 }
                 .hideKeyboardOnScroll()
                 .navigationbarHidden()
