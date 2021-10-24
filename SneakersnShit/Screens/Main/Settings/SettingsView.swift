@@ -371,71 +371,74 @@ struct SettingsView: View {
                         }
                     }
 
-                    Section(header: Text("More")) {
-                        NavigationLink(destination: ContactView()) {
-                            Text("Send us a message")
-                                .leftAligned()
+                    Group {
+                        Section(header: Text("More")) {
+                            NavigationLink(destination: ContactView()) {
+                                Text("Send us a message")
+                                    .leftAligned()
+                            }
+                            socialMediaLink(name: "Follow us on Twitter", link: "https://twitter.com/Cop_Deck")
+                            socialMediaLink(name: "Follow us on Instagram", link: "https://www.instagram.com/copdeck/")
+                            socialMediaLink(name: "Follow us on Discord", link: "https://discord.gg/cQh6VTvXas")
                         }
-                        socialMediaLink(name: "Follow us on Twitter", link: "https://twitter.com/Cop_Deck")
-                        socialMediaLink(name: "Follow us on Instagram", link: "https://www.instagram.com/copdeck/")
-                        socialMediaLink(name: "Follow us on Discord", link: "https://discord.gg/cQh6VTvXas")
-                    }
 
-                    if DebugSettings.shared.isAdmin {
-                        Section(header: Text("ADMIN")) {
-                            if DebugSettings.shared.isSuperAdmin {
-                                NavigationLink(destination: SpreadsheetImportAdminView()) {
-                                    Text("Spreadsheet import requests")
+                        if DebugSettings.shared.isAdmin {
+                            Section(header: Text("ADMIN")) {
+                                if DebugSettings.shared.isSuperAdmin {
+                                    NavigationLink(destination: SpreadsheetImportAdminView()) {
+                                        Text("Spreadsheet import requests")
+                                            .leftAligned()
+                                    }
+                                }
+                                NavigationLink(destination: AffiliateLinksView()) {
+                                    Text("Affilate links")
                                         .leftAligned()
                                 }
                             }
-                            NavigationLink(destination: AffiliateLinksView()) {
-                                Text("Affilate links")
-                                    .leftAligned()
-                            }
                         }
                     }
 
-                    VStack(alignment: .center, spacing: 45) {
-                        Button(action: {
-                            store.send(.authentication(action: .signOut))
-                        }, label: {
-                            Text("Sign Out")
-                                .font(.bold(size: 18))
-                                .foregroundColor(.customRed)
-                        })
-                            .centeredHorizontally()
+                    Button(action: {
+                        store.send(.authentication(action: .signOut))
+                    }, label: {
+                        Text("Sign Out")
+                            .font(.bold(size: 18))
+                            .foregroundColor(.customRed)
+                    })
+                        .listRow()
+                        .centeredHorizontally()
 
-                        VStack(alignment: .center, spacing: 5) {
-                            Text("CopDeck \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")")
-                                .font(.regular(size: 16))
-                                .foregroundColor(.customText2)
+                    VStack(alignment: .center, spacing: 5) {
+                        Text("CopDeck \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")")
+                            .font(.regular(size: 16))
+                            .foregroundColor(.customText2)
 
-                            HStack {
-                                Button {
-                                    if let url = URL(string: "https://copdeck.com/privacy") {
-                                        UIApplication.shared.open(url)
-                                    }
-                                } label: {
-                                    Text("Privacy Policy")
-                                        .font(.regular(size: 14))
-                                        .foregroundColor(.customText2)
-                                        .underline()
+                        HStack {
+                            Button {
+                                if let url = URL(string: "https://copdeck.com/privacy") {
+                                    UIApplication.shared.open(url)
                                 }
-                                Button {
-                                    if let url = URL(string: "https://copdeck.com/termsandconditions") {
-                                        UIApplication.shared.open(url)
-                                    }
-                                } label: {
-                                    Text("Terms & Conditions")
-                                        .font(.regular(size: 14))
-                                        .foregroundColor(.customText2)
-                                        .underline()
+                            } label: {
+                                Text("Privacy Policy")
+                                    .font(.regular(size: 14))
+                                    .foregroundColor(.customText2)
+                                    .underline()
+                            }
+                            Button {
+                                if let url = URL(string: "https://copdeck.com/termsandconditions") {
+                                    UIApplication.shared.open(url)
                                 }
+                            } label: {
+                                Text("Terms & Conditions")
+                                    .font(.regular(size: 14))
+                                    .foregroundColor(.customText2)
+                                    .underline()
                             }
                         }
                     }
-                    .padding(.top, -10)
+                    .buttonStyle(.plain)
+                    .centeredHorizontally()
+                    .padding(.top, 40)
                 }
                 .hideKeyboardOnScroll()
                 .navigationbarHidden()
