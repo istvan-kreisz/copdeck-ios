@@ -33,12 +33,12 @@ struct RootView: View {
                     } else if user?.inited != true {
                         CountrySelector(settings: store.globalState.settings)
                     } else {
-//                        if store.globalState.showPaymentView {
-//                            PaymentView()
-//                        } else {
+                        if store.globalState.showPaymentView {
+                            PaymentView()
+                        } else {
                             MainContainerView(store: store.appStore)
                                 .zIndex(0)
-//                        }
+                        }
                     }
                 }
             } else {

@@ -84,6 +84,8 @@
 		5D5D4C4426D50EB100A7C61A /* ModelWithDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D5D4C4326D50EB100A7C61A /* ModelWithDate.swift */; };
 		5D5D4C4726D5F20900A7C61A /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D5D4C4626D5F20900A7C61A /* ImagePickerView.swift */; };
 		5D605416272186D600B631FD /* PaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D605415272186D600B631FD /* PaymentView.swift */; };
+		5D6054182726C73900B631FD /* NSMutableAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6054172726C73900B631FD /* NSMutableAttributedString+Extensions.swift */; };
+		5D60541A2726C77900B631FD /* AttributedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6054192726C77900B631FD /* AttributedText.swift */; };
 		5D631220269330B900876D99 /* APIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D63121F269330B900876D99 /* APIConfig.swift */; };
 		5D6312222694797300876D99 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6312212694797300876D99 /* Item.swift */; };
 		5D6312242694D83100876D99 /* Decodable+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6312232694D83100876D99 /* Decodable+Extensions.swift */; };
@@ -281,6 +283,8 @@
 		5D5D4C4326D50EB100A7C61A /* ModelWithDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelWithDate.swift; sourceTree = "<group>"; };
 		5D5D4C4626D5F20900A7C61A /* ImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
 		5D605415272186D600B631FD /* PaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentView.swift; sourceTree = "<group>"; };
+		5D6054172726C73900B631FD /* NSMutableAttributedString+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSMutableAttributedString+Extensions.swift"; sourceTree = "<group>"; };
+		5D6054192726C77900B631FD /* AttributedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedText.swift; sourceTree = "<group>"; };
 		5D63121F269330B900876D99 /* APIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfig.swift; sourceTree = "<group>"; };
 		5D6312212694797300876D99 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		5D6312232694D83100876D99 /* Decodable+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Decodable+Extensions.swift"; sourceTree = "<group>"; };
@@ -518,6 +522,7 @@
 				5DF3596026FFB7DF0041A6C3 /* UserDefaults+Extensions.swift */,
 				5DECB57F2708C28B0017748C /* Date+Extensions.swift */,
 				5DEB42B4271F1CD200895766 /* Binding+Extensions.swift */,
+				5D6054172726C73900B631FD /* NSMutableAttributedString+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -659,6 +664,7 @@
 				5D424D1525C505450008D6F4 /* TextFieldUnderlined.swift */,
 				5D0E5A12269E60DB006D7E9C /* TextFieldRounded.swift */,
 				5DEB42B2271EEB7C00895766 /* TextFieldRoundedLarge.swift */,
+				5D6054192726C77900B631FD /* AttributedText.swift */,
 			);
 			path = Textfields;
 			sourceTree = "<group>";
@@ -1292,6 +1298,7 @@
 				5DE596EE26C8C74B0024F7D5 /* SelectStackItemsView.swift in Sources */,
 				5D84875526E2E220006062DC /* PullToRefresh.swift in Sources */,
 				5DE4F22226E0FD790087077A /* FeedPostData.swift in Sources */,
+				5D6054182726C73900B631FD /* NSMutableAttributedString+Extensions.swift in Sources */,
 				5DDEFDBC26CD7A42001B0F76 /* Constants.swift in Sources */,
 				5D63123A26950A5900876D99 /* Stores.swift in Sources */,
 				5DEBC088269B24BA000EEADC /* ViewRouter.swift in Sources */,
@@ -1418,6 +1425,7 @@
 				5DDEFDC126CEE16F001B0F76 /* ListSelectorMenu.swift in Sources */,
 				5DDEFDCF26D2ADC2001B0F76 /* EnumCodable.swift in Sources */,
 				5DF03CAB25DA1CE7001856B5 /* ImageView.swift in Sources */,
+				5D60541A2726C77900B631FD /* AttributedText.swift in Sources */,
 				5D2D5AA325C52E9B009598AA /* AppState.swift in Sources */,
 				5D36AA0B269E46300049640A /* TabBar.swift in Sources */,
 				5D9DFB0326D97990005A575D /* FBFunctionsCoordinator.swift in Sources */,

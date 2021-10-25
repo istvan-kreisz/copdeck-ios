@@ -21,12 +21,12 @@ extension Font {
 }
 
 extension UIFont {
-    static var extraLight: UIFont { return UIFont(name: "Karla-ExtraLight", size: 12)! }
-    static var light: UIFont { return UIFont(name: "Karla-Light", size: 12)! }
-    static var regular: UIFont { return UIFont(name: "Karla-Regular", size: 12)! }
-    static var medium: UIFont { return UIFont(name: "Karla-Medium", size: 12)! }
-    static var semiBold: UIFont { return UIFont(name: "Karla-SemiBold", size: 12)! }
-    static var bold: UIFont { return UIFont(name: "Karla-Bold", size: 12)! }
-    static var extraBold: UIFont { return UIFont(name: "Karla-ExtraBold", size: 12)! }
-    static var black: UIFont { return UIFont(name: "Karla-Black", size: 12)! }
+    static func extraLight(size: CGFloat) -> UIFont { UIFont(name: "Karla-ExtraLight", size: size)! }
+    static func light(size: CGFloat) -> UIFont { UIFont(name: "Karla-Light", size: size)! }
+    static func regular(size: CGFloat) -> UIFont { UIFont(name: "Karla-Regular", size: size)! }
+    static func medium(size: CGFloat) -> UIFont { UIFont(name: "Karla-Medium", size: size)! }
+    static func semiBold(size: CGFloat) -> UIFont { UIFont(name: "Karla-SemiBold", size: size)! }
+    static func bold(size: CGFloat) -> UIFont { UIFont(name: "Karla-Bold", size: size)! }
+    static func extraBold(size: CGFloat) -> UIFont { UIFont(name: "Karla-ExtraBold", size: size)! }
+    static func black(size: CGFloat) -> UIFont { UIFont(name: "Karla-Black", size: size)! }
 }

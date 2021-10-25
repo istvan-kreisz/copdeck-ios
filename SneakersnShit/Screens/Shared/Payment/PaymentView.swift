@@ -13,6 +13,24 @@ struct PaymentView: View {
         case dot
     }
 
+    static let privacyPolicyString: NSMutableAttributedString = {
+        let string = NSMutableAttributedString(string: "Before joining, please read our Privacy Policy and Terms & Conditions")
+        string.addAttributes([.foregroundColor: UIColor(Color.customText2), .font: UIFont.regular(size: 14)],
+                             range: NSRange.init(location: 0, length: string.length))
+        string.setAsLink(textToFind: "Privacy Policy", linkURL: "https://copdeck.com/privacy")
+        string.setAsLink(textToFind: "Terms & Conditions", linkURL: "https://copdeck.com/termsandconditions")
+        return string
+    }()
+    
+    static let restorePurchasesString: NSMutableAttributedString = {
+        let string = NSMutableAttributedString(string: "If you're already a CopDeck member, Restore Purchases to regain access.")
+        string.addAttributes([.foregroundColor: UIColor(Color.customText2), .font: UIFont.regular(size: 14)],
+                             range: NSRange.init(location: 0, length: string.length))
+        string.setAsLink(textToFind: "Restore Purchases", linkURL: "https://copdeck.com/")
+        return string
+    }()
+
+
     private func bulletPoint(text: String, bulletpointStyle: BulletpointStyle) -> some View {
         HStack(alignment: .top, spacing: 5) {
             Image(systemName: bulletpointStyle == .checkmark ? "checkmark" : "app.fill")
@@ -107,44 +125,13 @@ struct PaymentView: View {
                     }
                     .padding(.bottom, 20)
 
-                    #warning("convert to grid")
-                    VStack(alignment: .leading, spacing: 8) {
-                        VStack(alignment: .leading, spacing: 3) {
-                            Text("If you're already a CopDeck member,")
-                                .foregroundColor(.customText1)
-                                .font(.regular(size: 14))
-                            HStack(spacing: 0) {
-                                Button {
-                                    restorePurchases()
-                                } label: {
-                                    Text("Restore Purchases")
-                                        .foregroundColor(.customBlue)
-                                        .font(.regular(size: 14))
-                                }
-                                Text(" to regain access.")
-                                    .foregroundColor(.customText1)
-                                    .font(.regular(size: 14))
-                                Spacer()
-                            }
+                    VStack(alignment: .leading, spacing: 1) {
+                        AttributedText(Self.privacyPolicyString)
+                            .frame(height: 42)
+                        AttributedText(Self.restorePurchasesString) { link in
+                            #warning("restore purchases")
                         }
-
-                        VStack(alignment: .leading, spacing: 3) {
-                            Text("Before joining, please read our")
-                                .foregroundColor(.customText1)
-                                .font(.regular(size: 14))
-                            HStack(spacing: 0) {
-                                Link("Privacy Policy", destination: URL(string: "https://copdeck.com/privacy")!)
-                                    .foregroundColor(.customBlue)
-                                    .font(.regular(size: 14))
-                                Text(" and ")
-                                    .foregroundColor(.customText1)
-                                    .font(.regular(size: 14))
-                                Link(" Terms & Conditions ", destination: URL(string: "https://copdeck.com/termsandconditions")!)
-                                    .foregroundColor(.customBlue)
-                                    .font(.regular(size: 14))
-                                Spacer()
-                            }
-                        }
+                            .frame(height: 42)
                     }
                     Spacer(minLength: UIApplication.shared.safeAreaInsets().bottom + 55)
                 }
@@ -154,7 +141,7 @@ struct PaymentView: View {
             .navigationbarHidden()
             VStack {
                 Spacer()
-                
+
                 VStack(alignment: .center, spacing: 7, content: {
                     Button {
                         subscribe()
