@@ -86,6 +86,9 @@
 		5D605416272186D600B631FD /* PaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D605415272186D600B631FD /* PaymentView.swift */; };
 		5D6054182726C73900B631FD /* NSMutableAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6054172726C73900B631FD /* NSMutableAttributedString+Extensions.swift */; };
 		5D60541A2726C77900B631FD /* AttributedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6054192726C77900B631FD /* AttributedText.swift */; };
+		5D60541D2726F94E00B631FD /* PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D60541C2726F94E00B631FD /* PaymentService.swift */; };
+		5D60541F2726F96C00B631FD /* DefaultPaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D60541E2726F96C00B631FD /* DefaultPaymentService.swift */; };
+		5D60542127276D3000B631FD /* Purchases+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D60542027276D3000B631FD /* Purchases+Extensions.swift */; };
 		5D631220269330B900876D99 /* APIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D63121F269330B900876D99 /* APIConfig.swift */; };
 		5D6312222694797300876D99 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6312212694797300876D99 /* Item.swift */; };
 		5D6312242694D83100876D99 /* Decodable+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6312232694D83100876D99 /* Decodable+Extensions.swift */; };
@@ -285,6 +288,9 @@
 		5D605415272186D600B631FD /* PaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentView.swift; sourceTree = "<group>"; };
 		5D6054172726C73900B631FD /* NSMutableAttributedString+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSMutableAttributedString+Extensions.swift"; sourceTree = "<group>"; };
 		5D6054192726C77900B631FD /* AttributedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedText.swift; sourceTree = "<group>"; };
+		5D60541C2726F94E00B631FD /* PaymentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentService.swift; sourceTree = "<group>"; };
+		5D60541E2726F96C00B631FD /* DefaultPaymentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultPaymentService.swift; sourceTree = "<group>"; };
+		5D60542027276D3000B631FD /* Purchases+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Purchases+Extensions.swift"; sourceTree = "<group>"; };
 		5D63121F269330B900876D99 /* APIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfig.swift; sourceTree = "<group>"; };
 		5D6312212694797300876D99 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		5D6312232694D83100876D99 /* Decodable+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Decodable+Extensions.swift"; sourceTree = "<group>"; };
@@ -523,6 +529,7 @@
 				5DECB57F2708C28B0017748C /* Date+Extensions.swift */,
 				5DEB42B4271F1CD200895766 /* Binding+Extensions.swift */,
 				5D6054172726C73900B631FD /* NSMutableAttributedString+Extensions.swift */,
+				5D60542027276D3000B631FD /* Purchases+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -783,6 +790,15 @@
 			path = Payment;
 			sourceTree = "<group>";
 		};
+		5D60541B2726F93900B631FD /* PaymentService */ = {
+			isa = PBXGroup;
+			children = (
+				5D60541C2726F94E00B631FD /* PaymentService.swift */,
+				5D60541E2726F96C00B631FD /* DefaultPaymentService.swift */,
+			);
+			path = PaymentService;
+			sourceTree = "<group>";
+		};
 		5D6312302695097900876D99 /* State */ = {
 			isa = PBXGroup;
 			children = (
@@ -1028,6 +1044,7 @@
 		5DC00EA725C3A2F8009A3AB9 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				5D60541B2726F93900B631FD /* PaymentService */,
 				5D2726CE26CC59C100887449 /* Cache */,
 				5D6312512695BC3F00876D99 /* API */,
 				5D424CD225C4FF210008D6F4 /* IAP */,
@@ -1329,6 +1346,7 @@
 				5D9C8E3F269FAB8B008538D6 /* NextButton.swift in Sources */,
 				5D2726D226CC5B6900887449 /* ItemCache.swift in Sources */,
 				5D95570C269A60DA00CCC2E7 /* String+Extensions.swift in Sources */,
+				5D60541D2726F94E00B631FD /* PaymentService.swift in Sources */,
 				5D9C8E3D269F2F31008538D6 /* RoundedButton.swift in Sources */,
 				5DE4F21A26E02C430087077A /* SharedStackDetailView.swift in Sources */,
 				5D2D5AAF25C552B0009598AA /* DefaultBackendAPI.swift in Sources */,
@@ -1364,6 +1382,7 @@
 				5DF3595926FF724E0041A6C3 /* RootOnboardingView.swift in Sources */,
 				5DB590E826C556ED006ECEBD /* ScrollableSegmentedControl.swift in Sources */,
 				5DE596E626C876790024F7D5 /* PagerView.swift in Sources */,
+				5D60541F2726F96C00B631FD /* DefaultPaymentService.swift in Sources */,
 				5D424CFB25C503F00008D6F4 /* UIApplication+Extensions.swift in Sources */,
 				5D9DFB0526D998A8005A575D /* ProfileImageView.swift in Sources */,
 				5D117EAD271310E5000D1E43 /* SizeConversion.swift in Sources */,
@@ -1437,6 +1456,7 @@
 				5D605416272186D600B631FD /* PaymentView.swift in Sources */,
 				5D564E462704C8CA00190CF4 /* UserDetailView.swift in Sources */,
 				5DF3596126FFB7DF0041A6C3 /* UserDefaults+Extensions.swift in Sources */,
+				5D60542127276D3000B631FD /* Purchases+Extensions.swift in Sources */,
 				5D52E31226130E7500FA02B8 /* InventoryItemDetailView.swift in Sources */,
 				5D6B112E26A46E3A00B6B67A /* NavigationBar.swift in Sources */,
 				5D9D520426AE359C00AB1F30 /* InventoryViewPills.swift in Sources */,

@@ -88,6 +88,7 @@ class DefaultAuthenticator: NSObject, Authenticator {
     func signInWithFacebook() -> AnyPublisher<(userId: String, url: String?), Error> {
         return withPublisher { [weak self] in
             self?.loginButton.delegate = self
+            #warning("yooo")
             self?.loginButton.permissions = ["email", "user_link"]
             self?.loginButton.sendActions(for: .touchUpInside)
         }
@@ -116,8 +117,7 @@ class DefaultAuthenticator: NSObject, Authenticator {
             }
         }
 
-        guard let authentication = user?.authentication, let idToken = authentication.idToken
-        else { return }
+        guard let authentication = user?.authentication, let idToken = authentication.idToken else { return }
         let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: authentication.accessToken)
         signIn(credential: credential)
     }

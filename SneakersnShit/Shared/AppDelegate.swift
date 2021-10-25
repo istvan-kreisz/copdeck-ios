@@ -10,7 +10,6 @@ import Firebase
 import GoogleSignIn
 import FBSDKCoreKit
 import Nuke
-import Purchases
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -23,7 +22,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         StoreReviewHelper.incrementAppOpenedCount()
         setupNuke()
         setupUI()
-        setupRevenueCat()
         return true
     }
 
@@ -53,23 +51,5 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         UITableViewCell.appearance().selectionStyle = .none
         UINavigationBar.appearance().backgroundColor = UIColor.clear
         UITextView.appearance().backgroundColor = UIColor(red: 243 / 255, green: 246 / 255, blue: 248 / 255, alpha: 1.0)
-    }
-
-    private func setupRevenueCat() {
-        Purchases.debugLogsEnabled = DebugSettings.shared.isInDebugMode
-        Purchases.configure(withAPIKey: "vkJAtxOkCMEORPnQDmuEwtoUBuHDUMSu")
-
-        Purchases.shared.offerings { offerings, error in
-            if let package = offerings?.current?.monthly?.product {
-                print("--package--")
-                print(package.productIdentifier)
-
-//                Purchases.shared.purchasePackage(package) { transaction, purchaserInfo, error, userCancelled in
-//                    if purchaserInfo.entitlements[""]?.isActive == true {
-//                        // Unlock that great "pro" content
-//                    }
-//                }
-            }
-        }
     }
 }
