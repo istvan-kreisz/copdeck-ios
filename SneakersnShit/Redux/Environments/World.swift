@@ -12,11 +12,13 @@ import UIKit
 class World {
     let dataController: DataController
     let authenticator: Authenticator
+    let paymentService: PaymentService
     let feedbackGenerator = UISelectionFeedbackGenerator()
 
-    init(dataController: DataController, authenticator: Authenticator) {
+    init(dataController: DataController, authenticator: Authenticator, paymentService: PaymentService) {
         self.dataController = dataController
         self.authenticator = authenticator
+        self.paymentService = paymentService
     }
 
     convenience init() {
@@ -24,6 +26,7 @@ class World {
                                                         localScraper: LocalScraper(),
                                                         databaseManager: FirebaseService(),
                                                         imageService: DefaultImageService()),
-                  authenticator: DefaultAuthenticator())
+                  authenticator: DefaultAuthenticator(),
+                  paymentService: DefaultPaymentService())
     }
 }

@@ -244,6 +244,10 @@ func appReducer(state: inout AppState,
         switch action {
         case let .applyReferralCode(code, completion):
             environment.dataController.applyReferralCode(code, completion: completion)
+        case let .purchase(package):
+            environment.paymentService.purchase(package: package)
+        case .restorePurchases:
+            environment.paymentService.restorePurchases()
         }
     }
     return Empty(completeImmediately: true).eraseToAnyPublisher()

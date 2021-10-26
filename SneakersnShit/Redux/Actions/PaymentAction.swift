@@ -6,10 +6,12 @@
 //
 
 import Foundation
-
+import Purchases
 
 enum PaymentAction {
     case applyReferralCode(_ code: String, completion: ((Result<Void, AppError>) -> Void)?)
+    case restorePurchases
+    case purchase(package: Purchases.Package)
 }
 
 extension PaymentAction: StringRepresentable {}

@@ -18,15 +18,20 @@ class DefaultPaymentService: NSObject, PaymentService {
             subscriptionActiveSubject.send(purchaserInfo?.entitlements[Self.entitlementsId]?.isActive == true)
         }
     }
-    private var monthlyProduct: SKProduct?
-    private var yearlyProduct: SKProduct?
+    private var monthlyPackage: Purchases.Package?
+    private var yearlyPackage: Purchases.Package?
     
+    private let errorsSubject = PassthroughSubject<AppError, Never>()
     private let subscriptionActiveSubject = CurrentValueSubject<Bool?, Never>(nil)
+    
     var subscriptionActivePublisher: AnyPublisher<Bool?, Never> {
         subscriptionActiveSubject.eraseToAnyPublisher()
     }
     var subscriptionActive: Bool? {
         subscriptionActiveSubject.value
+    }
+    var errorsPublisher: AnyPublisher<AppError, Never> {
+        errorsSubject.eraseToAnyPublisher()
     }
 
     override init() {
@@ -38,16 +43,19 @@ class DefaultPaymentService: NSObject, PaymentService {
 //        Purchases.shared.delegate = self
 
         Purchases.shared.offerings { [weak self] offerings, error in
-            self?.monthlyProduct = offerings?.current?.monthly?.product
-            self?.yearlyProduct = offerings?.current?.annual?.product
+            error.map { self?.errorsSubject.send(AppError(error: $0)) }
+            self?.monthlyPackage = offerings?.current?.monthly
+            self?.yearlyPackage = offerings?.current?.annual
         }
         Purchases.shared.purchaserInfo { [weak self] purchaserInfo, error in
+            error.map { self?.errorsSubject.send(AppError(error: $0)) }
             self?.purchaserInfo = purchaserInfo
         }
     }
 
     func setup(userId: String, userEmail: String?) {
         Purchases.shared.logIn(userId) { [weak self] purchaserInfo, created, error in
+            error.map { self?.errorsSubject.send(AppError(error: $0)) }
             self?.purchaserInfo = purchaserInfo
             if created {
                 Purchases.shared.setEmail(userEmail)
@@ -56,17 +64,26 @@ class DefaultPaymentService: NSObject, PaymentService {
     }
 
     func reset() {
-        Purchases.shared.logOut { purchaseInfo, error in
+        Purchases.shared.logOut { [weak self] purchaseInfo, error in
+            error.map { self?.errorsSubject.send(AppError(error: $0)) }
             if error != nil {
-                self.purchaserInfo = nil
+                self?.purchaserInfo = nil
             } else {
-                self.purchaserInfo = purchaseInfo
+                self?.purchaserInfo = purchaseInfo
             }
         }
     }
 
     func restorePurchases() {
         Purchases.shared.restoreTransactions { [weak self] purchaserInfo, error in
+            error.map { self?.errorsSubject.send(AppError(error: $0)) }
+            self?.purchaserInfo = purchaserInfo
+        }
+    }
+    
+    func purchase(package: Purchases.Package) {
+        Purchases.shared.purchasePackage(package) { [weak self] transaction, purchaserInfo, error, userCancelled in
+            error.map { self?.errorsSubject.send(AppError(error: $0)) }
             self?.purchaserInfo = purchaserInfo
         }
     }

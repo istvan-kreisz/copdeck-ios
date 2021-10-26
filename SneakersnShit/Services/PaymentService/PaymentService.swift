@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import Purchases
 
 protocol PaymentService {
     var subscriptionActive: Bool? { get }
@@ -14,5 +15,6 @@ protocol PaymentService {
 
     func setup(userId: String, userEmail: String?)
     func reset()
+    func purchase(package: Purchases.Package)
     func restorePurchases()
 }

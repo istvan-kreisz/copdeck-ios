@@ -89,6 +89,7 @@
 		5D60541D2726F94E00B631FD /* PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D60541C2726F94E00B631FD /* PaymentService.swift */; };
 		5D60541F2726F96C00B631FD /* DefaultPaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D60541E2726F96C00B631FD /* DefaultPaymentService.swift */; };
 		5D60542127276D3000B631FD /* Purchases+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D60542027276D3000B631FD /* Purchases+Extensions.swift */; };
+		5D605423272772CE00B631FD /* PackageCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D605422272772CE00B631FD /* PackageCellView.swift */; };
 		5D631220269330B900876D99 /* APIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D63121F269330B900876D99 /* APIConfig.swift */; };
 		5D6312222694797300876D99 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6312212694797300876D99 /* Item.swift */; };
 		5D6312242694D83100876D99 /* Decodable+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6312232694D83100876D99 /* Decodable+Extensions.swift */; };
@@ -291,6 +292,7 @@
 		5D60541C2726F94E00B631FD /* PaymentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentService.swift; sourceTree = "<group>"; };
 		5D60541E2726F96C00B631FD /* DefaultPaymentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultPaymentService.swift; sourceTree = "<group>"; };
 		5D60542027276D3000B631FD /* Purchases+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Purchases+Extensions.swift"; sourceTree = "<group>"; };
+		5D605422272772CE00B631FD /* PackageCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackageCellView.swift; sourceTree = "<group>"; };
 		5D63121F269330B900876D99 /* APIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfig.swift; sourceTree = "<group>"; };
 		5D6312212694797300876D99 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		5D6312232694D83100876D99 /* Decodable+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Decodable+Extensions.swift"; sourceTree = "<group>"; };
@@ -786,6 +788,7 @@
 			isa = PBXGroup;
 			children = (
 				5D605415272186D600B631FD /* PaymentView.swift */,
+				5D605422272772CE00B631FD /* PackageCellView.swift */,
 			);
 			path = Payment;
 			sourceTree = "<group>";
@@ -1353,6 +1356,7 @@
 				5D564E482704F66700190CF4 /* StringRepresentable.swift in Sources */,
 				5D424CFF25C5041E0008D6F4 /* DebugSettings.swift in Sources */,
 				5D69609B258713760058BABE /* LoginView.swift in Sources */,
+				5D605423272772CE00B631FD /* PackageCellView.swift in Sources */,
 				5D56B7B42700A6BE001357E0 /* TestImageView.swift in Sources */,
 				5DE4F20C26DEF85D0087077A /* VerticalProfileListView.swift in Sources */,
 				5D424CF725C503D10008D6F4 /* UIScreen+Extensions.swift in Sources */,
