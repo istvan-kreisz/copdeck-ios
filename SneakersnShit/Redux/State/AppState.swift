@@ -27,6 +27,7 @@ struct GlobalState: Equatable {
     var requestInfo: [ScraperRequestInfo] = []
     var error: AppError?
     var exchangeRates: ExchangeRates?
+    #warning("yo")
     var showPaymentView = true
     
     var purchaserInfo: Purchases.PurchaserInfo?

@@ -24,12 +24,14 @@ func appReducer(state: inout AppState,
                 state.firstLoadDone = true
             }
             environment.dataController.reset()
+            environment.paymentService.reset()
         case let .setUser(user):
             if !state.firstLoadDone {
                 state.firstLoadDone = true
             }
             state.user = user
             environment.dataController.setup(userId: user.id)
+            environment.paymentService.setup(userId: user.id, userEmail: user.email)
         case let .updateUsername(username):
             if var updatedUser = state.user {
                 updatedUser.name = username

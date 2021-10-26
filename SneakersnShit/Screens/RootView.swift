@@ -23,7 +23,7 @@ struct RootView: View {
     var body: some View {
         let presentErrorAlert = Binding<Bool>(get: { error != nil }, set: { new in error = new ? error : nil })
         ZStack {
-            if store.globalState.firstLoadDone {
+            if store.globalState.firstLoadDone && store.globalState.didFetchPurchaserInfo {
                 if store.globalState.user?.id.isEmpty ?? true {
                     LoginView()
                         .zIndex(1)

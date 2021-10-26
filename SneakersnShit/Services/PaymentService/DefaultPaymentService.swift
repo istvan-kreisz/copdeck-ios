@@ -43,7 +43,9 @@ class DefaultPaymentService: NSObject, PaymentService {
         getPackages(completion: nil)
         Purchases.shared.purchaserInfo { [weak self] purchaserInfo, error in
             error.map { self?.errorsSubject.send(AppError(error: $0)) }
-            self?.purchaserInfoSubject.send(purchaserInfo)
+            if purchaserInfo != nil {
+                self?.purchaserInfoSubject.send(purchaserInfo)
+            }
         }
     }
 
