@@ -10,8 +10,9 @@ import Combine
 import Purchases
 
 protocol PaymentService {
-    var subscriptionActive: Bool? { get }
-    var subscriptionActivePublisher: AnyPublisher<Bool?, Never> { get }
+    var errorsPublisher: AnyPublisher<AppError, Never> { get }
+    var purchaserInfoPublisher: AnyPublisher<Purchases.PurchaserInfo?, Never> { get }
+    var packagesPublisher: AnyPublisher<SubscriptionPackages?, Never> { get }
 
     func setup(userId: String, userEmail: String?)
     func reset()

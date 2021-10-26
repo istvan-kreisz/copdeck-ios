@@ -24,7 +24,7 @@ extension AppStore {
     }
 
     func setupObservers() {
-        environment.dataController.errorsPublisher
+        environment.dataController.errorsPublisher.merge(with: environment.paymentService.errorsPublisher)
             .sink { [weak self] error in
                 self?.state.error = error
             }
@@ -93,6 +93,19 @@ extension AppStore {
 
         environment.dataController.profileImagePublisher.sink { [weak self] url in
             self?.state.profileImageURL = url
+        }
+        .store(in: &effectCancellables)
+        
+        environment.paymentService.packagesPublisher.sink { [weak self] packages in
+            self?.state.packages = packages
+        }
+        .store(in: &effectCancellables)
+        
+        environment.paymentService.purchaserInfoPublisher.sink { [weak self] purchaserInfo in
+            if self?.state.didFetchPurchaserInfo == false {
+                self?.state.didFetchPurchaserInfo = true
+            }
+            self?.state.purchaserInfo = purchaserInfo
         }
         .store(in: &effectCancellables)
     }

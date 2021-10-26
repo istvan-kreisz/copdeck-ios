@@ -9,29 +9,27 @@ import Foundation
 import Purchases
 import Combine
 
+struct SubscriptionPackages: Equatable {
+    var monthlyPackage: Purchases.Package?
+    var yearlyPackage: Purchases.Package?
+}
+
 class DefaultPaymentService: NSObject, PaymentService {
-    private static let entitlementsId = "pro"
-    private static let apiKey = "vkJAtxOkCMEORPnQDmuEwtoUBuHDUMSu"
-    
-    private var purchaserInfo: Purchases.PurchaserInfo? {
-        didSet {
-            subscriptionActiveSubject.send(purchaserInfo?.entitlements[Self.entitlementsId]?.isActive == true)
-        }
-    }
-    private var monthlyPackage: Purchases.Package?
-    private var yearlyPackage: Purchases.Package?
-    
+    static let entitlementsId = "pro"
+    static let apiKey = "vkJAtxOkCMEORPnQDmuEwtoUBuHDUMSu"
+
     private let errorsSubject = PassthroughSubject<AppError, Never>()
-    private let subscriptionActiveSubject = CurrentValueSubject<Bool?, Never>(nil)
-    
-    var subscriptionActivePublisher: AnyPublisher<Bool?, Never> {
-        subscriptionActiveSubject.eraseToAnyPublisher()
-    }
-    var subscriptionActive: Bool? {
-        subscriptionActiveSubject.value
-    }
+    private let packagesSubject = CurrentValueSubject<SubscriptionPackages?, Never>(nil)
+    private let purchaserInfoSubject = PassthroughSubject<Purchases.PurchaserInfo?, Never>()
+
     var errorsPublisher: AnyPublisher<AppError, Never> {
         errorsSubject.eraseToAnyPublisher()
+    }
+    var packagesPublisher: AnyPublisher<SubscriptionPackages?, Never> {
+        packagesSubject.removeDuplicates().eraseToAnyPublisher()
+    }
+    var purchaserInfoPublisher: AnyPublisher<Purchases.PurchaserInfo?, Never> {
+        purchaserInfoSubject.removeDuplicates().eraseToAnyPublisher()
     }
 
     override init() {
@@ -42,24 +40,20 @@ class DefaultPaymentService: NSObject, PaymentService {
         Purchases.configure(withAPIKey: Self.apiKey)
 //        Purchases.shared.delegate = self
 
-        Purchases.shared.offerings { [weak self] offerings, error in
-            error.map { self?.errorsSubject.send(AppError(error: $0)) }
-            self?.monthlyPackage = offerings?.current?.monthly
-            self?.yearlyPackage = offerings?.current?.annual
-        }
+        getPackages(completion: nil)
         Purchases.shared.purchaserInfo { [weak self] purchaserInfo, error in
             error.map { self?.errorsSubject.send(AppError(error: $0)) }
-            self?.purchaserInfo = purchaserInfo
+            self?.purchaserInfoSubject.send(purchaserInfo)
         }
     }
 
     func setup(userId: String, userEmail: String?) {
-        Purchases.shared.logIn(userId) { [weak self] purchaserInfo, created, error in
-            error.map { self?.errorsSubject.send(AppError(error: $0)) }
-            self?.purchaserInfo = purchaserInfo
-            if created {
-                Purchases.shared.setEmail(userEmail)
+        if packagesSubject.value?.monthlyPackage == nil || packagesSubject.value?.yearlyPackage == nil {
+            getPackages { [weak self] in
+                self?.login(userId: userId, userEmail: userEmail)
             }
+        } else {
+            login(userId: userId, userEmail: userEmail)
         }
     }
 
@@ -67,9 +61,9 @@ class DefaultPaymentService: NSObject, PaymentService {
         Purchases.shared.logOut { [weak self] purchaseInfo, error in
             error.map { self?.errorsSubject.send(AppError(error: $0)) }
             if error != nil {
-                self?.purchaserInfo = nil
+                self?.purchaserInfoSubject.send(nil)
             } else {
-                self?.purchaserInfo = purchaseInfo
+                self?.purchaserInfoSubject.send(purchaseInfo)
             }
         }
     }
@@ -77,14 +71,32 @@ class DefaultPaymentService: NSObject, PaymentService {
     func restorePurchases() {
         Purchases.shared.restoreTransactions { [weak self] purchaserInfo, error in
             error.map { self?.errorsSubject.send(AppError(error: $0)) }
-            self?.purchaserInfo = purchaserInfo
+            self?.purchaserInfoSubject.send(purchaserInfo)
         }
     }
-    
+
     func purchase(package: Purchases.Package) {
         Purchases.shared.purchasePackage(package) { [weak self] transaction, purchaserInfo, error, userCancelled in
             error.map { self?.errorsSubject.send(AppError(error: $0)) }
-            self?.purchaserInfo = purchaserInfo
+            self?.purchaserInfoSubject.send(purchaserInfo)
+        }
+    }
+    
+    private func getPackages(completion: (() -> Void)?) {
+        Purchases.shared.offerings { [weak self] offerings, error in
+            error.map { self?.errorsSubject.send(AppError(error: $0)) }
+            self?.packagesSubject.send(.init(monthlyPackage: offerings?.current?.monthly, yearlyPackage: offerings?.current?.annual))
+            completion?()
+        }
+    }
+    
+    private func login(userId: String, userEmail: String?) {
+        Purchases.shared.logIn(userId) { [weak self] purchaserInfo, created, error in
+            error.map { self?.errorsSubject.send(AppError(error: $0)) }
+            self?.purchaserInfoSubject.send(purchaserInfo)
+            if created {
+                Purchases.shared.setEmail(userEmail)
+            }
         }
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Purchases
 
 struct SearchState: Equatable {
     var searchResults: [Item] = []
@@ -27,6 +28,14 @@ struct GlobalState: Equatable {
     var error: AppError?
     var exchangeRates: ExchangeRates?
     var showPaymentView = true
+    
+    var purchaserInfo: Purchases.PurchaserInfo?
+    var packages: SubscriptionPackages?
+    var didFetchPurchaserInfo = false
+    
+    var subscriptionActive: Bool? {
+        purchaserInfo?.entitlements[DefaultPaymentService.entitlementsId]?.isActive == true
+    }
 
     var settings: CopDeckSettings {
         user?.settings ?? .default
@@ -105,6 +114,18 @@ struct AppState: Equatable {
     var profileImageURL: URL? {
         get { inventoryState.profileImageURL }
         set { inventoryState.profileImageURL = newValue }
+    }
+    var purchaserInfo: Purchases.PurchaserInfo? {
+        get { globalState.purchaserInfo }
+        set { globalState.purchaserInfo = newValue }
+    }
+    var packages: SubscriptionPackages? {
+        get { globalState.packages }
+        set { globalState.packages = newValue }
+    }
+    var didFetchPurchaserInfo: Bool {
+        get { globalState.didFetchPurchaserInfo }
+        set { globalState.didFetchPurchaserInfo = newValue }
     }
 
     var settings: CopDeckSettings {
