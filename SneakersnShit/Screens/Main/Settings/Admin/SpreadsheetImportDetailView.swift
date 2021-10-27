@@ -16,7 +16,7 @@ struct SpreadsheetImportDetailView: View {
 
     @State var selectedInventoryItem: InventoryItem?
     @State private var error: (String, String)? = nil
-    
+
     @State private var isFirstShow = true
 
     @StateObject private var loader = Loader()
@@ -32,43 +32,56 @@ struct SpreadsheetImportDetailView: View {
                     selectedInventoryItem = nil
                 }
             }
-            NavigationBar(title: "Errors", isBackButtonVisible: true, style: .dark) {
-                presentationMode.wrappedValue.dismiss()
+            List {
+                NavigationBar(title: "Errors", isBackButtonVisible: true, style: .dark) {
+                    presentationMode.wrappedValue.dismiss()
+                }
+                .withDefaultPadding(padding: .top)
+                .withDefaultPadding(padding: .horizontal)
+                .listRow(backgroundColor: .customWhite)
+
+                Text("Errors: ")
+                    .font(.bold(size: 18))
+                    .foregroundColor(.customText1)
+                    .padding(.vertical, 10)
+                    .withDefaultPadding(padding: .horizontal)
+                    .listRow(backgroundColor: .customWhite)
+
+                Text(text)
+                    .font(.regular(size: 15))
+                    .foregroundColor(.customText1)
+                    .withDefaultPadding(padding: .horizontal)
+                    .listRow(backgroundColor: .customWhite)
+
+                Text("Items: ")
+                    .font(.bold(size: 18))
+                    .foregroundColor(.customText1)
+                    .padding(.vertical, 10)
+                    .withDefaultPadding(padding: .horizontal)
+                    .listRow(backgroundColor: .customWhite)
+
+                if loader.isLoading {
+                    CustomSpinner(text: "Loading", animate: true)
+                        .withDefaultPadding(padding: .horizontal)
+                        .listRow(backgroundColor: .customWhite)
+                }
+
+                ForEach(inventoryItems) { (inventoryItem: InventoryItem) in
+                    InventoryListItem(inventoryItem: inventoryItem,
+                                      priceName: nil,
+                                      bestPrice: nil,
+                                      selectedInventoryItem: $selectedInventoryItem,
+                                      isSelected: false,
+                                      isInSharedStack: false,
+                                      isEditing: .constant(false),
+                                      requestInfo: store.globalState.requestInfo) {}
+                }
+                .withDefaultPadding(padding: .horizontal)
+                .listRow(backgroundColor: .customWhite)
+
+                Spacer()
             }
-            .withDefaultPadding(padding: .top)
-
-            Text("Errors: ")
-                .font(.bold(size: 18))
-                .foregroundColor(.customText1)
-                .padding(.vertical, 10)
-
-            Text(text)
-                .font(.regular(size: 15))
-                .foregroundColor(.customText1)
-
-            Text("Items: ")
-                .font(.bold(size: 18))
-                .foregroundColor(.customText1)
-                .padding(.vertical, 10)
-            
-            if loader.isLoading {
-                CustomSpinner(text: "Loading", animate: true)
-            }
-
-            ForEach(inventoryItems) { (inventoryItem: InventoryItem) in
-                InventoryListItem(inventoryItem: inventoryItem,
-                                  priceName: nil,
-                                  bestPrice: nil,
-                                  selectedInventoryItem: $selectedInventoryItem,
-                                  isSelected: false,
-                                  isInSharedStack: false,
-                                  isEditing: .constant(false),
-                                  requestInfo: store.globalState.requestInfo) {}
-            }
-
-            Spacer()
         }
-        .withDefaultPadding(padding: .horizontal)
         .onAppear {
             if isFirstShow {
                 isFirstShow = false

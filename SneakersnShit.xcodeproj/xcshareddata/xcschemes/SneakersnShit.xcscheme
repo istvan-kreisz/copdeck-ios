@@ -67,7 +67,7 @@
          <EnvironmentVariable
             key = "blockImageDownload"
             value = "true"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "showCacheLogs"

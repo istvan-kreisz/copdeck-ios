@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import StoreKit
 
 struct SpreadsheetImportAdminView: View {
     @EnvironmentObject var store: DerivedGlobalStore
@@ -49,6 +50,8 @@ struct SpreadsheetImportAdminView: View {
         VStack(spacing: 8) {
             NavigationLink(destination: (selectedUser?.spreadsheetImport?.summary?.description).map { (text: String) in
                 SpreadsheetImportDetailView(text: text, userId: selectedUser?.id ?? "")
+                    .environmentObject(AppStore.default)
+                    .environmentObject(DerivedGlobalStore.default)
             },
             isActive: showImportDetails) { EmptyView() }
 

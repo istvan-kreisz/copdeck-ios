@@ -49,28 +49,36 @@ extension Purchases.Package {
     var duration: String {
         self.packageType == Purchases.PackageType.monthly ? "month" : "year"
     }
-
-    var monthlyPriceString: String? {
-        guard let currencySymbol = product.priceLocale.currencySymbol else { return nil }
-        let price: Double
-        if packageType == Purchases.PackageType.monthly {
-            price = Double(truncating: product.price)
-        } else {
-            price = Double(truncating: product.price) / 12.0
-        }
-        return "\(currencySymbol)\(price.keepingDecimalPlaces(2))"
-    }
     
-    var weeklyPriceString: String? {
+    func priceString(for packageType: Purchases.PackageType) -> String? {
         guard let currencySymbol = product.priceLocale.currencySymbol else { return nil }
-        let price: Double
-        if packageType == Purchases.PackageType.monthly {
-            price = Double(truncating: product.price) / 4.0
-        } else {
-            price = Double(truncating: product.price) / 52.0
+        var price: Double?
+        if self.packageType == Purchases.PackageType.monthly {
+            switch packageType {
+            case .monthly:
+                price = Double(truncating: product.price)
+            case .annual:
+                price = Double(truncating: product.price) * 12.0
+            case .weekly:
+                price = Double(truncating: product.price) * 12.0 / 52.0
+            default:
+                break
+            }
+        } else if self.packageType == Purchases.PackageType.annual {
+            switch packageType {
+            case .monthly:
+                price = Double(truncating: product.price) / 12.0
+            case .annual:
+                price = Double(truncating: product.price)
+            case .weekly:
+                price = Double(truncating: product.price) / 52.0
+            default:
+                break
+            }
         }
+        guard let price = price else { return nil }
         return "\(currencySymbol)\(price.keepingDecimalPlaces(2))"
-    }
+    }    
 }
 
 extension SKProductSubscriptionPeriod {

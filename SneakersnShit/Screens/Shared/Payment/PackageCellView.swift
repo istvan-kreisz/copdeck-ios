@@ -36,7 +36,7 @@ struct PackageCellView: View {
                         Text(package.localizedPriceString.uppercased())
                             .font(.bold(size: 18))
                             .foregroundColor(.customText1)
-                        if let monthlyPriceString = package.monthlyPriceString {
+                        if let monthlyPriceString = package.priceString(for: .monthly) {
                             Text("\(monthlyPriceString) / mo")
                                 .font(.bold(size: 14))
                                 .foregroundColor(.customText1)

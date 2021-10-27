@@ -9,6 +9,11 @@ import SwiftUI
 import Purchases
 
 struct PaymentView1: View {
+    enum ViewType {
+        case trial(Purchases.Package)
+        case subscribe
+    }
+
     enum BulletpointStyle {
         case checkmark
         case dot
@@ -16,7 +21,16 @@ struct PaymentView1: View {
 
     @EnvironmentObject var store: DerivedGlobalStore
 
-    let package: Purchases.Package
+    let viewType: ViewType
+    var package: Purchases.Package? {
+        switch viewType {
+        case let .trial(package):
+            return package
+        case .subscribe:
+            return nil
+        }
+    }
+
     @Binding var show: Bool
 
     @State var present = false
@@ -86,10 +100,14 @@ struct PaymentView1: View {
                                 .rightAligned()
                             }
 
-                            if let monthlyPriceString = package.monthlyPriceString {
-                                Text("\(package.terms), then \(monthlyPriceString) per month")
-                                    .font(.bold(size: 30))
-                                    .foregroundColor(.customText1)
+                            if let package = package {
+                                if let monthlyPriceString = package.priceString(for: .monthly) {
+                                    Text("\(package.terms), then \(monthlyPriceString) per month")
+                                        .font(.bold(size: 30))
+                                        .foregroundColor(.customText1)
+                                }
+                            } else {
+                                Text("yooo")
                             }
 
                             VStack(alignment: .leading, spacing: 10) {
@@ -113,22 +131,26 @@ struct PaymentView1: View {
                                 bulletPoint(text: "Profit $$$", bulletpointStyle: .dot)
                             }
 
-                            VStack(alignment: .center, spacing: 4) {
-                                if let weeklyPriceString = package.weeklyPriceString {
-                                    Text("Just \(weeklyPriceString) per week")
-                                        .font(.semiBold(size: 23))
-                                        .foregroundColor(.customText1)
-                                }
+                            if let package = package {
+                                VStack(alignment: .center, spacing: 4) {
+                                    if let weeklyPriceString = package.priceString(for: .weekly) {
+                                        Text("Just \(weeklyPriceString) per week")
+                                            .font(.semiBold(size: 23))
+                                            .foregroundColor(.customText1)
+                                    }
 
-                                Text("Cancel anytime, billed monthly")
-                                    .font(.regular(size: 18))
-                                    .foregroundColor(Color.customText1.opacity(0.8))
+                                    Text("Cancel anytime, billed monthly")
+                                        .font(.regular(size: 18))
+                                        .foregroundColor(Color.customText1.opacity(0.8))
+                                }
+                                .padding(12)
+                                .frame(width: UIScreen.screenWidth - Styles.horizontalMargin * 2 - 6)
+                                .background(RoundedRectangle(cornerRadius: Styles.cornerRadius).stroke(Color.customBlue, lineWidth: 3))
+                                .centeredHorizontally()
+                                .padding(.vertical, 10)
+                            } else {
+                                Text("yooo")
                             }
-                            .padding(12)
-                            .frame(width: UIScreen.screenWidth - Styles.horizontalMargin * 2 - 6)
-                            .background(RoundedRectangle(cornerRadius: Styles.cornerRadius).stroke(Color.customBlue, lineWidth: 3))
-                            .centeredHorizontally()
-                            .padding(.vertical, 10)
 
                             VStack(alignment: .leading, spacing: 30) {
                                 Image("logo")
@@ -177,34 +199,36 @@ struct PaymentView1: View {
                     .withDefaultPadding(padding: .horizontal)
                     .withDefaultPadding(padding: .top)
                     .navigationbarHidden()
-                    VStack {
-                        Spacer()
+                    if let package = package {
+                        VStack {
+                            Spacer()
 
-                        VStack(alignment: .center, spacing: 7, content: {
-                            Button {
-                                subscribe()
-                            } label: {
-                                Text(package.termsFull)
-                                    .font(.semiBold(size: 20))
-                                    .foregroundColor(.customWhite)
-                                    .padding(15)
-                                    .frame(width: UIScreen.screenWidth - Styles.horizontalMargin * 2)
-                                    .background(RoundedRectangle(cornerRadius: Styles.cornerRadius).fill(Color.customBlue))
-                            }
+                            VStack(alignment: .center, spacing: 7, content: {
+                                Button {
+                                    subscribe()
+                                } label: {
+                                    Text(package.termsFull)
+                                        .font(.semiBold(size: 20))
+                                        .foregroundColor(.customWhite)
+                                        .padding(15)
+                                        .frame(width: UIScreen.screenWidth - Styles.horizontalMargin * 2)
+                                        .background(RoundedRectangle(cornerRadius: Styles.cornerRadius).fill(Color.customBlue))
+                                }
 
-                            if let monthlyPrice = package.monthlyPriceString {
-                                Text("Then only \(monthlyPrice) per month, billed \(package.duration)ly")
-                                    .font(.regular(size: 16))
-                                    .foregroundColor(.customText2)
-                            }
-                        })
-                            .padding(.top, 15)
-                            .padding(.bottom, UIApplication.shared.safeAreaInsets().bottom + 10)
-                            .frame(width: UIScreen.screenWidth)
-                            .background(Color.customWhite)
-                            .withDefaultShadow()
+                                if let monthlyPrice = package.priceString(for: .monthly) {
+                                    Text("Then only \(monthlyPrice) per month, billed \(package.duration)ly")
+                                        .font(.regular(size: 16))
+                                        .foregroundColor(.customText2)
+                                }
+                            })
+                                .padding(.top, 15)
+                                .padding(.bottom, UIApplication.shared.safeAreaInsets().bottom + 10)
+                                .frame(width: UIScreen.screenWidth)
+                                .background(Color.customWhite)
+                                .withDefaultShadow()
+                        }
+                        .edgesIgnoringSafeArea(.all)
                     }
-                    .edgesIgnoringSafeArea(.all)
                 }
                 .transition(.move(edge: .bottom))
             }
@@ -220,6 +244,7 @@ struct PaymentView1: View {
     }
 
     private func subscribe() {
+        guard let package = package else { return }
         store.send(.paymentAction(action: .purchase(package: package)))
     }
 
