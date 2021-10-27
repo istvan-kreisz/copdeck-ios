@@ -57,13 +57,13 @@ struct ImageView: View {
             Rectangle()
                 .fill(Color.customAccent2)
                 .frame(width: size, height: size)
-            if let source = source {
+            if let source = source, !DebugSettings.shared.blockImageDownload {
                 LazyImage(source: source) { state in
                     if let image = state.image {
                         image.resizingMode(resizingMode)
                     } else if state.error != nil {
                         if DebugSettings.shared.isInDebugMode {
-                            Color.customRed
+                            Color.customAccent2
                         } else {
                             if showPlaceholder {
                                 Color(.secondarySystemBackground)

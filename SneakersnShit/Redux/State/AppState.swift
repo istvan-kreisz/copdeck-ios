@@ -30,7 +30,13 @@ struct GlobalState: Equatable {
     #warning("yo")
     var showPaymentView = true
     
-    var purchaserInfo: Purchases.PurchaserInfo?
+    var purchaserInfo: Purchases.PurchaserInfo? {
+        didSet {
+            if !didFetchPurchaserInfo {
+                didFetchPurchaserInfo = true
+            }
+        }
+    }
     var packages: SubscriptionPackages?
     var didFetchPurchaserInfo = false
     

@@ -25,12 +25,14 @@ extension AppStore {
 
     func setupObservers() {
         environment.dataController.errorsPublisher.merge(with: environment.paymentService.errorsPublisher)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] error in
                 self?.state.error = error
             }
             .store(in: &effectCancellables)
 
         environment.dataController.userPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] newUser in
                 let oldSettings = self?.state.user?.settings
                 let newSettings = newUser.settings
@@ -44,6 +46,7 @@ extension AppStore {
 
         environment.dataController.inventoryItemsPublisher
             .map { inventoryItems in inventoryItems.filter { $0.pendingImport == nil } }
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] inventoryItems in
                 self?.state.inventoryItems = inventoryItems
                 self?.updateAllStack(withInventoryItems: inventoryItems)
@@ -55,12 +58,14 @@ extension AppStore {
             .store(in: &effectCancellables)
 
         environment.dataController.stacksPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] stacks in
                 self?.state.stacks = (self?.state.allStack.map { (stack: Stack) in [stack] } ?? []) + stacks
             }
             .store(in: &effectCancellables)
 
         environment.dataController.exchangeRatesPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] exchangeRates in
                 self?.state.exchangeRates = exchangeRates
             }
@@ -74,40 +79,46 @@ extension AppStore {
                                        imageDownloadHeaders: headers.first(where: { $0.storeId == cookie.store })?.headers ?? [:])
                 }
             }
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
                 self?.state.requestInfo = $0
             })
             .store(in: &effectCancellables)
 
         environment.dataController.recentlyViewedPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] recentlyViewed in
                 self?.state.recentlyViewed = recentlyViewed
             }
             .store(in: &effectCancellables)
 
         environment.dataController.favoritesPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] favorites in
                 self?.state.favoritedItems = favorites
             }
             .store(in: &effectCancellables)
 
-        environment.dataController.profileImagePublisher.sink { [weak self] url in
+        environment.dataController.profileImagePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] url in
             self?.state.profileImageURL = url
         }
         .store(in: &effectCancellables)
-        
-        environment.paymentService.packagesPublisher.sink { [weak self] packages in
+
+        environment.paymentService.packagesPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] packages in
             self?.state.packages = packages
         }
         .store(in: &effectCancellables)
-        
-        environment.paymentService.purchaserInfoPublisher.sink { [weak self] purchaserInfo in
-            if self?.state.didFetchPurchaserInfo == false {
-                self?.state.didFetchPurchaserInfo = true
+
+        environment.paymentService.purchaserInfoPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] purchaserInfo in
+                self?.state.purchaserInfo = purchaserInfo
             }
-            self?.state.purchaserInfo = purchaserInfo
-        }
-        .store(in: &effectCancellables)
+            .store(in: &effectCancellables)
     }
 
     func updateAllStack(withInventoryItems inventoryItems: [InventoryItem]) {

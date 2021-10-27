@@ -11,6 +11,10 @@ extension Double {
     func rounded(toPlaces places: Int) -> String {
         String(format: "%.\(places)f", self)
     }
+    
+    func keepingDecimalPlaces(_ places: Int) -> String {
+        String(format: "%.\(places)f", Double(floor(self * 100) / 100))
+    }
 
     func isOlderThan(minutes: Double) -> Bool {
         (Date().timeIntervalSince1970 - self / 1000) / 60 > minutes
@@ -27,7 +31,7 @@ extension Double {
         dateFormatter.dateFormat = "MMM d, h:mm a"
         return dateFormatter.string(from: publishedDate)
     }
-    
+
     var asDateFormat2: String {
         let joinedDate = Date(timeIntervalSince1970: self / 1000)
         let dateFormatter = DateFormatter()

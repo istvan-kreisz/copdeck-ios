@@ -13,6 +13,8 @@ struct PaymentView: View {
         case dot
     }
 
+    @EnvironmentObject var store: DerivedGlobalStore
+
     static let privacyPolicyString: NSMutableAttributedString = {
         let string = NSMutableAttributedString(string: "Before joining, please read our Privacy Policy and Terms & Conditions")
         string.addAttributes([.foregroundColor: UIColor(Color.customText2), .font: UIFont.regular(size: 14)],
@@ -21,7 +23,7 @@ struct PaymentView: View {
         string.setAsLink(textToFind: "Terms & Conditions", linkURL: "https://copdeck.com/termsandconditions")
         return string
     }()
-    
+
     static let restorePurchasesString: NSMutableAttributedString = {
         let string = NSMutableAttributedString(string: "If you're already a CopDeck member, Restore Purchases to regain access.")
         string.addAttributes([.foregroundColor: UIColor(Color.customText2), .font: UIFont.regular(size: 14)],
@@ -29,7 +31,6 @@ struct PaymentView: View {
         string.setAsLink(textToFind: "Restore Purchases", linkURL: "https://copdeck.com/")
         return string
     }()
-
 
     private func bulletPoint(text: String, bulletpointStyle: BulletpointStyle) -> some View {
         HStack(alignment: .top, spacing: 5) {
@@ -42,6 +43,16 @@ struct PaymentView: View {
                 .font(.regular(size: bulletpointStyle == .checkmark ? 18 : 20))
                 .foregroundColor(.customText1)
         }
+    }
+
+    var discountPercentage: Int? {
+        guard let monthlyPackage = store.globalState.packages?.monthlyPackage,
+              let yearlyPackage = store.globalState.packages?.yearlyPackage
+        else { return nil }
+        let yearlyPrice = Double(truncating: yearlyPackage.product.price)
+        let monthlyPrice = Double(truncating: monthlyPackage.product.price)
+        let percentage = 100 * ((monthlyPrice * 12.0) - yearlyPrice) / (monthlyPrice * 12.0)
+        return Int(round(percentage))
     }
 
     var body: some View {
@@ -61,6 +72,26 @@ struct PaymentView: View {
                     .centeredHorizontally()
                     .padding(.vertical, 10)
                     .padding(.bottom, 5)
+
+                    HStack(alignment: .center, spacing: 10) {
+                        if let monthlyPackage = store.globalState.packages?.monthlyPackage {
+                            PackageCellView(color: .customBlue,
+                                            discountPercentage: nil,
+                                            package: monthlyPackage) { package in
+                                store.send(.paymentAction(action: .purchase(package: monthlyPackage)))
+                            }
+                        }
+                        if let yearlyPackage = store.globalState.packages?.yearlyPackage {
+                            PackageCellView(color: .customPurple,
+                                            discountPercentage: discountPercentage,
+                                            package: yearlyPackage) { package in
+                                store.send(.paymentAction(action: .purchase(package: yearlyPackage)))
+                            }
+                        }
+                    }
+                    .frame(width: 400)
+                    .centeredHorizontally()
+                    
 
                     #warning("replace hardcoded value")
                     Text("14 days free, then $9.99 per month")
@@ -131,7 +162,7 @@ struct PaymentView: View {
                         AttributedText(Self.restorePurchasesString) { link in
                             #warning("restore purchases")
                         }
-                            .frame(height: 42)
+                        .frame(height: 42)
                     }
                     Spacer(minLength: UIApplication.shared.safeAreaInsets().bottom + 55)
                 }

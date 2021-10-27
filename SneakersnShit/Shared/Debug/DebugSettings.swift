@@ -108,8 +108,8 @@ struct DebugSettings {
         ProcessInfo.processInfo.environment[key]
     }
 
-    func bool(for key: String) -> Bool {
-        guard let value = string(for: key) else { return false }
+    private func bool(for key: String) -> Bool {
+        guard let value = string(for: key), isInDebugMode else { return false }
         return Bool(value) ?? false
     }
 
@@ -152,5 +152,9 @@ struct DebugSettings {
 
     var clearUserDefaults: Bool {
         bool(for: "clearUserDefaults")
+    }
+    
+    var blockImageDownload: Bool {
+        bool(for: "blockImageDownload")
     }
 }

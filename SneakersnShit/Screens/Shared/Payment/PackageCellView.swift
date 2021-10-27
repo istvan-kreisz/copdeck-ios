@@ -9,34 +9,69 @@ import SwiftUI
 import Purchases
 
 struct PackageCellView: View {
+    let color: Color
+    let discountPercentage: Int?
     let package: Purchases.Package
     let onSelection: (Purchases.Package) -> Void
-    
+
+    private static let width: CGFloat = 110
+    private static let height: CGFloat = 65
+
+    var duration: String {
+        package.packageType == Purchases.PackageType.monthly ? "month" : "year"
+    }
+
+    var monthlyPriceString: String? {
+        guard let currencySymbol = package.product.priceLocale.currencySymbol else { return nil }
+        let price: Double
+        if package.packageType == Purchases.PackageType.monthly {
+            price = Double(truncating: package.product.price)
+        } else {
+            price = Double(truncating: package.product.price) / 12.0
+        }
+        return "\(currencySymbol)\(price.keepingDecimalPlaces(2))"
+    }
+
     var body: some View {
-        HStack {
-            VStack {
-                HStack {
-                    Text(package.product.localizedTitle)
-                        .font(.title3)
-                        .bold()
-                    
-                    Spacer()
+        ZStack(alignment: .top) {
+            VStack(alignment: .center, spacing: 0) {
+                ZStack {
+                    Rectangle()
+                        .fill(color)
+                    Text("1\n\(duration)".uppercased())
+                        .multilineTextAlignment(.center)
+                        .font(.bold(size: 18))
+                        .foregroundColor(.customWhite)
                 }
-                HStack {
-                    Text(package.terms(for: package))
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    Spacer()
+                .frame(width: Self.width, height: Self.height)
+                ZStack {
+                    Rectangle()
+                        .fill(color.opacity(0.5))
+                    VStack {
+                        Text(package.localizedPriceString.uppercased())
+                            .font(.bold(size: 18))
+                            .foregroundColor(.customText1)
+                        if let monthlyPriceString = monthlyPriceString {
+                            Text("\(monthlyPriceString) / mo")
+                                .font(.bold(size: 14))
+                                .foregroundColor(.customText1)
+                        }
+                    }
                 }
+                .frame(width: Self.width, height: Self.height)
             }
-            .padding([.top, .bottom], 8.0)
-            
-            Spacer()
-            
-            Text(package.localizedPriceString)
-                .font(.title3)
-                .bold()
-        }.onTapGesture {
+            .cornerRadius(Styles.cornerRadius)
+
+            if let discountPercentage = discountPercentage {
+                Text("\(discountPercentage)% off")
+                    .font(.bold(size: 14))
+                    .foregroundColor(.customWhite)
+                    .frame(width: 60, height: 20)
+                    .background(Capsule().fill(Color.customGreen))
+                    .offset(x: 0, y: -10)
+            }
+        }
+        .onTapGesture {
             onSelection(package)
         }
     }
