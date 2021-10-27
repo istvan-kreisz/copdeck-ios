@@ -13,6 +13,8 @@ struct ContactView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var loader = Loader()
 
+    let isBackButtonVisible: Bool
+    
     @State private var alert: (String, String)? = nil
 
     @State var email = ""
@@ -23,7 +25,7 @@ struct ContactView: View {
         let presentErrorAlert = Binding<Bool>(get: { alert != nil }, set: { new in alert = new ? alert : nil })
 
         VStack(spacing: 8) {
-            NavigationBar(title: "Send us a message", isBackButtonVisible: true, titleFontSize: .large, style: .dark) {
+            NavigationBar(title: "Send us a message", isBackButtonVisible: isBackButtonVisible, titleFontSize: .large, style: .dark) {
                 presentationMode.wrappedValue.dismiss()
             }
             .withDefaultPadding(padding: .top)
@@ -52,7 +54,13 @@ struct ContactView: View {
         .alert(isPresented: presentErrorAlert) {
             let title = alert?.0 ?? ""
             let description = alert?.1 ?? ""
-            return Alert(title: Text(title), message: Text(description), dismissButton: Alert.Button.cancel(Text("Okay")))
+            if title == "Success" && !isBackButtonVisible {
+                return Alert(title: Text(title), message: Text(description), dismissButton: Alert.Button.cancel(Text("Okay"), action: {
+                    presentationMode.wrappedValue.dismiss()
+                }))
+            } else {
+                return Alert(title: Text(title), message: Text(description), dismissButton: Alert.Button.cancel(Text("Okay")))
+            }
         }
         .onAppear {
             if email.isEmpty {
@@ -61,6 +69,7 @@ struct ContactView: View {
         }
         .withDefaultPadding(padding: .horizontal)
         .navigationbarHidden()
+        .preferredColorScheme(.light)
     }
 
     private func sendMessage() {

@@ -373,7 +373,7 @@ struct SettingsView: View {
 
                     Group {
                         Section(header: Text("More")) {
-                            NavigationLink(destination: ContactView()) {
+                            NavigationLink(destination: ContactView(isBackButtonVisible: true)) {
                                 Text("Send us a message")
                                     .leftAligned()
                             }

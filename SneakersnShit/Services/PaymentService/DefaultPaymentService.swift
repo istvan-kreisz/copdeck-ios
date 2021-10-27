@@ -40,11 +40,12 @@ class DefaultPaymentService: NSObject, PaymentService {
         Purchases.configure(withAPIKey: Self.apiKey)
 //        Purchases.shared.delegate = self
 
-        getPackages(completion: nil)
-        Purchases.shared.purchaserInfo { [weak self] purchaserInfo, error in
-            error.map { self?.errorsSubject.send(AppError(error: $0)) }
-            if purchaserInfo != nil {
-                self?.purchaserInfoSubject.send(purchaserInfo)
+        getPackages {
+            Purchases.shared.purchaserInfo { [weak self] purchaserInfo, error in
+                error.map { self?.errorsSubject.send(AppError(error: $0)) }
+                if purchaserInfo != nil {
+                    self?.purchaserInfoSubject.send(purchaserInfo)
+                }
             }
         }
     }

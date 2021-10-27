@@ -13,6 +13,7 @@ struct RootView: View {
     @StateObject var viewState = ViewState()
 
     @State private var error: (String, String)? = nil
+    @State private var showPayment1View = true
 
     @AppStorage(UserDefaults.Keys.needsAppOnboarding.rawValue) private var needsAppOnboarding: Bool = true
 
@@ -33,8 +34,8 @@ struct RootView: View {
                     } else if user?.inited != true {
                         CountrySelector(settings: store.globalState.settings)
                     } else {
-                        if store.globalState.showPaymentView {
-                            PaymentView()
+                        if let monthlyPackage = store.globalState.packages?.monthlyPackage, !store.globalState.hasSubscribed, showPayment1View {
+                            PaymentView1(package: monthlyPackage, show: $showPayment1View)
                         } else {
                             MainContainerView(store: store.appStore)
                                 .zIndex(0)

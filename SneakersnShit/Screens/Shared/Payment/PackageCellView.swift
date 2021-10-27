@@ -17,28 +17,13 @@ struct PackageCellView: View {
     private static let width: CGFloat = 110
     private static let height: CGFloat = 65
 
-    var duration: String {
-        package.packageType == Purchases.PackageType.monthly ? "month" : "year"
-    }
-
-    var monthlyPriceString: String? {
-        guard let currencySymbol = package.product.priceLocale.currencySymbol else { return nil }
-        let price: Double
-        if package.packageType == Purchases.PackageType.monthly {
-            price = Double(truncating: package.product.price)
-        } else {
-            price = Double(truncating: package.product.price) / 12.0
-        }
-        return "\(currencySymbol)\(price.keepingDecimalPlaces(2))"
-    }
-
     var body: some View {
         ZStack(alignment: .top) {
             VStack(alignment: .center, spacing: 0) {
                 ZStack {
                     Rectangle()
                         .fill(color)
-                    Text("1\n\(duration)".uppercased())
+                    Text("1\n\(package.duration)".uppercased())
                         .multilineTextAlignment(.center)
                         .font(.bold(size: 18))
                         .foregroundColor(.customWhite)
@@ -51,7 +36,7 @@ struct PackageCellView: View {
                         Text(package.localizedPriceString.uppercased())
                             .font(.bold(size: 18))
                             .foregroundColor(.customText1)
-                        if let monthlyPriceString = monthlyPriceString {
+                        if let monthlyPriceString = package.monthlyPriceString {
                             Text("\(monthlyPriceString) / mo")
                                 .font(.bold(size: 14))
                                 .foregroundColor(.customText1)

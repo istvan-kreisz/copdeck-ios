@@ -27,9 +27,7 @@ struct GlobalState: Equatable {
     var requestInfo: [ScraperRequestInfo] = []
     var error: AppError?
     var exchangeRates: ExchangeRates?
-    #warning("yo")
-    var showPaymentView = true
-    
+    var showPayment2View = false
     var purchaserInfo: Purchases.PurchaserInfo? {
         didSet {
             if !didFetchPurchaserInfo {
@@ -42,6 +40,10 @@ struct GlobalState: Equatable {
     
     var subscriptionActive: Bool? {
         purchaserInfo?.entitlements[DefaultPaymentService.entitlementsId]?.isActive == true
+    }
+    
+    var hasSubscribed: Bool {
+        subscriptionActive == true || purchaserInfo?.purchaseDate(forEntitlement: DefaultPaymentService.entitlementsId) != nil
     }
 
     var settings: CopDeckSettings {
@@ -126,6 +128,10 @@ struct AppState: Equatable {
         get { globalState.purchaserInfo }
         set { globalState.purchaserInfo = newValue }
     }
+    var showPayment2View: Bool {
+        get { globalState.showPayment2View }
+        set { globalState.showPayment2View = newValue }
+    }
     var packages: SubscriptionPackages? {
         get { globalState.packages }
         set { globalState.packages = newValue }
@@ -168,5 +174,9 @@ struct AppState: Equatable {
         stacks = []
         profileImageURL = nil
         error = nil
+        showPayment2View = false
+        purchaserInfo = nil
+        didFetchPurchaserInfo = false
+
     }
 }

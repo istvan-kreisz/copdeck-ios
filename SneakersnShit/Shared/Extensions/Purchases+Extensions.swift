@@ -12,19 +12,64 @@ extension Purchases.Package: Identifiable {
     public var id: String { identifier }
 }
 
-/* Some methods to make displaying subscription terms easier */
-
 extension Purchases.Package {
-    func terms(for package: Purchases.Package) -> String {
-        if let intro = package.product.introductoryPrice {
+    var introductoryPeriodString: String? {
+        product.introductoryPrice?.subscriptionPeriod.periodTitle()
+    }
+
+    var freePeriodString: String? {
+        product.introductoryPrice?.price == 0 ? introductoryPeriodString : nil
+    }
+    
+    var terms: String {
+        if let intro = product.introductoryPrice {
             if intro.price == 0 {
-                return "\(intro.subscriptionPeriod.periodTitle()) free trial"
+                return "\(intro.subscriptionPeriod.periodTitle()) free"
             } else {
-                return "\(package.localizedIntroductoryPriceString) for \(intro.subscriptionPeriod.periodTitle())"
+                return "\(localizedIntroductoryPriceString) for \(intro.subscriptionPeriod.periodTitle())"
             }
         } else {
-            return "Unlocks Premium"
+            return "\(localizedPriceString)"
         }
+    }
+
+
+    var termsFull: String {
+        if let intro = product.introductoryPrice {
+            if intro.price == 0 {
+                return "Start your \(intro.subscriptionPeriod.periodTitle()) free trial"
+            } else {
+                return "Start at \(localizedIntroductoryPriceString) for \(intro.subscriptionPeriod.periodTitle())"
+            }
+        } else {
+            return "Subscribe for \(localizedPriceString)"
+        }
+    }
+
+    var duration: String {
+        self.packageType == Purchases.PackageType.monthly ? "month" : "year"
+    }
+
+    var monthlyPriceString: String? {
+        guard let currencySymbol = product.priceLocale.currencySymbol else { return nil }
+        let price: Double
+        if packageType == Purchases.PackageType.monthly {
+            price = Double(truncating: product.price)
+        } else {
+            price = Double(truncating: product.price) / 12.0
+        }
+        return "\(currencySymbol)\(price.keepingDecimalPlaces(2))"
+    }
+    
+    var weeklyPriceString: String? {
+        guard let currencySymbol = product.priceLocale.currencySymbol else { return nil }
+        let price: Double
+        if packageType == Purchases.PackageType.monthly {
+            price = Double(truncating: product.price) / 4.0
+        } else {
+            price = Double(truncating: product.price) / 52.0
+        }
+        return "\(currencySymbol)\(price.keepingDecimalPlaces(2))"
     }
 }
 
