@@ -14,8 +14,8 @@ struct ReferralCode: Codable, Equatable, Identifiable {
     let name: String?
     let expireDate: Double?
     let isValid: Bool?
-    let signedUpCount: Int?
-    let subscribedCount: Int?
+    let signedUp: [String]?
+    let subscribed: [String]?
     
     var id: String { code }
 }

@@ -38,7 +38,7 @@ enum DiscountValue: CaseIterable, Equatable {
 class DefaultPaymentService: NSObject, PaymentService {
     static let entitlementsId = "pro"
     static let apiKey = "vkJAtxOkCMEORPnQDmuEwtoUBuHDUMSu"
-    static let iosBetaTesterDiscount: DiscountValue = .d40
+    static let iosBetaTesterDiscount: DiscountValue = .d30
 
     static func offeringId(discount: DiscountValue) -> String {
         discount == .noDiscount ? "pro" : "pro" + discount.valueString

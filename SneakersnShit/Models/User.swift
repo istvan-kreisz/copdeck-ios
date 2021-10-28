@@ -36,16 +36,16 @@ struct User: Codable, Equatable, Identifiable {
         let referralCodeUsed: String?
         let referralCodeDiscount: String?
         let referralCodeName: String?
-        
+
         var isBetaTester: Bool {
             group?.contains("iosbetatester") ?? false
         }
 
         var discount: DiscountValue {
             if isBetaTester == true {
-                return .d40
+                return DefaultPaymentService.iosBetaTesterDiscount
             } else if let referralCodeDiscount = referralCodeDiscount,
-                      let discount = DiscountValue.allCases.first(where: { referralCodeDiscount.contains($0.valueString) }) {
+                      let discount = DiscountValue.allCases.filter({ $0 != .noDiscount }).first(where: { referralCodeDiscount.contains($0.valueString) }) {
                 return discount
             } else {
                 return .noDiscount

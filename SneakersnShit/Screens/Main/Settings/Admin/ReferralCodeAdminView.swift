@@ -42,8 +42,8 @@ struct ReferralCodeAdminView: View {
                             UserDetailView(name: "name", value: name, showCopyButton: false)
                         }
 
-                        UserDetailView(name: "invite count (signed up)", value: "\(referralCode.signedUpCount ?? 0)", showCopyButton: false)
-                        UserDetailView(name: "invite count (subscribed)", value: "\(referralCode.subscribedCount ?? 0)", showCopyButton: false)
+                        UserDetailView(name: "invite count (signed up)", value: "\(referralCode.signedUp?.count ?? 0)", showCopyButton: false)
+                        UserDetailView(name: "invite count (subscribed)", value: "\(referralCode.subscribed?.count ?? 0)", showCopyButton: false)
                     }
                     .padding(.vertical, 5)
                     .buttonStyle(PlainButtonStyle())

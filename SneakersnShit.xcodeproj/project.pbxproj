@@ -11,6 +11,7 @@
 		5D0703CA271DDEE700116CF4 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D0703C9271DDEE700116CF4 /* StoreKit.framework */; };
 		5D0E5A11269E4EDE006D7E9C /* AddToInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0E5A10269E4EDE006D7E9C /* AddToInventoryView.swift */; };
 		5D0E5A13269E60DB006D7E9C /* TextFieldRounded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0E5A12269E60DB006D7E9C /* TextFieldRounded.swift */; };
+		5D100707272B08860058C156 /* DiscountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D100706272B08860058C156 /* DiscountsView.swift */; };
 		5D117EAD271310E5000D1E43 /* SizeConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D117EAC271310E5000D1E43 /* SizeConversion.swift */; };
 		5D117EB12713287C000D1E43 /* sizes.json in Resources */ = {isa = PBXBuildFile; fileRef = 5D117EB02713287B000D1E43 /* sizes.json */; };
 		5D117EB3271468B7000D1E43 /* PriceFieldWithCurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D117EB2271468B7000D1E43 /* PriceFieldWithCurrency.swift */; };
@@ -214,6 +215,7 @@
 		5D0703C9271DDEE700116CF4 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		5D0E5A10269E4EDE006D7E9C /* AddToInventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToInventoryView.swift; sourceTree = "<group>"; };
 		5D0E5A12269E60DB006D7E9C /* TextFieldRounded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldRounded.swift; sourceTree = "<group>"; };
+		5D100706272B08860058C156 /* DiscountsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscountsView.swift; sourceTree = "<group>"; };
 		5D117EAC271310E5000D1E43 /* SizeConversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeConversion.swift; sourceTree = "<group>"; };
 		5D117EB02713287B000D1E43 /* sizes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sizes.json; sourceTree = "<group>"; };
 		5D117EB2271468B7000D1E43 /* PriceFieldWithCurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceFieldWithCurrency.swift; sourceTree = "<group>"; };
@@ -643,6 +645,7 @@
 				5D564E4B2704F9D100190CF4 /* ReferralCodeView.swift */,
 				5DEB42B0271EE16900895766 /* ContactView.swift */,
 				5D564E442704C8A700190CF4 /* Admin */,
+				5D100706272B08860058C156 /* DiscountsView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1387,6 +1390,7 @@
 				5DB590E826C556ED006ECEBD /* ScrollableSegmentedControl.swift in Sources */,
 				5DE596E626C876790024F7D5 /* PagerView.swift in Sources */,
 				5D60541F2726F96C00B631FD /* DefaultPaymentService.swift in Sources */,
+				5D100707272B08860058C156 /* DiscountsView.swift in Sources */,
 				5D424CFB25C503F00008D6F4 /* UIApplication+Extensions.swift in Sources */,
 				5D9DFB0526D998A8005A575D /* ProfileImageView.swift in Sources */,
 				5D117EAD271310E5000D1E43 /* SizeConversion.swift in Sources */,

@@ -22,7 +22,7 @@ struct PaymentView: View {
     @EnvironmentObject var store: DerivedGlobalStore
 
     let viewType: ViewType
-    var package: Purchases.Package? {
+    var trialPackage: Purchases.Package? {
         switch viewType {
         case let .trial(package):
             return package
@@ -119,9 +119,9 @@ struct PaymentView: View {
                                 .rightAligned()
                             }
 
-                            if let package = package {
-                                if let monthlyPriceString = package.priceString(for: .monthly) {
-                                    Text("\(package.terms), then \(monthlyPriceString) per month")
+                            if let trialPackage = trialPackage {
+                                if let monthlyPriceString = trialPackage.priceString(for: .monthly) {
+                                    Text("\(trialPackage.terms), then \(monthlyPriceString) per month")
                                         .font(.bold(size: 30))
                                         .foregroundColor(.customText1)
                                 }
@@ -166,9 +166,9 @@ struct PaymentView: View {
                                 bulletPoint(text: "Profit $$$", bulletpointStyle: .dot)
                             }
 
-                            if let package = package {
+                            if let trialPackage = trialPackage {
                                 VStack(alignment: .center, spacing: 4) {
-                                    if let weeklyPriceString = package.priceString(for: .weekly) {
+                                    if let weeklyPriceString = trialPackage.priceString(for: .weekly) {
                                         Text("Just \(weeklyPriceString) per week")
                                             .font(.semiBold(size: 23))
                                             .foregroundColor(.customText1)
@@ -236,20 +236,25 @@ struct PaymentView: View {
                                     }
                                 }
 
-                                VStack(alignment: .center, spacing: 10) {
-                                    Text("Apply referral code")
-                                        .font(.bold(size: 18))
-                                        .foregroundColor(.customText1)
-                                    Button {
-                                        showReferralCodeView = true
-                                    } label: {
-                                        Text("Add code")
-                                            .font(.bold(size: 14))
-                                            .foregroundColor(.customWhite)
-                                            .padding(10)
-                                            .background(RoundedRectangle(cornerRadius: Styles.cornerRadius).fill(Color.customBlue))
+                                if store.globalState.user?.membershipInfo?.referralCodeUsed == nil {
+                                    VStack(alignment: .center, spacing: 10) {
+                                        Text("Apply referral code")
+                                            .font(.bold(size: 18))
+                                            .foregroundColor(.customText1)
+                                        Button {
+                                            showReferralCodeView = true
+                                        } label: {
+                                            Text("Add code")
+                                                .font(.bold(size: 14))
+                                                .foregroundColor(.customWhite)
+                                                .padding(10)
+                                                .background(RoundedRectangle(cornerRadius: Styles.cornerRadius).fill(Color.customBlue))
+                                        }
                                     }
                                 }
+                                
+                                DiscountsView(membershipInfo: store.globalState.user?.membershipInfo)
+                                    .padding(.top, 20)
 
                                 VStack(alignment: .leading, spacing: 1) {
                                     AttributedText(Self.privacyPolicyString)
@@ -271,7 +276,7 @@ struct PaymentView: View {
                     .withDefaultPadding(padding: .horizontal)
                     .withDefaultPadding(padding: .top)
                     .navigationbarHidden()
-                    if let package = package {
+                    if let trialPackage = trialPackage {
                         VStack {
                             Spacer()
 
@@ -279,7 +284,7 @@ struct PaymentView: View {
                                 Button {
                                     subscribe()
                                 } label: {
-                                    Text(package.termsFull)
+                                    Text(trialPackage.termsFull)
                                         .font(.semiBold(size: 20))
                                         .foregroundColor(.customWhite)
                                         .padding(15)
@@ -287,8 +292,8 @@ struct PaymentView: View {
                                         .background(RoundedRectangle(cornerRadius: Styles.cornerRadius).fill(Color.customBlue))
                                 }
 
-                                if let monthlyPrice = package.priceString(for: .monthly) {
-                                    Text("Then only \(monthlyPrice) per month, billed \(package.duration)ly")
+                                if let monthlyPrice = trialPackage.priceString(for: .monthly) {
+                                    Text("Then only \(monthlyPrice) per month, billed \(trialPackage.duration)ly")
                                         .font(.regular(size: 16))
                                         .foregroundColor(.customText2)
                                 }
@@ -320,8 +325,8 @@ struct PaymentView: View {
     }
 
     private func subscribe() {
-        guard let package = package else { return }
-        store.send(.paymentAction(action: .purchase(package: package)))
+        guard let trialPackage = trialPackage else { return }
+        store.send(.paymentAction(action: .purchase(package: trialPackage)))
     }
 
     private func restorePurchases() {
