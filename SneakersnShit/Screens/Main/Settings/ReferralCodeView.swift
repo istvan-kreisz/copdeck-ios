@@ -15,6 +15,33 @@ struct ReferralCodeView: View {
     @State private var error: (String, String)? = nil
     @State var referralCode = ""
 
+    var referralCodeInfo: (code: String, name: String, discount: String)? {
+        guard let referralCode = store.globalState.user?.membershipInfo?.referralCodeUsed,
+              let referralCodeName = store.globalState.user?.membershipInfo?.referralCodeName,
+              let referralCodeDiscount = store.globalState.user?.membershipInfo?.referralCodeDiscount
+        else { return nil }
+        return (referralCode, referralCodeName, referralCodeDiscount)
+    }
+
+    var hasDiscounts: Bool {
+        (referralCodeInfo != nil) || (store.globalState.user?.membershipInfo?.isBetaTester == true)
+    }
+    
+    var totalDiscount: String? {
+        var discount: Int?
+        if let referralCodeInfo = referralCodeInfo {
+            discount = Int(referralCodeInfo.discount)
+        }
+        if store.globalState.user?.membershipInfo?.isBetaTester == true {
+            if let d = discount {
+                discount = max(DefaultPaymentService.iosBetaTesterDiscount.value, d)
+            } else {
+                discount = DefaultPaymentService.iosBetaTesterDiscount.value
+            }
+        }
+        return discount.map { "\($0)" }
+    }
+
     var body: some View {
         let presentErrorAlert = Binding<Bool>(get: { error != nil }, set: { new in error = new ? error : nil })
 
@@ -44,19 +71,7 @@ struct ReferralCodeView: View {
                     CustomSpinner(text: "Updating account", animate: true)
                 }
 
-                if let referralCode = store.globalState.user?.membershipInfo?.referralCodeUsed {
-                    HStack(spacing: 5) {
-                        Text("Your referral code:")
-                            .foregroundColor(.customText2)
-                            .font(.regular(size: 18))
-                        Text(referralCode)
-                            .foregroundColor(.customBlue)
-                            .font(.bold(size: 20))
-                        Spacer()
-                    }
-                    .padding(.top, 5)
-                    .layoutPriority(2)
-                } else {
+                if store.globalState.user?.membershipInfo?.referralCodeUsed == nil {
                     HStack(spacing: 5) {
                         TextFieldRounded(placeHolder: "Enter referral code", style: .gray, text: $referralCode)
                             .layoutPriority(1)
@@ -77,6 +92,37 @@ struct ReferralCodeView: View {
                     }
                     .layoutPriority(2)
                 }
+
+                if hasDiscounts {
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("Your discounts:")
+                            .foregroundColor(.customText1)
+                            .font(.bold(size: 18))
+                            .padding(.bottom, 10)
+
+                        if let referralCodeInfo = referralCodeInfo {
+                            Text("• Referral code: \(referralCodeInfo.code) (\(referralCodeInfo.name), \(referralCodeInfo.discount)% OFF)")
+                                .foregroundColor(.customText1)
+                                .font(.regular(size: 15))
+                        }
+                        if store.globalState.user?.membershipInfo?.isBetaTester == true {
+                            Text("• iOS Beta Tester (\(DefaultPaymentService.iosBetaTesterDiscount.valueString)% OFF)")
+                                .foregroundColor(.customText1)
+                                .font(.regular(size: 15))
+                        }
+                        if let totalDiscount = totalDiscount {
+                            Text("• Total: \(totalDiscount)% OFF")
+                                .foregroundColor(.customText1)
+                                .font(.bold(size: 15))
+                        }
+                    }
+                    .padding()
+                    .overlay(RoundedRectangle(cornerRadius: Styles.cornerRadius)
+                        .stroke(Color.customBlue, lineWidth: 2)
+                        .background(Color.customBlue.opacity(0.1).cornerRadius(Styles.cornerRadius)))
+                    .layoutPriority(2)
+                }
+
                 Spacer()
             }
         }

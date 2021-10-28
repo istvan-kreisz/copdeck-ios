@@ -38,7 +38,7 @@ struct User: Codable, Equatable, Identifiable {
         let referralCodeName: String?
         
         var isBetaTester: Bool {
-            group?.contains("betatester") ?? false
+            group?.contains("iosbetatester") ?? false
         }
 
         var discount: DiscountValue {
