@@ -73,7 +73,7 @@
 		5D54FE3726C3390F008CD05F /* PopularItemsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D54FE3626C3390F008CD05F /* PopularItemsListView.swift */; };
 		5D564E3D2703584100190CF4 /* SpreadsheetImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D564E3C2703584100190CF4 /* SpreadsheetImport.swift */; };
 		5D564E3F2703592E00190CF4 /* SpreadsheetImportAdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D564E3E2703592E00190CF4 /* SpreadsheetImportAdminView.swift */; };
-		5D564E432704C7EE00190CF4 /* AffiliateLinksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D564E422704C7EE00190CF4 /* AffiliateLinksView.swift */; };
+		5D564E432704C7EE00190CF4 /* ReferralCodeAdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D564E422704C7EE00190CF4 /* ReferralCodeAdminView.swift */; };
 		5D564E462704C8CA00190CF4 /* UserDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D564E452704C8CA00190CF4 /* UserDetailView.swift */; };
 		5D564E482704F66700190CF4 /* StringRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D564E472704F66700190CF4 /* StringRepresentable.swift */; };
 		5D564E4A2704F6C800190CF4 /* PaymentAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D564E492704F6C800190CF4 /* PaymentAction.swift */; };
@@ -83,14 +83,13 @@
 		5D56B7B42700A6BE001357E0 /* TestImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D56B7B32700A6BE001357E0 /* TestImageView.swift */; };
 		5D5D4C4426D50EB100A7C61A /* ModelWithDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D5D4C4326D50EB100A7C61A /* ModelWithDate.swift */; };
 		5D5D4C4726D5F20900A7C61A /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D5D4C4626D5F20900A7C61A /* ImagePickerView.swift */; };
-		5D605416272186D600B631FD /* PaymentView1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D605415272186D600B631FD /* PaymentView1.swift */; };
+		5D605416272186D600B631FD /* PaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D605415272186D600B631FD /* PaymentView.swift */; };
 		5D6054182726C73900B631FD /* NSMutableAttributedString+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6054172726C73900B631FD /* NSMutableAttributedString+Extensions.swift */; };
 		5D60541A2726C77900B631FD /* AttributedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6054192726C77900B631FD /* AttributedText.swift */; };
 		5D60541D2726F94E00B631FD /* PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D60541C2726F94E00B631FD /* PaymentService.swift */; };
 		5D60541F2726F96C00B631FD /* DefaultPaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D60541E2726F96C00B631FD /* DefaultPaymentService.swift */; };
 		5D60542127276D3000B631FD /* Purchases+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D60542027276D3000B631FD /* Purchases+Extensions.swift */; };
 		5D605423272772CE00B631FD /* PackageCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D605422272772CE00B631FD /* PackageCellView.swift */; };
-		5D6054252728F6CC00B631FD /* PaymentView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6054242728F6CC00B631FD /* PaymentView2.swift */; };
 		5D631220269330B900876D99 /* APIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D63121F269330B900876D99 /* APIConfig.swift */; };
 		5D6312222694797300876D99 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6312212694797300876D99 /* Item.swift */; };
 		5D6312242694D83100876D99 /* Decodable+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6312232694D83100876D99 /* Decodable+Extensions.swift */; };
@@ -277,7 +276,7 @@
 		5D54FE3626C3390F008CD05F /* PopularItemsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularItemsListView.swift; sourceTree = "<group>"; };
 		5D564E3C2703584100190CF4 /* SpreadsheetImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpreadsheetImport.swift; sourceTree = "<group>"; };
 		5D564E3E2703592E00190CF4 /* SpreadsheetImportAdminView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpreadsheetImportAdminView.swift; sourceTree = "<group>"; };
-		5D564E422704C7EE00190CF4 /* AffiliateLinksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AffiliateLinksView.swift; sourceTree = "<group>"; };
+		5D564E422704C7EE00190CF4 /* ReferralCodeAdminView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralCodeAdminView.swift; sourceTree = "<group>"; };
 		5D564E452704C8CA00190CF4 /* UserDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailView.swift; sourceTree = "<group>"; };
 		5D564E472704F66700190CF4 /* StringRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringRepresentable.swift; sourceTree = "<group>"; };
 		5D564E492704F6C800190CF4 /* PaymentAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentAction.swift; sourceTree = "<group>"; };
@@ -287,14 +286,13 @@
 		5D56B7B32700A6BE001357E0 /* TestImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestImageView.swift; sourceTree = "<group>"; };
 		5D5D4C4326D50EB100A7C61A /* ModelWithDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelWithDate.swift; sourceTree = "<group>"; };
 		5D5D4C4626D5F20900A7C61A /* ImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
-		5D605415272186D600B631FD /* PaymentView1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentView1.swift; sourceTree = "<group>"; };
+		5D605415272186D600B631FD /* PaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentView.swift; sourceTree = "<group>"; };
 		5D6054172726C73900B631FD /* NSMutableAttributedString+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSMutableAttributedString+Extensions.swift"; sourceTree = "<group>"; };
 		5D6054192726C77900B631FD /* AttributedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedText.swift; sourceTree = "<group>"; };
 		5D60541C2726F94E00B631FD /* PaymentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentService.swift; sourceTree = "<group>"; };
 		5D60541E2726F96C00B631FD /* DefaultPaymentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultPaymentService.swift; sourceTree = "<group>"; };
 		5D60542027276D3000B631FD /* Purchases+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Purchases+Extensions.swift"; sourceTree = "<group>"; };
 		5D605422272772CE00B631FD /* PackageCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackageCellView.swift; sourceTree = "<group>"; };
-		5D6054242728F6CC00B631FD /* PaymentView2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentView2.swift; sourceTree = "<group>"; };
 		5D63121F269330B900876D99 /* APIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfig.swift; sourceTree = "<group>"; };
 		5D6312212694797300876D99 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		5D6312232694D83100876D99 /* Decodable+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Decodable+Extensions.swift"; sourceTree = "<group>"; };
@@ -770,7 +768,7 @@
 		5D564E442704C8A700190CF4 /* Admin */ = {
 			isa = PBXGroup;
 			children = (
-				5D564E422704C7EE00190CF4 /* AffiliateLinksView.swift */,
+				5D564E422704C7EE00190CF4 /* ReferralCodeAdminView.swift */,
 				5D564E3E2703592E00190CF4 /* SpreadsheetImportAdminView.swift */,
 				5D564E452704C8CA00190CF4 /* UserDetailView.swift */,
 				5D564E4D2705423300190CF4 /* SpreadsheetImportDetailView.swift */,
@@ -789,8 +787,7 @@
 		5D605414272186C600B631FD /* Payment */ = {
 			isa = PBXGroup;
 			children = (
-				5D605415272186D600B631FD /* PaymentView1.swift */,
-				5D6054242728F6CC00B631FD /* PaymentView2.swift */,
+				5D605415272186D600B631FD /* PaymentView.swift */,
 				5D605422272772CE00B631FD /* PackageCellView.swift */,
 			);
 			path = Payment;
@@ -1302,7 +1299,6 @@
 				5D63122F269506AE00876D99 /* User.swift in Sources */,
 				5DE4F21426DFCCF30087077A /* SharedStackSummaryView.swift in Sources */,
 				5D7B17CC26868CA60065D01C /* Scraper.swift in Sources */,
-				5D6054252728F6CC00B631FD /* PaymentView2.swift in Sources */,
 				5D52E307261303AF00FA02B8 /* Publishers+Extensions.swift in Sources */,
 				5D564E4C2704F9D100190CF4 /* ReferralCodeView.swift in Sources */,
 				5DF3595F26FF72570041A6C3 /* OnboardingView.swift in Sources */,
@@ -1402,7 +1398,7 @@
 				5D63122D2695068300876D99 /* Currency.swift in Sources */,
 				5D0E5A11269E4EDE006D7E9C /* AddToInventoryView.swift in Sources */,
 				5D6312242694D83100876D99 /* Decodable+Extensions.swift in Sources */,
-				5D564E432704C7EE00190CF4 /* AffiliateLinksView.swift in Sources */,
+				5D564E432704C7EE00190CF4 /* ReferralCodeAdminView.swift in Sources */,
 				5DE4F21226DFBB7B0087077A /* State+Extensions.swift in Sources */,
 				5D9D520626AE361900AB1F30 /* PillView.swift in Sources */,
 				5D97630526EB640E00A1155B /* EmptyStateButton.swift in Sources */,
@@ -1461,7 +1457,7 @@
 				5DDEFDCA26D13695001B0F76 /* FiltersModal.swift in Sources */,
 				5D8ABBC126B1D2E100AFD8CF /* ItemImageView.swift in Sources */,
 				5DE4F21026DF1AD10087077A /* ProfileView.swift in Sources */,
-				5D605416272186D600B631FD /* PaymentView1.swift in Sources */,
+				5D605416272186D600B631FD /* PaymentView.swift in Sources */,
 				5D564E462704C8CA00190CF4 /* UserDetailView.swift in Sources */,
 				5DF3596126FFB7DF0041A6C3 /* UserDefaults+Extensions.swift in Sources */,
 				5D60542127276D3000B631FD /* Purchases+Extensions.swift in Sources */,

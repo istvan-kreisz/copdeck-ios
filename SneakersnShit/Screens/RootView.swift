@@ -35,7 +35,8 @@ struct RootView: View {
                         CountrySelector(settings: store.globalState.settings)
                     } else {
                         if let monthlyPackage = store.globalState.packages?.monthlyPackage, !store.globalState.hasSubscribed, showPayment1View {
-                            PaymentView1(viewType: .trial(monthlyPackage), show: $showPayment1View)
+                            #warning("change to trial")
+                            PaymentView(viewType: .subscribe, show: $showPayment1View)
                         } else {
                             MainContainerView(store: store.appStore)
                                 .zIndex(0)

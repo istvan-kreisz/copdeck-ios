@@ -8,7 +8,7 @@
 import SwiftUI
 import Purchases
 
-struct PaymentView1: View {
+struct PaymentView: View {
     enum ViewType {
         case trial(Purchases.Package)
         case subscribe
@@ -35,6 +35,7 @@ struct PaymentView1: View {
 
     @State var present = false
     @State var showContactView = false
+    @State var showReferralCodeView = false
 
     static let privacyPolicyString: NSMutableAttributedString = {
         let string = NSMutableAttributedString(string: "Before joining, please read our Privacy Policy and Terms & Conditions")
@@ -66,7 +67,25 @@ struct PaymentView1: View {
         }
     }
 
+    var discountPercentage: Int? {
+        guard let monthlyPackage = store.globalState.packages?.monthlyPackage,
+              let yearlyPackage = store.globalState.packages?.yearlyPackage
+        else { return nil }
+        let yearlyPrice = Double(truncating: yearlyPackage.product.price)
+        let monthlyPrice = Double(truncating: monthlyPackage.product.price)
+        let percentage = 100 * ((monthlyPrice * 12.0) - yearlyPrice) / (monthlyPrice * 12.0)
+        return Int(round(percentage))
+    }
+
     var body: some View {
+        let showSheet = Binding<Bool>(get: { showReferralCodeView || showContactView },
+                                      set: { new in
+                                          if !new {
+                                              showReferralCodeView = false
+                                              showContactView = false
+                                          }
+                                      })
+
         ZStack {
             Color.customWhite.edgesIgnoringSafeArea(.all)
 
@@ -107,7 +126,23 @@ struct PaymentView1: View {
                                         .foregroundColor(.customText1)
                                 }
                             } else {
-                                Text("yooo")
+                                VStack(alignment: .leading, spacing: 10) {
+                                    if let monthlyPackage = store.globalState.packages?.monthlyPackage,
+                                       let monthlyPriceString = monthlyPackage.priceString(for: .monthly) {
+                                        Text("\(monthlyPackage.terms), then \(monthlyPriceString) per month")
+                                            .font(.bold(size: 20))
+                                            .foregroundColor(.customText1)
+                                    }
+                                    if let yearlyPackage = store.globalState.packages?.yearlyPackage,
+                                       let yearlyPriceString = yearlyPackage.priceString(for: .annual) {
+                                        Text("OR")
+                                            .font(.bold(size: 20))
+                                            .foregroundColor(.customText1)
+                                        Text("\(yearlyPackage.terms), then \(yearlyPriceString) per year")
+                                            .font(.bold(size: 20))
+                                            .foregroundColor(.customText1)
+                                    }
+                                }
                             }
 
                             VStack(alignment: .leading, spacing: 10) {
@@ -148,8 +183,6 @@ struct PaymentView1: View {
                                 .background(RoundedRectangle(cornerRadius: Styles.cornerRadius).stroke(Color.customBlue, lineWidth: 3))
                                 .centeredHorizontally()
                                 .padding(.vertical, 10)
-                            } else {
-                                Text("yooo")
                             }
 
                             VStack(alignment: .leading, spacing: 30) {
@@ -168,6 +201,26 @@ struct PaymentView1: View {
                             .padding(.bottom, 20)
 
                             VStack(spacing: 10) {
+                                HStack(alignment: .center, spacing: 10) {
+                                    if let monthlyPackage = store.globalState.packages?.monthlyPackage {
+                                        PackageCellView(color: .customBlue,
+                                                        discountPercentage: nil,
+                                                        package: monthlyPackage) { package in
+                                            store.send(.paymentAction(action: .purchase(package: monthlyPackage)))
+                                        }
+                                    }
+                                    if let yearlyPackage = store.globalState.packages?.yearlyPackage {
+                                        PackageCellView(color: .customPurple,
+                                                        discountPercentage: discountPercentage,
+                                                        package: yearlyPackage) { package in
+                                            store.send(.paymentAction(action: .purchase(package: yearlyPackage)))
+                                        }
+                                    }
+                                }
+                                .frame(width: 300)
+                                .centeredHorizontally()
+                                .padding(.bottom, 30)
+
                                 VStack(alignment: .center, spacing: 10) {
                                     Text("Have questions?")
                                         .font(.bold(size: 18))
@@ -176,6 +229,21 @@ struct PaymentView1: View {
                                         showContactView = true
                                     } label: {
                                         Text("Message us")
+                                            .font(.bold(size: 14))
+                                            .foregroundColor(.customWhite)
+                                            .padding(10)
+                                            .background(RoundedRectangle(cornerRadius: Styles.cornerRadius).fill(Color.customBlue))
+                                    }
+                                }
+
+                                VStack(alignment: .center, spacing: 10) {
+                                    Text("Apply referral code")
+                                        .font(.bold(size: 18))
+                                        .foregroundColor(.customText1)
+                                    Button {
+                                        showReferralCodeView = true
+                                    } label: {
+                                        Text("Add code")
                                             .font(.bold(size: 14))
                                             .foregroundColor(.customWhite)
                                             .padding(10)
@@ -193,7 +261,11 @@ struct PaymentView1: View {
                                 }
                                 .frame(width: UIScreen.screenWidth - 2 * Styles.horizontalMargin)
                             }
-                            Spacer(minLength: UIApplication.shared.safeAreaInsets().bottom + 55)
+                            if case .subscribe = viewType {
+                                Spacer(minLength: UIApplication.shared.safeAreaInsets().bottom)
+                            } else {
+                                Spacer(minLength: UIApplication.shared.safeAreaInsets().bottom + 55)
+                            }
                         }
                     }
                     .withDefaultPadding(padding: .horizontal)
@@ -238,8 +310,12 @@ struct PaymentView1: View {
                 present = true
             }
         }
-        .sheet(isPresented: $showContactView) {
-            ContactView(isBackButtonVisible: false)
+        .sheet(isPresented: showSheet) {
+            if showContactView {
+                ContactView()
+            } else {
+                ReferralCodeView()
+            }
         }
     }
 

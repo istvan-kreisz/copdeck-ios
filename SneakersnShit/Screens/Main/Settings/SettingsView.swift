@@ -372,7 +372,7 @@ struct SettingsView: View {
 
                     Group {
                         Section(header: Text("More")) {
-                            NavigationLink(destination: ContactView(isBackButtonVisible: true)) {
+                            NavigationLink(destination: ContactView()) {
                                 Text("Send us a message")
                                     .leftAligned()
                             }
@@ -389,7 +389,7 @@ struct SettingsView: View {
                                             .leftAligned()
                                     }
                                 }
-                                NavigationLink(destination: AffiliateLinksView()) {
+                                NavigationLink(destination: ReferralCodeAdminView()) {
                                     Text("Affilate links")
                                         .leftAligned()
                                 }

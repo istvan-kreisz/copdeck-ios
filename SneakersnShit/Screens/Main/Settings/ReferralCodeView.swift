@@ -87,6 +87,7 @@ struct ReferralCodeView: View {
             return Alert(title: Text(title), message: Text(description), dismissButton: Alert.Button.cancel(Text("Okay")))
         }
         .navigationbarHidden()
+        .preferredColorScheme(.light)
     }
 
     private func applyReferralCode(_ referralCode: String) {

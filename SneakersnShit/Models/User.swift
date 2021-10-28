@@ -35,6 +35,22 @@ struct User: Codable, Equatable, Identifiable {
         let group: String?
         let referralCodeUsed: String?
         let referralCodeDiscount: String?
+        let referralCodeName: String?
+        
+        var isBetaTester: Bool {
+            group?.contains("betatester") ?? false
+        }
+
+        var discount: DiscountValue {
+            if isBetaTester == true {
+                return .d40
+            } else if let referralCodeDiscount = referralCodeDiscount,
+                      let discount = DiscountValue.allCases.first(where: { referralCodeDiscount.contains($0.valueString) }) {
+                return discount
+            } else {
+                return .noDiscount
+            }
+        }
     }
 
     let id: String

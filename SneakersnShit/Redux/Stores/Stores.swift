@@ -102,16 +102,16 @@ extension AppStore {
         environment.dataController.profileImagePublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] url in
-            self?.state.profileImageURL = url
-        }
-        .store(in: &effectCancellables)
+                self?.state.profileImageURL = url
+            }
+            .store(in: &effectCancellables)
 
         environment.paymentService.packagesPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] packages in
-            self?.state.packages = packages
-        }
-        .store(in: &effectCancellables)
+                self?.state.allPackages = packages
+            }
+            .store(in: &effectCancellables)
 
         environment.paymentService.purchaserInfoPublisher
             .receive(on: DispatchQueue.main)

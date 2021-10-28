@@ -35,13 +35,19 @@ struct GlobalState: Equatable {
             }
         }
     }
-    var packages: SubscriptionPackages?
+
+    var allPackages: [DiscountValue: SubscriptionPackages]?
     var didFetchPurchaserInfo = false
-    
+
     var subscriptionActive: Bool? {
         purchaserInfo?.entitlements[DefaultPaymentService.entitlementsId]?.isActive == true
     }
-    
+
+    var packages: SubscriptionPackages? {
+        let discount = user?.membershipInfo?.discount ?? .noDiscount
+        return allPackages?[discount]
+    }
+
     var hasSubscribed: Bool {
         subscriptionActive == true || purchaserInfo?.purchaseDate(forEntitlement: DefaultPaymentService.entitlementsId) != nil
     }
@@ -67,22 +73,27 @@ struct AppState: Equatable {
         get { globalState.user }
         set { globalState.user = newValue }
     }
+
     var firstLoadDone: Bool {
         get { globalState.firstLoadDone }
         set { globalState.firstLoadDone = newValue }
     }
+
     var didFetchItemPrices: Bool {
         get { globalState.didFetchItemPrices }
         set { globalState.didFetchItemPrices = newValue }
     }
+
     var requestInfo: [ScraperRequestInfo] {
         get { globalState.requestInfo }
         set { globalState.requestInfo = newValue }
     }
+
     var error: AppError? {
         get { globalState.error }
         set { globalState.error = newValue }
     }
+
     var exchangeRates: ExchangeRates? {
         get { globalState.exchangeRates }
         set { globalState.exchangeRates = newValue }
@@ -92,50 +103,66 @@ struct AppState: Equatable {
         get { searchState.searchResults }
         set { searchState.searchResults = newValue }
     }
+
     var popularItems: [Item] {
         get { searchState.popularItems }
         set { searchState.popularItems = newValue }
     }
+
     var favoritedItems: [Item] {
         get { searchState.favoritedItems }
         set { searchState.favoritedItems = newValue }
     }
+
     var recentlyViewed: [Item] {
         get { searchState.recentlyViewed }
         set { searchState.recentlyViewed = newValue }
     }
+
     var userSearchResults: [User] {
         get { searchState.userSearchResults }
         set { searchState.userSearchResults = newValue }
     }
+
     var feedPosts: PaginatedResult<[FeedPost]> {
         get { feedState.feedPosts }
         set { feedState.feedPosts = newValue }
     }
+
     var inventoryItems: [InventoryItem] {
         get { inventoryState.inventoryItems }
         set { inventoryState.inventoryItems = newValue }
     }
+
     var stacks: [Stack] {
         get { inventoryState.stacks }
         set { inventoryState.stacks = newValue }
     }
+
     var profileImageURL: URL? {
         get { inventoryState.profileImageURL }
         set { inventoryState.profileImageURL = newValue }
     }
+
     var purchaserInfo: Purchases.PurchaserInfo? {
         get { globalState.purchaserInfo }
         set { globalState.purchaserInfo = newValue }
     }
+
     var showPayment2View: Bool {
         get { globalState.showPayment2View }
         set { globalState.showPayment2View = newValue }
     }
-    var packages: SubscriptionPackages? {
-        get { globalState.packages }
-        set { globalState.packages = newValue }
+
+    var allPackages: [DiscountValue: SubscriptionPackages]? {
+        get { globalState.allPackages }
+        set { globalState.allPackages = newValue }
     }
+
+    var packages: SubscriptionPackages? {
+        globalState.packages
+    }
+
     var didFetchPurchaserInfo: Bool {
         get { globalState.didFetchPurchaserInfo }
         set { globalState.didFetchPurchaserInfo = newValue }
@@ -177,6 +204,5 @@ struct AppState: Equatable {
         showPayment2View = false
         purchaserInfo = nil
         didFetchPurchaserInfo = false
-
     }
 }

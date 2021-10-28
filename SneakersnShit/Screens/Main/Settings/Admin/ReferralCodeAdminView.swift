@@ -1,5 +1,5 @@
 //
-//  AffiliateLinksView.swift
+//  ReferralCodeAdminView.swift
 //  SneakersnShit
 //
 //  Created by István Kreisz on 9/29/21.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AffiliateLinksView: View {
+struct ReferralCodeAdminView: View {
     @EnvironmentObject var store: DerivedGlobalStore
     @Environment(\.presentationMode) var presentationMode
     @State var referralCodes: [ReferralCode] = []
@@ -41,12 +41,9 @@ struct AffiliateLinksView: View {
                         if let name = referralCode.name {
                             UserDetailView(name: "name", value: name, showCopyButton: false)
                         }
-                        if let invitesSignedUp = referralCode.signedUpCount {
-                            UserDetailView(name: "invite count (signed up)", value: "\(invitesSignedUp)", showCopyButton: false)
-                        }
-                        if let invitesSubscribed = referralCode.subscribedCount {
-                            UserDetailView(name: "invite count (subscribed)", value: "\(invitesSubscribed)", showCopyButton: false)
-                        }
+
+                        UserDetailView(name: "invite count (signed up)", value: "\(referralCode.signedUpCount ?? 0)", showCopyButton: false)
+                        UserDetailView(name: "invite count (subscribed)", value: "\(referralCode.subscribedCount ?? 0)", showCopyButton: false)
                     }
                     .padding(.vertical, 5)
                     .buttonStyle(PlainButtonStyle())
