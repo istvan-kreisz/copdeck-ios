@@ -58,7 +58,9 @@ struct ContactView: View {
         }
         .onAppear {
             if email.isEmpty {
-                email = store.globalState.user?.email ?? ""
+                if store.globalState.user?.email?.contains("privaterelay.appleid.com") == false {
+                    email = store.globalState.user?.email ?? ""
+                }
             }
         }
         .withDefaultPadding(padding: .horizontal)
