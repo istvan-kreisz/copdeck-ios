@@ -53,6 +53,17 @@ struct DebugSettings {
     
     var isIstvan: Bool { DefaultAuthenticator.user?.uid == istvanId }
     var isMilan: Bool { DefaultAuthenticator.user?.uid == milanId }
+    
+    private func isTesterEmail(_ email: String) -> Bool {
+        let regex1 = "milan\\+[0-9]+@copdeck.com"
+        let regex2 = "istvan\\+[0-9]+@copdeck.com"
+
+        let predicate1 = NSPredicate(format: "SELF MATCHES %@", regex1)
+        let predicate2 = NSPredicate(format: "SELF MATCHES %@", regex2)
+        return predicate1.evaluate(with: email) || predicate2.evaluate(with: email)
+    }
+
+    var isPaywallEnabled: Bool { (isIstvan || isMilan || (DefaultAuthenticator.user?.email.map(isTesterEmail) ?? false)) && true }
 
     lazy var environment: AppEnvironment? = {
         guard let currentConfiguration = Bundle.main.object(forInfoDictionaryKey: "Configuration") as? String,

@@ -109,7 +109,7 @@ extension View {
     func withPopup<Popup: View>(@ViewBuilder _ popup: () -> Popup) -> some View {
         ModifiedContent(content: self, modifier: WithPopup(popup))
     }
-    
+
     func withImageViewer(shownImageURL: Binding<URL?>) -> some View {
         ModifiedContent(content: self, modifier: WithImageViewer(shownImageURL: shownImageURL))
     }
@@ -140,21 +140,25 @@ extension View {
     func withTellTip(text: String = "What's this?", didTap: @escaping () -> Void) -> some View {
         ModifiedContent(content: self, modifier: WithTellTip(text: text, didTap: didTap))
     }
-    
-    func lockedContent(lockEnabled: Bool = true) -> some View {
-        ModifiedContent(content: self, modifier: LockedContent(isLocked: !AppStore.default.state.globalState.subscriptionActive && lockEnabled) {
-            AppStore.default.send(.paymentAction(action: .showPaymentView(show: true)))
-        })
+
+    func lockedContent(style: LockedContent.Style, lockSize: CGFloat, lockColor: Color = .customText1, lockEnabled: Bool = true) -> some View {
+        ModifiedContent(content: self,
+                        modifier: LockedContent(isLocked: !AppStore.default.state.globalState.subscriptionActive && lockEnabled && DebugSettings.shared.isPaywallEnabled,
+                                                lockSize: lockSize,
+                                                lockColor: lockColor,
+                                                style: style) {
+                            AppStore.default.send(.paymentAction(action: .showPaymentView(show: true)))
+                        })
     }
 }
 
- #if DEBUG
-private let rainbowDebugColors = [Color.purple, Color.blue, Color.green, Color.yellow, Color.orange, Color.red]
+#if DEBUG
+    private let rainbowDebugColors = [Color.purple, Color.blue, Color.green, Color.yellow, Color.orange, Color.red]
 
-extension View {
-    func rainbowDebug() -> some View {
-        self.background(rainbowDebugColors.randomElement()!)
+    extension View {
+        func rainbowDebug() -> some View {
+            self.background(rainbowDebugColors.randomElement()!)
+        }
     }
-}
 
- #endif
+#endif

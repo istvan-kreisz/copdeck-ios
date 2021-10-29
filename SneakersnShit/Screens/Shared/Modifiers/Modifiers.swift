@@ -48,7 +48,7 @@ struct DefaultPadding: ViewModifier {
 
 struct DefaultShadow: ViewModifier {
     var color: Color = .customAccent3
-    
+
     func body(content: Content) -> some View {
         content.shadow(color: color, radius: 5, x: 0, y: 0)
     }
@@ -295,19 +295,38 @@ struct WithImageViewer: ViewModifier {
 }
 
 struct LockedContent: ViewModifier {
-    var isLocked: Bool
-    var didTap: () -> Void
+    enum Style {
+        case hideOriginal
+        case overlay(offset: CGSize)
+    }
+
+    let isLocked: Bool
+    let lockSize: CGFloat
+    let lockColor: Color
+    let style: Style
+    let didTap: () -> Void
+
+    private func lock() -> some View {
+        Image(systemName: "lock.fill")
+            .font(.bold(size: lockSize))
+            .foregroundColor(lockColor)
+            .onTapGesture(perform: didTap)
+    }
 
     func body(content: Content) -> some View {
-        ZStack {
-            if isLocked {
-                Image(systemName: "lock.fill")
-                    .font(.bold(size: 20))
-                    .foregroundColor(Color.customText1)
-                    .onTapGesture(perform: didTap)
-            } else {
-                content
+        if isLocked {
+            if case .hideOriginal = style, isLocked {
+                lock()
+            } else if case let .overlay(offset) = style {
+                ZStack {
+                    content
+                        .allowsHitTesting(false)
+                    lock()
+                        .offset(offset)
+                }
             }
+        } else {
+            content
         }
     }
 }

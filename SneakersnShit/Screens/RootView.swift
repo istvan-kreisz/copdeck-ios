@@ -39,13 +39,14 @@ struct RootView: View {
                         if let monthlyPackage = store.globalState.packages?.monthlyPackage,
                            Purchases.shared.appUserID.contains("RCAnonymousID") == false,
                            !store.globalState.hasSubscribed,
-                           showPayment1View {
+                           showPayment1View,
+                            DebugSettings.shared.isPaywallEnabled {
                             PaymentView(viewType: .trial(monthlyPackage)) { showPayment1View = false }
                         } else {
                             ZStack {
                                 MainContainerView(store: store.appStore)
                                     .zIndex(0)
-                                if store.globalState.showPaymentView {
+                                if store.globalState.showPaymentView && DebugSettings.shared.isPaywallEnabled {
                                     PaymentView(viewType: .subscribe)  { store.send(.paymentAction(action: .showPaymentView(show: false))) }
                                 }
                             }

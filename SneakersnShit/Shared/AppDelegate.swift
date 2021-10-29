@@ -23,6 +23,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         StoreReviewHelper.incrementAppOpenedCount()
         setupNuke()
         setupUI()
+
         return true
     }
 
