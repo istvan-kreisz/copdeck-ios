@@ -116,6 +116,7 @@ extension AppStore {
         environment.paymentService.purchaserInfoPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] purchaserInfo in
+                print(purchaserInfo)
                 self?.state.purchaserInfo = purchaserInfo
             }
             .store(in: &effectCancellables)

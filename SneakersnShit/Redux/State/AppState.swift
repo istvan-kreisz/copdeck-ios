@@ -203,6 +203,5 @@ struct AppState: Equatable {
         error = nil
         showPayment2View = false
         purchaserInfo = nil
-        didFetchPurchaserInfo = false
     }
 }

@@ -98,7 +98,6 @@ class DefaultPaymentService: NSObject, PaymentService {
 
     func reset() {
         Purchases.shared.logOut { [weak self] purchaseInfo, error in
-            error.map { self?.errorsSubject.send(AppError(error: $0)) }
             if error != nil {
                 self?.purchaserInfoSubject.send(nil)
             } else {
@@ -107,9 +106,14 @@ class DefaultPaymentService: NSObject, PaymentService {
         }
     }
 
-    func restorePurchases() {
+    func restorePurchases(completion: ((Result<Void, AppError>) -> Void)?) {
         Purchases.shared.restoreTransactions { [weak self] purchaserInfo, error in
-            error.map { self?.errorsSubject.send(AppError(error: $0)) }
+            if let error = error {
+                self?.errorsSubject.send(AppError(error: error))
+                completion?(.failure(AppError(error: error)))
+            } else {
+                completion?(.success(()))
+            }
             self?.purchaserInfoSubject.send(purchaserInfo)
         }
     }
@@ -140,7 +144,7 @@ class DefaultPaymentService: NSObject, PaymentService {
     }
 
     private func login(userId: String, userEmail: String?) {
-        Purchases.shared.logIn(userId) { [weak self] purchaserInfo, created, error in
+        Purchases.shared.logIn(userId) { [weak self] purchaserInfo, created, error in            
             error.map { self?.errorsSubject.send(AppError(error: $0)) }
             self?.purchaserInfoSubject.send(purchaserInfo)
             if created {
@@ -149,9 +153,3 @@ class DefaultPaymentService: NSObject, PaymentService {
         }
     }
 }
-
-// extension DefaultPaymentService: PurchasesDelegate {
-//    func purchases(_ purchases: Purchases, didReceiveUpdated purchaserInfo: Purchases.PurchaserInfo) {
-//        self.purchaserInfo = purchaserInfo
-//    }
-// }

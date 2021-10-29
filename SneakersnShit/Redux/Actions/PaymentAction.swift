@@ -10,7 +10,7 @@ import Purchases
 
 enum PaymentAction {
     case applyReferralCode(_ code: String, completion: ((Result<Void, AppError>) -> Void)?)
-    case restorePurchases
+    case restorePurchases(completion: ((Result<Void, AppError>) -> Void)?)
     case purchase(package: Purchases.Package)
 }
 

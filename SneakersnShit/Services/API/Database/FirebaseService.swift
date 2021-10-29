@@ -95,10 +95,9 @@ class FirebaseService: DatabaseManager {
 
     func setup(userId: String) {
         guard userId != self.userId else { return }
-
-        self.userId = userId
-
         reset()
+        
+        self.userId = userId
         listenToChanges(userId: userId)
     }
 
@@ -140,6 +139,7 @@ class FirebaseService: DatabaseManager {
 
     func reset() {
         dbListeners.forEach { $0.reset() }
+        userId = nil
     }
 
     func getUser(withId id: String) -> AnyPublisher<User, AppError> {

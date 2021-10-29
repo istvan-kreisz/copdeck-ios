@@ -36,6 +36,8 @@ struct PaymentView: View {
     @State var present = false
     @State var showContactView = false
     @State var showReferralCodeView = false
+    
+    @State private var alert: (String, String)? = nil
 
     static let privacyPolicyString: NSMutableAttributedString = {
         let string = NSMutableAttributedString(string: "Before joining, please read our Privacy Policy and Terms & Conditions")
@@ -78,6 +80,7 @@ struct PaymentView: View {
     }
 
     var body: some View {
+        let presentAlert = Binding<Bool>(get: { alert != nil }, set: { new in alert = new ? alert : nil })
         let showSheet = Binding<Bool>(get: { showReferralCodeView || showContactView },
                                       set: { new in
                                           if !new {
@@ -201,25 +204,27 @@ struct PaymentView: View {
                             .padding(.bottom, 20)
 
                             VStack(spacing: 10) {
-                                HStack(alignment: .center, spacing: 10) {
-                                    if let monthlyPackage = store.globalState.packages?.monthlyPackage {
-                                        PackageCellView(color: .customBlue,
-                                                        discountPercentage: nil,
-                                                        package: monthlyPackage) { package in
-                                            store.send(.paymentAction(action: .purchase(package: monthlyPackage)))
+                                if trialPackage == nil {
+                                    HStack(alignment: .center, spacing: 10) {
+                                        if let monthlyPackage = store.globalState.packages?.monthlyPackage {
+                                            PackageCellView(color: .customBlue,
+                                                            discountPercentage: nil,
+                                                            package: monthlyPackage) { package in
+                                                store.send(.paymentAction(action: .purchase(package: monthlyPackage)))
+                                            }
+                                        }
+                                        if let yearlyPackage = store.globalState.packages?.yearlyPackage {
+                                            PackageCellView(color: .customPurple,
+                                                            discountPercentage: discountPercentage,
+                                                            package: yearlyPackage) { package in
+                                                store.send(.paymentAction(action: .purchase(package: yearlyPackage)))
+                                            }
                                         }
                                     }
-                                    if let yearlyPackage = store.globalState.packages?.yearlyPackage {
-                                        PackageCellView(color: .customPurple,
-                                                        discountPercentage: discountPercentage,
-                                                        package: yearlyPackage) { package in
-                                            store.send(.paymentAction(action: .purchase(package: yearlyPackage)))
-                                        }
-                                    }
+                                    .frame(width: 300)
+                                    .centeredHorizontally()
+                                    .padding(.bottom, 30)
                                 }
-                                .frame(width: 300)
-                                .centeredHorizontally()
-                                .padding(.bottom, 30)
 
                                 VStack(alignment: .center, spacing: 10) {
                                     Text("Have questions?")
@@ -252,20 +257,23 @@ struct PaymentView: View {
                                         }
                                     }
                                 }
-                                
+
                                 DiscountsView(membershipInfo: store.globalState.user?.membershipInfo)
                                     .padding(.top, 20)
 
                                 VStack(alignment: .leading, spacing: 1) {
                                     AttributedText(Self.privacyPolicyString)
                                         .frame(height: 42)
-                                    AttributedText(Self.restorePurchasesString) { link in
-                                        store.send(.paymentAction(action: .restorePurchases))
+                                    AttributedText(Self.restorePurchasesString) { _ in
+                                        restorePurchases()
                                     }
                                     .frame(height: 42)
                                 }
                                 .frame(width: UIScreen.screenWidth - 2 * Styles.horizontalMargin)
+                                .buttonStyle(.plain)
                             }
+                            .buttonStyle(.plain)
+                            
                             if case .subscribe = viewType {
                                 Spacer(minLength: UIApplication.shared.safeAreaInsets().bottom)
                             } else {
@@ -322,6 +330,9 @@ struct PaymentView: View {
                 ReferralCodeView()
             }
         }
+        .alert(isPresented: presentAlert) {
+            Alert(title: Text(alert?.0 ?? "Ooops"), message: Text(alert?.1 ?? "Unknown Error"), dismissButton: .default(Text("OK")))
+        }
     }
 
     private func subscribe() {
@@ -330,6 +341,13 @@ struct PaymentView: View {
     }
 
     private func restorePurchases() {
-        store.send(.paymentAction(action: .restorePurchases))
+        store.send(.paymentAction(action: .restorePurchases(completion: { result in
+            switch result {
+            case let .failure(error):
+                alert = (error.title, error.message)
+            case .success:
+                alert = ("Success", "Your purchases have been restored.")
+            }
+        })))
     }
 }

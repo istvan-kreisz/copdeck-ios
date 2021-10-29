@@ -25,7 +25,7 @@ struct ImageView: View {
     let background: Color
     let resizingMode: ImageResizingMode
 
-    var didLoadImage: ((UIImage) -> Void)?
+    var didLoadImage: ((_ image: UIImage, _ url: String?) -> Void)?
 
     init(source: ImageViewSourceType,
          size: CGFloat,
@@ -34,7 +34,7 @@ struct ImageView: View {
          showPlaceholder: Bool = true,
          resizingMode: ImageResizingMode = .aspectFit,
          background: Color = .customWhite,
-         didLoadImage: ((UIImage) -> Void)? = nil) {
+         didLoadImage: ((UIImage, String?) -> Void)? = nil) {
         switch source {
         case let .url(url):
             self._source = State(initialValue: url)
@@ -80,8 +80,8 @@ struct ImageView: View {
                     }
                 }
                 .onSuccess {
-                    if source is ImageRequest {
-                        didLoadImage?($0.image)
+                    if let imageRequest = source as? ImageRequest {
+                        didLoadImage?($0.image, imageRequest.url?.absoluteString)
                     }
                 }
                 .background(background)

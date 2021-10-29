@@ -25,7 +25,7 @@ struct SettingsView: View {
     @EnvironmentObject var store: DerivedGlobalStore
     @State private var settings: CopDeckSettings
 
-    @State private var error: (String, String)? = nil
+    @State private var alert: (String, String)? = nil
 
     // general
     @State private var currency: String
@@ -196,7 +196,7 @@ struct SettingsView: View {
 
     var body: some View {
         NavigationView {
-            let presentErrorAlert = Binding<Bool>(get: { error != nil }, set: { new in error = new ? error : nil })
+            let presentAlert = Binding<Bool>(get: { alert != nil }, set: { new in alert = new ? alert : nil })
             VStack(spacing: 20) {
                 Form {
                     HStack {
@@ -354,12 +354,18 @@ struct SettingsView: View {
                         }
                     }
 
-                    if DebugSettings.shared.isAdmin || DebugSettings.shared.isInDebugMode {
-                        Section(header: Text("Membership")) {
-                            NavigationLink(destination: ReferralCodeView()) {
-                                Text("Apply referral code")
-                                    .leftAligned()
-                            }
+                    Section(header: Text("Membership")) {
+                        HStack {
+                            Text("Membership level")
+                                .layoutPriority(2)
+                            Spacer()
+                            Text((store.globalState.subscriptionActive ?? false) ? "Pro" : "Free")
+                                .foregroundColor(.customBlue)
+                        }
+
+                        NavigationLink(destination: ReferralCodeView()) {
+                            Text("Apply referral code")
+                                .leftAligned()
                         }
                     }
 
@@ -397,15 +403,31 @@ struct SettingsView: View {
                         }
                     }
 
-                    Button(action: {
-                        store.send(.authentication(action: .signOut))
-                    }, label: {
-                        Text("Sign Out")
-                            .font(.bold(size: 18))
-                            .foregroundColor(.customRed)
-                    })
-                        .centeredHorizontally()
-                        .listRow(backgroundColor: .customWhite)
+                    
+                    VStack(spacing: 15) {
+                        Button(action: {
+                            restorePurchases()
+                        }, label: {
+                            Text("Restore purchases")
+                                .font(.bold(size: 18))
+                                .foregroundColor(.customBlue)
+                        })
+                            .centeredHorizontally()
+                            .listRow(backgroundColor: .customWhite)
+
+                        Button(action: {
+                            store.send(.authentication(action: .signOut))
+                        }, label: {
+                            Text("Sign Out")
+                                .font(.bold(size: 18))
+                                .foregroundColor(.customRed)
+                        })
+                            .centeredHorizontally()
+                            .listRow(backgroundColor: .customWhite)
+                        
+                    }
+                    .listRow(backgroundColor: .customWhite)
+                    .buttonStyle(.plain)
 
                     VStack(alignment: .center, spacing: 5) {
                         Text("CopDeck \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")")
@@ -446,16 +468,27 @@ struct SettingsView: View {
                 }
                 .onChange(of: store.globalState.error) { error in
                     if let title = error?.title, let message = error?.message {
-                        self.error = (title, message)
+                        self.alert = (title, message)
                     }
                 }
-                .alert(isPresented: presentErrorAlert) {
-                    Alert(title: Text(error?.0 ?? "Ooops"), message: Text(error?.1 ?? "Unknown Error"), dismissButton: .default(Text("OK")))
+                .alert(isPresented: presentAlert) {
+                    Alert(title: Text(alert?.0 ?? "Ooops"), message: Text(alert?.1 ?? "Unknown Error"), dismissButton: .default(Text("OK")))
                 }
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .preferredColorScheme(.light)
+    }
+    
+    private func restorePurchases() {
+        store.send(.paymentAction(action: .restorePurchases(completion: { result in
+            switch result {
+            case let .failure(error):
+                alert = (error.title, error.message)
+            case .success:
+                alert = ("Success", "Your purchases have been restored.")
+            }
+        })))
     }
 }
 

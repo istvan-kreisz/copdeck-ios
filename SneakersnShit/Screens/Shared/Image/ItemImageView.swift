@@ -38,8 +38,10 @@ struct ItemImageView: View {
     }
 
     var body: some View {
-        ImageView(source: source, size: size, aspectRatio: aspectRatio, flipImage: flipImage, showPlaceholder: showPlaceholder, resizingMode: resizingMode) {
-            AppStore.default.send(.main(action: .uploadItemImage(itemId: itemId, image: $0)), debounceDelayMs: 1000)
+        ImageView(source: source, size: size, aspectRatio: aspectRatio, flipImage: flipImage, showPlaceholder: showPlaceholder, resizingMode: resizingMode) { image, imageURL in
+            if imageURL?.contains("images.stockx") == true || imageURL?.contains("image.goat") == true {
+                AppStore.default.send(.main(action: .uploadItemImage(itemId: itemId, image: image)), debounceDelayMs: 1000)
+            }
         }
     }
 }

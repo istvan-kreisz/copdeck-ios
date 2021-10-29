@@ -28,15 +28,18 @@ struct RootView: View {
                 if store.globalState.user?.id.isEmpty ?? true {
                     LoginView()
                         .zIndex(1)
+                        .onAppear { showPayment1View = true }
                 } else {
                     if needsAppOnboarding {
                         RootOnboardingView()
                     } else if user?.inited != true {
                         CountrySelector(settings: store.globalState.settings)
                     } else {
-                        if let monthlyPackage = store.globalState.packages?.monthlyPackage, !store.globalState.hasSubscribed, showPayment1View {
-                            #warning("change to trial")
-                            PaymentView(viewType: .subscribe, show: $showPayment1View)
+                        if let monthlyPackage = store.globalState.packages?.monthlyPackage,
+                           store.globalState.purchaserInfo?.originalAppUserId.contains("RCAnonymousID") == false,
+                           !store.globalState.hasSubscribed,
+                           showPayment1View {
+                            PaymentView(viewType: .trial(monthlyPackage), show: $showPayment1View)
                         } else {
                             MainContainerView(store: store.appStore)
                                 .zIndex(0)
