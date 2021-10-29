@@ -74,10 +74,3 @@ struct PasswordResetView: View {
 
 extension PasswordResetView: EmailValidator {}
 
-struct PasswordResetView_Previews: PreviewProvider {
-    static var previews: some View {
-        PasswordResetView { _ in }
-            .previewDevice("iPhone 8")
-            .environmentObject(AppStore.default)
-    }
-}

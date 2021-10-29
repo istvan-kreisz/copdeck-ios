@@ -40,13 +40,3 @@ struct SignInButton: View {
     }
 }
 
-struct SignInButton_Previews: PreviewProvider {
-    static var previews: some View {
-        SignInButton(imageName: "google",
-                     text: "Sign in with Google",
-                     imageColor: nil,
-                     backgroundColor: .customBlack,
-                     action: {},
-                     initBlock: {})
-    }
-}

@@ -42,9 +42,3 @@ struct AccessoryButton: View {
         }
     }
 }
-
-struct AccessoryButton_Previews: PreviewProvider {
-    static var previews: some View {
-        AccessoryButton(title: "title", color: .customBlue, textColor: .customBlue, width: 110, imageName: "plus", tapped: {})
-    }
-}

@@ -37,9 +37,3 @@ struct CustomSpinner: View {
         }
     }
 }
-
-struct CustomSpinner_Previews: PreviewProvider {
-    static var previews: some View {
-        return CustomSpinner(text: "Loading...", animate: true)
-    }
-}

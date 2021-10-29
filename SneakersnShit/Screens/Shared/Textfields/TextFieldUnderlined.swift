@@ -57,16 +57,3 @@ struct TextFieldUnderlined: View {
         .padding(.trailing, trailingPadding)
     }
 }
-
-struct InputField_Previews: PreviewProvider {
-    static var previews: some View {
-        TextFieldUnderlined(text: .constant("email"),
-                            placeHolder: "Email",
-                            color: .clear,
-                            dismissKeyboardOnReturn: false,
-                            icon: Image("profile"),
-                            keyboardType: .emailAddress,
-                            isSecureField: false,
-                            onFinishedEditing: {})
-    }
-}

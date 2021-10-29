@@ -78,9 +78,3 @@ struct Snackbar: View {
         }
     }
 }
-
-struct Snackbar_Previews: PreviewProvider {
-    static var previews: some View {
-        Snackbar(isShowing: .constant(true), text: "")
-    }
-}

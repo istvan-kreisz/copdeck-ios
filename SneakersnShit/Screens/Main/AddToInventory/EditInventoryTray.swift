@@ -42,9 +42,3 @@ struct EditInventoryTray: View {
         .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 0)
     }
 }
-
-struct EditInventoryTray_Previews: PreviewProvider {
-    static var previews: some View {
-        EditInventoryTray(actions: .constant([]))
-    }
-}

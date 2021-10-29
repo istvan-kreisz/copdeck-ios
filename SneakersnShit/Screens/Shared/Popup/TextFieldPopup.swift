@@ -44,13 +44,3 @@ struct TextFieldPopup: View {
         }
     }
 }
-
-struct TextFieldPopup_Previews: PreviewProvider {
-    static var previews: some View {
-        TextFieldPopup(isShowing: .constant(true),
-                       title: "im a popup",
-                       subtitle: "im a popup description",
-                       placeholder: "placeholder",
-                       actionTitle: "Add") { _ in }
-    }
-}

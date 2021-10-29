@@ -87,9 +87,3 @@ struct NavigationBar: View {
 
     static let placeHolder = NavigationBar(title: nil, isBackButtonVisible: true, style: .clear, shouldDismiss: {})
 }
-
-struct NavigationBar_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationBar(title: "yo", isBackButtonVisible: true, style: .light) {}
-    }
-}

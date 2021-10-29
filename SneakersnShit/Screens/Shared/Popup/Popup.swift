@@ -93,13 +93,3 @@ struct Popup<Content: View>: View {
         .opacity(isShowing ? 1 : 0)
     }
 }
-
-struct Popup_Previews: PreviewProvider {
-    static var previews: some View {
-        Popup<EmptyView>(isShowing: .constant(true),
-                         title: "im a popup",
-                         subtitle: "im some description hey sup hello yoooo",
-                         firstAction: .init(name: "im an action", tapped: {}),
-                         secondAction: .init(name: "me too", tapped: {}))
-    }
-}

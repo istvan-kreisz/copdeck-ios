@@ -137,11 +137,3 @@ struct SignUpView: View {
 }
 
 extension SignUpView: EmailValidator {}
-
-struct SignupView_Previews: PreviewProvider {
-    static var previews: some View {
-        SignUpView(showView: .constant(false))
-            .previewDevice("iPhone 8")
-            .environmentObject(AppStore.default)
-    }
-}

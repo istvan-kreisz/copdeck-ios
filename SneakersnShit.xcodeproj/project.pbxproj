@@ -49,7 +49,6 @@
 		5D424D0825C504AF0008D6F4 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424D0725C504AF0008D6F4 /* RootView.swift */; };
 		5D424D1D25C505450008D6F4 /* Modifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424D1125C505450008D6F4 /* Modifiers.swift */; };
 		5D424D2025C505450008D6F4 /* TextFieldUnderlined.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424D1525C505450008D6F4 /* TextFieldUnderlined.swift */; };
-		5D424D2125C505450008D6F4 /* DimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424D1625C505450008D6F4 /* DimView.swift */; };
 		5D424D2E25C509530008D6F4 /* Karla-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5D424CD725C501B20008D6F4 /* Karla-ExtraBold.ttf */; };
 		5D424D3025C5095B0008D6F4 /* Karla-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5D424CD925C501B20008D6F4 /* Karla-ExtraLight.ttf */; };
 		5D424D3E25C509610008D6F4 /* Karla-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5D424CDD25C501B20008D6F4 /* Karla-Medium.ttf */; };
@@ -261,7 +260,6 @@
 		5D424D0725C504AF0008D6F4 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		5D424D1125C505450008D6F4 /* Modifiers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Modifiers.swift; sourceTree = "<group>"; };
 		5D424D1525C505450008D6F4 /* TextFieldUnderlined.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldUnderlined.swift; sourceTree = "<group>"; };
-		5D424D1625C505450008D6F4 /* DimView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DimView.swift; sourceTree = "<group>"; };
 		5D424D4625C509AD0008D6F4 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		5D424D4A25C509D20008D6F4 /* PasswordResetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetView.swift; sourceTree = "<group>"; };
 		5D488E8825C8D54E00624FEF /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
@@ -653,7 +651,6 @@
 		5D54FE2B26C31327008CD05F /* Popup */ = {
 			isa = PBXGroup;
 			children = (
-				5D424D1625C505450008D6F4 /* DimView.swift */,
 				5DE596F326C8D64F0024F7D5 /* Popup.swift */,
 				5DE596F526C9355C0024F7D5 /* ActionConfig.swift */,
 				5D4E19BB26C9404E00FCF780 /* TextFieldPopup.swift */,
@@ -1376,7 +1373,6 @@
 				5DECB5842708E1A00017748C /* SellerStatsView.swift in Sources */,
 				5DA5140426A614530067C4A2 /* FirebaseService.swift in Sources */,
 				5D6312222694797300876D99 /* Item.swift in Sources */,
-				5D424D2125C505450008D6F4 /* DimView.swift in Sources */,
 				5D2726CD26CB3CB800887449 /* TabBarView.swift in Sources */,
 				5D52E30B2613063B00FA02B8 /* Encodable+Extensions.swift in Sources */,
 				5DCC467026A8D759007671BC /* DropDownMenu.swift in Sources */,

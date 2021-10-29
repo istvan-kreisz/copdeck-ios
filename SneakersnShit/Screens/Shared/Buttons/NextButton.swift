@@ -47,9 +47,3 @@ struct NextButton: View {
                       tapped: tapped)
     }
 }
-
-struct NextButton_Previews: PreviewProvider {
-    static var previews: some View {
-        NextButton(text: "Next Yo", size: .init(width: 200, height: 50), color: .customBlack, tapped: {})
-    }
-}

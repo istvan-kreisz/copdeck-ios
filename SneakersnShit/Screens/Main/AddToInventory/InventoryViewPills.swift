@@ -34,12 +34,6 @@ struct InventoryViewPills: View {
     }
 }
 
-struct InventoryViewPills_Previews: PreviewProvider {
-    static var previews: some View {
-        return InventoryViewPills(inventoryItem: .init(fromItem: Item.sample))
-    }
-}
-
 struct TagCloudView: View {
     var tags: [String]
 

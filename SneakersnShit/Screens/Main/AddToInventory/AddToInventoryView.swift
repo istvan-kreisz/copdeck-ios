@@ -205,9 +205,3 @@ struct AddToInventoryView: View {
         addedInvantoryItem = true
     }
 }
-
-struct AddToInventoryView_Previews: PreviewProvider {
-    static var previews: some View {
-        return AddToInventoryView(item: Item.sample, presented: .constant((true, nil)), addedInvantoryItem: .constant(false))
-    }
-}

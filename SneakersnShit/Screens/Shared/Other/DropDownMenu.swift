@@ -66,9 +66,3 @@ struct DropDownMenu: View {
         .withDefaultShadow(color: style == .white ? .customAccent3 : .clear)
     }
 }
-
-struct DropDownMenu_Previews: PreviewProvider {
-    static var previews: some View {
-        DropDownMenu(title: "test", selectedItem: .constant("yo"), options: ["yo", "hey", "sup"])
-    }
-}

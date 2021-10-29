@@ -117,11 +117,3 @@ struct LoginView: View {
         store.send(.authentication(action: .passwordReset(email: email)))
     }
 }
-
-struct LoginView_Previews: PreviewProvider {
-    static var previews: some View {
-        LoginView()
-            .previewDevice("iPhone 8")
-            .environmentObject(AppStore.default)
-    }
-}

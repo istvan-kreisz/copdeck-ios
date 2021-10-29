@@ -92,10 +92,3 @@ struct RootView: View {
         .preferredColorScheme(.light)
     }
 }
-
-struct RootView_Previews: PreviewProvider {
-    static var previews: some View {
-        RootView()
-            .environmentObject(AppStore.default)
-    }
-}

@@ -52,9 +52,3 @@ struct StockXSellerFeeSelector: View {
         }
     }
 }
-
-struct StockXSellerFeeSelector_Previews: PreviewProvider {
-    static var previews: some View {
-        StockXSellerFeeSelector(settings: .default)
-    }
-}

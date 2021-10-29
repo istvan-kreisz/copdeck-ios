@@ -108,14 +108,3 @@ struct RoundedButton<V: View>: View {
         })
     }
 }
-
-struct RoundedButton_Previews: PreviewProvider {
-    static var previews: some View {
-        RoundedButton<EmptyView>(text: "Button",
-                                 width: 300,
-                                 height: 50,
-                                 color: .customBlack,
-                                 accessoryView: nil,
-                                 tapped: {})
-    }
-}

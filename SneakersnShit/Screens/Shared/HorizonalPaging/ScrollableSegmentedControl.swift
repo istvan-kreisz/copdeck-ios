@@ -119,15 +119,6 @@ struct ScrollableSegmentedControl: View {
     }
 }
 
-struct ScrollableSegmentedControl_Previews: PreviewProvider {
-    @State static var selectedIndex: Int = 0
-
-    static var previews: some View {
-        let titles = ["First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth"]
-        ScrollableSegmentedControl(selectedIndex: $selectedIndex, titles: .constant(titles), button: nil)
-    }
-}
-
 private struct CustomSegmentButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration

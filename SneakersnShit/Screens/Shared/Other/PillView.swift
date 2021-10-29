@@ -20,9 +20,3 @@ struct PillView: View {
             .background(Capsule().fill(color))
     }
 }
-
-struct PillView_Previews: PreviewProvider {
-    static var previews: some View {
-        return PillView(title: "yooo", color: Color.randomPillColor)
-    }
-}

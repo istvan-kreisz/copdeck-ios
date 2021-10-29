@@ -152,6 +152,7 @@ struct InventoryView: View {
 
                 ScrollableSegmentedControl(selectedIndex: $selectedStackIndex,
                                            titles: stackTitles,
+                                           isContentLocked: store.globalState.isContentLocked,
                                            button: .init(title: "New Stack", tapped: { showAddNewStackAlert = true }))
                     .padding(.bottom, 8)
                     .padding(.top, -6)

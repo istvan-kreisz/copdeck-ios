@@ -58,17 +58,3 @@ struct VerticalItemListView: View {
         }
     }
 }
-
-struct VerticalItemListView_Previews: PreviewProvider {
-    static var previews: some View {
-        return Group {
-            VerticalItemListView(items: .constant([.sample, .sample]),
-                                 selectedItem: .constant(.sample),
-                                 isLoading: .constant(false),
-                                 title: "title",
-                                 resultsLabelText: nil,
-                                 bottomPadding: Styles.tabScreenBottomPadding,
-                                 requestInfo: [])
-        }
-    }
-}
