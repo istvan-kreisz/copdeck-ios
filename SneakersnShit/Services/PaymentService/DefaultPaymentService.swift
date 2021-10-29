@@ -119,7 +119,11 @@ class DefaultPaymentService: NSObject, PaymentService {
 
     func purchase(package: Purchases.Package) {
         Purchases.shared.purchasePackage(package) { [weak self] transaction, purchaserInfo, error, userCancelled in
-            error.map { self?.errorsSubject.send(AppError(error: $0)) }
+            if let error = error {
+                self?.errorsSubject.send(AppError(error: error))
+            } else {
+                AppStore.default.send(.paymentAction(action: .userSubscribed))
+            }
             self?.purchaserInfoSubject.send(purchaserInfo)
         }
     }

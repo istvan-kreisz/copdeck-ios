@@ -29,7 +29,8 @@ struct MainContainerView: View {
                 InventoryView(username: store.state.user?.name ?? "",
                               shouldShowTabBar: $shouldShowTabBar,
                               viewRouter: viewRouter)
-                    .environmentObject(store)
+                    .environmentObject(DerivedGlobalStore.default)
+                    .environmentObject(InventoryStore.default)
             })
         }
         .hideKeyboardOnScroll()

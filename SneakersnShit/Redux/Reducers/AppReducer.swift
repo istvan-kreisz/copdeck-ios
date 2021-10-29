@@ -246,6 +246,8 @@ func appReducer(state: inout AppState,
         switch action {
         case let .applyReferralCode(code, completion):
             environment.dataController.applyReferralCode(code, completion: completion)
+        case .userSubscribed:
+            environment.dataController.userSubscribed()
         case let .purchase(package):
             environment.paymentService.purchase(package: package)
         case let .restorePurchases(completion):
