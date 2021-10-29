@@ -22,6 +22,7 @@ struct PaymentView: View {
     @EnvironmentObject var store: DerivedGlobalStore
 
     let viewType: ViewType
+    let shouldDismiss: () -> Void
     var trialPackage: Purchases.Package? {
         switch viewType {
         case let .trial(package):
@@ -31,12 +32,10 @@ struct PaymentView: View {
         }
     }
 
-    @Binding var show: Bool
-
     @State var present = false
     @State var showContactView = false
     @State var showReferralCodeView = false
-    
+
     @State private var alert: (String, String)? = nil
 
     static let privacyPolicyString: NSMutableAttributedString = {
@@ -90,7 +89,7 @@ struct PaymentView: View {
                                       })
 
         ZStack {
-            Color.customWhite.edgesIgnoringSafeArea(.all)
+//            Color.customWhite.edgesIgnoringSafeArea(.all)
 
             if present {
                 ZStack {
@@ -111,9 +110,7 @@ struct PaymentView: View {
                                 .centeredHorizontally()
                                 .padding(.vertical, 10)
                                 .padding(.bottom, 5)
-                                Button {
-                                    show = false
-                                } label: {
+                                Button(action: shouldDismiss) {
                                     Text("Exit")
                                         .font(.bold(size: 20))
                                         .foregroundColor(.customText1)
@@ -260,7 +257,7 @@ struct PaymentView: View {
 
                                 DiscountsView(membershipInfo: store.globalState.user?.membershipInfo)
                                     .padding(.top, 20)
-                                
+
                                 VStack(alignment: .leading, spacing: 1) {
                                     AttributedText(Self.privacyPolicyString)
                                         .frame(height: 42)
@@ -273,7 +270,7 @@ struct PaymentView: View {
                                 .buttonStyle(.plain)
                             }
                             .buttonStyle(.plain)
-                            
+
                             if case .subscribe = viewType {
                                 Spacer(minLength: UIApplication.shared.safeAreaInsets().bottom == 0 ? 30 : UIApplication.shared.safeAreaInsets().bottom)
                             } else {
@@ -322,6 +319,9 @@ struct PaymentView: View {
             withAnimation(.spring()) {
                 present = true
             }
+        }
+        .onDisappear {
+            present = false
         }
         .sheet(isPresented: showSheet) {
             if showContactView {

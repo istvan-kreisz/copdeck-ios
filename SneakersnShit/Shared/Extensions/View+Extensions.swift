@@ -140,6 +140,12 @@ extension View {
     func withTellTip(text: String = "What's this?", didTap: @escaping () -> Void) -> some View {
         ModifiedContent(content: self, modifier: WithTellTip(text: text, didTap: didTap))
     }
+    
+    func lockedContent(lockEnabled: Bool = true) -> some View {
+        ModifiedContent(content: self, modifier: LockedContent(isLocked: !AppStore.default.state.globalState.subscriptionActive && lockEnabled) {
+            AppStore.default.send(.paymentAction(action: .showPaymentView(show: true)))
+        })
+    }
 }
 
  #if DEBUG

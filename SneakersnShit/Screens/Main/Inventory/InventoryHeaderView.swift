@@ -124,11 +124,12 @@ struct InventoryHeaderView: View {
                     }
                 }
 
-                HStack {
+                HStack(alignment: .bottom) {
                     VStack(spacing: 2) {
                         Text(textBox1.text)
                             .font(.bold(size: 20))
                             .foregroundColor(.customText1)
+                            .lockedContent(lockEnabled: updateUsername != nil)
                         Text(textBox1.title)
                             .font(.regular(size: 15))
                             .foregroundColor(.customText2)
@@ -138,6 +139,7 @@ struct InventoryHeaderView: View {
                         Text(textBox2.text)
                             .font(.bold(size: 20))
                             .foregroundColor(.customText1)
+                            .lockedContent(lockEnabled: updateUsername != nil)
                         Text(textBox2.title)
                             .font(.regular(size: 15))
                             .foregroundColor(.customText2)

@@ -13,6 +13,7 @@ enum PaymentAction {
     case restorePurchases(completion: ((Result<Void, AppError>) -> Void)?)
     case purchase(package: Purchases.Package)
     case userSubscribed
+    case showPaymentView(show: Bool)
 }
 
 extension PaymentAction: StringRepresentable {}

@@ -27,7 +27,7 @@ struct GlobalState: Equatable {
     var requestInfo: [ScraperRequestInfo] = []
     var error: AppError?
     var exchangeRates: ExchangeRates?
-    var showPayment2View = false
+    var showPaymentView = false
     var purchaserInfo: Purchases.PurchaserInfo? {
         didSet {
             if !didFetchPurchaserInfo {
@@ -39,7 +39,7 @@ struct GlobalState: Equatable {
     var allPackages: [DiscountValue: SubscriptionPackages]?
     var didFetchPurchaserInfo = false
 
-    var subscriptionActive: Bool? {
+    var subscriptionActive: Bool {
         purchaserInfo?.entitlements[DefaultPaymentService.entitlementsId]?.isActive == true
     }
 
@@ -149,9 +149,9 @@ struct AppState: Equatable {
         set { globalState.purchaserInfo = newValue }
     }
 
-    var showPayment2View: Bool {
-        get { globalState.showPayment2View }
-        set { globalState.showPayment2View = newValue }
+    var showPaymentView: Bool {
+        get { globalState.showPaymentView }
+        set { globalState.showPaymentView = newValue }
     }
 
     var allPackages: [DiscountValue: SubscriptionPackages]? {
@@ -201,7 +201,7 @@ struct AppState: Equatable {
         stacks = []
         profileImageURL = nil
         error = nil
-        showPayment2View = false
+        showPaymentView = false
         purchaserInfo = nil
     }
 }

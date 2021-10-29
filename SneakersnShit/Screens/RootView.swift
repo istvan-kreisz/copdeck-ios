@@ -40,10 +40,15 @@ struct RootView: View {
                            Purchases.shared.appUserID.contains("RCAnonymousID") == false,
                            !store.globalState.hasSubscribed,
                            showPayment1View {
-                            PaymentView(viewType: .trial(monthlyPackage), show: $showPayment1View)
+                            PaymentView(viewType: .trial(monthlyPackage)) { showPayment1View = false }
                         } else {
-                            MainContainerView(store: store.appStore)
-                                .zIndex(0)
+                            ZStack {
+                                MainContainerView(store: store.appStore)
+                                    .zIndex(0)
+                                if store.globalState.showPaymentView {
+                                    PaymentView(viewType: .subscribe)  { store.send(.paymentAction(action: .showPaymentView(show: false))) }
+                                }
+                            }
                         }
                     }
                 }

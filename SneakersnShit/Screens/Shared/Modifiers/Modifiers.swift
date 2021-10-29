@@ -293,3 +293,21 @@ struct WithImageViewer: ViewModifier {
         }
     }
 }
+
+struct LockedContent: ViewModifier {
+    var isLocked: Bool
+    var didTap: () -> Void
+
+    func body(content: Content) -> some View {
+        ZStack {
+            if isLocked {
+                Image(systemName: "lock.fill")
+                    .font(.bold(size: 20))
+                    .foregroundColor(Color.customText1)
+                    .onTapGesture(perform: didTap)
+            } else {
+                content
+            }
+        }
+    }
+}

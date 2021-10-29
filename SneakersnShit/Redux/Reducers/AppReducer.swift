@@ -252,6 +252,8 @@ func appReducer(state: inout AppState,
             environment.paymentService.purchase(package: package)
         case let .restorePurchases(completion):
             environment.paymentService.restorePurchases(completion: completion)
+        case let .showPaymentView(show):
+            state.showPaymentView = show
         }
     }
     return Empty(completeImmediately: true).eraseToAnyPublisher()
