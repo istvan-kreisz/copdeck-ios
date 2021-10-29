@@ -12,16 +12,11 @@ struct TextFieldRounded: View {
         case white, gray
     }
 
-    enum Size {
-        case regular, large
-    }
-
     var title: String?
     var titleColor: Color? = nil
     var placeHolder: String
     let style: Style
     var keyboardType: UIKeyboardType = .default
-    var size: Size = .regular
     @Binding var text: String
     var width: CGFloat? = nil
     var onEdited: ((Bool) -> Void)?
@@ -35,28 +30,16 @@ struct TextFieldRounded: View {
                     .padding(.leading, 5)
             }
 
-            if size == .regular {
-                TextField(placeHolder, text: $text, onEditingChanged: { isActive in
-                    onEdited?(isActive)
-                })
-                    .keyboardType(keyboardType)
-                    .foregroundColor(.customText2)
-                    .padding(.horizontal, 8)
-                    .frame(width: width, height: Styles.inputFieldHeight)
-                    .background(style == .white ? Color.customWhite : Color.customAccent4)
-                    .cornerRadius(Styles.cornerRadius)
-                    .if(style == .white) { $0.withDefaultShadow() }
-            } else {
-                TextEditor(text: $text)
-                    .keyboardType(keyboardType)
-                    .foregroundColor(.customText2)
-                    .background(style == .white ? Color.customWhite : Color.customAccent4)
-                    .padding(.horizontal, 8)
-                    .frame(width: width, height: Styles.inputFieldHeightLarge)
-                    .background(style == .white ? Color.customWhite : Color.customAccent4)
-                    .cornerRadius(Styles.cornerRadius)
-                    .if(style == .white) { $0.withDefaultShadow() }
-            }
+            TextField(placeHolder, text: $text, onEditingChanged: { isActive in
+                onEdited?(isActive)
+            })
+                .keyboardType(keyboardType)
+                .foregroundColor(.customText2)
+                .padding(.horizontal, 8)
+                .frame(width: width, height: Styles.inputFieldHeight)
+                .background(style == .white ? Color.customWhite : Color.customAccent4)
+                .cornerRadius(Styles.cornerRadius)
+                .if(style == .white) { $0.withDefaultShadow() }
         }
     }
 }

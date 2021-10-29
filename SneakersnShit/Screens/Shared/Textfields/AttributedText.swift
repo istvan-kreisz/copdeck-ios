@@ -20,7 +20,8 @@ struct AttributedText: UIViewRepresentable {
         let textView = UITextViewWithDelegate(didTapLink: didTapLink)
         textView.isEditable = false
         textView.isSelectable = true
-        textView.isUserInteractionEnabled = false
+        textView.showsVerticalScrollIndicator = false
+        textView.showsHorizontalScrollIndicator = false
         return textView
     }
 

@@ -74,7 +74,6 @@ class DefaultPaymentService: NSObject, PaymentService {
             Purchases.logLevel = .debug
         }
         Purchases.configure(withAPIKey: Self.apiKey)
-//        Purchases.shared.delegate = self
 
         getPackages {
             Purchases.shared.purchaserInfo { [weak self] purchaserInfo, error in
@@ -144,7 +143,7 @@ class DefaultPaymentService: NSObject, PaymentService {
     }
 
     private func login(userId: String, userEmail: String?) {
-        Purchases.shared.logIn(userId) { [weak self] purchaserInfo, created, error in            
+        Purchases.shared.logIn(userId) { [weak self] purchaserInfo, created, error in
             error.map { self?.errorsSubject.send(AppError(error: $0)) }
             self?.purchaserInfoSubject.send(purchaserInfo)
             if created {

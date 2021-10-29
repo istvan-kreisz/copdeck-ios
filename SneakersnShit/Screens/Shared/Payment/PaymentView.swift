@@ -125,7 +125,7 @@ struct PaymentView: View {
                             if let trialPackage = trialPackage {
                                 if let monthlyPriceString = trialPackage.priceString(for: .monthly) {
                                     Text("\(trialPackage.terms), then \(monthlyPriceString) per month")
-                                        .font(.bold(size: 30))
+                                        .font(.bold(size: 25))
                                         .foregroundColor(.customText1)
                                 }
                             } else {
@@ -260,7 +260,7 @@ struct PaymentView: View {
 
                                 DiscountsView(membershipInfo: store.globalState.user?.membershipInfo)
                                     .padding(.top, 20)
-
+                                
                                 VStack(alignment: .leading, spacing: 1) {
                                     AttributedText(Self.privacyPolicyString)
                                         .frame(height: 42)
@@ -275,9 +275,9 @@ struct PaymentView: View {
                             .buttonStyle(.plain)
                             
                             if case .subscribe = viewType {
-                                Spacer(minLength: UIApplication.shared.safeAreaInsets().bottom)
+                                Spacer(minLength: UIApplication.shared.safeAreaInsets().bottom == 0 ? 30 : UIApplication.shared.safeAreaInsets().bottom)
                             } else {
-                                Spacer(minLength: UIApplication.shared.safeAreaInsets().bottom + 55)
+                                Spacer(minLength: UIApplication.shared.safeAreaInsets().bottom == 0 ? 85 : UIApplication.shared.safeAreaInsets().bottom + 55)
                             }
                         }
                     }

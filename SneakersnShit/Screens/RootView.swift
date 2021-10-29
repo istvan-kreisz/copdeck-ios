@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Purchases
 
 struct RootView: View {
     @EnvironmentObject var store: DerivedGlobalStore
@@ -36,7 +37,7 @@ struct RootView: View {
                         CountrySelector(settings: store.globalState.settings)
                     } else {
                         if let monthlyPackage = store.globalState.packages?.monthlyPackage,
-                           store.globalState.purchaserInfo?.originalAppUserId.contains("RCAnonymousID") == false,
+                           Purchases.shared.appUserID.contains("RCAnonymousID") == false,
                            !store.globalState.hasSubscribed,
                            showPayment1View {
                             PaymentView(viewType: .trial(monthlyPackage), show: $showPayment1View)

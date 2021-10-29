@@ -31,7 +31,6 @@ struct TextFieldPopup: View {
                                  placeHolder: placeholder,
                                  style: .white,
                                  keyboardType: .default,
-                                 size: .regular,
                                  text: $text,
                                  width: nil)
                     .padding(.top, 30)

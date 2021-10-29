@@ -8,8 +8,8 @@
 import SwiftUI
 
 enum Styles {
-    static let horizontalMargin: CGFloat = 28
-    static let horizontalPadding: CGFloat = 18
+    static let horizontalMargin: CGFloat = { UIScreen.isSmallScreen ? 16 : 25 }()
+    static let horizontalPadding: CGFloat = { UIScreen.isSmallScreen ? 10 : 15 }()
     static let verticalPadding: CGFloat = 15
     static let inputFieldHeight: CGFloat = 42
     static let inputFieldHeightLarge: CGFloat = 120
