@@ -69,7 +69,9 @@ struct ItemDetailView: View {
             ForEach(row.prices) { (price: Item.PriceRow.Price) in
                 let overlayColor: Color = (price.store.id == row.lowest?.id && (feeType == .Buy || feeType == .None)) ? .customGreen :
                     (price.store.id == row.highest?.id && (feeType == .Sell || feeType == .None) ? .customRed : .customAccent1)
-                Text(price.primaryText)
+                Text(price.store.id != .stockx && store.state.isContentLocked ? "" : price.primaryText)
+                    .font(.regular(size: 18))
+                    .foregroundColor(.customText1)
                     .frame(height: 32)
                     .frame(maxWidth: .infinity)
                     .overlay(Capsule().stroke(overlayColor, lineWidth: 2))
@@ -87,6 +89,7 @@ struct ItemDetailView: View {
                             UIApplication.shared.open(url)
                         }
                     }
+                    .lockedContent(style: .overlay(offset: .zero), lockSize: 18, lockColor: .customText1, lockEnabled: price.store.id != .stockx)
             }
         }
         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0))
@@ -231,7 +234,7 @@ struct ItemDetailView: View {
                                             .frame(height: 36)
                                             .frame(maxWidth: 50)
 
-                                        ForEach(store.state.settings.displayedStores.compactMap { Store.store(withId: $0) }) { (store: Store) in
+                                        ForEach(store.state.displayedStores.compactMap { Store.store(withId: $0) }) { (store: Store) in
                                             VStack(alignment: .center, spacing: 5) {
                                                 Text(store.name.rawValue)
                                                     .font(.bold(size: 16))
@@ -275,7 +278,7 @@ struct ItemDetailView: View {
                                        let row = item?.priceRow(size: preferredSize,
                                                                 priceType: priceType,
                                                                 feeType: feeType,
-                                                                stores: store.state.settings.displayedStores,
+                                                                stores: store.state.displayedStores,
                                                                 restocksPriceType: restocksPriceType) {
                                         Text("Your size:")
                                             .font(.semiBold(size: 14))
@@ -289,7 +292,7 @@ struct ItemDetailView: View {
                                     }
                                     ForEach((item?.allPriceRows(priceType: priceType,
                                                                 feeType: feeType,
-                                                                stores: store.state.settings.displayedStores,
+                                                                stores: store.state.displayedStores,
                                                                 restocksPriceType: restocksPriceType)) ?? []) { (row: Item.PriceRow) in
                                         priceRow(row: row)
                                     }

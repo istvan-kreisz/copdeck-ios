@@ -48,12 +48,12 @@ struct SettingsView: View {
 
     @Binding private var isPresented: Bool
 
-    init(settings: CopDeckSettings, isPresented: Binding<Bool>) {
+    init(settings: CopDeckSettings, isContentLocked: Bool, isPresented: Binding<Bool>) {
         self._settings = State(initialValue: settings)
 
         // general
         self._currency = State(initialValue: settings.currency.symbol.rawValue)
-        self._stores = State(initialValue: settings.displayedStores.compactMap { Store.store(withId: $0)?.name.rawValue })
+        self._stores = State(initialValue: isContentLocked ? ALLSTORES.map(\.name.rawValue) : settings.displayedStores.compactMap { Store.store(withId: $0)?.name.rawValue })
         self._country = State(initialValue: settings.feeCalculation.country.name)
         self._bestPricePriceType = State(initialValue: settings.bestPricePriceType.rawValue.capitalized)
         self._bestPriceFeeType = State(initialValue: settings.bestPriceFeeType.rawValue.capitalized)
@@ -489,14 +489,5 @@ struct SettingsView: View {
                 alert = ("Success", "Your purchases have been restored.")
             }
         })))
-    }
-}
-
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        return Group {
-            SettingsView(settings: .default, isPresented: .constant(true))
-                .environmentObject(AppStore.default)
-        }
     }
 }

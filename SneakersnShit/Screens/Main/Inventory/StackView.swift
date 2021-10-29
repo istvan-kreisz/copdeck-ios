@@ -15,6 +15,7 @@ struct StackView: View {
         let action: (() -> Void)
     }
     var stack: Stack
+    let isContentLocked: Bool
     @Binding var searchText: String
     @Binding var filters: Filters
     @Binding var inventoryItems: [InventoryItem]
@@ -125,6 +126,7 @@ struct StackView: View {
             ForEach(allStackItems) { (inventoryItem: InventoryItem) in
                 InventoryListItem(inventoryItem: inventoryItem,
                                   priceName: "Best Price",
+                                  isContentLocked: isContentLocked,
                                   bestPrice: bestPrices[inventoryItem.id],
                                   selectedInventoryItem: $selectedInventoryItem,
                                   isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }),

@@ -93,7 +93,7 @@ struct InventoryView: View {
             return item.bestPrice(for: inventoryItem.size,
                                   feeType: globalStore.globalState.settings.bestPriceFeeType,
                                   priceType: globalStore.globalState.settings.bestPricePriceType,
-                                  stores: globalStore.globalState.settings.displayedStores)
+                                  stores: globalStore.globalState.displayedStores)
         } else {
             return nil
         }
@@ -161,6 +161,7 @@ struct InventoryView: View {
                     let isSelected = Binding<Bool>(get: { stack.id == selectedStack?.id }, set: { _ in })
 
                     StackView(stack: stack,
+                              isContentLocked: globalStore.globalState.isContentLocked,
                               searchText: $searchText,
                               filters: filters,
                               inventoryItems: $store.state.inventoryItems,
@@ -238,7 +239,7 @@ struct InventoryView: View {
             .sheet(isPresented: showSheet) {
                 switch presentedSheet {
                 case .settings:
-                    SettingsView(settings: globalStore.globalState.settings, isPresented: settingsPresented)
+                    SettingsView(settings: globalStore.globalState.settings, isContentLocked: globalStore.globalState.isContentLocked, isPresented: settingsPresented)
                         .environmentObject(DerivedGlobalStore.default)
                 case .filters:
                     FiltersModal(settings: globalStore.globalState.settings, isPresented: showFilters)

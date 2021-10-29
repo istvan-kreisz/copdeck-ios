@@ -69,6 +69,7 @@ struct SpreadsheetImportDetailView: View {
                 ForEach(inventoryItems) { (inventoryItem: InventoryItem) in
                     InventoryListItem(inventoryItem: inventoryItem,
                                       priceName: nil,
+                                      isContentLocked: false,
                                       bestPrice: nil,
                                       selectedInventoryItem: $selectedInventoryItem,
                                       isSelected: false,

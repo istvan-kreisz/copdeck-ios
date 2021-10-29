@@ -67,6 +67,7 @@ struct SharedStackDetailView: View {
                 ForEach(inventoryItems) { (inventoryItem: InventoryItem) in
                     InventoryListItem(inventoryItem: inventoryItem,
                                       priceName: "Price",
+                                      isContentLocked: false,
                                       bestPrice: inventoryItem.copdeckPrice,
                                       selectedInventoryItem: selectedInventoryItemBinding,
                                       isSelected: false,

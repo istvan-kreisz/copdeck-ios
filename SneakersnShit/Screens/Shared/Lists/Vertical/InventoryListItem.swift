@@ -10,6 +10,7 @@ import SwiftUI
 struct InventoryListItem: View {
     var inventoryItem: InventoryItem
     let priceName: String?
+    let isContentLocked: Bool
     let bestPrice: ListingPrice?
     @Binding var selectedInventoryItem: InventoryItem?
     var isSelected: Bool
@@ -27,7 +28,8 @@ struct InventoryListItem: View {
             Text(bestPrice?.price.asString ?? "-")
                 .foregroundColor(.customText1)
                 .font(.bold(size: 20))
-            if let storeId = bestPrice?.storeId, let store = Store.store(withId: storeId) {
+                .lockedContent(style: .hideOriginal, lockSize: 20, lockEnabled: priceName == "Best Price")
+            if let storeId = bestPrice?.storeId, let store = Store.store(withId: storeId), !isContentLocked {
                 Text("(\(store.name.rawValue))")
                     .foregroundColor(.customText2)
                     .font(.medium(size: 12))

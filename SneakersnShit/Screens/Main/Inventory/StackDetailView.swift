@@ -164,7 +164,8 @@ struct StackDetailView: View {
 
                 ForEach(allStackItems) { (inventoryItem: InventoryItem) in
                     InventoryListItem(inventoryItem: inventoryItem,
-                                      priceName: "Best price",
+                                      priceName: "Best Price",
+                                      isContentLocked: store.state.isContentLocked,
                                       bestPrice: bestPrices[inventoryItem.id],
                                       selectedInventoryItem: selectedInventoryItemBinding,
                                       isSelected: false,

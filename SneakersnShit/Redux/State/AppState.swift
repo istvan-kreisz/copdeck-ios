@@ -59,6 +59,10 @@ struct GlobalState: Equatable {
     var settings: CopDeckSettings {
         user?.settings ?? .default
     }
+    
+    var displayedStores: [StoreId] {
+        isContentLocked ? ALLSTORES.map(\.id) : settings.displayedStores
+    }
 }
 
 struct InventoryState: Equatable {
@@ -169,6 +173,10 @@ struct AppState: Equatable {
     
     var isContentLocked: Bool {
         globalState.isContentLocked
+    }
+    
+    var displayedStores: [StoreId] {
+        globalState.displayedStores
     }
 
     var didFetchPurchaserInfo: Bool {
