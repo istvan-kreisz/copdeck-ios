@@ -25,6 +25,7 @@ struct StackShareSettingsView: View {
     @State var isPublished: Bool
 
     let includeTitle: Bool
+    let isContentLocked: Bool
 
     @State private var showSnackBar = false
     @State private var popupIndex: Int? = nil
@@ -38,6 +39,7 @@ struct StackShareSettingsView: View {
          isPublic: Bool,
          isPublished: Bool,
          includeTitle: Bool,
+         isContentLocked: Bool,
          showSnackbar: @escaping (_ text: String) -> Void,
          showPopup: @escaping (_ title: String, _ subtitle: String) -> Void,
          updateStack: @escaping (_ stack: Stack) -> Void) {
@@ -46,6 +48,7 @@ struct StackShareSettingsView: View {
         self._isPublic = State<Bool>(initialValue: isPublic)
         self._isPublished = State<Bool>(initialValue: isPublished)
         self.includeTitle = includeTitle
+        self.isContentLocked = isContentLocked
         self.showSnackbar = showSnackbar
         self.showPopup = showPopup
         self.updateStack = updateStack
@@ -63,7 +66,7 @@ struct StackShareSettingsView: View {
             Spacer()
             Toggle("", isOn: isOn)
                 .labelsHidden()
-                .lockedContent(style: .overlay(offset: .init(width: -10, height: 0)), lockSize: 16)
+                .lockedContent(style: .overlay(offset: .init(width: -10, height: 0)), lockSize: 16, lockColor: .customText2)
                 .layoutPriority(2)
         }
     }
@@ -111,11 +114,14 @@ struct StackShareSettingsView: View {
                             RoundedRectangle(cornerRadius: Styles.cornerRadius)
                                 .fill(Color.customGreen)
                                 .frame(width: Styles.inputFieldHeight, height: Styles.inputFieldHeight)
-                            Image(systemName: "link")
-                                .font(.bold(size: 15))
-                                .foregroundColor(Color.customWhite)
+                            if !isContentLocked {
+                                Image(systemName: "link")
+                                    .font(.bold(size: 15))
+                                    .foregroundColor(Color.customWhite)
+                            }
                         }
                     }
+                    .lockedContent(style: .overlay(offset: .zero), lockSize: 20, lockColor: .customWhite)
                     .rightAligned()
                 }
             }

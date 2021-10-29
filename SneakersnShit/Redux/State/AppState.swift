@@ -42,6 +42,10 @@ struct GlobalState: Equatable {
     var subscriptionActive: Bool {
         purchaserInfo?.entitlements[DefaultPaymentService.entitlementsId]?.isActive == true
     }
+    
+    var isContentLocked: Bool {
+        !subscriptionActive && DebugSettings.shared.isPaywallEnabled
+    }
 
     var packages: SubscriptionPackages? {
         let discount = user?.membershipInfo?.discount ?? .noDiscount
@@ -161,6 +165,10 @@ struct AppState: Equatable {
 
     var packages: SubscriptionPackages? {
         globalState.packages
+    }
+    
+    var isContentLocked: Bool {
+        globalState.isContentLocked
     }
 
     var didFetchPurchaserInfo: Bool {

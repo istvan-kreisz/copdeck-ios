@@ -150,7 +150,8 @@ struct StackDetailView: View {
                                        stack: $stack,
                                        isPublic: stack.isPublic ?? false,
                                        isPublished: stack.isPublished ?? false,
-                                       includeTitle: true) { title in
+                                       includeTitle: true,
+                                       isContentLocked: store.state.isContentLocked) { title in
                         showSnackBar = true
                 } showPopup: { title, subtitle in
                     popup = (title, subtitle)

@@ -143,7 +143,7 @@ extension View {
 
     func lockedContent(style: LockedContent.Style, lockSize: CGFloat, lockColor: Color = .customText1, lockEnabled: Bool = true) -> some View {
         ModifiedContent(content: self,
-                        modifier: LockedContent(isLocked: !AppStore.default.state.globalState.subscriptionActive && lockEnabled && DebugSettings.shared.isPaywallEnabled,
+                        modifier: LockedContent(isLocked: AppStore.default.state.globalState.isContentLocked && lockEnabled,
                                                 lockSize: lockSize,
                                                 lockColor: lockColor,
                                                 style: style) {

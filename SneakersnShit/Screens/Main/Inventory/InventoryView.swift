@@ -275,7 +275,8 @@ struct InventoryView: View {
                                            stack: .constant(stack),
                                            isPublic: stack.isPublic ?? false,
                                            isPublished: stack.isPublished ?? false,
-                                           includeTitle: false) { title in
+                                           includeTitle: false,
+                                           isContentLocked: store.globalState.isContentLocked) { title in
                         showSnackBar = true
                     } showPopup: { title, subtitle in
                         popup = (title, subtitle)
