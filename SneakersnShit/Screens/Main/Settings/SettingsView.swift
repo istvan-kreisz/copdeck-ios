@@ -203,7 +203,6 @@ struct SettingsView: View {
                         Text("Settings")
                             .foregroundColor(.customText1)
                             .font(.bold(size: 35))
-                            .withDefaultPadding(padding: [.top])
                         Spacer()
                         Button(action: {
                             isPresented = false
@@ -215,6 +214,7 @@ struct SettingsView: View {
                             .buttonStyle(StaticButtonStyle())
                             .padding(.leading, -10)
                     }
+                    .withDefaultPadding(padding: [.top])
                     .buttonStyle(StaticButtonStyle())
 
                     Section(header: Text("General")) {
