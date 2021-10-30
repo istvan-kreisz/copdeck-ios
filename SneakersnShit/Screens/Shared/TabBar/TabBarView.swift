@@ -60,14 +60,16 @@ struct TabBarElement<Content: View>: TabBarElementView {
     var body: some View { content }
 }
 
-struct UITabBarWrapper<Tab1: View, Tab2: View, Tab3: View>: View {
+struct UITabBarWrapper<Tab1: View, Tab2: View, Tab3: View, Tab4: View>: View {
     let controller1: UIHostingController<TabBarElement<Tab1>>
     let controller2: UIHostingController<TabBarElement<Tab2>>
     let controller3: UIHostingController<TabBarElement<Tab3>>
+    let controller4: UIHostingController<TabBarElement<Tab4>>
+    
     @Binding var selectedIndex: Int
 
     init(selectedIndex: Binding<Int>,
-         _ tabs: () -> (tab1: TabBarElement<Tab1>, tab2: TabBarElement<Tab2>, tab3: TabBarElement<Tab3>)) {
+         _ tabs: () -> (tab1: TabBarElement<Tab1>, tab2: TabBarElement<Tab2>, tab3: TabBarElement<Tab3>, tab4: TabBarElement<Tab4>)) {
         self._selectedIndex = selectedIndex
         let tabs = tabs()
         controller1 = UIHostingController(rootView: tabs.tab1)
@@ -84,10 +86,15 @@ struct UITabBarWrapper<Tab1: View, Tab2: View, Tab3: View>: View {
         controller3.tabBarItem = UITabBarItem(title: tabs.tab3.tabBarElementItem.title,
                                               image: UIImage(systemName: tabs.tab3.tabBarElementItem.systemImageName),
                                               tag: 0)
+        
+        controller4 = UIHostingController(rootView: tabs.tab4)
+        controller4.tabBarItem = UITabBarItem(title: tabs.tab4.tabBarElementItem.title,
+                                              image: UIImage(systemName: tabs.tab4.tabBarElementItem.systemImageName),
+                                              tag: 0)
     }
 
     var body: some View {
-        UITabBarControllerWrapper(viewControllers: [controller1, controller2, controller3], selectedIndex: $selectedIndex)
+        UITabBarControllerWrapper(viewControllers: [controller1, controller2, controller3, controller4], selectedIndex: $selectedIndex)
     }
 }
 

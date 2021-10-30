@@ -83,6 +83,7 @@
 		5D564E4E2705423300190CF4 /* SpreadsheetImportDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D564E4D2705423300190CF4 /* SpreadsheetImportDetailView.swift */; };
 		5D56B7B2270097EC001357E0 /* DeleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D56B7B1270097EC001357E0 /* DeleteButton.swift */; };
 		5D56B7B42700A6BE001357E0 /* TestImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D56B7B32700A6BE001357E0 /* TestImageView.swift */; };
+		5D587A92272DE1820075C93C /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D587A91272DE1820075C93C /* ChatView.swift */; };
 		5D5D4C4426D50EB100A7C61A /* ModelWithDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D5D4C4326D50EB100A7C61A /* ModelWithDate.swift */; };
 		5D5D4C4726D5F20900A7C61A /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D5D4C4626D5F20900A7C61A /* ImagePickerView.swift */; };
 		5D605416272186D600B631FD /* PaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D605415272186D600B631FD /* PaymentView.swift */; };
@@ -290,6 +291,7 @@
 		5D564E4D2705423300190CF4 /* SpreadsheetImportDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpreadsheetImportDetailView.swift; sourceTree = "<group>"; };
 		5D56B7B1270097EC001357E0 /* DeleteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButton.swift; sourceTree = "<group>"; };
 		5D56B7B32700A6BE001357E0 /* TestImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestImageView.swift; sourceTree = "<group>"; };
+		5D587A91272DE1820075C93C /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		5D5D4C4326D50EB100A7C61A /* ModelWithDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelWithDate.swift; sourceTree = "<group>"; };
 		5D5D4C4626D5F20900A7C61A /* ImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
 		5D605415272186D600B631FD /* PaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentView.swift; sourceTree = "<group>"; };
@@ -610,6 +612,7 @@
 		5D424D2925C505E90008D6F4 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				5D587A90272DE1720075C93C /* Chat */,
 				5DA4FE0526E75FC000084AEF /* Onboarding */,
 				5DEBC086269B24AA000EEADC /* MainContainer */,
 				5D8ABBC226B205BE00AFD8CF /* Feed */,
@@ -792,6 +795,14 @@
 				5D564E4D2705423300190CF4 /* SpreadsheetImportDetailView.swift */,
 			);
 			path = Admin;
+			sourceTree = "<group>";
+		};
+		5D587A90272DE1720075C93C /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				5D587A91272DE1820075C93C /* ChatView.swift */,
+			);
+			path = Chat;
 			sourceTree = "<group>";
 		};
 		5D5D4C4526D5F1F500A7C61A /* ImagePicker */ = {
@@ -1348,6 +1359,7 @@
 				5D564E4E2705423300190CF4 /* SpreadsheetImportDetailView.swift in Sources */,
 				5DE596F426C8D64F0024F7D5 /* Popup.swift in Sources */,
 				5D56B7B2270097EC001357E0 /* DeleteButton.swift in Sources */,
+				5D587A92272DE1820075C93C /* ChatView.swift in Sources */,
 				5DE4F21E26E052570087077A /* OwnerCardView.swift in Sources */,
 				5D5D4C4426D50EB100A7C61A /* ModelWithDate.swift in Sources */,
 				5DECB57C27068AA50017748C /* SocialLoginView.swift in Sources */,

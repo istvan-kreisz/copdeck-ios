@@ -9,41 +9,30 @@ import SwiftUI
 
 struct TabBar: View {
     @ObservedObject var viewRouter: ViewRouter
+    
+    static let width: CGFloat = 70
+    
+    private func tabItem(page: Page, iconName: String) -> some View {
+        Button(action: { [weak viewRouter] in
+            viewRouter?.currentPage = page
+        }) { [weak viewRouter] in
+                Image(iconName)
+                    .renderingMode(.template)
+                    .frame(height: 24)
+                    .foregroundColor(viewRouter?.currentPage == page ? .customText1 : .customAccent1)
+                    .centeredHorizontally()
+        }
+        .frame(width: Self.width)
+    }
 
     var body: some View {
-        HStack(alignment: .center, spacing: 10) {
-            Button(action: { [weak viewRouter] in
-                viewRouter?.currentPage = .feed
-            }) { [weak viewRouter] in
-                    Image("home")
-                        .renderingMode(.template)
-                        .frame(height: 24)
-                        .foregroundColor(viewRouter?.currentPage == .feed ? .customText1 : .customAccent1)
-                        .centeredHorizontally()
-            }
-            .frame(width: 82)
-            Button(action: { [weak viewRouter] in
-                viewRouter?.currentPage = .search
-            }) { [weak viewRouter] in
-                    Image("search")
-                        .renderingMode(.template)
-                        .frame(height: 24)
-                        .foregroundColor(viewRouter?.currentPage == .search ? .customText1 : .customAccent1)
-                        .centeredHorizontally()
-            }
-            .frame(width: 82)
-            Button(action: { [weak viewRouter] in
-                viewRouter?.currentPage = .inventory
-            }) { [weak viewRouter] in
-                    Image("inventory")
-                        .renderingMode(.template)
-                        .frame(height: 24)
-                        .foregroundColor(viewRouter?.currentPage == .inventory ? .customText1 : .customAccent1)
-                        .centeredHorizontally()
-            }
-            .frame(width: 82)
+        HStack(alignment: .center, spacing: 0) {
+            tabItem(page: .feed, iconName: "home")
+            tabItem(page: .search, iconName: "search")
+            tabItem(page: .inventory, iconName: "inventory")
+            tabItem(page: .chat, iconName: "message")
         }
-        .frame(width: 246, height: 60)
+        .frame(width: Self.width * CGFloat(Page.allCases.count), height: 60)
         .background(Color.customWhite)
         .cornerRadius(30)
         .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 0)

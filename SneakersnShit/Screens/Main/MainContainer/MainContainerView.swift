@@ -31,6 +31,10 @@ struct MainContainerView: View {
                               viewRouter: viewRouter)
                     .environmentObject(DerivedGlobalStore.default)
                     .environmentObject(InventoryStore.default)
+            },
+            TabBarElement(tabBarElementItem: .init(title: "Fourth", systemImageName: "message")) {
+                ChatView()
+                    .withTabViewWrapper(viewRouter: viewRouter, store: DerivedGlobalStore.default, shouldShow: $shouldShowTabBar)
             })
         }
         .hideKeyboardOnScroll()

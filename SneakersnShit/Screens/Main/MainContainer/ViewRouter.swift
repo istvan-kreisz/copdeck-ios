@@ -11,8 +11,9 @@ class ViewRouter: ObservableObject {
     @Published var currentPage: Page = .search
 }
 
-enum Page: Int {
+enum Page: Int, CaseIterable {
     case feed = 0
     case search
     case inventory
+    case chat
 }
