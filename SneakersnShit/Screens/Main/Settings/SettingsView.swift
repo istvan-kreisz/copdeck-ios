@@ -230,6 +230,7 @@ struct SettingsView: View {
                                          buttonTitle: "Select sites",
                                          options: ALLSTORES.map { (store: Store) in store.name.rawValue },
                                          selectedOptions: $stores,
+                                         isContentLocked: store.globalState.isContentLocked,
                                          buttonTapped: selectStores)
 
                         ListSelectorMenu(title: "Country",
@@ -245,6 +246,7 @@ struct SettingsView: View {
                                          buttonTitle: "Select option",
                                          options: PriceType.allCases.map { (priceType: PriceType) in priceType.rawValue.capitalized },
                                          selectedOption: $bestPricePriceType,
+                                         isContentLocked: store.globalState.isContentLocked,
                                          buttonTapped: selectBestPricePriceType)
 
                         ListSelectorMenu(title: "Best price fees",
@@ -253,6 +255,7 @@ struct SettingsView: View {
                                          buttonTitle: "Select option",
                                          options: FeeType.allCases.map { (feeType: FeeType) in feeType.rawValue.capitalized },
                                          selectedOption: $bestPriceFeeType,
+                                         isContentLocked: store.globalState.isContentLocked,
                                          buttonTapped: selectBestPriceFeeType)
 
                         ListSelectorMenu(title: "Shoe size system",

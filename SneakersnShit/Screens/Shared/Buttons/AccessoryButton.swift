@@ -32,7 +32,7 @@ struct AccessoryButton: View {
                           textColor: textColor,
                           padding: padding,
                           accessoryView: (Image(systemName: "lock.fill")
-                              .font(.bold(size: 16))
+                              .font(.bold(size: 15))
                               .foregroundColor(textColor),
                               buttonPosition, 6, .none)) {
                 AppStore.default.send(.paymentAction(action: .showPaymentView(show: true)))

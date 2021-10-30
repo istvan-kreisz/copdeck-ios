@@ -22,6 +22,7 @@ struct PaymentView: View {
     @EnvironmentObject var store: DerivedGlobalStore
 
     let viewType: ViewType
+    var animateTransition = true
     let shouldDismiss: () -> Void
     var trialPackage: Purchases.Package? {
         switch viewType {
@@ -316,7 +317,11 @@ struct PaymentView: View {
             }
         }
         .onAppear {
-            withAnimation(.spring()) {
+            if animateTransition {
+                withAnimation(.spring()) {
+                    present = true
+                }
+            } else {
                 present = true
             }
         }

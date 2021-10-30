@@ -16,27 +16,45 @@ struct ListSelector: View {
     let enableMultipleSelection: Bool
     let popBackOnSelect: Bool
     let options: [String]
+    var isContentLocked: Bool = false
     @Binding var selectedOptions: [String]
     let buttonTapped: () -> Void
 
+    @State var showPaymentView = false
+
     var body: some View {
-        SettingMenu(title: title, description: description, buttonTitle: buttonTitle, popBackOnSelect: popBackOnSelect, buttonTapped: buttonTapped) {
-            ForEach(options, id: \.self) { option in
-                Button(action: {
-                    if enableMultipleSelection {
-                        if let index = selectedOptions.firstIndex(of: option) {
-                            selectedOptions.remove(at: index)
+        Group {
+            if isContentLocked && DebugSettings.shared.isPaywallEnabled {
+            NavigationLink(destination: PaymentView(viewType: .subscribe, animateTransition: false) { showPaymentView = false },
+                               isActive: $showPaymentView) { EmptyView() }
+            }
+
+            SettingMenu(title: title, description: description, buttonTitle: buttonTitle, popBackOnSelect: popBackOnSelect, buttonTapped: buttonTapped) {
+                ForEach(options, id: \.self) { option in
+                    Button(action: {
+                        if isContentLocked {
+                            showPaymentView = true
                         } else {
-                            selectedOptions.append(option)
+                            if enableMultipleSelection {
+                                if let index = selectedOptions.firstIndex(of: option) {
+                                    selectedOptions.remove(at: index)
+                                } else {
+                                    selectedOptions.append(option)
+                                }
+                            } else {
+                                selectedOptions = [option]
+                            }
                         }
-                    } else {
-                        selectedOptions = [option]
-                    }
-                }) {
+                    }) {
                         HStack {
                             Text(option)
                             Spacer()
-                            if selectedOptions.contains(option) {
+                            if isContentLocked {
+                                Image(systemName: "lock.fill")
+//                                .font(.bold(size: 18))
+//                                .foregroundColor(color.opacity(0.2))
+                                //
+                            } else if selectedOptions.contains(option) {
                                 ZStack {
                                     Circle()
                                         .fill(Color.customBlue)
@@ -47,6 +65,7 @@ struct ListSelector: View {
                                 }
                             }
                         }
+                    }
                 }
             }
         }

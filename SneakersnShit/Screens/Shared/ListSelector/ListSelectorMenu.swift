@@ -15,6 +15,7 @@ struct ListSelectorMenu: View {
     let options: [String]
     var selectedOptions: Binding<[String]>?
     var selectedOption: Binding<String>?
+    var isContentLocked: Bool
     let buttonTapped: () -> Void
 
     init(title: String,
@@ -23,6 +24,7 @@ struct ListSelectorMenu: View {
          buttonTitle: String,
          options: [String],
          selectedOption: Binding<String>,
+         isContentLocked: Bool = false,
          buttonTapped: @escaping () -> Void) {
         self.title = title
         self.description = description
@@ -31,6 +33,7 @@ struct ListSelectorMenu: View {
         self.options = options
         self.selectedOptions = nil
         self.selectedOption = selectedOption
+        self.isContentLocked = isContentLocked
         self.buttonTapped = buttonTapped
     }
 
@@ -40,6 +43,7 @@ struct ListSelectorMenu: View {
          buttonTitle: String,
          options: [String],
          selectedOptions: Binding<[String]>,
+         isContentLocked: Bool = false,
          buttonTapped: @escaping () -> Void) {
         self.title = title
         self.description = description
@@ -48,6 +52,7 @@ struct ListSelectorMenu: View {
         self.options = options
         self.selectedOptions = selectedOptions
         self.selectedOption = nil
+        self.isContentLocked = isContentLocked
         self.buttonTapped = buttonTapped
     }
 
@@ -71,6 +76,7 @@ struct ListSelectorMenu: View {
                                                  enableMultipleSelection: selectedOptions != nil,
                                                  popBackOnSelect: true,
                                                  options: options,
+                                                 isContentLocked: isContentLocked,
                                                  selectedOptions: _options,
                                                  buttonTapped: buttonTapped).navigationbarHidden()) {
                 HStack {
