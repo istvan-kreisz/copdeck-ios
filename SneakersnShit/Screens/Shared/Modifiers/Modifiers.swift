@@ -298,6 +298,8 @@ struct LockedContent: ViewModifier {
     enum Style {
         case hideOriginal
         case overlay(offset: CGSize)
+        case adjacentRight(spacing: CGFloat)
+        case adjacentLeft(spacing: CGFloat)
     }
 
     let isLocked: Bool
@@ -310,20 +312,36 @@ struct LockedContent: ViewModifier {
         Image(systemName: "lock.fill")
             .font(.bold(size: lockSize))
             .foregroundColor(lockColor)
-            .onTapGesture(perform: didTap)
     }
 
     func body(content: Content) -> some View {
         if isLocked {
-            if case .hideOriginal = style, isLocked {
+            switch style {
+            case .hideOriginal:
                 lock()
-            } else if case let .overlay(offset) = style {
+                    .onTapGesture(perform: didTap)
+            case let .overlay(offset):
                 ZStack {
                     content
-                        .allowsHitTesting(false)
+                        .disabled(true)
                     lock()
                         .offset(offset)
                 }
+                .onTapGesture(perform: didTap)
+            case let .adjacentLeft(spacing):
+                HStack(spacing: spacing) {
+                    lock()
+                    content
+                        .disabled(true)
+                }
+                .onTapGesture(perform: didTap)
+            case let .adjacentRight(spacing):
+                HStack(spacing: spacing) {
+                    content
+                        .disabled(true)
+                    lock()
+                }
+                .onTapGesture(perform: didTap)
             }
         } else {
             content

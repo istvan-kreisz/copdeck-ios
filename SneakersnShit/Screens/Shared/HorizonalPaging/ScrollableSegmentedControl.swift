@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Nuke
 
 struct ScrollableSegmentedControl: View {
     struct ButtonConfig {
@@ -15,6 +16,7 @@ struct ScrollableSegmentedControl: View {
 
     @Binding private var selectedIndex: Int
     @Binding private var titles: [String]
+    let isContentLocked: Bool
     let button: ButtonConfig?
     let size: CGFloat?
 
@@ -22,9 +24,10 @@ struct ScrollableSegmentedControl: View {
     @State private var backgroundFrame = CGRect.zero
     @State private var isScrollable = true
 
-    init(selectedIndex: Binding<Int>, titles: Binding<[String]>, button: ButtonConfig?, size: CGFloat? = nil) {
+    init(selectedIndex: Binding<Int>, titles: Binding<[String]>, isContentLocked: Bool, button: ButtonConfig?, size: CGFloat? = nil) {
         self._selectedIndex = selectedIndex
         self._titles = titles
+        self.isContentLocked = isContentLocked
         self.button = button
         self.size = size
         self._frames = State<[CGRect]>(initialValue: [CGRect](repeating: .zero, count: titles.wrappedValue.count))
@@ -36,16 +39,16 @@ struct ScrollableSegmentedControl: View {
                 HStack(spacing: 0) {
                     HStack(spacing: 0) {
                         ForEach(titles.indices, id: \.self) { (index: Int) in
+                            let textColor: Color = selectedIndex == index ? .customBlack : .customText2
                             Button {
                                 selectedIndex = index
                             } label: {
-                                HStack {
-                                    Text(titles[index])
-                                        .font(.bold(size: 22))
-                                        .foregroundColor(selectedIndex == index ? .customBlack : .customText2)
-                                        .frame(height: 42)
-                                }
+                                Text(titles[index])
+                                    .font(.bold(size: 22))
+                                    .foregroundColor(textColor)
+                                    .frame(height: 42)
                             }
+                            .lockedContent(style: .adjacentRight(spacing: -15), lockSize: 20, lockColor: textColor, lockEnabled: isContentLocked && index != 0)
                             .buttonStyle(CustomSegmentButtonStyle())
                             .frame(width: size)
                             .background(GeometryReader { geoReader in
@@ -65,7 +68,6 @@ struct ScrollableSegmentedControl: View {
                         .fill(Color.gray)
                         .frame(height: 1), alignment: .bottomLeading)
                     .animation(.default)
-                    
 
                     if let button = button {
                         Button(action: button.tapped) {
@@ -74,16 +76,20 @@ struct ScrollableSegmentedControl: View {
                                     .font(.bold(size: 22))
                                     .foregroundColor(.customBlue)
                                     .frame(height: 42)
-                                ZStack {
-                                    Circle()
-                                        .fill(Color.customBlue.opacity(0.2))
-                                        .frame(width: 21, height: 21)
-                                    Image(systemName: "plus")
-                                        .font(.bold(size: 9))
-                                        .foregroundColor(Color.customBlue)
-                                }.frame(width: 21, height: 21)
+                                if !isContentLocked {
+                                    ZStack {
+                                        Circle()
+                                            .fill(Color.customBlue.opacity(0.2))
+                                            .frame(width: 21, height: 21)
+                                        Image(systemName: "plus")
+                                            .font(.bold(size: 9))
+                                            .foregroundColor(Color.customBlue)
+                                    }
+                                    .frame(width: 21, height: 21)
+                                }
                             }
                         }
+                        .lockedContent(style: .adjacentRight(spacing: 4), lockSize: 20, lockColor: .customBlue, lockEnabled: isContentLocked)
                         .padding(.horizontal, 20)
                         .id(titles.count)
                     }

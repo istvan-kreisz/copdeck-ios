@@ -16,10 +16,15 @@ struct EmptyStateButton: View {
     let buttonTitle: String
     let style: Style
     let showPlusIcon: Bool
+    let isContentLocked: Bool
     let action: () -> Void
 
     var iconSize: CGFloat {
         style == .large ? 19 : 16
+    }
+    
+    var buttonTextSize: CGFloat {
+        style == .large ? 18 : 16
     }
 
     var body: some View {
@@ -31,7 +36,7 @@ struct EmptyStateButton: View {
                 HStack {
                     Text(buttonTitle)
                         .underline()
-                        .font(.bold(size: style == .large ? 18 : 16))
+                        .font(.bold(size: buttonTextSize))
                         .foregroundColor(.customBlue)
                     if showPlusIcon {
                         ZStack {
@@ -45,6 +50,7 @@ struct EmptyStateButton: View {
                     }
                 }
             }
+            .lockedContent(style: .adjacentRight(spacing: 3), lockSize: buttonTextSize, lockColor: .customBlue, lockEnabled: isContentLocked)
         }
         .centeredHorizontally()
     }

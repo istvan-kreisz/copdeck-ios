@@ -120,7 +120,12 @@ struct StackView: View {
     var body: some View {
         toolbar()
         if allStackItems.isEmpty {
-            EmptyStateButton(title: emptyStateConfig.title, buttonTitle: emptyStateConfig.buttonTitle, style: .large, showPlusIcon: true, action: emptyStateConfig.action)
+            EmptyStateButton(title: emptyStateConfig.title,
+                             buttonTitle: emptyStateConfig.buttonTitle,
+                             style: .large,
+                             showPlusIcon: true,
+                             isContentLocked: false,
+                             action: emptyStateConfig.action)
                 .padding(.top, 50)
         } else {
             ForEach(allStackItems) { (inventoryItem: InventoryItem) in

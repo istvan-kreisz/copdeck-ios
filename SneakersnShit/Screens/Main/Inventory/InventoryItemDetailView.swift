@@ -149,8 +149,11 @@ struct InventoryItemDetailView: View {
 
                             if didLoadPhotos {
                                 if photoURLs.isEmpty {
-                                    EmptyStateButton(title: "Your haven't added any photos", buttonTitle: "Start adding photos", style: .regular,
-                                                     showPlusIcon: false) {
+                                    EmptyStateButton(title: "Your haven't added any photos",
+                                                     buttonTitle: "Start adding photos",
+                                                     style: .regular,
+                                                     showPlusIcon: false,
+                                                     isContentLocked: true) {
                                         showPhotoSelector = true
                                     }
                                     .padding(.top, 20)

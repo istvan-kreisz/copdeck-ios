@@ -96,6 +96,7 @@ struct SearchView: View {
 
                 ScrollableSegmentedControl(selectedIndex: $selectedTabIndex,
                                            titles: .constant(["Sneakers", "People"]),
+                                           isContentLocked: false,
                                            button: nil,
                                            size: (UIScreen.screenWidth - Styles.horizontalMargin * 2) / 2)
                     .frame(width: UIScreen.screenWidth - Styles.horizontalMargin * 2)
