@@ -174,6 +174,10 @@ func appReducer(state: inout AppState,
             environment.dataController.getAffiliateList(completion: completion)
         case let .sendMessage(email, message, completion):
             environment.dataController.sendMessage(email: email, message: message, completion: completion)
+        case let .getChannelsListener(completion):
+            environment.dataController.getChannelsListener(completion: completion)
+        case let .getChannelListener(channelId, completion):
+            environment.dataController.getChannelListener(channelId: channelId, completion: completion)
         }
     case let .authentication(action):
         let result: AnyPublisher<String, Error>

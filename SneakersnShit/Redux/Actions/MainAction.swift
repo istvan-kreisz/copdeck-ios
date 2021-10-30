@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 enum MainAction {
     // auth
@@ -69,6 +70,9 @@ enum MainAction {
     case getAffiliateList(completion: (Result<[ReferralCode], Error>) -> Void)
     // contact
     case sendMessage(email: String, message: String, completion: ((Result<Void, AppError>) -> Void)?)
+    // chat
+    case getChannelsListener(completion: (_ publisher: AnyPublisher<[Channel], AppError>, _ cancel: () -> Void) -> Void)
+    case getChannelListener(channelId: String, completion: (_ publisher: AnyPublisher<[Message], AppError>, _ cancel: () -> Void) -> Void)
 }
 
 extension MainAction: Identifiable, StringRepresentable {

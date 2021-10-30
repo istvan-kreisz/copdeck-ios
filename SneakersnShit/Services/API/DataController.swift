@@ -77,18 +77,19 @@ protocol DatabaseManager {
     // deinit
     func reset()
     // read
-    var inventoryItemsPublisher: AnyPublisher<[InventoryItem], Never> { get }
-    var favoritesPublisher: AnyPublisher<[Item], Never> { get }
-    var recentlyViewedPublisher: AnyPublisher<[Item], Never> { get }
-    var popularItemsPublisher: AnyPublisher<[Item], Never> { get }
-    var stacksPublisher: AnyPublisher<[Stack], Never> { get }
-    var userPublisher: AnyPublisher<User, Never> { get }
-    var exchangeRatesPublisher: AnyPublisher<ExchangeRates, Never> { get }
+    var inventoryItemsPublisher: AnyPublisher<[InventoryItem], AppError> { get }
+    var favoritesPublisher: AnyPublisher<[Item], AppError> { get }
+    var recentlyViewedPublisher: AnyPublisher<[Item], AppError> { get }
+    var stacksPublisher: AnyPublisher<[Stack], AppError> { get }
+    var userPublisher: AnyPublisher<User, AppError> { get }
+    var exchangeRatesPublisher: AnyPublisher<ExchangeRates, AppError> { get }
     var errorsPublisher: AnyPublisher<AppError, Never> { get }
 
     // read
     func getUser(withId id: String) -> AnyPublisher<User, AppError>
     func getItem(withId id: String, settings: CopDeckSettings) -> AnyPublisher<Item, AppError>
+    func getChannelsListener(completion: @escaping (_ publisher: AnyPublisher<[Channel], AppError>, _ cancel: () -> Void) -> Void)
+    func getChannelListener(channelId: String, completion: @escaping (_ publisher: AnyPublisher<[Message], AppError>, _ cancel: () -> Void) -> Void)
 
     // write
     func add(inventoryItems: [InventoryItem])

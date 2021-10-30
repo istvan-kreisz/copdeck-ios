@@ -14,23 +14,23 @@ class FirebaseService: DatabaseManager {
     private static let recentlyViewedLimit = 20
 
     private let firestore: Firestore
-
     private var userId: String?
 
-    private var feedLastDocument: QueryDocumentSnapshot?
+    var cancellables: Set<AnyCancellable> = []
 
     // collection listeners
     private var inventoryListener = CollectionListener<InventoryItem>()
     private var stacksListener = CollectionListener<Stack>()
     private var favoritesListener = CollectionListener<Item>()
     private var recentlyViewedListener = CollectionListener<Item>()
+    private var channelsListener = CollectionListener<Channel>()
+    private var channelListener = CollectionListener<Message>()
 
     // document listeners
     private var userListener = DocumentListener<User>()
     private var exchangeRatesListener = DocumentListener<ExchangeRates>()
 
     private let errorsSubject = PassthroughSubject<AppError, Never>()
-    private let popularItemsSubject = PassthroughSubject<[Item], Never>()
 
     private var dbListeners: [FireStoreListener] {
         let listeners: [FireStoreListener?] = [inventoryListener,
@@ -38,42 +38,44 @@ class FirebaseService: DatabaseManager {
                                                favoritesListener,
                                                recentlyViewedListener,
                                                userListener,
-                                               exchangeRatesListener]
+                                               exchangeRatesListener,
+                                               channelsListener,
+                                               channelListener]
         return listeners.compactMap { $0 }
     }
 
     // collection publishers
-    var inventoryItemsPublisher: AnyPublisher<[InventoryItem], Never> {
+    var inventoryItemsPublisher: AnyPublisher<[InventoryItem], AppError> {
         inventoryListener.dataPublisher
     }
 
-    var favoritesPublisher: AnyPublisher<[Item], Never> {
+    var favoritesPublisher: AnyPublisher<[Item], AppError> {
         favoritesListener.dataPublisher
     }
 
-    var recentlyViewedPublisher: AnyPublisher<[Item], Never> {
+    var recentlyViewedPublisher: AnyPublisher<[Item], AppError> {
         recentlyViewedListener.dataPublisher
     }
 
-    var stacksPublisher: AnyPublisher<[Stack], Never> {
+    var channelsPublisher: AnyPublisher<[Channel], AppError> {
+        channelsListener.dataPublisher
+    }
+
+    var stacksPublisher: AnyPublisher<[Stack], AppError> {
         stacksListener.dataPublisher
     }
 
     // document publishers
-    var userPublisher: AnyPublisher<User, Never> {
+    var userPublisher: AnyPublisher<User, AppError> {
         userListener.dataPublisher.compactMap { $0 }.eraseToAnyPublisher()
     }
 
-    var exchangeRatesPublisher: AnyPublisher<ExchangeRates, Never> {
+    var exchangeRatesPublisher: AnyPublisher<ExchangeRates, AppError> {
         exchangeRatesListener.dataPublisher.compactMap { $0 }.eraseToAnyPublisher()
     }
 
     var errorsPublisher: AnyPublisher<AppError, Never> {
         errorsSubject.eraseToAnyPublisher()
-    }
-
-    var popularItemsPublisher: AnyPublisher<[Item], Never> {
-        popularItemsSubject.eraseToAnyPublisher()
     }
 
     private var itemsRef: CollectionReference?
@@ -96,7 +98,7 @@ class FirebaseService: DatabaseManager {
     func setup(userId: String) {
         guard userId != self.userId else { return }
         reset()
-        
+
         self.userId = userId
         listenToChanges(userId: userId)
     }
@@ -107,6 +109,35 @@ class FirebaseService: DatabaseManager {
         stacksListener.startListening(collectionName: "stacks", baseDocumentReference: userListener.documentRef)
         favoritesListener.startListening(collectionName: "favorites", baseDocumentReference: userListener.documentRef)
         recentlyViewedListener.startListening(collectionName: "recentlyViewed", baseDocumentReference: userListener.documentRef)
+    }
+
+    func getChannelsListener(completion: @escaping (_ publisher: AnyPublisher<[Channel], AppError>, _ cancel: () -> Void) -> Void) {
+        guard let userId = userId else { return }
+        channelsListener.reset()
+        
+        channelsListener.startListening(collectionName: "channels", firestore: firestore) { $0?.whereField("users", arrayContains: userId) }
+        let publisher = channelsListener.dataPublisher
+        let cancel: () -> Void = { [weak channelsListener] in
+            channelsListener?.reset()
+        }
+        completion(publisher, cancel)
+    }
+    
+    func getChannelListener(channelId: String, completion: @escaping (_ publisher: AnyPublisher<[Message], AppError>, _ cancel: () -> Void) -> Void) {
+
+    }
+
+
+    func getChannelListener(channelId: String, updated: @escaping ([Message]) -> Void) -> () -> Void {
+        channelListener.reset()
+        channelListener.startListening(collectionName: "thread", baseDocumentReference: firestore.collection("channels").document(channelId))
+
+        channelListener.dataPublisher
+            .sink(receiveCompletion: { _ in }, receiveValue: { updated($0) })
+            .store(in: &cancellables)
+        return { [weak channelListener] in
+            channelListener?.reset()
+        }
     }
 
     private func addCollectionUpdatesListener<T: Codable>(collectionRef: CollectionReference?,

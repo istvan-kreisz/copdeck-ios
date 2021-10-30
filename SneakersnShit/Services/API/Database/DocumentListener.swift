@@ -13,9 +13,9 @@ import FirebaseStorage
 class DocumentListener<T: Codable>: FireStoreListener {
     var documentRef: DocumentReference?
     var listener: ListenerRegistration?
-    let dataSubject = CurrentValueSubject<T?, Never>(nil)
+    let dataSubject = CurrentValueSubject<T?, AppError>(nil)
 
-    var dataPublisher: AnyPublisher<T?, Never> {
+    var dataPublisher: AnyPublisher<T?, AppError> {
         dataSubject.eraseToAnyPublisher()
     }
 

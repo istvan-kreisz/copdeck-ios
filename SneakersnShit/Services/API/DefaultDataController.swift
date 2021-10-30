@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import UIKit
 
-class DefaultDataController: DataController {
+class DefaultDataController: DataController {    
     let backendAPI: BackendAPI
     let localScraper: LocalAPI
     let databaseManager: DatabaseManager
@@ -22,7 +22,6 @@ class DefaultDataController: DataController {
     lazy var userPublisher = databaseManager.userPublisher
     lazy var exchangeRatesPublisher = databaseManager.exchangeRatesPublisher
     lazy var errorsPublisher = databaseManager.errorsPublisher.merge(with: backendAPI.errorsPublisher, imageService.errorsPublisher).eraseToAnyPublisher()
-    lazy var popularItemsPublisher = databaseManager.popularItemsPublisher
     lazy var cookiesPublisher = localScraper.cookiesPublisher
     lazy var imageDownloadHeadersPublisher = localScraper.imageDownloadHeadersPublisher
 
@@ -211,6 +210,14 @@ class DefaultDataController: DataController {
 
     func getItem(withId id: String, settings: CopDeckSettings) -> AnyPublisher<Item, AppError> {
         databaseManager.getItem(withId: id, settings: settings)
+    }
+    
+    func getChannelsListener(completion: @escaping (_ publisher: AnyPublisher<[Channel], AppError>, _ cancel: () -> Void) -> Void) {
+        databaseManager.getChannelsListener(completion: completion)
+    }
+    
+    func getChannelListener(channelId: String, completion: @escaping (_ publisher: AnyPublisher<[Message], AppError>, _ cancel: () -> Void) -> Void) {
+        databaseManager.getChannelListener(channelId: channelId, completion: completion)
     }
 
     func getFeedPosts(loadMore: Bool) -> AnyPublisher<PaginatedResult<[FeedPost]>, AppError> {

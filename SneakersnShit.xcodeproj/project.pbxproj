@@ -31,6 +31,8 @@
 		5D2ED124270152BC002A5E12 /* ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2ED123270152BC002A5E12 /* ImageViewer.swift */; };
 		5D30BA42269C3EAD0062F6AB /* CustomSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D30BA41269C3EAD0062F6AB /* CustomSpinner.swift */; };
 		5D32C2F42709CBDC003257C6 /* Overlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D32C2F32709CBDC003257C6 /* Overlay.swift */; };
+		5D32C2F8270A1805003257C6 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D32C2F7270A1805003257C6 /* Channel.swift */; };
+		5D32C2FB270A3BB5003257C6 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D32C2FA270A3BB5003257C6 /* Message.swift */; };
 		5D36AA0B269E46300049640A /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D36AA0A269E46300049640A /* TabBar.swift */; };
 		5D3769762611709C00F9ED72 /* Debouncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D3769752611709C00F9ED72 /* Debouncer.swift */; };
 		5D3DE37426AFA96D009E4D52 /* UINavigationController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D3DE37326AFA96D009E4D52 /* UINavigationController+Extensions.swift */; };
@@ -90,6 +92,8 @@
 		5D60541F2726F96C00B631FD /* DefaultPaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D60541E2726F96C00B631FD /* DefaultPaymentService.swift */; };
 		5D60542127276D3000B631FD /* Purchases+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D60542027276D3000B631FD /* Purchases+Extensions.swift */; };
 		5D605423272772CE00B631FD /* PackageCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D605422272772CE00B631FD /* PackageCellView.swift */; };
+		5D606D17272D040A00E49A59 /* MessageKit in Frameworks */ = {isa = PBXBuildFile; productRef = 5D606D16272D040A00E49A59 /* MessageKit */; };
+		5D606D19272D0B2A00E49A59 /* Sender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D606D18272D0B2A00E49A59 /* Sender.swift */; };
 		5D631220269330B900876D99 /* APIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D63121F269330B900876D99 /* APIConfig.swift */; };
 		5D6312222694797300876D99 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6312212694797300876D99 /* Item.swift */; };
 		5D6312242694D83100876D99 /* Decodable+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6312232694D83100876D99 /* Decodable+Extensions.swift */; };
@@ -234,6 +238,8 @@
 		5D2ED123270152BC002A5E12 /* ImageViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewer.swift; sourceTree = "<group>"; };
 		5D30BA41269C3EAD0062F6AB /* CustomSpinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSpinner.swift; sourceTree = "<group>"; };
 		5D32C2F32709CBDC003257C6 /* Overlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Overlay.swift; sourceTree = "<group>"; };
+		5D32C2F7270A1805003257C6 /* Channel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
+		5D32C2FA270A3BB5003257C6 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		5D36AA0A269E46300049640A /* TabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
 		5D3769752611709C00F9ED72 /* Debouncer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Debouncer.swift; sourceTree = "<group>"; };
 		5D3DE37326AFA96D009E4D52 /* UINavigationController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+Extensions.swift"; sourceTree = "<group>"; };
@@ -293,6 +299,7 @@
 		5D60541E2726F96C00B631FD /* DefaultPaymentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultPaymentService.swift; sourceTree = "<group>"; };
 		5D60542027276D3000B631FD /* Purchases+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Purchases+Extensions.swift"; sourceTree = "<group>"; };
 		5D605422272772CE00B631FD /* PackageCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackageCellView.swift; sourceTree = "<group>"; };
+		5D606D18272D0B2A00E49A59 /* Sender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sender.swift; sourceTree = "<group>"; };
 		5D63121F269330B900876D99 /* APIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIConfig.swift; sourceTree = "<group>"; };
 		5D6312212694797300876D99 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		5D6312232694D83100876D99 /* Decodable+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Decodable+Extensions.swift"; sourceTree = "<group>"; };
@@ -424,6 +431,7 @@
 				5DCC466A26A7A96C007671BC /* FacebookLogin in Frameworks */,
 				5D9D51FB26AE1BE500AB1F30 /* Nuke in Frameworks */,
 				5D0703C8271DDED200116CF4 /* Purchases in Frameworks */,
+				5D606D17272D040A00E49A59 /* MessageKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -466,6 +474,16 @@
 				5D9DFB0226D97990005A575D /* FBFunctionsCoordinator.swift */,
 			);
 			path = Functions;
+			sourceTree = "<group>";
+		};
+		5D32C2F9270A3BA3003257C6 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				5D32C2F7270A1805003257C6 /* Channel.swift */,
+				5D32C2FA270A3BB5003257C6 /* Message.swift */,
+				5D606D18272D0B2A00E49A59 /* Sender.swift */,
+			);
+			path = Chat;
 			sourceTree = "<group>";
 		};
 		5D424CCD25C4FE200008D6F4 /* StoreReviewHelper */ = {
@@ -918,6 +936,7 @@
 		5D6960C025873E790058BABE /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				5D32C2F9270A3BA3003257C6 /* Chat */,
 				5DDEFDCD26D2ADB5001B0F76 /* Types */,
 				5D63121F269330B900876D99 /* APIConfig.swift */,
 				5D488E8825C8D54E00624FEF /* AppError.swift */,
@@ -1181,6 +1200,7 @@
 				5D9D51FA26AE1BE500AB1F30 /* Nuke */,
 				5D9D51FD26AE1C0B00AB1F30 /* NukeUI */,
 				5D0703C7271DDED200116CF4 /* Purchases */,
+				5D606D16272D040A00E49A59 /* MessageKit */,
 			);
 			productName = InfluTrader;
 			productReference = 5D696093258713760058BABE /* CopDeck.app */;
@@ -1214,6 +1234,7 @@
 				5D9D51F926AE1BE500AB1F30 /* XCRemoteSwiftPackageReference "Nuke" */,
 				5D9D51FC26AE1C0B00AB1F30 /* XCRemoteSwiftPackageReference "NukeUI" */,
 				5D0703C6271DDED200116CF4 /* XCRemoteSwiftPackageReference "purchases-ios" */,
+				5D606D15272D040A00E49A59 /* XCRemoteSwiftPackageReference "MessageKit" */,
 			);
 			productRefGroup = 5D696094258713760058BABE /* Products */;
 			projectDirPath = "";
@@ -1297,6 +1318,7 @@
 			files = (
 				5DA5140B26A6161A0067C4A2 /* CopDeckSettings.swift in Sources */,
 				5D63122F269506AE00876D99 /* User.swift in Sources */,
+				5D606D19272D0B2A00E49A59 /* Sender.swift in Sources */,
 				5DE4F21426DFCCF30087077A /* SharedStackSummaryView.swift in Sources */,
 				5D7B17CC26868CA60065D01C /* Scraper.swift in Sources */,
 				5D52E307261303AF00FA02B8 /* Publishers+Extensions.swift in Sources */,
@@ -1353,6 +1375,7 @@
 				5D9C8E3D269F2F31008538D6 /* RoundedButton.swift in Sources */,
 				5DE4F21A26E02C430087077A /* SharedStackDetailView.swift in Sources */,
 				5D2D5AAF25C552B0009598AA /* DefaultBackendAPI.swift in Sources */,
+				5D32C2FB270A3BB5003257C6 /* Message.swift in Sources */,
 				5D564E482704F66700190CF4 /* StringRepresentable.swift in Sources */,
 				5D424CFF25C5041E0008D6F4 /* DebugSettings.swift in Sources */,
 				5D69609B258713760058BABE /* LoginView.swift in Sources */,
@@ -1384,6 +1407,7 @@
 				5D9D520026AE211900AB1F30 /* VerticalListItem.swift in Sources */,
 				5DF3595926FF724E0041A6C3 /* RootOnboardingView.swift in Sources */,
 				5DB590E826C556ED006ECEBD /* ScrollableSegmentedControl.swift in Sources */,
+				5D32C2F8270A1805003257C6 /* Channel.swift in Sources */,
 				5DE596E626C876790024F7D5 /* PagerView.swift in Sources */,
 				5D60541F2726F96C00B631FD /* DefaultPaymentService.swift in Sources */,
 				5D100707272B08860058C156 /* DiscountsView.swift in Sources */,
@@ -1861,6 +1885,14 @@
 				minimumVersion = 3.12.6;
 			};
 		};
+		5D606D15272D040A00E49A59 /* XCRemoteSwiftPackageReference "MessageKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MessageKit/MessageKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
 		5D9D51F926AE1BE500AB1F30 /* XCRemoteSwiftPackageReference "Nuke" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kean/Nuke.git";
@@ -1892,6 +1924,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5D0703C6271DDED200116CF4 /* XCRemoteSwiftPackageReference "purchases-ios" */;
 			productName = Purchases;
+		};
+		5D606D16272D040A00E49A59 /* MessageKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5D606D15272D040A00E49A59 /* XCRemoteSwiftPackageReference "MessageKit" */;
+			productName = MessageKit;
 		};
 		5D9D51FA26AE1BE500AB1F30 /* Nuke */ = {
 			isa = XCSwiftPackageProductDependency;

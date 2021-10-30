@@ -33,42 +33,46 @@ extension AppStore {
 
         environment.dataController.userPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] newUser in
-                let oldSettings = self?.state.user?.settings
-                let newSettings = newUser.settings
-                if oldSettings?.feeCalculation != newSettings?.feeCalculation || oldSettings?.currency != newSettings?.currency {
-                    ItemCache.default.removeAll()
-                    self?.refreshItemPricesIfNeeded(newUser: newUser)
-                }
-                self?.state.user = newUser
-            }
+            .sink(receiveCompletion: { _ in },
+                  receiveValue: { [weak self] newUser in
+                      let oldSettings = self?.state.user?.settings
+                      let newSettings = newUser.settings
+                      if oldSettings?.feeCalculation != newSettings?.feeCalculation || oldSettings?.currency != newSettings?.currency {
+                          ItemCache.default.removeAll()
+                          self?.refreshItemPricesIfNeeded(newUser: newUser)
+                      }
+                      self?.state.user = newUser
+                  })
             .store(in: &effectCancellables)
 
         environment.dataController.inventoryItemsPublisher
             .map { inventoryItems in inventoryItems.filter { $0.pendingImport == nil } }
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] inventoryItems in
-                self?.state.inventoryItems = inventoryItems
-                self?.updateAllStack(withInventoryItems: inventoryItems)
-                if !inventoryItems.isEmpty, self?.state.didFetchItemPrices == false {
-                    self?.refreshItemPricesIfNeeded()
-                    self?.state.didFetchItemPrices = true
-                }
-            }
+            .sink(receiveCompletion: { _ in },
+                  receiveValue: { [weak self] inventoryItems in
+                      self?.state.inventoryItems = inventoryItems
+                      self?.updateAllStack(withInventoryItems: inventoryItems)
+                      if !inventoryItems.isEmpty, self?.state.didFetchItemPrices == false {
+                          self?.refreshItemPricesIfNeeded()
+                          self?.state.didFetchItemPrices = true
+                      }
+                  })
             .store(in: &effectCancellables)
 
         environment.dataController.stacksPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] stacks in
-                self?.state.stacks = (self?.state.allStack.map { (stack: Stack) in [stack] } ?? []) + stacks
-            }
+            .sink(receiveCompletion: { _ in },
+                  receiveValue: { [weak self] stacks in
+                      self?.state.stacks = (self?.state.allStack.map { (stack: Stack) in [stack] } ?? []) + stacks
+                  })
             .store(in: &effectCancellables)
 
         environment.dataController.exchangeRatesPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] exchangeRates in
-                self?.state.exchangeRates = exchangeRates
-            }
+            .sink(receiveCompletion: { _ in },
+                  receiveValue: { [weak self] exchangeRates in
+                      self?.state.exchangeRates = exchangeRates
+                  })
             .store(in: &effectCancellables)
 
         environment.dataController.cookiesPublisher.removeDuplicates()
@@ -87,37 +91,42 @@ extension AppStore {
 
         environment.dataController.recentlyViewedPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] recentlyViewed in
-                self?.state.recentlyViewed = recentlyViewed
-            }
+            .sink(receiveCompletion: { _ in },
+                  receiveValue: { [weak self] recentlyViewed in
+                      self?.state.recentlyViewed = recentlyViewed
+                  })
             .store(in: &effectCancellables)
 
         environment.dataController.favoritesPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] favorites in
-                self?.state.favoritedItems = favorites
-            }
+            .sink(receiveCompletion: { _ in },
+                  receiveValue: { [weak self] favorites in
+                      self?.state.favoritedItems = favorites
+                  })
             .store(in: &effectCancellables)
 
         environment.dataController.profileImagePublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] url in
-                self?.state.profileImageURL = url
-            }
+            .sink(receiveCompletion: { _ in },
+                  receiveValue: { [weak self] url in
+                      self?.state.profileImageURL = url
+                  })
             .store(in: &effectCancellables)
 
         environment.paymentService.packagesPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] packages in
-                self?.state.allPackages = packages
-            }
+            .sink(receiveCompletion: { _ in },
+                  receiveValue: { [weak self] packages in
+                      self?.state.allPackages = packages
+                  })
             .store(in: &effectCancellables)
 
         environment.paymentService.purchaserInfoPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] purchaserInfo in
-                self?.state.purchaserInfo = purchaserInfo
-            }
+            .sink(receiveCompletion: { _ in },
+                  receiveValue: { [weak self] purchaserInfo in
+                      self?.state.purchaserInfo = purchaserInfo
+                  })
             .store(in: &effectCancellables)
     }
 

@@ -38,4 +38,8 @@ extension Double {
         dateFormatter.dateFormat = "MMMM yyyy"
         return dateFormatter.string(from: joinedDate)
     }
+    
+    var serverDate: Date {
+        Date(timeIntervalSince1970: self / 1000)
+    }
 }
