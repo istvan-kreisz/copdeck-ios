@@ -73,6 +73,7 @@ enum MainAction {
     // chat
     case getChannelsListener(completion: (_ publisher: AnyPublisher<[Channel], AppError>, _ cancel: () -> Void) -> Void)
     case getChannelListener(channelId: String, completion: (_ publisher: AnyPublisher<[Message], AppError>, _ cancel: () -> Void) -> Void)
+    case sendChatMessage(message: String, sendeeId: String, completion: (Result<Void, AppError>) -> Void)
 }
 
 extension MainAction: Identifiable, StringRepresentable {

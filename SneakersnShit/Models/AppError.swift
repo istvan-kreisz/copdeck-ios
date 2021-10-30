@@ -18,10 +18,10 @@ struct AppError: Identifiable, LocalizedError, Equatable {
         self.message = message
         self.error = error
     }
-    
+
     var errorDescription: String? {
         message
-    }    
+    }
 }
 
 extension AppError {
@@ -31,6 +31,9 @@ extension AppError {
 
     static var unknown: Self = .init(title: "", message: "")
     static var unauthenticated: Self = .init(title: "Error", message: "Not Authenticated")
+    static func notFound(val: String) -> Self {
+        .init(title: "Error", message: val.isEmpty ? "Not Found" : "\(val) Not Found")
+    }
 
     static func == (_ lhs: AppError, _ rhs: AppError) -> Bool {
         lhs.id == rhs.id

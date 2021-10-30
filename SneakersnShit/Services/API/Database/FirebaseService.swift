@@ -57,10 +57,6 @@ class FirebaseService: DatabaseManager {
         recentlyViewedListener.dataPublisher
     }
 
-    var channelsPublisher: AnyPublisher<[Channel], AppError> {
-        channelsListener.dataPublisher
-    }
-
     var stacksPublisher: AnyPublisher<[Stack], AppError> {
         stacksListener.dataPublisher
     }
@@ -114,30 +110,92 @@ class FirebaseService: DatabaseManager {
     func getChannelsListener(completion: @escaping (_ publisher: AnyPublisher<[Channel], AppError>, _ cancel: () -> Void) -> Void) {
         guard let userId = userId else { return }
         channelsListener.reset()
-        
         channelsListener.startListening(collectionName: "channels", firestore: firestore) { $0?.whereField("users", arrayContains: userId) }
+
         let publisher = channelsListener.dataPublisher
         let cancel: () -> Void = { [weak channelsListener] in
             channelsListener?.reset()
         }
         completion(publisher, cancel)
     }
-    
+
     func getChannelListener(channelId: String, completion: @escaping (_ publisher: AnyPublisher<[Message], AppError>, _ cancel: () -> Void) -> Void) {
-
-    }
-
-
-    func getChannelListener(channelId: String, updated: @escaping ([Message]) -> Void) -> () -> Void {
         channelListener.reset()
         channelListener.startListening(collectionName: "thread", baseDocumentReference: firestore.collection("channels").document(channelId))
 
-        channelListener.dataPublisher
-            .sink(receiveCompletion: { _ in }, receiveValue: { updated($0) })
-            .store(in: &cancellables)
-        return { [weak channelListener] in
+        let publisher = channelListener.dataPublisher
+        let cancel: () -> Void = { [weak channelListener] in
             channelListener?.reset()
         }
+        completion(publisher, cancel)
+    }
+
+    func sendMessage(user: User, message: String, toUserWithId sendeeId: String, completion: @escaping (Result<Void, AppError>) -> Void) {
+        let userIds = [user.id, sendeeId]
+        let message = Message(user: user, content: message)
+
+        func sendMessage(inChannel channel: Channel) {
+            send(message: message, inChannel: channel, completion: { result in
+                switch result {
+                case let .failure(error):
+                    completion(.failure(error))
+                case .success():
+                    completion(.success(()))
+                }
+            })
+        }
+
+        getChannel(withUserIds: userIds) { [weak self] result in
+            switch result {
+            case let .success(channel):
+                sendMessage(inChannel: channel)
+            case .failure:
+                self?.addChannel(userIds: userIds) { result in
+                    switch result {
+                    case let .success(channel):
+                        sendMessage(inChannel: channel)
+                    case let .failure(error):
+                        completion(.failure(error))
+                    }
+                }
+            }
+        }
+    }
+
+    private func getChannel(withUserIds userIds: [String], completion: @escaping (Result<Channel, AppError>) -> Void) {
+        if let channel = channelsListener.value.first(where: { $0.users.sorted() == userIds.sorted() }) {
+            completion(.success(channel))
+        } else {
+            firestore.collection("channels").whereField("users", isEqualTo: userIds.sorted()).getDocuments { snapshot, error in
+                guard let data = snapshot?.documents.map({ $0.data() }),
+                      let channels = [Channel](from: data),
+                      let channel = channels.first(where: { $0.users.sorted() == userIds.sorted() })
+                else {
+                    completion(.failure(.notFound(val: "Channel")))
+                    return
+                }
+                completion(.success(channel))
+            }
+        }
+    }
+
+    private func addChannel(userIds: [String], completion: @escaping (Result<Channel, AppError>) -> Void) {
+        let channel = Channel(users: userIds.sorted())
+        let ref = firestore.collection("channels").document(channel.id)
+        guard let dict = try? channel.asDictionary() else { return }
+        setDocument(dict, atRef: ref) { error in
+            if let error = error {
+                completion(.failure(AppError(error: error)))
+            } else {
+                completion(.success(channel))
+            }
+        }
+    }
+
+    private func send(message: Message, inChannel channel: Channel, completion: @escaping (Result<Void, AppError>) -> Void) {
+        let ref = firestore.collection("channels").document(channel.id).collection("thread").document(message.id)
+        guard let dict = try? message.asDictionary() else { return }
+        setDocument(dict, atRef: ref)
     }
 
     private func addCollectionUpdatesListener<T: Codable>(collectionRef: CollectionReference?,
@@ -387,7 +445,7 @@ class FirebaseService: DatabaseManager {
         }
     }
 
-    private func setDocument(_ data: [String: Any], atRef ref: DocumentReference, using batch: WriteBatch? = nil) {
+    private func setDocument(_ data: [String: Any], atRef ref: DocumentReference, using batch: WriteBatch? = nil, completion: ((Error?) -> Void)? = nil) {
         let data = dataWithUpdatedDates(data)
         if let batch = batch {
             batch.setData(data, forDocument: ref, merge: true)
@@ -396,11 +454,12 @@ class FirebaseService: DatabaseManager {
                 if let error = error {
                     self?.errorsSubject.send(AppError(error: error))
                 }
+                completion?(error)
             }
         }
     }
 
-    private func updateDocument(_ data: [String: Any], atRef ref: DocumentReference, using batch: WriteBatch? = nil) {
+    private func updateDocument(_ data: [String: Any], atRef ref: DocumentReference, using batch: WriteBatch? = nil, completion: ((Error?) -> Void)? = nil) {
         let data = dataWithUpdatedDates(data)
         if let batch = batch {
             batch.updateData(data, forDocument: ref)
@@ -409,11 +468,12 @@ class FirebaseService: DatabaseManager {
                 if let error = error {
                     self?.errorsSubject.send(AppError(error: error))
                 }
+                completion?(error)
             }
         }
     }
 
-    private func deleteDocument(atRef ref: DocumentReference, using batch: WriteBatch? = nil) {
+    private func deleteDocument(atRef ref: DocumentReference, using batch: WriteBatch? = nil, completion: ((Error?) -> Void)? = nil) {
         if let batch = batch {
             batch.deleteDocument(ref)
         } else {
@@ -421,6 +481,7 @@ class FirebaseService: DatabaseManager {
                 if let error = error {
                     self?.errorsSubject.send(AppError(error: error))
                 }
+                completion?(error)
             }
         }
     }

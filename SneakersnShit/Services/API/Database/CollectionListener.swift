@@ -14,6 +14,7 @@ class CollectionListener<T: Codable>: FireStoreListener {
     var collectionRef: CollectionReference?
     var listener: ListenerRegistration?
     let dataSubject = CurrentValueSubject<[T], AppError>([])
+    var value: [T] { dataSubject.value }
 
     var dataPublisher: AnyPublisher<[T], AppError> {
         dataSubject.eraseToAnyPublisher()

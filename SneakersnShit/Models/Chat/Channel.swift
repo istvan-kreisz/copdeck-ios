@@ -13,3 +13,9 @@ struct Channel: Codable, Identifiable {
     let created: Double
     let updated: Double
 }
+
+extension Channel {
+    init(users: [String]) {
+        self.init(id: UUID().uuidString, users: users, created: Date.serverDate, updated: Date.serverDate)
+    }
+}
