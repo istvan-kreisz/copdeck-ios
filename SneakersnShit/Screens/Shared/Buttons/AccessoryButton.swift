@@ -18,27 +18,45 @@ struct AccessoryButton: View {
     var padding: CGFloat = 10
     let imageName: String
     var buttonPosition: RoundedButtonPosition = .left
+    var isContentLocked = false
     let tapped: () -> Void
 
     var body: some View {
-        RoundedButton(text: title,
-                      width: width,
-                      height: height,
-                      fontSize: fontSize,
-                      color: .clear,
-                      borderColor: borderColor ?? color.opacity(0.4),
-                      textColor: textColor,
-                      padding: padding,
-                      accessoryView: (ZStack {
-                          Circle()
-                              .fill(color.opacity(0.2))
-                              .frame(width: 18, height: 18)
-                          Image(systemName: imageName)
-                              .font(.bold(size: 7))
-                              .foregroundColor(color)
-                      }.frame(width: 18, height: 18),
-                      buttonPosition, 6, .none)) {
+        if isContentLocked {
+            RoundedButton(text: title,
+                          width: width,
+                          height: height,
+                          fontSize: fontSize,
+                          color: .clear,
+                          borderColor: borderColor ?? color.opacity(0.4),
+                          textColor: textColor,
+                          padding: padding,
+                          accessoryView: (Image(systemName: "lock.fill")
+                              .font(.bold(size: 16))
+                              .foregroundColor(textColor),
+                              buttonPosition, 6, .none)) {
+                AppStore.default.send(.paymentAction(action: .showPaymentView(show: true)))
+            }
+        } else {
+            RoundedButton(text: title,
+                          width: width,
+                          height: height,
+                          fontSize: fontSize,
+                          color: .clear,
+                          borderColor: borderColor ?? color.opacity(0.4),
+                          textColor: textColor,
+                          padding: padding,
+                          accessoryView: (ZStack {
+                              Circle()
+                                  .fill(color.opacity(0.2))
+                                  .frame(width: 18, height: 18)
+                              Image(systemName: imageName)
+                                  .font(.bold(size: 7))
+                                  .foregroundColor(color)
+                          }.frame(width: 18, height: 18),
+                          buttonPosition, 6, .none)) {
                 tapped()
+            }
         }
     }
 }

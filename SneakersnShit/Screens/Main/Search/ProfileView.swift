@@ -84,7 +84,8 @@ struct ProfileView: View {
                                     facebookURL: $profileData.user.facebookProfileURL,
                                     textBox1: .init(title: "Joined", text: joinedDate),
                                     textBox2: .init(title: "Shared Stacks", text: "\(profileData.stacks.count)"),
-                                    isOwnProfile: false)
+                                    isOwnProfile: false,
+                                    isContentLocked: false)
 
                 Text(profileData.user.name.map { "\($0)'s Stacks" } ?? "Stacks")
                     .font(.bold(size: 25))

@@ -23,6 +23,7 @@ struct InventoryHeaderView: View {
     var textBox1: TextBox
     var textBox2: TextBox
     var isOwnProfile: Bool = true
+    let isContentLocked: Bool
     var updateUsername: (() -> Void)?
     var linkFacebookProfile: (() -> Void)?
 
@@ -110,6 +111,7 @@ struct InventoryHeaderView: View {
                                         width: 155,
                                         imageName: "chevron.right",
                                         buttonPosition: .right,
+                                        isContentLocked: isContentLocked,
                                         tapped: { showSellerStats = true })
                             .padding(.top, 15)
                     }

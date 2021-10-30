@@ -147,6 +147,7 @@ struct InventoryView: View {
                                     facebookURL: .constant(nil),
                                     textBox1: .init(title: "Inventory Value", text: inventoryValue?.asString ?? "-"),
                                     textBox2: .init(title: "Inventory Size", text: "\(inventoryItems.count)"),
+                                    isContentLocked: store.globalState.isContentLocked,
                                     updateUsername: updateUsername,
                                     linkFacebookProfile: globalStore.globalState.user?.facebookProfileURL == nil ? linkFacebookProfile : nil)
 
