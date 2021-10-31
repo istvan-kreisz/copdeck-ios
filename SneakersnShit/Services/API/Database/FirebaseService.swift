@@ -195,7 +195,7 @@ class FirebaseService: DatabaseManager {
         
         var updatedChannel = channel
         updatedChannel.lastSeenDates[userId] = Date.serverDate
-        update(channel: channel, completion: nil)
+        update(channel: updatedChannel, completion: nil)
     }
 
     private func getChannel(withUserIds userIds: [String], completion: @escaping (Result<Channel, AppError>) -> Void) {

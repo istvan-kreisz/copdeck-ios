@@ -68,8 +68,8 @@ struct ChatView: View {
                 }
             }
             .onAppear {
+                loadChannels(isFirstLoad: isFirstLoad)
                 if isFirstLoad {
-                    loadChannels()
                     isFirstLoad = false
                 }
             }
@@ -84,8 +84,11 @@ struct ChatView: View {
         }
     }
     
-    private func loadChannels() {
-        let loader = channelsLoader.getLoader()
+    private func loadChannels(isFirstLoad: Bool) {
+        var loader: ((Result<Void, AppError>) -> Void)?
+        if isFirstLoad {
+            loader = channelsLoader.getLoader()
+        }
         store.send(.main(action: .getChannelsListener(cancel: { cancel in
             self.cancelListener = cancel
         }, update: { result in
@@ -95,7 +98,7 @@ struct ChatView: View {
             case let .success(channels):
                 self.channels = channels
             }
-            loader(.success(()))
+            loader?(.success(()))
         })))
     }
 }

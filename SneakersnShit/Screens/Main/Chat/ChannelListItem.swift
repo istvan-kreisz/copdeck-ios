@@ -40,26 +40,28 @@ struct ChannelListItem: View {
                     .cornerRadius(Self.profileImageSize / 2)
                     .layoutPriority(2)
                     .onTapGesture(perform: didTapUser)
-                VStack(alignment: .leading, spacing: 5) {
+                HStack(alignment: .center, spacing: 10) {
+                    VStack(alignment: .leading, spacing: 5) {
+                        Spacer()
+                        Text(messagePartner.name ?? "anonymus")
+                            .font(.extraBold(size: 16))
+                            .foregroundColor(.customText1)
+                            .layoutPriority(2)
+                        Text(lastMessageContent)
+                            .font(channel.hasUnreadMessages(userId: userId) ? .bold(size: 14) : .regular(size: 14))
+                            .foregroundColor(channel.hasUnreadMessages(userId: userId) ? .customText1 : .customText2)
+                            .layoutPriority(2)
+                        Spacer()
+                    }
+                    .layoutPriority(2)
                     Spacer()
-                    Text(messagePartner.name ?? "anonymus")
-                        .font(.extraBold(size: 16))
-                        .foregroundColor(.customText1)
-                        .layoutPriority(2)
-                    Text(lastMessageContent)
-                        .font(channel.hasUnreadMessages(userId: userId) ? .bold(size: 14) : .regular(size: 14))
-                        .foregroundColor(channel.hasUnreadMessages(userId: userId) ? .customText1 : .customText2)
-                        .layoutPriority(2)
-                    Spacer()
+                    if channel.hasUnreadMessages(userId: userId) {
+                        Circle().fill(Color.customRed.opacity(0.3))
+                            .frame(width: 20, height: 20)
+                    }
                 }
-                .layoutPriority(2)
-                Spacer()
-                if channel.hasUnreadMessages(userId: userId) {
-                    Circle().fill(Color.customRed.opacity(0.3))
-                        .frame(width: 20, height: 20)
-                }
+                .onTapGesture(perform: didTapChannel)
             }
-            .onTapGesture(perform: didTapChannel)
         }
     }
 }
