@@ -223,13 +223,10 @@ class DefaultDataController: DataController {
                         update(.failure(error))
                     case let .success(users):
                         self?.getImageURLs(for: users) { updatedUsers in
-                            let channelsWithUsers = channels.map { channel in
-                                Channel(id: channel.id,
-                                        userIds: channel.userIds,
-                                        lastMessage: channel.lastMessage,
-                                        created: channel.created,
-                                        updated: channel.updated,
-                                        users: updatedUsers.filter { channel.userIds.contains($0.id) })
+                            let channelsWithUsers = channels.map { (channel: Channel) -> Channel in
+                                var updatedChannel = channel
+                                updatedChannel.users = updatedUsers.filter { channel.userIds.contains($0.id) }
+                                return updatedChannel
                             }
                             update(.success(channelsWithUsers))
                         }

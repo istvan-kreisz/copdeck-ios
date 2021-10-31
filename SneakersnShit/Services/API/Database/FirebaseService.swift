@@ -189,6 +189,14 @@ class FirebaseService: DatabaseManager {
             }
         }
     }
+    
+    func markChannelAsSeen(channel: Channel) {
+        guard let userId = userId else { return }
+        
+        var updatedChannel = channel
+        updatedChannel.lastSeenDates[userId] = Date.serverDate
+        update(channel: channel, completion: nil)
+    }
 
     private func getChannel(withUserIds userIds: [String], completion: @escaping (Result<Channel, AppError>) -> Void) {
         if let channel = channelsListener.value.first(where: { $0.userIds.sorted() == userIds.sorted() }) {
@@ -209,15 +217,7 @@ class FirebaseService: DatabaseManager {
 
     private func addChannel(userIds: [String], completion: @escaping (Result<Channel, AppError>) -> Void) {
         let channel = Channel(userIds: userIds.sorted())
-        let ref = firestore.collection("channels").document(channel.id)
-        guard let dict = try? channel.asDictionary() else { return }
-        setDocument(dict, atRef: ref) { error in
-            if let error = error {
-                completion(.failure(AppError(error: error)))
-            } else {
-                completion(.success(channel))
-            }
-        }
+        update(channel: channel, completion: completion)
     }
 
     private func send(message: Message, inChannel channel: Channel, completion: @escaping (Result<Void, AppError>) -> Void) {
@@ -234,15 +234,24 @@ class FirebaseService: DatabaseManager {
     }
 
     private func addLastMessage(toChannel channel: Channel, message: Message) {
-        let updatedChannel = Channel(id: channel.id,
-                                     userIds: channel.userIds,
-                                     lastMessage: .init(userId: message.sender.senderId, content: message.content),
-                                     created: channel.created,
-                                     updated: Date.serverDate,
-                                     users: channel.users)
+        var updatedChannel = channel
+        updatedChannel.lastMessages[message.sender.senderId] = .init(userId: message.sender.senderId, content: message.content, sentDate: Date.serverDate)
+        updatedChannel.updated = Date.serverDate
+        
+        update(channel: updatedChannel, completion: nil)
+    }
+    
+    private func update(channel: Channel, completion: ((Result<Channel, AppError>) -> Void)?) {
         let ref = firestore.collection("channels").document(channel.id)
-        guard let dict = try? updatedChannel.asDictionary() else { return }
-        updateDocument(dict, atRef: ref)
+        guard let dict = try? channel.asDictionary() else { return }
+        setDocument(dict, atRef: ref) { error in
+            guard let completion = completion else { return }
+            if let error = error {
+                completion(.failure(AppError(error: error)))
+            } else {
+                completion(.success(channel))
+            }
+        }
     }
 
     private func addCollectionUpdatesListener<T: Codable>(collectionRef: CollectionReference?,

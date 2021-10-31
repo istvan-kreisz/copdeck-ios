@@ -50,33 +50,12 @@ struct ChatView: View {
             let presentErrorAlert = Binding<Bool>(get: { error != nil }, set: { new in error = new ? error : nil })
             let showDetail = Binding<Bool>(get: { navigationDestination.show },
                                            set: { show in show ? navigationDestination.display() : navigationDestination.hide() })
-            let selectedUserBinding = Binding<ProfileData?>(get: { selectedUser },
-                                                            set: { profile in
-                                                                if let profile = profile {
-                                                                    navigationDestination += .profile(profile)
-                                                                } else {
-                                                                    navigationDestination.hide()
-                                                                }
-                                                            })
 
             NavigationLink(destination: Destination(store: store,
                                                     navigationDestination: $navigationDestination).navigationbarHidden(),
                            isActive: showDetail) { EmptyView() }
 
             VStack(alignment: .leading, spacing: 19) {
-//                Text("Messages")
-//                    .foregroundColor(.customText1)
-//                    .font(.bold(size: 35))
-//                    .leftAligned()
-//                    .padding(.leading, 6)
-//                    .withDefaultPadding(padding: .horizontal)
-//
-//                if channelsLoader.isLoading {
-//                    CustomSpinner(text: "Updating messages", animate: true)
-//                        .padding(.top, 5)
-//                        .withDefaultPadding(padding: .horizontal)
-//                }
-                
                 VerticalListView(bottomPadding: Styles.tabScreenBottomPadding, spacing: 0) {
                     Text("Messages")
                         .tabTitle()
@@ -89,6 +68,7 @@ struct ChatView: View {
                     ForEach(channels) { (channel: Channel) in
                         if let userId = userId {
                             ChannelListItem(channel: channel, userId: userId) {
+                                // mark channel as unread
                                 navigationDestination += .chat(channel)
                             } didTapUser: {
                                 if let messagePartner = channel.messagePartner(userId: userId) {

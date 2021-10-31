@@ -11,24 +11,39 @@ struct Channel: Codable, Identifiable {
     struct LastMessage: Codable {
         let userId: String
         let content: String
+        let sentDate: Double
     }
 
     let id: String
     let userIds: [String]
-    let lastMessage: LastMessage?
+    var lastMessages: [String: LastMessage]
+    var lastSeenDates: [String: Double]
     let created: Double
-    let updated: Double
+    var updated: Double
 
     var users: [User] = []
-    var unreadCount = 0
     
-    
+    var lastMessage: LastMessage? {
+        lastMessages.values.sorted(by: { $0.sentDate < $1.sentDate }).last
+    }
+
+    func lastMessageSent(byUserWithId id: String) -> LastMessage? {
+        lastMessages[id]
+    }
+
     func messagePartner(userId: String) -> User? {
         users.first(where: { $0.id != userId })
     }
 
+    func hasUnreadMessages(userId: String) -> Bool {
+        let lastSeenDate = lastSeenDates[userId] ?? Date(timeIntervalSince1970: 0).timeIntervalSince1970 * 1000
+        let lastMessagesByOthers = userIds.filter { $0 != userId }.compactMap(lastMessageSent)
+
+        return lastMessagesByOthers.contains(where: { $0.sentDate > lastSeenDate })
+    }
+
     enum CodingKeys: String, CodingKey {
-        case id, userIds, lastMessage, created, updated
+        case id, userIds, lastMessages, lastSeenDates, created, updated
     }
 }
 
@@ -36,7 +51,8 @@ extension Channel {
     init(userIds: [String]) {
         self.init(id: UUID().uuidString,
                   userIds: userIds,
-                  lastMessage: nil,
+                  lastMessages: [:],
+                  lastSeenDates: [:],
                   created: Date.serverDate,
                   updated: Date.serverDate)
     }

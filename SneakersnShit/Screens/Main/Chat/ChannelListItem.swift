@@ -47,19 +47,16 @@ struct ChannelListItem: View {
                         .foregroundColor(.customText1)
                         .layoutPriority(2)
                     Text(lastMessageContent)
-                        .font(channel.unreadCount == 0 ? .regular(size: 14) : .bold(size: 14))
-                        .foregroundColor(channel.unreadCount == 0 ? .customText2 : .customText1)
+                        .font(channel.hasUnreadMessages(userId: userId) ? .regular(size: 14) : .bold(size: 14))
+                        .foregroundColor(channel.hasUnreadMessages(userId: userId) ? .customText2 : .customText1)
                         .layoutPriority(2)
                     Spacer()
                 }
                 .layoutPriority(2)
                 Spacer()
-                if channel.unreadCount > 0 {
-                    Text("\(channel.unreadCount)")
-                        .font(.bold(size: 14))
-                        .foregroundColor(.customText1)
-                        .padding(10)
-                        .background(Circle().fill(Color.customRed.opacity(0.3)))
+                if channel.hasUnreadMessages(userId: userId) {
+                    Circle().fill(Color.customRed.opacity(0.3))
+                        .frame(width: 20, height: 20)
                 }
             }
             .onTapGesture(perform: didTapChannel)
