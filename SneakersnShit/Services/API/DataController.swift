@@ -103,7 +103,7 @@ protocol DatabaseManager {
     func add(recentlyViewedItem: Item)
     func favorite(item: Item)
     func unfavorite(item: Item)
-    func sendMessage(user: User, message: String, toUserWithId sendeeId: String, completion: @escaping (Result<Void, AppError>) -> Void)
+    func sendMessage(user: User, message: String, toChannelWithId channelId: String, completion: @escaping (Result<Void, AppError>) -> Void)
 
     // admin
     func getSpreadsheetImportWaitlist(completion: @escaping (Result<[User], Error>) -> Void)

@@ -20,7 +20,7 @@ struct ChannelListItem: View {
             if lastMessage.userId == userId {
                 return "Me: \(lastMessage.content)"
             } else {
-                return "\(channel.messagePartner(userId: userId)?.name ?? "anonymus"): \(lastMessage.content)"
+                return "\(channel.messagePartner(userId: userId)?.name ?? "Anonymus"): \(lastMessage.content)"
             }
         } else {
             return ""
@@ -43,7 +43,7 @@ struct ChannelListItem: View {
                 HStack(alignment: .center, spacing: 10) {
                     VStack(alignment: .leading, spacing: 5) {
                         Spacer()
-                        Text(messagePartner.name ?? "anonymus")
+                        Text(messagePartner.name ?? "Anonymus")
                             .font(.extraBold(size: 16))
                             .foregroundColor(.customText1)
                             .layoutPriority(2)

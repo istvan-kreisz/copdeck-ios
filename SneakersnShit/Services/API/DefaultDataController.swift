@@ -377,8 +377,8 @@ class DefaultDataController: DataController {
         databaseManager.unfavorite(item: item)
     }
 
-    func sendMessage(user: User, message: String, toUserWithId sendeeId: String, completion: @escaping (Result<Void, AppError>) -> Void) {
-        databaseManager.sendMessage(user: user, message: message, toUserWithId: sendeeId, completion: completion)
+    func sendMessage(user: User, message: String, toChannelWithId channelId: String, completion: @escaping (Result<Void, AppError>) -> Void) {
+        databaseManager.sendMessage(user: user, message: message, toChannelWithId: channelId, completion: completion)
     }
 
     func uploadProfileImage(image: UIImage) {

@@ -19,6 +19,6 @@ struct Sender: Codable, SenderType {
 extension Sender {
     init(user: User) {
         self.id = user.id
-        self.name = user.name ?? "anonymus"
+        self.name = user.name ?? "Anonymus"
     }
 }
