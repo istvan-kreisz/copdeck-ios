@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import UIKit
 
-class DefaultDataController: DataController {    
+class DefaultDataController: DataController {
     let backendAPI: BackendAPI
     let localScraper: LocalAPI
     let databaseManager: DatabaseManager
@@ -211,13 +211,36 @@ class DefaultDataController: DataController {
     func getItem(withId id: String, settings: CopDeckSettings) -> AnyPublisher<Item, AppError> {
         databaseManager.getItem(withId: id, settings: settings)
     }
-    
-    func getChannelsListener(completion: @escaping (_ publisher: AnyPublisher<[Channel], AppError>, _ cancel: () -> Void) -> Void) {
-        databaseManager.getChannelsListener(completion: completion)
+
+    func getChannelsListener(cancel: @escaping (_ cancel: @escaping () -> Void) -> Void, update: @escaping (Result<[Channel], AppError>) -> Void) {
+        databaseManager.getChannelsListener(cancel: cancel) { [weak self] result in
+            switch result {
+            case let .success(channels):
+                let allUserIds = channels.flatMap { $0.userIds }.uniqued()
+                self?.backendAPI.getUsers(userIds: allUserIds) { result in
+                    switch result {
+                    case let .failure(error):
+                        update(.failure(error))
+                    case let .success(users):
+                        let channelsWithUsers = channels.map { channel in
+                            Channel(id: channel.id,
+                                    userIds: channel.userIds,
+                                    created: channel.created,
+                                    updated: channel.updated,
+                                    users: users.filter { channel.userIds.contains($0.id) })
+                        }
+                        update(.success(channelsWithUsers))
+                    }
+                }
+            case let .failure(error):
+                update(.failure(error))
+            }
+        }
     }
-    
-    func getChannelListener(channelId: String, completion: @escaping (_ publisher: AnyPublisher<[Message], AppError>, _ cancel: () -> Void) -> Void) {
-        databaseManager.getChannelListener(channelId: channelId, completion: completion)
+
+    func getChannelListener(channelId: String, cancel: @escaping (_ cancel: @escaping () -> Void) -> Void,
+                            update: @escaping (Result<[Message], AppError>) -> Void) {
+        databaseManager.getChannelListener(channelId: channelId, cancel: cancel, update: update)
     }
 
     func getFeedPosts(loadMore: Bool) -> AnyPublisher<PaginatedResult<[FeedPost]>, AppError> {
@@ -245,7 +268,7 @@ class DefaultDataController: DataController {
             }
             .eraseToAnyPublisher()
     }
-    
+
     func updateLike(onStack stack: Stack, addLike: Bool, stackOwnerId: String) {
         backendAPI.updateLike(onStack: stack, addLike: addLike, stackOwnerId: stackOwnerId)
     }
@@ -334,6 +357,10 @@ class DefaultDataController: DataController {
             }.eraseToAnyPublisher()
     }
 
+    func getUsers(userIds: [String], completion: @escaping (Result<[User], AppError>) -> Void) {
+        backendAPI.getUsers(userIds: userIds, completion: completion)
+    }
+
     func add(recentlyViewedItem: Item) {
         databaseManager.add(recentlyViewedItem: recentlyViewedItem)
     }
@@ -345,10 +372,9 @@ class DefaultDataController: DataController {
     func unfavorite(item: Item) {
         databaseManager.unfavorite(item: item)
     }
-    
+
     func sendMessage(user: User, message: String, toUserWithId sendeeId: String, completion: @escaping (Result<Void, AppError>) -> Void) {
         databaseManager.sendMessage(user: user, message: message, toUserWithId: sendeeId, completion: completion)
-        
     }
 
     func uploadProfileImage(image: UIImage) {
@@ -424,11 +450,11 @@ class DefaultDataController: DataController {
     func applyReferralCode(_ code: String, completion: ((Result<Void, AppError>) -> Void)?) {
         backendAPI.applyReferralCode(code, completion: completion)
     }
-    
+
     func userSubscribed() {
         backendAPI.userSubscribed()
     }
-    
+
     func sendMessage(email: String, message: String, completion: ((Result<Void, AppError>) -> Void)?) {
         backendAPI.sendMessage(email: email, message: message, completion: completion)
     }

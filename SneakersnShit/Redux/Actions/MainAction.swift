@@ -71,8 +71,8 @@ enum MainAction {
     // contact
     case sendMessage(email: String, message: String, completion: ((Result<Void, AppError>) -> Void)?)
     // chat
-    case getChannelsListener(completion: (_ publisher: AnyPublisher<[Channel], AppError>, _ cancel: () -> Void) -> Void)
-    case getChannelListener(channelId: String, completion: (_ publisher: AnyPublisher<[Message], AppError>, _ cancel: () -> Void) -> Void)
+    case getChannelsListener(cancel: (_ cancel: @escaping () -> Void) -> Void, update: (Result<[Channel], AppError>) -> Void)
+    case getChannelListener(channelId: String, cancel: (_ cancel: @escaping () -> Void) -> Void, update: (Result<[Message], AppError>) -> Void)
     case sendChatMessage(message: String, sendeeId: String, completion: (Result<Void, AppError>) -> Void)
 }
 

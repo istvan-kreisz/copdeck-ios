@@ -52,6 +52,7 @@ protocol BackendAPI {
     func deleteUser()
     func getUserProfile(userId: String) -> AnyPublisher<ProfileData, AppError>
     func searchUsers(searchTerm: String) -> AnyPublisher<[User], AppError>
+    func getUsers(userIds: [String], completion: @escaping (Result<[User], AppError>) -> Void)
     // spreadsheet import
     func startSpreadsheetImport(urlString: String, completion: @escaping (Error?) -> Void)
     func revertLastImport(completion: @escaping (Error?) -> Void)
@@ -88,9 +89,9 @@ protocol DatabaseManager {
     // read
     func getUser(withId id: String) -> AnyPublisher<User, AppError>
     func getItem(withId id: String, settings: CopDeckSettings) -> AnyPublisher<Item, AppError>
-    func getChannelsListener(completion: @escaping (_ publisher: AnyPublisher<[Channel], AppError>, _ cancel: () -> Void) -> Void)
-    func getChannelListener(channelId: String, completion: @escaping (_ publisher: AnyPublisher<[Message], AppError>, _ cancel: () -> Void) -> Void)
-
+    func getChannelsListener(cancel: @escaping (_ cancel: @escaping () -> Void) -> Void, update: @escaping (Result<[Channel], AppError>) -> Void)
+    func getChannelListener(channelId: String, cancel: @escaping (_ cancel: @escaping () -> Void) -> Void, update: @escaping (Result<[Message], AppError>) -> Void)
+    
     // write
     func add(inventoryItems: [InventoryItem])
     func delete(inventoryItems: [InventoryItem])

@@ -107,27 +107,55 @@ class FirebaseService: DatabaseManager {
         recentlyViewedListener.startListening(collectionName: "recentlyViewed", baseDocumentReference: userListener.documentRef)
     }
 
-    func getChannelsListener(completion: @escaping (_ publisher: AnyPublisher<[Channel], AppError>, _ cancel: () -> Void) -> Void) {
+    func getChannelsListener(cancel: @escaping (_ cancel: @escaping () -> Void) -> Void, update: @escaping (Result<[Channel], AppError>) -> Void) {
         guard let userId = userId else { return }
         channelsListener.reset()
         channelsListener.startListening(collectionName: "channels", firestore: firestore) { $0?.whereField("users", arrayContains: userId) }
 
         let publisher = channelsListener.dataPublisher
-        let cancel: () -> Void = { [weak channelsListener] in
+            .sink { completion in
+                switch completion {
+                case let .failure(error):
+                    update(.failure(error))
+                case .finished:
+                    break
+                }
+            } receiveValue: { channels in
+                update(.success(channels))
+            }
+        publisher.store(in: &cancellables)
+
+        let cancelBlock: () -> Void = { [weak channelsListener, weak publisher] in
             channelsListener?.reset()
+            publisher?.cancel()
         }
-        completion(publisher, cancel)
+        cancel(cancelBlock)
     }
 
-    func getChannelListener(channelId: String, completion: @escaping (_ publisher: AnyPublisher<[Message], AppError>, _ cancel: () -> Void) -> Void) {
+    func getChannelListener(channelId: String,
+                            cancel: @escaping (_ cancel: @escaping () -> Void) -> Void,
+                            update: @escaping (Result<[Message], AppError>) -> Void) {
         channelListener.reset()
         channelListener.startListening(collectionName: "thread", baseDocumentReference: firestore.collection("channels").document(channelId))
 
         let publisher = channelListener.dataPublisher
-        let cancel: () -> Void = { [weak channelListener] in
+            .sink { completion in
+                switch completion {
+                case let .failure(error):
+                    update(.failure(error))
+                case .finished:
+                    break
+                }
+            } receiveValue: { messages in
+                update(.success(messages))
+            }
+        publisher.store(in: &cancellables)
+
+        let cancelBlock: () -> Void = { [weak channelListener, weak publisher] in
             channelListener?.reset()
+            publisher?.cancel()
         }
-        completion(publisher, cancel)
+        cancel(cancelBlock)
     }
 
     func sendMessage(user: User, message: String, toUserWithId sendeeId: String, completion: @escaping (Result<Void, AppError>) -> Void) {
@@ -163,13 +191,13 @@ class FirebaseService: DatabaseManager {
     }
 
     private func getChannel(withUserIds userIds: [String], completion: @escaping (Result<Channel, AppError>) -> Void) {
-        if let channel = channelsListener.value.first(where: { $0.users.sorted() == userIds.sorted() }) {
+        if let channel = channelsListener.value.first(where: { $0.userIds.sorted() == userIds.sorted() }) {
             completion(.success(channel))
         } else {
             firestore.collection("channels").whereField("users", isEqualTo: userIds.sorted()).getDocuments { snapshot, error in
                 guard let data = snapshot?.documents.map({ $0.data() }),
                       let channels = [Channel](from: data),
-                      let channel = channels.first(where: { $0.users.sorted() == userIds.sorted() })
+                      let channel = channels.first(where: { $0.userIds.sorted() == userIds.sorted() })
                 else {
                     completion(.failure(.notFound(val: "Channel")))
                     return
@@ -180,7 +208,7 @@ class FirebaseService: DatabaseManager {
     }
 
     private func addChannel(userIds: [String], completion: @escaping (Result<Channel, AppError>) -> Void) {
-        let channel = Channel(users: userIds.sorted())
+        let channel = Channel(userIds: userIds.sorted())
         let ref = firestore.collection("channels").document(channel.id)
         guard let dict = try? channel.asDictionary() else { return }
         setDocument(dict, atRef: ref) { error in
@@ -195,7 +223,26 @@ class FirebaseService: DatabaseManager {
     private func send(message: Message, inChannel channel: Channel, completion: @escaping (Result<Void, AppError>) -> Void) {
         let ref = firestore.collection("channels").document(channel.id).collection("thread").document(message.id)
         guard let dict = try? message.asDictionary() else { return }
-        setDocument(dict, atRef: ref)
+        setDocument(dict, atRef: ref) { [weak self] error in
+            if let error = error {
+                completion(.failure(AppError(error: error)))
+            } else {
+                self?.addLastMessage(toChannel: channel, message: message)
+                completion(.success(()))
+            }
+        }
+    }
+
+    private func addLastMessage(toChannel channel: Channel, message: Message) {
+        let updatedChannel = Channel(id: channel.id,
+                                     userIds: channel.userIds,
+                                     lastMessage: .init(userId: message.sender.senderId, content: message.content),
+                                     created: channel.created,
+                                     updated: channel.updated,
+                                     users: channel.users)
+        let ref = firestore.collection("channels").document(channel.id)
+        guard let dict = try? updatedChannel.asDictionary() else { return }
+        updateDocument(dict, atRef: ref)
     }
 
     private func addCollectionUpdatesListener<T: Codable>(collectionRef: CollectionReference?,

@@ -197,6 +197,13 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
         }
         return callFirebaseFunctionArray(functionName: "searchUsers", model: Wrapper(searchTerm: searchTerm))
     }
+    
+    func getUsers(userIds: [String], completion: @escaping (Result<[User], AppError>) -> Void) {
+        struct Wrapper: Encodable {
+            let userIds: [String]
+        }
+        handlePublisherResult(publisher: callFirebaseFunctionArray(functionName: "getUsers", model: Wrapper(userIds: userIds)), showAlert: false, completion: completion)
+    }
 
     func startSpreadsheetImport(urlString: String, completion: @escaping (Error?) -> Void) {
         struct Wrapper: Encodable {

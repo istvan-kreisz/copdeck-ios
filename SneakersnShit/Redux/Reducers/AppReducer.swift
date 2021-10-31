@@ -174,10 +174,10 @@ func appReducer(state: inout AppState,
             environment.dataController.getAffiliateList(completion: completion)
         case let .sendMessage(email, message, completion):
             environment.dataController.sendMessage(email: email, message: message, completion: completion)
-        case let .getChannelsListener(completion):
-            environment.dataController.getChannelsListener(completion: completion)
-        case let .getChannelListener(channelId, completion):
-            environment.dataController.getChannelListener(channelId: channelId, completion: completion)
+        case let .getChannelsListener(cancel, update):
+            environment.dataController.getChannelsListener(cancel: cancel, update: update)
+        case let .getChannelListener(channelId, cancel, update):
+            environment.dataController.getChannelListener(channelId: channelId, cancel: cancel, update: update)
         case let .sendChatMessage(message, sendeeId, completion):
             if let user = state.user {
                 environment.dataController.sendMessage(user: user, message: message, toUserWithId: sendeeId, completion: completion)
