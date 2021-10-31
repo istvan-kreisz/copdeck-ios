@@ -114,6 +114,7 @@ protocol ImageService {
     var profileImagePublisher: AnyPublisher<URL?, Never> { get }
 
     func getImageURLs(for users: [User]) -> AnyPublisher<[User], AppError>
+    func getImageURLs(for users: [User], completion: @escaping ([User]) -> Void)
     func uploadProfileImage(image: UIImage)
     func setup(userId: String)
     func reset()

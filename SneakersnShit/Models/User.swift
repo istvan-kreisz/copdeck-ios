@@ -115,7 +115,7 @@ extension User {
 
 extension Array where Element == User {
     var asProfiles: [ProfileData] {
-        get { self.map { .init(user: $0, stacks: [], inventoryItems: []) } }
+        get { self.map { .init(user: $0) } }
         set {}
     }
 }

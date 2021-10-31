@@ -48,6 +48,22 @@ class DefaultImageService: ImageService {
     func reset() {
         userId = nil
     }
+    
+    func getImageURLs(for users: [User], completion: @escaping ([User]) -> Void) {
+        var usersWithImageURLs: [User] = []
+        let dispatchGroup = DispatchGroup()
+
+        for user in users {
+            dispatchGroup.enter()
+            self.getImage(imageId: user.id, reference: self.profileImageRef(userId: user.id), callbackQueue: self.imagesQueue) { url in
+                usersWithImageURLs.append(user.withImageURL(url))
+                dispatchGroup.leave()
+            }
+        }
+        dispatchGroup.notify(queue: .main) {
+            completion(usersWithImageURLs)
+        }
+    }
 
     func getImageURLs(for users: [User]) -> AnyPublisher<[User], AppError> {
         Future { [weak self] promise in
@@ -55,18 +71,8 @@ class DefaultImageService: ImageService {
                 promise(.success(users))
                 return
             }
-            var usersWithImageURLs: [User] = []
-            let dispatchGroup = DispatchGroup()
-
-            for user in users {
-                dispatchGroup.enter()
-                self.getImage(imageId: user.id, reference: self.profileImageRef(userId: user.id), callbackQueue: self.imagesQueue) { url in
-                    usersWithImageURLs.append(user.withImageURL(url))
-                    dispatchGroup.leave()
-                }
-            }
-            dispatchGroup.notify(queue: .main) {
-                promise(.success(usersWithImageURLs))
+            self.getImageURLs(for: users) { users in
+                promise(.success(users))
             }
         }.eraseToAnyPublisher()
     }

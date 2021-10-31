@@ -63,10 +63,7 @@ struct InventoryHeaderView: View {
             if isOwnProfile {
                 HStack {
                     Text("Inventory")
-                        .foregroundColor(.customText1)
-                        .font(.bold(size: 35))
-                        .leftAligned()
-                        .padding(.leading, 6)
+                        .tabTitle()
                     Spacer()
                     Button(action: {
                         settingsPresented = true

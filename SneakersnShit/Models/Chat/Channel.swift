@@ -21,6 +21,11 @@ struct Channel: Codable, Identifiable {
 
     var users: [User] = []
     var unreadCount = 0
+    
+    
+    func messagePartner(userId: String) -> User? {
+        users.first(where: { $0.id != userId })
+    }
 
     enum CodingKeys: String, CodingKey {
         case id, userIds, lastMessage, created, updated

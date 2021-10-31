@@ -222,14 +222,17 @@ class DefaultDataController: DataController {
                     case let .failure(error):
                         update(.failure(error))
                     case let .success(users):
-                        let channelsWithUsers = channels.map { channel in
-                            Channel(id: channel.id,
-                                    userIds: channel.userIds,
-                                    created: channel.created,
-                                    updated: channel.updated,
-                                    users: users.filter { channel.userIds.contains($0.id) })
+                        self?.getImageURLs(for: users) { updatedUsers in
+                            let channelsWithUsers = channels.map { channel in
+                                Channel(id: channel.id,
+                                        userIds: channel.userIds,
+                                        lastMessage: channel.lastMessage,
+                                        created: channel.created,
+                                        updated: channel.updated,
+                                        users: updatedUsers.filter { channel.userIds.contains($0.id) })
+                            }
+                            update(.success(channelsWithUsers))
                         }
-                        update(.success(channelsWithUsers))
                     }
                 }
             case let .failure(error):
@@ -383,6 +386,10 @@ class DefaultDataController: DataController {
 
     func getImageURLs(for users: [User]) -> AnyPublisher<[User], AppError> {
         imageService.getImageURLs(for: users)
+    }
+
+    func getImageURLs(for users: [User], completion: @escaping ([User]) -> Void) {
+        imageService.getImageURLs(for: users, completion: completion)
     }
 
     func getImage(for itemId: String, completion: @escaping (URL?) -> Void) {

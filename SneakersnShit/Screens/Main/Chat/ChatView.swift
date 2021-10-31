@@ -50,14 +50,6 @@ struct ChatView: View {
             let presentErrorAlert = Binding<Bool>(get: { error != nil }, set: { new in error = new ? error : nil })
             let showDetail = Binding<Bool>(get: { navigationDestination.show },
                                            set: { show in show ? navigationDestination.display() : navigationDestination.hide() })
-            let selectedChannelBinding = Binding<Channel?>(get: { selectedChannel },
-                                                     set: { channel in
-                                                         if let channel = channel {
-                                                             navigationDestination += .chat(channel)
-                                                         } else {
-                                                             navigationDestination.hide()
-                                                         }
-                                                     })
             let selectedUserBinding = Binding<ProfileData?>(get: { selectedUser },
                                                             set: { profile in
                                                                 if let profile = profile {
@@ -72,34 +64,39 @@ struct ChatView: View {
                            isActive: showDetail) { EmptyView() }
 
             VStack(alignment: .leading, spacing: 19) {
-                Text("Search")
-                    .foregroundColor(.customText1)
-                    .font(.bold(size: 35))
-                    .leftAligned()
-                    .padding(.leading, 6)
-                    .withDefaultPadding(padding: .horizontal)
+//                Text("Messages")
+//                    .foregroundColor(.customText1)
+//                    .font(.bold(size: 35))
+//                    .leftAligned()
+//                    .padding(.leading, 6)
+//                    .withDefaultPadding(padding: .horizontal)
+//
+//                if channelsLoader.isLoading {
+//                    CustomSpinner(text: "Updating messages", animate: true)
+//                        .padding(.top, 5)
+//                        .withDefaultPadding(padding: .horizontal)
+//                }
+                
                 VerticalListView(bottomPadding: Styles.tabScreenBottomPadding, spacing: 0) {
+                    Text("Messages")
+                        .tabTitle()
+                        .padding(.bottom, 19)
+                    
+                    if channelsLoader.isLoading {
+                        CustomSpinner(text: "Updating messages", animate: true)
+                    }
+
                     ForEach(channels) { (channel: Channel) in
                         if let userId = userId {
-                            ChannelListItem(channel: channel, userId: userId)                            
+                            ChannelListItem(channel: channel, userId: userId) {
+                                navigationDestination += .chat(channel)
+                            } didTapUser: {
+                                if let messagePartner = channel.messagePartner(userId: userId) {
+                                    navigationDestination += .profile(.init(user: messagePartner))
+                                }
+                            }
+
                         }
-//                        if let user = feedPostData.user {
-//                            SharedStackSummaryView(selectedInventoryItem: selectedInventoryItemBinding,
-//                                                   selectedStack: selectedStackBinding,
-//                                                   stack: feedPostData.stack,
-//                                                   stackOwnerId: feedPostData.userId,
-//                                                   userId: userId,
-//                                                   userCountry: feedPostData.user?.country,
-//                                                   inventoryItems: feedPostData.inventoryItems,
-//                                                   requestInfo: store.globalState.requestInfo,
-//                                                   profileInfo: (user.name ?? "", user.imageURL)) {
-//                                if let profileData = feedPostData.profileData {
-//                                    navigationDestination += .profile(profileData)
-//                                }
-//                            }
-//                            .buttonStyle(PlainButtonStyle())
-//                            .padding(.bottom, 4)
-//                        }
                     }
                 }
             }
@@ -121,6 +118,7 @@ struct ChatView: View {
     }
     
     private func loadChannels() {
+        let loader = channelsLoader.getLoader()
         store.send(.main(action: .getChannelsListener(cancel: { cancel in
             self.cancelListener = cancel
         }, update: { result in
@@ -130,6 +128,7 @@ struct ChatView: View {
             case let .success(channels):
                 self.channels = channels
             }
+            loader(.success(()))
         })))
     }
 }

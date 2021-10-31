@@ -66,65 +66,59 @@ struct FeedView: View {
                     .navigationbarHidden(),
                 isActive: showDetail) { EmptyView() }
 
-            VStack(alignment: .leading, spacing: 19) {
+            VerticalListView(bottomPadding: Styles.tabScreenBottomPadding, spacing: 0) {
                 Text("Feed")
-                    .foregroundColor(.customText1)
-                    .font(.bold(size: 35))
-                    .leftAligned()
-                    .padding(.leading, 6)
-                    .withDefaultPadding(padding: .horizontal)
+                    .tabTitle()
 
-                VerticalListView(bottomPadding: Styles.tabScreenBottomPadding, spacing: 0) {
-                    PullToRefresh(coordinateSpaceName: "pullToRefresh") {
-                        loadFeedPosts(loadMore: false)
-                    }
+                PullToRefresh(coordinateSpaceName: "pullToRefresh") {
+                    loadFeedPosts(loadMore: false)
+                }
 
-                    if loader.isLoading && store.state.feedPosts.isLastPage {
-                        CustomSpinner(text: "Loading posts...", animate: true)
-                            .padding(.top, 21)
-                            .centeredHorizontally()
-                    }
+                if loader.isLoading && store.state.feedPosts.isLastPage {
+                    CustomSpinner(text: "Loading posts...", animate: true)
+                        .padding(.top, 21)
+                        .centeredHorizontally()
+                }
 
-                    ForEach(feedPosts) { (feedPostData: FeedPost) in
-                        if let user = feedPostData.user {
-                            SharedStackSummaryView(selectedInventoryItem: selectedInventoryItemBinding,
-                                                   selectedStack: selectedStackBinding,
-                                                   stack: feedPostData.stack,
-                                                   stackOwnerId: feedPostData.userId,
-                                                   userId: userId,
-                                                   userCountry: feedPostData.user?.country,
-                                                   inventoryItems: feedPostData.inventoryItems,
-                                                   requestInfo: store.globalState.requestInfo,
-                                                   profileInfo: (user.name ?? "", user.imageURL)) {
-                                if let profileData = feedPostData.profileData {
-                                    navigationDestination += .profile(profileData)
-                                }
+                ForEach(feedPosts) { (feedPostData: FeedPost) in
+                    if let user = feedPostData.user {
+                        SharedStackSummaryView(selectedInventoryItem: selectedInventoryItemBinding,
+                                               selectedStack: selectedStackBinding,
+                                               stack: feedPostData.stack,
+                                               stackOwnerId: feedPostData.userId,
+                                               userId: userId,
+                                               userCountry: feedPostData.user?.country,
+                                               inventoryItems: feedPostData.inventoryItems,
+                                               requestInfo: store.globalState.requestInfo,
+                                               profileInfo: (user.name ?? "", user.imageURL)) {
+                            if let profileData = feedPostData.profileData {
+                                navigationDestination += .profile(profileData)
                             }
-                            .buttonStyle(PlainButtonStyle())
-                            .padding(.bottom, 4)
                         }
-                    }
-
-                    if store.state.feedPosts.isLastPage {
-                        Text("That's it!")
-                            .font(.bold(size: 14))
-                            .foregroundColor(.customText2)
-                            .padding(.top, 21)
-                            .centeredHorizontally()
-                    } else {
-                        CustomSpinner(text: "Loading posts...", animate: true)
-                            .padding(.top, 21)
-                            .centeredHorizontally()
-                            .onAppear {
-                                if !feedPosts.isEmpty {
-                                    loadFeedPosts(loadMore: true)
-                                }
-                            }
+                        .buttonStyle(PlainButtonStyle())
+                        .padding(.bottom, 4)
                     }
                 }
-                .environment(\.defaultMinListRowHeight, 1)
-                .coordinateSpace(name: "pullToRefresh")
+
+                if store.state.feedPosts.isLastPage {
+                    Text("That's it!")
+                        .font(.bold(size: 14))
+                        .foregroundColor(.customText2)
+                        .padding(.top, 21)
+                        .centeredHorizontally()
+                } else {
+                    CustomSpinner(text: "Loading posts...", animate: true)
+                        .padding(.top, 21)
+                        .centeredHorizontally()
+                        .onAppear {
+                            if !feedPosts.isEmpty {
+                                loadFeedPosts(loadMore: true)
+                            }
+                        }
+                }
             }
+            .environment(\.defaultMinListRowHeight, 1)
+            .coordinateSpace(name: "pullToRefresh")
         }
         .onAppear {
             if isFirstLoad {

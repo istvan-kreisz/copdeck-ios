@@ -16,3 +16,9 @@ struct ProfileData: Codable, Equatable {
 extension ProfileData: Identifiable {
     var id: String { user.id }
 }
+
+extension ProfileData {
+    init(user: User) {
+        self.init(user: user, stacks: [], inventoryItems: [])
+    }
+}

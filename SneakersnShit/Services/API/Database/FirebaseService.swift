@@ -238,7 +238,7 @@ class FirebaseService: DatabaseManager {
                                      userIds: channel.userIds,
                                      lastMessage: .init(userId: message.sender.senderId, content: message.content),
                                      created: channel.created,
-                                     updated: channel.updated,
+                                     updated: Date.serverDate,
                                      users: channel.users)
         let ref = firestore.collection("channels").document(channel.id)
         guard let dict = try? updatedChannel.asDictionary() else { return }

@@ -150,6 +150,14 @@ extension View {
                             AppStore.default.send(.paymentAction(action: .showPaymentView(show: true)))
                         })
     }
+
+    func tabTitle() -> some View {
+        self
+            .foregroundColor(.customText1)
+            .font(.bold(size: 35))
+            .leftAligned()
+            .padding(.leading, 6)
+    }
 }
 
 #if DEBUG
