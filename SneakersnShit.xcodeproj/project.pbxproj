@@ -84,7 +84,6 @@
 		5D56B7B2270097EC001357E0 /* DeleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D56B7B1270097EC001357E0 /* DeleteButton.swift */; };
 		5D56B7B42700A6BE001357E0 /* TestImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D56B7B32700A6BE001357E0 /* TestImageView.swift */; };
 		5D587A92272DE1820075C93C /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D587A91272DE1820075C93C /* ChatView.swift */; };
-		5D587A94272DEC480075C93C /* ChatDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D587A93272DEC480075C93C /* ChatDetailView.swift */; };
 		5D587A96272E41980075C93C /* ChannelListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D587A95272E41980075C93C /* ChannelListItem.swift */; };
 		5D5D4C4426D50EB100A7C61A /* ModelWithDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D5D4C4326D50EB100A7C61A /* ModelWithDate.swift */; };
 		5D5D4C4726D5F20900A7C61A /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D5D4C4626D5F20900A7C61A /* ImagePickerView.swift */; };
@@ -296,7 +295,6 @@
 		5D56B7B1270097EC001357E0 /* DeleteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButton.swift; sourceTree = "<group>"; };
 		5D56B7B32700A6BE001357E0 /* TestImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestImageView.swift; sourceTree = "<group>"; };
 		5D587A91272DE1820075C93C /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
-		5D587A93272DEC480075C93C /* ChatDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDetailView.swift; sourceTree = "<group>"; };
 		5D587A95272E41980075C93C /* ChannelListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelListItem.swift; sourceTree = "<group>"; };
 		5D5D4C4326D50EB100A7C61A /* ModelWithDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelWithDate.swift; sourceTree = "<group>"; };
 		5D5D4C4626D5F20900A7C61A /* ImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerView.swift; sourceTree = "<group>"; };
@@ -809,7 +807,6 @@
 			isa = PBXGroup;
 			children = (
 				5D587A91272DE1820075C93C /* ChatView.swift */,
-				5D587A93272DEC480075C93C /* ChatDetailView.swift */,
 				5D587A95272E41980075C93C /* ChannelListItem.swift */,
 				5D7CAAD3272F193D003A241D /* ChatViewController.swift */,
 				5D7CAAD5272F1A2A003A241D /* MessagesView.swift */,
@@ -1470,7 +1467,6 @@
 				5D424CEE25C502F90008D6F4 /* Colors.swift in Sources */,
 				5D83156B25C397C4008AB948 /* MainContainerView.swift in Sources */,
 				5D8ABBBA26B0B51200AFD8CF /* Snackbar.swift in Sources */,
-				5D587A94272DEC480075C93C /* ChatDetailView.swift in Sources */,
 				5D88261926F917770006031D /* ImageService.swift in Sources */,
 				5DE4F21C26E048100087077A /* SharedInventoryItemDetailView.swift in Sources */,
 				5D7CAAD6272F1A2A003A241D /* MessagesView.swift in Sources */,

@@ -24,7 +24,7 @@ struct ChatView: View {
     }
 
     var selectedChannel: Channel? {
-        guard case let .chat(channel) = navigationDestination.destination else { return nil }
+        guard case let .chat(channel, _) = navigationDestination.destination else { return nil }
         return channel
     }
 
@@ -56,7 +56,7 @@ struct ChatView: View {
                     ForEach(channels) { (channel: Channel) in
                         if let userId = userId {
                             ChannelListItem(channel: channel, userId: userId) {
-                                navigationDestination += .chat(channel)
+                                navigationDestination += .chat(channel, userId)
                             } didTapUser: {
                                 if let messagePartner = channel.messagePartner(userId: userId) {
                                     navigationDestination += .profile(.init(user: messagePartner))
@@ -105,7 +105,7 @@ struct ChatView: View {
 
 extension ChatView {
     enum NavigationDestination {
-        case chat(Channel), profile(ProfileData), empty
+        case chat(Channel, String), profile(ProfileData), empty
     }
 
     struct Destination: View {
@@ -114,8 +114,8 @@ extension ChatView {
 
         var body: some View {
             switch navigationDestination.destination {
-            case let .chat(channel):
-                ChatDetailView(channel: channel)
+            case let .chat(channel, userId):
+                MessagesView(channel: channel, userId: userId, store: store)
             case let .profile(profile):
                 ProfileView(profileData: profile) { navigationDestination.hide() }
             case .empty:

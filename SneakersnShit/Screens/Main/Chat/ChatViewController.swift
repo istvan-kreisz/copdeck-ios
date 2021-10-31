@@ -9,7 +9,7 @@ import UIKit
 import MessageKit
 import InputBarAccessoryView
 
-final class MessageViewController: MessagesViewController {
+final class ChatViewController: MessagesViewController {
 //    private var isSendingPhoto = false {
 //        didSet {
 //            messageInputBar.leftStackViewItems.forEach { item in
@@ -22,7 +22,7 @@ final class MessageViewController: MessagesViewController {
 //    }
 
     private let channel: Channel
-    private let user: User
+    private let userId: String
     private let store: DerivedGlobalStore
 
     private var cancelListener: (() -> Void)?
@@ -31,14 +31,23 @@ final class MessageViewController: MessagesViewController {
             messagesCollectionView.reloadData()
         }
     }
-
-    deinit {
-        cancelListener?()
+    private var user: User? {
+        channel.users.first(where: { $0.id == userId })
     }
-
-    init(channel: Channel, user: User, store: DerivedGlobalStore) {
+    
+    deinit {
+        #warning("do we need this?")
+        tearDown()
+    }
+        
+    func tearDown() {
+        cancelListener?()
+        markAsSeen()
+    }
+    
+    init(channel: Channel, userId: String, store: DerivedGlobalStore) {
         self.channel = channel
-        self.user = user
+        self.userId = userId
         self.store = store
 
         super.init(nibName: nil, bundle: nil)
@@ -52,8 +61,10 @@ final class MessageViewController: MessagesViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        listenToMessages()
         navigationItem.largeTitleDisplayMode = .never
+        
+        markAsSeen()
+        listenToMessages()
         setUpMessageView()
         removeMessageAvatars()
 //        addCameraBarButton()
@@ -63,6 +74,10 @@ final class MessageViewController: MessagesViewController {
         super.viewDidAppear(animated)
         becomeFirstResponder()
         messagesCollectionView.scrollToLastItem(animated: true)
+    }
+    
+    private func markAsSeen() {
+        store.send(.main(action: .markChannelAsSeen(channel: channel)))
     }
 
     private func listenToMessages() {
@@ -79,7 +94,9 @@ final class MessageViewController: MessagesViewController {
     }
 
     private func setUpMessageView() {
+        scrollsToLastItemOnKeyboardBeginsEditing = true
         maintainPositionOnKeyboardFrameChanged = true
+        showMessageTimestampOnSwipeLeft = true
         messageInputBar.inputTextView.tintColor = .black
         messageInputBar.sendButton.setTitleColor(.black, for: .normal)
 
@@ -167,9 +184,9 @@ final class MessageViewController: MessagesViewController {
 
 // MARK: - MessagesDisplayDelegate
 
-extension MessageViewController: MessagesDisplayDelegate {
+extension ChatViewController: MessagesDisplayDelegate {
     func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
-        return message.sender.senderId == user.id ? UIColor(.customBlue) : UIColor(.customAccent2)
+        return message.sender.senderId == userId ? UIColor(.customBlue) : UIColor(.customAccent2)
     }
 
     func shouldDisplayHeader(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> Bool {
@@ -188,7 +205,7 @@ extension MessageViewController: MessagesDisplayDelegate {
 
 // MARK: - MessagesLayoutDelegate
 
-extension MessageViewController: MessagesLayoutDelegate {
+extension ChatViewController: MessagesLayoutDelegate {
     func footerViewSize(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGSize {
         CGSize(width: 0, height: 8)
     }
@@ -196,17 +213,29 @@ extension MessageViewController: MessagesLayoutDelegate {
     func messageTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
         20
     }
+    
+//    func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
+//        let avatar = SampleData.shared.getAvatarFor(sender: message.sender)
+//        avatarView.set(avatar: avatar)
+//    }
+//    func messageTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
+//        return 20
+//    }
+//
+//    func messageBottomLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
+//        return 16
+//    }
 }
 
 // MARK: - MessagesDataSource
 
-extension MessageViewController: MessagesDataSource {
+extension ChatViewController: MessagesDataSource {
     func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
         messages.count
     }
 
     func currentSender() -> SenderType {
-        Sender(user: user)
+        user.map { Sender(user: $0) } ?? Sender(id: userId, name: "Anonymus")
     }
 
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
@@ -217,10 +246,28 @@ extension MessageViewController: MessagesDataSource {
         NSAttributedString(string: message.sender.displayName,
                            attributes: [.font: UIFont.preferredFont(forTextStyle: .caption1), .foregroundColor: UIColor(white: 0.3, alpha: 1)])
     }
+    
+//    func messageTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+//        let name = message.sender.displayName
+//        return NSAttributedString(string: name, attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption1)])
+//    }
+//
+//    func messageBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+//        let dateString = formatter.string(from: message.sentDate)
+//        return NSAttributedString(string: dateString, attributes: [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption2)])
+//    }
+//
+//    func messageTimestampLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+//        let sentDate = message.sentDate
+//        let sentDateString = MessageKitDateFormatter.shared.string(from: sentDate)
+//        let timeLabelFont: UIFont = .boldSystemFont(ofSize: 10)
+//        let timeLabelColor: UIColor = .systemGray
+//        return NSAttributedString(string: sentDateString, attributes: [NSAttributedString.Key.font: timeLabelFont, NSAttributedString.Key.foregroundColor: timeLabelColor])
+//    }
 }
 
 // MARK: - InputBarAccessoryViewDelegate
-extension MessageViewController: InputBarAccessoryViewDelegate {
+extension ChatViewController: InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         sendMessage(content: text)
         inputBar.inputTextView.text = ""
@@ -229,7 +276,7 @@ extension MessageViewController: InputBarAccessoryViewDelegate {
 
 // MARK: - UIImagePickerControllerDelegate
 
-// extension MessageViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+// extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 //    private func addCameraBarButton() {
 //        let cameraItem = InputBarButtonItem(type: .system)
 //        cameraItem.tintColor = .primary
