@@ -1,171 +1,125 @@
-////
-////  ChatViewController.swift
-////  CopDeck
-////
-////  Created by István Kreisz on 10/31/21.
-////
 //
-//import UIKit
-//import MessageKit
-//import InputBarAccessoryView
+//  ChatViewController.swift
+//  CopDeck
 //
-//final class MessageViewController: MessagesViewController {
-////    private var isSendingPhoto = false {
-////        didSet {
-////            messageInputBar.leftStackViewItems.forEach { item in
-////                guard let item = item as? InputBarButtonItem else {
-////                    return
-////                }
-////                item.isEnabled = !self.isSendingPhoto
-////            }
-////        }
-////    }
+//  Created by István Kreisz on 10/31/21.
 //
-//    
-//    private let channel: Channel
-//    private let user: User
-//    private let store: DerivedGlobalStore
-//    
-//    private var cancelListener: (() -> Void)?
-//    private var messages: [Message] = [] {
+
+import UIKit
+import MessageKit
+import InputBarAccessoryView
+
+final class MessageViewController: MessagesViewController {
+//    private var isSendingPhoto = false {
 //        didSet {
-//            messagesCollectionView.reloadData()
-//        }
-//    }
-//
-//    deinit {
-//        //
-//    }
-//
-//    init(channel: Channel, user: User, store: DerivedGlobalStore) {
-//        self.channel = channel
-//        self.user = user
-//        self.store = store
-//        
-//        super.init(nibName: nil, bundle: nil)
-//        title = channel.users.map { $0.name ?? "Anonymus" }.joined(separator: " & ")
-//    }
-//
-//    @available(*, unavailable)
-//    required init?(coder aDecoder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        listenToMessages()
-//        navigationItem.largeTitleDisplayMode = .never
-//        setUpMessageView()
-//        removeMessageAvatars()
-////        addCameraBarButton()
-//    }
-//    
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//        becomeFirstResponder()
-//        messagesCollectionView.scrollToLastItem(animated: true)
-//    }
-//
-//    private func listenToMessages() {
-////        guard let id = channel.id else {
-////            navigationController?.popViewController(animated: true)
-////            return
-////        }
-////
-////        reference = database.collection("channels/\(id)/thread")
-////
-////        messageListener = reference?.addSnapshotListener { [weak self] querySnapshot, error in
-////            guard let self = self else { return }
-////            guard let snapshot = querySnapshot else {
-////                print("Error listening for channel updates: \(error?.localizedDescription ?? "No error")")
-////                return
-////            }
-////
-////            snapshot.documentChanges.forEach { change in
-////                self.handleDocumentChange(change)
-////            }
-////        }
-//        store.send(.main(action: .getChannelListener(channelId: channel.id, cancel: { [weak self] cancel in
-//            self?.cancelListener = cancel
-//        }, update: { [weak self] result in
-//            switch result {
-//            case let .success(messages):
-//                self?.messages = messages
-//            case let .failure(error):
-//                print(error)
+//            messageInputBar.leftStackViewItems.forEach { item in
+//                guard let item = item as? InputBarButtonItem else {
+//                    return
+//                }
+//                item.isEnabled = !self.isSendingPhoto
 //            }
-//        })))
-//    }
-//
-//    private func setUpMessageView() {
-//        maintainPositionOnKeyboardFrameChanged = true
-//        messageInputBar.inputTextView.tintColor = .black
-//        messageInputBar.sendButton.setTitleColor(.black, for: .normal)
-//
-//        messageInputBar.delegate = self
-//        messagesCollectionView.messagesDataSource = self
-//        messagesCollectionView.messagesLayoutDelegate = self
-//        messagesCollectionView.messagesDisplayDelegate = self
-//    }
-//
-//    private func removeMessageAvatars() {
-//        guard let layout = messagesCollectionView.collectionViewLayout as? MessagesCollectionViewFlowLayout else {
-//            return
-//        }
-//        layout.textMessageSizeCalculator.outgoingAvatarSize = .zero
-//        layout.textMessageSizeCalculator.incomingAvatarSize = .zero
-//        layout.setMessageIncomingAvatarSize(.zero)
-//        layout.setMessageOutgoingAvatarSize(.zero)
-//        let incomingLabelAlignment = LabelAlignment(textAlignment: .left,
-//                                                    textInsets: UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0))
-//        layout.setMessageIncomingMessageTopLabelAlignment(incomingLabelAlignment)
-//        let outgoingLabelAlignment = LabelAlignment(textAlignment: .right,
-//                                                    textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15))
-//        layout.setMessageOutgoingMessageTopLabelAlignment(outgoingLabelAlignment)
-//    }
-//
-////    private func addCameraBarButton() {
-////        let cameraItem = InputBarButtonItem(type: .system)
-////        cameraItem.tintColor = .primary
-////        cameraItem.image = UIImage(named: "camera")
-////        cameraItem.addTarget(self,
-////                             action: #selector(cameraButtonPressed),
-////                             for: .primaryActionTriggered)
-////        cameraItem.setSize(CGSize(width: 60, height: 30), animated: false)
-////
-////        messageInputBar.leftStackView.alignment = .center
-////        messageInputBar.setLeftStackViewWidthConstant(to: 50, animated: false)
-////        messageInputBar.setStackViewItems([cameraItem], forStack: .left, animated: false)
-////    }
-//
-//    // MARK: - Actions
-//
-////    @objc private func cameraButtonPressed() {
-////        let picker = UIImagePickerController()
-////        picker.delegate = self
-////
-////        if UIImagePickerController.isSourceTypeAvailable(.camera) {
-////            picker.sourceType = .camera
-////        } else {
-////            picker.sourceType = .photoLibrary
-////        }
-////
-////        present(picker, animated: true)
-////    }
-//
-//    // MARK: - Helpers
-//
-//    private func send(message: Message) {
-//        reference?.addDocument(data: message.representation) { [weak self] error in
-//            guard let self = self else { return }
-//            if let error = error {
-//                print("Error sending message: \(error.localizedDescription)")
-//                return
-//            }
-//            self.messagesCollectionView.scrollToLastItem()
 //        }
 //    }
-//
+
+    private let channel: Channel
+    private let user: User
+    private let store: DerivedGlobalStore
+
+    private var cancelListener: (() -> Void)?
+    private var messages: [Message] = [] {
+        didSet {
+            messagesCollectionView.reloadData()
+        }
+    }
+
+    deinit {
+        cancelListener?()
+    }
+
+    init(channel: Channel, user: User, store: DerivedGlobalStore) {
+        self.channel = channel
+        self.user = user
+        self.store = store
+
+        super.init(nibName: nil, bundle: nil)
+        title = channel.users.map { $0.name ?? "Anonymus" }.joined(separator: " & ")
+    }
+
+    @available(*, unavailable)
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        listenToMessages()
+        navigationItem.largeTitleDisplayMode = .never
+        setUpMessageView()
+        removeMessageAvatars()
+//        addCameraBarButton()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        becomeFirstResponder()
+        messagesCollectionView.scrollToLastItem(animated: true)
+    }
+
+    private func listenToMessages() {
+        store.send(.main(action: .getChannelListener(channelId: channel.id, cancel: { [weak self] cancel in
+            self?.cancelListener = cancel
+        }, update: { [weak self] result in
+            switch result {
+            case let .success(messages):
+                self?.messages = messages
+            case let .failure(error):
+                print(error)
+            }
+        })))
+    }
+
+    private func setUpMessageView() {
+        maintainPositionOnKeyboardFrameChanged = true
+        messageInputBar.inputTextView.tintColor = .black
+        messageInputBar.sendButton.setTitleColor(.black, for: .normal)
+
+        messageInputBar.delegate = self
+        messagesCollectionView.messagesDataSource = self
+        messagesCollectionView.messagesLayoutDelegate = self
+        messagesCollectionView.messagesDisplayDelegate = self
+    }
+
+    private func removeMessageAvatars() {
+        guard let layout = messagesCollectionView.collectionViewLayout as? MessagesCollectionViewFlowLayout else {
+            return
+        }
+        layout.textMessageSizeCalculator.outgoingAvatarSize = .zero
+        layout.textMessageSizeCalculator.incomingAvatarSize = .zero
+        layout.setMessageIncomingAvatarSize(.zero)
+        layout.setMessageOutgoingAvatarSize(.zero)
+        let incomingLabelAlignment = LabelAlignment(textAlignment: .left,
+                                                    textInsets: UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0))
+        layout.setMessageIncomingMessageTopLabelAlignment(incomingLabelAlignment)
+        let outgoingLabelAlignment = LabelAlignment(textAlignment: .right,
+                                                    textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15))
+        layout.setMessageOutgoingMessageTopLabelAlignment(outgoingLabelAlignment)
+    }
+
+    // MARK: - Helpers
+
+    private func sendMessage(content: String) {
+        store.send(.main(action: .sendChatMessage(message: content, channelId: channel.id, completion: { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case let .failure(error):
+                #warning("show error message")
+                print(error)
+            case .success(()):
+                self.messagesCollectionView.scrollToLastItem()
+            }
+        })))
+    }
+
 //    private func insertNewMessage(_ message: Message) {
 //        if messages.contains(message) {
 //            return
@@ -183,7 +137,7 @@
 //            messagesCollectionView.scrollToLastItem(animated: true)
 //        }
 //    }
-//
+
 //    private func handleDocumentChange(_ change: DocumentChange) {
 //        guard var message = Message(document: change.document) else {
 //            return
@@ -209,7 +163,102 @@
 //            break
 //        }
 //    }
+}
+
+// MARK: - MessagesDisplayDelegate
+
+extension MessageViewController: MessagesDisplayDelegate {
+    func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+        return message.sender.senderId == user.id ? UIColor(.customBlue) : UIColor(.customAccent2)
+    }
+
+    func shouldDisplayHeader(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> Bool {
+        false
+    }
+
+    func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
+        avatarView.isHidden = true
+    }
+
+    func messageStyle(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageStyle {
+        let corner: MessageStyle.TailCorner = isFromCurrentSender(message: message) ? .bottomRight : .bottomLeft
+        return .bubbleTail(corner, .curved)
+    }
+}
+
+// MARK: - MessagesLayoutDelegate
+
+extension MessageViewController: MessagesLayoutDelegate {
+    func footerViewSize(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGSize {
+        CGSize(width: 0, height: 8)
+    }
+
+    func messageTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
+        20
+    }
+}
+
+// MARK: - MessagesDataSource
+
+extension MessageViewController: MessagesDataSource {
+    func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
+        messages.count
+    }
+
+    func currentSender() -> SenderType {
+        Sender(user: user)
+    }
+
+    func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
+        messages[indexPath.section]
+    }
+
+    func messageTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        NSAttributedString(string: message.sender.displayName,
+                           attributes: [.font: UIFont.preferredFont(forTextStyle: .caption1), .foregroundColor: UIColor(white: 0.3, alpha: 1)])
+    }
+}
+
+// MARK: - InputBarAccessoryViewDelegate
+extension MessageViewController: InputBarAccessoryViewDelegate {
+    func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
+        sendMessage(content: text)
+        inputBar.inputTextView.text = ""
+    }
+}
+
+// MARK: - UIImagePickerControllerDelegate
+
+// extension MessageViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+//    private func addCameraBarButton() {
+//        let cameraItem = InputBarButtonItem(type: .system)
+//        cameraItem.tintColor = .primary
+//        cameraItem.image = UIImage(named: "camera")
+//        cameraItem.addTarget(self,
+//                             action: #selector(cameraButtonPressed),
+//                             for: .primaryActionTriggered)
+//        cameraItem.setSize(CGSize(width: 60, height: 30), animated: false)
 //
+//        messageInputBar.leftStackView.alignment = .center
+//        messageInputBar.setLeftStackViewWidthConstant(to: 50, animated: false)
+//        messageInputBar.setStackViewItems([cameraItem], forStack: .left, animated: false)
+//    }
+
+    // MARK: - Actions
+
+//    @objc private func cameraButtonPressed() {
+//        let picker = UIImagePickerController()
+//        picker.delegate = self
+//
+//        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+//            picker.sourceType = .camera
+//        } else {
+//            picker.sourceType = .photoLibrary
+//        }
+//
+//        present(picker, animated: true)
+//    }
+
 //    private func uploadImage(_ image: UIImage,
 //                             to channel: Channel,
 //                             completion: @escaping (URL?) -> Void) {
@@ -232,7 +281,7 @@
 //            }
 //        }
 //    }
-//
+
 //    private func sendPhoto(_ image: UIImage) {
 //        isSendingPhoto = true
 //
@@ -251,7 +300,7 @@
 //            self.messagesCollectionView.scrollToLastItem()
 //        }
 //    }
-//
+
 //    private func downloadImage(at url: URL, completion: @escaping (UIImage?) -> Void) {
 //        let ref = Storage.storage().reference(forURL: url.absoluteString)
 //        let megaByte = Int64(1 * 1024 * 1024)
@@ -264,98 +313,27 @@
 //            completion(UIImage(data: imageData))
 //        }
 //    }
-//}
+
+//    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+//        picker.dismiss(animated: true)
 //
-//// MARK: - MessagesDisplayDelegate
-//
-//extension MessageViewController: MessagesDisplayDelegate {
-//    func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
-//        return isFromCurrentSender(message: message) ? .primary : .incomingMessage
+//        if let asset = info[.phAsset] as? PHAsset {
+//            let size = CGSize(width: 500, height: 500)
+//            PHImageManager.default().requestImage(for: asset,
+//                                                  targetSize: size,
+//                                                  contentMode: .aspectFit,
+//                                                  options: nil) { result, _ in
+//                guard let image = result else {
+//                    return
+//                }
+//                self.sendPhoto(image)
+//            }
+//        } else if let image = info[.originalImage] as? UIImage {
+//            sendPhoto(image)
+//        }
 //    }
 //
-//    func shouldDisplayHeader(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> Bool {
-//        return false
+//    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+//        picker.dismiss(animated: true)
 //    }
-//
-//    func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
-//        avatarView.isHidden = true
-//    }
-//
-//    func messageStyle(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageStyle {
-//        let corner: MessageStyle.TailCorner = isFromCurrentSender(message: message) ? .bottomRight : .bottomLeft
-//        return .bubbleTail(corner, .curved)
-//    }
-//}
-//
-//// MARK: - MessagesLayoutDelegate
-//
-//extension MessageViewController: MessagesLayoutDelegate {
-//    func footerViewSize(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGSize {
-//        return CGSize(width: 0, height: 8)
-//    }
-//
-//    func messageTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
-//        return 20
-//    }
-//}
-//
-//// MARK: - MessagesDataSource
-//
-//extension MessageViewController: MessagesDataSource {
-//    func numberOfSections(in messagesCollectionView: MessagesCollectionView) -> Int {
-//        return messages.count
-//    }
-//
-//    func currentSender() -> SenderType {
-//        return Sender(senderId: user.uid, displayName: AppSettings.displayName)
-//    }
-//
-//    func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
-//        return messages[indexPath.section]
-//    }
-//
-//    func messageTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
-//        let name = message.sender.displayName
-//        return NSAttributedString(string: name,
-//                                  attributes: [.font: UIFont.preferredFont(forTextStyle: .caption1),
-//                                               .foregroundColor: UIColor(white: 0.3, alpha: 1)])
-//    }
-//}
-//
-//// MARK: - InputBarAccessoryViewDelegate
-//
-//extension MessageViewController: InputBarAccessoryViewDelegate {
-//    func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
-//        let message = Message(user: user, content: text)
-//        save(message)
-//        inputBar.inputTextView.text = ""
-//    }
-//}
-//
-//// MARK: - UIImagePickerControllerDelegate
-//
-////extension MessageViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-////    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-////        picker.dismiss(animated: true)
-////
-////        if let asset = info[.phAsset] as? PHAsset {
-////            let size = CGSize(width: 500, height: 500)
-////            PHImageManager.default().requestImage(for: asset,
-////                                                  targetSize: size,
-////                                                  contentMode: .aspectFit,
-////                                                  options: nil) { result, _ in
-////                guard let image = result else {
-////                    return
-////                }
-////                self.sendPhoto(image)
-////            }
-////        } else if let image = info[.originalImage] as? UIImage {
-////            sendPhoto(image)
-////        }
-////    }
-////
-////    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-////        picker.dismiss(animated: true)
-////    }
-////}
-//
+// }
