@@ -242,6 +242,10 @@ class DefaultDataController: DataController {
                             update: @escaping (Result<[Message], AppError>) -> Void) {
         databaseManager.getChannelListener(channelId: channelId, cancel: cancel, update: update)
     }
+    
+    func markChannelAsSeen(channel: Channel) {
+        databaseManager.markChannelAsSeen(channel: channel)
+    }
 
     func getFeedPosts(loadMore: Bool) -> AnyPublisher<PaginatedResult<[FeedPost]>, AppError> {
         backendAPI.getFeedPosts(loadMore: loadMore)

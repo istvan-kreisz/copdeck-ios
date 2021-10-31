@@ -38,7 +38,7 @@ struct Channel: Codable, Identifiable {
     func hasUnreadMessages(userId: String) -> Bool {
         let lastSeenDate = lastSeenDates[userId] ?? Date(timeIntervalSince1970: 0).timeIntervalSince1970 * 1000
         let lastMessagesByOthers = userIds.filter { $0 != userId }.compactMap(lastMessageSent)
-
+        
         return lastMessagesByOthers.contains(where: { $0.sentDate > lastSeenDate })
     }
 

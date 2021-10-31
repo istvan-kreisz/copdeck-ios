@@ -91,6 +91,7 @@ protocol DatabaseManager {
     func getItem(withId id: String, settings: CopDeckSettings) -> AnyPublisher<Item, AppError>
     func getChannelsListener(cancel: @escaping (_ cancel: @escaping () -> Void) -> Void, update: @escaping (Result<[Channel], AppError>) -> Void)
     func getChannelListener(channelId: String, cancel: @escaping (_ cancel: @escaping () -> Void) -> Void, update: @escaping (Result<[Message], AppError>) -> Void)
+    func markChannelAsSeen(channel: Channel)
     
     // write
     func add(inventoryItems: [InventoryItem])

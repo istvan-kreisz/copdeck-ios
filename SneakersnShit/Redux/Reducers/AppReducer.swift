@@ -184,6 +184,8 @@ func appReducer(state: inout AppState,
             } else {
                 completion(.failure(.notFound(val: "User")))
             }
+        case let .markChannelAsSeen(channel: channel):
+            environment.dataController.markChannelAsSeen(channel: channel)
         }
     case let .authentication(action):
         let result: AnyPublisher<String, Error>

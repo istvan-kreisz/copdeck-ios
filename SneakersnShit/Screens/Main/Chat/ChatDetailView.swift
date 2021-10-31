@@ -8,9 +8,17 @@
 import SwiftUI
 
 struct ChatDetailView: View {
+    @EnvironmentObject var store: DerivedGlobalStore
+    
     let channel: Channel
     
     var body: some View {
         Text("Hello, World!")
+            .onAppear(perform: markAsSeen)
+            .onDisappear(perform: markAsSeen)
+    }
+    
+    func markAsSeen() {
+        store.send(.main(action: .markChannelAsSeen(channel: channel)))
     }
 }

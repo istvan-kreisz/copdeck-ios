@@ -47,8 +47,8 @@ struct ChannelListItem: View {
                         .foregroundColor(.customText1)
                         .layoutPriority(2)
                     Text(lastMessageContent)
-                        .font(channel.hasUnreadMessages(userId: userId) ? .regular(size: 14) : .bold(size: 14))
-                        .foregroundColor(channel.hasUnreadMessages(userId: userId) ? .customText2 : .customText1)
+                        .font(channel.hasUnreadMessages(userId: userId) ? .bold(size: 14) : .regular(size: 14))
+                        .foregroundColor(channel.hasUnreadMessages(userId: userId) ? .customText1 : .customText2)
                         .layoutPriority(2)
                     Spacer()
                 }

@@ -33,18 +33,6 @@ struct ChatView: View {
         return profile
     }
 
-//    var allProfiles: [ProfileData] {
-//        let selectedProfile: [ProfileData] = selectedUser.map { (profile: ProfileData) in [profile] } ?? []
-//        let searchResults: [ProfileData] = store.state.userSearchResults.map { (user: User) in ProfileData(user: user, stacks: [], inventoryItems: []) }
-//        var uniqued: [ProfileData] = []
-//        (selectedProfile + searchResults).forEach { profileData in
-//            if !uniqued.contains(where: { $0.user.id == profileData.user.id }) {
-//                uniqued.append(profileData)
-//            }
-//        }
-//        return uniqued
-//    }
-
     var body: some View {
         Group {
             let presentErrorAlert = Binding<Bool>(get: { error != nil }, set: { new in error = new ? error : nil })
@@ -62,13 +50,12 @@ struct ChatView: View {
                         .padding(.bottom, 19)
                     
                     if channelsLoader.isLoading {
-                        CustomSpinner(text: "Updating messages", animate: true)
+                        CustomSpinner(text: "Loading messages", animate: true)
                     }
 
                     ForEach(channels) { (channel: Channel) in
                         if let userId = userId {
                             ChannelListItem(channel: channel, userId: userId) {
-                                // mark channel as unread
                                 navigationDestination += .chat(channel)
                             } didTapUser: {
                                 if let messagePartner = channel.messagePartner(userId: userId) {
