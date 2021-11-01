@@ -20,6 +20,8 @@ final class ChatViewController: MessagesViewController {
 //            }
 //        }
 //    }
+    let userColor = UIColor.pillColors[0]
+    let messageColors = Array(UIColor.pillColors.dropFirst())
 
     private let channel: Channel
     private let userId: String
@@ -186,7 +188,11 @@ final class ChatViewController: MessagesViewController {
 
 extension ChatViewController: MessagesDisplayDelegate {
     func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
-        return message.sender.senderId == userId ? UIColor(.customBlue) : UIColor(.customAccent2)
+        if message.sender.senderId == userId {
+            return userColor
+        } else {
+            return .white
+        }
     }
 
     func shouldDisplayHeader(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> Bool {
@@ -194,12 +200,24 @@ extension ChatViewController: MessagesDisplayDelegate {
     }
 
     func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
+        #warning("finish")
+//        avatarView.set(avatar: .init(image: "", initials: "?"))
         avatarView.isHidden = true
     }
 
     func messageStyle(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageStyle {
-        let corner: MessageStyle.TailCorner = isFromCurrentSender(message: message) ? .bottomRight : .bottomLeft
-        return .bubbleTail(corner, .curved)
+        let color: UIColor
+        if message.sender.senderId == userId {
+            color = userColor
+        } else {
+            if let index = channel.userIds.filter({ $0 != userId }).sorted().firstIndex(of: message.sender.senderId) {
+                color =  messageColors[index % messageColors.count]
+            } else {
+                color =  messageColors.randomElement()!
+            }
+        }
+        
+        return .bubbleOutline(color)
     }
 }
 

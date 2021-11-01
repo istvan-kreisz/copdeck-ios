@@ -54,15 +54,6 @@ extension Color {
     }
 }
 
-// extension UIColor {
-//    static var customBackground = UIColor(named: "Background")!
-//    static var customBlue = UIColor(named: "Blue")!
-//    static var customGreen = UIColor(named: "Green")!
-//    static var customLightGray1 = UIColor(named: "LightGray1")!
-//    static var customLightGray2 = UIColor(named: "LightGray2")!
-//    static var customLightGray3 = UIColor(named: "LightGray3")!
-//    static var customPurple = UIColor(named: "Purple")!
-//    static var customRed = UIColor(named: "Red")!
-//    static var customTwitterBlue = UIColor(named: "TwitterBlue")!
-//    static var customYellow = UIColor(named: "Yellow")!
-// }
+ extension UIColor {
+     static var pillColors: [UIColor] = Color.pillColors.map { UIColor($0) }
+ }
