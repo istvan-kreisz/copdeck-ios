@@ -8,7 +8,7 @@
 import Foundation
 
 struct Channel: Codable, Identifiable {
-    struct LastMessage: Codable {
+    struct LastMessage: Codable, Equatable {
         let userId: String
         let content: String
         let sentDate: Double
@@ -20,6 +20,7 @@ struct Channel: Codable, Identifiable {
     var lastSeenDates: [String: Double]
     let created: Double
     var updated: Double
+    var lastMessageSentDate: Double?
 
     var users: [User] = []
     
@@ -43,7 +44,7 @@ struct Channel: Codable, Identifiable {
     }
 
     enum CodingKeys: String, CodingKey {
-        case id, userIds, lastMessages, lastSeenDates, created, updated
+        case id, userIds, lastMessages, lastSeenDates, created, updated, lastMessageSentDate
     }
 }
 
@@ -54,6 +55,7 @@ extension Channel {
                   lastMessages: [:],
                   lastSeenDates: [:],
                   created: Date.serverDate,
-                  updated: Date.serverDate)
+                  updated: Date.serverDate,
+                  lastMessageSentDate: nil)
     }
 }

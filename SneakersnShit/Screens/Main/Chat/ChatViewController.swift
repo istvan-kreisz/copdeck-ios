@@ -41,6 +41,7 @@ final class ChatViewController: MessagesViewController {
     }
     
     func tearDown() {
+        messages = []
         cancelListener?()
         markAsSeen()
     }

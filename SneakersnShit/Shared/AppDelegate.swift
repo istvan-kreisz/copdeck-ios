@@ -17,7 +17,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             UserDefaults.standard.reset()
         }
         _ = IAPHelper.shared
-        FirebaseConfiguration.shared.setLoggerLevel(DebugSettings.shared.isInDebugMode ? .max : .min)
+        FirebaseConfiguration.shared.setLoggerLevel(DebugSettings.shared.isInDebugMode ? .info : .min)
         FirebaseApp.configure()
         ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
         StoreReviewHelper.incrementAppOpenedCount()
