@@ -29,7 +29,7 @@ struct PopularItemsListView: View {
             }
             VStack(alignment: .center, spacing: 8) {
                 NavigationBar(title: "Trending now", isBackButtonVisible: true, style: .dark) { presentationMode.wrappedValue.dismiss() }
-                    .withDefaultPadding(padding: .horizontal)
+                    .withDefaultPadding(padding: [.horizontal, .top])
 
                 VerticalItemListView(items: $items,
                                      selectedItem: $selectedItem,

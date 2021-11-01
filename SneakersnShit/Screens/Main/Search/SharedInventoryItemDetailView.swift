@@ -10,6 +10,7 @@ import Combine
 
 struct SharedInventoryItemView: View {
     @EnvironmentObject var store: DerivedGlobalStore
+
     private static let profileImageSize: CGFloat = 38
 
     let user: User
@@ -20,6 +21,9 @@ struct SharedInventoryItemView: View {
 
     @State var photoURLs: [URL] = []
     @State var shownImageURL: URL?
+
+    @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
+    @State private var alert: (String, String)? = nil
 
     var photoURLsChunked: [(Int, [URL])] {
         Array(photoURLs.chunked(into: 3).enumerated())
@@ -39,14 +43,26 @@ struct SharedInventoryItemView: View {
 
     var body: some View {
         Group {
+            let showDetail = Binding<Bool>(get: { navigationDestination.show },
+                                           set: { show in show ? navigationDestination.display() : navigationDestination.hide() })
+            NavigationLink(destination: Destination(navigationDestination: $navigationDestination).navigationbarHidden(),
+                           isActive: showDetail) { EmptyView() }
+
             VerticalListView(bottomPadding: 30, spacing: 2, addHorizontalPadding: false) {
                 NavigationBar(title: user.name.map { "\($0)'s sneaker" } ?? "sneaker details",
                               isBackButtonVisible: true,
                               style: .dark,
                               shouldDismiss: shouldDismiss)
-                    .withDefaultPadding(padding: .horizontal)
+                    .withDefaultPadding(padding: [.horizontal, .top])
 
-                OwnerCardView(user: user)
+                OwnerCardView(user: user) { result in
+                    switch result {
+                    case let .failure(error):
+                        alert = (error.title, error.message)
+                    case let .success((channel, userId)):
+                        navigationDestination += .chat(channel, userId)
+                    }
+                }
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text(inventoryItem.name)
@@ -141,18 +157,38 @@ struct SharedInventoryItemView: View {
         }
         .edgesIgnoringSafeArea(.bottom)
         .frame(maxWidth: UIScreen.main.bounds.width)
-        .withDefaultPadding(padding: .top)
         .withBackgroundColor()
         .onAppear {
             loadPhotos()
         }
         .withImageViewer(shownImageURL: $shownImageURL)
         .navigationbarHidden()
+        .withAlert(alert: $alert)
     }
 
     private func loadPhotos() {
         store.send(.main(action: .getInventoryItemImages(userId: user.id, inventoryItem: inventoryItem, completion: { urls in
             photoURLs = urls
         })))
+    }
+}
+
+extension SharedInventoryItemView {
+    enum NavigationDestination {
+        case chat(Channel, String)
+        case empty
+    }
+
+    struct Destination: View {
+        @Binding var navigationDestination: Navigation<NavigationDestination>
+
+        var body: some View {
+            switch navigationDestination.destination {
+            case let .chat(channel, userId):
+                MessagesView(channel: channel, userId: userId, store: DerivedGlobalStore.default)
+            case .empty:
+                EmptyView()
+            }
+        }
     }
 }

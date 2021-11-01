@@ -144,6 +144,7 @@ struct SearchView: View {
                                             bottomPadding: Styles.tabScreenBottomPadding)
                 }
             }
+            .hideKeyboardOnScroll()
             .onChange(of: searchText) { searchText in
                 if selectedTabIndex == 0 {
                     store.send(.main(action: .getSearchResults(searchTerm: searchText)), completed: searchResultsLoader.getLoader())

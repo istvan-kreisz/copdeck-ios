@@ -9,14 +9,6 @@
 import SwiftUI
 import Combine
 
-struct NavigationbarHidden: ViewModifier {
-    func body(content: Content) -> some View {
-        content
-            .navigationBarTitle("")
-            .navigationBarHidden(true)
-    }
-}
-
 struct DefaultPadding: ViewModifier {
     let padding: Padding
 
@@ -39,7 +31,7 @@ struct DefaultPadding: ViewModifier {
     #warning("refactor margins + paddings")
     func body(content: Content) -> some View {
         content
-            .padding(.top, padding.contains(.top) ? 20 : 0)
+            .padding(.top, padding.contains(.top) ? 10 : 0)
             .padding(.bottom, padding.contains(.bottom) ? 30 : 0)
             .padding(.leading, padding.contains(.leading) ? Styles.horizontalMargin : 0)
             .padding(.trailing, padding.contains(.trailing) ? Styles.horizontalMargin : 0)
@@ -58,62 +50,6 @@ struct DefaultInsets: ViewModifier {
     func body(content: Content) -> some View {
         content
             .listRowInsets(EdgeInsets(top: 7, leading: 15, bottom: 7, trailing: 15))
-    }
-}
-
-struct CenteredHorizontally: ViewModifier {
-    func body(content: Content) -> some View {
-        HStack {
-            Spacer()
-            content
-            Spacer()
-        }
-    }
-}
-
-struct CenteredVertically: ViewModifier {
-    func body(content: Content) -> some View {
-        VStack {
-            Spacer()
-            content
-            Spacer()
-        }
-    }
-}
-
-struct LeftAligned: ViewModifier {
-    func body(content: Content) -> some View {
-        HStack {
-            content
-            Spacer()
-        }
-    }
-}
-
-struct RightAligned: ViewModifier {
-    func body(content: Content) -> some View {
-        HStack {
-            Spacer()
-            content
-        }
-    }
-}
-
-struct TopAligned: ViewModifier {
-    func body(content: Content) -> some View {
-        VStack {
-            content
-            Spacer()
-        }
-    }
-}
-
-struct BottomAligned: ViewModifier {
-    func body(content: Content) -> some View {
-        VStack {
-            Spacer()
-            content
-        }
     }
 }
 
@@ -346,5 +282,19 @@ struct LockedContent: ViewModifier {
         } else {
             content
         }
+    }
+}
+
+struct WithAlert: ViewModifier {
+    @Binding var alert: (String, String)?
+
+    func body(content: Content) -> some View {
+        let presentErrorAlert = Binding<Bool>(get: { alert != nil }, set: { new in alert = new ? alert : nil })
+        content
+            .alert(isPresented: presentErrorAlert) {
+                let title = alert?.0 ?? ""
+                let description = alert?.1 ?? ""
+                return Alert(title: Text(title), message: Text(description), dismissButton: Alert.Button.cancel(Text("Okay")))
+            }
     }
 }

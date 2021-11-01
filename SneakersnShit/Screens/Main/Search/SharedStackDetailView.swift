@@ -18,6 +18,8 @@ struct SharedStackDetailView: View {
     let requestInfo: [ScraperRequestInfo]
 
     let shouldDismiss: () -> Void
+    
+    @State private var alert: (String, String)? = nil
 
     var selectedInventoryItem: InventoryItem? {
         guard case let .inventoryItem(inventoryItem) = navigationDestination.destination else { return nil }
@@ -43,9 +45,16 @@ struct SharedStackDetailView: View {
 
             VerticalListView(bottomPadding: 30, spacing: 2, addHorizontalPadding: false) {
                 NavigationBar(title: stack.name, isBackButtonVisible: true, style: .dark, shouldDismiss: shouldDismiss)
-                    .withDefaultPadding(padding: .horizontal)
+                    .withDefaultPadding(padding: [.horizontal, .top])
 
-                OwnerCardView(user: user)
+                OwnerCardView(user: user) { result in
+                    switch result {
+                    case let .failure(error):
+                        alert = (error.title, error.message)
+                    case let .success((channel, userId)):
+                        navigationDestination += .chat(channel, userId)
+                    }
+                }
 
                 if let caption = stack.caption {
                     HStack {
@@ -85,12 +94,15 @@ struct SharedStackDetailView: View {
         .withDefaultPadding(padding: .top)
         .withBackgroundColor()
         .navigationbarHidden()
+        .withAlert(alert: $alert)
     }
 }
 
 extension SharedStackDetailView {
     enum NavigationDestination {
-        case inventoryItem(InventoryItem), empty
+        case inventoryItem(InventoryItem)
+        case chat(Channel, String)
+        case empty
     }
 
     struct Destination: View {
@@ -104,6 +116,8 @@ extension SharedStackDetailView {
                 SharedInventoryItemView(user: user,
                                         inventoryItem: inventoryItem,
                                         requestInfo: requestInfo) { navigationDestination.hide() }
+            case let .chat(channel, userId):
+                MessagesView(channel: channel, userId: userId, store: DerivedGlobalStore.default)
             case .empty:
                 EmptyView()
             }

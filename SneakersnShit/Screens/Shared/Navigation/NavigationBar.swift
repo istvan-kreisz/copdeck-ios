@@ -8,9 +8,14 @@
 import SwiftUI
 
 struct NavigationBar: View {
+    static let height: CGFloat = 38
+    static let botttomPadding: CGFloat = 20
+    static var size: CGFloat { height + botttomPadding }
+    
     enum Style {
         case light, dark, clear
     }
+
     enum TitleSize {
         case small, large
     }
@@ -54,14 +59,14 @@ struct NavigationBar: View {
                         shouldDismiss()
                     }
                 }) {
-                        ZStack {
-                            Circle()
-                                .fill(backgroundColor)
-                                .frame(width: 38, height: 38, alignment: .center)
-                            Image(systemName: "chevron.left")
-                                .font(.bold(size: 14))
-                                .foregroundColor(foregroundColor)
-                        }
+                    ZStack {
+                        Circle()
+                            .fill(backgroundColor)
+                            .frame(width: Self.height, height: Self.height, alignment: .center)
+                        Image(systemName: "chevron.left")
+                            .font(.bold(size: 14))
+                            .foregroundColor(foregroundColor)
+                    }
                 }
             }
             Spacer()
@@ -69,20 +74,19 @@ struct NavigationBar: View {
                 Text(title.uppercased())
                     .font(.bold(size: titleFontSize == .small ? 12 : 16))
                     .foregroundColor(backgroundColor)
-                    .padding(.leading, isBackButtonVisible ? -38 : 0)
+                    .padding(.leading, isBackButtonVisible ? -Self.height : 0)
                     .frame(maxWidth: UIScreen.screenWidth - 180 - Self.titlePadding * 2 + (isBackButtonVisible ? 0 : 130))
                     .lineLimit(1)
                     .fixedSize()
                     .padding(.horizontal, Self.titlePadding)
                     .background(Capsule()
                         .fill(foregroundColor)
-                        .frame(height: 38)
-                        .padding(.leading, isBackButtonVisible ? -38 : 0))
+                        .frame(height: Self.height)
+                        .padding(.leading, isBackButtonVisible ? -Self.height : 0))
                 Spacer()
             }
         }
-        .padding(.top, 30)
-        .padding(.bottom, 20)
+        .padding(.bottom, Self.botttomPadding)
     }
 
     static let placeHolder = NavigationBar(title: nil, isBackButtonVisible: true, style: .clear, shouldDismiss: {})

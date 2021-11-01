@@ -20,12 +20,10 @@ struct MainContainerView: View {
             (TabBarElement(tabBarElementItem: .init(title: "First", systemImageName: "house.fill")) {
                 FeedView(userId: store.state.user?.id ?? "")
                     .withTabViewWrapper(viewRouter: viewRouter, store: FeedStore.default, shouldShow: $shouldShowTabBar)
-                    .hideKeyboardOnScroll()
             },
             TabBarElement(tabBarElementItem: .init(title: "Second", systemImageName: "pencil.circle.fill")) {
                 SearchView()
                     .withTabViewWrapper(viewRouter: viewRouter, store: SearchStore.default, shouldShow: $shouldShowTabBar)
-                    .hideKeyboardOnScroll()
             },
             TabBarElement(tabBarElementItem: .init(title: "Third", systemImageName: "folder.fill")) {
                 InventoryView(username: store.state.user?.name ?? "",

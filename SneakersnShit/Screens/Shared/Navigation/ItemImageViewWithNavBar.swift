@@ -44,7 +44,7 @@ struct ItemImageViewWithNavBar: View {
                 .padding(.trailing, 20)
             }
             NavigationBar(title: nil, isBackButtonVisible: true, style: .dark, shouldDismiss: shouldDismiss)
-                .withDefaultPadding(padding: .horizontal)
+                .withDefaultPadding(padding: [.horizontal, .top])
                 .topAligned()
         }
     }

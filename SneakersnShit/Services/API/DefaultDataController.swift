@@ -380,6 +380,10 @@ class DefaultDataController: DataController {
     func sendMessage(user: User, message: String, toChannelWithId channelId: String, completion: @escaping (Result<Void, AppError>) -> Void) {
         databaseManager.sendMessage(user: user, message: message, toChannelWithId: channelId, completion: completion)
     }
+    
+    func getOrCreateChannel(userIds: [String], completion: @escaping (Result<Channel, AppError>) -> Void) {
+        databaseManager.getOrCreateChannel(userIds: userIds, completion: completion)
+    }
 
     func uploadProfileImage(image: UIImage) {
         imageService.uploadProfileImage(image: image)

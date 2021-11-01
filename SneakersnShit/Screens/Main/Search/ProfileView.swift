@@ -73,6 +73,7 @@ struct ProfileView: View {
 
             VerticalListView(bottomPadding: 0, spacing: 0, listRowStyling: .none) {
                 NavigationBar(title: nil, isBackButtonVisible: true, style: .dark, shouldDismiss: shouldDismiss)
+                    .withDefaultPadding(padding: .top)
                     .listRow(backgroundColor: .customWhite)
                     .buttonStyle(PlainButtonStyle())
 

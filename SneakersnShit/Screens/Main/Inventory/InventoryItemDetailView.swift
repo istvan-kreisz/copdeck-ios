@@ -230,6 +230,7 @@ struct InventoryItemDetailView: View {
             }
         }
         .withImageViewer(shownImageURL: $shownImageURL)
+        .hideKeyboardOnScroll()
         .navigationbarHidden()
     }
 

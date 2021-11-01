@@ -75,6 +75,7 @@ enum MainAction {
     case getChannelListener(channelId: String, cancel: (_ cancel: @escaping () -> Void) -> Void, update: (Result<[Message], AppError>) -> Void)
     case sendChatMessage(message: String, channelId: String, completion: (Result<Void, AppError>) -> Void)
     case markChannelAsSeen(channel: Channel)
+    case getOrCreateChannel(userIds: [String], completion: (Result<Channel, AppError>) -> Void)
 }
 
 extension MainAction: Identifiable, StringRepresentable {

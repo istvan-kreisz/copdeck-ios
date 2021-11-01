@@ -10,35 +10,38 @@ import SwiftUI
 import MessageKit
 import InputBarAccessoryView
 
-//struct MessagesView: View {
-//    static let profileImageSize: CGFloat = 58
-//    
-//    let channel: Channel
-//    let userId: String
-//    let didTapChannel: () -> Void
-//    let didTapUser: () -> Void
-//    
-//    var lastMessageContent: String {
-//        if let lastMessage = channel.lastMessage {
-//            if lastMessage.userId == userId {
-//                return "Me: \(lastMessage.content)"
-//            } else {
-//                return "\(channel.messagePartner(userId: userId)?.name ?? "Anonymus"): \(lastMessage.content)"
-//            }
-//        } else {
-//            return ""
-//        }
-//    }
-//    
-//    var body: some View {
-//        if let messagePartner = channel.messagePartner(userId: userId) {
-//            HStack(alignment: .center, spacing: 10) {
-//            }
-//        }
-//    }
-//}
+struct MessagesView: View {
+    @Environment(\.presentationMode) var presentationMode
 
-struct MessagesView: UIViewControllerRepresentable {
+    let channel: Channel
+    let userId: String
+    let store: DerivedGlobalStore
+
+    var chatName: String {
+        channel.users.filter { $0.id != userId }.map { $0.name ?? "Anonymus" }.joined(separator: " & ")
+    }
+
+    var body: some View {
+        ZStack {
+            ChatDetailView(channel: channel, userId: userId, store: store)
+                .withDefaultPadding(padding: .top)
+                .padding(.top, UIApplication.shared.safeAreaInsets().top)
+
+            Rectangle().fill(Color.white)
+                .frame(width: UIScreen.screenWidth, height: NavigationBar.size + UIApplication.shared.safeAreaInsets().top)
+                .topAligned()
+            NavigationBar(title: chatName, isBackButtonVisible: true, titleFontSize: .large, style: .dark) {
+                presentationMode.wrappedValue.dismiss()
+            }
+            .withDefaultPadding(padding: [.top, .horizontal])
+            .padding(.top, UIApplication.shared.safeAreaInsets().top)
+            .topAligned()
+        }
+        .edgesIgnoringSafeArea(.top)
+    }
+}
+
+struct ChatDetailView: UIViewControllerRepresentable {
     let channel: Channel
     let userId: String
     let store: DerivedGlobalStore
@@ -46,7 +49,7 @@ struct MessagesView: UIViewControllerRepresentable {
     static func dismantleUIViewController(_ uiViewController: ChatViewController, coordinator: ()) {
         uiViewController.tearDown()
     }
-    
+
     func makeUIViewController(context: Context) -> ChatViewController {
         ChatViewController(channel: channel, userId: userId, store: store)
     }

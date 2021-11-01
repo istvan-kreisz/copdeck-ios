@@ -36,8 +36,7 @@ struct SpreadsheetImportDetailView: View {
                 NavigationBar(title: "Errors", isBackButtonVisible: true, style: .dark) {
                     presentationMode.wrappedValue.dismiss()
                 }
-                .withDefaultPadding(padding: .top)
-                .withDefaultPadding(padding: .horizontal)
+                .withDefaultPadding(padding: [.top, .horizontal])
                 .listRow(backgroundColor: .customWhite)
 
                 Text("Errors: ")

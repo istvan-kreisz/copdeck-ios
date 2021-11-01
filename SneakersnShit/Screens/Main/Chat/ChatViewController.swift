@@ -30,6 +30,9 @@ final class ChatViewController: MessagesViewController {
     private var cancelListener: (() -> Void)?
     private var messages: [Message] = [] {
         didSet {
+            #warning("only when other person texts")
+            markAsSeen()
+            #warning("add granular updates")
             messagesCollectionView.reloadData()
         }
     }
@@ -37,11 +40,6 @@ final class ChatViewController: MessagesViewController {
         channel.users.first(where: { $0.id == userId })
     }
     
-    deinit {
-        #warning("do we need this?")
-        tearDown()
-    }
-        
     func tearDown() {
         cancelListener?()
         markAsSeen()
@@ -53,7 +51,7 @@ final class ChatViewController: MessagesViewController {
         self.store = store
 
         super.init(nibName: nil, bundle: nil)
-        title = channel.users.map { $0.name ?? "Anonymus" }.joined(separator: " & ")
+        title = nil
     }
 
     @available(*, unavailable)
@@ -89,6 +87,7 @@ final class ChatViewController: MessagesViewController {
             switch result {
             case let .success(messages):
                 self?.messages = messages
+                self?.messagesCollectionView.scrollToLastItem(at: .bottom, animated: true)
             case let .failure(error):
                 print(error)
             }
@@ -106,6 +105,8 @@ final class ChatViewController: MessagesViewController {
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
+        
+        messagesCollectionView.contentInset.top = NavigationBar.size
     }
 
     private func removeMessageAvatars() {
@@ -134,7 +135,7 @@ final class ChatViewController: MessagesViewController {
                 #warning("show error message")
                 print(error)
             case .success(()):
-                self.messagesCollectionView.scrollToLastItem()
+                break
             }
         })))
     }
@@ -255,7 +256,7 @@ extension ChatViewController: MessagesDataSource {
     func messageTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
         NSAttributedString(string: message.sender.displayName,
                            attributes: [.font: UIFont.preferredFont(forTextStyle: .caption1), .foregroundColor: UIColor(white: 0.3, alpha: 1)])
-    }    
+    }
 }
 
 // MARK: - InputBarAccessoryViewDelegate

@@ -9,27 +9,47 @@ import SwiftUI
 
 extension View {
     func leftAligned() -> some View {
-        ModifiedContent(content: self, modifier: LeftAligned())
+        HStack {
+            self
+            Spacer()
+        }
     }
 
     func rightAligned() -> some View {
-        ModifiedContent(content: self, modifier: RightAligned())
+        HStack {
+            Spacer()
+            self
+        }
     }
 
     func topAligned() -> some View {
-        ModifiedContent(content: self, modifier: TopAligned())
+        VStack {
+            self
+            Spacer()
+        }
     }
 
     func bottomAligned() -> some View {
-        ModifiedContent(content: self, modifier: BottomAligned())
+        VStack {
+            Spacer()
+            self
+        }
     }
 
     func centeredVertically() -> some View {
-        ModifiedContent(content: self, modifier: CenteredVertically())
+        VStack {
+            Spacer()
+            self
+            Spacer()
+        }
     }
 
     func centeredHorizontally() -> some View {
-        ModifiedContent(content: self, modifier: CenteredHorizontally())
+        HStack {
+            Spacer()
+            self
+            Spacer()
+        }
     }
 
     func withDefaultShadow(color: Color = .customAccent3) -> some View {
@@ -41,7 +61,9 @@ extension View {
     }
 
     func navigationbarHidden() -> some View {
-        ModifiedContent(content: self, modifier: NavigationbarHidden())
+        self
+            .navigationBarTitle("")
+            .navigationBarHidden(true)
     }
 
     func asCard() -> some View {
@@ -157,6 +179,10 @@ extension View {
             .font(.bold(size: 35))
             .leftAligned()
             .padding(.leading, 6)
+    }
+    
+    func withAlert(alert: Binding<(String, String)?>) -> some View {
+        ModifiedContent(content: self, modifier: WithAlert(alert: alert))
     }
 }
 

@@ -99,8 +99,8 @@ struct StackDetailView: View {
             }
 
             VerticalListView(bottomPadding: Styles.tabScreenBottomPadding, spacing: 6, addHorizontalPadding: false) {
-                NavigationBar(title: nil, isBackButtonVisible: true, style: .dark, shouldDismiss: shouldDismiss)
-                    .withDefaultPadding(padding: .horizontal)
+                NavigationBar(title: stack.name, isBackButtonVisible: true, style: .dark, shouldDismiss: shouldDismiss)
+                    .withDefaultPadding(padding: [.horizontal, .top])
 
                 VStack {
                     Text("Stack Stats".uppercased())

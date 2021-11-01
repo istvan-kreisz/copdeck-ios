@@ -109,7 +109,7 @@ class FirebaseService: DatabaseManager {
 
     func getChannelsListener(cancel: @escaping (_ cancel: @escaping () -> Void) -> Void, update: @escaping (Result<[Channel], AppError>) -> Void) {
         guard let userId = userId else { return }
-        
+
         channelsListener.reset()
         channelsListener.startListening(collectionName: "channels", firestore: firestore) { $0?.whereField("userIds", arrayContains: userId) }
 
@@ -184,6 +184,29 @@ class FirebaseService: DatabaseManager {
         var updatedChannel = channel
         updatedChannel.lastSeenDates[userId] = Date.serverDate
         update(channel: updatedChannel, completion: nil)
+    }
+    
+    func getOrCreateChannel(userIds: [String], completion: @escaping (Result<Channel, AppError>) -> Void) {
+        if let channel = channelsListener.value.first(where: { $0.userIds == userIds.sorted() }) {
+            completion(.success(channel))
+        } else {
+            firestore.collection("channels").whereField("userIds", isEqualTo: userIds.sorted()).getDocuments { [weak self] snapshot, error in
+                if let data = snapshot?.documents.map({ $0.data() }),
+                   let channels = [Channel](from: data),
+                   let channel = channels.first(where: { $0.userIds == userIds.sorted() }) {
+                    completion(.success(channel))
+                } else {
+                    self?.addChannel(userIds: userIds) { result in
+                        switch result {
+                        case let .success(channel):
+                            completion(.success(channel))
+                        case let .failure(error):
+                            completion(.failure(error))
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private func getChannel(channelId: String, completion: @escaping (Result<Channel, AppError>) -> Void) {

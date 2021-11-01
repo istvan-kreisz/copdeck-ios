@@ -33,6 +33,7 @@ struct SignUpView: View {
             Color.customBackground.edgesIgnoringSafeArea(.all)
             VStack(alignment: .center, spacing: 8) {
                 NavigationBar(title: nil, isBackButtonVisible: true, style: .light) { showView = false }
+                    .withDefaultPadding(padding: [.top])
 
                 Text("Sign up")
                     .font(.bold(size: 22))

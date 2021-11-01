@@ -11,6 +11,7 @@ struct OwnerCardView: View {
     private static let profileImageSize: CGFloat = 38
 
     let user: User
+    let didTapMessage: (Result<(Channel, String), AppError>) -> Void
 
     var body: some View {
         VStack(spacing: 9) {
@@ -34,7 +35,16 @@ struct OwnerCardView: View {
                         .foregroundColor(.customText1)
 
                     Button {
-                        #warning("navigate to message view")
+                        if let userId = DerivedGlobalStore.default.globalState.user?.id {
+                            AppStore.default.send(.main(action: .getOrCreateChannel(userIds: [user.id, userId], completion: { result in
+                                switch result {
+                                case let .failure(error):
+                                    didTapMessage(.failure(error))
+                                case let .success(channel):
+                                    didTapMessage(.success((channel, userId)))
+                                }
+                            })))
+                        }
                     } label: {
                         HStack {
                             Text("Message \(user.name ?? "owner")")

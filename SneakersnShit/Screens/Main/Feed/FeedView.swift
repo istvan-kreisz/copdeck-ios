@@ -119,6 +119,7 @@ struct FeedView: View {
             }
             .environment(\.defaultMinListRowHeight, 1)
             .coordinateSpace(name: "pullToRefresh")
+            .hideKeyboardOnScroll()
         }
         .onAppear {
             if isFirstLoad {
