@@ -13,6 +13,7 @@ struct TextBox {
 }
 
 struct InventoryHeaderView: View {
+    let userId: String
     @Binding var settingsPresented: Bool
     @Binding var showImagePicker: Bool
     @Binding var showSellerStats: Bool
@@ -26,6 +27,7 @@ struct InventoryHeaderView: View {
     let isContentLocked: Bool
     var updateUsername: (() -> Void)?
     var linkFacebookProfile: (() -> Void)?
+    var showChannel: ((Result<(Channel, String), AppError>) -> Void)?
 
     let facebookLogoSize: CGFloat = 18
 
@@ -117,8 +119,33 @@ struct InventoryHeaderView: View {
                         Text(username)
                             .foregroundColor(.customText1)
                             .font(.bold(size: 22))
+
                         if facebookURL != nil {
                             facebookAccountButton()
+                        }
+
+                        if let showChannel = showChannel {
+                            AccessoryButton(title: "Message \(username.isEmpty ? "owner" : username)",
+                                            color: .customAccent1,
+                                            textColor: .customText1,
+                                            width: 155,
+                                            imageName: "chevron.right",
+                                            buttonPosition: .right,
+                                            isContentLocked: isContentLocked,
+                                            tapped: {
+                                                guard let ownUserId = DerivedGlobalStore.default.globalState.user?.id else { return }
+                                                AppStore.default
+                                                    .send(.main(action: .getOrCreateChannel(userIds: [userId, ownUserId], completion: { result in
+                                                        switch result {
+                                                        case let .failure(error):
+                                                            showChannel(.failure(error))
+                                                        case let .success(channel):
+                                                            showChannel(.success((channel, userId)))
+                                                        }
+                                                    })))
+
+                                            })
+                                .padding(.top, 15)
                         }
                     }
                 }

@@ -13,6 +13,7 @@ struct ProfileView: View {
 
     @State var profileData: ProfileData
     @State private var isFirstLoad = true
+    @State private var alert: (String, String)? = nil
 
     @StateObject private var loader = Loader()
 
@@ -77,7 +78,8 @@ struct ProfileView: View {
                     .listRow(backgroundColor: .customWhite)
                     .buttonStyle(PlainButtonStyle())
 
-                InventoryHeaderView(settingsPresented: .constant(false),
+                InventoryHeaderView(userId: profileData.user.id,
+                                    settingsPresented: .constant(false),
                                     showImagePicker: .constant(false),
                                     showSellerStats: .constant(false),
                                     profileImageURL: $profileData.user.imageURL,
@@ -86,7 +88,14 @@ struct ProfileView: View {
                                     textBox1: .init(title: "Joined", text: joinedDate),
                                     textBox2: .init(title: "Shared Stacks", text: "\(profileData.stacks.count)"),
                                     isOwnProfile: false,
-                                    isContentLocked: false)
+                                    isContentLocked: false, showChannel: { result in
+                    switch result {
+                    case let .failure(error):
+                        alert = (error.title, error.message)
+                    case let .success((channel, userId)):
+                        navigationDestination += .chat(channel, userId)
+                    }
+                })
 
                 Text(profileData.user.name.map { "\($0)'s Stacks" } ?? "Stacks")
                     .font(.bold(size: 25))
@@ -127,6 +136,7 @@ struct ProfileView: View {
                 .listRow()
             }
             .navigationbarHidden()
+            .withAlert(alert: $alert)
             .onAppear {
                 if isFirstLoad {
                     store.send(.main(action: .getUserProfile(userId: profileData.user.id) { profileData in
@@ -146,7 +156,7 @@ struct ProfileView: View {
 
 extension ProfileView {
     enum NavigationDestination {
-        case inventoryItem(InventoryItem), stack(Stack), empty
+        case inventoryItem(InventoryItem), stack(Stack), chat(Channel, String), empty
     }
 
     struct Destination: View {
@@ -169,6 +179,8 @@ extension ProfileView {
                                       stack: stack,
                                       inventoryItems: stackItems(in: stack),
                                       requestInfo: requestInfo) { navigationDestination.hide() }
+            case let .chat(channel, userId):
+                MessagesView(channel: channel, userId: userId, store: DerivedGlobalStore.default)
             case .empty:
                 EmptyView()
             }
