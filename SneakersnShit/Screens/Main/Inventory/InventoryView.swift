@@ -139,7 +139,7 @@ struct InventoryView: View {
             }
 
             VerticalListView(bottomPadding: 0, spacing: 0, listRowStyling: .none) {
-                InventoryHeaderView(userId: store.globalState.user.id,
+                InventoryHeaderView(userId: store.globalState.user?.id ?? "",
                                     settingsPresented: settingsPresented,
                                     showImagePicker: showImagePicker,
                                     showSellerStats: showSellerStats,
