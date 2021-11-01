@@ -145,6 +145,7 @@ struct InventoryView: View {
                                     showSellerStats: showSellerStats,
                                     profileImageURL: $store.state.profileImageURL,
                                     username: $username,
+                                    countryIcon: .constant(""),
                                     facebookURL: .constant(nil),
                                     textBox1: .init(title: "Inventory Value", text: inventoryValue?.asString ?? "-"),
                                     textBox2: .init(title: "Inventory Size", text: "\(inventoryItems.count)"),

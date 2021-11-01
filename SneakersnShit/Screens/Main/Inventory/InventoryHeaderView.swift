@@ -19,6 +19,7 @@ struct InventoryHeaderView: View {
     @Binding var showSellerStats: Bool
     @Binding var profileImageURL: URL?
     @Binding var username: String
+    @Binding var countryIcon: String
     @Binding var facebookURL: String?
 
     var textBox1: TextBox
@@ -116,7 +117,7 @@ struct InventoryHeaderView: View {
                     }
                 } else {
                     VStack(alignment: .center, spacing: 5) {
-                        Text(username)
+                        Text("\(username) \(countryIcon)")
                             .foregroundColor(.customText1)
                             .font(.bold(size: 22))
 
@@ -140,7 +141,7 @@ struct InventoryHeaderView: View {
                                                         case let .failure(error):
                                                             showChannel(.failure(error))
                                                         case let .success(channel):
-                                                            showChannel(.success((channel, userId)))
+                                                            showChannel(.success((channel, ownUserId)))
                                                         }
                                                     })))
 
