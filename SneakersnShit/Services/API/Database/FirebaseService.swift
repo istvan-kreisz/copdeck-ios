@@ -148,7 +148,7 @@ class FirebaseService: DatabaseManager {
                     break
                 }
             } receiveValue: { messages in
-                update(.success(messages))
+                update(.success(messages.sorted(by: { $0.dateSent < $1.dateSent })))
             }
         publisher.store(in: &cancellables)
 
