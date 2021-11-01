@@ -109,8 +109,9 @@ class FirebaseService: DatabaseManager {
 
     func getChannelsListener(cancel: @escaping (_ cancel: @escaping () -> Void) -> Void, update: @escaping (Result<[Channel], AppError>) -> Void) {
         guard let userId = userId else { return }
+        
         channelsListener.reset()
-        channelsListener.startListening(collectionName: "channels", firestore: firestore) { $0?.whereField("users", arrayContains: userId) }
+        channelsListener.startListening(collectionName: "channels", firestore: firestore) { $0?.whereField("userIds", arrayContains: userId) }
 
         let publisher = channelsListener.dataPublisher
             .sink { completion in

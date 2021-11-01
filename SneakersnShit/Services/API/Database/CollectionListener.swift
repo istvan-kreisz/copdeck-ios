@@ -22,14 +22,14 @@ class CollectionListener<T: Codable>: FireStoreListener {
 
     func startListening(collectionName: String, baseDocumentReference: DocumentReference?, query: ((CollectionReference?) -> Query?)? = nil) {
         collectionRef = baseDocumentReference?.collection(collectionName)
-        listener = addCollectionListener(collectionRef: collectionRef) { [weak self] in
+        listener = addCollectionListener(collectionRef: collectionRef, query: query) { [weak self] in
             self?.dataSubject.send($0)
         }
     }
     
     func startListening(collectionName: String, firestore: Firestore?, query: ((CollectionReference?) -> Query?)? = nil) {
         collectionRef = firestore?.collection(collectionName)
-        listener = addCollectionListener(collectionRef: collectionRef) { [weak self] in
+        listener = addCollectionListener(collectionRef: collectionRef, query: query) { [weak self] in
             self?.dataSubject.send($0)
         }
     }
