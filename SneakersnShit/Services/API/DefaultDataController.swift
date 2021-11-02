@@ -243,7 +243,7 @@ class DefaultDataController: DataController {
     }
 
     func getChannelListener(channelId: String, cancel: @escaping (_ cancel: @escaping () -> Void) -> Void,
-                            update: @escaping (Result<[Message], AppError>) -> Void) {
+                            update: @escaping (Result<([Change<Message>], [Message]), AppError>) -> Void) {
         databaseManager.getChannelListener(channelId: channelId, cancel: cancel, update: update)
     }
 

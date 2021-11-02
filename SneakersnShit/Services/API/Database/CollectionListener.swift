@@ -10,29 +10,29 @@ import Combine
 import UIKit
 import FirebaseStorage
 
+enum Change<T: Codable> {
+    case add(T)
+    case update(T)
+    case delete(T)
+}
+
 class CollectionListener<T: Codable>: FireStoreListener {
     enum UpdateType {
         case data, changes
     }
 
-    enum Change {
-        case add(T)
-        case update(T)
-        case delete(T)
-    }
-
     var collectionRef: CollectionReference?
     var listener: ListenerRegistration?
     var updateType: UpdateType = .data
-    let dataSubject = CurrentValueSubject<[T], AppError>([])
-    let changesSubject = CurrentValueSubject<[Change], AppError>([])
+    var dataSubject = CurrentValueSubject<[T], AppError>([])
+    var changesSubject = CurrentValueSubject<([Change<T>], [T]), AppError>(([], []))
     var value: [T] { dataSubject.value }
 
     var dataPublisher: AnyPublisher<[T], AppError> {
         dataSubject.eraseToAnyPublisher()
     }
 
-    var changesPublisher: AnyPublisher<[Change], AppError> {
+    var changesPublisher: AnyPublisher<([Change<T>], [T]), AppError> {
         changesSubject.eraseToAnyPublisher()
     }
 
@@ -40,33 +40,35 @@ class CollectionListener<T: Codable>: FireStoreListener {
                         query: ((CollectionReference?) -> Query?)? = nil) {
         self.updateType = updateType
         collectionRef = baseDocumentReference?.collection(collectionName)
-        listener = addCollectionListener(collectionRef: collectionRef, query: query) { [weak self] in
-            self?.dataSubject.send($0)
-        }
+        listener = addCollectionListener(collectionRef: collectionRef, query: query)
     }
 
     func startListening(updateType: UpdateType = .data, collectionName: String, firestore: Firestore?, query: ((CollectionReference?) -> Query?)? = nil) {
         self.updateType = updateType
         collectionRef = firestore?.collection(collectionName)
-        listener = addCollectionListener(collectionRef: collectionRef, query: query) { [weak self] in
-            self?.dataSubject.send($0)
-        }
+        listener = addCollectionListener(collectionRef: collectionRef, query: query)
     }
 
     func reset() {
+        dataSubject.send(completion: .finished)
+        changesSubject.send(completion: .finished)
+        dataSubject = CurrentValueSubject<[T], AppError>([])
+        changesSubject = CurrentValueSubject<([Change<T>], [T]), AppError>(([], []))
         listener?.remove()
     }
 
-    private func handleResult(snapshot: QuerySnapshot?, error: Error?, updated: @escaping (_ items: [T]) -> Void) {
+    private func handleResult(snapshot: QuerySnapshot?, error: Error?) {
         if let error = error {
             print("Error fetching documents: \(error)")
             return
         }
+        let updatedData = snapshot?.documents.compactMap { T(from: $0.data()) } ?? []
+        
         switch updateType {
         case .data:
-            updated(snapshot?.documents.compactMap { T(from: $0.data()) } ?? [])
+            dataSubject.send(updatedData)
         case .changes:
-            var changes: [Change] = []
+            var changes: [Change<T>] = []
             snapshot?.documentChanges.forEach { diff in
                 let dict = diff.document.data()
                 guard let element = T(from: dict) else { return }
@@ -79,22 +81,19 @@ class CollectionListener<T: Codable>: FireStoreListener {
                     changes.append(.delete(element))
                 }
             }
-            changesSubject.send(changes)
+            changesSubject.send((changes, updatedData))
         }
     }
 
-    private func addCollectionListener(collectionRef: CollectionReference?,
-                                       query: ((CollectionReference?) -> Query?)? = nil,
-                                       updated: @escaping (_ items: [T]) -> Void) -> ListenerRegistration? {
+    private func addCollectionListener(collectionRef: CollectionReference?, query: ((CollectionReference?) -> Query?)? = nil) -> ListenerRegistration? {
         if let query = query {
             return query(collectionRef)?.addSnapshotListener { [weak self] snapshot, error in
-                self?.handleResult(snapshot: snapshot, error: error, updated: updated)
+                self?.handleResult(snapshot: snapshot, error: error)
             }
         } else {
-            return collectionRef?
-                .addSnapshotListener { [weak self] snapshot, error in
-                    self?.handleResult(snapshot: snapshot, error: error, updated: updated)
-                }
+            return collectionRef?.addSnapshotListener { [weak self] snapshot, error in
+                self?.handleResult(snapshot: snapshot, error: error)
+            }
         }
     }
 }

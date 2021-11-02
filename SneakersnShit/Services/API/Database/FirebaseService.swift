@@ -140,11 +140,11 @@ class FirebaseService: DatabaseManager {
 
     func getChannelListener(channelId: String,
                             cancel: @escaping (_ cancel: @escaping () -> Void) -> Void,
-                            update: @escaping (Result<[Message], AppError>) -> Void) {
+                            update: @escaping (Result<([Change<Message>], [Message]), AppError>) -> Void) {
         channelListener.reset()
-        channelListener.startListening(collectionName: "thread", baseDocumentReference: firestore.collection("channels").document(channelId))
+        channelListener.startListening(updateType: .changes, collectionName: "thread", baseDocumentReference: firestore.collection("channels").document(channelId))
 
-        let publisher = channelListener.dataPublisher
+        let publisher = channelListener.changesPublisher
             .sink { completion in
                 switch completion {
                 case let .failure(error):
@@ -152,8 +152,8 @@ class FirebaseService: DatabaseManager {
                 case .finished:
                     break
                 }
-            } receiveValue: { messages in
-                update(.success(messages.sorted(by: { $0.dateSent < $1.dateSent })))
+            } receiveValue: { changes in
+                update(.success(changes))
             }
         publisher.store(in: &cancellables)
 

@@ -32,8 +32,6 @@ final class ChatViewController: MessagesViewController {
         didSet {
             #warning("only when other person texts")
             markAsSeen()
-            #warning("add granular updates")
-            messagesCollectionView.reloadData()
         }
     }
 
@@ -49,6 +47,7 @@ final class ChatViewController: MessagesViewController {
 
     func tearDown() {
         messages = []
+        messagesCollectionView.reloadData()
         cancelListener?()
         markAsSeen()
     }
@@ -81,7 +80,6 @@ final class ChatViewController: MessagesViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         becomeFirstResponder()
-        messagesCollectionView.scrollToLastItem(animated: true)
     }
 
     private func downloadProfileImages() {
@@ -104,14 +102,73 @@ final class ChatViewController: MessagesViewController {
         store.send(.main(action: .getChannelListener(channelId: channel.id, cancel: { [weak self] cancel in
             self?.cancelListener = cancel
         }, update: { [weak self] result in
-            switch result {
-            case let .success(messages):
-                self?.messages = messages
-                self?.messagesCollectionView.scrollToLastItem(at: .bottom, animated: true)
-            case let .failure(error):
-                print(error)
-            }
+            self?.updateCollectionView(result: result)
         })))
+    }
+
+    private func updateCollectionView(result: Result<([Change<Message>], [Message]), AppError>) {
+        switch result {
+        case let .success((changes, newValue)):
+            let updatedMessagesSorted = newValue.sortedByDate()
+            var added: [Message] = []
+            var updated: [Message] = []
+            var deleted: [Message] = []
+
+            if messages.isEmpty {
+                messages = updatedMessagesSorted
+                messagesCollectionView.reloadData()
+            } else {
+                changes.forEach { change in
+                    switch change {
+                    case let .add(message):
+                        added.append(message)
+                    case let .update(message):
+                        updated.append(message)
+                    case let .delete(message):
+                        deleted.append(message)
+                    }
+                }
+                let deletedIndexes = deleted.compactMap { (message: Message) -> Int? in
+                    messages.firstIndex(where: { $0.id == message.id })
+                }
+                let updatedIndexes = updated.compactMap { (message: Message) -> Int? in
+                    messages.firstIndex(where: { $0.id == message.id })
+                }
+                let addedIndexes = added.sortedByDate().enumerated().map { (index: Int, _) -> Int in
+                    messages.count + index - deletedIndexes.count
+                }
+                
+                messages = updatedMessagesSorted
+
+                messagesCollectionView.performBatchUpdates { [weak self] in
+                    guard let self = self else { return }
+                    if !addedIndexes.isEmpty {
+                        self.messagesCollectionView.insertSections(.init(addedIndexes))
+                    }
+                    if !updatedIndexes.isEmpty {
+                        self.messagesCollectionView.reloadSections(.init(updatedIndexes))
+                    }
+                    if !deletedIndexes.isEmpty {
+                        self.messagesCollectionView.deleteSections(.init(deletedIndexes))
+                    }
+                } completion: { [weak self] _ in
+                    guard let self = self else { return }
+                    if self.isLastSectionVisible() {
+                        self.messagesCollectionView.scrollToLastItem(animated: true)
+                    }
+                }
+            }
+        case let .failure(error):
+            print(error)
+            #warning("show errorr")
+        }
+    }
+
+    private func isLastSectionVisible() -> Bool {
+        guard !messages.isEmpty else { return false }
+
+        let lastIndexPath = IndexPath(item: 0, section: messages.count - 1)
+        return messagesCollectionView.indexPathsForVisibleItems.contains(lastIndexPath)
     }
 
     private func setUpMessageView() {

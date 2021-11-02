@@ -75,3 +75,9 @@ extension Message: Comparable {
         return lhs.sentDate < rhs.sentDate
     }
 }
+
+extension Sequence where Element == Message {
+    func sortedByDate() -> Array<Element> {
+        sorted(by: { $0.sentDate < $1.sentDate })
+    }
+}
