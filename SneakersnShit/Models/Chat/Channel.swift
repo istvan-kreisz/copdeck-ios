@@ -59,3 +59,19 @@ extension Channel {
                   lastMessageSentDate: nil)
     }
 }
+
+extension Sequence where Element == Channel {
+    func sortedByDate() -> Array<Element> {
+        sorted(by: { (first: Channel, second: Channel) -> Bool in
+            if let firstDate = first.lastMessageSentDate {
+                if let secondDate = second.lastMessageSentDate {
+                    return firstDate > secondDate
+                } else {
+                    return true
+                }
+            } else {
+                return false
+            }
+        })
+    }
+}

@@ -96,7 +96,7 @@ struct ChatView: View {
             case let .failure(error):
                 self.error = (error.title, error.message)
             case let .success(channels):
-                self.channels = channels
+                self.channels = channels.sortedByDate()
             }
             loader?(.success(()))
         })))

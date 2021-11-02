@@ -29,11 +29,15 @@ class CollectionListener<T: Codable>: FireStoreListener {
     var value: [T] { dataSubject.value }
 
     var dataPublisher: AnyPublisher<[T], AppError> {
-        dataSubject.eraseToAnyPublisher()
+        dataSubject
+//            .dropFirst()
+            .eraseToAnyPublisher()
     }
 
     var changesPublisher: AnyPublisher<([Change<T>], [T]), AppError> {
-        changesSubject.eraseToAnyPublisher()
+        changesSubject
+//            .dropFirst()
+            .eraseToAnyPublisher()
     }
 
     func startListening(updateType: UpdateType = .data, collectionName: String, baseDocumentReference: DocumentReference?,
