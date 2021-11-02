@@ -8,5 +8,11 @@
 import Foundation
 
 protocol FireStoreListener {
-    func reset()
+    func reset(reinitializePublishers: Bool)
+}
+
+extension FireStoreListener {
+    func reset() {
+        reset(reinitializePublishers: false)
+    }
 }

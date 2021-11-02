@@ -13,7 +13,7 @@ import FirebaseStorage
 class DocumentListener<T: Codable>: FireStoreListener {
     var documentRef: DocumentReference?
     var listener: ListenerRegistration?
-    let dataSubject = CurrentValueSubject<T?, AppError>(nil)
+    var dataSubject = CurrentValueSubject<T?, AppError>(nil)
 
     var dataPublisher: AnyPublisher<T?, AppError> {
         dataSubject.eraseToAnyPublisher()
@@ -26,7 +26,10 @@ class DocumentListener<T: Codable>: FireStoreListener {
         }
     }
 
-    func reset() {
+    func reset(reinitializePublishers: Bool = false) {
+        if reinitializePublishers {
+            dataSubject = CurrentValueSubject<T?, AppError>(nil)
+        }
         listener?.remove()
     }
 

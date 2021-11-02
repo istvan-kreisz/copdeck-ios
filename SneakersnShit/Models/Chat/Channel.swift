@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Channel: Codable, Identifiable {
+struct Channel: Codable, Identifiable, Equatable {
     struct LastMessage: Codable, Equatable {
         let userId: String
         let content: String

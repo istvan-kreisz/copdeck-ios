@@ -15,10 +15,10 @@ struct ChatView: View {
     @StateObject private var channelsLoader = Loader()
 
     @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
-    
+
     @State var cancelListener: (() -> Void)?
     @State private var error: (String, String)? = nil
-    
+
     var userId: String? {
         store.globalState.user?.id
     }
@@ -43,26 +43,23 @@ struct ChatView: View {
                                                     navigationDestination: $navigationDestination).navigationbarHidden(),
                            isActive: showDetail) { EmptyView() }
 
-            VStack(alignment: .leading, spacing: 19) {
-                VerticalListView(bottomPadding: Styles.tabScreenBottomPadding, spacing: 0) {
-                    Text("Messages")
-                        .tabTitle()
-                        .padding(.bottom, 19)
-                    
-                    if channelsLoader.isLoading {
-                        CustomSpinner(text: "Loading messages", animate: true)
-                    }
+            VerticalListView(bottomPadding: Styles.tabScreenBottomPadding, spacing: 0) {
+                Text("Messages")
+                    .tabTitle()
+                    .padding(.bottom, 19)
 
-                    ForEach(channels) { (channel: Channel) in
-                        if let userId = userId {
-                            ChannelListItem(channel: channel, userId: userId) {
-                                navigationDestination += .chat(channel, userId)
-                            } didTapUser: {
-                                if let messagePartner = channel.messagePartner(userId: userId) {
-                                    navigationDestination += .profile(.init(user: messagePartner))
-                                }
+                if channelsLoader.isLoading {
+                    CustomSpinner(text: "Loading messages", animate: true)
+                }
+
+                ForEach(channels) { (channel: Channel) in
+                    if let userId = userId {
+                        ChannelListItem(channel: channel, userId: userId) {
+                            navigationDestination += .chat(channel, userId)
+                        } didTapUser: {
+                            if let messagePartner = channel.messagePartner(userId: userId) {
+                                navigationDestination += .profile(.init(user: messagePartner))
                             }
-
                         }
                     }
                 }
@@ -83,7 +80,7 @@ struct ChatView: View {
             }
         }
     }
-    
+
     private func loadChannels(isFirstLoad: Bool) {
         var loader: ((Result<Void, AppError>) -> Void)?
         if isFirstLoad {

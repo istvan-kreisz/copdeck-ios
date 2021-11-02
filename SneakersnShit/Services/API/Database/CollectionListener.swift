@@ -16,7 +16,7 @@ enum Change<T: Codable> {
     case delete(T)
 }
 
-class CollectionListener<T: Codable>: FireStoreListener {
+class CollectionListener<T: Codable & Equatable>: FireStoreListener {
     enum UpdateType {
         case data, changes
     }
@@ -29,15 +29,11 @@ class CollectionListener<T: Codable>: FireStoreListener {
     var value: [T] { dataSubject.value }
 
     var dataPublisher: AnyPublisher<[T], AppError> {
-        dataSubject
-//            .dropFirst()
-            .eraseToAnyPublisher()
+        dataSubject.dropFirst().eraseToAnyPublisher()
     }
 
     var changesPublisher: AnyPublisher<([Change<T>], [T]), AppError> {
-        changesSubject
-//            .dropFirst()
-            .eraseToAnyPublisher()
+        changesSubject.dropFirst().eraseToAnyPublisher()
     }
 
     func startListening(updateType: UpdateType = .data, collectionName: String, baseDocumentReference: DocumentReference?,
@@ -53,11 +49,11 @@ class CollectionListener<T: Codable>: FireStoreListener {
         listener = addCollectionListener(collectionRef: collectionRef, query: query)
     }
 
-    func reset() {
-        dataSubject.send(completion: .finished)
-        changesSubject.send(completion: .finished)
-        dataSubject = CurrentValueSubject<[T], AppError>([])
-        changesSubject = CurrentValueSubject<([Change<T>], [T]), AppError>(([], []))
+    func reset(reinitializePublishers: Bool = false) {
+        if reinitializePublishers {
+            dataSubject = CurrentValueSubject<[T], AppError>([])
+            changesSubject = CurrentValueSubject<([Change<T>], [T]), AppError>(([], []))
+        }
         listener?.remove()
     }
 

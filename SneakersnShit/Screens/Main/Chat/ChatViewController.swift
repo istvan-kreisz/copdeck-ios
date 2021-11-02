@@ -182,7 +182,7 @@ final class ChatViewController: MessagesViewController {
         maintainPositionOnKeyboardFrameChanged = true
         showMessageTimestampOnSwipeLeft = true
         messageInputBar.inputTextView.tintColor = .black
-        messageInputBar.sendButton.setTitleColor(.black, for: .normal)
+        messageInputBar.sendButton.setTitleColor(UIColor(.customBlack), for: .normal)
 
         messageInputBar.delegate = self
         messagesCollectionView.messagesDataSource = self
@@ -257,11 +257,7 @@ final class ChatViewController: MessagesViewController {
 
 extension ChatViewController: MessagesDisplayDelegate {
     func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
-        if message.sender.senderId == userId {
-            return userColor
-        } else {
-            return .white
-        }
+        color(for: message)
     }
 
     func shouldDisplayHeader(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> Bool {
@@ -271,22 +267,47 @@ extension ChatViewController: MessagesDisplayDelegate {
     func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
         if let sender = messages[safe: indexPath.section]?.sender {
             avatarView.set(avatar: .init(image: images[sender.senderId], initials: "?"))
+            avatarView.layer.borderWidth = 2
+            avatarView.layer.borderColor = color(for: message).cgColor
         }
     }
 
     func messageStyle(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageStyle {
-        let color: UIColor
+        .bubble
+    }
+
+    func cellTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        nil
+    }
+
+    func cellTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
+        0
+    }
+    
+    func textColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+        UIColor(.customWhite)
+    }
+
+    func detectorAttributes(for detector: DetectorType, and message: MessageType, at indexPath: IndexPath) -> [NSAttributedString.Key: Any] {
+        [NSAttributedString.Key.foregroundColor: UIColor.white,
+         NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue,
+         NSAttributedString.Key.underlineColor: UIColor.white]
+    }
+
+    func enabledDetectors(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> [DetectorType] {
+        return [.url, .address, .phoneNumber, .date, .transitInformation, .mention, .hashtag]
+    }
+        
+    private func color(for message: MessageType) -> UIColor {
         if message.sender.senderId == userId {
-            color = userColor
+            return userColor
         } else {
             if let index = channel.userIds.filter({ $0 != userId }).sorted().firstIndex(of: message.sender.senderId) {
-                color = messageColors[index % messageColors.count]
+                return messageColors[index % messageColors.count]
             } else {
-                color = messageColors.randomElement()!
+                return messageColors.randomElement()!
             }
         }
-
-        return .bubbleOutline(color)
     }
 }
 
@@ -294,7 +315,7 @@ extension ChatViewController: MessagesDisplayDelegate {
 
 extension ChatViewController: MessagesLayoutDelegate {
     func messageTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
-        20
+        isFromNewSender(message: message, at: indexPath) ? 20 : 0
     }
 
     func messageBottomLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
@@ -318,12 +339,29 @@ extension ChatViewController: MessagesDataSource {
     }
 
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
-        messages[indexPath.section]
+        messages[safe: indexPath.section] ?? Message(user: user ?? User(id: userId), content: "")
     }
 
     func messageTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
-        NSAttributedString(string: message.sender.displayName,
-                           attributes: [.font: UIFont.preferredFont(forTextStyle: .caption1), .foregroundColor: UIColor(white: 0.3, alpha: 1)])
+        let username = NSAttributedString(string: message.sender.displayName,
+                                          attributes: [.font: UIFont.regular(size: 14), .foregroundColor: UIColor(.customText1)])
+        return isFromNewSender(message: message, at: indexPath) ? username : nil
+    }
+    
+    private func isFromNewSender(message: MessageType, at indexPath: IndexPath) -> Bool {
+        if indexPath.section == 0 {
+            return true
+        } else {
+            if let previousMessage = messages[safe: indexPath.section - 1] {
+                if previousMessage.sender.senderId == message.sender.senderId {
+                    return false
+                } else {
+                    return true
+                }
+            } else {
+                return true
+            }
+        }
     }
 }
 

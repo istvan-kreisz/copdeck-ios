@@ -111,7 +111,7 @@ class FirebaseService: DatabaseManager {
     func getChannelsListener(cancel: @escaping (_ cancel: @escaping () -> Void) -> Void, update: @escaping (Result<[Channel], AppError>) -> Void) {
         guard let userId = userId else { return }
 
-        channelsListener.reset()
+        channelsListener.reset(reinitializePublishers: true)
         channelsListener.startListening(collectionName: "channels", firestore: firestore) {
             $0?
                 .whereField("userIds", arrayContains: userId)
@@ -132,7 +132,7 @@ class FirebaseService: DatabaseManager {
         publisher.store(in: &cancellables)
 
         let cancelBlock: () -> Void = { [weak channelsListener, weak publisher] in
-            channelsListener?.reset()
+            channelsListener?.reset(reinitializePublishers: true)
             publisher?.cancel()
         }
         cancel(cancelBlock)
