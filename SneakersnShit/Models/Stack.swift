@@ -32,8 +32,9 @@ struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
         allInventoryItems.filter { (inventoryItem: InventoryItem) -> Bool in
             let hasStackItem = items.contains(where: { (stackItem: StackItem) -> Bool in inventoryItem.id == stackItem.inventoryItemId })
             if hasStackItem {
-                let matchesSearchString = inventoryItem.name.lowercased().fuzzyMatch(searchText.lowercased())
-                if matchesSearchString {
+                let nameMatchesSearchString = inventoryItem.name.lowercased().fuzzyMatch(searchText.lowercased())
+                let notesMatchesSearchString = inventoryItem.notes.map { $0.lowercased().fuzzyMatch(searchText.lowercased()) } ?? false
+                if nameMatchesSearchString || notesMatchesSearchString {
                     switch filters.soldStatus {
                     case .All:
                         return true
