@@ -11,23 +11,42 @@ import UIKit
 import FirebaseStorage
 
 class CollectionListener<T: Codable>: FireStoreListener {
+    enum UpdateType {
+        case data, changes
+    }
+
+    enum Change {
+        case add(T)
+        case update(T)
+        case delete(T)
+    }
+
     var collectionRef: CollectionReference?
     var listener: ListenerRegistration?
+    var updateType: UpdateType = .data
     let dataSubject = CurrentValueSubject<[T], AppError>([])
+    let changesSubject = CurrentValueSubject<[Change], AppError>([])
     var value: [T] { dataSubject.value }
 
     var dataPublisher: AnyPublisher<[T], AppError> {
         dataSubject.eraseToAnyPublisher()
     }
 
-    func startListening(collectionName: String, baseDocumentReference: DocumentReference?, query: ((CollectionReference?) -> Query?)? = nil) {
+    var changesPublisher: AnyPublisher<[Change], AppError> {
+        changesSubject.eraseToAnyPublisher()
+    }
+
+    func startListening(updateType: UpdateType = .data, collectionName: String, baseDocumentReference: DocumentReference?,
+                        query: ((CollectionReference?) -> Query?)? = nil) {
+        self.updateType = updateType
         collectionRef = baseDocumentReference?.collection(collectionName)
         listener = addCollectionListener(collectionRef: collectionRef, query: query) { [weak self] in
             self?.dataSubject.send($0)
         }
     }
-    
-    func startListening(collectionName: String, firestore: Firestore?, query: ((CollectionReference?) -> Query?)? = nil) {
+
+    func startListening(updateType: UpdateType = .data, collectionName: String, firestore: Firestore?, query: ((CollectionReference?) -> Query?)? = nil) {
+        self.updateType = updateType
         collectionRef = firestore?.collection(collectionName)
         listener = addCollectionListener(collectionRef: collectionRef, query: query) { [weak self] in
             self?.dataSubject.send($0)
@@ -43,7 +62,25 @@ class CollectionListener<T: Codable>: FireStoreListener {
             print("Error fetching documents: \(error)")
             return
         }
-        updated(snapshot?.documents.compactMap { T(from: $0.data()) } ?? [])
+        switch updateType {
+        case .data:
+            updated(snapshot?.documents.compactMap { T(from: $0.data()) } ?? [])
+        case .changes:
+            var changes: [Change] = []
+            snapshot?.documentChanges.forEach { diff in
+                let dict = diff.document.data()
+                guard let element = T(from: dict) else { return }
+                switch diff.type {
+                case .added:
+                    changes.append(.add(element))
+                case .modified:
+                    changes.append(.update(element))
+                case .removed:
+                    changes.append(.delete(element))
+                }
+            }
+            changesSubject.send(changes)
+        }
     }
 
     private func addCollectionListener(collectionRef: CollectionReference?,
