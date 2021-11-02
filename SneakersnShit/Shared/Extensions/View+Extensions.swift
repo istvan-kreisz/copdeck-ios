@@ -184,6 +184,16 @@ extension View {
     func withAlert(alert: Binding<(String, String)?>) -> some View {
         ModifiedContent(content: self, modifier: WithAlert(alert: alert))
     }
+    
+    func withSafeAreaTopPadding() -> some View {
+        self
+            .padding(.top, UIApplication.shared.safeAreaInsets().top)
+    }
+    
+    func withSafeAreaBottomPadding() -> some View {
+        self
+            .padding(.top, UIApplication.shared.safeAreaInsets().top)
+    }
 }
 
 #if DEBUG

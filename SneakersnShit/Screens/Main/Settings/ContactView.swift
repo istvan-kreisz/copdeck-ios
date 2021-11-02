@@ -26,7 +26,8 @@ struct ContactView: View {
             NavigationBar(title: "Send us a message", isBackButtonVisible: true, titleFontSize: .large, style: .dark) {
                 presentationMode.wrappedValue.dismiss()
             }
-            .withDefaultPadding(padding: .top)
+            .padding(.top, 30)
+            
             VStack(alignment: .leading, spacing: 12) {
                 TextFieldRounded(placeHolder: "Enter your email", style: .gray, text: $email)
                     .layoutPriority(1)

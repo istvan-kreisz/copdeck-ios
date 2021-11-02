@@ -32,7 +32,7 @@ struct PasswordResetView: View {
                     .foregroundColor(.customText2)
                     .leftAligned()
                 Spacer()
-
+                
                 TextFieldUnderlined(text: $email,
                                     placeHolder: "Email",
                                     color: .customText1,
@@ -60,6 +60,7 @@ struct PasswordResetView: View {
             .withDefaultPadding(padding: .horizontal)
             .navigationbarHidden()
         }
+        .preferredColorScheme(.light)
     }
 
     private func resetPassword() {

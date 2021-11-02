@@ -25,7 +25,7 @@ struct MessagesView: View {
         ZStack {
             ChatDetailView(channel: channel, userId: userId, store: store)
                 .withDefaultPadding(padding: .top)
-                .padding(.top, UIApplication.shared.safeAreaInsets().top)
+                .withSafeAreaTopPadding()
 
             Rectangle().fill(Color.white)
                 .frame(width: UIScreen.screenWidth, height: NavigationBar.size + UIApplication.shared.safeAreaInsets().top)
@@ -33,8 +33,8 @@ struct MessagesView: View {
             NavigationBar(title: chatName, isBackButtonVisible: true, titleFontSize: .large, style: .dark) {
                 presentationMode.wrappedValue.dismiss()
             }
-            .withDefaultPadding(padding: [.top, .horizontal])
-            .padding(.top, UIApplication.shared.safeAreaInsets().top)
+            .withDefaultPadding(padding: [.horizontal])
+            .withSafeAreaTopPadding()
             .topAligned()
         }
         .edgesIgnoringSafeArea(.vertical)

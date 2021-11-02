@@ -102,7 +102,7 @@ struct SpreadsheetImportView: View {
             NavigationBar(title: "Spreadsheet import", isBackButtonVisible: true, titleFontSize: .large, style: .dark) {
                 presentationMode.wrappedValue.dismiss()
             }
-            .withDefaultPadding(padding: .top)
+            .padding(.top, 30)
 
             Text("Please note that the imported items won't replace your current inventory, but will be added to it, so you won't lose any data. You'll also have the option to revert the import if you don't like the result.")
                 .foregroundColor(.customText2)

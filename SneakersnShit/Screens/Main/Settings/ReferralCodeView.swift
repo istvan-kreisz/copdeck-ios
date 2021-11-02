@@ -22,7 +22,8 @@ struct ReferralCodeView: View {
             NavigationBar(title: "Referral code", isBackButtonVisible: true, titleFontSize: .large, style: .dark) {
                 presentationMode.wrappedValue.dismiss()
             }
-            .withDefaultPadding(padding: .top)
+            .padding(.top, 30)
+            
             VStack(alignment: .leading, spacing: 12) {
                 Text("1. Use a referral code to get a discount on subscription fees.")
                     .foregroundColor(.customText2)

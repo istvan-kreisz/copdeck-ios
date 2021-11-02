@@ -22,7 +22,7 @@ struct ReferralCodeAdminView: View {
             NavigationBar(title: nil, isBackButtonVisible: true, style: .dark) {
                 presentationMode.wrappedValue.dismiss()
             }
-            .withDefaultPadding(padding: .top)
+            .padding(.top, 30)
             .withDefaultPadding(padding: .horizontal)
 
             Text("Affiliate links dashboard")
