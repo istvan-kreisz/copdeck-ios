@@ -47,6 +47,7 @@ class DefaultDataController: DataController {
         localScraper.refreshHeadersAndCookie()
     }
 
+    #warning("sup here")
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
 //        backendAPI.search(searchTerm: searchTerm, settings: settings, exchangeRates: exchangeRates)
         localScraper.search(searchTerm: searchTerm, settings: settings, exchangeRates: exchangeRates)
@@ -332,10 +333,6 @@ class DefaultDataController: DataController {
         var updatedUser = user
         updatedUser.nameInsensitive = updatedUser.name?.uppercased()
         databaseManager.update(user: updatedUser)
-    }
-
-    func deleteUser() {
-        backendAPI.deleteUser()
     }
 
     func getUserProfile(userId: String) -> AnyPublisher<ProfileData, AppError> {

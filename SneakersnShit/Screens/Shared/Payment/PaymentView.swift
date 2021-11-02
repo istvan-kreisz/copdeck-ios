@@ -99,7 +99,6 @@ struct PaymentView: View {
                         VStack(alignment: .leading, spacing: 30) {
                             ZStack(alignment: .center) {
                                 HStack(alignment: .center, spacing: 5) {
-                                    #warning("make bold logo")
                                     Image("logo")
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)

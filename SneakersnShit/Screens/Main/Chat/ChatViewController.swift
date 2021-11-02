@@ -27,14 +27,8 @@ final class ChatViewController: MessagesViewController {
     private let userId: String
     private let store: DerivedGlobalStore
 
-//    private var isFirstLoad = true
     private var cancelListener: (() -> Void)?
-    private var messages: [Message] = [] {
-        didSet {
-            #warning("only when other person texts")
-            markAsSeen()
-        }
-    }
+    private var messages: [Message] = []
 
     private var images: [String: UIImage] = [:] {
         didSet {
@@ -124,14 +118,23 @@ final class ChatViewController: MessagesViewController {
                     self.messagesCollectionView.scrollToLastItem(animated: true)
                 }
             } else {
+                var hasChangesFromOthers = false
+
                 changes.forEach { change in
+                    let m: Message
                     switch change {
                     case let .add(message):
+                        m = message
                         added.append(message)
                     case let .update(message):
+                        m = message
                         updated.append(message)
                     case let .delete(message):
+                        m = message
                         deleted.append(message)
+                    }
+                    if !hasChangesFromOthers, m.sender.senderId != self.userId {
+                        hasChangesFromOthers = true
                     }
                 }
                 let deletedIndexes = deleted.compactMap { (message: Message) -> Int? in
@@ -162,12 +165,22 @@ final class ChatViewController: MessagesViewController {
                     if self.isLastSectionVisible() {
                         self.messagesCollectionView.scrollToLastItem(animated: true)
                     }
+                    if hasChangesFromOthers {
+                        self.markAsSeen()
+                    }
                 }
             }
         case let .failure(error):
-            print(error)
-            #warning("show errorr")
+            showAlert(title: "Failed to load messsages", message: error.localizedDescription)
         }
+    }
+
+    private func showAlert(title: String, message: String) {
+        Debouncer.debounce(delay: .seconds(3), id: "showChatAlert") { [weak self] in
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            alert.addAction(.init(title: "OK", style: .default))
+            self?.present(alert, animated: true, completion: nil)
+        } cancel: {}
     }
 
     private func isLastSectionVisible() -> Bool {
@@ -191,24 +204,25 @@ final class ChatViewController: MessagesViewController {
 
         messagesCollectionView.contentInset.top = NavigationBar.size
         additionalBottomInset = 3
-        
+
         let layout = messagesCollectionView.collectionViewLayout as? MessagesCollectionViewFlowLayout
         layout?.sectionInset = UIEdgeInsets(top: 1, left: 8, bottom: 1, right: 8)
         layout?.setMessageOutgoingCellBottomLabelAlignment(.init(textAlignment: .right, textInsets: .zero))
         layout?.setMessageOutgoingAvatarSize(.zero)
-        layout?.setMessageOutgoingMessageTopLabelAlignment(LabelAlignment(textAlignment: .right, textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 12)))
-        layout?.setMessageOutgoingMessageBottomLabelAlignment(LabelAlignment(textAlignment: .right, textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 12)))
+        layout?
+            .setMessageOutgoingMessageTopLabelAlignment(LabelAlignment(textAlignment: .right, textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 12)))
+        layout?
+            .setMessageOutgoingMessageBottomLabelAlignment(LabelAlignment(textAlignment: .right,
+                                                                          textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 12)))
     }
-    
+
     // MARK: - Helpers
 
     private func sendMessage(content: String) {
         store.send(.main(action: .sendChatMessage(message: content, channelId: channel.id, completion: { [weak self] result in
-            guard let self = self else { return }
             switch result {
             case let .failure(error):
-                #warning("show error message")
-                print(error)
+                self?.showAlert(title: "Failed to send message", message: error.localizedDescription)
             case .success(()):
                 break
             }
@@ -290,7 +304,7 @@ extension ChatViewController: MessagesDisplayDelegate {
     func cellTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
         0
     }
-    
+
     func textColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
         UIColor(.customWhite)
     }
@@ -304,7 +318,7 @@ extension ChatViewController: MessagesDisplayDelegate {
     func enabledDetectors(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> [DetectorType] {
         return [.url, .address, .phoneNumber, .date, .transitInformation, .mention, .hashtag]
     }
-        
+
     private func color(for message: MessageType) -> UIColor {
         if message.sender.senderId == userId {
             return userColor
@@ -354,7 +368,7 @@ extension ChatViewController: MessagesDataSource {
                                           attributes: [.font: UIFont.regular(size: 14), .foregroundColor: UIColor(.customText1)])
         return isFromNewSender(message: message, at: indexPath) ? username : nil
     }
-    
+
     private func isFromNewSender(message: MessageType, at indexPath: IndexPath) -> Bool {
         if indexPath.section == 0 {
             return true

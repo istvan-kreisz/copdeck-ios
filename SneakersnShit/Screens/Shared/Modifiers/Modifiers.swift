@@ -28,7 +28,6 @@ struct DefaultPadding: ViewModifier {
         self.padding = padding
     }
 
-    #warning("refactor margins + paddings")
     func body(content: Content) -> some View {
         content
             .padding(.top, padding.contains(.top) ? 10 : 0)

@@ -123,67 +123,6 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
         return result.map(\.res).eraseToAnyPublisher()
     }
 
-    func add(inventoryItems: [InventoryItem]) {
-        struct Wrapper: Encodable {
-            let userId: String?
-            let inventoryItems: [InventoryItem]
-        }
-        handlePublisherResult(publisher: callFirebaseFunction(functionName: "addInventoryItems",
-                                                              model: Wrapper(userId: userId, inventoryItems: inventoryItems)))
-    }
-
-    func delete(inventoryItems: [InventoryItem]) {
-        struct Wrapper: Encodable {
-            let userId: String?
-            let inventoryItemIds: [String]
-        }
-        handlePublisherResult(publisher: callFirebaseFunction(functionName: "deleteInventoryItems",
-                                                              model: Wrapper(userId: userId, inventoryItemIds: inventoryItems.map(\.id))))
-    }
-
-    func update(inventoryItem: InventoryItem) {
-        struct Wrapper: Encodable {
-            let userId: String?
-            let inventoryItem: InventoryItem
-        }
-        handlePublisherResult(publisher: callFirebaseFunction(functionName: "updateInventoryItem",
-                                                              model: Wrapper(userId: userId, inventoryItem: inventoryItem)))
-    }
-
-    func update(stacks: [Stack]) {
-        #warning("rewrite if reenabled")
-        struct Wrapper: Encodable {
-            let userId: String?
-            let stack: Stack
-        }
-        stacks.forEach { stack in
-            handlePublisherResult(publisher: callFirebaseFunction(functionName: "updateStack", model: Wrapper(userId: userId, stack: stack)))
-        }
-    }
-
-    func delete(stack: Stack) {
-        struct Wrapper: Encodable {
-            let userId: String?
-            let stackId: String
-        }
-        handlePublisherResult(publisher: callFirebaseFunction(functionName: "deleteStack", model: Wrapper(userId: userId, stackId: stack.id)))
-    }
-
-    func deleteUser() {
-        struct Wrapper: Encodable {
-            let userId: String?
-        }
-        handlePublisherResult(publisher: callFirebaseFunction(functionName: "deleteUser", model: Wrapper(userId: userId)))
-    }
-
-    func update(user: User) {
-        struct Wrapper: Encodable {
-            let userId: String?
-            let user: User
-        }
-        handlePublisherResult(publisher: callFirebaseFunction(functionName: "updateUser", model: Wrapper(userId: userId, user: user)))
-    }
-
     func getUserProfile(userId: String) -> AnyPublisher<ProfileData, AppError> {
         struct Wrapper: Encodable {
             let profileId: String
@@ -238,7 +177,6 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
             .store(in: &cancellables)
     }
 
-    #warning("refactor - more uniform error handling too")
     func updateSpreadsheetImportStatus(importedUserId: String,
                                        spreadSheetImportStatus: User.SpreadSheetImportStatus,
                                        spreadSheetImportError: String?,

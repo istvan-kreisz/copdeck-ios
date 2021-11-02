@@ -88,8 +88,7 @@ class DefaultAuthenticator: NSObject, Authenticator {
     func signInWithFacebook() -> AnyPublisher<(userId: String, url: String?), Error> {
         return withPublisher { [weak self] in
             self?.loginButton.delegate = self
-            #warning("yooo")
-            self?.loginButton.permissions = ["email", "user_link"]
+            self?.loginButton.permissions = ["email"]
             self?.loginButton.sendActions(for: .touchUpInside)
         }
         .map { (userId: $0, url: Profile.current?.linkURL?.absoluteString) }

@@ -41,15 +41,7 @@ protocol BackendAPI {
     func getPopularItems(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError>
     // item
     func update(item: Item, settings: CopDeckSettings)
-    // inventory
-    func add(inventoryItems: [InventoryItem])
-    func delete(inventoryItems: [InventoryItem])
-    func update(inventoryItem: InventoryItem)
-    func update(stacks: [Stack])
-    func delete(stack: Stack)
     // user
-    func update(user: User)
-    func deleteUser()
     func getUserProfile(userId: String) -> AnyPublisher<ProfileData, AppError>
     func searchUsers(searchTerm: String) -> AnyPublisher<[User], AppError>
     func getUsers(userIds: [String], completion: @escaping (Result<[User], AppError>) -> Void)
@@ -66,6 +58,7 @@ protocol BackendAPI {
     func getImportedInventoryItems(importedUserId: String, completion: @escaping (Result<[InventoryItem], Error>) -> Void)
     // membership
     func applyReferralCode(_ code: String, completion: ((Result<Void, AppError>) -> Void)?)
+    #warning("delete")
     func userSubscribed()
     func getAffiliateList(completion: @escaping (Result<[ReferralCode], Error>) -> Void)
     // contact support

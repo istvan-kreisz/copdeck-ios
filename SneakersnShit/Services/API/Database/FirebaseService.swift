@@ -591,7 +591,6 @@ class FirebaseService: DatabaseManager {
         deleteDocument(atRef: ref)
     }
 
-    #warning("indexxx")
     func getSpreadsheetImportWaitlist(completion: @escaping (Result<[User], Error>) -> Void) {
         guard DebugSettings.shared.isAdmin else { return }
         firestore
