@@ -53,6 +53,10 @@ struct User: Codable, Equatable, Identifiable {
         }
     }
 
+    enum Subscription: String, Codable {
+        case pro
+    }
+
     let id: String
     var inited: Bool?
     var name: String?
@@ -67,9 +71,11 @@ struct User: Codable, Equatable, Identifiable {
     let membershipInfo: MembershipInfo?
     let country: String?
     var facebookProfileURL: String?
+    let subscription: Subscription?
+    let subscribedDate: String?
 
     enum CodingKeys: String, CodingKey {
-        case id, inited, name, nameInsensitive, email, isPublic, created, updated, settings, spreadsheetImport, membershipInfo, country, facebookProfileURL
+        case id, inited, name, nameInsensitive, email, isPublic, created, updated, settings, spreadsheetImport, membershipInfo, country, facebookProfileURL, subscription, subscribedDate
     }
 }
 
@@ -89,6 +95,8 @@ extension User {
         membershipInfo = try container.decodeIfPresent(MembershipInfo.self, forKey: .membershipInfo)
         country = try container.decodeIfPresent(String.self, forKey: .country)
         facebookProfileURL = try container.decodeIfPresent(String.self, forKey: .facebookProfileURL)
+        subscription = try container.decodeIfPresent(Subscription.self, forKey: .subscription)
+        subscribedDate = try container.decodeIfPresent(String.self, forKey: .subscribedDate)
     }
 
     init(id: String) {
@@ -103,7 +111,9 @@ extension User {
                   spreadsheetImport: nil,
                   membershipInfo: nil,
                   country: nil,
-                  facebookProfileURL: nil)
+                  facebookProfileURL: nil,
+                  subscription: nil,
+                  subscribedDate: nil)
     }
 
     func withImageURL(_ url: URL?) -> User {
