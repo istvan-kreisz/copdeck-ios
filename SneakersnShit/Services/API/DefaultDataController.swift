@@ -37,6 +37,7 @@ class DefaultDataController: DataController {
     }
 
     func reset() {
+        _ = UIApplication.shared.applicationIconBadgeNumber
         backendAPI.reset()
         databaseManager.reset()
         localScraper.reset()

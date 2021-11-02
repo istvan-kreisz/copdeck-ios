@@ -41,7 +41,6 @@
 		5D3E872525C5D3FC00FC65FE /* Sequence+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D3E872425C5D3FC00FC65FE /* Sequence+Extensions.swift */; };
 		5D41174526E9765C0048D122 /* StackShareSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D41174426E9765C0048D122 /* StackShareSettingsView.swift */; };
 		5D424CAE25C4FDCC0008D6F4 /* SignInButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424CAB25C4FDCC0008D6F4 /* SignInButton.swift */; };
-		5D424CD425C4FF2F0008D6F4 /* IAPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424CD325C4FF2F0008D6F4 /* IAPManager.swift */; };
 		5D424CEE25C502F90008D6F4 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424CED25C502F90008D6F4 /* Colors.swift */; };
 		5D424CF225C503120008D6F4 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5D424CF125C503120008D6F4 /* Colors.xcassets */; };
 		5D424CF725C503D10008D6F4 /* UIScreen+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D424CF625C503D10008D6F4 /* UIScreen+Extensions.swift */; };
@@ -254,7 +253,6 @@
 		5D3E872425C5D3FC00FC65FE /* Sequence+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence+Extensions.swift"; sourceTree = "<group>"; };
 		5D41174426E9765C0048D122 /* StackShareSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackShareSettingsView.swift; sourceTree = "<group>"; };
 		5D424CAB25C4FDCC0008D6F4 /* SignInButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInButton.swift; sourceTree = "<group>"; };
-		5D424CD325C4FF2F0008D6F4 /* IAPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPManager.swift; sourceTree = "<group>"; };
 		5D424CD725C501B20008D6F4 /* Karla-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Karla-ExtraBold.ttf"; sourceTree = "<group>"; };
 		5D424CD825C501B20008D6F4 /* Karla-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Karla-Bold.ttf"; sourceTree = "<group>"; };
 		5D424CD925C501B20008D6F4 /* Karla-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Karla-ExtraLight.ttf"; sourceTree = "<group>"; };
@@ -504,14 +502,6 @@
 				5DBCB6DC25C90A510025BC23 /* StoreReviewHelper.swift */,
 			);
 			path = StoreReviewHelper;
-			sourceTree = "<group>";
-		};
-		5D424CD225C4FF210008D6F4 /* IAP */ = {
-			isa = PBXGroup;
-			children = (
-				5D424CD325C4FF2F0008D6F4 /* IAPManager.swift */,
-			);
-			path = IAP;
 			sourceTree = "<group>";
 		};
 		5D424CE625C501BA0008D6F4 /* Fonts */ = {
@@ -1093,7 +1083,6 @@
 				5D60541B2726F93900B631FD /* PaymentService */,
 				5D2726CE26CC59C100887449 /* Cache */,
 				5D6312512695BC3F00876D99 /* API */,
-				5D424CD225C4FF210008D6F4 /* IAP */,
 				5D424CCD25C4FE200008D6F4 /* StoreReviewHelper */,
 				5DC00EA925C3A317009A3AB9 /* Authenticator */,
 			);
@@ -1259,9 +1248,9 @@
 			mainGroup = 5D69608A258713760058BABE;
 			packageReferences = (
 				5DCC466626A7A96C007671BC /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
-				5D9D51F926AE1BE500AB1F30 /* XCRemoteSwiftPackageReference "Nuke.git" */,
-				5D9D51FC26AE1C0B00AB1F30 /* XCRemoteSwiftPackageReference "NukeUI.git" */,
-				5D0703C6271DDED200116CF4 /* XCRemoteSwiftPackageReference "purchases-ios.git" */,
+				5D9D51F926AE1BE500AB1F30 /* XCRemoteSwiftPackageReference "Nuke" */,
+				5D9D51FC26AE1C0B00AB1F30 /* XCRemoteSwiftPackageReference "NukeUI" */,
+				5D0703C6271DDED200116CF4 /* XCRemoteSwiftPackageReference "purchases-ios" */,
 				5D606D15272D040A00E49A59 /* XCRemoteSwiftPackageReference "MessageKit" */,
 			);
 			productRefGroup = 5D696094258713760058BABE /* Products */;
@@ -1469,7 +1458,6 @@
 				5DC3538F26117C7F00294DF0 /* ItemDetailView.swift in Sources */,
 				5DD01E5426DD78480054F6F1 /* InventoryHeaderView.swift in Sources */,
 				5DA4FE0126E6DA3900084AEF /* StockXSellerFeeSelector.swift in Sources */,
-				5D424CD425C4FF2F0008D6F4 /* IAPManager.swift in Sources */,
 				5DE4F21626E00BBC0087077A /* StackSummaryListItem.swift in Sources */,
 				5D3E872525C5D3FC00FC65FE /* Sequence+Extensions.swift in Sources */,
 				5D424CEE25C502F90008D6F4 /* Colors.swift in Sources */,
@@ -1909,7 +1897,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		5D0703C6271DDED200116CF4 /* XCRemoteSwiftPackageReference "purchases-ios.git" */ = {
+		5D0703C6271DDED200116CF4 /* XCRemoteSwiftPackageReference "purchases-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/RevenueCat/purchases-ios.git";
 			requirement = {
@@ -1925,7 +1913,7 @@
 				minimumVersion = 3.0.0;
 			};
 		};
-		5D9D51F926AE1BE500AB1F30 /* XCRemoteSwiftPackageReference "Nuke.git" */ = {
+		5D9D51F926AE1BE500AB1F30 /* XCRemoteSwiftPackageReference "Nuke" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kean/Nuke.git";
 			requirement = {
@@ -1933,7 +1921,7 @@
 				minimumVersion = 10.3.1;
 			};
 		};
-		5D9D51FC26AE1C0B00AB1F30 /* XCRemoteSwiftPackageReference "NukeUI.git" */ = {
+		5D9D51FC26AE1C0B00AB1F30 /* XCRemoteSwiftPackageReference "NukeUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kean/NukeUI.git";
 			requirement = {
@@ -1954,7 +1942,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		5D0703C7271DDED200116CF4 /* Purchases */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 5D0703C6271DDED200116CF4 /* XCRemoteSwiftPackageReference "purchases-ios.git" */;
+			package = 5D0703C6271DDED200116CF4 /* XCRemoteSwiftPackageReference "purchases-ios" */;
 			productName = Purchases;
 		};
 		5D606D16272D040A00E49A59 /* MessageKit */ = {
@@ -1964,12 +1952,12 @@
 		};
 		5D9D51FA26AE1BE500AB1F30 /* Nuke */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 5D9D51F926AE1BE500AB1F30 /* XCRemoteSwiftPackageReference "Nuke.git" */;
+			package = 5D9D51F926AE1BE500AB1F30 /* XCRemoteSwiftPackageReference "Nuke" */;
 			productName = Nuke;
 		};
 		5D9D51FD26AE1C0B00AB1F30 /* NukeUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 5D9D51FC26AE1C0B00AB1F30 /* XCRemoteSwiftPackageReference "NukeUI.git" */;
+			package = 5D9D51FC26AE1C0B00AB1F30 /* XCRemoteSwiftPackageReference "NukeUI" */;
 			productName = NukeUI;
 		};
 		5DCC466726A7A96C007671BC /* FacebookCore */ = {

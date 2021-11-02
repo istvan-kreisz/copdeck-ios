@@ -16,7 +16,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         if DebugSettings.shared.clearUserDefaults {
             UserDefaults.standard.reset()
         }
-        _ = IAPHelper.shared
         FirebaseConfiguration.shared.setLoggerLevel(DebugSettings.shared.isInDebugMode ? .info : .min)
         FirebaseApp.configure()
         ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
