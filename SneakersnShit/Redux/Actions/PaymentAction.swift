@@ -12,7 +12,6 @@ enum PaymentAction {
     case applyReferralCode(_ code: String, completion: ((Result<Void, AppError>) -> Void)?)
     case restorePurchases(completion: ((Result<Void, AppError>) -> Void)?)
     case purchase(package: Purchases.Package)
-    case userSubscribed
     case showPaymentView(show: Bool)
 }
 

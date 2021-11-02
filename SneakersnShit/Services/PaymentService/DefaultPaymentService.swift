@@ -54,7 +54,6 @@ class DefaultPaymentService: NSObject, PaymentService {
 
     private let errorsSubject = PassthroughSubject<AppError, Never>()
     private let packagesSubject = CurrentValueSubject<[DiscountValue: SubscriptionPackages]?, Never>(nil)
-    private let purchaserInfoSubject = PassthroughSubject<Purchases.PurchaserInfo?, Never>()
 
     var errorsPublisher: AnyPublisher<AppError, Never> {
         errorsSubject.eraseToAnyPublisher()
@@ -64,10 +63,6 @@ class DefaultPaymentService: NSObject, PaymentService {
         packagesSubject.eraseToAnyPublisher()
     }
 
-    var purchaserInfoPublisher: AnyPublisher<Purchases.PurchaserInfo?, Never> {
-        purchaserInfoSubject.removeDuplicates().eraseToAnyPublisher()
-    }
-
     override init() {
         super.init()
         if DebugSettings.shared.isInDebugMode {
@@ -75,14 +70,7 @@ class DefaultPaymentService: NSObject, PaymentService {
         }
         Purchases.configure(withAPIKey: Self.apiKey)
 
-        getPackages {
-            Purchases.shared.purchaserInfo { [weak self] purchaserInfo, error in
-                error.map { self?.errorsSubject.send(AppError(error: $0)) }
-                if purchaserInfo != nil {
-                    self?.purchaserInfoSubject.send(purchaserInfo)
-                }
-            }
-        }
+        getPackages {}
     }
 
     func setup(userId: String, userEmail: String?) {
@@ -96,35 +84,25 @@ class DefaultPaymentService: NSObject, PaymentService {
     }
 
     func reset() {
-        Purchases.shared.logOut { [weak self] purchaseInfo, error in
-            if error != nil {
-                self?.purchaserInfoSubject.send(nil)
-            } else {
-                self?.purchaserInfoSubject.send(purchaseInfo)
-            }
-        }
+        Purchases.shared.logOut(nil)
     }
 
     func restorePurchases(completion: ((Result<Void, AppError>) -> Void)?) {
-        Purchases.shared.restoreTransactions { [weak self] purchaserInfo, error in
+        Purchases.shared.restoreTransactions { [weak self] _, error in
             if let error = error {
                 self?.errorsSubject.send(AppError(error: error))
                 completion?(.failure(AppError(error: error)))
             } else {
                 completion?(.success(()))
             }
-            self?.purchaserInfoSubject.send(purchaserInfo)
         }
     }
 
     func purchase(package: Purchases.Package) {
-        Purchases.shared.purchasePackage(package) { [weak self] transaction, purchaserInfo, error, userCancelled in
+        Purchases.shared.purchasePackage(package) { [weak self] transaction, _, error, userCancelled in
             if let error = error {
                 self?.errorsSubject.send(AppError(error: error))
-            } else {
-                AppStore.default.send(.paymentAction(action: .userSubscribed))
             }
-            self?.purchaserInfoSubject.send(purchaserInfo)
         }
     }
 
@@ -147,9 +125,8 @@ class DefaultPaymentService: NSObject, PaymentService {
     }
 
     private func login(userId: String, userEmail: String?) {
-        Purchases.shared.logIn(userId) { [weak self] purchaserInfo, created, error in
+        Purchases.shared.logIn(userId) { [weak self] _, created, error in
             error.map { self?.errorsSubject.send(AppError(error: $0)) }
-            self?.purchaserInfoSubject.send(purchaserInfo)
             if created {
                 Purchases.shared.setEmail(userEmail)
             }

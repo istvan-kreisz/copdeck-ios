@@ -259,13 +259,6 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
         handlePublisherResult(publisher: callFirebaseFunction(functionName: "applyReferralCode", model: Wrapper(referralCode: code)), completion: completion)
     }
 
-    func userSubscribed() {
-        struct Wrapper: Encodable {
-            let userId: String?
-        }
-        handlePublisherResult(publisher: callFirebaseFunction(functionName: "userSubscribed", model: Wrapper(userId: userId)), showAlert: false)
-    }
-
     func sendMessage(email: String, message: String, completion: ((Result<Void, AppError>) -> Void)?) {
         struct Wrapper: Encodable {
             let email: String

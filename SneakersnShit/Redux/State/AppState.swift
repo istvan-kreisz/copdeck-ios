@@ -28,19 +28,10 @@ struct GlobalState: Equatable {
     var error: AppError?
     var exchangeRates: ExchangeRates?
     var showPaymentView = false
-    var purchaserInfo: Purchases.PurchaserInfo? {
-        didSet {
-            if !didFetchPurchaserInfo {
-                didFetchPurchaserInfo = true
-            }
-        }
-    }
-
     var allPackages: [DiscountValue: SubscriptionPackages]?
-    var didFetchPurchaserInfo = false
 
     var subscriptionActive: Bool {
-        purchaserInfo?.entitlements[DefaultPaymentService.entitlementsId]?.isActive == true
+        user?.subscription == .pro
     }
     
     var isContentLocked: Bool {
@@ -53,7 +44,7 @@ struct GlobalState: Equatable {
     }
 
     var hasSubscribed: Bool {
-        subscriptionActive == true || purchaserInfo?.purchaseDate(forEntitlement: DefaultPaymentService.entitlementsId) != nil
+        subscriptionActive || user?.subscribedDate != nil
     }
 
     var settings: CopDeckSettings {
@@ -152,11 +143,6 @@ struct AppState: Equatable {
         set { inventoryState.profileImageURL = newValue }
     }
 
-    var purchaserInfo: Purchases.PurchaserInfo? {
-        get { globalState.purchaserInfo }
-        set { globalState.purchaserInfo = newValue }
-    }
-
     var showPaymentView: Bool {
         get { globalState.showPaymentView }
         set { globalState.showPaymentView = newValue }
@@ -177,11 +163,6 @@ struct AppState: Equatable {
     
     var displayedStores: [StoreId] {
         globalState.displayedStores
-    }
-
-    var didFetchPurchaserInfo: Bool {
-        get { globalState.didFetchPurchaserInfo }
-        set { globalState.didFetchPurchaserInfo = newValue }
     }
 
     var settings: CopDeckSettings {
@@ -212,12 +193,10 @@ struct AppState: Equatable {
         searchState = SearchState()
         feedState = FeedState()
         user = nil
-        didFetchItemPrices = false
         inventoryItems = []
         stacks = []
         profileImageURL = nil
         error = nil
         showPaymentView = false
-        purchaserInfo = nil
     }
 }

@@ -58,8 +58,6 @@ protocol BackendAPI {
     func getImportedInventoryItems(importedUserId: String, completion: @escaping (Result<[InventoryItem], Error>) -> Void)
     // membership
     func applyReferralCode(_ code: String, completion: ((Result<Void, AppError>) -> Void)?)
-    #warning("delete")
-    func userSubscribed()
     func getAffiliateList(completion: @escaping (Result<[ReferralCode], Error>) -> Void)
     // contact support
     func sendMessage(email: String, message: String, completion: ((Result<Void, AppError>) -> Void)?)

@@ -120,14 +120,6 @@ extension AppStore {
                       self?.state.allPackages = packages
                   })
             .store(in: &effectCancellables)
-
-        environment.paymentService.purchaserInfoPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in },
-                  receiveValue: { [weak self] purchaserInfo in
-                      self?.state.purchaserInfo = purchaserInfo
-                  })
-            .store(in: &effectCancellables)
     }
 
     func updateAllStack(withInventoryItems inventoryItems: [InventoryItem]) {

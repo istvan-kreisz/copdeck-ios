@@ -11,7 +11,6 @@ import Purchases
 
 protocol PaymentService {
     var errorsPublisher: AnyPublisher<AppError, Never> { get }
-    var purchaserInfoPublisher: AnyPublisher<Purchases.PurchaserInfo?, Never> { get }
     var packagesPublisher: AnyPublisher<[DiscountValue: SubscriptionPackages]?, Never> { get }
 
     func setup(userId: String, userEmail: String?)
