@@ -27,9 +27,12 @@ struct MessagesView: View {
                 .withDefaultPadding(padding: .top)
                 .withSafeAreaTopPadding()
 
-            Rectangle().fill(Color.white)
-                .frame(width: UIScreen.screenWidth, height: NavigationBar.size + UIApplication.shared.safeAreaInsets().top)
-                .topAligned()
+            VStack {
+                Rectangle().fill(Color.white)
+                    .frame(width: UIScreen.screenWidth, height: NavigationBar.size + UIApplication.shared.safeAreaInsets().top)
+                    .topAligned()
+                Spacer()
+            }
             NavigationBar(title: chatName, isBackButtonVisible: true, titleFontSize: .large, style: .dark) {
                 presentationMode.wrappedValue.dismiss()
             }
