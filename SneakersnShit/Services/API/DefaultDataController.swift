@@ -216,25 +216,29 @@ class DefaultDataController: DataController {
         databaseManager.getChannelsListener(cancel: cancel) { [weak self] result in
             switch result {
             case let .success(channels):
-                let allUserIds = channels.flatMap { $0.userIds }.uniqued()
-                self?.backendAPI.getUsers(userIds: allUserIds) { result in
-                    switch result {
-                    case let .failure(error):
-                        update(.failure(error))
-                    case let .success(users):
-                        self?.getImageURLs(for: users) { updatedUsers in
-                            let channelsWithUsers = channels.map { (channel: Channel) -> Channel in
-                                var updatedChannel = channel
-                                updatedChannel.users = updatedUsers.filter { channel.userIds.contains($0.id) }
-                                return updatedChannel
-                            }
-                            update(.success(channelsWithUsers))
-                        }
-                    }
-                }
+                self?.updateChannelsWithUsers(channels: channels, update: update)
             case let .failure(error):
                 update(.failure(error))
             }
+        }
+    }
+
+    private func updateChannelsWithUsers(channels: [Channel], update: @escaping (Result<[Channel], AppError>) -> Void) {
+        let allUserIds = channels.flatMap { $0.userIds }.uniqued()
+        backendAPI.getUsers(userIds: allUserIds) { [weak self] result in
+//            switch result {
+//            case let .failure(error):
+//                update(.failure(error))
+//            case let .success(users):
+//                self?.getImageURLs(for: users) { updatedUsers in
+//                    let channelsWithUsers = channels.map { (channel: Channel) -> Channel in
+//                        var updatedChannel = channel
+//                        updatedChannel.users = updatedUsers.filter { channel.userIds.contains($0.id) }
+//                        return updatedChannel
+//                    }
+//                    update(.success(channelsWithUsers))
+//                }
+//            }
         }
     }
 
@@ -242,7 +246,7 @@ class DefaultDataController: DataController {
                             update: @escaping (Result<[Message], AppError>) -> Void) {
         databaseManager.getChannelListener(channelId: channelId, cancel: cancel, update: update)
     }
-    
+
     func markChannelAsSeen(channel: Channel) {
         databaseManager.markChannelAsSeen(channel: channel)
     }
@@ -380,9 +384,9 @@ class DefaultDataController: DataController {
     func sendMessage(user: User, message: String, toChannelWithId channelId: String, completion: @escaping (Result<Void, AppError>) -> Void) {
         databaseManager.sendMessage(user: user, message: message, toChannelWithId: channelId, completion: completion)
     }
-    
-    func getOrCreateChannel(userIds: [String], completion: @escaping (Result<Channel, AppError>) -> Void) {
-        databaseManager.getOrCreateChannel(userIds: userIds, completion: completion)
+
+    func getOrCreateChannel(users: [User], completion: @escaping (Result<Channel, AppError>) -> Void) {
+        databaseManager.getOrCreateChannel(users: users, completion: completion)
     }
 
     func uploadProfileImage(image: UIImage) {

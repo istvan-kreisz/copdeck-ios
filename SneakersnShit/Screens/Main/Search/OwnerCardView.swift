@@ -36,13 +36,13 @@ struct OwnerCardView: View {
 
                     if user.id != DerivedGlobalStore.default.globalState.user?.id {
                         Button {
-                            if let userId = DerivedGlobalStore.default.globalState.user?.id {
-                                AppStore.default.send(.main(action: .getOrCreateChannel(userIds: [user.id, userId], completion: { result in
+                            if let ownUser = DerivedGlobalStore.default.globalState.user {
+                                AppStore.default.send(.main(action: .getOrCreateChannel(users: [user, ownUser], completion: { result in
                                     switch result {
                                     case let .failure(error):
                                         didTapMessage(.failure(error))
                                     case let .success(channel):
-                                        didTapMessage(.success((channel, userId)))
+                                        didTapMessage(.success((channel, ownUser.id)))
                                     }
                                 })))
                             }

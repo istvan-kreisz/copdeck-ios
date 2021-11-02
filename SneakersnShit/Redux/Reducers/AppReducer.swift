@@ -186,8 +186,8 @@ func appReducer(state: inout AppState,
             }
         case let .markChannelAsSeen(channel: channel):
             environment.dataController.markChannelAsSeen(channel: channel)
-        case let .getOrCreateChannel(userIds: userIds, completion: completion):
-            environment.dataController.getOrCreateChannel(userIds: userIds, completion: completion)
+        case let .getOrCreateChannel(users: users, completion: completion):
+            environment.dataController.getOrCreateChannel(users: users, completion: completion)
         }
     case let .authentication(action):
         let result: AnyPublisher<String, Error>

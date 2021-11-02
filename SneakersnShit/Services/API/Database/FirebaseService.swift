@@ -17,6 +17,7 @@ class FirebaseService: DatabaseManager {
     private var userId: String?
 
     var cancellables: Set<AnyCancellable> = []
+    private let channelCache = Cache<String, Channel>(entryLifetimeMin: 60)
 
     // collection listeners
     private var inventoryListener = CollectionListener<InventoryItem>()
@@ -190,19 +191,31 @@ class FirebaseService: DatabaseManager {
         update(channel: updatedChannel, fieldsToUpdate: [.lastSeenDates], completion: nil)
     }
 
-    func getOrCreateChannel(userIds: [String], completion: @escaping (Result<Channel, AppError>) -> Void) {
-        if let channel = channelsListener.value.first(where: { $0.userIds == userIds.sorted() }) {
+    func getOrCreateChannel(users: [User], completion: @escaping (Result<Channel, AppError>) -> Void) {
+        let userIds = users.map(\.id).sorted()
+        let userIdsJoined = userIds.joined(separator: "")
+        if var channel = channelsListener.value.first(where: { $0.userIds == userIds.sorted() }) {
+            channel.users = []
+            channelCache.insert(channel, forKey: userIdsJoined)
+            channel.users = users
+            completion(.success(channel))
+        } else if var channel = channelCache.value(forKey: userIdsJoined) {
+            channel.users = users
             completion(.success(channel))
         } else {
             firestore.collection("channels").whereField("userIds", isEqualTo: userIds.sorted()).getDocuments { [weak self] snapshot, error in
                 if let data = snapshot?.documents.map({ $0.data() }),
                    let channels = [Channel](from: data),
-                   let channel = channels.first(where: { $0.userIds == userIds.sorted() }) {
+                   var channel = channels.first(where: { $0.userIds == userIds.sorted() }) {
+                    self?.channelCache.insert(channel, forKey: userIdsJoined)
+                    channel.users = users
                     completion(.success(channel))
                 } else {
-                    self?.addChannel(userIds: userIds) { result in
+                    self?.addChannel(userIds: userIds) { [weak self] result in
                         switch result {
-                        case let .success(channel):
+                        case var .success(channel):
+                            self?.channelCache.insert(channel, forKey: userIdsJoined)
+                            channel.users = users
                             completion(.success(channel))
                         case let .failure(error):
                             completion(.failure(error))
@@ -257,19 +270,19 @@ class FirebaseService: DatabaseManager {
     private func update(channel: Channel, fieldsToUpdate: [Channel.CodingKeys]?, completion: ((Result<Channel, AppError>) -> Void)?) {
         let ref = firestore.collection("channels").document(channel.id)
 
-        firestore.runTransaction { transaction, error in
-            let snapshot: DocumentSnapshot
-            do {
-                try snapshot = transaction.getDocument(ref)
-            } catch let fetchError as NSError {
-                error?.pointee = fetchError
-                return nil
-            }
+        if let fieldsToUpdate = fieldsToUpdate {
+            firestore.runTransaction { transaction, error in
+                let snapshot: DocumentSnapshot
+                do {
+                    try snapshot = transaction.getDocument(ref)
+                } catch let fetchError as NSError {
+                    error?.pointee = fetchError
+                    return nil
+                }
 
-            guard let dict = snapshot.data(), let currentChannel = Channel(from: dict)
-            else { return nil }
+                guard let dict = snapshot.data(), let currentChannel = Channel(from: dict)
+                else { return nil }
 
-            if let fieldsToUpdate = fieldsToUpdate {
                 var updates: [AnyHashable: Any] = [:]
                 fieldsToUpdate.forEach { field in
                     var updateValue: Any? = nil
@@ -338,20 +351,19 @@ class FirebaseService: DatabaseManager {
                         }
                     }
                 }
-            } else {
-                if let dict = try? channel.asDictionary() {
-                    transaction.setData(dict, forDocument: ref, merge: true)
-                    return channel
+                return nil
+            } completion: { object, error in
+                if let error = error {
+                    completion?(.failure(AppError(error: error)))
+                } else if let newChannel = object as? Channel {
+                    completion?(.success(newChannel))
+                } else {
+                    completion?(.failure(AppError(title: "Error", message: "Nothing to update", error: nil)))
                 }
             }
-            return nil
-        } completion: { object, error in
-            if let error = error {
-                completion?(.failure(AppError(error: error)))
-            } else if let newChannel = object as? Channel {
-                completion?(.success(newChannel))
-            } else {
-                completion?(.failure(AppError(title: "Error", message: "Nothing to update", error: nil)))
+        } else {
+            if let dict = try? channel.asDictionary() {
+                ref.setData(dict)
             }
         }
     }

@@ -139,19 +139,21 @@ struct InventoryView: View {
             }
 
             VerticalListView(bottomPadding: 0, spacing: 0, listRowStyling: .none) {
-                InventoryHeaderView(userId: store.globalState.user?.id ?? "",
-                                    settingsPresented: settingsPresented,
-                                    showImagePicker: showImagePicker,
-                                    showSellerStats: showSellerStats,
-                                    profileImageURL: $store.state.profileImageURL,
-                                    username: $username,
-                                    countryIcon: .constant(""),
-                                    facebookURL: .constant(nil),
-                                    textBox1: .init(title: "Inventory Value", text: inventoryValue?.asString ?? "-"),
-                                    textBox2: .init(title: "Inventory Size", text: "\(inventoryItems.count)"),
-                                    isContentLocked: store.globalState.isContentLocked,
-                                    updateUsername: updateUsername,
-                                    linkFacebookProfile: globalStore.globalState.user?.facebookProfileURL == nil ? linkFacebookProfile : nil)
+                if let user = store.globalState.user {
+                    InventoryHeaderView(user: user,
+                                        settingsPresented: settingsPresented,
+                                        showImagePicker: showImagePicker,
+                                        showSellerStats: showSellerStats,
+                                        profileImageURL: $store.state.profileImageURL,
+                                        username: $username,
+                                        countryIcon: .constant(""),
+                                        facebookURL: .constant(nil),
+                                        textBox1: .init(title: "Inventory Value", text: inventoryValue?.asString ?? "-"),
+                                        textBox2: .init(title: "Inventory Size", text: "\(inventoryItems.count)"),
+                                        isContentLocked: store.globalState.isContentLocked,
+                                        updateUsername: updateUsername,
+                                        linkFacebookProfile: globalStore.globalState.user?.facebookProfileURL == nil ? linkFacebookProfile : nil)
+                }
 
                 ScrollableSegmentedControl(selectedIndex: $selectedStackIndex,
                                            titles: stackTitles,
@@ -243,7 +245,8 @@ struct InventoryView: View {
             .sheet(isPresented: showSheet) {
                 switch presentedSheet {
                 case .settings:
-                    SettingsView(settings: globalStore.globalState.settings, isContentLocked: globalStore.globalState.isContentLocked, isPresented: settingsPresented)
+                    SettingsView(settings: globalStore.globalState.settings, isContentLocked: globalStore.globalState.isContentLocked,
+                                 isPresented: settingsPresented)
                         .environmentObject(DerivedGlobalStore.default)
                 case .filters:
                     FiltersModal(settings: globalStore.globalState.settings, isPresented: showFilters)

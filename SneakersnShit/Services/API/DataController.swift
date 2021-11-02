@@ -104,7 +104,7 @@ protocol DatabaseManager {
     func favorite(item: Item)
     func unfavorite(item: Item)
     func sendMessage(user: User, message: String, toChannelWithId channelId: String, completion: @escaping (Result<Void, AppError>) -> Void)
-    func getOrCreateChannel(userIds: [String], completion: @escaping (Result<Channel, AppError>) -> Void)
+    func getOrCreateChannel(users: [User], completion: @escaping (Result<Channel, AppError>) -> Void)
 
     // admin
     func getSpreadsheetImportWaitlist(completion: @escaping (Result<[User], Error>) -> Void)

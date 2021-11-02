@@ -13,7 +13,7 @@ struct TextBox {
 }
 
 struct InventoryHeaderView: View {
-    let userId: String
+    let user: User
     @Binding var settingsPresented: Bool
     @Binding var showImagePicker: Bool
     @Binding var showSellerStats: Bool
@@ -125,7 +125,7 @@ struct InventoryHeaderView: View {
                             facebookAccountButton()
                         }
 
-                        if let showChannel = showChannel, userId != DerivedGlobalStore.default.globalState.user?.id {
+                        if let showChannel = showChannel, user.id != DerivedGlobalStore.default.globalState.user?.id {
                             AccessoryButton(title: "Message \(username.isEmpty ? "user" : username)",
                                             color: .customAccent1,
                                             textColor: .customText1,
@@ -134,14 +134,14 @@ struct InventoryHeaderView: View {
                                             buttonPosition: .right,
                                             isContentLocked: isContentLocked,
                                             tapped: {
-                                                guard let ownUserId = DerivedGlobalStore.default.globalState.user?.id else { return }
+                                                guard let ownUser = DerivedGlobalStore.default.globalState.user else { return }
                                                 AppStore.default
-                                                    .send(.main(action: .getOrCreateChannel(userIds: [userId, ownUserId], completion: { result in
+                                                    .send(.main(action: .getOrCreateChannel(users: [user, ownUser], completion: { result in
                                                         switch result {
                                                         case let .failure(error):
                                                             showChannel(.failure(error))
                                                         case let .success(channel):
-                                                            showChannel(.success((channel, ownUserId)))
+                                                            showChannel(.success((channel, ownUser.id)))
                                                         }
                                                     })))
 

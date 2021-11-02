@@ -78,7 +78,7 @@ struct ProfileView: View {
                     .listRow(backgroundColor: .customWhite)
                     .buttonStyle(PlainButtonStyle())
 
-                InventoryHeaderView(userId: profileData.user.id,
+                InventoryHeaderView(user: profileData.user,
                                     settingsPresented: .constant(false),
                                     showImagePicker: .constant(false),
                                     showSellerStats: .constant(false),
