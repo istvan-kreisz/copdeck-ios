@@ -27,6 +27,7 @@ final class ChatViewController: MessagesViewController {
     private let userId: String
     private let store: DerivedGlobalStore
 
+//    private var isFirstLoad = true
     private var cancelListener: (() -> Void)?
     private var messages: [Message] = [] {
         didSet {
@@ -102,7 +103,9 @@ final class ChatViewController: MessagesViewController {
         store.send(.main(action: .getChannelListener(channelId: channel.id, cancel: { [weak self] cancel in
             self?.cancelListener = cancel
         }, update: { [weak self] result in
-            self?.updateCollectionView(result: result)
+            DispatchQueue.main.async {
+                self?.updateCollectionView(result: result)
+            }
         })))
     }
 
@@ -117,6 +120,9 @@ final class ChatViewController: MessagesViewController {
             if messages.isEmpty {
                 messages = updatedMessagesSorted
                 messagesCollectionView.reloadData()
+                DispatchQueue.main.async {
+                    self.messagesCollectionView.scrollToLastItem(animated: true)
+                }
             } else {
                 changes.forEach { change in
                     switch change {
@@ -137,7 +143,7 @@ final class ChatViewController: MessagesViewController {
                 let addedIndexes = added.sortedByDate().enumerated().map { (index: Int, _) -> Int in
                     messages.count + index - deletedIndexes.count
                 }
-                
+
                 messages = updatedMessagesSorted
 
                 messagesCollectionView.performBatchUpdates { [weak self] in
@@ -184,6 +190,7 @@ final class ChatViewController: MessagesViewController {
         messagesCollectionView.messagesDisplayDelegate = self
 
         messagesCollectionView.contentInset.top = NavigationBar.size
+        additionalBottomInset = 3
     }
 
     // MARK: - Helpers
