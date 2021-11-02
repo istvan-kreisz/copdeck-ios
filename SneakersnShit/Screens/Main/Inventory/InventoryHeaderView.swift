@@ -125,8 +125,8 @@ struct InventoryHeaderView: View {
                             facebookAccountButton()
                         }
 
-                        if let showChannel = showChannel {
-                            AccessoryButton(title: "Message \(username.isEmpty ? "owner" : username)",
+                        if let showChannel = showChannel, userId != DerivedGlobalStore.default.globalState.user?.id {
+                            AccessoryButton(title: "Message \(username.isEmpty ? "user" : username)",
                                             color: .customAccent1,
                                             textColor: .customText1,
                                             width: 155,

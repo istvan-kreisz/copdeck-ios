@@ -34,32 +34,34 @@ struct OwnerCardView: View {
                         .font(.bold(size: 14))
                         .foregroundColor(.customText1)
 
-                    Button {
-                        if let userId = DerivedGlobalStore.default.globalState.user?.id {
-                            AppStore.default.send(.main(action: .getOrCreateChannel(userIds: [user.id, userId], completion: { result in
-                                switch result {
-                                case let .failure(error):
-                                    didTapMessage(.failure(error))
-                                case let .success(channel):
-                                    didTapMessage(.success((channel, userId)))
-                                }
-                            })))
-                        }
-                    } label: {
-                        HStack {
-                            Text("Message \(user.name ?? "owner")")
-                                .lineLimit(1)
-                                .font(.bold(size: 13))
-                                .foregroundColor(.customText2)
-                                .layoutPriority(2)
-                            ZStack {
-                                Circle()
-                                    .fill(Color.customAccent1.opacity(0.2))
-                                    .frame(width: 16, height: 16)
-                                Image(systemName: "chevron.right")
-                                    .font(.bold(size: 7))
-                                    .foregroundColor(Color.customAccent1)
-                            }.frame(width: 16, height: 16)
+                    if user.id != DerivedGlobalStore.default.globalState.user?.id {
+                        Button {
+                            if let userId = DerivedGlobalStore.default.globalState.user?.id {
+                                AppStore.default.send(.main(action: .getOrCreateChannel(userIds: [user.id, userId], completion: { result in
+                                    switch result {
+                                    case let .failure(error):
+                                        didTapMessage(.failure(error))
+                                    case let .success(channel):
+                                        didTapMessage(.success((channel, userId)))
+                                    }
+                                })))
+                            }
+                        } label: {
+                            HStack {
+                                Text("Message \(user.name ?? "user")")
+                                    .lineLimit(1)
+                                    .font(.bold(size: 13))
+                                    .foregroundColor(.customText2)
+                                    .layoutPriority(2)
+                                ZStack {
+                                    Circle()
+                                        .fill(Color.customAccent1.opacity(0.2))
+                                        .frame(width: 16, height: 16)
+                                    Image(systemName: "chevron.right")
+                                        .font(.bold(size: 7))
+                                        .foregroundColor(Color.customAccent1)
+                                }.frame(width: 16, height: 16)
+                            }
                         }
                     }
                     Spacer()
