@@ -1,6 +1,6 @@
 platform :ios, '14.0'
 
-target 'SneakersnShit' do
+target 'CopDeck' do
   use_frameworks!
 
   inhibit_all_warnings!

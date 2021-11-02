@@ -213,11 +213,13 @@
 		5DF3595926FF724E0041A6C3 /* RootOnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF3595826FF724E0041A6C3 /* RootOnboardingView.swift */; };
 		5DF3595F26FF72570041A6C3 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF3595C26FF72570041A6C3 /* OnboardingView.swift */; };
 		5DF3596126FFB7DF0041A6C3 /* UserDefaults+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF3596026FFB7DF0041A6C3 /* UserDefaults+Extensions.swift */; };
-		C0A401BBBC5AD2E508F6A578 /* Pods_SneakersnShit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE80E208C5DB6897B4D1B91A /* Pods_SneakersnShit.framework */; };
+		B2EF4F84E80FEA5072CFBCF7 /* Pods_CopDeck.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10F79ED8ABF4602588CCCFDD /* Pods_CopDeck.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0BAED15144C87B77932F7F5E /* Pods-CopDeck.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CopDeck.debug.xcconfig"; path = "Target Support Files/Pods-CopDeck/Pods-CopDeck.debug.xcconfig"; sourceTree = "<group>"; };
 		10F05964238EC7800C0C5A21 /* Pods-SneakersnShit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SneakersnShit.debug.xcconfig"; path = "Target Support Files/Pods-SneakersnShit/Pods-SneakersnShit.debug.xcconfig"; sourceTree = "<group>"; };
+		10F79ED8ABF4602588CCCFDD /* Pods_CopDeck.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CopDeck.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		569D9ED09F3A9EE7E6A213A0 /* Pods-SneakersnShit.debug staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SneakersnShit.debug staging.xcconfig"; path = "Target Support Files/Pods-SneakersnShit/Pods-SneakersnShit.debug staging.xcconfig"; sourceTree = "<group>"; };
 		5D0703C9271DDEE700116CF4 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		5D0E5A10269E4EDE006D7E9C /* AddToInventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToInventoryView.swift; sourceTree = "<group>"; };
@@ -424,7 +426,9 @@
 		5DF3596026FFB7DF0041A6C3 /* UserDefaults+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extensions.swift"; sourceTree = "<group>"; };
 		780150CC93D4F13CFCC193B7 /* Pods-SneakersnShit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SneakersnShit.release.xcconfig"; path = "Target Support Files/Pods-SneakersnShit/Pods-SneakersnShit.release.xcconfig"; sourceTree = "<group>"; };
 		8C15B2644BB4E9FA2D184B0B /* Pods-SneakersnShit.release staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SneakersnShit.release staging.xcconfig"; path = "Target Support Files/Pods-SneakersnShit/Pods-SneakersnShit.release staging.xcconfig"; sourceTree = "<group>"; };
-		DE80E208C5DB6897B4D1B91A /* Pods_SneakersnShit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SneakersnShit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A561B4EE42A13805BD035467 /* Pods-CopDeck.debug staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CopDeck.debug staging.xcconfig"; path = "Target Support Files/Pods-CopDeck/Pods-CopDeck.debug staging.xcconfig"; sourceTree = "<group>"; };
+		B31FE27BF68B45304F47E3A8 /* Pods-CopDeck.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CopDeck.release.xcconfig"; path = "Target Support Files/Pods-CopDeck/Pods-CopDeck.release.xcconfig"; sourceTree = "<group>"; };
+		C983715414F6154D05FAD5E5 /* Pods-CopDeck.release staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CopDeck.release staging.xcconfig"; path = "Target Support Files/Pods-CopDeck/Pods-CopDeck.release staging.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -434,12 +438,12 @@
 			files = (
 				5D9D51FE26AE1C0B00AB1F30 /* NukeUI in Frameworks */,
 				5D0703CA271DDEE700116CF4 /* StoreKit.framework in Frameworks */,
-				C0A401BBBC5AD2E508F6A578 /* Pods_SneakersnShit.framework in Frameworks */,
 				5DCC466826A7A96C007671BC /* FacebookCore in Frameworks */,
 				5DCC466A26A7A96C007671BC /* FacebookLogin in Frameworks */,
 				5D9D51FB26AE1BE500AB1F30 /* Nuke in Frameworks */,
 				5D0703C8271DDED200116CF4 /* Purchases in Frameworks */,
 				5D606D17272D040A00E49A59 /* MessageKit in Frameworks */,
+				B2EF4F84E80FEA5072CFBCF7 /* Pods_CopDeck.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1180,7 +1184,7 @@
 			isa = PBXGroup;
 			children = (
 				5D0703C9271DDEE700116CF4 /* StoreKit.framework */,
-				DE80E208C5DB6897B4D1B91A /* Pods_SneakersnShit.framework */,
+				10F79ED8ABF4602588CCCFDD /* Pods_CopDeck.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1192,6 +1196,10 @@
 				780150CC93D4F13CFCC193B7 /* Pods-SneakersnShit.release.xcconfig */,
 				569D9ED09F3A9EE7E6A213A0 /* Pods-SneakersnShit.debug staging.xcconfig */,
 				8C15B2644BB4E9FA2D184B0B /* Pods-SneakersnShit.release staging.xcconfig */,
+				0BAED15144C87B77932F7F5E /* Pods-CopDeck.debug.xcconfig */,
+				A561B4EE42A13805BD035467 /* Pods-CopDeck.debug staging.xcconfig */,
+				B31FE27BF68B45304F47E3A8 /* Pods-CopDeck.release.xcconfig */,
+				C983715414F6154D05FAD5E5 /* Pods-CopDeck.release staging.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1251,9 +1259,9 @@
 			mainGroup = 5D69608A258713760058BABE;
 			packageReferences = (
 				5DCC466626A7A96C007671BC /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
-				5D9D51F926AE1BE500AB1F30 /* XCRemoteSwiftPackageReference "Nuke" */,
-				5D9D51FC26AE1C0B00AB1F30 /* XCRemoteSwiftPackageReference "NukeUI" */,
-				5D0703C6271DDED200116CF4 /* XCRemoteSwiftPackageReference "purchases-ios" */,
+				5D9D51F926AE1BE500AB1F30 /* XCRemoteSwiftPackageReference "Nuke.git" */,
+				5D9D51FC26AE1C0B00AB1F30 /* XCRemoteSwiftPackageReference "NukeUI.git" */,
+				5D0703C6271DDED200116CF4 /* XCRemoteSwiftPackageReference "purchases-ios.git" */,
 				5D606D15272D040A00E49A59 /* XCRemoteSwiftPackageReference "MessageKit" */,
 			);
 			productRefGroup = 5D696094258713760058BABE /* Products */;
@@ -1296,15 +1304,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SneakersnShit/Pods-SneakersnShit-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-CopDeck/Pods-CopDeck-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SneakersnShit/Pods-SneakersnShit-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-CopDeck/Pods-CopDeck-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SneakersnShit/Pods-SneakersnShit-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CopDeck/Pods-CopDeck-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		48226E9C78C6C5FDB1043EDA /* [CP] Check Pods Manifest.lock */ = {
@@ -1322,7 +1330,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-SneakersnShit-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-CopDeck-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1645,7 +1653,7 @@
 		};
 		5D6960A8258713770058BABE /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 10F05964238EC7800C0C5A21 /* Pods-SneakersnShit.debug.xcconfig */;
+			baseConfigurationReference = 0BAED15144C87B77932F7F5E /* Pods-CopDeck.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1674,7 +1682,7 @@
 		};
 		5D6960A9258713770058BABE /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 780150CC93D4F13CFCC193B7 /* Pods-SneakersnShit.release.xcconfig */;
+			baseConfigurationReference = B31FE27BF68B45304F47E3A8 /* Pods-CopDeck.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1763,7 +1771,7 @@
 		};
 		5DDEFE6926D3D6CD001B0F76 /* Debug Staging */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 569D9ED09F3A9EE7E6A213A0 /* Pods-SneakersnShit.debug staging.xcconfig */;
+			baseConfigurationReference = A561B4EE42A13805BD035467 /* Pods-CopDeck.debug staging.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1847,7 +1855,7 @@
 		};
 		5DDEFE6B26D3D70B001B0F76 /* Release Staging */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8C15B2644BB4E9FA2D184B0B /* Pods-SneakersnShit.release staging.xcconfig */;
+			baseConfigurationReference = C983715414F6154D05FAD5E5 /* Pods-CopDeck.release staging.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1901,7 +1909,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		5D0703C6271DDED200116CF4 /* XCRemoteSwiftPackageReference "purchases-ios" */ = {
+		5D0703C6271DDED200116CF4 /* XCRemoteSwiftPackageReference "purchases-ios.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/RevenueCat/purchases-ios.git";
 			requirement = {
@@ -1917,7 +1925,7 @@
 				minimumVersion = 3.0.0;
 			};
 		};
-		5D9D51F926AE1BE500AB1F30 /* XCRemoteSwiftPackageReference "Nuke" */ = {
+		5D9D51F926AE1BE500AB1F30 /* XCRemoteSwiftPackageReference "Nuke.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kean/Nuke.git";
 			requirement = {
@@ -1925,7 +1933,7 @@
 				minimumVersion = 10.3.1;
 			};
 		};
-		5D9D51FC26AE1C0B00AB1F30 /* XCRemoteSwiftPackageReference "NukeUI" */ = {
+		5D9D51FC26AE1C0B00AB1F30 /* XCRemoteSwiftPackageReference "NukeUI.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kean/NukeUI.git";
 			requirement = {
@@ -1946,7 +1954,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		5D0703C7271DDED200116CF4 /* Purchases */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 5D0703C6271DDED200116CF4 /* XCRemoteSwiftPackageReference "purchases-ios" */;
+			package = 5D0703C6271DDED200116CF4 /* XCRemoteSwiftPackageReference "purchases-ios.git" */;
 			productName = Purchases;
 		};
 		5D606D16272D040A00E49A59 /* MessageKit */ = {
@@ -1956,12 +1964,12 @@
 		};
 		5D9D51FA26AE1BE500AB1F30 /* Nuke */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 5D9D51F926AE1BE500AB1F30 /* XCRemoteSwiftPackageReference "Nuke" */;
+			package = 5D9D51F926AE1BE500AB1F30 /* XCRemoteSwiftPackageReference "Nuke.git" */;
 			productName = Nuke;
 		};
 		5D9D51FD26AE1C0B00AB1F30 /* NukeUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 5D9D51FC26AE1C0B00AB1F30 /* XCRemoteSwiftPackageReference "NukeUI" */;
+			package = 5D9D51FC26AE1C0B00AB1F30 /* XCRemoteSwiftPackageReference "NukeUI.git" */;
 			productName = NukeUI;
 		};
 		5DCC466726A7A96C007671BC /* FacebookCore */ = {

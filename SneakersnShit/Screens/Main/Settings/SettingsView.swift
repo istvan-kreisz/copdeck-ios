@@ -362,7 +362,7 @@ struct SettingsView: View {
                             Text("Membership level")
                                 .layoutPriority(2)
                             Spacer()
-                            Text((store.globalState.subscriptionActive ?? false) ? "Pro" : "Free")
+                            Text(store.globalState.subscriptionActive ? "Pro" : "Free")
                                 .foregroundColor(.customBlue)
                         }
 

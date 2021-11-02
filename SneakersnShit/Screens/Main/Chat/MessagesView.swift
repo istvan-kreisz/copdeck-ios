@@ -37,7 +37,7 @@ struct MessagesView: View {
             .padding(.top, UIApplication.shared.safeAreaInsets().top)
             .topAligned()
         }
-        .edgesIgnoringSafeArea(.top)
+        .edgesIgnoringSafeArea(.vertical)
     }
 }
 
