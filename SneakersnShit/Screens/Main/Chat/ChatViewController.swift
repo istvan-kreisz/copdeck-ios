@@ -36,16 +36,23 @@ final class ChatViewController: MessagesViewController {
             messagesCollectionView.reloadData()
         }
     }
+
+    private var images: [String: UIImage] = [:] {
+        didSet {
+            messagesCollectionView.reloadData()
+        }
+    }
+
     private var user: User? {
         channel.users.first(where: { $0.id == userId })
     }
-    
+
     func tearDown() {
         messages = []
         cancelListener?()
         markAsSeen()
     }
-    
+
     init(channel: Channel, userId: String, store: DerivedGlobalStore) {
         self.channel = channel
         self.userId = userId
@@ -53,6 +60,7 @@ final class ChatViewController: MessagesViewController {
 
         super.init(nibName: nil, bundle: nil)
         title = nil
+        downloadProfileImages()
     }
 
     @available(*, unavailable)
@@ -63,11 +71,10 @@ final class ChatViewController: MessagesViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.largeTitleDisplayMode = .never
-        
+
         markAsSeen()
         listenToMessages()
         setUpMessageView()
-        removeMessageAvatars()
 //        addCameraBarButton()
     }
 
@@ -76,7 +83,19 @@ final class ChatViewController: MessagesViewController {
         becomeFirstResponder()
         messagesCollectionView.scrollToLastItem(animated: true)
     }
-    
+
+    private func downloadProfileImages() {
+        channel.users.forEach { user in
+            if let url = user.imageURL {
+                UIImage.download(from: url) { [weak self] image in
+                    if let image = image {
+                        self?.images[user.id] = image
+                    }
+                }
+            }
+        }
+    }
+
     private func markAsSeen() {
         store.send(.main(action: .markChannelAsSeen(channel: channel)))
     }
@@ -106,24 +125,8 @@ final class ChatViewController: MessagesViewController {
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
-        
-        messagesCollectionView.contentInset.top = NavigationBar.size
-    }
 
-    private func removeMessageAvatars() {
-        guard let layout = messagesCollectionView.collectionViewLayout as? MessagesCollectionViewFlowLayout else {
-            return
-        }
-        layout.textMessageSizeCalculator.outgoingAvatarSize = .zero
-        layout.textMessageSizeCalculator.incomingAvatarSize = .zero
-        layout.setMessageIncomingAvatarSize(.zero)
-        layout.setMessageOutgoingAvatarSize(.zero)
-        let incomingLabelAlignment = LabelAlignment(textAlignment: .left,
-                                                    textInsets: UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 0))
-        layout.setMessageIncomingMessageTopLabelAlignment(incomingLabelAlignment)
-        let outgoingLabelAlignment = LabelAlignment(textAlignment: .right,
-                                                    textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 15))
-        layout.setMessageOutgoingMessageTopLabelAlignment(outgoingLabelAlignment)
+        messagesCollectionView.contentInset.top = NavigationBar.size
     }
 
     // MARK: - Helpers
@@ -202,9 +205,9 @@ extension ChatViewController: MessagesDisplayDelegate {
     }
 
     func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
-        #warning("finish")
-//        avatarView.set(avatar: .init(image: "", initials: "?"))
-        avatarView.isHidden = true
+        if let sender = messages[safe: indexPath.section]?.sender {
+            avatarView.set(avatar: .init(image: images[sender.senderId], initials: "?"))
+        }
     }
 
     func messageStyle(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageStyle {
@@ -213,12 +216,12 @@ extension ChatViewController: MessagesDisplayDelegate {
             color = userColor
         } else {
             if let index = channel.userIds.filter({ $0 != userId }).sorted().firstIndex(of: message.sender.senderId) {
-                color =  messageColors[index % messageColors.count]
+                color = messageColors[index % messageColors.count]
             } else {
-                color =  messageColors.randomElement()!
+                color = messageColors.randomElement()!
             }
         }
-        
+
         return .bubbleOutline(color)
     }
 }
@@ -229,11 +232,11 @@ extension ChatViewController: MessagesLayoutDelegate {
     func messageTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
         20
     }
-    
+
     func messageBottomLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
         0
     }
-    
+
     func typingIndicatorViewSize(for layout: MessagesCollectionViewFlowLayout) -> CGSize {
         .zero
     }
@@ -261,6 +264,7 @@ extension ChatViewController: MessagesDataSource {
 }
 
 // MARK: - InputBarAccessoryViewDelegate
+
 extension ChatViewController: InputBarAccessoryViewDelegate {
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         sendMessage(content: text)
@@ -285,7 +289,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
 //        messageInputBar.setStackViewItems([cameraItem], forStack: .left, animated: false)
 //    }
 
-    // MARK: - Actions
+// MARK: - Actions
 
 //    @objc private func cameraButtonPressed() {
 //        let picker = UIImagePickerController()

@@ -7,8 +7,26 @@
 
 import UIKit
 
-
 extension UIImage {
+    static func download(from url: URL, completion: @escaping (UIImage?) -> Void) {
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            guard
+                let httpURLResponse = response as? HTTPURLResponse, httpURLResponse.statusCode == 200,
+                let data = data,
+                let image = UIImage(data: data),
+                error == nil
+            else {
+                DispatchQueue.main.async {
+                    completion(nil)
+                }
+                return
+            }
+            DispatchQueue.main.async {
+                completion(image)
+            }
+        }.resume()
+    }
+
     var scaledToSafeUploadSize: UIImage? {
         let maxImageSideLength: CGFloat = 600
 

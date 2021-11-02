@@ -226,19 +226,19 @@ class DefaultDataController: DataController {
     private func updateChannelsWithUsers(channels: [Channel], update: @escaping (Result<[Channel], AppError>) -> Void) {
         let allUserIds = channels.flatMap { $0.userIds }.uniqued()
         backendAPI.getUsers(userIds: allUserIds) { [weak self] result in
-//            switch result {
-//            case let .failure(error):
-//                update(.failure(error))
-//            case let .success(users):
-//                self?.getImageURLs(for: users) { updatedUsers in
-//                    let channelsWithUsers = channels.map { (channel: Channel) -> Channel in
-//                        var updatedChannel = channel
-//                        updatedChannel.users = updatedUsers.filter { channel.userIds.contains($0.id) }
-//                        return updatedChannel
-//                    }
-//                    update(.success(channelsWithUsers))
-//                }
-//            }
+            switch result {
+            case let .failure(error):
+                update(.failure(error))
+            case let .success(users):
+                self?.getImageURLs(for: users) { updatedUsers in
+                    let channelsWithUsers = channels.map { (channel: Channel) -> Channel in
+                        var updatedChannel = channel
+                        updatedChannel.users = updatedUsers.filter { channel.userIds.contains($0.id) }
+                        return updatedChannel
+                    }
+                    update(.success(channelsWithUsers))
+                }
+            }
         }
     }
 
