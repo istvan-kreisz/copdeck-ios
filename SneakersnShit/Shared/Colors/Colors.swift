@@ -55,5 +55,8 @@ extension Color {
 }
 
  extension UIColor {
-     static var pillColors: [UIColor] = Color.pillColors.map { UIColor($0) }
+     static var messageColors: [UIColor] = {
+         let colors: [Color] = [.customBlue, .customPurple, .customOrange, .customGreen, .customRed]
+         return colors.map { UIColor($0) }
+     }()
  }

@@ -26,12 +26,16 @@ struct Message: MessageType, Codable, Identifiable {
     let author: Sender
     let content: String
     let dateSent: Double
-    
+
+    var attributedString: NSAttributedString {
+        NSAttributedString.init(string: content, attributes: [.font: UIFont.medium(size: 17), .foregroundColor: UIColor(.customWhite)])
+    }
+
     var sender: SenderType { author }
-    var kind: MessageKind { .text(content) }
+    var kind: MessageKind { .attributedText(attributedString) }
     var messageId: String { id }
     var sentDate: Date { dateSent.serverDate }
-    
+
 //    var image: UIImage?
 //    var downloadURL: URL?
 
@@ -77,7 +81,7 @@ extension Message: Comparable {
 }
 
 extension Sequence where Element == Message {
-    func sortedByDate() -> Array<Element> {
+    func sortedByDate() -> [Element] {
         sorted(by: { $0.sentDate < $1.sentDate })
     }
 }

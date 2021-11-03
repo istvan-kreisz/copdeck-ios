@@ -20,8 +20,8 @@ final class ChatViewController: MessagesViewController {
 //            }
 //        }
 //    }
-    let userColor = UIColor.pillColors[0]
-    let messageColors = Array(UIColor.pillColors.dropFirst())
+    let userColor = UIColor.messageColors[0]
+    let messageColors = Array(UIColor.messageColors.dropFirst())
 
     private let channel: Channel
     private let userId: String
@@ -194,8 +194,17 @@ final class ChatViewController: MessagesViewController {
         scrollsToLastItemOnKeyboardBeginsEditing = true
         maintainPositionOnKeyboardFrameChanged = true
         showMessageTimestampOnSwipeLeft = true
-        messageInputBar.inputTextView.tintColor = .black
-        messageInputBar.sendButton.setTitleColor(UIColor(.customBlack), for: .normal)
+        
+        messageInputBar.sendButton.titleLabel?.font = .bold(size: 19)
+        messageInputBar.sendButton.setTitleColor(UIColor(.customBlue), for: .normal)
+        messageInputBar.sendButton.setTitleColor(UIColor(.customBlue), for: .highlighted)
+        messageInputBar.sendButton.setTitleColor(UIColor(.customBlue), for: .focused)
+        messageInputBar.sendButton.tintColor = UIColor(.customBlue)
+        
+        messageInputBar.inputTextView.tintColor = UIColor(.customText1)
+        messageInputBar.inputTextView.font = .medium(size: 17)
+        messageInputBar.inputTextView.textColor = UIColor(.customText1)
+        messageInputBar.inputTextView.placeholderTextColor = UIColor(.customText2)
 
         messageInputBar.delegate = self
         messagesCollectionView.messagesDataSource = self
@@ -205,15 +214,17 @@ final class ChatViewController: MessagesViewController {
         messagesCollectionView.contentInset.top = NavigationBar.size
         additionalBottomInset = 3
 
-        let layout = messagesCollectionView.collectionViewLayout as? MessagesCollectionViewFlowLayout
-        layout?.sectionInset = UIEdgeInsets(top: 1, left: 8, bottom: 1, right: 8)
-        layout?.setMessageOutgoingCellBottomLabelAlignment(.init(textAlignment: .right, textInsets: .zero))
-        layout?.setMessageOutgoingAvatarSize(.zero)
-        layout?
-            .setMessageOutgoingMessageTopLabelAlignment(LabelAlignment(textAlignment: .right, textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 12)))
-        layout?
-            .setMessageOutgoingMessageBottomLabelAlignment(LabelAlignment(textAlignment: .right,
-                                                                          textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 12)))
+        if let layout = messagesCollectionView.collectionViewLayout as? MessagesCollectionViewFlowLayout {
+            layout.sectionInset = UIEdgeInsets(top: 1, left: 8, bottom: 1, right: 8)
+            layout.setMessageOutgoingCellBottomLabelAlignment(.init(textAlignment: .right, textInsets: .zero))
+            layout.setMessageOutgoingAvatarSize(.zero)
+            layout
+                .setMessageOutgoingMessageTopLabelAlignment(LabelAlignment(textAlignment: .right,
+                                                                           textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 12)))
+            layout
+                .setMessageOutgoingMessageBottomLabelAlignment(LabelAlignment(textAlignment: .right,
+                                                                              textInsets: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 12)))
+        }
     }
 
     // MARK: - Helpers
@@ -286,11 +297,12 @@ extension ChatViewController: MessagesDisplayDelegate {
     }
 
     func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
-        if let sender = messages[safe: indexPath.section]?.sender {
-            avatarView.set(avatar: .init(image: images[sender.senderId], initials: "?"))
-            avatarView.layer.borderWidth = 2
-            avatarView.layer.borderColor = color(for: message).cgColor
-        }
+        guard let sender = messages[safe: indexPath.section]?.sender else { return }
+        avatarView.isHidden = isNextMessageSameSender(at: indexPath)
+
+        avatarView.set(avatar: .init(image: images[sender.senderId], initials: "?"))
+        avatarView.layer.borderWidth = 2
+        avatarView.layer.borderColor = color(for: message).cgColor
     }
 
     func messageStyle(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageStyle {
@@ -383,6 +395,11 @@ extension ChatViewController: MessagesDataSource {
                 return true
             }
         }
+    }
+
+    private func isNextMessageSameSender(at indexPath: IndexPath) -> Bool {
+        guard indexPath.section + 1 < messages.count else { return false }
+        return messages[safe: indexPath.section]?.sender.senderId == messages[safe: indexPath.section + 1]?.sender.senderId
     }
 }
 
