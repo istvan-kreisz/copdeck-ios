@@ -242,6 +242,9 @@ PODS:
   - Firebase/Functions (6.34.0):
     - Firebase/CoreOnly
     - FirebaseFunctions (~> 2.9.0)
+  - Firebase/Messaging (6.34.0):
+    - Firebase/CoreOnly
+    - FirebaseMessaging (~> 4.7.1)
   - Firebase/Storage (6.34.0):
     - Firebase/CoreOnly
     - FirebaseStorage (~> 3.9.1)
@@ -296,6 +299,19 @@ PODS:
     - GoogleUtilities/Environment (~> 6.7)
     - GoogleUtilities/UserDefaults (~> 6.7)
     - PromisesObjC (~> 1.2)
+  - FirebaseInstanceID (4.8.0):
+    - FirebaseCore (~> 6.10)
+    - FirebaseInstallations (~> 1.6)
+    - GoogleUtilities/Environment (~> 6.7)
+    - GoogleUtilities/UserDefaults (~> 6.7)
+  - FirebaseMessaging (4.7.1):
+    - FirebaseCore (~> 6.10)
+    - FirebaseInstanceID (~> 4.7)
+    - GoogleUtilities/AppDelegateSwizzler (~> 6.7)
+    - GoogleUtilities/Environment (~> 6.7)
+    - GoogleUtilities/Reachability (~> 6.7)
+    - GoogleUtilities/UserDefaults (~> 6.7)
+    - Protobuf (>= 3.9.2, ~> 3.9)
   - FirebaseStorage (3.9.1):
     - FirebaseCore (~> 6.10)
     - GTMSessionFetcher/Core (~> 1.1)
@@ -366,6 +382,7 @@ PODS:
   - nanopb/encode (1.30906.0)
   - OasisJSBridge (0.3.14)
   - PromisesObjC (1.2.12)
+  - Protobuf (3.17.0)
 
 DEPENDENCIES:
   - Firebase/Analytics
@@ -373,6 +390,7 @@ DEPENDENCIES:
   - Firebase/Crashlytics
   - Firebase/Firestore
   - Firebase/Functions
+  - Firebase/Messaging
   - Firebase/Storage
   - FirebaseFirestoreSwift
   - GoogleSignIn
@@ -393,6 +411,8 @@ SPEC REPOS:
     - FirebaseFirestoreSwift
     - FirebaseFunctions
     - FirebaseInstallations
+    - FirebaseInstanceID
+    - FirebaseMessaging
     - FirebaseStorage
     - GoogleAppMeasurement
     - GoogleDataTransport
@@ -406,6 +426,7 @@ SPEC REPOS:
     - nanopb
     - OasisJSBridge
     - PromisesObjC
+    - Protobuf
 
 SPEC CHECKSUMS:
   abseil: 6c8eb7892aefa08d929b39f9bb108e5367e3228f
@@ -421,6 +442,8 @@ SPEC CHECKSUMS:
   FirebaseFirestoreSwift: 2c46dbc1156db97dc4f6dd798d4f5b57b9c7fab6
   FirebaseFunctions: 27518fdd14d8b3a849e2443f921cd1b471ab7acd
   FirebaseInstallations: 466c7b4d1f58fe16707693091da253726a731ed2
+  FirebaseInstanceID: bd3ffc24367f901a43c063b36c640b345a4a5dd1
+  FirebaseMessaging: 5eca4ef173de76253352511aafef774caa1cba2a
   FirebaseStorage: 15e0f15ef3c7fec3d1899d68623e47d4447066b4
   GoogleAppMeasurement: a6a3a066369828db64eda428cb2856dc1cdc7c4e
   GoogleDataTransport: f56af7caa4ed338dc8e138a5d7c5973e66440833
@@ -434,7 +457,8 @@ SPEC CHECKSUMS:
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
   OasisJSBridge: c7fcf62b65c1493190d69b235d6f54c24f464c58
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
+  Protobuf: 7327d4444215b5f18e560a97f879ff5503c4581c
 
-PODFILE CHECKSUM: a5cd7686ae3ae2eefa2dabbf0dda80dd5a487a94
+PODFILE CHECKSUM: 21c218f71f5237c268821a6e4653925f1e59c12f
 
 COCOAPODS: 1.10.1

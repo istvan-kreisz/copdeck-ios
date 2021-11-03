@@ -13,6 +13,7 @@ target 'CopDeck' do
   pod 'FirebaseFirestoreSwift'
   pod 'GoogleSignIn'
   pod 'Firebase/Storage'
+  pod 'Firebase/Messaging'
   # pod 'FBSDKLoginKit'
   pod 'OasisJSBridge'
 end

@@ -194,13 +194,13 @@ final class ChatViewController: MessagesViewController {
         scrollsToLastItemOnKeyboardBeginsEditing = true
         maintainPositionOnKeyboardFrameChanged = true
         showMessageTimestampOnSwipeLeft = true
-        
+
         messageInputBar.sendButton.titleLabel?.font = .bold(size: 19)
         messageInputBar.sendButton.setTitleColor(UIColor(.customBlue), for: .normal)
         messageInputBar.sendButton.setTitleColor(UIColor(.customBlue), for: .highlighted)
         messageInputBar.sendButton.setTitleColor(UIColor(.customBlue), for: .focused)
         messageInputBar.sendButton.tintColor = UIColor(.customBlue)
-        
+
         messageInputBar.inputTextView.tintColor = UIColor(.customText1)
         messageInputBar.inputTextView.font = .medium(size: 17)
         messageInputBar.inputTextView.textColor = UIColor(.customText1)
@@ -210,6 +210,7 @@ final class ChatViewController: MessagesViewController {
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
+        messagesCollectionView.messageCellDelegate = self
 
         messagesCollectionView.contentInset.top = NavigationBar.size
         additionalBottomInset = 3
@@ -328,7 +329,7 @@ extension ChatViewController: MessagesDisplayDelegate {
     }
 
     func enabledDetectors(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> [DetectorType] {
-        return [.url, .address, .phoneNumber, .date, .transitInformation, .mention, .hashtag]
+        return [.url, .phoneNumber, .date, .mention, .hashtag]
     }
 
     private func color(for message: MessageType) -> UIColor {
@@ -357,6 +358,26 @@ extension ChatViewController: MessagesLayoutDelegate {
 
     func typingIndicatorViewSize(for layout: MessagesCollectionViewFlowLayout) -> CGSize {
         .zero
+    }
+}
+
+extension ChatViewController: MessageCellDelegate {
+    func didSelectDate(_ date: Date) {
+        if let url = URL(string: "calshow:\(date.timeIntervalSinceReferenceDate)"), UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        }
+    }
+
+    func didSelectPhoneNumber(_ phoneNumber: String) {
+        if let url = URL(string: "tel://\(phoneNumber)"), UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        }
+    }
+
+    func didSelectURL(_ url: URL) {
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        }
     }
 }
 

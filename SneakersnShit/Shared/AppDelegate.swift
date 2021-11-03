@@ -10,6 +10,7 @@ import Firebase
 import GoogleSignIn
 import FBSDKCoreKit
 import Nuke
+import FirebaseMessaging
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -52,5 +53,47 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         UITableViewCell.appearance().selectionStyle = .none
         UINavigationBar.appearance().backgroundColor = UIColor.clear
         UITextView.appearance().backgroundColor = UIColor(red: 243 / 255, green: 246 / 255, blue: 248 / 255, alpha: 1.0)
+    }
+
+    private func setupNotifications(application: UIApplication) {
+        UNUserNotificationCenter.current().delegate = self
+
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        #warning("request later")
+        UNUserNotificationCenter.current().requestAuthorization(options: authOptions, completionHandler: { _, _ in })
+        application.registerForRemoteNotifications()
+
+        Messaging.messaging().delegate = self
+    }
+
+    private var token: String?
+}
+
+extension AppDelegate: UNUserNotificationCenterDelegate {}
+
+extension AppDelegate: MessagingDelegate {
+
+    #warning("when swizzling is disabled")
+    func application(application: UIApplication,
+                     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+      Messaging.messaging().apnsToken = deviceToken
+    }
+
+    
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+        self.token = fcmToken
+
+        let dataDict: [String: String] = ["token": fcmToken ?? ""]
+        NotificationCenter.default.post(name: Notification.Name("FCMToken"),
+                                        object: nil,
+                                        userInfo: dataDict)
+//        Messaging.messaging().token { token, error in
+//            if let error = error {
+//                print("Error fetching FCM registration token: \(error)")
+//            } else if let token = token {
+//                print("FCM registration token: \(token)")
+//                self.fcmRegTokenMessage.text = "Remote FCM registration token: \(token)"
+//            }
+//        }
     }
 }
