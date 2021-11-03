@@ -60,7 +60,6 @@ struct RootView: View {
                     .frame(width: 130)
                     .centeredVertically()
                     .centeredHorizontally()
-                    .edgesIgnoringSafeArea(.all)
             }
         }
         .onReceive(store.$globalState) { state in
