@@ -12,7 +12,6 @@ struct SpreadsheetImportDetailView: View {
     let userId: String
     @State var inventoryItems: [InventoryItem] = []
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var store: DerivedGlobalStore
 
     @State var selectedInventoryItem: InventoryItem?
     @State private var error: (String, String)? = nil
@@ -74,7 +73,7 @@ struct SpreadsheetImportDetailView: View {
                                       isSelected: false,
                                       isInSharedStack: false,
                                       isEditing: .constant(false),
-                                      requestInfo: store.globalState.requestInfo) {}
+                                      requestInfo: DerivedGlobalStore.default.globalState.requestInfo) {}
                 }
                 .withDefaultPadding(padding: .horizontal)
                 .listRow(backgroundColor: .customWhite)
@@ -98,7 +97,7 @@ struct SpreadsheetImportDetailView: View {
 
     private func refreshInventoryItems() {
         let loader = loader.getLoader()
-        store.send(.main(action: .getImportedInventoryItems(importedUserId: userId, completion: { result in
+        AppStore.default.send(.main(action: .getImportedInventoryItems(importedUserId: userId, completion: { result in
             switch result {
             case let .success(inventoryItems):
                 self.inventoryItems = inventoryItems

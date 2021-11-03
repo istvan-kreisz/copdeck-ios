@@ -15,7 +15,6 @@ struct MessagesView: View {
 
     let channel: Channel
     let userId: String
-    let store: DerivedGlobalStore
 
     var chatName: String {
         channel.users.filter { $0.id != userId }.map { $0.name ?? "Anonymus" }.joined(separator: " & ")
@@ -23,7 +22,7 @@ struct MessagesView: View {
 
     var body: some View {
         ZStack {
-            ChatDetailView(channel: channel, userId: userId, store: store)
+            ChatDetailView(channel: channel, userId: userId)
                 .withDefaultPadding(padding: .top)
                 .withSafeAreaTopPadding()
 
@@ -47,14 +46,13 @@ struct MessagesView: View {
 struct ChatDetailView: UIViewControllerRepresentable {
     let channel: Channel
     let userId: String
-    let store: DerivedGlobalStore
 
     static func dismantleUIViewController(_ uiViewController: ChatViewController, coordinator: ()) {
         uiViewController.tearDown()
     }
 
     func makeUIViewController(context: Context) -> ChatViewController {
-        ChatViewController(channel: channel, userId: userId, store: store)
+        ChatViewController(channel: channel, userId: userId)
     }
 
     func updateUIViewController(_ uiViewController: ChatViewController, context: Context) {}

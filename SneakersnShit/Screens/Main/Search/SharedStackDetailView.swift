@@ -117,7 +117,7 @@ extension SharedStackDetailView {
                                         inventoryItem: inventoryItem,
                                         requestInfo: requestInfo) { navigationDestination.hide() }
             case let .chat(channel, userId):
-                MessagesView(channel: channel, userId: userId, store: DerivedGlobalStore.default)
+                MessagesView(channel: channel, userId: userId)
             case .empty:
                 EmptyView()
             }

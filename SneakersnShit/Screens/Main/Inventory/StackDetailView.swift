@@ -94,8 +94,9 @@ struct StackDetailView: View {
 
             NavigationLink(destination: Destination(navigationDestination: $navigationDestination,
                                                     inventoryItems: $inventoryItems,
-                                                    stack: $stack).navigationbarHidden(), isActive: showDetail) {
-                    EmptyView()
+                                                    stack: $stack,
+                                                    requestInfo: store.state.requestInfo).navigationbarHidden(), isActive: showDetail) {
+                EmptyView()
             }
 
             VerticalListView(bottomPadding: Styles.tabScreenBottomPadding, spacing: 6, addHorizontalPadding: false) {
@@ -152,7 +153,7 @@ struct StackDetailView: View {
                                        isPublished: stack.isPublished ?? false,
                                        includeTitle: true,
                                        isContentLocked: store.state.isContentLocked) { title in
-                        showSnackBar = true
+                    showSnackBar = true
                 } showPopup: { title, subtitle in
                     popup = (title, subtitle)
                 } updateStack: { stack in
@@ -235,10 +236,10 @@ extension StackDetailView {
     }
 
     struct Destination: View {
-        @EnvironmentObject var store: AppStore
         @Binding var navigationDestination: Navigation<NavigationDestination>
         @Binding var inventoryItems: [InventoryItem]
         @Binding var stack: Stack
+        let requestInfo: [ScraperRequestInfo]
 
         var body: some View {
             switch navigationDestination.destination {
@@ -247,12 +248,12 @@ extension StackDetailView {
             case let .itemSelector(stack):
                 SelectStackItemsView(stack: stack,
                                      inventoryItems: inventoryItems,
-                                     requestInfo: store.state.requestInfo,
+                                     requestInfo: requestInfo,
                                      shouldDismiss: { navigationDestination.hide() },
                                      saveChanges: { updatedStackItems in
                                          var updatedStack = stack
                                          updatedStack.items = updatedStackItems
-                                         store.send(.main(action: .updateStack(stack: updatedStack)))
+                                         AppStore.default.send(.main(action: .updateStack(stack: updatedStack)))
                                      })
             case .empty:
                 EmptyView()

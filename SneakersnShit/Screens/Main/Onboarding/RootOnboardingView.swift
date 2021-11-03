@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct RootOnboardingView: View {
-    @EnvironmentObject var store: DerivedGlobalStore
     @AppStorage(UserDefaults.Keys.needsAppOnboarding.rawValue) private var needsAppOnboarding: Bool = true
     @State private var currentTab = 0
 

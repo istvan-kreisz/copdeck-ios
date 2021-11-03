@@ -25,10 +25,10 @@ final class ChatViewController: MessagesViewController {
 
     private let channel: Channel
     private let userId: String
-    private let store: DerivedGlobalStore
 
     private var cancelListener: (() -> Void)?
     private var messages: [Message] = []
+    private let store = AppStore.default
 
     private var images: [String: UIImage] = [:] {
         didSet {
@@ -47,10 +47,9 @@ final class ChatViewController: MessagesViewController {
         markAsSeen()
     }
 
-    init(channel: Channel, userId: String, store: DerivedGlobalStore) {
+    init(channel: Channel, userId: String) {
         self.channel = channel
         self.userId = userId
-        self.store = store
 
         super.init(nibName: nil, bundle: nil)
         title = nil

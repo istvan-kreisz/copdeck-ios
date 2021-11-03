@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ReferralCodeAdminView: View {
-    @EnvironmentObject var store: DerivedGlobalStore
     @Environment(\.presentationMode) var presentationMode
     @State var referralCodes: [ReferralCode] = []
     @State private var error: (String, String)? = nil
@@ -63,7 +62,7 @@ struct ReferralCodeAdminView: View {
 
     private func refreshList() {
         let loader = loader.getLoader()
-        store.send(.main(action: .getAffiliateList(completion: { result in
+        AppStore.default.send(.main(action: .getAffiliateList(completion: { result in
             switch result {
             case let .success(referralCodes):
                 self.referralCodes = referralCodes

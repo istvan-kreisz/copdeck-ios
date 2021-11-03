@@ -60,10 +60,8 @@ struct FeedView: View {
                                                                navigationDestination.hide()
                                                            }
                                                        })
-            NavigationLink(destination: Destination(store: store,
-                                                    requestInfo: store.globalState.requestInfo,
-                                                    navigationDestination: $navigationDestination)
-                    .navigationbarHidden(),
+            NavigationLink(destination: Destination(requestInfo: store.globalState.requestInfo, navigationDestination: $navigationDestination)
+                .navigationbarHidden(),
                 isActive: showDetail) { EmptyView() }
 
             VerticalListView(bottomPadding: Styles.tabScreenBottomPadding, spacing: 0) {
@@ -142,12 +140,11 @@ extension FeedView {
     }
 
     struct Destination: View {
-        var store: FeedStore
         let requestInfo: [ScraperRequestInfo]
         @Binding var navigationDestination: Navigation<NavigationDestination>
 
         var feedPosts: [FeedPost] {
-            store.state.feedPosts.data
+            FeedStore.default.state.feedPosts.data
         }
 
         func user(for inventoryItem: InventoryItem) -> User? {

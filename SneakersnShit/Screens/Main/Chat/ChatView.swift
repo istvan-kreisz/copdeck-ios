@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct ChatView: View {
-    @EnvironmentObject var store: DerivedGlobalStore
-
     @State var isFirstLoad = true
     @State var channels: [Channel] = []
     @StateObject private var channelsLoader = Loader()
@@ -20,7 +18,7 @@ struct ChatView: View {
     @State private var error: (String, String)? = nil
 
     var userId: String? {
-        store.globalState.user?.id
+        AppStore.default.state.user?.id
     }
 
     var selectedChannel: Channel? {
@@ -39,9 +37,7 @@ struct ChatView: View {
             let showDetail = Binding<Bool>(get: { navigationDestination.show },
                                            set: { show in show ? navigationDestination.display() : navigationDestination.hide() })
 
-            NavigationLink(destination: Destination(store: store,
-                                                    navigationDestination: $navigationDestination).navigationbarHidden(),
-                           isActive: showDetail) { EmptyView() }
+            NavigationLink(destination: Destination(navigationDestination: $navigationDestination).navigationbarHidden(), isActive: showDetail) { EmptyView() }
 
             VerticalListView(bottomPadding: Styles.tabScreenBottomPadding, spacing: 0) {
                 Text("Messages")
@@ -86,7 +82,7 @@ struct ChatView: View {
         if isFirstLoad {
             loader = channelsLoader.getLoader()
         }
-        store.send(.main(action: .getChannelsListener(cancel: { cancel in
+        AppStore.default.send(.main(action: .getChannelsListener(cancel: { cancel in
             self.cancelListener = cancel
         }, update: { result in
             switch result {
@@ -106,13 +102,12 @@ extension ChatView {
     }
 
     struct Destination: View {
-        var store: DerivedGlobalStore
         @Binding var navigationDestination: Navigation<NavigationDestination>
 
         var body: some View {
             switch navigationDestination.destination {
             case let .chat(channel, userId):
-                MessagesView(channel: channel, userId: userId, store: store)
+                MessagesView(channel: channel, userId: userId)
             case let .profile(profile):
                 ProfileView(profileData: profile) { navigationDestination.hide() }
             case .empty:

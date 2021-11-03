@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ProfileView: View {
+    #warning("we can probs get rid of this")
     @EnvironmentObject var store: DerivedGlobalStore
     @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
 
@@ -111,6 +112,7 @@ struct ProfileView: View {
                         .padding(.top, 21)
                         .listRow()
                 }
+                #warning("do we need requestInfo???")
 
                 ForEach(profileData.stacks) { (stack: Stack) in
                     SharedStackSummaryView(selectedInventoryItem: selectedInventoryItemBinding,
@@ -181,7 +183,7 @@ extension ProfileView {
                                       inventoryItems: stackItems(in: stack),
                                       requestInfo: requestInfo) { navigationDestination.hide() }
             case let .chat(channel, userId):
-                MessagesView(channel: channel, userId: userId, store: DerivedGlobalStore.default)
+                MessagesView(channel: channel, userId: userId)
             case .empty:
                 EmptyView()
             }

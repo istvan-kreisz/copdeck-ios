@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct AddToInventoryView: View {
-    @EnvironmentObject var store: AppStore
+    let currency: Currency
     @State var item: Item
+    @Binding var requestInfo: [ScraperRequestInfo]
     @Binding var presented: (isActive: Bool, size: String?)
     @Binding var addedInvantoryItem: Bool
 
@@ -33,8 +34,10 @@ struct AddToInventoryView: View {
         allInventoryItems.compactMap { $0 }.count
     }
 
-    init(item: Item, presented: Binding<(isActive: Bool, size: String?)>, addedInvantoryItem: Binding<Bool>) {
+    init(item: Item, currency: Currency, requestInfo: Binding<[ScraperRequestInfo]>, presented: Binding<(isActive: Bool, size: String?)>, addedInvantoryItem: Binding<Bool>) {
         self._item = State(initialValue: item)
+        self.currency = currency
+        self._requestInfo = requestInfo
         self._presented = presented
         self._addedInvantoryItem = addedInvantoryItem
 
@@ -51,7 +54,7 @@ struct AddToInventoryView: View {
     }
 
     var priceWithCurrency: PriceWithCurrency? {
-        item.retailPrice.asPriceWithCurrency(currency: store.state.settings.currency)
+        item.retailPrice.asPriceWithCurrency(currency: currency)
     }
 
     var body: some View {
@@ -59,7 +62,7 @@ struct AddToInventoryView: View {
             VStack(alignment: .center, spacing: 20) {
                 ItemImageViewWithNavBar(itemId: item.id,
                                         source: imageSource(for: item),
-                                        requestInfo: store.state.requestInfo,
+                                        requestInfo: requestInfo,
                                         shouldDismiss: { presented = (false, nil) },
                                         flipImage: item.imageURL?.store?.id == .klekt)
 
@@ -82,7 +85,7 @@ struct AddToInventoryView: View {
 
                     NewItemCard(inventoryItem: $inventoryItem1,
                                 purchasePrice: priceWithCurrency,
-                                currency: store.state.currency,
+                                currency: currency,
                                 sizes: self.item.sortedSizes,
                                 showCopDeckPrice: false,
                                 highlightCopDeckPrice: false,
@@ -91,7 +94,7 @@ struct AddToInventoryView: View {
                         let item = Binding<InventoryItem>(get: { inventoryItem2 }, set: { self.inventoryItem2 = $0 })
                         NewItemCard(inventoryItem: item,
                                     purchasePrice: priceWithCurrency,
-                                    currency: store.state.currency,
+                                    currency: currency,
                                     sizes: self.item.sortedSizes,
                                     showCopDeckPrice: false,
                                     highlightCopDeckPrice: false,
@@ -106,7 +109,7 @@ struct AddToInventoryView: View {
                         let item = Binding<InventoryItem>(get: { inventoryItem3 }, set: { self.inventoryItem3 = $0 })
                         NewItemCard(inventoryItem: item,
                                     purchasePrice: priceWithCurrency,
-                                    currency: store.state.currency,
+                                    currency: currency,
                                     sizes: self.item.sortedSizes,
                                     showCopDeckPrice: false,
                                     highlightCopDeckPrice: false,
@@ -120,7 +123,7 @@ struct AddToInventoryView: View {
                         let item = Binding<InventoryItem>(get: { inventoryItem4 }, set: { self.inventoryItem4 = $0 })
                         NewItemCard(inventoryItem: item,
                                     purchasePrice: priceWithCurrency,
-                                    currency: store.state.currency,
+                                    currency: currency,
                                     sizes: self.item.sortedSizes,
                                     showCopDeckPrice: false,
                                     highlightCopDeckPrice: false,
@@ -133,7 +136,7 @@ struct AddToInventoryView: View {
                         let item = Binding<InventoryItem>(get: { inventoryItem5 }, set: { self.inventoryItem5 = $0 })
                         NewItemCard(inventoryItem: item,
                                     purchasePrice: priceWithCurrency,
-                                    currency: store.state.currency,
+                                    currency: currency,
                                     sizes: self.item.sortedSizes,
                                     showCopDeckPrice: false,
                                     highlightCopDeckPrice: false,
@@ -200,7 +203,7 @@ struct AddToInventoryView: View {
                     return copy
                 }
             }
-        store.send(.main(action: .addToInventory(inventoryItems: inventoryItems)))
+        AppStore.default.send(.main(action: .addToInventory(inventoryItems: inventoryItems)))
         presented = (false, nil)
         addedInvantoryItem = true
     }

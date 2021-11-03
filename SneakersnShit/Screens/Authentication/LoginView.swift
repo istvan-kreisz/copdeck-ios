@@ -10,8 +10,6 @@ import GoogleSignIn
 // import FacebookLogin
 
 struct LoginView: View {
-    @EnvironmentObject var store: AppStore
-
     @State var email = DebugSettings.shared.loginCredentials?.username ?? ""
     @State var password = DebugSettings.shared.loginCredentials?.password ?? ""
     @State var signUpTapped = false
@@ -102,7 +100,7 @@ struct LoginView: View {
     }
 
     private func signIn() {
-        store.send(.authentication(action: .signIn(userName: email, password: password)))
+        AppStore.default.send(.authentication(action: .signIn(userName: email, password: password)))
     }
 
     private func signUp() {
@@ -114,6 +112,6 @@ struct LoginView: View {
     }
 
     private func resetPassword(email: String) {
-        store.send(.authentication(action: .passwordReset(email: email)))
+        AppStore.default.send(.authentication(action: .passwordReset(email: email)))
     }
 }

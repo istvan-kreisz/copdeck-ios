@@ -10,8 +10,6 @@ import GoogleSignIn
 // import FacebookLogin
 
 struct SignUpView: View {
-    @EnvironmentObject var store: AppStore
-
     @State var email = ""
     @State var password1 = ""
     @State var password2 = ""
@@ -129,11 +127,11 @@ struct SignUpView: View {
             return
         }
         errorMessage = nil
-        store.send(.authentication(action: .signUp(userName: email, password: password1, referralCode: refCode)))
+        AppStore.default.send(.authentication(action: .signUp(userName: email, password: password1, referralCode: refCode)))
     }
 
     private func resetPassword(email: String) {
-        store.send(.authentication(action: .passwordReset(email: email)))
+        AppStore.default.send(.authentication(action: .passwordReset(email: email)))
     }
 }
 

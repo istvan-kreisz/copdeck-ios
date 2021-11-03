@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct ItemDetailView: View {
-    @EnvironmentObject var store: AppStore
+    @EnvironmentObject var store: DerivedGlobalStore
     @State private var item: Item?
     @State private var priceType: PriceType = .Ask
     @State private var feeType: FeeType = .None
@@ -69,7 +69,7 @@ struct ItemDetailView: View {
             ForEach(row.prices) { (price: Item.PriceRow.Price) in
                 let overlayColor: Color = (price.store.id == row.lowest?.id && (feeType == .Buy || feeType == .None)) ? .customGreen :
                     (price.store.id == row.highest?.id && (feeType == .Sell || feeType == .None) ? .customRed : .customAccent1)
-                Text(price.store.id != .stockx && store.state.isContentLocked ? "" : price.primaryText)
+                Text(price.store.id != .stockx && store.globalState.isContentLocked ? "" : price.primaryText)
                     .font(.regular(size: 18))
                     .foregroundColor(.customText1)
                     .frame(height: 32)
@@ -103,8 +103,11 @@ struct ItemDetailView: View {
             let isFavorited = Binding<Bool>(get: { self.isFavorited }, set: { self.didToggleFavorite(newValue: $0) })
 
             NavigationLink(destination: item
-                .map { item in AddToInventoryView(item: item, presented: $addToInventory, addedInvantoryItem: $addedInventoryItem) } ??
-                nil,
+                .map { item in AddToInventoryView(item: item,
+                                                  currency: store.globalState.settings.currency,
+                                                  requestInfo: $store.globalState.requestInfo,
+                                                  presented: $addToInventory,
+                                                  addedInvantoryItem: $addedInventoryItem) } ?? nil,
                 isActive: isAddToInventoryActive) { EmptyView() }
 
             ScrollView(.vertical, showsIndicators: false) {
@@ -112,7 +115,7 @@ struct ItemDetailView: View {
                     VStack(alignment: .center, spacing: 20) {
                         ItemImageViewWithNavBar(itemId: item?.id ?? "",
                                                 source: imageSource(for: item),
-                                                requestInfo: store.state.requestInfo,
+                                                requestInfo: store.globalState.requestInfo,
                                                 shouldDismiss: shouldDismiss,
                                                 isFavorited: isFavorited,
                                                 flipImage: item?.imageURL?.store?.id == .klekt)
@@ -234,7 +237,7 @@ struct ItemDetailView: View {
                                             .frame(height: 36)
                                             .frame(maxWidth: 50)
 
-                                        ForEach(store.state.displayedStores.compactMap { Store.store(withId: $0) }) { (store: Store) in
+                                        ForEach(store.globalState.displayedStores.compactMap { Store.store(withId: $0) }) { (store: Store) in
                                             VStack(alignment: .center, spacing: 5) {
                                                 Text(store.name.rawValue)
                                                     .font(.bold(size: 16))
@@ -273,12 +276,12 @@ struct ItemDetailView: View {
                                             .padding(5)
                                     }
 
-                                    if let preferredSize = store.state.settings.preferredShoeSize,
+                                    if let preferredSize = store.globalState.settings.preferredShoeSize,
                                        item?.sortedSizes.contains(where: { $0.number == preferredSize.number }) == true,
                                        let row = item?.priceRow(size: preferredSize,
                                                                 priceType: priceType,
                                                                 feeType: feeType,
-                                                                stores: store.state.displayedStores,
+                                                                stores: store.globalState.displayedStores,
                                                                 restocksPriceType: restocksPriceType) {
                                         Text("Your size:")
                                             .font(.semiBold(size: 14))
@@ -292,7 +295,7 @@ struct ItemDetailView: View {
                                     }
                                     ForEach((item?.allPriceRows(priceType: priceType,
                                                                 feeType: feeType,
-                                                                stores: store.state.displayedStores,
+                                                                stores: store.globalState.displayedStores,
                                                                 restocksPriceType: restocksPriceType)) ?? []) { (row: Item.PriceRow) in
                                         priceRow(row: row)
                                     }
@@ -311,7 +314,7 @@ struct ItemDetailView: View {
                                                    size: .init(width: 260, height: 60),
                                                    color: .customBlack,
                                                    tapped: {
-                                                       addToInventory = (true, store.state.settings.preferredShoeSize)
+                                                       addToInventory = (true, store.globalState.settings.preferredShoeSize)
                                                        addedInventoryItem = false
                                                    })
                     .disabled(loader.isLoading)

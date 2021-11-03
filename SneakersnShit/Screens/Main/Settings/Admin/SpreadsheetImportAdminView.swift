@@ -9,7 +9,6 @@ import SwiftUI
 import StoreKit
 
 struct SpreadsheetImportAdminView: View {
-    @EnvironmentObject var store: DerivedGlobalStore
     @Environment(\.presentationMode) var presentationMode
     @State var waitlist: [User] = []
     @State private var error: (String, String)? = nil
@@ -202,18 +201,18 @@ struct SpreadsheetImportAdminView: View {
     }
 
     private func updateSpreadsheetImportStatus(userId: String, newStatus: User.SpreadSheetImportStatus, errorMessage: String?) {
-        store.send(.main(action: .updateSpreadsheetImportStatus(importedUserId: userId,
+        AppStore.default.send(.main(action: .updateSpreadsheetImportStatus(importedUserId: userId,
                                                                 spreadSheetImportStatus: newStatus,
                                                                 spreadSheetImportError: errorMessage,
                                                                 completion: updateWaitlist)))
     }
     
     private func finishImport(userId: String) {
-        store.send(.main(action: .finishImport(importedUserId: userId, completion: updateWaitlist)))
+        AppStore.default.send(.main(action: .finishImport(importedUserId: userId, completion: updateWaitlist)))
     }
 
     private func runImport(userId: String) {
-        store.send(.main(action: .runImport(importedUserId: userId, completion: updateWaitlist)))
+        AppStore.default.send(.main(action: .runImport(importedUserId: userId, completion: updateWaitlist)))
     }
 
     private func updateWaitlist(result: Result<User, Error>) {
@@ -229,7 +228,7 @@ struct SpreadsheetImportAdminView: View {
 
     private func refreshWaitlist() {
         let loader = loader.getLoader()
-        store.send(.main(action: .getSpreadsheetImportWaitlist(completion: { result in
+        AppStore.default.send(.main(action: .getSpreadsheetImportWaitlist(completion: { result in
             switch result {
             case let .success(users):
                 waitlist = users

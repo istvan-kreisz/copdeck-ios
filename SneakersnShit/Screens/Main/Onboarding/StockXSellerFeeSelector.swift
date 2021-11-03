@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct StockXSellerFeeSelector: View {
-    @EnvironmentObject var store: DerivedGlobalStore
-
     @State private var settings: CopDeckSettings
     @State private var stockxSellerFee: String
 
@@ -48,7 +46,7 @@ struct StockXSellerFeeSelector: View {
                         .keyboardType(.decimalPad)
                 }
         }.onChange(of: settings) { updatedSettings in
-            store.send(.main(action: .updateSettings(settings: updatedSettings)))
+            AppStore.default.send(.main(action: .updateSettings(settings: updatedSettings)))
         }
     }
 }

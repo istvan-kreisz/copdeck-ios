@@ -9,7 +9,6 @@ import Foundation
 import SwiftUI
 
 struct ContactView: View {
-    @EnvironmentObject var store: DerivedGlobalStore
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var loader = Loader()
     
@@ -59,8 +58,8 @@ struct ContactView: View {
         }
         .onAppear {
             if email.isEmpty {
-                if store.globalState.user?.email?.contains("privaterelay.appleid.com") == false {
-                    email = store.globalState.user?.email ?? ""
+                if AppStore.default.state.user?.email?.contains("privaterelay.appleid.com") == false {
+                    email = AppStore.default.state.user?.email ?? ""
                 }
             }
         }
@@ -80,7 +79,7 @@ struct ContactView: View {
         }
         let loader = loader.getLoader()
 
-        store.send(.main(action: .sendMessage(email: email, message: message, completion: { result in
+        AppStore.default.send(.main(action: .sendMessage(email: email, message: message, completion: { result in
             if case let .failure(error) = result {
                 self.alert = ("Error", error.localizedDescription)
             } else {

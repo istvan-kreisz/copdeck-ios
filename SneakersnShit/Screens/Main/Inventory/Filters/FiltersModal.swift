@@ -9,7 +9,6 @@ import SwiftUI
 import Combine
 
 struct FiltersModal: View {
-    @EnvironmentObject var store: AppStore
     @State private var settings: CopDeckSettings
 
     @State private var soldStatus: String
@@ -82,7 +81,7 @@ struct FiltersModal: View {
                                                                  height: 60,
                                                                  color: .customBlack,
                                                                  accessoryView: nil) {
-                    store.send(.main(action: .updateSettings(settings: settings)))
+                    AppStore.default.send(.main(action: .updateSettings(settings: settings)))
                     isPresented = false
                 })
         }

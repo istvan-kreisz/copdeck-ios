@@ -9,8 +9,6 @@ import SwiftUI
 import Combine
 
 struct SharedInventoryItemView: View {
-    @EnvironmentObject var store: DerivedGlobalStore
-
     private static let profileImageSize: CGFloat = 38
 
     let user: User
@@ -167,7 +165,7 @@ struct SharedInventoryItemView: View {
     }
 
     private func loadPhotos() {
-        store.send(.main(action: .getInventoryItemImages(userId: user.id, inventoryItem: inventoryItem, completion: { urls in
+        AppStore.default.send(.main(action: .getInventoryItemImages(userId: user.id, inventoryItem: inventoryItem, completion: { urls in
             photoURLs = urls
         })))
     }
@@ -185,7 +183,7 @@ extension SharedInventoryItemView {
         var body: some View {
             switch navigationDestination.destination {
             case let .chat(channel, userId):
-                MessagesView(channel: channel, userId: userId, store: DerivedGlobalStore.default)
+                MessagesView(channel: channel, userId: userId)
             case .empty:
                 EmptyView()
             }

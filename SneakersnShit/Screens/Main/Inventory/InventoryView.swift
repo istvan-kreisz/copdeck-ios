@@ -132,6 +132,7 @@ struct InventoryView: View {
             let filters = Binding<Filters>(get: { globalStore.globalState.settings.filters }, set: { _ in })
 
             NavigationLink(destination: Destination(navigationDestination: $navigationDestination,
+                                                    inventoryItems: $store.state.inventoryItems,
                                                     bestPrices: $bestPrices,
                                                     selectedStack: selectedStackBinding).navigationbarHidden(),
                            isActive: showDetail) {
@@ -362,10 +363,10 @@ extension InventoryView {
     }
 
     struct Destination: View {
-        @EnvironmentObject var store: InventoryStore
         @EnvironmentObject var globalStore: DerivedGlobalStore
 
         @Binding var navigationDestination: Navigation<NavigationDestination>
+        @Binding var inventoryItems: [InventoryItem]
         @Binding var bestPrices: [String: ListingPrice]
         @Binding var selectedStack: Stack
 
@@ -382,7 +383,7 @@ extension InventoryView {
                 InventoryItemDetailView(inventoryItem: inventoryItem, isInSharedStack: selectedStack.isShared) { navigationDestination.hide() }
             case let .stack(stack):
                 StackDetailView(stack: stack,
-                                inventoryItems: $store.state.inventoryItems,
+                                inventoryItems: $inventoryItems,
                                 bestPrices: $bestPrices,
                                 filters: filters,
                                 linkURL: editedStack?.linkURL(userId: globalStore.globalState.user?.id ?? "") ?? "",
@@ -391,23 +392,23 @@ extension InventoryView {
                                 saveChanges: { updatedStackItems in
                                     if var updatedStack = editedStack {
                                         updatedStack.items = updatedStackItems
-                                        store.send(.main(action: .updateStack(stack: updatedStack)))
+                                        AppStore.default.send(.main(action: .updateStack(stack: updatedStack)))
                                     }
                                 }, deleteStack: {
                                     navigationDestination.hide()
                                     if let editedStack = editedStack {
-                                        store.send(.main(action: .deleteStack(stack: editedStack)))
+                                        AppStore.default.send(.main(action: .deleteStack(stack: editedStack)))
                                     }
                                 })
             case let .selectStackItems(stack):
                 SelectStackItemsView(stack: stack,
-                                     inventoryItems: store.state.inventoryItems,
+                                     inventoryItems: inventoryItems,
                                      requestInfo: globalStore.globalState.requestInfo,
                                      shouldDismiss: { navigationDestination.hide() },
                                      saveChanges: { updatedStackItems in
                                          var updatedStack = stack
                                          updatedStack.items = updatedStackItems
-                                         store.send(.main(action: .updateStack(stack: updatedStack)))
+                                         AppStore.default.send(.main(action: .updateStack(stack: updatedStack)))
                                      })
             case .empty:
                 EmptyView()

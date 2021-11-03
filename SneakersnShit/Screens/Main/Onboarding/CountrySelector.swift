@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct CountrySelector: View {
-    @EnvironmentObject var store: DerivedGlobalStore
     @State private var settings: CopDeckSettings
     @State private var countries: [String] = []
 
@@ -30,7 +29,7 @@ struct CountrySelector: View {
     private func selectCountryTapped() {
         if let countryName = self.countries.first {
             settings.feeCalculation.country = Country.allCases.first(where: { $0.name == countryName }) ?? .US
-            store.send(.main(action: .updateSettings(settings: settings)))
+            AppStore.default.send(.main(action: .updateSettings(settings: settings)))
         }
     }
 }
