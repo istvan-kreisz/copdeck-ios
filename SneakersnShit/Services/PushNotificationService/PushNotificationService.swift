@@ -14,6 +14,10 @@ class PushNotificationService: NSObject {
     private var userId: String?
     private let topics = ["all", "alliOS"]
 
+    var deviceId: String {
+        UIDevice.current.identifierForVendor?.uuidString ?? UUID().uuidString
+    }
+
     func setup(application: UIApplication) {
         UNUserNotificationCenter.current().delegate = self
         Messaging.messaging().delegate = self
@@ -22,7 +26,8 @@ class PushNotificationService: NSObject {
         requestUserPermission()
     }
 
-    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+    func application(_ application: UIApplication,
+                     didReceiveRemoteNotification userInfo: [AnyHashable: Any],
                      fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         if let messageID = userInfo[gcmMessageIDKey] {
             print("Message ID: \(messageID)")
@@ -46,7 +51,20 @@ class PushNotificationService: NSObject {
         delay(seconds: 2) { [weak self] in
             self?.fetchFCMToken { [weak self] token in
                 guard let token = token else { return }
-                self?.topics.forEach { self?.subscribeToken(toTopic: $0) }
+                AppStore.default.environment.dataController.getToken(byId: token) { [weak self] notificationToken in
+                    guard let self = self else { return }
+                    if let notificationToken = notificationToken {
+                    } else {
+                        let newToken = NotificationToken(token: token, userId: userId, deviceId: self.deviceId, refreshedDate: Date.serverDate)
+                        AppStore.default.environment.dataController.setToken(newToken) { [weak self] error in
+                            if let error = error {
+                                log(error, logType: .error)
+                            } else {
+                                self?.subscribeToDefaultTopics()
+                            }
+                        }
+                    }
+                }
             }
         }
 //        - [ ] Fetch token
@@ -60,14 +78,6 @@ class PushNotificationService: NSObject {
 //                - [ ] If user id != saved user id
 //                    - [ ] Update token with new user id and update refresh date
 //                    - [ ] Subscribe it to topics
-//            - [ ] If this token doesn’t exist in the DB
-//                - [ ] Save token along with user id and device id
-//                - [ ] Subscribe it to topics
-//                - [ ] Check if other token exists for this device ID
-//                    - [ ] If yes
-//                        - [ ] Delete other token
-//                    - [ ] If no
-//                        - [ ] Do nothing
     }
 
     func reset() {}
@@ -90,6 +100,10 @@ class PushNotificationService: NSObject {
                 completion(nil)
             }
         }
+    }
+
+    private func subscribeToDefaultTopics() {
+        topics.forEach { subscribeToken(toTopic: $0) }
     }
 
     private func subscribeToken(toTopic topic: String) {

@@ -13,6 +13,10 @@ import UIKit
 class FirebaseService: DatabaseManager {
     private static let recentlyViewedLimit = 20
 
+    enum DBRef: String {
+        case notificationTokens
+    }
+
     private let firestore: Firestore
     private var userId: String?
 
@@ -666,12 +670,45 @@ class FirebaseService: DatabaseManager {
     }
 
     func getToken(byId id: String, completion: @escaping (NotificationToken?) -> Void) {
-        firestore.collection("notificationTokens").document(id).getDocument { snapshot, error in
+        firestore.collection(DBRef.notificationTokens.rawValue).document(id).getDocument { snapshot, error in
             if let dict = snapshot?.data(), let token = NotificationToken(from: dict) {
                 completion(token)
             } else {
                 completion(nil)
             }
         }
+    }
+
+    func setToken(_ token: NotificationToken, completion: @escaping (AppError?) -> Void) {
+        firestore
+            .collection(DBRef.notificationTokens.rawValue)
+            .whereField("deviceId", isEqualTo: token.deviceId)
+            .getDocuments { [weak self] snapshot, error in
+                guard let self = self else { return }
+                if let data = snapshot?.documents.map({ $0.data() }), let tokens = [NotificationToken](from: data) {
+                    tokens.forEach { token in
+                        self.deleteToken(token)
+                    }
+                    self.addToken(token, completion: completion)
+                } else {
+                    self.addToken(token, completion: completion)
+                }
+            }
+    }
+    
+    private func addToken(_ token: NotificationToken, completion: @escaping (AppError?) -> Void) {
+        guard let dict = try? token.asDictionary() else {
+            completion(AppError.unknown)
+            return
+        }
+
+        let ref = firestore.collection(DBRef.notificationTokens.rawValue).document(token.token)
+        setDocument(dict, atRef: ref) { error in
+            completion(error.map { AppError(error: $0) })
+        }
+    }
+    
+    private func deleteToken(_ token: NotificationToken) {
+        firestore.collection(DBRef.notificationTokens.rawValue).document(token.token).delete()
     }
 }
