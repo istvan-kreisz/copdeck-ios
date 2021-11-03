@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import FirebaseFunctions
+import SwiftUI
 
 class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
     private var feedPagination = PaginationState<FeedPost>(lastLoaded: nil, isLastPage: false)
@@ -69,6 +70,47 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
                 }
             } receiveValue: { completion(.success($0)) }
             .store(in: &cancellables)
+    }
+
+    func refreshUserSubscriptionStatus(completion: ((Result<Void, AppError>) -> Void)?) {
+        guard let userId = userId else { return }
+        struct Body: Encodable {
+            struct Event: Encodable {
+                let original_app_user_id: String
+            }
+
+            let event: Event
+        }
+        let body = Body(event: .init(original_app_user_id: userId))
+
+        guard let url = URL(string: "https://europe-west1-sneakersnshit-2e22f.cloudfunctions.net/refreshUserSubscriptionStatus"),
+              let httpBody = try? JSONEncoder().encode(body)
+        else { return }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer vkJAtxOkCMEORPnQDmuEwtoUBuHDUMSu", forHTTPHeaderField: "Authorization")
+        request.httpBody = httpBody
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            let statusMessage = data.map { String(decoding: $0, as: UTF8.self) } ?? ""
+            let appError = error.map { AppError(error: $0) }
+            let error = appError ?? AppError(title: "Error", message: statusMessage, error: nil)
+
+            if let response = response as? HTTPURLResponse {
+                if response.statusCode == 200 {
+                    if statusMessage.isEmpty || statusMessage.lowercased() == "ok" {
+                        completion?(.success(()))
+                    } else {
+                        completion?(.failure(error))
+                    }
+                } else {
+                    completion?(.failure(error))
+                }
+            } else {
+                completion?(.failure(error))
+            }
+        }.resume()
     }
 
     func updateLike(onStack stack: Stack, addLike: Bool, stackOwnerId: String) {
@@ -136,12 +178,13 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
         }
         return callFirebaseFunctionArray(functionName: "searchUsers", model: Wrapper(searchTerm: searchTerm))
     }
-    
+
     func getUsers(userIds: [String], completion: @escaping (Result<[User], AppError>) -> Void) {
         struct Wrapper: Encodable {
             let userIds: [String]
         }
-        handlePublisherResult(publisher: callFirebaseFunctionArray(functionName: "getUsers", model: Wrapper(userIds: userIds)), showAlert: false, completion: completion)
+        handlePublisherResult(publisher: callFirebaseFunctionArray(functionName: "getUsers", model: Wrapper(userIds: userIds)), showAlert: false,
+                              completion: completion)
     }
 
     func startSpreadsheetImport(urlString: String, completion: @escaping (Error?) -> Void) {

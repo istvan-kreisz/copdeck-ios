@@ -59,6 +59,7 @@ protocol BackendAPI {
     // membership
     func applyReferralCode(_ code: String, completion: ((Result<Void, AppError>) -> Void)?)
     func getAffiliateList(completion: @escaping (Result<[ReferralCode], Error>) -> Void)
+    func refreshUserSubscriptionStatus(completion: ((Result<Void, AppError>) -> Void)?)
     // contact support
     func sendMessage(email: String, message: String, completion: ((Result<Void, AppError>) -> Void)?)
 }

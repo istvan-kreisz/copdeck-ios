@@ -16,5 +16,4 @@ protocol PaymentService {
     func setup(userId: String, userEmail: String?)
     func reset()
     func purchase(package: Purchases.Package)
-    func restorePurchases(completion: ((Result<Void, AppError>) -> Void)?)
 }

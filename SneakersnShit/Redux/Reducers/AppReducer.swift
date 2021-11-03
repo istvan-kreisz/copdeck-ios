@@ -263,7 +263,7 @@ func appReducer(state: inout AppState,
         case let .purchase(package):
             environment.paymentService.purchase(package: package)
         case let .restorePurchases(completion):
-            environment.paymentService.restorePurchases(completion: completion)
+            environment.dataController.refreshUserSubscriptionStatus(completion: completion)
         case let .showPaymentView(show):
             state.showPaymentView = show
         }

@@ -87,17 +87,6 @@ class DefaultPaymentService: NSObject, PaymentService {
         Purchases.shared.logOut(nil)
     }
 
-    func restorePurchases(completion: ((Result<Void, AppError>) -> Void)?) {
-        Purchases.shared.restoreTransactions { [weak self] _, error in
-            if let error = error {
-                self?.errorsSubject.send(AppError(error: error))
-                completion?(.failure(AppError(error: error)))
-            } else {
-                completion?(.success(()))
-            }
-        }
-    }
-
     func purchase(package: Purchases.Package) {
         Purchases.shared.purchasePackage(package) { [weak self] transaction, _, error, userCancelled in
             if let error = error {
