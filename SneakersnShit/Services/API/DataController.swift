@@ -100,6 +100,8 @@ protocol DatabaseManager {
 
     // admin
     func getSpreadsheetImportWaitlist(completion: @escaping (Result<[User], Error>) -> Void)
+    // push notifications
+    func getToken(byId id: String, completion: @escaping (NotificationToken?) -> Void)
 }
 
 protocol ImageService {

@@ -460,7 +460,7 @@ class DefaultDataController: DataController {
     func getAffiliateList(completion: @escaping (Result<[ReferralCode], Error>) -> Void) {
         backendAPI.getAffiliateList(completion: completion)
     }
-    
+
     func refreshUserSubscriptionStatus(completion: ((Result<Void, AppError>) -> Void)?) {
         backendAPI.refreshUserSubscriptionStatus(completion: completion)
     }
@@ -471,6 +471,10 @@ class DefaultDataController: DataController {
 
     func sendMessage(email: String, message: String, completion: ((Result<Void, AppError>) -> Void)?) {
         backendAPI.sendMessage(email: email, message: message, completion: completion)
+    }
+
+    func getToken(byId id: String, completion: @escaping (NotificationToken?) -> Void) {
+        databaseManager.getToken(byId: id, completion: completion)
     }
 }
 

@@ -136,6 +136,8 @@
 		5D95570C269A60DA00CCC2E7 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D95570B269A60DA00CCC2E7 /* String+Extensions.swift */; };
 		5D97630026EACD0C00A1155B /* ConfirmActionPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9762FF26EACD0C00A1155B /* ConfirmActionPopup.swift */; };
 		5D97630526EB640E00A1155B /* EmptyStateButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D97630426EB640E00A1155B /* EmptyStateButton.swift */; };
+		5D9A472327333628001C85E4 /* PushNotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9A472227333628001C85E4 /* PushNotificationService.swift */; };
+		5D9A472527333DEF001C85E4 /* NotificationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9A472427333DEF001C85E4 /* NotificationToken.swift */; };
 		5D9C8E3D269F2F31008538D6 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C8E3C269F2F31008538D6 /* RoundedButton.swift */; };
 		5D9C8E3F269FAB8B008538D6 /* NextButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C8E3E269FAB8B008538D6 /* NextButton.swift */; };
 		5D9D51F226AC0E8F00AB1F30 /* Optional+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D51F126AC0E8F00AB1F30 /* Optional+Extensions.swift */; };
@@ -350,6 +352,8 @@
 		5D95570B269A60DA00CCC2E7 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		5D9762FF26EACD0C00A1155B /* ConfirmActionPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmActionPopup.swift; sourceTree = "<group>"; };
 		5D97630426EB640E00A1155B /* EmptyStateButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateButton.swift; sourceTree = "<group>"; };
+		5D9A472227333628001C85E4 /* PushNotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationService.swift; sourceTree = "<group>"; };
+		5D9A472427333DEF001C85E4 /* NotificationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationToken.swift; sourceTree = "<group>"; };
 		5D9C8E3C269F2F31008538D6 /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
 		5D9C8E3E269FAB8B008538D6 /* NextButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextButton.swift; sourceTree = "<group>"; };
 		5D9D51F126AC0E8F00AB1F30 /* Optional+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Extensions.swift"; sourceTree = "<group>"; };
@@ -971,6 +975,7 @@
 				5DECB5812708DC4F0017748C /* MonthlyStatistics.swift */,
 				5D117EAC271310E5000D1E43 /* SizeConversion.swift */,
 				5D8FEECB271B28350004D8B3 /* ReferralCode.swift */,
+				5D9A472427333DEF001C85E4 /* NotificationToken.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1037,6 +1042,14 @@
 			path = Empty;
 			sourceTree = "<group>";
 		};
+		5D9A472127333614001C85E4 /* PushNotificationService */ = {
+			isa = PBXGroup;
+			children = (
+				5D9A472227333628001C85E4 /* PushNotificationService.swift */,
+			);
+			path = PushNotificationService;
+			sourceTree = "<group>";
+		};
 		5DA4FE0226E6DC9500084AEF /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -1080,6 +1093,7 @@
 		5DC00EA725C3A2F8009A3AB9 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				5D9A472127333614001C85E4 /* PushNotificationService */,
 				5D60541B2726F93900B631FD /* PaymentService */,
 				5D2726CE26CC59C100887449 /* Cache */,
 				5D6312512695BC3F00876D99 /* API */,
@@ -1444,8 +1458,10 @@
 				5D564E432704C7EE00190CF4 /* ReferralCodeAdminView.swift in Sources */,
 				5D587A96272E41980075C93C /* ChannelListItem.swift in Sources */,
 				5DE4F21226DFBB7B0087077A /* State+Extensions.swift in Sources */,
+				5D9A472327333628001C85E4 /* PushNotificationService.swift in Sources */,
 				5D9D520626AE361900AB1F30 /* PillView.swift in Sources */,
 				5D97630526EB640E00A1155B /* EmptyStateButton.swift in Sources */,
+				5D9A472527333DEF001C85E4 /* NotificationToken.swift in Sources */,
 				5D3769762611709C00F9ED72 /* Debouncer.swift in Sources */,
 				5D424D4B25C509D20008D6F4 /* PasswordResetView.swift in Sources */,
 				5D424D2025C505450008D6F4 /* TextFieldUnderlined.swift in Sources */,

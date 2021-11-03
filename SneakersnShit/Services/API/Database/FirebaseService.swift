@@ -142,7 +142,8 @@ class FirebaseService: DatabaseManager {
                             cancel: @escaping (_ cancel: @escaping () -> Void) -> Void,
                             update: @escaping (Result<([Change<Message>], [Message]), AppError>) -> Void) {
         channelListener.reset()
-        channelListener.startListening(updateType: .changes, collectionName: "thread", baseDocumentReference: firestore.collection("channels").document(channelId))
+        channelListener.startListening(updateType: .changes, collectionName: "thread",
+                                       baseDocumentReference: firestore.collection("channels").document(channelId))
 
         let publisher = channelListener.changesPublisher
             .sink { completion in
@@ -662,5 +663,15 @@ class FirebaseService: DatabaseManager {
         }
         copy["updated"] = Date.serverDate
         return copy
+    }
+
+    func getToken(byId id: String, completion: @escaping (NotificationToken?) -> Void) {
+        firestore.collection("notificationTokens").document(id).getDocument { snapshot, error in
+            if let dict = snapshot?.data(), let token = NotificationToken(from: dict) {
+                completion(token)
+            } else {
+                completion(nil)
+            }
+        }
     }
 }

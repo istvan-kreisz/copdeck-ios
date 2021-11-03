@@ -20,6 +20,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         FirebaseConfiguration.shared.setLoggerLevel(DebugSettings.shared.isInDebugMode ? .info : .min)
         FirebaseApp.configure()
         ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
+        AppStore.default.environment.pushNotificationService.setup(application: application)
         StoreReviewHelper.incrementAppOpenedCount()
         setupNuke()
         setupUI()
@@ -55,45 +56,20 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         UITextView.appearance().backgroundColor = UIColor(red: 243 / 255, green: 246 / 255, blue: 248 / 255, alpha: 1.0)
     }
 
-    private func setupNotifications(application: UIApplication) {
-        UNUserNotificationCenter.current().delegate = self
-
-        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-        #warning("request later")
-        UNUserNotificationCenter.current().requestAuthorization(options: authOptions, completionHandler: { _, _ in })
-        application.registerForRemoteNotifications()
-
-        Messaging.messaging().delegate = self
+    func application(_ application: UIApplication,
+                     didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+                     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        AppStore.default.environment.pushNotificationService.application(application,
+                                                                         didReceiveRemoteNotification: userInfo,
+                                                                         fetchCompletionHandler: completionHandler)
     }
-
-    private var token: String?
-}
-
-extension AppDelegate: UNUserNotificationCenterDelegate {}
-
-extension AppDelegate: MessagingDelegate {
-
-    #warning("when swizzling is disabled")
-    func application(application: UIApplication,
-                     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-      Messaging.messaging().apnsToken = deviceToken
-    }
-
     
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
-        self.token = fcmToken
-
-        let dataDict: [String: String] = ["token": fcmToken ?? ""]
-        NotificationCenter.default.post(name: Notification.Name("FCMToken"),
-                                        object: nil,
-                                        userInfo: dataDict)
-//        Messaging.messaging().token { token, error in
-//            if let error = error {
-//                print("Error fetching FCM registration token: \(error)")
-//            } else if let token = token {
-//                print("FCM registration token: \(token)")
-//                self.fcmRegTokenMessage.text = "Remote FCM registration token: \(token)"
-//            }
-//        }
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Messaging.messaging().apnsToken = deviceToken
+        print(deviceToken)
+    }
+    
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print(error)
     }
 }
