@@ -123,7 +123,7 @@
 		5D84875826E3BF60006062DC /* PaginatedResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D84875726E3BF60006062DC /* PaginatedResult.swift */; };
 		5D88261526F8A42D0006031D /* DerivedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D88261426F8A42D0006031D /* DerivedStore.swift */; };
 		5D88261726F8DCD20006031D /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D88261626F8DCD20006031D /* Navigation.swift */; };
-		5D88261926F917770006031D /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D88261826F917770006031D /* ImageService.swift */; };
+		5D88261926F917770006031D /* DefaultImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D88261826F917770006031D /* DefaultImageService.swift */; };
 		5D8ABBBA26B0B51200AFD8CF /* Snackbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ABBB926B0B51200AFD8CF /* Snackbar.swift */; };
 		5D8ABBBF26B1C82500AFD8CF /* ScraperRequestInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ABBBE26B1C82500AFD8CF /* ScraperRequestInfo.swift */; };
 		5D8ABBC126B1D2E100AFD8CF /* ItemImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ABBC026B1D2E100AFD8CF /* ItemImageView.swift */; };
@@ -139,6 +139,13 @@
 		5D9A472327333628001C85E4 /* PushNotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9A472227333628001C85E4 /* PushNotificationService.swift */; };
 		5D9A472527333DEF001C85E4 /* NotificationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9A472427333DEF001C85E4 /* NotificationToken.swift */; };
 		5D9A47272733FB4D001C85E4 /* ChatUpdateInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9A47262733FB4D001C85E4 /* ChatUpdateInfo.swift */; };
+		5D9A472C27340455001C85E4 /* ChatWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9A472B27340455001C85E4 /* ChatWorker.swift */; };
+		5D9A472E273408FD001C85E4 /* FirestoreWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9A472D273408FD001C85E4 /* FirestoreWorker.swift */; };
+		5D9A473127340E28001C85E4 /* Firestore+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9A473027340E28001C85E4 /* Firestore+Extensions.swift */; };
+		5D9A4735273410C7001C85E4 /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9A4734273410C7001C85E4 /* ImageService.swift */; };
+		5D9A473727341122001C85E4 /* BackendAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9A473627341122001C85E4 /* BackendAPI.swift */; };
+		5D9A4739273411FD001C85E4 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9A4738273411FD001C85E4 /* DatabaseManager.swift */; };
+		5D9A473B273412A7001C85E4 /* LocalAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9A473A273412A7001C85E4 /* LocalAPI.swift */; };
 		5D9C8E3D269F2F31008538D6 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C8E3C269F2F31008538D6 /* RoundedButton.swift */; };
 		5D9C8E3F269FAB8B008538D6 /* NextButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9C8E3E269FAB8B008538D6 /* NextButton.swift */; };
 		5D9D51F226AC0E8F00AB1F30 /* Optional+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9D51F126AC0E8F00AB1F30 /* Optional+Extensions.swift */; };
@@ -157,7 +164,7 @@
 		5D9E85F126931F4300477377 /* scraper.bundle.js in Resources */ = {isa = PBXBuildFile; fileRef = 5D9E85F026931F4200477377 /* scraper.bundle.js */; };
 		5DA4FE0126E6DA3900084AEF /* StockXSellerFeeSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA4FE0026E6DA3900084AEF /* StockXSellerFeeSelector.swift */; };
 		5DA4FE0426E6DCA700084AEF /* SettingMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA4FE0326E6DCA700084AEF /* SettingMenu.swift */; };
-		5DA5140426A614530067C4A2 /* FirebaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140026A614530067C4A2 /* FirebaseService.swift */; };
+		5DA5140426A614530067C4A2 /* DefaultDatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140026A614530067C4A2 /* DefaultDatabaseManager.swift */; };
 		5DA5140B26A6161A0067C4A2 /* CopDeckSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140A26A6161A0067C4A2 /* CopDeckSettings.swift */; };
 		5DB590E826C556ED006ECEBD /* ScrollableSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB590E726C556ED006ECEBD /* ScrollableSegmentedControl.swift */; };
 		5DBCB6DD25C90A510025BC23 /* StoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DBCB6DC25C90A510025BC23 /* StoreReviewHelper.swift */; };
@@ -339,7 +346,7 @@
 		5D84875726E3BF60006062DC /* PaginatedResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaginatedResult.swift; sourceTree = "<group>"; };
 		5D88261426F8A42D0006031D /* DerivedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DerivedStore.swift; sourceTree = "<group>"; };
 		5D88261626F8DCD20006031D /* Navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
-		5D88261826F917770006031D /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
+		5D88261826F917770006031D /* DefaultImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultImageService.swift; sourceTree = "<group>"; };
 		5D8ABBB926B0B51200AFD8CF /* Snackbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snackbar.swift; sourceTree = "<group>"; };
 		5D8ABBBB26B0DF4900AFD8CF /* SneakersnShit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SneakersnShit.entitlements; sourceTree = "<group>"; };
 		5D8ABBBE26B1C82500AFD8CF /* ScraperRequestInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScraperRequestInfo.swift; sourceTree = "<group>"; };
@@ -356,6 +363,13 @@
 		5D9A472227333628001C85E4 /* PushNotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationService.swift; sourceTree = "<group>"; };
 		5D9A472427333DEF001C85E4 /* NotificationToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationToken.swift; sourceTree = "<group>"; };
 		5D9A47262733FB4D001C85E4 /* ChatUpdateInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUpdateInfo.swift; sourceTree = "<group>"; };
+		5D9A472B27340455001C85E4 /* ChatWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatWorker.swift; sourceTree = "<group>"; };
+		5D9A472D273408FD001C85E4 /* FirestoreWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreWorker.swift; sourceTree = "<group>"; };
+		5D9A473027340E28001C85E4 /* Firestore+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Firestore+Extensions.swift"; sourceTree = "<group>"; };
+		5D9A4734273410C7001C85E4 /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
+		5D9A473627341122001C85E4 /* BackendAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendAPI.swift; sourceTree = "<group>"; };
+		5D9A4738273411FD001C85E4 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
+		5D9A473A273412A7001C85E4 /* LocalAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAPI.swift; sourceTree = "<group>"; };
 		5D9C8E3C269F2F31008538D6 /* RoundedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
 		5D9C8E3E269FAB8B008538D6 /* NextButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextButton.swift; sourceTree = "<group>"; };
 		5D9D51F126AC0E8F00AB1F30 /* Optional+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Extensions.swift"; sourceTree = "<group>"; };
@@ -372,7 +386,7 @@
 		5D9E85F026931F4200477377 /* scraper.bundle.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = scraper.bundle.js; sourceTree = "<group>"; };
 		5DA4FE0026E6DA3900084AEF /* StockXSellerFeeSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockXSellerFeeSelector.swift; sourceTree = "<group>"; };
 		5DA4FE0326E6DCA700084AEF /* SettingMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingMenu.swift; sourceTree = "<group>"; };
-		5DA5140026A614530067C4A2 /* FirebaseService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseService.swift; sourceTree = "<group>"; };
+		5DA5140026A614530067C4A2 /* DefaultDatabaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultDatabaseManager.swift; sourceTree = "<group>"; };
 		5DA5140A26A6161A0067C4A2 /* CopDeckSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopDeckSettings.swift; sourceTree = "<group>"; };
 		5DB590E726C556ED006ECEBD /* ScrollableSegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableSegmentedControl.swift; sourceTree = "<group>"; };
 		5DBCB6DC25C90A510025BC23 /* StoreReviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreReviewHelper.swift; sourceTree = "<group>"; };
@@ -486,6 +500,7 @@
 		5D2D5A9E25C529CA009598AA /* Functions */ = {
 			isa = PBXGroup;
 			children = (
+				5D9A473627341122001C85E4 /* BackendAPI.swift */,
 				5D2D5AAE25C552B0009598AA /* DefaultBackendAPI.swift */,
 				5D9DFB0226D97990005A575D /* FBFunctionsCoordinator.swift */,
 			);
@@ -559,6 +574,7 @@
 				5DEB42B4271F1CD200895766 /* Binding+Extensions.swift */,
 				5D6054172726C73900B631FD /* NSMutableAttributedString+Extensions.swift */,
 				5D60542027276D3000B631FD /* Purchases+Extensions.swift */,
+				5D9A473027340E28001C85E4 /* Firestore+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -882,10 +898,9 @@
 		5D6312512695BC3F00876D99 /* API */ = {
 			isa = PBXGroup;
 			children = (
-				5D84875626E3BF51006062DC /* Pagination */,
+				5D9A4733273410A7001C85E4 /* Storage */,
+				5D9A47322734106B001C85E4 /* DataController */,
 				5DA513FF26A6143A0067C4A2 /* Database */,
-				5D2D5A9F25C529E3009598AA /* DataController.swift */,
-				5D631256269669A600876D99 /* DefaultDataController.swift */,
 				5D2D5A9E25C529CA009598AA /* Functions */,
 				5D7B17CA26868C970065D01C /* LocalScraper */,
 			);
@@ -962,6 +977,7 @@
 				5D63121F269330B900876D99 /* APIConfig.swift */,
 				5D488E8825C8D54E00624FEF /* AppError.swift */,
 				5D6312212694797300876D99 /* Item.swift */,
+				5D84875726E3BF60006062DC /* PaginatedResult.swift */,
 				5DECB57D2707849E0017748C /* ShoeSize.swift */,
 				5D63122A2695066500876D99 /* ExchangeRates.swift */,
 				5D63122C2695068300876D99 /* Currency.swift */,
@@ -986,8 +1002,9 @@
 		5D7B17CA26868C970065D01C /* LocalScraper */ = {
 			isa = PBXGroup;
 			children = (
-				5D7B17CD26868D760065D01C /* JS */,
+				5D9A473A273412A7001C85E4 /* LocalAPI.swift */,
 				5D7B17CB26868CA60065D01C /* Scraper.swift */,
+				5D7B17CD26868D760065D01C /* JS */,
 				5D631252269668FE00876D99 /* JSNativeBridge.swift */,
 				5D6312542696696500876D99 /* JSLogger.swift */,
 			);
@@ -1011,14 +1028,6 @@
 				5D424D0B25C505450008D6F4 /* Shared */,
 			);
 			path = Screens;
-			sourceTree = "<group>";
-		};
-		5D84875626E3BF51006062DC /* Pagination */ = {
-			isa = PBXGroup;
-			children = (
-				5D84875726E3BF60006062DC /* PaginatedResult.swift */,
-			);
-			path = Pagination;
 			sourceTree = "<group>";
 		};
 		5D8ABBC226B205BE00AFD8CF /* Feed */ = {
@@ -1053,6 +1062,59 @@
 			path = PushNotificationService;
 			sourceTree = "<group>";
 		};
+		5D9A4728273403EC001C85E4 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				5D9A472F27340926001C85E4 /* DatabaseListeners */,
+				5D9A472D273408FD001C85E4 /* FirestoreWorker.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		5D9A472927340417001C85E4 /* Workers */ = {
+			isa = PBXGroup;
+			children = (
+				5D9A472B27340455001C85E4 /* ChatWorker.swift */,
+			);
+			path = Workers;
+			sourceTree = "<group>";
+		};
+		5D9A472A2734042D001C85E4 /* ImageService */ = {
+			isa = PBXGroup;
+			children = (
+				5D88261826F917770006031D /* DefaultImageService.swift */,
+				5D9A4734273410C7001C85E4 /* ImageService.swift */,
+			);
+			path = ImageService;
+			sourceTree = "<group>";
+		};
+		5D9A472F27340926001C85E4 /* DatabaseListeners */ = {
+			isa = PBXGroup;
+			children = (
+				5D90EDCB26DE6C66005AEA30 /* FireStoreListener.swift */,
+				5D90EDC726DE6254005AEA30 /* CollectionListener.swift */,
+				5D90EDC926DE6C37005AEA30 /* DocumentListener.swift */,
+			);
+			path = DatabaseListeners;
+			sourceTree = "<group>";
+		};
+		5D9A47322734106B001C85E4 /* DataController */ = {
+			isa = PBXGroup;
+			children = (
+				5D2D5A9F25C529E3009598AA /* DataController.swift */,
+				5D631256269669A600876D99 /* DefaultDataController.swift */,
+			);
+			path = DataController;
+			sourceTree = "<group>";
+		};
+		5D9A4733273410A7001C85E4 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				5D9A472A2734042D001C85E4 /* ImageService */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
 		5DA4FE0226E6DC9500084AEF /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -1075,11 +1137,10 @@
 		5DA513FF26A6143A0067C4A2 /* Database */ = {
 			isa = PBXGroup;
 			children = (
-				5DA5140026A614530067C4A2 /* FirebaseService.swift */,
-				5D90EDC726DE6254005AEA30 /* CollectionListener.swift */,
-				5D90EDC926DE6C37005AEA30 /* DocumentListener.swift */,
-				5D90EDCB26DE6C66005AEA30 /* FireStoreListener.swift */,
-				5D88261826F917770006031D /* ImageService.swift */,
+				5D9A4738273411FD001C85E4 /* DatabaseManager.swift */,
+				5DA5140026A614530067C4A2 /* DefaultDatabaseManager.swift */,
+				5D9A472927340417001C85E4 /* Workers */,
+				5D9A4728273403EC001C85E4 /* Utilities */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -1352,9 +1413,11 @@
 			files = (
 				5DA5140B26A6161A0067C4A2 /* CopDeckSettings.swift in Sources */,
 				5D63122F269506AE00876D99 /* User.swift in Sources */,
+				5D9A4735273410C7001C85E4 /* ImageService.swift in Sources */,
 				5D606D19272D0B2A00E49A59 /* Sender.swift in Sources */,
 				5DE4F21426DFCCF30087077A /* SharedStackSummaryView.swift in Sources */,
 				5D7B17CC26868CA60065D01C /* Scraper.swift in Sources */,
+				5D9A473127340E28001C85E4 /* Firestore+Extensions.swift in Sources */,
 				5D52E307261303AF00FA02B8 /* Publishers+Extensions.swift in Sources */,
 				5D564E4C2704F9D100190CF4 /* ReferralCodeView.swift in Sources */,
 				5DF3595F26FF72570041A6C3 /* OnboardingView.swift in Sources */,
@@ -1431,7 +1494,8 @@
 				5D424CAE25C4FDCC0008D6F4 /* SignInButton.swift in Sources */,
 				5DECB5842708E1A00017748C /* SellerStatsView.swift in Sources */,
 				5D9A47272733FB4D001C85E4 /* ChatUpdateInfo.swift in Sources */,
-				5DA5140426A614530067C4A2 /* FirebaseService.swift in Sources */,
+				5D9A472C27340455001C85E4 /* ChatWorker.swift in Sources */,
+				5DA5140426A614530067C4A2 /* DefaultDatabaseManager.swift in Sources */,
 				5D6312222694797300876D99 /* Item.swift in Sources */,
 				5D2726CD26CB3CB800887449 /* TabBarView.swift in Sources */,
 				5D52E30B2613063B00FA02B8 /* Encodable+Extensions.swift in Sources */,
@@ -1471,6 +1535,7 @@
 				5D424D2025C505450008D6F4 /* TextFieldUnderlined.swift in Sources */,
 				5DEB42B3271EEB7C00895766 /* TextFieldRoundedLarge.swift in Sources */,
 				5D9D520826AE4CF400AB1F30 /* EditInventoryTray.swift in Sources */,
+				5D9A473B273412A7001C85E4 /* LocalAPI.swift in Sources */,
 				5D2ED124270152BC002A5E12 /* ImageViewer.swift in Sources */,
 				5D4E19BC26C9404E00FCF780 /* TextFieldPopup.swift in Sources */,
 				5D2726D026CC59CC00887449 /* Cache.swift in Sources */,
@@ -1483,7 +1548,7 @@
 				5D424CEE25C502F90008D6F4 /* Colors.swift in Sources */,
 				5D83156B25C397C4008AB948 /* MainContainerView.swift in Sources */,
 				5D8ABBBA26B0B51200AFD8CF /* Snackbar.swift in Sources */,
-				5D88261926F917770006031D /* ImageService.swift in Sources */,
+				5D88261926F917770006031D /* DefaultImageService.swift in Sources */,
 				5DE4F21C26E048100087077A /* SharedInventoryItemDetailView.swift in Sources */,
 				5D7CAAD6272F1A2A003A241D /* MessagesView.swift in Sources */,
 				5D19B0AB26A6D76600A31F4E /* MainAction.swift in Sources */,
@@ -1512,6 +1577,7 @@
 				5DDEFDC126CEE16F001B0F76 /* ListSelectorMenu.swift in Sources */,
 				5DDEFDCF26D2ADC2001B0F76 /* EnumCodable.swift in Sources */,
 				5DF03CAB25DA1CE7001856B5 /* ImageView.swift in Sources */,
+				5D9A4739273411FD001C85E4 /* DatabaseManager.swift in Sources */,
 				5D60541A2726C77900B631FD /* AttributedText.swift in Sources */,
 				5D2D5AA325C52E9B009598AA /* AppState.swift in Sources */,
 				5D36AA0B269E46300049640A /* TabBar.swift in Sources */,
@@ -1520,12 +1586,14 @@
 				5DE4F21826E022070087077A /* UIImage+Extensions.swift in Sources */,
 				5DDEFDCA26D13695001B0F76 /* FiltersModal.swift in Sources */,
 				5D8ABBC126B1D2E100AFD8CF /* ItemImageView.swift in Sources */,
+				5D9A473727341122001C85E4 /* BackendAPI.swift in Sources */,
 				5DE4F21026DF1AD10087077A /* ProfileView.swift in Sources */,
 				5D605416272186D600B631FD /* PaymentView.swift in Sources */,
 				5D564E462704C8CA00190CF4 /* UserDetailView.swift in Sources */,
 				5DF3596126FFB7DF0041A6C3 /* UserDefaults+Extensions.swift in Sources */,
 				5D60542127276D3000B631FD /* Purchases+Extensions.swift in Sources */,
 				5D52E31226130E7500FA02B8 /* InventoryItemDetailView.swift in Sources */,
+				5D9A472E273408FD001C85E4 /* FirestoreWorker.swift in Sources */,
 				5D6B112E26A46E3A00B6B67A /* NavigationBar.swift in Sources */,
 				5D9D520426AE359C00AB1F30 /* InventoryViewPills.swift in Sources */,
 				5DA4FE0426E6DCA700084AEF /* SettingMenu.swift in Sources */,
