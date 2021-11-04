@@ -103,6 +103,8 @@ protocol DatabaseManager {
     // push notifications
     func getToken(byId id: String, completion: @escaping (NotificationToken?) -> Void)
     func setToken(_ token: NotificationToken, completion: @escaping (AppError?) -> Void)
+    func deleteToken(_ token: NotificationToken, completion: @escaping (AppError?) -> Void)
+    func deleteToken(byId id: String, completion: @escaping (AppError?) -> Void)
 }
 
 protocol ImageService {

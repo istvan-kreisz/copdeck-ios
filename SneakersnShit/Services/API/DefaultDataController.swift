@@ -480,6 +480,14 @@ class DefaultDataController: DataController {
     func setToken(_ token: NotificationToken, completion: @escaping (AppError?) -> Void) {
         databaseManager.setToken(token, completion: completion)
     }
+    
+    func deleteToken(_ token: NotificationToken, completion: @escaping (AppError?) -> Void) {
+        databaseManager.deleteToken(token, completion: completion)
+    }
+    
+    func deleteToken(byId id: String, completion: @escaping (AppError?) -> Void) {
+        databaseManager.deleteToken(byId: id, completion: completion)
+    }
 }
 
 extension DefaultDataController {

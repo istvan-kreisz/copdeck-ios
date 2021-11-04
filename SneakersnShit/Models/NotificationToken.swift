@@ -11,5 +11,5 @@ struct NotificationToken: Equatable, Codable {
     let token: String
     let userId: String
     let deviceId: String
-    let refreshedDate: Double
+    var refreshedDate: Double
 }

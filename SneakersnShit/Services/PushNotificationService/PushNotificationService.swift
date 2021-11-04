@@ -49,38 +49,49 @@ class PushNotificationService: NSObject {
     func setup(userId: String) {
         self.userId = userId
         delay(seconds: 2) { [weak self] in
-            self?.fetchFCMToken { [weak self] token in
+            self?.getToken { [weak self] token in
                 guard let token = token else { return }
                 AppStore.default.environment.dataController.getToken(byId: token) { [weak self] notificationToken in
                     guard let self = self else { return }
-                    if let notificationToken = notificationToken {
-                    } else {
-                        let newToken = NotificationToken(token: token, userId: userId, deviceId: self.deviceId, refreshedDate: Date.serverDate)
-                        AppStore.default.environment.dataController.setToken(newToken) { [weak self] error in
-                            if let error = error {
-                                log(error, logType: .error)
+                    if var notificationToken = notificationToken {
+                        if userId == notificationToken.userId {
+                            if notificationToken.refreshedDate.isOlderThan(days: 14) {
+                                notificationToken.refreshedDate = Date.serverDate
+                                self.updateTokenInDB(notificationToken)
                             } else {
-                                self?.subscribeToDefaultTopics()
+                                // do nothing
+                            }
+                        } else {
+                            self.deleteToken(byId: token) { [weak self] in
+                                self?.getToken { [weak self] newToken in
+                                    guard let self = self, let newToken = newToken else { return }
+
+                                    let newNotificationToken = NotificationToken(token: newToken,
+                                                                                 userId: userId,
+                                                                                 deviceId: self.deviceId,
+                                                                                 refreshedDate: Date.serverDate)
+                                    self.updateTokenInDB(newNotificationToken)
+                                }
                             }
                         }
+                    } else {
+                        let newToken = NotificationToken(token: token,
+                                                         userId: userId,
+                                                         deviceId: self.deviceId,
+                                                         refreshedDate: Date.serverDate)
+                        self.updateTokenInDB(newToken)
                     }
                 }
             }
         }
-//        - [ ] Fetch token
-//            - [ ] If this token exists in the DB
-//                - [ ] If user id == saved user id
-//                    - [ ] If updated date is > 2weeks old
-//                        - [ ] Update token refresh date
-//                        - [ ] Subscribe it to topics
-//                    - [ ] If updated date is < 2weeks old
-//                        - [ ] Do nothing
-//                - [ ] If user id != saved user id
-//                    - [ ] Update token with new user id and update refresh date
-//                    - [ ] Subscribe it to topics
     }
 
-    func reset() {}
+    func reset() {
+        getToken { [weak self] token in
+            guard let token = token else { return }
+            self?.deleteToken(byId: token) {}
+        }
+    }
 
     private func delay(seconds: TimeInterval, completion: @escaping () -> Void) {
         Timer.scheduledTimer(withTimeInterval: seconds, repeats: false) { _ in
@@ -88,16 +99,16 @@ class PushNotificationService: NSObject {
         }
     }
 
-    private func fetchFCMToken(completion: @escaping (String?) -> Void) {
+    private func getToken(completion: @escaping (String?) -> Void) {
         Messaging.messaging().token { token, error in
-            if let error = error {
-                print("Error fetching FCM registration token: \(error)")
-                completion(nil)
-            } else if let token = token {
-                print("FCM registration token: \(token)")
-                completion(token)
-            } else {
-                completion(nil)
+            completion(token)
+        }
+    }
+
+    private func deleteToken(byId id: String, completion: @escaping () -> Void) {
+        Messaging.messaging().deleteToken { _ in
+            AppStore.default.environment.dataController.deleteToken(byId: id) { _ in
+                completion()
             }
         }
     }
@@ -108,6 +119,16 @@ class PushNotificationService: NSObject {
 
     private func subscribeToken(toTopic topic: String) {
         Messaging.messaging().subscribe(toTopic: topic)
+    }
+
+    private func updateTokenInDB(_ token: NotificationToken) {
+        AppStore.default.environment.dataController.setToken(token) { [weak self] error in
+            if let error = error {
+                log(error, logType: .error)
+            } else {
+                self?.subscribeToDefaultTopics()
+            }
+        }
     }
 //
 //    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {

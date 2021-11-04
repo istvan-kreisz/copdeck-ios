@@ -686,16 +686,18 @@ class FirebaseService: DatabaseManager {
             .getDocuments { [weak self] snapshot, error in
                 guard let self = self else { return }
                 if let data = snapshot?.documents.map({ $0.data() }), let tokens = [NotificationToken](from: data) {
-                    tokens.forEach { token in
-                        self.deleteToken(token)
-                    }
+                    tokens
+                        .filter { $0.token != token.token }
+                        .forEach { token in
+                            self.deleteToken(token) { _ in }
+                        }
                     self.addToken(token, completion: completion)
                 } else {
                     self.addToken(token, completion: completion)
                 }
             }
     }
-    
+
     private func addToken(_ token: NotificationToken, completion: @escaping (AppError?) -> Void) {
         guard let dict = try? token.asDictionary() else {
             completion(AppError.unknown)
@@ -707,8 +709,15 @@ class FirebaseService: DatabaseManager {
             completion(error.map { AppError(error: $0) })
         }
     }
-    
-    private func deleteToken(_ token: NotificationToken) {
-        firestore.collection(DBRef.notificationTokens.rawValue).document(token.token).delete()
+
+    func deleteToken(_ token: NotificationToken, completion: @escaping (AppError?) -> Void) {
+        deleteToken(byId: token.token, completion: completion)
     }
+    
+    func deleteToken(byId id: String, completion: @escaping (AppError?) -> Void) {
+        firestore.collection(DBRef.notificationTokens.rawValue).document(id).delete { error in
+            completion(error.map { AppError(error: $0) })
+        }
+    }
+
 }
