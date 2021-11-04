@@ -191,9 +191,10 @@ class FirebaseService: DatabaseManager {
     func markChannelAsSeen(channel: Channel) {
         guard let userId = userId else { return }
 
-        var updatedChannel = channel
-        updatedChannel.lastSeenDates[userId] = Date.serverDate
-        update(channel: updatedChannel, fieldsToUpdate: [.lastSeenDates], completion: nil)
+        #warning("mark as seen")
+//        var updatedChannel = channel
+//        updatedChannel.lastSeenDates[userId] = Date.serverDate
+//        update(channel: updatedChannel, fieldsToUpdate: [.lastSeenDates], completion: nil)
     }
 
     func getOrCreateChannel(users: [User], completion: @escaping (Result<Channel, AppError>) -> Void) {
@@ -263,114 +264,116 @@ class FirebaseService: DatabaseManager {
 
     private func addLastMessage(toChannel channel: Channel, message: Message) {
         var updatedChannel = channel
-        updatedChannel.lastMessages[message.sender.senderId] = .init(userId: message.sender.senderId, content: message.content, sentDate: Date.serverDate)
-        updatedChannel.updated = Date.serverDate
-        updatedChannel.lastMessageSentDate = Date.serverDate
-
-        update(channel: updatedChannel,
-               fieldsToUpdate: [.lastMessages, .updated, .lastMessageSentDate],
-               completion: nil)
+        #warning("yoo")
+//        updatedChannel.lastMessages[message.sender.senderId] = .init(userId: message.sender.senderId, content: message.content, sentDate: Date.serverDate)
+//        updatedChannel.updated = Date.serverDate
+//        updatedChannel.lastMessageSentDate = Date.serverDate
+//
+//        update(channel: updatedChannel,
+//               fieldsToUpdate: [.lastMessages, .updated, .lastMessageSentDate],
+//               completion: nil)
     }
 
     private func update(channel: Channel, fieldsToUpdate: [Channel.CodingKeys]?, completion: ((Result<Channel, AppError>) -> Void)?) {
         let ref = firestore.collection("channels").document(channel.id)
 
-        if let fieldsToUpdate = fieldsToUpdate {
-            firestore.runTransaction { transaction, error in
-                let snapshot: DocumentSnapshot
-                do {
-                    try snapshot = transaction.getDocument(ref)
-                } catch let fetchError as NSError {
-                    error?.pointee = fetchError
-                    return nil
-                }
-
-                guard let dict = snapshot.data(), let currentChannel = Channel(from: dict)
-                else { return nil }
-
-                var updates: [AnyHashable: Any] = [:]
-                fieldsToUpdate.forEach { field in
-                    var updateValue: Any? = nil
-                    switch field {
-                    case .id:
-                        break
-                    case .userIds:
-                        updateValue = channel.userIds
-                    case .lastMessages:
-                        var lastMessages = currentChannel.lastMessages
-                        channel.lastMessages.forEach { key, value in
-                            if let currentValue = lastMessages[key] {
-                                if value.sentDate > currentValue.sentDate {
-                                    lastMessages[key] = value
-                                }
-                            } else {
-                                lastMessages[key] = value
-                            }
-                        }
-                        if lastMessages != currentChannel.lastMessages {
-                            updateValue = lastMessages.compactMapValues { try? $0.asDictionary() }
-                        }
-                    case .lastSeenDates:
-                        var lastSeenDates = currentChannel.lastSeenDates
-                        channel.lastSeenDates.forEach { key, value in
-                            if let currentValue = lastSeenDates[key] {
-                                if value > currentValue {
-                                    lastSeenDates[key] = value
-                                }
-                            } else {
-                                lastSeenDates[key] = value
-                            }
-                        }
-                        if lastSeenDates != currentChannel.lastSeenDates {
-                            updateValue = lastSeenDates
-                        }
-                    case .created:
-                        updateValue = channel.created
-                    case .updated:
-                        if channel.updated > currentChannel.updated {
-                            updateValue = channel.updated
-                        }
-                    case .lastMessageSentDate:
-                        if let newValue = channel.lastMessageSentDate {
-                            if let oldValue = currentChannel.lastMessageSentDate {
-                                if newValue > oldValue {
-                                    updateValue = newValue
-                                }
-                            } else {
-                                updateValue = newValue
-                            }
-                        }
-                    }
-                    if let updateValue = updateValue {
-                        updates[field.rawValue] = updateValue
-                    }
-                }
-                if !updates.isEmpty {
-                    transaction.updateData(updates, forDocument: ref)
-                    if var updatedChannelDict = try? currentChannel.asDictionary() as [AnyHashable: Any] {
-                        updates.forEach { key, value in
-                            updatedChannelDict[key] = value
-                        }
-                        if let updatedChannel = Channel(from: updatedChannelDict) {
-                            return updatedChannel
-                        }
-                    }
-                }
-                return nil
-            } completion: { object, error in
-                if let error = error {
-                    completion?(.failure(AppError(error: error)))
-                } else if let newChannel = object as? Channel {
-                    completion?(.success(newChannel))
-                } else {
-                    completion?(.failure(AppError(title: "Error", message: "Nothing to update", error: nil)))
-                }
-            }
-        } else {
-            if let dict = try? channel.asDictionary() {
-                ref.setData(dict)
-            }
-        }
+        #warning("yooo")
+//        if let fieldsToUpdate = fieldsToUpdate {
+//            firestore.runTransaction { transaction, error in
+//                let snapshot: DocumentSnapshot
+//                do {
+//                    try snapshot = transaction.getDocument(ref)
+//                } catch let fetchError as NSError {
+//                    error?.pointee = fetchError
+//                    return nil
+//                }
+//
+//                guard let dict = snapshot.data(), let currentChannel = Channel(from: dict)
+//                else { return nil }
+//
+//                var updates: [AnyHashable: Any] = [:]
+//                fieldsToUpdate.forEach { field in
+//                    var updateValue: Any? = nil
+//                    switch field {
+//                    case .id:
+//                        break
+//                    case .userIds:
+//                        updateValue = channel.userIds
+//                    case .lastMessages:
+//                        var lastMessages = currentChannel.lastMessages
+//                        channel.lastMessages.forEach { key, value in
+//                            if let currentValue = lastMessages[key] {
+//                                if value.sentDate > currentValue.sentDate {
+//                                    lastMessages[key] = value
+//                                }
+//                            } else {
+//                                lastMessages[key] = value
+//                            }
+//                        }
+//                        if lastMessages != currentChannel.lastMessages {
+//                            updateValue = lastMessages.compactMapValues { try? $0.asDictionary() }
+//                        }
+//                    case .lastSeenDates:
+//                        var lastSeenDates = currentChannel.lastSeenDates
+//                        channel.lastSeenDates.forEach { key, value in
+//                            if let currentValue = lastSeenDates[key] {
+//                                if value > currentValue {
+//                                    lastSeenDates[key] = value
+//                                }
+//                            } else {
+//                                lastSeenDates[key] = value
+//                            }
+//                        }
+//                        if lastSeenDates != currentChannel.lastSeenDates {
+//                            updateValue = lastSeenDates
+//                        }
+//                    case .created:
+//                        updateValue = channel.created
+//                    case .updated:
+//                        if channel.updated > currentChannel.updated {
+//                            updateValue = channel.updated
+//                        }
+//                    case .lastMessageSentDate:
+//                        if let newValue = channel.lastMessageSentDate {
+//                            if let oldValue = currentChannel.lastMessageSentDate {
+//                                if newValue > oldValue {
+//                                    updateValue = newValue
+//                                }
+//                            } else {
+//                                updateValue = newValue
+//                            }
+//                        }
+//                    }
+//                    if let updateValue = updateValue {
+//                        updates[field.rawValue] = updateValue
+//                    }
+//                }
+//                if !updates.isEmpty {
+//                    transaction.updateData(updates, forDocument: ref)
+//                    if var updatedChannelDict = try? currentChannel.asDictionary() as [AnyHashable: Any] {
+//                        updates.forEach { key, value in
+//                            updatedChannelDict[key] = value
+//                        }
+//                        if let updatedChannel = Channel(from: updatedChannelDict) {
+//                            return updatedChannel
+//                        }
+//                    }
+//                }
+//                return nil
+//            } completion: { object, error in
+//                if let error = error {
+//                    completion?(.failure(AppError(error: error)))
+//                } else if let newChannel = object as? Channel {
+//                    completion?(.success(newChannel))
+//                } else {
+//                    completion?(.failure(AppError(title: "Error", message: "Nothing to update", error: nil)))
+//                }
+//            }
+//        } else {
+//            if let dict = try? channel.asDictionary() {
+//                ref.setData(dict)
+//            }
+//        }
     }
 
     private func addCollectionUpdatesListener<T: Codable>(collectionRef: CollectionReference?,

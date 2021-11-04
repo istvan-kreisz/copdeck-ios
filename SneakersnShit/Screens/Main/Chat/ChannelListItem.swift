@@ -16,7 +16,7 @@ struct ChannelListItem: View {
     let didTapUser: () -> Void
 
     var lastMessageContent: String {
-        if let lastMessage = channel.lastMessage {
+        if let lastMessage = channel.updateInfo?.lastMessage {
             if lastMessage.userId == userId {
                 return "Me: \(lastMessage.content)"
             } else {
