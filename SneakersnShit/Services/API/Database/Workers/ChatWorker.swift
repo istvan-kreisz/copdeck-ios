@@ -40,14 +40,14 @@ class ChatWorker: FirestoreServiceWorker, ChatManager {
     }
 
     func listenToChanges(userId: String) {
-        chatUpdatesListener.startListening(documentRef: firestore.collection("chatUpdates").document(userId))
+//        chatUpdatesListener.startListening(documentRef: updateInfoRef(userId))
     }
 
     func getChannelsListener(cancel: @escaping (_ cancel: @escaping () -> Void) -> Void, update: @escaping (Result<[Channel], AppError>) -> Void) {
         guard let userId = userId else { return }
 
         channelsListener.reset(reinitializePublishers: true)
-        channelsListener.startListening(collectionName: "channels", firestore: firestore) {
+        channelsListener.startListening(collectionRef: channelsRef()) {
             $0?
                 .whereField("userIds", arrayContains: userId)
                 .whereField("lastMessageSentDate", isNotEqualTo: 0)
@@ -77,8 +77,7 @@ class ChatWorker: FirestoreServiceWorker, ChatManager {
                             cancel: @escaping (_ cancel: @escaping () -> Void) -> Void,
                             update: @escaping (Result<([Change<Message>], [Message]), AppError>) -> Void) {
         channelListener.reset()
-        channelListener.startListening(updateType: .changes, collectionName: "thread",
-                                       baseDocumentReference: firestore.collection("channels").document(channelId))
+        channelListener.startListening(updateType: .changes, collectionRef: channelRef(channelId).collection(.thread))
 
         let publisher = channelListener.changesPublisher
             .sink { completion in
@@ -176,6 +175,10 @@ private extension ChatWorker {
     func channelRef(_ channelId: String) -> DocumentReference {
         channelsRef().document(channelId)
     }
+    
+    func updateInfoRef(_ userId: String) -> DocumentReference {
+        firestore.collection(.chat).document(.updateInfo).collection(.updateInfo).document(userId)
+    }
 
     func getChannel(channelId: String, completion: @escaping (Result<Channel, AppError>) -> Void) {
         channelRef(channelId).getDocument { snapshot, error in
@@ -220,7 +223,7 @@ private extension ChatWorker {
     }
 
     func update(channel: Channel, fieldsToUpdate: [Channel.CodingKeys]?, completion: ((Result<Channel, AppError>) -> Void)?) {
-        let ref = firestore.collection("channels").document(channel.id)
+//        let ref = firestore.collection("channels").document(channel.id)
 
         #warning("yooo")
 //        if let fieldsToUpdate = fieldsToUpdate {

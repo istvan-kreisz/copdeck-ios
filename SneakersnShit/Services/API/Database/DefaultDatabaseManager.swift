@@ -10,14 +10,6 @@ import Firebase
 import Combine
 import UIKit
 
-enum DBRef: String {
-    case notificationTokens
-    case chat
-    case updates
-    case channels
-    case thread
-}
-
 class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
     private static let recentlyViewedLimit = 20
 
@@ -83,8 +75,6 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
         errorsSubject.merge(with: chatWorker.errorsSubject).eraseToAnyPublisher()
     }
 
-    private var itemsRef: CollectionReference?
-
     init() {
         // firestore
         firestore = Firestore.firestore()
@@ -98,8 +88,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
         firestore.settings = settings
 
         // other
-        itemsRef = firestore.collection("items")
-        exchangeRatesListener.startListening(documentRef: firestore.collection("info").document("exchangerates"))
+        exchangeRatesListener.startListening(documentRef: firestore.collection(.info).document(.exchangerates))
     }
 
     func setup(userId: String) {
@@ -111,12 +100,13 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
     }
 
     func listenToChanges(userId: String) {
-        userListener.startListening(documentRef: firestore.collection("users").document(userId))
+        let userRef = firestore.collection(.users).document(userId)
+        userListener.startListening(documentRef: userRef)
         
-        inventoryListener.startListening(collectionName: "inventory", baseDocumentReference: userListener.documentRef)
-        stacksListener.startListening(collectionName: "stacks", baseDocumentReference: userListener.documentRef)
-        favoritesListener.startListening(collectionName: "favorites", baseDocumentReference: userListener.documentRef)
-        recentlyViewedListener.startListening(collectionName: "recentlyViewed", baseDocumentReference: userListener.documentRef)
+        inventoryListener.startListening(collectionRef: userRef.collection(.inventory))
+        stacksListener.startListening(collectionRef: userRef.collection(.stacks))
+        favoritesListener.startListening(collectionRef: userRef.collection(.favorites))
+        recentlyViewedListener.startListening(collectionRef: userRef.collection(.recentlyViewed))
         
         chatWorker.listenToChanges(userId: userId)
     }
@@ -145,7 +135,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
 
     func getItem(withId id: String, settings: CopDeckSettings) -> AnyPublisher<Item, AppError> {
         return Future { [weak self] promise in
-            self?.itemsRef?.document(Item.databaseId(itemId: id, settings: settings)).getDocument { snapshot, error in
+            self?.firestore.collection(.items).document(Item.databaseId(itemId: id, settings: settings)).getDocument { snapshot, error in
                 log("db read itemId: \(id)", logType: .database)
                 if let dict = snapshot?.data(), let item = Item(from: dict) {
                     promise(.success(item))
@@ -319,7 +309,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
     func getSpreadsheetImportWaitlist(completion: @escaping (Result<[User], Error>) -> Void) {
         guard DebugSettings.shared.isAdmin else { return }
         firestore
-            .collection("users")
+            .collection(.users)
             .whereField("spreadsheetImport.status", in: User.SpreadSheetImportStatus.allCases.map(\.rawValue))
             .order(by: "spreadsheetImport.date", descending: true)
             .getDocuments { [weak self] snapshot, error in
