@@ -477,7 +477,7 @@ class DefaultDataController: DataController {
         databaseManager.getToken(byId: id, completion: completion)
     }
     
-    func setToken(_ token: NotificationToken, completion: @escaping (AppError?) -> Void) {
+    func setToken(_ token: NotificationToken, completion: @escaping (Result<[NotificationToken], AppError>) -> Void) {
         databaseManager.setToken(token, completion: completion)
     }
     

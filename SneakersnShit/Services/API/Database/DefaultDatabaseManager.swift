@@ -339,21 +339,29 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
         }
     }
 
-    func setToken(_ token: NotificationToken, completion: @escaping (AppError?) -> Void) {
+    func setToken(_ token: NotificationToken, completion: @escaping (Result<[NotificationToken], AppError>) -> Void) {
         firestore
             .collection(.notificationTokens)
             .whereField("deviceId", isEqualTo: token.deviceId)
             .getDocuments { [weak self] snapshot, error in
                 guard let self = self else { return }
                 if let data = snapshot?.documents.map({ $0.data() }), let tokens = [NotificationToken](from: data) {
-                    tokens
-                        .filter { $0.token != token.token }
-                        .forEach { token in
-                            self.deleteToken(token) { _ in }
+                    let tokensToDelete = tokens.filter { $0.token != token.token }
+                    self.addToken(token) { error in
+                        if let error = error {
+                            completion(.failure(error))
+                        } else {
+                            completion(.success(tokensToDelete))
                         }
-                    self.addToken(token, completion: completion)
+                    }
                 } else {
-                    self.addToken(token, completion: completion)
+                    self.addToken(token) { error in
+                        if let error = error {
+                            completion(.failure(error))
+                        } else {
+                            completion(.success([]))
+                        }
+                    }
                 }
             }
     }

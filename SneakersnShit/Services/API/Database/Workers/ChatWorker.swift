@@ -9,11 +9,10 @@ import Firebase
 import Combine
 import UIKit
 
-
 class ChatWorker: FirestoreServiceWorker, ChatManager {
     weak var delegate: FirestoreWorkerDelegate!
     let errorsSubject = PassthroughSubject<AppError, Never>()
-    
+
     var cancellables: Set<AnyCancellable> = []
 
     private let channelCache = Cache<String, Channel>(entryLifetimeMin: 60)
@@ -34,7 +33,7 @@ class ChatWorker: FirestoreServiceWorker, ChatManager {
     var chatUpdatesPublisher: AnyPublisher<ChatUpdateInfo, AppError> {
         chatUpdatesListener.dataPublisher.compactMap { $0 }.eraseToAnyPublisher()
     }
-    
+
     required init(delegate: FirestoreWorkerDelegate) {
         self.delegate = delegate
     }
@@ -139,26 +138,28 @@ class ChatWorker: FirestoreServiceWorker, ChatManager {
             channel.users = users
             completion(.success(channel))
         } else {
-            channelsRef().whereField("userIds", isEqualTo: userIds.sorted()).getDocuments { [weak self] snapshot, error in
-                if let data = snapshot?.documents.map({ $0.data() }),
-                   let channels = [Channel](from: data),
-                   var channel = channels.first(where: { $0.userIds == userIds.sorted() }) {
-                    self?.channelCache.insert(channel, forKey: userIdsJoined)
-                    channel.users = users
-                    completion(.success(channel))
-                } else {
-                    self?.addChannel(userIds: userIds) { [weak self] result in
-                        switch result {
-                        case var .success(channel):
-                            self?.channelCache.insert(channel, forKey: userIdsJoined)
-                            channel.users = users
-                            completion(.success(channel))
-                        case let .failure(error):
-                            completion(.failure(error))
+            channelsRef()
+                .whereField("userIds", isEqualTo: userIds.sorted())
+                .getDocuments { [weak self] snapshot, error in
+                    if let data = snapshot?.documents.map({ $0.data() }),
+                       let channels = [Channel](from: data),
+                       var channel = channels.first(where: { $0.userIds == userIds.sorted() }) {
+                        self?.channelCache.insert(channel, forKey: userIdsJoined)
+                        channel.users = users
+                        completion(.success(channel))
+                    } else {
+                        self?.addChannel(userIds: userIds) { [weak self] result in
+                            switch result {
+                            case var .success(channel):
+                                self?.channelCache.insert(channel, forKey: userIdsJoined)
+                                channel.users = users
+                                completion(.success(channel))
+                            case let .failure(error):
+                                completion(.failure(error))
+                            }
                         }
                     }
                 }
-            }
         }
     }
 
@@ -175,7 +176,7 @@ private extension ChatWorker {
     func channelRef(_ channelId: String) -> DocumentReference {
         channelsRef().document(channelId)
     }
-    
+
     func updateInfoRef(_ userId: String) -> DocumentReference {
         firestore.collection(.chat).document(.updateInfo).collection(.updateInfo).document(userId)
     }
@@ -323,5 +324,4 @@ private extension ChatWorker {
 //            }
 //        }
     }
-
 }

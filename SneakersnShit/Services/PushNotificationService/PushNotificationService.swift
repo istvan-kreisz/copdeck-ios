@@ -8,12 +8,13 @@
 import Foundation
 import UIKit
 import FirebaseMessaging
+import Combine
 
 class PushNotificationService: NSObject {
     private let gcmMessageIDKey = "gcm.message_id"
     private var userId: String?
     private let topics = ["all", "alliOS"]
-    
+
     let latestMessageSubject = CurrentValueSubject<(messageId: String, channelId: String)?, Never>(nil)
 
     var deviceId: String {
@@ -26,18 +27,6 @@ class PushNotificationService: NSObject {
 
         #warning("where to call this?")
         requestUserPermission()
-    }
-
-    func application(_ application: UIApplication,
-                     didReceiveRemoteNotification userInfo: [AnyHashable: Any],
-                     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        if let messageID = userInfo[gcmMessageIDKey] {
-            print("Message ID: \(messageID)")
-        }
-
-        #warning("fetch messages & navigate to messages tab")
-
-        completionHandler(UIBackgroundFetchResult.newData)
     }
 
     func requestUserPermission() {
@@ -98,20 +87,6 @@ class PushNotificationService: NSObject {
         }
     }
 
-    private func getToken(completion: @escaping (String?) -> Void) {
-        Messaging.messaging().token { token, error in
-            completion(token)
-        }
-    }
-
-    private func deleteToken(byId id: String, completion: @escaping () -> Void) {
-        Messaging.messaging().deleteToken { _ in
-            AppStore.default.environment.dataController.deleteToken(byId: id) { _ in
-                completion()
-            }
-        }
-    }
-
     private func subscribeToDefaultTopics() {
         topics.forEach { subscribeToken(toTopic: $0) }
     }
@@ -121,11 +96,42 @@ class PushNotificationService: NSObject {
     }
 
     private func updateTokenInDB(_ token: NotificationToken) {
-        AppStore.default.environment.dataController.setToken(token) { [weak self] error in
+        AppStore.default.environment.dataController.setToken(token) { [weak self] result in
+            switch result {
+            case let .failure(error):
+                log(error, logType: .error)
+            case let .success(tokensToDelete):
+                self?.deleteTokens(tokensToDelete)
+                self?.subscribeToDefaultTopics()
+            }
+        }
+    }
+
+    private func getToken(completion: @escaping (String?) -> Void) {
+        Messaging.messaging().token { token, error in
+            completion(token)
+        }
+    }
+
+    private func deleteToken(byId id: String, completion: @escaping () -> Void) {
+        Messaging.messaging().deleteToken { [weak self] _ in
+            self?.deleteTokenInDB(byId: id)
+        }
+    }
+
+    private func deleteTokens(_ tokens: [NotificationToken]) {
+        tokens.forEach { token in
+            topics.forEach { topic in
+                Messaging.messaging().unsubscribe(fromTopic: topic)
+            }
+            deleteTokenInDB(byId: token.token)
+        }
+    }
+
+    private func deleteTokenInDB(byId id: String) {
+        AppStore.default.environment.dataController.deleteToken(byId: id) { error in
             if let error = error {
                 log(error, logType: .error)
-            } else {
-                self?.subscribeToDefaultTopics()
             }
         }
     }
@@ -148,19 +154,27 @@ extension PushNotificationService: UNUserNotificationCenterDelegate {
     }
 
     #warning("do we need to implement this? - react to user interaction")
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse,
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
 
-        // [START_EXCLUDE]
-        // Print message ID.
         if let messageID = userInfo[gcmMessageIDKey] {
             print("Message ID: \(messageID)")
-            completionHandler([[.sound, .badge]])
         }
         print(userInfo)
+        print("---------")
 
-
+        switch response.actionIdentifier {
+        case UNNotificationDefaultActionIdentifier:
+            print("")
+            break
+        case UNNotificationDismissActionIdentifier:
+            break
+        default:
+            break
+        }
+        completionHandler()
     }
 }
 

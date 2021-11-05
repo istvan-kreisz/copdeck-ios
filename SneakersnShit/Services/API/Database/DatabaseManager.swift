@@ -41,7 +41,7 @@ protocol DatabaseManager: ChatManager {
     func getSpreadsheetImportWaitlist(completion: @escaping (Result<[User], Error>) -> Void)
     // push notifications
     func getToken(byId id: String, completion: @escaping (NotificationToken?) -> Void)
-    func setToken(_ token: NotificationToken, completion: @escaping (AppError?) -> Void)
+    func setToken(_ token: NotificationToken, completion: @escaping (Result<[NotificationToken], AppError>) -> Void)
     func deleteToken(_ token: NotificationToken, completion: @escaping (AppError?) -> Void)
     func deleteToken(byId id: String, completion: @escaping (AppError?) -> Void)
 }

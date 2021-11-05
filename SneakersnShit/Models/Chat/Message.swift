@@ -35,6 +35,10 @@ struct Message: MessageType, Codable, Identifiable {
     var kind: MessageKind { .attributedText(attributedString) }
     var messageId: String { id }
     var sentDate: Date { dateSent.serverDate }
+    
+    enum CodingKeys: String, CodingKey {
+        case id, author, content, dateSent
+    }
 
 //    var image: UIImage?
 //    var downloadURL: URL?

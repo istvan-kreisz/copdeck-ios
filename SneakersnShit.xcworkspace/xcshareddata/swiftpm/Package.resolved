@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "Facebook",
+        "repositoryURL": "https://github.com/facebook/facebook-ios-sdk",
+        "state": {
+          "branch": null,
+          "revision": "7ae3f42b3e52bf9ff0660a4f89762186a01d0035",
+          "version": "12.1.0"
+        }
+      },
+      {
         "package": "Gifu",
         "repositoryURL": "https://github.com/kaishin/Gifu",
         "state": {

@@ -14,6 +14,10 @@ struct Sender: Codable, SenderType {
     
     var senderId: String { id }
     var displayName: String { name }
+    
+    enum CodingKeys: String, CodingKey {
+        case id, name
+    }
 }
 
 extension Sender {
