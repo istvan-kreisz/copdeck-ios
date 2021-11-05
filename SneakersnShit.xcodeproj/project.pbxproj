@@ -175,8 +175,6 @@
 		5DC2C102269E098C00674756 /* Loader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC2C101269E098C00674756 /* Loader.swift */; };
 		5DC2C105269E2BD800674756 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC2C104269E2BD800674756 /* View+Extensions.swift */; };
 		5DC3538F26117C7F00294DF0 /* ItemDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC3538E26117C7F00294DF0 /* ItemDetailView.swift */; };
-		5DCC466826A7A96C007671BC /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 5DCC466726A7A96C007671BC /* FacebookCore */; };
-		5DCC466A26A7A96C007671BC /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 5DCC466926A7A96C007671BC /* FacebookLogin */; };
 		5DCC466C26A88367007671BC /* InventoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCC466B26A88367007671BC /* InventoryItem.swift */; };
 		5DCC466E26A8CEDE007671BC /* NewItemCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCC466D26A8CEDE007671BC /* NewItemCard.swift */; };
 		5DCC467026A8D759007671BC /* DropDownMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCC466F26A8D759007671BC /* DropDownMenu.swift */; };
@@ -458,8 +456,6 @@
 			files = (
 				5D9D51FE26AE1C0B00AB1F30 /* NukeUI in Frameworks */,
 				5D0703CA271DDEE700116CF4 /* StoreKit.framework in Frameworks */,
-				5DCC466826A7A96C007671BC /* FacebookCore in Frameworks */,
-				5DCC466A26A7A96C007671BC /* FacebookLogin in Frameworks */,
 				5D9D51FB26AE1BE500AB1F30 /* Nuke in Frameworks */,
 				5D0703C8271DDED200116CF4 /* Purchases in Frameworks */,
 				5D606D17272D040A00E49A59 /* MessageKit in Frameworks */,
@@ -1293,8 +1289,6 @@
 			);
 			name = CopDeck;
 			packageProductDependencies = (
-				5DCC466726A7A96C007671BC /* FacebookCore */,
-				5DCC466926A7A96C007671BC /* FacebookLogin */,
 				5D9D51FA26AE1BE500AB1F30 /* Nuke */,
 				5D9D51FD26AE1C0B00AB1F30 /* NukeUI */,
 				5D0703C7271DDED200116CF4 /* Purchases */,
@@ -1328,7 +1322,6 @@
 			);
 			mainGroup = 5D69608A258713760058BABE;
 			packageReferences = (
-				5DCC466626A7A96C007671BC /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
 				5D9D51F926AE1BE500AB1F30 /* XCRemoteSwiftPackageReference "Nuke" */,
 				5D9D51FC26AE1C0B00AB1F30 /* XCRemoteSwiftPackageReference "NukeUI" */,
 				5D0703C6271DDED200116CF4 /* XCRemoteSwiftPackageReference "purchases-ios" */,
@@ -2021,14 +2014,6 @@
 				minimumVersion = 0.6.4;
 			};
 		};
-		5DCC466626A7A96C007671BC /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/facebook/facebook-ios-sdk";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 11.0.1;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -2051,16 +2036,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5D9D51FC26AE1C0B00AB1F30 /* XCRemoteSwiftPackageReference "NukeUI" */;
 			productName = NukeUI;
-		};
-		5DCC466726A7A96C007671BC /* FacebookCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5DCC466626A7A96C007671BC /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
-			productName = FacebookCore;
-		};
-		5DCC466926A7A96C007671BC /* FacebookLogin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5DCC466626A7A96C007671BC /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
-			productName = FacebookLogin;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
