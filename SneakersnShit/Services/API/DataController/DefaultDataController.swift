@@ -21,6 +21,7 @@ class DefaultDataController: DataController {
     lazy var stacksPublisher = databaseManager.stacksPublisher
     lazy var userPublisher = databaseManager.userPublisher
     lazy var exchangeRatesPublisher = databaseManager.exchangeRatesPublisher
+    lazy var chatUpdatesPublisher = databaseManager.chatUpdatesPublisher
     lazy var errorsPublisher = databaseManager.errorsPublisher.merge(with: backendAPI.errorsPublisher, imageService.errorsPublisher).eraseToAnyPublisher()
     lazy var cookiesPublisher = localScraper.cookiesPublisher
     lazy var imageDownloadHeadersPublisher = localScraper.imageDownloadHeadersPublisher

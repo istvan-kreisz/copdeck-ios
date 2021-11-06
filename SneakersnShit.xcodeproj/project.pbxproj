@@ -1873,7 +1873,7 @@
 				);
 				MARKETING_VERSION = 0.12.2;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xfrontend -debug-time-function-bodies";
-				PRODUCT_BUNDLE_IDENTIFIER = istvankreisz.SneakersnShit.staging;
+				PRODUCT_BUNDLE_IDENTIFIER = istvankreisz.SneakersnShit;
 				PRODUCT_NAME = "$(TARGET_NAME)-Staging";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
@@ -1956,7 +1956,7 @@
 				);
 				MARKETING_VERSION = 0.12.2;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xfrontend -debug-time-function-bodies";
-				PRODUCT_BUNDLE_IDENTIFIER = istvankreisz.SneakersnShit.staging;
+				PRODUCT_BUNDLE_IDENTIFIER = istvankreisz.SneakersnShit;
 				PRODUCT_NAME = "$(TARGET_NAME)-Staging";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;

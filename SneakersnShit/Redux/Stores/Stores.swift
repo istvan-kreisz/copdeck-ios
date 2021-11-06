@@ -120,6 +120,14 @@ extension AppStore {
                       self?.state.allPackages = packages
                   })
             .store(in: &effectCancellables)
+
+        environment.dataController.chatUpdatesPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in },
+                  receiveValue: { [weak self] chatUpdateInfo in
+                      self?.state.globalState.chatUpdates = chatUpdateInfo
+                  })
+            .store(in: &effectCancellables)
     }
 
     func updateAllStack(withInventoryItems inventoryItems: [InventoryItem]) {

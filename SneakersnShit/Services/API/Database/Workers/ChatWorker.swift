@@ -39,7 +39,7 @@ class ChatWorker: FirestoreServiceWorker, ChatManager {
     }
 
     func listenToChanges(userId: String) {
-//        chatUpdatesListener.startListening(documentRef: updateInfoRef(userId))
+        chatUpdatesListener.startListening(documentRef: updateInfoRef(userId))
     }
 
     func getChannelsListener(cancel: @escaping (_ cancel: @escaping () -> Void) -> Void, update: @escaping (Result<[Channel], AppError>) -> Void) {
@@ -49,7 +49,7 @@ class ChatWorker: FirestoreServiceWorker, ChatManager {
         channelsListener.startListening(collectionRef: channelsRef()) {
             $0?
                 .whereField("userIds", arrayContains: userId)
-                .whereField("lastMessageSentDate", isNotEqualTo: 0)
+                .whereField("isEmpty", isNotEqualTo: true)
         }
 
         let publisher = channelsListener.dataPublisher
@@ -102,7 +102,7 @@ class ChatWorker: FirestoreServiceWorker, ChatManager {
         getChannel(channelId: channelId) { [weak self] result in
             switch result {
             case let .success(channel):
-                let message = Message(user: user, content: message)
+                let message = Message(user: user, channelUserIds: channel.userIds, content: message)
                 self?.send(message: message, inChannel: channel, completion: { result in
                     switch result {
                     case let .failure(error):
@@ -195,7 +195,7 @@ private extension ChatWorker {
 
     func addChannel(userIds: [String], completion: @escaping (Result<Channel, AppError>) -> Void) {
         let channel = Channel(userIds: userIds.sorted())
-        update(channel: channel, fieldsToUpdate: nil, completion: completion)
+        add(channel: channel, completion: completion)
     }
 
     func send(message: Message, inChannel channel: Channel, completion: @escaping (Result<Void, AppError>) -> Void) {
@@ -223,10 +223,24 @@ private extension ChatWorker {
 //               completion: nil)
     }
 
-    func update(channel: Channel, fieldsToUpdate: [Channel.CodingKeys]?, completion: ((Result<Channel, AppError>) -> Void)?) {
-//        let ref = firestore.collection("channels").document(channel.id)
+    func add(channel: Channel, completion: ((Result<Channel, AppError>) -> Void)?) {
+        guard let dict = try? channel.asDictionary() else {
+            completion?(.failure(.wrongData))
+            return
+        }
+        setDocument(dict, atRef: channelRef(channel.id)) { error in
+            if let error = error {
+                completion?(.failure(AppError(error: error)))
+            } else {
+                completion?(.success(channel))
+            }
+        }
+    }
 
-        #warning("yooo")
+//    func update(channel: Channel, fieldsToUpdate: [Channel.CodingKeys]?, completion: ((Result<Channel, AppError>) -> Void)?) {
+//        let ref = firestore.collection("channels").document(channel.id)
+//
+//        #warning("yooo")
 //        if let fieldsToUpdate = fieldsToUpdate {
 //            firestore.runTransaction { transaction, error in
 //                let snapshot: DocumentSnapshot
@@ -323,5 +337,5 @@ private extension ChatWorker {
 //                ref.setData(dict)
 //            }
 //        }
-    }
+//    }
 }

@@ -12,4 +12,6 @@ struct NotificationToken: Equatable, Codable {
     let userId: String
     let deviceId: String
     var refreshedDate: Double
+    var created: Double = Date.serverDate
+    var updated: Double = Date.serverDate
 }

@@ -12,10 +12,25 @@ import Combine
 
 class PushNotificationService: NSObject {
     private let gcmMessageIDKey = "gcm.message_id"
-    private var userId: String?
     private let topics = ["all", "alliOS"]
 
-    let latestMessageSubject = CurrentValueSubject<(messageId: String, channelId: String)?, Never>(nil)
+    let lastMessageChannelIdSubject = CurrentValueSubject<String?, Never>(nil)
+
+    private var userId: String? {
+        didSet {
+            if let userId = userId, didGrantNotificationPermission {
+                setupToken(userId: userId)
+            }
+        }
+    }
+
+    private var didGrantNotificationPermission: Bool = false {
+        didSet {
+            if let userId = userId, didGrantNotificationPermission {
+                setupToken(userId: userId)
+            }
+        }
+    }
 
     var deviceId: String {
         UIDevice.current.identifierForVendor?.uuidString ?? UUID().uuidString
@@ -23,19 +38,42 @@ class PushNotificationService: NSObject {
 
     func setup(application: UIApplication) {
         UNUserNotificationCenter.current().delegate = self
-        Messaging.messaging().delegate = self
+        Messaging.messaging().isAutoInitEnabled = false
 
+        UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
+            self?.handlePermissionBlockResult(isGranted: settings.authorizationStatus == .authorized)
+        }
         #warning("where to call this?")
         requestUserPermission()
     }
 
+    func application(_ application: UIApplication,
+                     didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+                     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        Messaging.messaging().appDidReceiveMessage(userInfo)
+        completionHandler(UIBackgroundFetchResult.noData)
+    }
+
     func requestUserPermission() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound], completionHandler: { _, _ in })
-        UIApplication.shared.registerForRemoteNotifications()
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { [weak self] didGrant, error in
+            self?.handlePermissionBlockResult(isGranted: didGrant)
+        }
+    }
+    
+    private func handlePermissionBlockResult(isGranted: Bool) {
+        if isGranted {
+            DispatchQueue.main.async { [weak self] in
+                UIApplication.shared.registerForRemoteNotifications()
+                self?.didGrantNotificationPermission = true
+            }
+        }
     }
 
     func setup(userId: String) {
         self.userId = userId
+    }
+
+    private func setupToken(userId: String) {
         delay(seconds: 2) { [weak self] in
             self?.getToken { [weak self] token in
                 guard let token = token else { return }
@@ -83,7 +121,9 @@ class PushNotificationService: NSObject {
 
     private func delay(seconds: TimeInterval, completion: @escaping () -> Void) {
         Timer.scheduledTimer(withTimeInterval: seconds, repeats: false) { _ in
-            completion()
+            DispatchQueue.main.async {
+                completion()
+            }
         }
     }
 
@@ -138,37 +178,34 @@ class PushNotificationService: NSObject {
 }
 
 extension PushNotificationService: UNUserNotificationCenterDelegate {
-    #warning("do we need to implement this? - decide how to present")
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let userInfo = notification.request.content.userInfo
 
-        print(userInfo)
-        if let messageID = userInfo[gcmMessageIDKey] {
-            print("Message ID: \(messageID)")
-            completionHandler([[.sound, .badge]])
+        Messaging.messaging().appDidReceiveMessage(userInfo)
+
+        if notification.isChatMessage && ViewRouter.shared.currentPage != .chat {
+            completionHandler([[.sound, .badge, .banner]])
         } else {
             completionHandler([[.sound, .badge]])
         }
     }
 
-    #warning("do we need to implement this? - react to user interaction")
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
 
-        if let messageID = userInfo[gcmMessageIDKey] {
-            print("Message ID: \(messageID)")
-        }
-        print(userInfo)
-        print("---------")
+        Messaging.messaging().appDidReceiveMessage(userInfo)
 
         switch response.actionIdentifier {
         case UNNotificationDefaultActionIdentifier:
-            print("")
-            break
+            if response.notification.isChatMessage {
+                if let channelId = userInfo["channelId"] as? String {
+                    lastMessageChannelIdSubject.send(channelId)
+                }
+            }
         case UNNotificationDismissActionIdentifier:
             break
         default:
@@ -178,12 +215,8 @@ extension PushNotificationService: UNUserNotificationCenterDelegate {
     }
 }
 
-extension PushNotificationService: MessagingDelegate {
-    #warning("what to do here?")
-//    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
-//        let dataDict: [String: String] = ["token": fcmToken ?? ""]
-//        NotificationCenter.default.post(name: Notification.Name("FCMToken"),
-//                                        object: nil,
-//                                        userInfo: dataDict)
-//    }
+extension UNNotification {
+    var isChatMessage: Bool {
+        (request.content.userInfo["type"] as? String) == "chat"
+    }
 }

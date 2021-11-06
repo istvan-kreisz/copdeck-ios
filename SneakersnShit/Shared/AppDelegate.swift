@@ -55,4 +55,17 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         UINavigationBar.appearance().backgroundColor = UIColor.clear
         UITextView.appearance().backgroundColor = UIColor(red: 243 / 255, green: 246 / 255, blue: 248 / 255, alpha: 1.0)
     }
+
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Messaging.messaging().apnsToken = deviceToken
+    }
+
+    // todo: prefetch messages data here
+    func application(_ application: UIApplication,
+                     didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+                     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        AppStore.default.environment.pushNotificationService.application(application,
+                                                                         didReceiveRemoteNotification: userInfo,
+                                                                         fetchCompletionHandler: completionHandler)
+    }
 }

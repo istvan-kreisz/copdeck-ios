@@ -47,6 +47,7 @@ protocol DatabaseManager: ChatManager {
 }
 
 protocol ChatManager {
+    var chatUpdatesPublisher: AnyPublisher<ChatUpdateInfo, AppError> { get }
     func getChannelsListener(cancel: @escaping (_ cancel: @escaping () -> Void) -> Void, update: @escaping (Result<[Channel], AppError>) -> Void)
     func getChannelListener(channelId: String, cancel: @escaping (_ cancel: @escaping () -> Void) -> Void, update: @escaping (Result<([Change<Message>], [Message]), AppError>) -> Void)
     func markChannelAsSeen(channel: Channel)

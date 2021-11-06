@@ -14,14 +14,22 @@ struct ChatUpdateInfo: Codable, Equatable {
         let sentDate: Double
     }
     struct ChannelInfo: Codable, Equatable {
-        let channelId: String
+        var channelId: String?
         let lastSeenDate: Double?
         let lastMessage: LastMessage?
+        
+        enum CodingKeys: String, CodingKey {
+            case lastSeenDate, lastMessage
+        }
     }
 
     let updateInfo: [String: ChannelInfo]
     
     var updates: [ChannelInfo] {
-        Array(updateInfo.values)
+        updateInfo.map { info in
+            var infoWithId = info.value
+            infoWithId.channelId = info.key
+            return infoWithId
+        }
     }
 }

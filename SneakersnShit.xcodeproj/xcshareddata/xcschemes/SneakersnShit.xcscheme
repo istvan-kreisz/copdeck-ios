@@ -65,6 +65,11 @@
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "ipAddress"
+            value = "192.168.1.129"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "blockImageDownload"
             value = "true"
             isEnabled = "NO">
@@ -97,12 +102,12 @@
          <EnvironmentVariable
             key = "useFunctionsEmulator"
             value = "true"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "useFirestoreEmulator"
             value = "true"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "showScraperLogs"

@@ -10,6 +10,7 @@ import Foundation
 struct Channel: Codable, Identifiable, Equatable {
     let id: String
     let userIds: [String]
+    let isEmpty: Bool
     let created: Double
     let updated: Double
 
@@ -37,13 +38,13 @@ struct Channel: Codable, Identifiable, Equatable {
     }
 
     enum CodingKeys: String, CodingKey {
-        case id, userIds, created, updated
+        case id, userIds, isEmpty, created, updated
     }
 }
 
 extension Channel {
     init(userIds: [String]) {
-        self.init(id: UUID().uuidString, userIds: userIds, created: Date.serverDate, updated: Date.serverDate)
+        self.init(id: UUID().uuidString, userIds: userIds, isEmpty: true, created: Date.serverDate, updated: Date.serverDate)
     }
 }
 
