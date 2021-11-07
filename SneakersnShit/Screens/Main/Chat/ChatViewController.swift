@@ -45,6 +45,11 @@ final class ChatViewController: MessagesViewController {
         messagesCollectionView.reloadData()
         cancelListener?()
         markAsSeen()
+        AppStore.isChatDetailView = false
+    }
+    
+    deinit {
+        AppStore.isChatDetailView = false
     }
 
     init(channel: Channel, userId: String, store: DerivedGlobalStore) {
@@ -64,6 +69,7 @@ final class ChatViewController: MessagesViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        AppStore.isChatDetailView = true
         navigationItem.largeTitleDisplayMode = .never
 
         markAsSeen()
@@ -228,10 +234,8 @@ final class ChatViewController: MessagesViewController {
         }
     }
 
-    // MARK: - Helpers
-
     private func sendMessage(content: String) {
-        store.send(.main(action: .sendChatMessage(message: content, channelId: channel.id, completion: { [weak self] result in
+        store.send(.main(action: .sendChatMessage(message: content, channel: channel, completion: { [weak self] result in
             switch result {
             case let .failure(error):
                 self?.showAlert(title: "Failed to send message", message: error.localizedDescription)
@@ -240,50 +244,6 @@ final class ChatViewController: MessagesViewController {
             }
         })))
     }
-
-//    private func insertNewMessage(_ message: Message) {
-//        if messages.contains(message) {
-//            return
-//        }
-//
-//        messages.append(message)
-//        messages.sort()
-//
-//        let isLatestMessage = messages.firstIndex(of: message) == (messages.count - 1)
-//        let shouldScrollToBottom = messagesCollectionView.isAtBottom && isLatestMessage
-//
-//        messagesCollectionView.reloadData()
-//
-//        if shouldScrollToBottom {
-//            messagesCollectionView.scrollToLastItem(animated: true)
-//        }
-//    }
-
-//    private func handleDocumentChange(_ change: DocumentChange) {
-//        guard var message = Message(document: change.document) else {
-//            return
-//        }
-//
-//        switch change.type {
-//        case .added:
-//            if let url = message.downloadURL {
-//                downloadImage(at: url) { [weak self] image in
-//                    guard
-//                        let self = self,
-//                        let image = image
-//                    else {
-//                        return
-//                    }
-//                    message.image = image
-//                    self.insertNewMessage(message)
-//                }
-//            } else {
-//                insertNewMessage(message)
-//            }
-//        default:
-//            break
-//        }
-//    }
 }
 
 // MARK: - MessagesDisplayDelegate

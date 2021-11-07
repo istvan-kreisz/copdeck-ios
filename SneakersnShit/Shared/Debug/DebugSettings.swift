@@ -20,26 +20,25 @@ enum LogType {
 }
 
 func log(_ value: Any, logType: LogType? = nil) {
-    if DebugSettings.shared.isInDebugMode {
-        var shouldPrint = false
-        switch logType {
-        case .reduxAction:
-            shouldPrint = DebugSettings.shared.showReduxLogs
-        case .database:
-            shouldPrint = DebugSettings.shared.showDatabaseLogs
-        case .cache:
-            shouldPrint = DebugSettings.shared.showCacheLogs
-        case .scraping:
-            shouldPrint = DebugSettings.shared.showScrapingLogs
-        case .error:
-            shouldPrint = DebugSettings.shared.showErrorLogs
-        case .none:
-            shouldPrint = true
-        }
-        if shouldPrint {
-            print("------------------")
-            print(value)
-        }
+    guard DebugSettings.shared.isInDebugMode else { return }
+    var shouldPrint = false
+    switch logType {
+    case .reduxAction:
+        shouldPrint = DebugSettings.shared.showReduxLogs
+    case .database:
+        shouldPrint = DebugSettings.shared.showDatabaseLogs
+    case .cache:
+        shouldPrint = DebugSettings.shared.showCacheLogs
+    case .scraping:
+        shouldPrint = DebugSettings.shared.showScrapingLogs
+    case .error:
+        shouldPrint = DebugSettings.shared.showErrorLogs
+    case .none:
+        shouldPrint = true
+    }
+    if shouldPrint {
+        print("------------------")
+        print(value)
     }
 }
 
@@ -48,10 +47,10 @@ struct DebugSettings {
 
     let istvanId = "s80wQjTNqXRlRzirFlgY3MF9BxJ3"
     let milanId = "U5VMyc8UNsN1JvDlWYOxQUmL6uE2"
-    
+
     var isIstvan: Bool { DefaultAuthenticator.user?.uid == istvanId }
     var isMilan: Bool { DefaultAuthenticator.user?.uid == milanId }
-    
+
     private func isTesterEmail(_ email: String) -> Bool {
         let regex1 = "milan\\+[0-9]+@copdeck.com"
         let regex2 = "istvan\\+[0-9]+@copdeck.com"
@@ -84,7 +83,7 @@ struct DebugSettings {
     var isAdmin: Bool {
         isIstvan || isMilan
     }
-    
+
     var isSuperAdmin: Bool {
         isIstvan || isMilan
     }
@@ -126,7 +125,7 @@ struct DebugSettings {
         guard let value = string(for: key) else { return nil }
         return Double(value)
     }
-    
+
     var ipAddress: String {
         string(for: "ipAddress") ?? ""
     }
@@ -166,7 +165,7 @@ struct DebugSettings {
     var clearUserDefaults: Bool {
         bool(for: "clearUserDefaults")
     }
-    
+
     var blockImageDownload: Bool {
         bool(for: "blockImageDownload")
     }

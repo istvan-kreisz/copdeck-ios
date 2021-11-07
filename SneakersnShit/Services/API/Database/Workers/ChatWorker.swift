@@ -98,32 +98,27 @@ class ChatWorker: FirestoreServiceWorker, ChatManager {
         cancel(cancelBlock)
     }
 
-    func sendMessage(user: User, message: String, toChannelWithId channelId: String, completion: @escaping (Result<Void, AppError>) -> Void) {
-        getChannel(channelId: channelId) { [weak self] result in
+    func sendMessage(user: User, message: String, toChannel channel: Channel, completion: @escaping (Result<Void, AppError>) -> Void) {
+        let message = Message(user: user, channelUserIds: channel.userIds, content: message)
+        send(message: message, inChannel: channel, completion: { result in
             switch result {
-            case let .success(channel):
-                let message = Message(user: user, channelUserIds: channel.userIds, content: message)
-                self?.send(message: message, inChannel: channel, completion: { result in
-                    switch result {
-                    case let .failure(error):
-                        completion(.failure(error))
-                    case .success():
-                        completion(.success(()))
-                    }
-                })
             case let .failure(error):
                 completion(.failure(error))
+            case .success():
+                completion(.success(()))
             }
-        }
+        })
     }
 
     func markChannelAsSeen(channel: Channel) {
         guard let userId = userId else { return }
 
-        #warning("mark as seen")
-//        var updatedChannel = channel
-//        updatedChannel.lastSeenDates[userId] = Date.serverDate
-//        update(channel: updatedChannel, fieldsToUpdate: [.lastSeenDates], completion: nil)
+        let updateData = ["updateInfo": ["\(channel.id)": ["lastSeenDate": Date.serverDate]]]
+        setDocument(updateData, atRef: updateInfoRef(userId), updateDates: false) { error in
+            if let error = error {
+                log(error, logType: .error)
+            }
+        }
     }
 
     func getOrCreateChannel(users: [User], completion: @escaping (Result<Channel, AppError>) -> Void) {
@@ -181,46 +176,44 @@ private extension ChatWorker {
         firestore.collection(.chat).document(.updateInfo).collection(.updateInfo).document(userId)
     }
 
-    func getChannel(channelId: String, completion: @escaping (Result<Channel, AppError>) -> Void) {
-        channelRef(channelId).getDocument { snapshot, error in
-            if let dict = snapshot?.data(), let channel = Channel(from: dict) {
-                completion(.success(channel))
-            } else if let error = error {
-                completion(.failure(AppError(error: error)))
-            } else {
-                completion(.failure(AppError.unknown))
-            }
-        }
-    }
-
     func addChannel(userIds: [String], completion: @escaping (Result<Channel, AppError>) -> Void) {
         let channel = Channel(userIds: userIds.sorted())
         add(channel: channel, completion: completion)
     }
 
     func send(message: Message, inChannel channel: Channel, completion: @escaping (Result<Void, AppError>) -> Void) {
-        let ref = channelRef(channel.id).collection(.thread).document(message.id)
-        guard let dict = try? message.asDictionary() else { return }
-        setDocument(dict, atRef: ref) { [weak self] error in
-            if let error = error {
-                completion(.failure(AppError(error: error)))
-            } else {
-                self?.addLastMessage(toChannel: channel, message: message)
-                completion(.success(()))
+        guard let newMessageDict = try? message.asDictionary() else { return }
+        
+        let batch = firestore.batch()
+        
+        // 1. send message
+        let newMessageRef = channelRef(channel.id).collection(.thread).document(message.id)
+        batch.setData(newMessageDict, forDocument: newMessageRef)
+        
+        // 2. update channel if channel.isEmpty == true
+        if channel.isEmpty {
+            let cRef = channelRef(channel.id)
+            let channelDict = ["isEmpty": false]
+            batch.setData(channelDict, forDocument: cRef, merge: true)
+        }
+        
+        // 3. update all chatUpdateInfos for all users
+        let lastMessage = ChatUpdateInfo.LastMessage(userId: message.sender.senderId, content: message.content, sentDate: message.dateSent)
+        if let lastMessageDict = try? lastMessage.asDictionary() {
+            channel.userIds.forEach { userId in
+                let ref = updateInfoRef(userId)
+                let updateData = ["updateInfo": ["\(channel.id)": ["lastMessage": lastMessageDict]]]
+                batch.setData(updateData, forDocument: ref, merge: true)
             }
         }
-    }
-
-    func addLastMessage(toChannel channel: Channel, message: Message) {
-        var updatedChannel = channel
-        #warning("yoo")
-//        updatedChannel.lastMessages[message.sender.senderId] = .init(userId: message.sender.senderId, content: message.content, sentDate: Date.serverDate)
-//        updatedChannel.updated = Date.serverDate
-//        updatedChannel.lastMessageSentDate = Date.serverDate
-//
-//        update(channel: updatedChannel,
-//               fieldsToUpdate: [.lastMessages, .updated, .lastMessageSentDate],
-//               completion: nil)
+        
+        // 4. commit changes
+        batch.commit { [weak self] error in
+            if let error = error {
+                log(error, logType: .error)
+                self?.errorsSubject.send(AppError.unknown)
+            }
+        }
     }
 
     func add(channel: Channel, completion: ((Result<Channel, AppError>) -> Void)?) {
@@ -236,106 +229,4 @@ private extension ChatWorker {
             }
         }
     }
-
-//    func update(channel: Channel, fieldsToUpdate: [Channel.CodingKeys]?, completion: ((Result<Channel, AppError>) -> Void)?) {
-//        let ref = firestore.collection("channels").document(channel.id)
-//
-//        #warning("yooo")
-//        if let fieldsToUpdate = fieldsToUpdate {
-//            firestore.runTransaction { transaction, error in
-//                let snapshot: DocumentSnapshot
-//                do {
-//                    try snapshot = transaction.getDocument(ref)
-//                } catch let fetchError as NSError {
-//                    error?.pointee = fetchError
-//                    return nil
-//                }
-//
-//                guard let dict = snapshot.data(), let currentChannel = Channel(from: dict)
-//                else { return nil }
-//
-//                var updates: [AnyHashable: Any] = [:]
-//                fieldsToUpdate.forEach { field in
-//                    var updateValue: Any? = nil
-//                    switch field {
-//                    case .id:
-//                        break
-//                    case .userIds:
-//                        updateValue = channel.userIds
-//                    case .lastMessages:
-//                        var lastMessages = currentChannel.lastMessages
-//                        channel.lastMessages.forEach { key, value in
-//                            if let currentValue = lastMessages[key] {
-//                                if value.sentDate > currentValue.sentDate {
-//                                    lastMessages[key] = value
-//                                }
-//                            } else {
-//                                lastMessages[key] = value
-//                            }
-//                        }
-//                        if lastMessages != currentChannel.lastMessages {
-//                            updateValue = lastMessages.compactMapValues { try? $0.asDictionary() }
-//                        }
-//                    case .lastSeenDates:
-//                        var lastSeenDates = currentChannel.lastSeenDates
-//                        channel.lastSeenDates.forEach { key, value in
-//                            if let currentValue = lastSeenDates[key] {
-//                                if value > currentValue {
-//                                    lastSeenDates[key] = value
-//                                }
-//                            } else {
-//                                lastSeenDates[key] = value
-//                            }
-//                        }
-//                        if lastSeenDates != currentChannel.lastSeenDates {
-//                            updateValue = lastSeenDates
-//                        }
-//                    case .created:
-//                        updateValue = channel.created
-//                    case .updated:
-//                        if channel.updated > currentChannel.updated {
-//                            updateValue = channel.updated
-//                        }
-//                    case .lastMessageSentDate:
-//                        if let newValue = channel.lastMessageSentDate {
-//                            if let oldValue = currentChannel.lastMessageSentDate {
-//                                if newValue > oldValue {
-//                                    updateValue = newValue
-//                                }
-//                            } else {
-//                                updateValue = newValue
-//                            }
-//                        }
-//                    }
-//                    if let updateValue = updateValue {
-//                        updates[field.rawValue] = updateValue
-//                    }
-//                }
-//                if !updates.isEmpty {
-//                    transaction.updateData(updates, forDocument: ref)
-//                    if var updatedChannelDict = try? currentChannel.asDictionary() as [AnyHashable: Any] {
-//                        updates.forEach { key, value in
-//                            updatedChannelDict[key] = value
-//                        }
-//                        if let updatedChannel = Channel(from: updatedChannelDict) {
-//                            return updatedChannel
-//                        }
-//                    }
-//                }
-//                return nil
-//            } completion: { object, error in
-//                if let error = error {
-//                    completion?(.failure(AppError(error: error)))
-//                } else if let newChannel = object as? Channel {
-//                    completion?(.success(newChannel))
-//                } else {
-//                    completion?(.failure(AppError(title: "Error", message: "Nothing to update", error: nil)))
-//                }
-//            }
-//        } else {
-//            if let dict = try? channel.asDictionary() {
-//                ref.setData(dict)
-//            }
-//        }
-//    }
 }

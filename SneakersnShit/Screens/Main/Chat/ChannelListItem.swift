@@ -43,11 +43,11 @@ struct ChannelListItem: View {
                 VStack(alignment: .leading, spacing: 5) {
                     Spacer()
                     Text(channel.messagePartner(userId: userId)?.name ?? "Anonymus")
-                        .font(.extraBold(size: 16))
+                        .font(.extraBold(size: 17))
                         .foregroundColor(.customText1)
                         .layoutPriority(2)
                     Text(lastMessageContent)
-                        .font(channel.hasUnreadMessages(userId: userId) ? .bold(size: 14) : .regular(size: 14))
+                        .font(channel.hasUnreadMessages(userId: userId) ? .semiBold(size: 14) : .regular(size: 14))
                         .foregroundColor(channel.hasUnreadMessages(userId: userId) ? .customText1 : .customText2)
                         .layoutPriority(2)
                     Spacer()

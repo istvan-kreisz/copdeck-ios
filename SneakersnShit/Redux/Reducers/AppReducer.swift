@@ -182,9 +182,9 @@ func appReducer(state: inout AppState,
             environment.dataController.getChannelsListener(cancel: cancel, update: update)
         case let .getChannelListener(channelId, cancel, update):
             environment.dataController.getChannelListener(channelId: channelId, cancel: cancel, update: update)
-        case let .sendChatMessage(message, channelId, completion):
+        case let .sendChatMessage(message, channel, completion):
             if let user = state.user {
-                environment.dataController.sendMessage(user: user, message: message, toChannelWithId: channelId, completion: completion)
+                environment.dataController.sendMessage(user: user, message: message, toChannel: channel, completion: completion)
             } else {
                 completion(.failure(.notFound(val: "User")))
             }

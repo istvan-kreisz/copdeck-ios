@@ -178,7 +178,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
                 _ = (stacksListener.collectionRef?.document(stack.id))
                     .map { [weak self] ref in
                         if let data = try? stack.asDictionary() {
-                            self?.updateDocument(data, atRef: ref, using: batch)
+                            self?.setDocument(data, atRef: ref, using: batch)
                         }
                     }
             }
@@ -405,8 +405,8 @@ extension DefaultDatabaseManager {
         chatWorker.markChannelAsSeen(channel: channel)
     }
     
-    func sendMessage(user: User, message: String, toChannelWithId channelId: String, completion: @escaping (Result<Void, AppError>) -> Void) {
-        chatWorker.sendMessage(user: user, message: message, toChannelWithId: channelId, completion: completion)
+    func sendMessage(user: User, message: String, toChannel channel: Channel, completion: @escaping (Result<Void, AppError>) -> Void) {
+        chatWorker.sendMessage(user: user, message: message, toChannel: channel, completion: completion)
     }
     
     func getOrCreateChannel(users: [User], completion: @escaping (Result<Channel, AppError>) -> Void) {

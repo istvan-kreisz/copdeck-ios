@@ -185,8 +185,12 @@ extension PushNotificationService: UNUserNotificationCenterDelegate {
 
         Messaging.messaging().appDidReceiveMessage(userInfo)
 
-        if notification.isChatMessage && ViewRouter.shared.currentPage != .chat {
-            completionHandler([[.sound, .badge, .banner]])
+        if notification.isChatMessage {
+            if ViewRouter.shared.currentPage != .chat && !AppStore.isChatDetailView {
+                completionHandler([[.sound, .badge, .banner]])
+            } else {
+                completionHandler([[.sound, .badge]])
+            }
         } else {
             completionHandler([[.sound, .badge]])
         }

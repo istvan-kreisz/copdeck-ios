@@ -87,6 +87,9 @@ struct ChatView: View {
                 self.lastMessageChannelId = nil
             }
         }
+        .onChange(of: store.globalState.chatUpdates) { chatUpdates in
+            updateChannels(channels: channels, chatUpdateInfo: chatUpdates)
+        }
     }
 
     private func loadChannels(isFirstLoad: Bool) {
@@ -101,8 +104,8 @@ struct ChatView: View {
             case let .failure(error):
                 self.error = (error.title, error.message)
             case let .success(channels):
-                self.channels = channels.sortedByDate()
-                
+                self.updateChannels(channels: channels, chatUpdateInfo: store.globalState.chatUpdates)
+
                 if let userId = userId, let channel = channels.first(where: { $0.id == lastMessageChannelId }) {
                     navigationDestination += .chat(channel: channel, userId: userId)
                     self.lastMessageChannelId = nil
@@ -110,6 +113,14 @@ struct ChatView: View {
             }
             loader?(.success(()))
         })))
+    }
+
+    private func updateChannels(channels: [Channel], chatUpdateInfo: ChatUpdateInfo) {
+        self.channels = channels.sortedByDate().map { channel in
+            var updatedChannel = channel
+            updatedChannel.updateInfo = chatUpdateInfo.updateInfo[channel.id]
+            return updatedChannel
+        }
     }
 }
 

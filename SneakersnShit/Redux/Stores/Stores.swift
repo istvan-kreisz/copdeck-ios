@@ -12,6 +12,8 @@ import Nuke
 typealias AppStore = ReduxStore<AppState, AppAction, World>
 
 extension AppStore {
+    static var isChatDetailView = false
+    
     static let `default`: AppStore = {
         let appStore = AppStore(state: .init(), reducer: appReducer, environment: World())
         appStore.setup()

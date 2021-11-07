@@ -14,7 +14,7 @@ struct Channel: Codable, Identifiable, Equatable {
     let created: Double
     let updated: Double
 
-    var updateInfo: ChatUpdateInfo.ChannelInfo?
+    var updateInfo: ChatUpdateInfo.ChannelInfo? = nil
     var users: [User] = []
 
     func messagePartner(userId: String) -> User? {
