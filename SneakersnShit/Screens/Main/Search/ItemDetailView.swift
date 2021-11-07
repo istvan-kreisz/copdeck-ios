@@ -100,7 +100,7 @@ struct ItemDetailView: View {
             Color.customWhite.edgesIgnoringSafeArea(.all)
             let isAddToInventoryActive = Binding<Bool>(get: { addToInventory.isActive },
                                                        set: { addToInventory = $0 ? addToInventory : (false, nil) })
-            let isFavorited = Binding<Bool>(get: { self.isFavorited }, set: { self.didToggleFavorite(newValue: $0) })
+            let isFavorited = Binding<Bool>(get: { self.isFavorited }, set: { _ in self.didToggleFavorite() })
 
             NavigationLink(destination: item
                 .map { item in AddToInventoryView(item: item,
@@ -355,9 +355,11 @@ struct ItemDetailView: View {
         }
     }
 
-    private func didToggleFavorite(newValue: Bool) {
+    private func didToggleFavorite() {
         guard let item = item else { return }
-        isFavorited = newValue
+        AppStore.default.environment.feedbackGenerator.selectionChanged()
+        let newValue = !isFavorited
+        self.isFavorited = newValue
         if newValue {
             store.send(.main(action: .favorite(item: item)))
         } else {

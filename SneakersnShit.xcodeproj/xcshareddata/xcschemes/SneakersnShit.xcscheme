@@ -82,7 +82,7 @@
          <EnvironmentVariable
             key = "clearUserDefaults"
             value = "true"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "itemPricesRefreshPeriodMin"
