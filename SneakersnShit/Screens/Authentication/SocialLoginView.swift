@@ -29,12 +29,12 @@ struct SocialLoginView: View {
                          backgroundColor: .customWhite,
                          action: { store.send(.authentication(action: .signInWithGoogle(referralCode: refCode))) },
                          initBlock: {})
-            SignInButton(imageName: "facebook",
-                         text: "Sign in with Facebook",
-                         imageColor: nil,
-                         backgroundColor: Color(r: 66, g: 103, b: 178),
-                         action: { store.send(.authentication(action: .signInWithFacebook(referralCode: refCode))) },
-                         initBlock: {})
+//            SignInButton(imageName: "facebook",
+//                         text: "Sign in with Facebook",
+//                         imageColor: nil,
+//                         backgroundColor: Color(r: 66, g: 103, b: 178),
+//                         action: { store.send(.authentication(action: .signInWithFacebook(referralCode: refCode))) },
+//                         initBlock: {})
             Spacer()
         }
     }

@@ -18,24 +18,24 @@
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.googleusercontent.apps.451723603004-hcldole21rt7k6gd0vngicvhnrlaol76</string>
-				<string>fb1146324629126599</string>
-			</array>
-		</dict>
-	</array>
+    <key>CFBundleURLTypes</key>
+    <array>
+      <dict>
+          <key>CFBundleTypeRole</key>
+          <string>Editor</string>
+      <key>CFBundleURLSchemes</key>
+      <array>
+          <string>com.googleusercontent.apps.451723603004-hcldole21rt7k6gd0vngicvhnrlaol76</string>
+          <string>fb854124205281211</string>
+      </array>
+      </dict>
+    </array>
+    <key>FacebookAppID</key>
+    <string>854124205281211</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>Configuration</key>
 	<string>${CONFIGURATION}</string>
-	<key>FacebookAppID</key>
-	<string>1146324629126599</string>
 	<key>FacebookClientToken</key>
 	<string>1310004f817459ef8160829059ce6400</string>
 	<key>FacebookDisplayName</key>

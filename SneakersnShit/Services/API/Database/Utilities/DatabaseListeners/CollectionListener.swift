@@ -40,6 +40,7 @@ class CollectionListener<T: Codable & Equatable>: FireStoreListener {
                         collectionRef: CollectionReference,
                         query: ((CollectionReference?) -> Query?)? = nil) {
         self.updateType = updateType
+        self.collectionRef = collectionRef
         listener = addCollectionListener(collectionRef: collectionRef, query: query)
     }
 
