@@ -23,83 +23,24 @@ struct InventoryViewPills: View {
          inventoryItem.purchasePrice?.asString].enumerated()
             .compactMap { item in item.element.map { ($0, item.offset) } ?? nil }
     }
-
-    var body: some View {
-//        TagCloudView(tags: details.map { $0.0 })
-        HStack {
-            ForEach(Array(details), id: \.self.1) { (detail: String, index: Int) in
-                PillView(title: detail, color: Color.pillColors[index % Color.pillColors.count])
+    
+    private func pillsHStack(pills: [(String, Int)], startIndex: Int) -> some View {
+        HStack(spacing: 4) {
+            ForEach(pills, id: \.self.1) { (detail: String, index: Int) in
+                PillView(title: detail, color: Color.pillColors[(index + startIndex) % Color.pillColors.count])
             }
+            Spacer()
         }
     }
-}
-
-struct TagCloudView: View {
-    var tags: [String]
-
-    @State private var totalHeight
-        = CGFloat.zero // << variant for ScrollView/List
-//        = CGFloat.infinity // << variant for VStack
 
     var body: some View {
-        VStack(spacing: 3) {
-            GeometryReader { geometry in
-                self.generateContent(in: geometry)
+        if UIScreen.isSmallScreen && details.count > 2 {
+            VStack(spacing: 4) {
+                pillsHStack(pills: details.first(n: 2), startIndex: 0)
+                pillsHStack(pills: Array(details.dropFirst(2)), startIndex: 2)
             }
-        }
-        .frame(height: totalHeight) // << variant for ScrollView/List
-        // .frame(maxHeight: totalHeight) // << variant for VStack
-    }
-
-    private func generateContent(in geometryProxy: GeometryProxy) -> some View {
-        var width = CGFloat.zero
-        var height = CGFloat.zero
-
-        return ZStack(alignment: .topLeading) {
-            ForEach(tags, id: \.self) { (tag: String) in
-                item(for: tag)
-                    .padding([.horizontal, .vertical], 4)
-                    .alignmentGuide(.leading, computeValue: { d in
-                        if abs(width - d.width) > geometryProxy.size.width {
-                            width = 0
-                            height -= d.height
-                        }
-                        let result = width
-                        if tag == self.tags.last! {
-                            width = 0 // last item
-                        } else {
-                            width -= d.width
-                        }
-                        return result
-                    })
-                    .alignmentGuide(.top, computeValue: { d in
-                        let result = height
-                        if tag == self.tags.last! {
-                            height = 0 // last item
-                        }
-                        return result
-                    })
-            }
-        }.background(viewHeightReader($totalHeight))
-    }
-
-    private func item(for text: String) -> some View {
-        PillView(title: text, color: Color.randomPillColor)
-//        Text(text)
-//            .padding(.all, 5)
-//            .font(.body)
-//            .background(Color.blue)
-//            .foregroundColor(Color.customWhite)
-//            .cornerRadius(5)
-    }
-
-    private func viewHeightReader(_ binding: Binding<CGFloat>) -> some View {
-        return GeometryReader { geometry -> Color in
-            let rect = geometry.frame(in: .local)
-            DispatchQueue.main.async {
-                binding.wrappedValue = rect.size.height
-            }
-            return .clear
+        } else {
+            pillsHStack(pills: details, startIndex: 0)
         }
     }
 }

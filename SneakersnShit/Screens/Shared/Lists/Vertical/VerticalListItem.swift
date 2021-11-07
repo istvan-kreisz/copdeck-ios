@@ -69,8 +69,6 @@ struct VerticalListItem<V1: View, V2: View>: View {
                         .leftAligned()
                         .layoutPriority(2)
                     if let accessoryView = accessoryView1 {
-                        Spacer()
-                            .layoutPriority(0)
                         accessoryView
                             .layoutPriority(2)
                     } else {
