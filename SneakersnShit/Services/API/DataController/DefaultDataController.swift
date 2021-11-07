@@ -21,6 +21,7 @@ class DefaultDataController: DataController {
     lazy var stacksPublisher = databaseManager.stacksPublisher
     lazy var userPublisher = databaseManager.userPublisher
     lazy var exchangeRatesPublisher = databaseManager.exchangeRatesPublisher
+    lazy var chatUpdatesPublisher = databaseManager.chatUpdatesPublisher
     lazy var errorsPublisher = databaseManager.errorsPublisher.merge(with: backendAPI.errorsPublisher, imageService.errorsPublisher).eraseToAnyPublisher()
     lazy var cookiesPublisher = localScraper.cookiesPublisher
     lazy var imageDownloadHeadersPublisher = localScraper.imageDownloadHeadersPublisher
@@ -379,8 +380,8 @@ class DefaultDataController: DataController {
         databaseManager.unfavorite(item: item)
     }
 
-    func sendMessage(user: User, message: String, toChannelWithId channelId: String, completion: @escaping (Result<Void, AppError>) -> Void) {
-        databaseManager.sendMessage(user: user, message: message, toChannelWithId: channelId, completion: completion)
+    func sendMessage(user: User, message: String, toChannel channel: Channel, completion: @escaping (Result<Void, AppError>) -> Void) {
+        databaseManager.sendMessage(user: user, message: message, toChannel: channel, completion: completion)
     }
 
     func getOrCreateChannel(users: [User], completion: @escaping (Result<Channel, AppError>) -> Void) {
@@ -460,7 +461,7 @@ class DefaultDataController: DataController {
     func getAffiliateList(completion: @escaping (Result<[ReferralCode], Error>) -> Void) {
         backendAPI.getAffiliateList(completion: completion)
     }
-    
+
     func refreshUserSubscriptionStatus(completion: ((Result<Void, AppError>) -> Void)?) {
         backendAPI.refreshUserSubscriptionStatus(completion: completion)
     }
@@ -471,6 +472,22 @@ class DefaultDataController: DataController {
 
     func sendMessage(email: String, message: String, completion: ((Result<Void, AppError>) -> Void)?) {
         backendAPI.sendMessage(email: email, message: message, completion: completion)
+    }
+
+    func getToken(byId id: String, completion: @escaping (NotificationToken?) -> Void) {
+        databaseManager.getToken(byId: id, completion: completion)
+    }
+    
+    func setToken(_ token: NotificationToken, completion: @escaping (Result<[NotificationToken], AppError>) -> Void) {
+        databaseManager.setToken(token, completion: completion)
+    }
+    
+    func deleteToken(_ token: NotificationToken, completion: @escaping (AppError?) -> Void) {
+        databaseManager.deleteToken(token, completion: completion)
+    }
+    
+    func deleteToken(byId id: String, completion: @escaping (AppError?) -> Void) {
+        databaseManager.deleteToken(byId: id, completion: completion)
     }
 }
 

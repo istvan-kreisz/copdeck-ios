@@ -10,9 +10,9 @@ import FirebaseFunctions
 
 struct MainContainerView: View {
     var store: AppStore
-    @StateObject var viewRouter = ViewRouter()
-
+    @StateObject var viewRouter = ViewRouter.shared
     @State var shouldShowTabBar = true
+    @State var lastMessageChannelId: String?
 
     var body: some View {
         let selectedIndex = Binding<Int>(get: { viewRouter.currentPage.rawValue }, set: { viewRouter.currentPage = Page(rawValue: $0) ?? .search })
@@ -34,9 +34,15 @@ struct MainContainerView: View {
                     .hideKeyboardOnScroll()
             },
             TabBarElement(tabBarElementItem: .init(title: "Fourth", systemImageName: "message")) {
-                ChatView()
+                ChatView(lastMessageChannelId: $lastMessageChannelId)
                     .withTabViewWrapper(viewRouter: viewRouter, store: DerivedGlobalStore.default, shouldShow: $shouldShowTabBar)
             })
+        }
+        .onReceive(store.environment.pushNotificationService.lastMessageChannelIdSubject) { lastMessageChannelId in
+            self.lastMessageChannelId = lastMessageChannelId
+            if lastMessageChannelId != nil && viewRouter.currentPage != .chat {
+                viewRouter.currentPage = .chat
+            }
         }
         .edgesIgnoringSafeArea(.all)
     }

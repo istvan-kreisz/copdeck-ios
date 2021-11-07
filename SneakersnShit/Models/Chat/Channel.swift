@@ -8,63 +8,51 @@
 import Foundation
 
 struct Channel: Codable, Identifiable, Equatable {
-    struct LastMessage: Codable, Equatable {
-        let userId: String
-        let content: String
-        let sentDate: Double
-    }
-
     let id: String
     let userIds: [String]
-    var lastMessages: [String: LastMessage]
-    var lastSeenDates: [String: Double]
+    let isEmpty: Bool
     let created: Double
-    var updated: Double
-    var lastMessageSentDate: Double?
+    let updated: Double
 
+    var updateInfo: ChatUpdateInfo.ChannelInfo? = nil
     var users: [User] = []
-    
-    var lastMessage: LastMessage? {
-        lastMessages.values.sorted(by: { $0.sentDate < $1.sentDate }).last
-    }
-
-    func lastMessageSent(byUserWithId id: String) -> LastMessage? {
-        lastMessages[id]
-    }
 
     func messagePartner(userId: String) -> User? {
         users.first(where: { $0.id != userId })
     }
 
     func hasUnreadMessages(userId: String) -> Bool {
-        let lastSeenDate = lastSeenDates[userId] ?? Date(timeIntervalSince1970: 0).timeIntervalSince1970 * 1000
-        let lastMessagesByOthers = userIds.filter { $0 != userId }.compactMap(lastMessageSent)
-        
-        return lastMessagesByOthers.contains(where: { $0.sentDate > lastSeenDate })
+        if let lastMessage = updateInfo?.lastMessage {
+            if lastMessage.userId == userId {
+                return false
+            } else {
+                if let lastSeenDate = updateInfo?.lastSeenDate {
+                    return lastSeenDate < lastMessage.sentDate
+                } else {
+                    return true
+                }
+            }
+        } else {
+            return false
+        }
     }
 
     enum CodingKeys: String, CodingKey {
-        case id, userIds, lastMessages, lastSeenDates, created, updated, lastMessageSentDate
+        case id, userIds, isEmpty, created, updated
     }
 }
 
 extension Channel {
     init(userIds: [String]) {
-        self.init(id: UUID().uuidString,
-                  userIds: userIds,
-                  lastMessages: [:],
-                  lastSeenDates: [:],
-                  created: Date.serverDate,
-                  updated: Date.serverDate,
-                  lastMessageSentDate: nil)
+        self.init(id: UUID().uuidString, userIds: userIds, isEmpty: true, created: Date.serverDate, updated: Date.serverDate)
     }
 }
 
 extension Sequence where Element == Channel {
-    func sortedByDate() -> Array<Element> {
+    func sortedByDate() -> [Element] {
         sorted(by: { (first: Channel, second: Channel) -> Bool in
-            if let firstDate = first.lastMessageSentDate {
-                if let secondDate = second.lastMessageSentDate {
+            if let firstDate = first.updateInfo?.lastMessage?.sentDate {
+                if let secondDate = second.updateInfo?.lastMessage?.sentDate {
                     return firstDate > secondDate
                 } else {
                     return true

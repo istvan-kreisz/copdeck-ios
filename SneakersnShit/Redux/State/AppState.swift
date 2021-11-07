@@ -29,6 +29,7 @@ struct GlobalState: Equatable {
     var exchangeRates: ExchangeRates?
     var showPaymentView = false
     var allPackages: [DiscountValue: SubscriptionPackages]?
+    var chatUpdates: ChatUpdateInfo = .init(updateInfo: [:])
 
     var subscriptionActive: Bool {
         user?.subscription == .pro

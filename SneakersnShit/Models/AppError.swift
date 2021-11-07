@@ -31,6 +31,7 @@ extension AppError {
 
     static var unknown: Self = .init(title: "", message: "")
     static var unauthenticated: Self = .init(title: "Error", message: "Not Authenticated")
+    static var wrongData: Self = .init(title: "Error", message: "Unrecognized data format")
     static func notFound(val: String) -> Self {
         .init(title: "Error", message: val.isEmpty ? "Not Found" : "\(val) Not Found")
     }

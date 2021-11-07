@@ -45,6 +45,11 @@ final class ChatViewController: MessagesViewController {
         messagesCollectionView.reloadData()
         cancelListener?()
         markAsSeen()
+        AppStore.isChatDetailView = false
+    }
+    
+    deinit {
+        AppStore.isChatDetailView = false
     }
 
     init(channel: Channel, userId: String) {
@@ -63,6 +68,7 @@ final class ChatViewController: MessagesViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        AppStore.isChatDetailView = true
         navigationItem.largeTitleDisplayMode = .never
 
         markAsSeen()
@@ -73,6 +79,7 @@ final class ChatViewController: MessagesViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        AppStore.default.environment.pushNotificationService.requestPermissionsIfNotAsked(completion: nil)
         becomeFirstResponder()
     }
 
@@ -193,13 +200,13 @@ final class ChatViewController: MessagesViewController {
         scrollsToLastItemOnKeyboardBeginsEditing = true
         maintainPositionOnKeyboardFrameChanged = true
         showMessageTimestampOnSwipeLeft = true
-        
+
         messageInputBar.sendButton.titleLabel?.font = .bold(size: 19)
         messageInputBar.sendButton.setTitleColor(UIColor(.customBlue), for: .normal)
         messageInputBar.sendButton.setTitleColor(UIColor(.customBlue), for: .highlighted)
         messageInputBar.sendButton.setTitleColor(UIColor(.customBlue), for: .focused)
         messageInputBar.sendButton.tintColor = UIColor(.customBlue)
-        
+
         messageInputBar.inputTextView.tintColor = UIColor(.customText1)
         messageInputBar.inputTextView.font = .medium(size: 17)
         messageInputBar.inputTextView.textColor = UIColor(.customText1)
@@ -209,6 +216,7 @@ final class ChatViewController: MessagesViewController {
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
+        messagesCollectionView.messageCellDelegate = self
 
         messagesCollectionView.contentInset.top = NavigationBar.size
         additionalBottomInset = 3
@@ -226,10 +234,8 @@ final class ChatViewController: MessagesViewController {
         }
     }
 
-    // MARK: - Helpers
-
     private func sendMessage(content: String) {
-        store.send(.main(action: .sendChatMessage(message: content, channelId: channel.id, completion: { [weak self] result in
+        store.send(.main(action: .sendChatMessage(message: content, channel: channel, completion: { [weak self] result in
             switch result {
             case let .failure(error):
                 self?.showAlert(title: "Failed to send message", message: error.localizedDescription)
@@ -238,50 +244,6 @@ final class ChatViewController: MessagesViewController {
             }
         })))
     }
-
-//    private func insertNewMessage(_ message: Message) {
-//        if messages.contains(message) {
-//            return
-//        }
-//
-//        messages.append(message)
-//        messages.sort()
-//
-//        let isLatestMessage = messages.firstIndex(of: message) == (messages.count - 1)
-//        let shouldScrollToBottom = messagesCollectionView.isAtBottom && isLatestMessage
-//
-//        messagesCollectionView.reloadData()
-//
-//        if shouldScrollToBottom {
-//            messagesCollectionView.scrollToLastItem(animated: true)
-//        }
-//    }
-
-//    private func handleDocumentChange(_ change: DocumentChange) {
-//        guard var message = Message(document: change.document) else {
-//            return
-//        }
-//
-//        switch change.type {
-//        case .added:
-//            if let url = message.downloadURL {
-//                downloadImage(at: url) { [weak self] image in
-//                    guard
-//                        let self = self,
-//                        let image = image
-//                    else {
-//                        return
-//                    }
-//                    message.image = image
-//                    self.insertNewMessage(message)
-//                }
-//            } else {
-//                insertNewMessage(message)
-//            }
-//        default:
-//            break
-//        }
-//    }
 }
 
 // MARK: - MessagesDisplayDelegate
@@ -327,7 +289,7 @@ extension ChatViewController: MessagesDisplayDelegate {
     }
 
     func enabledDetectors(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> [DetectorType] {
-        return [.url, .address, .phoneNumber, .date, .transitInformation, .mention, .hashtag]
+        return [.url, .phoneNumber, .date, .mention, .hashtag]
     }
 
     private func color(for message: MessageType) -> UIColor {
@@ -359,6 +321,26 @@ extension ChatViewController: MessagesLayoutDelegate {
     }
 }
 
+extension ChatViewController: MessageCellDelegate {
+    func didSelectDate(_ date: Date) {
+        if let url = URL(string: "calshow:\(date.timeIntervalSinceReferenceDate)"), UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        }
+    }
+
+    func didSelectPhoneNumber(_ phoneNumber: String) {
+        if let url = URL(string: "tel://\(phoneNumber)"), UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        }
+    }
+
+    func didSelectURL(_ url: URL) {
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        }
+    }
+}
+
 // MARK: - MessagesDataSource
 
 extension ChatViewController: MessagesDataSource {
@@ -371,7 +353,7 @@ extension ChatViewController: MessagesDataSource {
     }
 
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
-        messages[safe: indexPath.section] ?? Message(user: user ?? User(id: userId), content: "")
+        messages[safe: indexPath.section] ?? Message(user: user ?? User(id: userId), channelUserIds: [], content: "")
     }
 
     func messageTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {

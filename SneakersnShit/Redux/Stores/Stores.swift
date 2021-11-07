@@ -12,6 +12,8 @@ import Nuke
 typealias AppStore = ReduxStore<AppState, AppAction, World>
 
 extension AppStore {
+    static var isChatDetailView = false
+    
     static let `default`: AppStore = {
         let appStore = AppStore(state: .init(), reducer: appReducer, environment: World())
         appStore.setup()
@@ -118,6 +120,14 @@ extension AppStore {
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] packages in
                       self?.state.allPackages = packages
+                  })
+            .store(in: &effectCancellables)
+
+        environment.dataController.chatUpdatesPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in },
+                  receiveValue: { [weak self] chatUpdateInfo in
+                      self?.state.globalState.chatUpdates = chatUpdateInfo
                   })
             .store(in: &effectCancellables)
     }

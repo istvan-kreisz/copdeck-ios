@@ -17,6 +17,8 @@ struct ChatView: View {
     @State var cancelListener: (() -> Void)?
     @State private var error: (String, String)? = nil
 
+    @Binding var lastMessageChannelId: String?
+
     var userId: String? {
         AppStore.default.state.user?.id
     }
@@ -51,7 +53,7 @@ struct ChatView: View {
                 ForEach(channels) { (channel: Channel) in
                     if let userId = userId {
                         ChannelListItem(channel: channel, userId: userId) {
-                            navigationDestination += .chat(channel, userId)
+                            navigationDestination += .chat(channel: channel, userId: userId)
                         } didTapUser: {
                             if let messagePartner = channel.messagePartner(userId: userId) {
                                 navigationDestination += .profile(.init(user: messagePartner))
@@ -75,6 +77,15 @@ struct ChatView: View {
                 return Alert(title: Text(title), message: Text(description), dismissButton: Alert.Button.cancel(Text("Okay")))
             }
         }
+        .onChange(of: lastMessageChannelId) { lastMessageChannelId in
+            if let userId = userId, let channel = channels.first(where: { $0.id == lastMessageChannelId }) {
+                navigationDestination += .chat(channel: channel, userId: userId)
+                self.lastMessageChannelId = nil
+            }
+        }
+        .onChange(of: store.globalState.chatUpdates) { chatUpdates in
+            updateChannels(channels: channels, chatUpdateInfo: chatUpdates)
+        }
     }
 
     private func loadChannels(isFirstLoad: Bool) {
@@ -89,16 +100,29 @@ struct ChatView: View {
             case let .failure(error):
                 self.error = (error.title, error.message)
             case let .success(channels):
-                self.channels = channels.sortedByDate()
+                self.updateChannels(channels: channels, chatUpdateInfo: store.globalState.chatUpdates)
+
+                if let userId = userId, let channel = channels.first(where: { $0.id == lastMessageChannelId }) {
+                    navigationDestination += .chat(channel: channel, userId: userId)
+                    self.lastMessageChannelId = nil
+                }
             }
             loader?(.success(()))
         })))
+    }
+
+    private func updateChannels(channels: [Channel], chatUpdateInfo: ChatUpdateInfo) {
+        self.channels = channels.sortedByDate().map { channel in
+            var updatedChannel = channel
+            updatedChannel.updateInfo = chatUpdateInfo.updateInfo[channel.id]
+            return updatedChannel
+        }
     }
 }
 
 extension ChatView {
     enum NavigationDestination {
-        case chat(Channel, String), profile(ProfileData), empty
+        case chat(channel: Channel, userId: String), profile(ProfileData), empty
     }
 
     struct Destination: View {

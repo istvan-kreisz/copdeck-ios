@@ -36,16 +36,10 @@ class CollectionListener<T: Codable & Equatable>: FireStoreListener {
         changesSubject.dropFirst().eraseToAnyPublisher()
     }
 
-    func startListening(updateType: UpdateType = .data, collectionName: String, baseDocumentReference: DocumentReference?,
+    func startListening(updateType: UpdateType = .data,
+                        collectionRef: CollectionReference,
                         query: ((CollectionReference?) -> Query?)? = nil) {
         self.updateType = updateType
-        collectionRef = baseDocumentReference?.collection(collectionName)
-        listener = addCollectionListener(collectionRef: collectionRef, query: query)
-    }
-
-    func startListening(updateType: UpdateType = .data, collectionName: String, firestore: Firestore?, query: ((CollectionReference?) -> Query?)? = nil) {
-        self.updateType = updateType
-        collectionRef = firestore?.collection(collectionName)
         listener = addCollectionListener(collectionRef: collectionRef, query: query)
     }
 

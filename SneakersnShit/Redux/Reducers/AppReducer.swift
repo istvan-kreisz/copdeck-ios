@@ -25,13 +25,17 @@ func appReducer(state: inout AppState,
             }
             environment.dataController.reset()
             environment.paymentService.reset()
+            environment.pushNotificationService.reset()
+            // delete tokens
         case let .setUser(user):
             if !state.firstLoadDone {
                 state.firstLoadDone = true
             }
             state.user = user
+            environment.pushNotificationService.setup(userId: user.id)
             environment.dataController.setup(userId: user.id)
             environment.paymentService.setup(userId: user.id, userEmail: user.email)
+            // register tokens
         case let .updateUsername(username):
             if var updatedUser = state.user {
                 updatedUser.name = username
@@ -178,9 +182,9 @@ func appReducer(state: inout AppState,
             environment.dataController.getChannelsListener(cancel: cancel, update: update)
         case let .getChannelListener(channelId, cancel, update):
             environment.dataController.getChannelListener(channelId: channelId, cancel: cancel, update: update)
-        case let .sendChatMessage(message, channelId, completion):
+        case let .sendChatMessage(message, channel, completion):
             if let user = state.user {
-                environment.dataController.sendMessage(user: user, message: message, toChannelWithId: channelId, completion: completion)
+                environment.dataController.sendMessage(user: user, message: message, toChannel: channel, completion: completion)
             } else {
                 completion(.failure(.notFound(val: "User")))
             }

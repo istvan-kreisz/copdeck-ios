@@ -13,20 +13,23 @@ class World {
     let dataController: DataController
     let authenticator: Authenticator
     let paymentService: PaymentService
+    let pushNotificationService: PushNotificationService
     let feedbackGenerator = UISelectionFeedbackGenerator()
 
-    init(dataController: DataController, authenticator: Authenticator, paymentService: PaymentService) {
+    init(dataController: DataController, authenticator: Authenticator, paymentService: PaymentService, pushNotificationService: PushNotificationService) {
         self.dataController = dataController
         self.authenticator = authenticator
         self.paymentService = paymentService
+        self.pushNotificationService = pushNotificationService
     }
 
     convenience init() {
         self.init(dataController: DefaultDataController(backendAPI: DefaultBackendAPI(),
                                                         localScraper: LocalScraper(),
-                                                        databaseManager: FirebaseService(),
+                                                        databaseManager: DefaultDatabaseManager(),
                                                         imageService: DefaultImageService()),
                   authenticator: DefaultAuthenticator(),
-                  paymentService: DefaultPaymentService())
+                  paymentService: DefaultPaymentService(),
+                  pushNotificationService: PushNotificationService())
     }
 }

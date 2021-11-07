@@ -24,8 +24,12 @@ import MessageKit
 struct Message: MessageType, Codable, Identifiable {
     let id: String
     let author: Sender
+    let channelUserIds: [String]
     let content: String
     let dateSent: Double
+    
+    let created: Double
+    let updated: Double
 
     var attributedString: NSAttributedString {
         NSAttributedString.init(string: content, attributes: [.font: UIFont.medium(size: 17), .foregroundColor: UIColor(.customWhite)])
@@ -35,6 +39,10 @@ struct Message: MessageType, Codable, Identifiable {
     var kind: MessageKind { .attributedText(attributedString) }
     var messageId: String { id }
     var sentDate: Date { dateSent.serverDate }
+
+    enum CodingKeys: String, CodingKey {
+        case id, author, channelUserIds, content, dateSent, created, updated
+    }
 
 //    var image: UIImage?
 //    var downloadURL: URL?
@@ -58,15 +66,18 @@ struct Message: MessageType, Codable, Identifiable {
 }
 
 extension Message {
-    init(user: User, content: String) {
-        self.init(author: .init(user: user), content: content)
+    init(user: User, channelUserIds: [String], content: String) {
+        self.init(author: .init(user: user), channelUserIds: channelUserIds, content: content)
     }
 
-    init(author: Sender, content: String) {
+    init(author: Sender, channelUserIds: [String], content: String) {
         self.id = UUID().uuidString
         self.author = author
+        self.channelUserIds = channelUserIds
         self.content = content
         self.dateSent = Date.serverDate
+        self.created = Date.serverDate
+        self.updated = Date.serverDate
     }
 }
 
