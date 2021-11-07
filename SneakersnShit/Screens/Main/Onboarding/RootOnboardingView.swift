@@ -13,7 +13,7 @@ struct RootOnboardingView: View {
     @State private var currentTab = 0
 
     private func nextTapped() {
-        if currentTab == 7 {
+        if currentTab == 8 {
             needsAppOnboarding = false
         } else {
             currentTab += 1
@@ -44,7 +44,7 @@ struct RootOnboardingView: View {
                 .tag(3)
             OnboardingView(imageName: "onboarding-share",
                            titleText: "Share your sneaks",
-                           subtitleText: "Share your inventory on our in-app feed. You can also generate a shareable link, that lets anyone see them, even if they don't have the CopDeck app.",
+                           subtitleText: "Share your inventory on our in-app feed. Or generate a shareable link to share it with anyone, even if they don't have the CopDeck app.",
                            buttonTapped: nextTapped)
                 .tag(4)
             OnboardingView(imageName: "onboarding-feed",
@@ -60,9 +60,16 @@ struct RootOnboardingView: View {
             OnboardingView(imageName: "onboarding-import",
                            titleText: "Spreadsheet import",
                            subtitleText: "Import your sneaker reseller spreadsheet with just a single click.",
-                           buttonText: "Get started!",
                            buttonTapped: nextTapped)
                 .tag(7)
+            OnboardingView(imageName: "onboarding-import",
+                           titleText: "Chat & Enable notifications",
+                           subtitleText: "Chat with other CopDeck users using our built-in chat. Enable notifications to make sure you don't miss anything.",
+                           buttonText: "Enable notifications",
+                           secondaryButtonText: "Not now",
+                           buttonTapped: {},
+                           secondaryButtonTapped: {})
+                .tag(8)
         }
         .tabViewStyle(PageTabViewStyle())
         .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
