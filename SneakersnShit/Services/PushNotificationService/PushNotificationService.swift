@@ -41,10 +41,8 @@ class PushNotificationService: NSObject {
         Messaging.messaging().isAutoInitEnabled = false
 
         UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
-            self?.handlePermissionBlockResult(isGranted: settings.authorizationStatus == .authorized)
+            self?.handlePermissionBlockResult(isGranted: settings.authorizationStatus == .authorized, completion: nil)
         }
-        #warning("where to call this?")
-        requestUserPermission()
     }
 
     func application(_ application: UIApplication,
@@ -53,18 +51,29 @@ class PushNotificationService: NSObject {
         Messaging.messaging().appDidReceiveMessage(userInfo)
         completionHandler(UIBackgroundFetchResult.noData)
     }
+    
+    func requestPermissionsIfNotAsked(completion: (() -> Void)?) {
+        UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
+            if settings.authorizationStatus == .notDetermined {
+                self?.requestUserPermission(completion: completion)
+            } else {
+                completion?()
+            }
+        }
+    }
 
-    func requestUserPermission() {
+    func requestUserPermission(completion: (() -> Void)?) {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { [weak self] didGrant, error in
-            self?.handlePermissionBlockResult(isGranted: didGrant)
+            self?.handlePermissionBlockResult(isGranted: didGrant, completion: completion)
         }
     }
     
-    private func handlePermissionBlockResult(isGranted: Bool) {
+    private func handlePermissionBlockResult(isGranted: Bool, completion: (() -> Void)?) {
         if isGranted {
             DispatchQueue.main.async { [weak self] in
                 UIApplication.shared.registerForRemoteNotifications()
                 self?.didGrantNotificationPermission = true
+                completion?()
             }
         }
     }

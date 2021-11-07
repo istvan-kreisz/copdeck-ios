@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct RootOnboardingView: View {
-    @EnvironmentObject var store: DerivedGlobalStore
     @AppStorage(UserDefaults.Keys.needsAppOnboarding.rawValue) private var needsAppOnboarding: Bool = true
     @State private var currentTab = 0
 
@@ -67,8 +66,10 @@ struct RootOnboardingView: View {
                            subtitleText: "Chat with other CopDeck users using our built-in chat. Enable notifications to make sure you don't miss anything.",
                            buttonText: "Enable notifications",
                            secondaryButtonText: "Not now",
-                           buttonTapped: {},
-                           secondaryButtonTapped: {})
+                           buttonTapped: {
+                               AppStore.default.environment.pushNotificationService.requestPermissionsIfNotAsked(completion: nextTapped)
+                           },
+                           secondaryButtonTapped: nextTapped)
                 .tag(8)
         }
         .tabViewStyle(PageTabViewStyle())
