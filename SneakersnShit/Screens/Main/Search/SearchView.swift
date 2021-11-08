@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct SearchView: View {
-    @EnvironmentObject var store: SearchStore
+    @EnvironmentObject var store: DerivedGlobalStore
 
     @State private var searchText = ""
     @State private var isFirstLoad = true
@@ -21,6 +21,10 @@ struct SearchView: View {
     @State private var selectedTabIndex = 0
 
     @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
+
+    @State var searchState = SearchState()
+
+    var alert = State<(String, String)?>(initialValue: nil)
 
     var selectedItem: Item? {
         guard case let .itemDetail(item) = navigationDestination.destination else { return nil }
@@ -34,16 +38,16 @@ struct SearchView: View {
 
     var allItems: [Item] {
         let selectedItem: [Item] = selectedItem.map { (item: Item) in [item] } ?? []
-        let searchResults: [Item] = store.state.searchResults
-        let popularItems: [Item] = store.state.popularItems
-        let favoritedItems: [Item] = store.state.favoritedItems
-        let recentlyViewed: [Item] = store.state.recentlyViewed
+        let searchResults: [Item] = searchState.searchResults
+        let popularItems: [Item] = searchState.popularItems
+        let favoritedItems: [Item] = store.globalState.favoritedItems
+        let recentlyViewed: [Item] = store.globalState.recentlyViewedItems
         return (selectedItem + searchResults + popularItems + favoritedItems + recentlyViewed).uniqued()
     }
 
     var allProfiles: [ProfileData] {
         let selectedProfile: [ProfileData] = selectedUser.map { (profile: ProfileData) in [profile] } ?? []
-        let searchResults: [ProfileData] = store.state.userSearchResults.map { (user: User) in ProfileData(user: user, stacks: [], inventoryItems: []) }
+        let searchResults: [ProfileData] = searchState.userSearchResults.map { (user: User) in ProfileData(user: user, stacks: [], inventoryItems: []) }
         var uniqued: [ProfileData] = []
         (selectedProfile + searchResults).forEach { profileData in
             if !uniqued.contains(where: { $0.user.id == profileData.user.id }) {
@@ -74,8 +78,8 @@ struct SearchView: View {
                                                                 }
                                                             })
             NavigationLink(destination: Destination(store: store,
-                                                    popularItems: $store.state.popularItems,
-                                                    favoritedItems: $store.state.favoritedItems,
+                                                    popularItems: $searchState.popularItems,
+                                                    favoritedItems: $store.globalState.favoritedItems,
                                                     navigationDestination: $navigationDestination)
                     .navigationbarHidden(),
                 isActive: showDetail) { EmptyView() }
@@ -103,23 +107,23 @@ struct SearchView: View {
                     .withDefaultPadding(padding: .horizontal)
 
                 if selectedTabIndex == 0 {
-                    if store.state.searchResults.isEmpty {
+                    if searchState.searchResults.isEmpty {
                         VStack(alignment: .leading, spacing: 10) {
-                            HorizontaltemListView(items: $store.state.popularItems,
+                            HorizontaltemListView(items: $searchState.popularItems,
                                                   selectedItem: selectedItemBinding,
                                                   isLoading: $popularItemsLoader.isLoading,
                                                   title: "Trending now",
                                                   requestInfo: store.globalState.requestInfo,
                                                   style: .round) { navigationDestination += .popularItems }
 
-                            HorizontaltemListView(items: $store.state.favoritedItems,
+                            HorizontaltemListView(items: $store.globalState.favoritedItems,
                                                   selectedItem: selectedItemBinding,
                                                   isLoading: .constant(false),
                                                   title: "Your favorites",
                                                   requestInfo: store.globalState.requestInfo,
                                                   style: .square(.customRed)) { navigationDestination += .favoritedItems }
 
-                            HorizontaltemListView(items: $store.state.recentlyViewed,
+                            HorizontaltemListView(items: $store.globalState.recentlyViewedItems,
                                                   selectedItem: selectedItemBinding,
                                                   isLoading: .constant(false),
                                                   title: "Recently viewed",
@@ -129,7 +133,7 @@ struct SearchView: View {
                             Spacer()
                         }
                     } else {
-                        VerticalItemListView(items: $store.state.searchResults,
+                        VerticalItemListView(items: $searchState.searchResults,
                                              selectedItem: selectedItemBinding,
                                              isLoading: $searchResultsLoader.isLoading,
                                              title: nil,
@@ -138,36 +142,49 @@ struct SearchView: View {
                                              requestInfo: store.globalState.requestInfo)
                     }
                 } else {
-                    VerticalProfileListView(profiles: $store.state.userSearchResults.asProfiles,
+                    VerticalProfileListView(profiles: $searchState.userSearchResults.asProfiles,
                                             selectedProfile: selectedUserBinding,
                                             isLoading: $userSearchResultsLoader.isLoading,
                                             bottomPadding: Styles.tabScreenBottomPadding)
                 }
             }
             .hideKeyboardOnScroll()
-            .onChange(of: searchText) { searchText in
-                if selectedTabIndex == 0 {
-                    store.send(.main(action: .getSearchResults(searchTerm: searchText)), completed: searchResultsLoader.getLoader())
-                } else {
-                    store.send(.main(action: .searchUsers(searchTerm: searchText)), completed: userSearchResultsLoader.getLoader())
-                }
-            }
+            .onChange(of: searchText) { search(searchTerm: $0) }
             .onAppear {
-                if store.state.popularItems.isEmpty {
-                    store.send(.main(action: .getPopularItems), completed: popularItemsLoader.getLoader())
+                if searchState.popularItems.isEmpty {
+                    store.send(.main(action: .getPopularItems(completion: { result in
+                        handleResult(result: result, loader: nil) { self.searchState.popularItems = $0 }
+                    })))
                 }
                 if isFirstLoad {
                     loadFeedPosts(loadMore: false)
                     isFirstLoad = false
                 }
             }
+            .withAlert(alert: alert.projectedValue)
         }
     }
 
+    private func search(searchTerm: String) {
+        if selectedTabIndex == 0 {
+            let loader = searchResultsLoader.getLoader()
+            store.send(.main(action: .getSearchResults(searchTerm: searchText, completion: { result in
+                handleResult(result: result, loader: loader) { self.searchState.searchResults = $0 }
+            })))
+        } else {
+            let loader = userSearchResultsLoader.getLoader()
+            store.send(.main(action: .searchUsers(searchTerm: searchText, completion: { result in
+                handleResult(result: result, loader: loader) { self.searchState.userSearchResults = $0 }
+            })))
+        }
+    }
+    
     private func loadFeedPosts(loadMore: Bool) {
         store.send(.main(action: .getFeedPosts(loadMore: loadMore)), debounceDelayMs: 2000)
     }
 }
+
+extension SearchView: ViewWithAlert {}
 
 extension SearchView {
     enum NavigationDestination: Equatable {
@@ -175,7 +192,7 @@ extension SearchView {
     }
 
     struct Destination: View {
-        var store: SearchStore
+        var store: DerivedGlobalStore
         @Binding var popularItems: [Item]
         @Binding var favoritedItems: [Item]
         @Binding var navigationDestination: Navigation<NavigationDestination>
@@ -185,15 +202,15 @@ extension SearchView {
             case .popularItems:
                 PopularItemsListView(items: $popularItems,
                                      requestInfo: store.globalState.requestInfo,
-                                     favoritedItemIds: store.state.favoritedItems.map(\.id))
+                                     favoritedItemIds: store.globalState.favoritedItems.map(\.id))
             case .favoritedItems:
                 PopularItemsListView(items: $favoritedItems,
                                      requestInfo: store.globalState.requestInfo,
-                                     favoritedItemIds: store.state.favoritedItems.map(\.id))
+                                     favoritedItemIds: store.globalState.favoritedItems.map(\.id))
             case let .itemDetail(item):
                 ItemDetailView(item: item,
                                itemId: item.id,
-                               favoritedItemIds: store.state.favoritedItems.map(\.id)) { navigationDestination.hide() }
+                               favoritedItemIds: store.globalState.favoritedItems.map(\.id)) { navigationDestination.hide() }
                     .environmentObject(AppStore.default)
             case let .profile(profileData):
                 ProfileView(profileData: profileData) { navigationDestination.hide() }
@@ -203,3 +220,5 @@ extension SearchView {
         }
     }
 }
+
+#warning("check if publishers terminate correctly in all cases")

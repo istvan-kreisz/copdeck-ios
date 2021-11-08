@@ -18,8 +18,12 @@ class Loader: ObservableObject {
             isLoading = !loaders.isEmpty
         }
     }
-
+    
     func getLoader() -> (Result<Void, AppError>) -> Void {
+        loaders.first?.value ?? getNewLoader()
+    }
+
+    func getNewLoader() -> (Result<Void, AppError>) -> Void {
         if !didStart {
             didStart = true
         }

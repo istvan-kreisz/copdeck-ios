@@ -23,7 +23,7 @@ struct MainContainerView: View {
             },
             TabBarElement(tabBarElementItem: .init(title: "Second", systemImageName: "pencil.circle.fill")) {
                 SearchView()
-                    .withTabViewWrapper(viewRouter: viewRouter, store: SearchStore.default, shouldShow: $shouldShowTabBar)
+                    .withTabViewWrapper(viewRouter: viewRouter, store: AppStore.default, shouldShow: $shouldShowTabBar)
             },
             TabBarElement(tabBarElementItem: .init(title: "Third", systemImageName: "folder.fill")) {
                 InventoryView(username: store.state.user?.name ?? "",

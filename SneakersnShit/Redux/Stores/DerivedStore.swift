@@ -48,7 +48,6 @@ class DerivedStore<T: Equatable>: DerivedGlobalStore {
     }
 }
 
-typealias SearchStore = DerivedStore<SearchState>
 typealias FeedStore = DerivedStore<FeedState>
 typealias InventoryStore = DerivedStore<InventoryState>
 
@@ -58,10 +57,6 @@ extension DerivedGlobalStore {
 
 extension FeedStore {
     static let `default`: FeedStore = FeedStore(appStore: AppStore.default, derivedState: { $0.feedState })
-}
-
-extension SearchStore {
-    static let `default`: SearchStore = SearchStore(appStore: AppStore.default, derivedState: { $0.searchState })
 }
 
 extension InventoryStore {
