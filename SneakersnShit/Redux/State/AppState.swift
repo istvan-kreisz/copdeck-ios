@@ -31,6 +31,7 @@ struct GlobalState: Equatable {
     var chatUpdates: ChatUpdateInfo = .init(updateInfo: [:])
     
     var bestPrices: [String: ListingPrice] = [:]
+    var inventoryValue: PriceWithCurrency?
 
     var subscriptionActive: Bool {
         user?.subscription == .pro

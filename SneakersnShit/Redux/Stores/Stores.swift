@@ -26,48 +26,63 @@ extension AppStore {
         setupObservers()
     }
 
-//    func updateBestPrices() {
-//        state.globalState.bestPrices = state.inventoryItems
-//            .map { (inventoryItem: InventoryItem) -> (String, ListingPrice?) in (inventoryItem.id, bestPrice(for: inventoryItem)) }
-//            .reduce([:]) { (dict: [String: ListingPrice], element: (String, ListingPrice?)) in
-//                if let price = element.1 {
-//                    var newDict = dict
-//                    newDict[element.0] = price
-//                    return newDict
-//                } else {
-//                    return dict
-//                }
-//            }
-//    }
-//
-//    var inventoryValue: PriceWithCurrency? {
-//        if let currencyCode = bestPrices.values.first?.price.currencyCode {
-//            let sum = state.inventoryItems
-//                .filter { (inventoryItem: InventoryItem) -> Bool in inventoryItem.status != .Sold }
-//                .compactMap { (inventoryItem: InventoryItem) -> Double? in bestPrices[inventoryItem.id]?.price.price }
-//                .sum()
-//            return PriceWithCurrency(price: sum, currencyCode: currencyCode)
-//        } else {
-//            return nil
-//        }
-//    }
-//
-//    private func bestPrice(for inventoryItem: InventoryItem) -> ListingPrice? {
-//        if let itemId = inventoryItem.itemId, let item = ItemCache.default.value(itemId: itemId, settings: globalStore.globalState.settings) {
-//            return item.bestPrice(for: inventoryItem.size,
-//                                  feeType: globalStore.globalState.settings.bestPriceFeeType,
-//                                  priceType: globalStore.globalState.settings.bestPricePriceType,
-//                                  stores: globalStore.globalState.displayedStores)
-//        } else {
-//            return nil
-//        }
-//    }
+    private func updateBestPrices(state: AppState, completion: @escaping ([String: ListingPrice]) -> Void) {
+        let bestPrices = state.inventoryItems
+            .map { (inventoryItem: InventoryItem) -> (String, ListingPrice?) in (inventoryItem.id, bestPrice(for: inventoryItem)) }
+            .reduce([:]) { (dict: [String: ListingPrice], element: (String, ListingPrice?)) in
+                if let price = element.1 {
+                    var newDict = dict
+                    newDict[element.0] = price
+                    return newDict
+                } else {
+                    return dict
+                }
+            }
+        completion(bestPrices)
+    }
+
+    private func updateTotalInventoryValue(state: AppState, completion: (PriceWithCurrency?) -> Void) {
+        if let currencyCode = state.globalState.bestPrices.values.first?.price.currencyCode {
+            let sum = state.inventoryItems
+                .filter { (inventoryItem: InventoryItem) -> Bool in inventoryItem.status != .Sold }
+                .compactMap { (inventoryItem: InventoryItem) -> Double? in state.globalState.bestPrices[inventoryItem.id]?.price.price }
+                .sum()
+            completion(PriceWithCurrency(price: sum, currencyCode: currencyCode))
+        } else {
+            completion(nil)
+        }
+    }
+
+    private func updateInventoryValue() {
+        let appState = state
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            self?.updateBestPrices(state: appState) { bestPrices in
+                self?.updateTotalInventoryValue(state: appState) { inventoryValue in
+                    DispatchQueue.main.async {
+                        self?.state.globalState.bestPrices = bestPrices
+                        self?.state.globalState.inventoryValue = inventoryValue
+                    }
+                }
+            }
+        }
+    }
+
+    private func bestPrice(for inventoryItem: InventoryItem) -> ListingPrice? {
+        if let itemId = inventoryItem.itemId, let item = ItemCache.default.value(itemId: itemId, settings: state.settings) {
+            return item.bestPrice(for: inventoryItem.size,
+                                  feeType: state.settings.bestPriceFeeType,
+                                  priceType: state.settings.bestPricePriceType,
+                                  stores: state.displayedStores)
+        } else {
+            return nil
+        }
+    }
 
     func setupObservers() {
         ItemCache.default.updatedPublisher.debounce(for: .milliseconds(2000), scheduler: RunLoop.main).prepend(())
             .receive(on: DispatchQueue.main)
             .sink { [weak self] in
-//                self?.updateBestPrices()
+                self?.updateInventoryValue()
             }
             .store(in: &effectCancellables)
 
@@ -89,7 +104,7 @@ extension AppStore {
                           self?.refreshItemPricesIfNeeded(newUser: newUser)
                       }
                       self?.state.user = newUser
-//                      self?.updateBestPrices()
+                      self?.updateInventoryValue()
                   })
             .store(in: &effectCancellables)
 
@@ -103,7 +118,7 @@ extension AppStore {
                           self?.refreshItemPricesIfNeeded()
                           self?.state.didFetchItemPrices = true
                       }
-//                      self?.updateBestPrices()
+                      self?.updateInventoryValue()
                   })
             .store(in: &effectCancellables)
 
