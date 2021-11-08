@@ -97,7 +97,7 @@ struct SpreadsheetImportDetailView: View {
     }
 
     private func refreshInventoryItems() {
-        let loader = loader.getNewLoader()
+        let loader = loader.getLoader()
         store.send(.main(action: .getImportedInventoryItems(importedUserId: userId, completion: { result in
             switch result {
             case let .success(inventoryItems):

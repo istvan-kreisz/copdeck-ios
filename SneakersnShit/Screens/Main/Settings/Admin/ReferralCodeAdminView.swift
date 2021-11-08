@@ -62,7 +62,7 @@ struct ReferralCodeAdminView: View {
     }
 
     private func refreshList() {
-        let loader = loader.getNewLoader()
+        let loader = loader.getLoader()
         store.send(.main(action: .getAffiliateList(completion: { result in
             switch result {
             case let .success(referralCodes):

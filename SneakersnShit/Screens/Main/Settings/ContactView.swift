@@ -78,7 +78,7 @@ struct ContactView: View {
             self.alert = ("Error", "Please enter your message")
             return
         }
-        let loader = loader.getNewLoader()
+        let loader = loader.getLoader()
 
         store.send(.main(action: .sendMessage(email: email, message: message, completion: { result in
             if case let .failure(error) = result {

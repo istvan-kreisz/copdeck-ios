@@ -240,7 +240,7 @@ struct SpreadsheetImportView: View {
     }
 
     private func revertLastImport() {
-        let loader = loader.getNewLoader()
+        let loader = loader.getLoader()
         store.send(.main(action: .revertLastImport(completion: { error in
             if let error = error {
                 self.error = ("Error", error.localizedDescription, nil)
@@ -252,7 +252,7 @@ struct SpreadsheetImportView: View {
     }
 
     private func sendImportRequest() {
-        let loader = loader.getNewLoader()
+        let loader = loader.getLoader()
         store.send(.main(action: .startSpreadsheetImport(urlString: spreadsheetURL, completion: { error in
             if let error = error {
                 self.error = ("Error", error.localizedDescription, nil)
