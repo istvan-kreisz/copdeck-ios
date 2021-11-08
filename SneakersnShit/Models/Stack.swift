@@ -30,7 +30,7 @@ struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
 
     func inventoryItems(allInventoryItems: [InventoryItem], filters: Filters, searchText: String) -> [InventoryItem] {
         allInventoryItems.filter { (inventoryItem: InventoryItem) -> Bool in
-            let hasStackItem = items.contains(where: { (stackItem: StackItem) -> Bool in inventoryItem.id == stackItem.inventoryItemId })
+            let hasStackItem = id == "all" || items.contains(where: { (stackItem: StackItem) -> Bool in inventoryItem.id == stackItem.inventoryItemId })
             if hasStackItem {
                 let nameMatchesSearchString = inventoryItem.name.lowercased().fuzzyMatch(searchText.lowercased())
                 let notesMatchesSearchString = inventoryItem.notes.map { $0.lowercased().fuzzyMatch(searchText.lowercased()) } ?? false
@@ -56,18 +56,18 @@ struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
         "https://www.copdeck.com/shared/\(id)?userid=\(userId)"
     }
 
-    static func allStack(inventoryItems: [InventoryItem]) -> Stack {
+    static let allStack: Stack = {
         Stack(id: "all",
               name: "All",
               isPublished: false,
               isPublic: nil,
               isSharedViaLink: nil,
-              items: inventoryItems.map { .init(inventoryItemId: $0.id) },
+              items: [],
               created: 0,
               updated: 0,
               publishedDate: nil,
               likes: nil)
-    }
+    }()
 
     static var empty: Stack {
         Stack(id: "empty",

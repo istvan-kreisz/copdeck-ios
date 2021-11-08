@@ -26,7 +26,51 @@ extension AppStore {
         setupObservers()
     }
 
+//    func updateBestPrices() {
+//        state.globalState.bestPrices = state.inventoryItems
+//            .map { (inventoryItem: InventoryItem) -> (String, ListingPrice?) in (inventoryItem.id, bestPrice(for: inventoryItem)) }
+//            .reduce([:]) { (dict: [String: ListingPrice], element: (String, ListingPrice?)) in
+//                if let price = element.1 {
+//                    var newDict = dict
+//                    newDict[element.0] = price
+//                    return newDict
+//                } else {
+//                    return dict
+//                }
+//            }
+//    }
+//
+//    var inventoryValue: PriceWithCurrency? {
+//        if let currencyCode = bestPrices.values.first?.price.currencyCode {
+//            let sum = state.inventoryItems
+//                .filter { (inventoryItem: InventoryItem) -> Bool in inventoryItem.status != .Sold }
+//                .compactMap { (inventoryItem: InventoryItem) -> Double? in bestPrices[inventoryItem.id]?.price.price }
+//                .sum()
+//            return PriceWithCurrency(price: sum, currencyCode: currencyCode)
+//        } else {
+//            return nil
+//        }
+//    }
+//
+//    private func bestPrice(for inventoryItem: InventoryItem) -> ListingPrice? {
+//        if let itemId = inventoryItem.itemId, let item = ItemCache.default.value(itemId: itemId, settings: globalStore.globalState.settings) {
+//            return item.bestPrice(for: inventoryItem.size,
+//                                  feeType: globalStore.globalState.settings.bestPriceFeeType,
+//                                  priceType: globalStore.globalState.settings.bestPricePriceType,
+//                                  stores: globalStore.globalState.displayedStores)
+//        } else {
+//            return nil
+//        }
+//    }
+
     func setupObservers() {
+        ItemCache.default.updatedPublisher.debounce(for: .milliseconds(2000), scheduler: RunLoop.main).prepend(())
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+//                self?.updateBestPrices()
+            }
+            .store(in: &effectCancellables)
+
         environment.dataController.errorsPublisher.merge(with: environment.paymentService.errorsPublisher)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] error in
@@ -45,6 +89,7 @@ extension AppStore {
                           self?.refreshItemPricesIfNeeded(newUser: newUser)
                       }
                       self?.state.user = newUser
+//                      self?.updateBestPrices()
                   })
             .store(in: &effectCancellables)
 
@@ -54,11 +99,11 @@ extension AppStore {
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] inventoryItems in
                       self?.state.inventoryItems = inventoryItems
-                      self?.updateAllStack(withInventoryItems: inventoryItems)
                       if !inventoryItems.isEmpty, self?.state.didFetchItemPrices == false {
                           self?.refreshItemPricesIfNeeded()
                           self?.state.didFetchItemPrices = true
                       }
+//                      self?.updateBestPrices()
                   })
             .store(in: &effectCancellables)
 
@@ -66,7 +111,7 @@ extension AppStore {
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] stacks in
-                      self?.state.stacks = (self?.state.allStack.map { (stack: Stack) in [stack] } ?? []) + stacks
+                      self?.state.stacks = [.allStack] + stacks
                   })
             .store(in: &effectCancellables)
 
@@ -131,16 +176,6 @@ extension AppStore {
                       self?.state.globalState.chatUpdates = chatUpdateInfo
                   })
             .store(in: &effectCancellables)
-    }
-
-    func updateAllStack(withInventoryItems inventoryItems: [InventoryItem]) {
-        if state.stacks.isEmpty {
-            state.stacks = [.allStack(inventoryItems: inventoryItems)]
-        } else if let allStackIndex = state.allStackIndex {
-            state.stacks[allStackIndex].items = inventoryItems.map { (inventoryItem: InventoryItem) in StackItem(inventoryItemId: inventoryItem.id) }
-        } else {
-            state.stacks.insert(.allStack(inventoryItems: inventoryItems), at: 0)
-        }
     }
 
     func setupTimers() {

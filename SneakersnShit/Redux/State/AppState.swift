@@ -29,6 +29,8 @@ struct GlobalState: Equatable {
     var showPaymentView = false
     var allPackages: [DiscountValue: SubscriptionPackages]?
     var chatUpdates: ChatUpdateInfo = .init(updateInfo: [:])
+    
+    var bestPrices: [String: ListingPrice] = [:]
 
     var subscriptionActive: Bool {
         user?.subscription == .pro
@@ -148,14 +150,6 @@ struct AppState: Equatable {
 
     var rates: ExchangeRates {
         exchangeRates ?? .default
-    }
-
-    var allStackIndex: Int? {
-        stacks.firstIndex(where: { $0.id == "all" })
-    }
-
-    var allStack: Stack? {
-        allStackIndex.map { (index: Int) in stacks[index] }
     }
 
     mutating func reset() {
