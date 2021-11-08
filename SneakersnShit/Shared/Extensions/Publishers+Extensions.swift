@@ -16,3 +16,17 @@ extension Publishers.Map where Output == AppAction {
             .eraseToAnyPublisher()
     }
 }
+
+extension AnyPublisher where Failure == AppError {
+    func complete(completion: @escaping (Result<Output, AppError>) -> Void) -> AnyPublisher<AppAction, Never> {
+        handleEvents(receiveOutput: { items in
+            completion(.success(items))
+        }, receiveCompletion: { result in
+            guard case let .failure(error) = result else { return }
+            completion(.failure(error))
+        })
+            .map { _ in AppAction.none }
+            .replaceError(with: AppAction.none)
+            .eraseToAnyPublisher()
+    }
+}

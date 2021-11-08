@@ -26,7 +26,7 @@ func appReducer(state: inout AppState,
             environment.dataController.reset()
             environment.paymentService.reset()
             environment.pushNotificationService.reset()
-            // delete tokens
+        // delete tokens
         case let .setUser(user):
             if !state.firstLoadDone {
                 state.firstLoadDone = true
@@ -35,7 +35,7 @@ func appReducer(state: inout AppState,
             environment.pushNotificationService.setup(userId: user.id)
             environment.dataController.setup(userId: user.id)
             environment.paymentService.setup(userId: user.id, userEmail: user.email)
-            // register tokens
+        // register tokens
         case let .updateUsername(username):
             if var updatedUser = state.user {
                 updatedUser.name = username
@@ -68,30 +68,19 @@ func appReducer(state: inout AppState,
                 updatedUser.inited = true
                 environment.dataController.update(user: updatedUser)
             }
-        case let .getSearchResults(searchTerm: searchTerm):
+        case let .getSearchResults(searchTerm: searchTerm, completion: completion):
             if searchTerm.isEmpty {
-                state.searchResults = []
+                completion(.success([]))
             } else {
                 return environment.dataController.search(searchTerm: searchTerm, settings: state.settings, exchangeRates: state.rates)
-                    .map { (items: [Item]) in AppAction.main(action: .setSearchResults(searchResults: items)) }
-                    .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
-                    .eraseToAnyPublisher()
+                    .complete(completion: completion)
             }
-        case let .setSearchResults(searchResults):
-            state.searchResults = searchResults
-        case .getPopularItems:
+        case let .getPopularItems(completion: completion):
             return environment.dataController.getPopularItems(settings: state.settings, exchangeRates: state.rates)
-                .map { (items: [Item]) in AppAction.main(action: .setPopularItems(items: items)) }
-                .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
-                .eraseToAnyPublisher()
-        case let .setPopularItems(items):
-            state.popularItems = items
-        case let .searchUsers(searchTerm):
+                .complete(completion: completion)
+        case let .searchUsers(searchTerm: searchTerm, completion: completion):
             return environment.dataController.searchUsers(searchTerm: searchTerm)
-                .map { (users: [User]) in AppAction.main(action: .setUserSearchResults(searchResults: users)) }
-                .catchErrors()
-        case let .setUserSearchResults(searchResults):
-            state.userSearchResults = searchResults
+                .complete(completion: completion)
         case let .favorite(item):
             environment.dataController.favorite(item: item)
         case let .unfavorite(item):
@@ -100,18 +89,20 @@ func appReducer(state: inout AppState,
             environment.dataController.add(recentlyViewedItem: item)
         case let .getUserProfile(userId, completion):
             return environment.dataController.getUserProfile(userId: userId)
-                .map { (user: ProfileData) in AppAction.main(action: .setSelectedUser(user: user, completion: completion)) }
-                .catchErrors()
-        case let .setSelectedUser(user, completion):
-            completion(user)
+                .complete { completion($0.value) }
         case let .getItemDetails(item, itemId, fetchMode, completion):
+            let settings = state.settings
             return environment.dataController.getItemDetails(for: item,
                                                              itemId: itemId,
                                                              fetchMode: fetchMode,
                                                              settings: state.settings,
                                                              exchangeRates: state.rates)
-                .map { AppAction.main(action: .setSelectedItem(item: $0, completion: completion)) }
-                .catchErrors()
+                .complete(completion: { result in
+                    if let item = result.value {
+                        ItemCache.default.insert(item: item, settings: settings)
+                    }
+                    completion(result.value)
+                })
         case let .getItemImage(itemId, completion):
             environment.dataController.getImage(for: itemId, completion: completion)
         case let .uploadItemImage(itemId, image):
@@ -124,11 +115,6 @@ func appReducer(state: inout AppState,
                                                              exchangeRates: state.rates)
                 .map { _ in AppAction.none }
                 .catchErrors()
-        case let .setSelectedItem(item, completion):
-            if let item = item {
-                ItemCache.default.insert(item: item, settings: state.settings)
-            }
-            completion(item)
         case let .addStack(stack):
             environment.dataController.update(stacks: [stack])
         case let .deleteStack(stack):

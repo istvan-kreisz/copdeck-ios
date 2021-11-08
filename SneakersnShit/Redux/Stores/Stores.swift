@@ -13,7 +13,7 @@ typealias AppStore = ReduxStore<AppState, AppAction, World>
 
 extension AppStore {
     static var isChatDetailView = false
-    
+
     static let `default`: AppStore = {
         let appStore = AppStore(state: .init(), reducer: appReducer, environment: World())
         appStore.setup()
@@ -94,8 +94,8 @@ extension AppStore {
         environment.dataController.recentlyViewedPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in },
-                  receiveValue: { [weak self] recentlyViewed in
-                      self?.state.recentlyViewed = recentlyViewed
+                  receiveValue: { [weak self] in
+                      self?.state.recentlyViewedItems = $0
                   })
             .store(in: &effectCancellables)
 

@@ -11,8 +11,6 @@ import Purchases
 struct SearchState: Equatable {
     var searchResults: [Item] = []
     var popularItems: [Item] = []
-    var favoritedItems: [Item] = []
-    var recentlyViewed: [Item] = []
     var userSearchResults: [User] = []
 }
 
@@ -26,6 +24,8 @@ struct GlobalState: Equatable {
     var didFetchItemPrices = false
     var requestInfo: [ScraperRequestInfo] = []
     var error: AppError?
+    var favoritedItems: [Item] = []
+    var recentlyViewedItems: [Item] = []
     var exchangeRates: ExchangeRates?
     var showPaymentView = false
     var allPackages: [DiscountValue: SubscriptionPackages]?
@@ -65,7 +65,6 @@ struct InventoryState: Equatable {
 
 struct AppState: Equatable {
     var globalState = GlobalState()
-    var searchState = SearchState()
     var feedState = FeedState()
     var inventoryState = InventoryState()
 
@@ -99,29 +98,14 @@ struct AppState: Equatable {
         set { globalState.exchangeRates = newValue }
     }
 
-    var searchResults: [Item] {
-        get { searchState.searchResults }
-        set { searchState.searchResults = newValue }
-    }
-
-    var popularItems: [Item] {
-        get { searchState.popularItems }
-        set { searchState.popularItems = newValue }
-    }
-
     var favoritedItems: [Item] {
-        get { searchState.favoritedItems }
-        set { searchState.favoritedItems = newValue }
+        get { globalState.favoritedItems }
+        set { globalState.favoritedItems = newValue }
     }
-
-    var recentlyViewed: [Item] {
-        get { searchState.recentlyViewed }
-        set { searchState.recentlyViewed = newValue }
-    }
-
-    var userSearchResults: [User] {
-        get { searchState.userSearchResults }
-        set { searchState.userSearchResults = newValue }
+    
+    var recentlyViewedItems: [Item] {
+        get { globalState.recentlyViewedItems }
+        set { globalState.recentlyViewedItems = newValue }
     }
 
     var feedPosts: PaginatedResult<[FeedPost]> {
@@ -191,7 +175,6 @@ struct AppState: Equatable {
     }
 
     mutating func reset() {
-        searchState = SearchState()
         feedState = FeedState()
         user = nil
         inventoryItems = []

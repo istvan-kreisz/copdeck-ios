@@ -18,7 +18,6 @@ struct CopDeckApp: App {
             RootView()
                 .environmentObject(AppStore.default)
                 .environmentObject(DerivedGlobalStore.default)
-                .environmentObject(SearchStore.default)
                 .environmentObject(FeedStore.default)
                 .environmentObject(InventoryStore.default)
         }

@@ -22,24 +22,19 @@ enum MainAction {
     // settings
     case updateSettings(settings: CopDeckSettings)
     // search
-    case getSearchResults(searchTerm: String)
-    case setSearchResults(searchResults: [Item])
-    case getPopularItems
-    case setPopularItems(items: [Item])
-    case searchUsers(searchTerm: String)
-    case setUserSearchResults(searchResults: [User])
+    case getSearchResults(searchTerm: String, completion: (Result<[Item], AppError>) -> Void)
+    case getPopularItems(completion: (Result<[Item], AppError>) -> Void)
+    case searchUsers(searchTerm: String, completion: (Result<[User], AppError>) -> Void)
     case favorite(item: Item)
     case unfavorite(item: Item)
     case addRecentlyViewed(item: Item)
     // users
     case getUserProfile(userId: String, completion: (ProfileData?) -> Void)
-    case setSelectedUser(user: ProfileData?, completion: (ProfileData?) -> Void)
     // item details
     case getItemDetails(item: Item?, itemId: String, fetchMode: FetchMode, completion: (Item?) -> Void)
     case getItemImage(itemId: String, completion: (URL?) -> Void)
     case uploadItemImage(itemId: String, image: UIImage)
     case refreshItemIfNeeded(itemId: String, fetchMode: FetchMode)
-    case setSelectedItem(item: Item?, completion: (Item?) -> Void)
     // inventory
     case addStack(stack: Stack)
     case deleteStack(stack: Stack)

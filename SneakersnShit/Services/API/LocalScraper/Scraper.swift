@@ -37,7 +37,7 @@ class LocalScraper {
     private var native: JSNativeBridge!
     private lazy var interpreter: JavascriptInterpreter = {
         if DebugSettings.shared.isInDebugMode {
-            JSBridgeConfiguration.add(logger: JSLogger())            
+            JSBridgeConfiguration.add(logger: JSLogger())
         }
         let interpreter = JavascriptInterpreter()
         native = JSNativeBridge()
