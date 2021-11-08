@@ -15,9 +15,7 @@ enum MainAction {
     case setUser(user: User)
     case updateUsername(username: String)
     // feed
-    case getFeedPosts(loadMore: Bool)
-    case setFeedPosts(feedPosts: PaginatedResult<[FeedPost]>)
-    case addFeedPosts(feedPosts: PaginatedResult<[FeedPost]>)
+    case getFeedPosts(loadMore: Bool, completion: (Result<PaginatedResult<[FeedPost]>, AppError>) -> Void)
     case toggleLike(stack: Stack, stackOwnerId: String)
     // settings
     case updateSettings(settings: CopDeckSettings)

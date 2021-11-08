@@ -19,7 +19,7 @@ struct MainContainerView: View {
         UITabBarWrapper(selectedIndex: selectedIndex) {
             (TabBarElement(tabBarElementItem: .init(title: "First", systemImageName: "house.fill")) {
                 FeedView(userId: store.state.user?.id ?? "")
-                    .withTabViewWrapper(viewRouter: viewRouter, store: FeedStore.default, shouldShow: $shouldShowTabBar)
+                    .withTabViewWrapper(viewRouter: viewRouter, store: DerivedGlobalStore.default, shouldShow: $shouldShowTabBar)
             },
             TabBarElement(tabBarElementItem: .init(title: "Second", systemImageName: "pencil.circle.fill")) {
                 SearchView()

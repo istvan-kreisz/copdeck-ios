@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-protocol ViewWithAlert: View {
+protocol LoadViewWithAlert: View {
     var alert: State<(String, String)?> { get }
 }
 
-extension ViewWithAlert {
+extension LoadViewWithAlert {
     func showError(_ appError: AppError) {
         self.alert.wrappedValue = (appError.title, appError.message)
     }

@@ -9,12 +9,17 @@ import SwiftUI
 import Combine
 
 struct FeedView: View {
-    @EnvironmentObject var store: FeedStore
+    static var preloadedPosts: PaginatedResult<[FeedPost]>?
+
+    @EnvironmentObject var store: DerivedGlobalStore
     @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
 
     @State private var isFirstLoad = true
 
     @StateObject private var loader = Loader()
+
+    @State var feedState = FeedState()
+    var alert = State<(String, String)?>(initialValue: nil)
 
     let userId: String
 
@@ -29,7 +34,7 @@ struct FeedView: View {
     }
 
     var feedPosts: [FeedPost] {
-        store.state.feedPosts.data
+        feedState.feedPosts.data
     }
 
     var allProfiles: [ProfileData] {
@@ -39,9 +44,12 @@ struct FeedView: View {
     var inventoryItems: [InventoryItem] {
         feedPosts.flatMap { $0.inventoryItems }
     }
-    
+
     init(userId: String) {
         self.userId = userId
+        if Self.preloadedPosts == nil {
+            loadFeedPosts(loadMore: false, preload: true)            
+        }
     }
 
     var body: some View {
@@ -58,14 +66,15 @@ struct FeedView: View {
                                                                        })
             let selectedStackBinding = Binding<Stack?>(get: { selectedStack },
                                                        set: { stack in
-                                                           if let feedPost = store.state.feedPosts.data.first(where: { $0.stack.id == stack?.id }) {
+                                                           if let feedPost = feedPosts.first(where: { $0.stack.id == stack?.id }) {
                                                                navigationDestination += .feedPost(feedPost)
                                                            } else {
                                                                navigationDestination.hide()
                                                            }
                                                        })
-            NavigationLink(destination: Destination(requestInfo: store.globalState.requestInfo, navigationDestination: $navigationDestination)
-                .navigationbarHidden(),
+            NavigationLink(destination: Destination(requestInfo: store.globalState.requestInfo, navigationDestination: $navigationDestination,
+                                                    feedPosts: $feedState.feedPosts)
+                    .navigationbarHidden(),
                 isActive: showDetail) { EmptyView() }
 
             VerticalListView(bottomPadding: Styles.tabScreenBottomPadding, spacing: 0) {
@@ -76,7 +85,7 @@ struct FeedView: View {
                     loadFeedPosts(loadMore: false)
                 }
 
-                if loader.isLoading && store.state.feedPosts.isLastPage {
+                if loader.isLoading && feedState.feedPosts.isLastPage {
                     CustomSpinner(text: "Loading posts...", animate: true)
                         .padding(.top, 21)
                         .centeredHorizontally()
@@ -102,7 +111,7 @@ struct FeedView: View {
                     }
                 }
 
-                if store.state.feedPosts.isLastPage {
+                if feedState.feedPosts.isLastPage {
                     Text("That's it!")
                         .font(.bold(size: 14))
                         .foregroundColor(.customText2)
@@ -125,16 +134,38 @@ struct FeedView: View {
         }
         .onAppear {
             if isFirstLoad {
-                if feedPosts.isEmpty {
-                    loadFeedPosts(loadMore: false)
+                if let preloadedPosts = Self.preloadedPosts {
+                    self.feedState.feedPosts = preloadedPosts
+                } else {
+                    if feedPosts.isEmpty {
+                        loadFeedPosts(loadMore: false)
+                    }
                 }
                 isFirstLoad = false
             }
         }
+        .withAlert(alert: alert.projectedValue)
     }
 
-    private func loadFeedPosts(loadMore: Bool) {
-        store.send(.main(action: .getFeedPosts(loadMore: loadMore)), debounceDelayMs: 2000, completed: loader.getNewLoader())
+    private func loadFeedPosts(loadMore: Bool, preload: Bool = false) {
+        var loader: ((Result<Void, AppError>) -> Void)? = nil
+        if !preload {
+            loader = self.loader.getLoader()
+        }
+        AppStore.default.send(.main(action: .getFeedPosts(loadMore: loadMore, completion: { result in
+            handleResult(result: result, loader: loader) { new in
+                if preload {
+                    Self.preloadedPosts = new
+                } else {
+                    if loadMore {
+                        feedState.feedPosts.data += new.data
+                        feedState.feedPosts.isLastPage = new.isLastPage
+                    } else {
+                        feedState.feedPosts = new
+                    }
+                }
+            }
+        })))
     }
 }
 
@@ -146,13 +177,10 @@ extension FeedView {
     struct Destination: View {
         let requestInfo: [ScraperRequestInfo]
         @Binding var navigationDestination: Navigation<NavigationDestination>
-
-        var feedPosts: [FeedPost] {
-            FeedStore.default.state.feedPosts.data
-        }
+        @Binding var feedPosts: PaginatedResult<[FeedPost]>
 
         func user(for inventoryItem: InventoryItem) -> User? {
-            feedPosts.first(where: { $0.stack.itemIds.contains(inventoryItem.id) })?.user
+            feedPosts.data.first(where: { $0.stack.itemIds.contains(inventoryItem.id) })?.user
         }
 
         var body: some View {
@@ -178,3 +206,5 @@ extension FeedView {
         }
     }
 }
+
+extension FeedView: LoadViewWithAlert {}

@@ -18,7 +18,6 @@ struct CopDeckApp: App {
             RootView()
                 .environmentObject(AppStore.default)
                 .environmentObject(DerivedGlobalStore.default)
-                .environmentObject(FeedStore.default)
                 .environmentObject(InventoryStore.default)
         }
         .onChange(of: scenePhase) { phase in

@@ -65,7 +65,6 @@ struct InventoryState: Equatable {
 
 struct AppState: Equatable {
     var globalState = GlobalState()
-    var feedState = FeedState()
     var inventoryState = InventoryState()
 
     var user: User? {
@@ -106,11 +105,6 @@ struct AppState: Equatable {
     var recentlyViewedItems: [Item] {
         get { globalState.recentlyViewedItems }
         set { globalState.recentlyViewedItems = newValue }
-    }
-
-    var feedPosts: PaginatedResult<[FeedPost]> {
-        get { feedState.feedPosts }
-        set { feedState.feedPosts = newValue }
     }
 
     var inventoryItems: [InventoryItem] {
@@ -175,7 +169,6 @@ struct AppState: Equatable {
     }
 
     mutating func reset() {
-        feedState = FeedState()
         user = nil
         inventoryItems = []
         stacks = []

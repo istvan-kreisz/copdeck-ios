@@ -23,6 +23,7 @@ func appReducer(state: inout AppState,
             if !state.firstLoadDone {
                 state.firstLoadDone = true
             }
+            FeedView.preloadedPosts = nil
             environment.dataController.reset()
             environment.paymentService.reset()
             environment.pushNotificationService.reset()
@@ -41,22 +42,9 @@ func appReducer(state: inout AppState,
                 updatedUser.name = username
                 environment.dataController.update(user: updatedUser)
             }
-        case let .getFeedPosts(loadMore):
+        case let .getFeedPosts(loadMore, completion):
             return environment.dataController.getFeedPosts(loadMore: loadMore)
-                .map { (result: PaginatedResult<[FeedPost]>) in
-                    if loadMore {
-                        return AppAction.main(action: .addFeedPosts(feedPosts: result))
-                    } else {
-                        return AppAction.main(action: .setFeedPosts(feedPosts: result))
-                    }
-                }
-                .replaceError(with: AppAction.error(action: .setError(error: AppError.unknown)))
-                .eraseToAnyPublisher()
-        case let .setFeedPosts(postsData):
-            state.feedPosts = postsData
-        case let .addFeedPosts(postsData):
-            state.feedPosts.data += postsData.data
-            state.feedPosts.isLastPage = postsData.isLastPage
+                .complete(completion: completion)
         case let .toggleLike(stack, stackOwnerId):
             if let userId = state.user?.id {
                 let shouldAddLike = stack.likes?.contains(userId) == true

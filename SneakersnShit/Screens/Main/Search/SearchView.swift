@@ -12,7 +12,6 @@ struct SearchView: View {
     @EnvironmentObject var store: DerivedGlobalStore
 
     @State private var searchText = ""
-    @State private var isFirstLoad = true
 
     @StateObject private var searchResultsLoader = Loader()
     @StateObject private var popularItemsLoader = Loader()
@@ -156,10 +155,6 @@ struct SearchView: View {
                         handleResult(result: result, loader: nil) { self.searchState.popularItems = $0 }
                     })))
                 }
-                if isFirstLoad {
-                    loadFeedPosts(loadMore: false)
-                    isFirstLoad = false
-                }
             }
             .withAlert(alert: alert.projectedValue)
         }
@@ -178,13 +173,9 @@ struct SearchView: View {
             })))
         }
     }
-    
-    private func loadFeedPosts(loadMore: Bool) {
-        store.send(.main(action: .getFeedPosts(loadMore: loadMore)), debounceDelayMs: 2000)
-    }
 }
 
-extension SearchView: ViewWithAlert {}
+extension SearchView: LoadViewWithAlert {}
 
 extension SearchView {
     enum NavigationDestination: Equatable {
