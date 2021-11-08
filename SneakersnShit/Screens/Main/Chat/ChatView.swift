@@ -50,15 +50,25 @@ struct ChatView: View {
                     CustomSpinner(text: "Loading messages", animate: true)
                 }
 
-                ForEach(channels) { (channel: Channel) in
-                    if let userId = userId {
-                        ChannelListItem(channel: channel, userId: userId) {
-                            navigationDestination += .chat(channel: channel, userId: userId)
-                        } didTapUser: {
-                            if let messagePartner = channel.messagePartner(userId: userId) {
-                                navigationDestination += .profile(.init(user: messagePartner))
+                if !channels.isEmpty {
+                    ForEach(channels) { (channel: Channel) in
+                        if let userId = userId {
+                            ChannelListItem(channel: channel, userId: userId) {
+                                navigationDestination += .chat(channel: channel, userId: userId)
+                            } didTapUser: {
+                                if let messagePartner = channel.messagePartner(userId: userId) {
+                                    navigationDestination += .profile(.init(user: messagePartner))
+                                }
                             }
                         }
+                    }
+                } else {
+                    if !channelsLoader.isLoading {
+                        Text("No messages here!")
+                            .font(.bold(size: 14))
+                            .foregroundColor(.customText2)
+                            .padding(.top, 21)
+                            .centeredHorizontally()
                     }
                 }
             }

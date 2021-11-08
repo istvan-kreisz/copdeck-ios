@@ -136,7 +136,7 @@ struct StackShareSettingsView: View {
         if isSharing, !didPublish {
             didPublish = true
             showPopup("Stack sharing",
-                      "When you share your stack to sell your items, make sure to specify a price in the \"CopDeck\" price field. That's the price others will see when they see your shared stack.")
+                      "When you share your stack to sell your items, make sure to specify a price in the \"CopDeck price\" field. That's the price others will see when they see your shared stack.")
         }
     }
 
