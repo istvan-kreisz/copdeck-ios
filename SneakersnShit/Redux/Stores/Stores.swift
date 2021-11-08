@@ -41,11 +41,11 @@ extension AppStore {
         completion(bestPrices)
     }
 
-    private func updateTotalInventoryValue(state: AppState, completion: (PriceWithCurrency?) -> Void) {
-        if let currencyCode = state.globalState.bestPrices.values.first?.price.currencyCode {
+    private func updateTotalInventoryValue(state: AppState, bestPrices: [String : ListingPrice], completion: (PriceWithCurrency?) -> Void) {
+        if let currencyCode = bestPrices.values.first?.price.currencyCode {
             let sum = state.inventoryItems
                 .filter { (inventoryItem: InventoryItem) -> Bool in inventoryItem.status != .Sold }
-                .compactMap { (inventoryItem: InventoryItem) -> Double? in state.globalState.bestPrices[inventoryItem.id]?.price.price }
+                .compactMap { (inventoryItem: InventoryItem) -> Double? in bestPrices[inventoryItem.id]?.price.price }
                 .sum()
             completion(PriceWithCurrency(price: sum, currencyCode: currencyCode))
         } else {
@@ -57,7 +57,7 @@ extension AppStore {
         let appState = state
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             self?.updateBestPrices(state: appState) { bestPrices in
-                self?.updateTotalInventoryValue(state: appState) { inventoryValue in
+                self?.updateTotalInventoryValue(state: appState, bestPrices: bestPrices) { inventoryValue in
                     DispatchQueue.main.async {
                         self?.state.globalState.bestPrices = bestPrices
                         self?.state.globalState.inventoryValue = inventoryValue

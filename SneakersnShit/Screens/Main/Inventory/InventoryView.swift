@@ -22,7 +22,6 @@ struct InventoryView: View {
     @State private var selectedInventoryItems: [InventoryItem] = []
     @State private var selectedStackIndex = 0
     @State private var showAddNewStackAlert = false
-    @State private var bestPrices: [String: ListingPrice] = [:]
     @State private var newStackId: String?
     @State var username: String = ""
     @State private var sharedStack: Stack?
@@ -62,43 +61,6 @@ struct InventoryView: View {
         return inventoryItem
     }
 
-    func updateBestPrices() {
-        bestPrices = store.state.inventoryItems
-            .map { (inventoryItem: InventoryItem) -> (String, ListingPrice?) in (inventoryItem.id, bestPrice(for: inventoryItem)) }
-            .reduce([:]) { (dict: [String: ListingPrice], element: (String, ListingPrice?)) in
-                if let price = element.1 {
-                    var newDict = dict
-                    newDict[element.0] = price
-                    return newDict
-                } else {
-                    return dict
-                }
-            }
-    }
-
-    var inventoryValue: PriceWithCurrency? {
-        if let currencyCode = bestPrices.values.first?.price.currencyCode {
-            let sum = inventoryItems
-                .filter { (inventoryItem: InventoryItem) -> Bool in inventoryItem.status != .Sold }
-                .compactMap { (inventoryItem: InventoryItem) -> Double? in bestPrices[inventoryItem.id]?.price.price }
-                .sum()
-            return PriceWithCurrency(price: sum, currencyCode: currencyCode)
-        } else {
-            return nil
-        }
-    }
-
-    private func bestPrice(for inventoryItem: InventoryItem) -> ListingPrice? {
-        if let itemId = inventoryItem.itemId, let item = ItemCache.default.value(itemId: itemId, settings: globalStore.globalState.settings) {
-            return item.bestPrice(for: inventoryItem.size,
-                                  feeType: globalStore.globalState.settings.bestPriceFeeType,
-                                  priceType: globalStore.globalState.settings.bestPricePriceType,
-                                  stores: globalStore.globalState.displayedStores)
-        } else {
-            return nil
-        }
-    }
-
     var body: some View {
         let showDetail = Binding<Bool>(get: { navigationDestination.show },
                                        set: { show in show ? navigationDestination.display() : navigationDestination.hide() })
@@ -133,7 +95,7 @@ struct InventoryView: View {
 
             NavigationLink(destination: Destination(navigationDestination: $navigationDestination,
                                                     inventoryItems: $store.state.inventoryItems,
-                                                    bestPrices: $bestPrices,
+                                                    bestPrices: $globalStore.globalState.bestPrices,
                                                     selectedStack: selectedStackBinding).navigationbarHidden(),
                            isActive: showDetail) {
                 EmptyView()
@@ -149,7 +111,7 @@ struct InventoryView: View {
                                         username: $username,
                                         countryIcon: .constant(""),
                                         facebookURL: .constant(nil),
-                                        textBox1: .init(title: "Inventory Value", text: inventoryValue?.asString ?? "-"),
+                                        textBox1: .init(title: "Inventory Value", text: globalStore.globalState.inventoryValue?.asString ?? "-"),
                                         textBox2: .init(title: "Inventory Size", text: "\(inventoryItems.count)"),
                                         isContentLocked: store.globalState.isContentLocked,
                                         updateUsername: updateUsername,
@@ -177,7 +139,7 @@ struct InventoryView: View {
                               showFilters: showFilters,
                               selectedInventoryItems: $selectedInventoryItems,
                               isSelected: isSelected,
-                              bestPrices: $bestPrices,
+                              bestPrices: $globalStore.globalState.bestPrices,
                               emptyStateConfig: (stack.id == "all" ?
                                   StackView.EmptyStateConfig.init(title: "Your inventory is empty",
                                                                   buttonTitle: "Use the search tab to add items") {
@@ -230,17 +192,8 @@ struct InventoryView: View {
                     }
                 }
             }
-            .onChange(of: store.state.inventoryItems) { _ in
-                updateBestPrices()
-            }
             .onChange(of: globalStore.globalState.user?.name) { newValue in
                 self.username = newValue ?? ""
-            }
-            .onChange(of: globalStore.globalState.user?.settings) { _ in
-                updateBestPrices()
-            }
-            .onReceive(ItemCache.default.updatedPublisher.debounce(for: .milliseconds(500), scheduler: RunLoop.main).prepend(())) { _ in
-                updateBestPrices()
             }
             .sheet(isPresented: showSheet) {
                 switch presentedSheet {
@@ -383,7 +336,7 @@ extension InventoryView {
             case let .stack(stack):
                 StackDetailView(stack: stack,
                                 inventoryItems: $inventoryItems,
-                                bestPrices: $bestPrices,
+                                bestPrices: $globalStore.globalState.bestPrices,
                                 filters: filters,
                                 linkURL: editedStack?.linkURL(userId: globalStore.globalState.user?.id ?? "") ?? "",
                                 shouldDismiss: { navigationDestination.hide() },
