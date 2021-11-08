@@ -24,6 +24,7 @@ struct NewItemCard: View {
     let highlightCopDeckPrice: Bool
     let addQuantitySelector: Bool
     let didTapDelete: (() -> Void)?
+    let onCopDeckPriceTooltipTapped: (() -> Void)?
 
     var sizesConverted: [String] {
         sizes.asSizes(of: inventoryItem)
@@ -51,7 +52,8 @@ struct NewItemCard: View {
          showCopDeckPrice: Bool,
          highlightCopDeckPrice: Bool,
          addQuantitySelector: Bool,
-         didTapDelete: (() -> Void)? = nil) {
+         didTapDelete: (() -> Void)? = nil,
+         onCopDeckPriceTooltipTapped: (() -> Void)? = nil) {
         self._inventoryItem = inventoryItem ?? Binding.constant(InventoryItem.init(fromItem: .sample))
         self.purchasePrice = purchasePrice
         self.currency = currency
@@ -61,6 +63,7 @@ struct NewItemCard: View {
         self.highlightCopDeckPrice = highlightCopDeckPrice
         self.addQuantitySelector = addQuantitySelector
         self.didTapDelete = didTapDelete
+        self.onCopDeckPriceTooltipTapped = onCopDeckPriceTooltipTapped
     }
 
     @ViewBuilder func datePicker(title: String, date: Binding<Date>) -> some View {
@@ -162,7 +165,8 @@ struct NewItemCard: View {
                                        textFieldStyle: textFieldStyle,
                                        dropDownStyle: dropdownStyle,
                                        price: price,
-                                       currency: currency)
+                                       currency: currency,
+                                       onTooltipTapped: onCopDeckPriceTooltipTapped)
             }
 
             ToggleButton(title: "status",

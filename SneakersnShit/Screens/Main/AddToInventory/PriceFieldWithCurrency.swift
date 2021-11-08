@@ -16,6 +16,7 @@ struct PriceFieldWithCurrency: View {
     @Binding var price: String
     @Binding var currency: String
     var onEdited: ((Bool) -> Void)? = nil
+    var onTooltipTapped: (() -> Void)? = nil
     
     var body: some View {
         HStack(spacing: 11) {
@@ -25,7 +26,8 @@ struct PriceFieldWithCurrency: View {
                              style: textFieldStyle,
                              keyboardType: .numberPad,
                              text: $price,
-                             onEdited: onEdited)
+                             onEdited: onEdited,
+                             onTooltipTapped: onTooltipTapped)
             DropDownMenu(title: "currency",
                          selectedItem: $currency,
                          options: ALLSELECTABLECURRENCYSYMBOLS.map(\.rawValue),

@@ -20,14 +20,24 @@ struct TextFieldRounded: View {
     @Binding var text: String
     var width: CGFloat? = nil
     var onEdited: ((Bool) -> Void)?
+    var onTooltipTapped: (() -> Void)? = nil
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             if let title = title {
-                Text(title)
-                    .font(.regular(size: 12))
-                    .foregroundColor(titleColor ?? (style == .white ? .customText1 : .customText2))
-                    .padding(.leading, 5)
+                HStack(alignment: .center, spacing: 3) {
+                    Text(title)
+                        .font(.regular(size: 12))
+                        .foregroundColor(titleColor ?? (style == .white ? .customText1 : .customText2))
+                        .padding(.leading, 5)
+                    if let onTooltipTapped = onTooltipTapped {
+                        Button(action: onTooltipTapped) {
+                            Image(systemName: "questionmark.circle.fill")
+                                .font(.regular(size: 13))
+                                .foregroundColor(titleColor ?? (style == .white ? .customText1 : .customText2))
+                        }
+                    }
+                }
             }
 
             TextField(placeHolder, text: $text, onEditingChanged: { isActive in

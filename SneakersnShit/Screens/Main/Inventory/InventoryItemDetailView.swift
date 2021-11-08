@@ -24,6 +24,8 @@ struct InventoryItemDetailView: View {
     @State var didLoadPhotos = false
     @State var photoURLs: [URL] = []
     @State var shownImageURL: URL?
+    
+    @State var alert: (String, String)? = nil
 
     var photoURLsChunked: [(Int, [URL])] {
         Array(photoURLs.chunked(into: 3).enumerated())
@@ -53,6 +55,7 @@ struct InventoryItemDetailView: View {
     }
 
     var body: some View {
+        let showPopup = Binding<Bool>(get: { alert != nil }, set: { new in alert = new ? alert : nil })
         VStack {
             if !importSummaryMode {
                 NavigationLink(destination: inventoryItem.itemId.map { (itemId: String) in
@@ -109,7 +112,10 @@ struct InventoryItemDetailView: View {
                                     sizes: inventoryItem.item?.sortedSizes ?? ShoeSize.ALLSHOESIZESUS,
                                     showCopDeckPrice: true,
                                     highlightCopDeckPrice: isInSharedStack,
-                                    addQuantitySelector: false)
+                                    addQuantitySelector: false,
+                                    onCopDeckPriceTooltipTapped: {
+                            alert = ("CopDeck price", "When you share your stack on the CopDeck feed or via a link, this the price that will show up next to your items.")
+                        })
 
                         VStack(alignment: .leading, spacing: 9) {
                             Text("Photos:".uppercased())
@@ -228,6 +234,13 @@ struct InventoryItemDetailView: View {
             .onAppear {
                 loadPhotos()
             }
+        }
+        .withPopup {
+            Popup<EmptyView>(isShowing: showPopup,
+                             title: alert.map { $0.0 } ?? "",
+                             subtitle: alert.map { $0.1 } ?? "",
+                             firstAction: .init(name: "Okay", tapped: { alert = nil }),
+                             secondAction: nil)
         }
         .withImageViewer(shownImageURL: $shownImageURL)
         .hideKeyboardOnScroll()
