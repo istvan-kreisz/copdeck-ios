@@ -55,7 +55,7 @@ extension AppStore {
 
     private func updateInventoryValue() {
         let appState = state
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+        DispatchQueue.global(qos: .userInteractive).async { [weak self] in
             self?.updateBestPrices(state: appState) { bestPrices in
                 self?.updateTotalInventoryValue(state: appState, bestPrices: bestPrices) { inventoryValue in
                     DispatchQueue.main.async {
