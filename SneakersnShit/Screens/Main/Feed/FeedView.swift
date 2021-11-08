@@ -39,6 +39,10 @@ struct FeedView: View {
     var inventoryItems: [InventoryItem] {
         feedPosts.flatMap { $0.inventoryItems }
     }
+    
+    init(userId: String) {
+        self.userId = userId
+    }
 
     var body: some View {
         Group {
