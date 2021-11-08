@@ -228,7 +228,7 @@ struct SpreadsheetImportAdminView: View {
     }
 
     private func refreshWaitlist() {
-        let loader = loader.getLoader()
+        let loader = loader.getNewLoader()
         store.send(.main(action: .getSpreadsheetImportWaitlist(completion: { result in
             switch result {
             case let .success(users):

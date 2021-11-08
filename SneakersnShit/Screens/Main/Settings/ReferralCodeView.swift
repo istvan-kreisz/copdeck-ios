@@ -87,7 +87,7 @@ struct ReferralCodeView: View {
             self.error = ("Error", "Invalid Promo code")
             return
         }
-        let loader = loader.getLoader()
+        let loader = loader.getNewLoader()
         store.send(.paymentAction(action: .applyReferralCode(referralCode, completion: { result in
             if case let .failure(error) = result {
                 self.error = ("Error", error.localizedDescription)

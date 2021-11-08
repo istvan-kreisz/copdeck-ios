@@ -142,7 +142,7 @@ struct ProfileView: View {
                 if isFirstLoad {
                     store.send(.main(action: .getUserProfile(userId: profileData.user.id) { profileData in
                         updateProfile(newProfile: profileData)
-                    }), completed: loader.getLoader())
+                    }), completed: loader.getNewLoader())
                     isFirstLoad = false
                 }
             }

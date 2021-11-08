@@ -24,6 +24,8 @@ struct SearchView: View {
 
     @State var searchState = SearchState()
 
+    var alert = State<(String, String)?>(initialValue: nil)
+
     var selectedItem: Item? {
         guard case let .itemDetail(item) = navigationDestination.destination else { return nil }
         return item
@@ -147,39 +149,11 @@ struct SearchView: View {
                 }
             }
             .hideKeyboardOnScroll()
-            .onChange(of: searchText) { searchText in
-                if selectedTabIndex == 0 {
-                    store.send(.main(action: .getSearchResults(searchTerm: searchText, completion: { result in
-                        #warning("yo loader + error")
-                        switch result {
-                        case let .success(results):
-                            self.searchState.searchResults = results
-                        case let .failure(error):
-                            print(error)
-                        }
-                    })))
-                } else {
-                    store.send(.main(action: .searchUsers(searchTerm: searchText, completion: { result in
-                        switch result {
-                        case let .success(results):
-                            self.searchState.userSearchResults = results
-                        case let .failure(error):
-                            print(error)
-                        }
-                        #warning("yo loader")
-                    })))
-                }
-            }
+            .onChange(of: searchText) { search(searchTerm: $0) }
             .onAppear {
                 if searchState.popularItems.isEmpty {
                     store.send(.main(action: .getPopularItems(completion: { result in
-                        switch result {
-                        case let .success(results):
-                            self.searchState.popularItems = results
-                        case let .failure(error):
-                            print(error)
-                        }
-                        #warning("yo loader")
+                        handleResult(result: result, loader: nil) { self.searchState.popularItems = $0 }
                     })))
                 }
                 if isFirstLoad {
@@ -187,13 +161,30 @@ struct SearchView: View {
                     isFirstLoad = false
                 }
             }
+            .withAlert(alert: alert.projectedValue)
         }
     }
 
+    private func search(searchTerm: String) {
+        if selectedTabIndex == 0 {
+            let loader = searchResultsLoader.getLoader()
+            store.send(.main(action: .getSearchResults(searchTerm: searchText, completion: { result in
+                handleResult(result: result, loader: loader) { self.searchState.searchResults = $0 }
+            })))
+        } else {
+            let loader = userSearchResultsLoader.getLoader()
+            store.send(.main(action: .searchUsers(searchTerm: searchText, completion: { result in
+                handleResult(result: result, loader: loader) { self.searchState.userSearchResults = $0 }
+            })))
+        }
+    }
+    
     private func loadFeedPosts(loadMore: Bool) {
         store.send(.main(action: .getFeedPosts(loadMore: loadMore)), debounceDelayMs: 2000)
     }
 }
+
+extension SearchView: ViewWithAlert {}
 
 extension SearchView {
     enum NavigationDestination: Equatable {

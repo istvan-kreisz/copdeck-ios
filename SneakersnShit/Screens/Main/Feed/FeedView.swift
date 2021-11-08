@@ -132,7 +132,7 @@ struct FeedView: View {
     }
 
     private func loadFeedPosts(loadMore: Bool) {
-        store.send(.main(action: .getFeedPosts(loadMore: loadMore)), debounceDelayMs: 2000, completed: loader.getLoader())
+        store.send(.main(action: .getFeedPosts(loadMore: loadMore)), debounceDelayMs: 2000, completed: loader.getNewLoader())
     }
 }
 

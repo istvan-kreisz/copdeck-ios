@@ -95,7 +95,7 @@ struct ChatView: View {
     private func loadChannels(isFirstLoad: Bool) {
         var loader: ((Result<Void, AppError>) -> Void)?
         if isFirstLoad {
-            loader = channelsLoader.getLoader()
+            loader = channelsLoader.getNewLoader()
         }
         store.send(.main(action: .getChannelsListener(cancel: { cancel in
             self.cancelListener = cancel

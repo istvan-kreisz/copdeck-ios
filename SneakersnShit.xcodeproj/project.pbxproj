@@ -181,6 +181,7 @@
 		5DCC467226A8EBB9007671BC /* ToggleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DCC467126A8EBB9007671BC /* ToggleButton.swift */; };
 		5DD01E5426DD78480054F6F1 /* InventoryHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DD01E5326DD78480054F6F1 /* InventoryHeaderView.swift */; };
 		5DD036032738D36200104627 /* Result+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DD036022738D36100104627 /* Result+Extensions.swift */; };
+		5DD036052738E93800104627 /* ViewWithAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DD036042738E93800104627 /* ViewWithAlert.swift */; };
 		5DDEFDBC26CD7A42001B0F76 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DDEFDBB26CD7A42001B0F76 /* Constants.swift */; };
 		5DDEFDBF26CED83A001B0F76 /* ListSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DDEFDBE26CED83A001B0F76 /* ListSelector.swift */; };
 		5DDEFDC126CEE16F001B0F76 /* ListSelectorMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DDEFDC026CEE16F001B0F76 /* ListSelectorMenu.swift */; };
@@ -406,6 +407,7 @@
 		5DCC467126A8EBB9007671BC /* ToggleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleButton.swift; sourceTree = "<group>"; };
 		5DD01E5326DD78480054F6F1 /* InventoryHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryHeaderView.swift; sourceTree = "<group>"; };
 		5DD036022738D36100104627 /* Result+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Result+Extensions.swift"; sourceTree = "<group>"; };
+		5DD036042738E93800104627 /* ViewWithAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewWithAlert.swift; sourceTree = "<group>"; };
 		5DDEFDBB26CD7A42001B0F76 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		5DDEFDBE26CED83A001B0F76 /* ListSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListSelector.swift; sourceTree = "<group>"; };
 		5DDEFDC026CEE16F001B0F76 /* ListSelectorMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListSelectorMenu.swift; sourceTree = "<group>"; };
@@ -1233,6 +1235,7 @@
 				5DDEFDCE26D2ADC2001B0F76 /* EnumCodable.swift */,
 				5D5D4C4326D50EB100A7C61A /* ModelWithDate.swift */,
 				5D564E472704F66700190CF4 /* StringRepresentable.swift */,
+				5DD036042738E93800104627 /* ViewWithAlert.swift */,
 			);
 			path = Types;
 			sourceTree = "<group>";
@@ -1504,6 +1507,7 @@
 				5DECB5842708E1A00017748C /* SellerStatsView.swift in Sources */,
 				5D9A47272733FB4D001C85E4 /* ChatUpdateInfo.swift in Sources */,
 				5D9A472C27340455001C85E4 /* ChatWorker.swift in Sources */,
+				5DD036052738E93800104627 /* ViewWithAlert.swift in Sources */,
 				5DA5140426A614530067C4A2 /* DefaultDatabaseManager.swift in Sources */,
 				5D6312222694797300876D99 /* Item.swift in Sources */,
 				5D2726CD26CB3CB800887449 /* TabBarView.swift in Sources */,

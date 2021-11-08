@@ -336,7 +336,7 @@ struct ItemDetailView: View {
     }
 
     private func refreshPrices(fetchMode: FetchMode) {
-        store.send(.main(action: .getItemDetails(item: item, itemId: itemId, fetchMode: fetchMode) { updateItem(newItem: $0) }), completed: loader.getLoader())
+        store.send(.main(action: .getItemDetails(item: item, itemId: itemId, fetchMode: fetchMode) { updateItem(newItem: $0) }), completed: loader.getNewLoader())
     }
 
     private func updateItem(newItem: Item?) {
