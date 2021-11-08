@@ -79,6 +79,19 @@ struct FeedView: View {
             VerticalListView(bottomPadding: Styles.tabScreenBottomPadding, spacing: 0) {
                 Text("Feed")
                     .tabTitle()
+                
+                if !AppStore.default.state.globalState.isContentLocked {
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("Your inventory's value:")
+                            .font(.regular(size: 14))
+                            .foregroundColor(.customText2)
+                            .padding(.leading, 5)
+                        
+                        Text(store.globalState.inventoryValue?.asString ?? "-")
+                            .font(.bold(size: UIScreen.isSmallScreen ? 40 : 45))
+                            .foregroundColor(.customText1)
+                    }
+                }
 
                 PullToRefresh(coordinateSpaceName: "pullToRefresh") {
                     loadFeedPosts(loadMore: false)
