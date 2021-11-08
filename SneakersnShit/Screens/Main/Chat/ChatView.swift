@@ -83,7 +83,7 @@ struct ChatView: View {
                 self.lastMessageChannelId = nil
             }
         }
-        .onChange(of: store.globalState.chatUpdates) { chatUpdates in
+        .onChange(of: DerivedGlobalStore.default.globalState.chatUpdates) { chatUpdates in
             updateChannels(channels: channels, chatUpdateInfo: chatUpdates)
         }
     }
@@ -100,7 +100,7 @@ struct ChatView: View {
             case let .failure(error):
                 self.error = (error.title, error.message)
             case let .success(channels):
-                self.updateChannels(channels: channels, chatUpdateInfo: store.globalState.chatUpdates)
+                self.updateChannels(channels: channels, chatUpdateInfo: DerivedGlobalStore.default.globalState.chatUpdates)
 
                 if let userId = userId, let channel = channels.first(where: { $0.id == lastMessageChannelId }) {
                     navigationDestination += .chat(channel: channel, userId: userId)
