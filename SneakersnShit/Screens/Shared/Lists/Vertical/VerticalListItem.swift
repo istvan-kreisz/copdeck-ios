@@ -18,7 +18,6 @@ struct VerticalListItem<V1: View, V2: View>: View {
     var title: String
     let source: ImageViewSourceType
     var flipImage = false
-    var requestInfo: [ScraperRequestInfo]
 
     @Binding var isEditing: Bool
     var isSelected: Bool
@@ -55,7 +54,6 @@ struct VerticalListItem<V1: View, V2: View>: View {
             HStack(alignment: .center, spacing: 10) {
                 ItemImageView(itemId: itemId,
                               source: source,
-                              requestInfo: requestInfo,
                               size: 62,
                               aspectRatio: nil,
                               flipImage: flipImage,
@@ -113,7 +111,6 @@ struct VerticalListItemWithAccessoryView1<V: View>: View {
     var title: String
     let source: ImageViewSourceType
     var flipImage = false
-    var requestInfo: [ScraperRequestInfo]
 
     @Binding var isEditing: Bool
     var isSelected: Bool
@@ -131,7 +128,6 @@ struct VerticalListItemWithAccessoryView1<V: View>: View {
                                        title: title,
                                        source: source,
                                        flipImage: flipImage,
-                                       requestInfo: requestInfo,
                                        isEditing: $isEditing,
                                        isSelected: isSelected,
                                        selectionStyle: selectionStyle,
@@ -150,7 +146,6 @@ struct VerticalListItemWithoutAccessoryView: View {
     var title: String
     let source: ImageViewSourceType
     var flipImage = false
-    var requestInfo: [ScraperRequestInfo]
 
     @Binding var isEditing: Bool
     var isSelected: Bool
@@ -168,7 +163,6 @@ struct VerticalListItemWithoutAccessoryView: View {
                                                title: title,
                                                source: source,
                                                flipImage: flipImage,
-                                               requestInfo: requestInfo,
                                                isEditing: $isEditing,
                                                isSelected: isSelected,
                                                selectionStyle: selectionStyle,

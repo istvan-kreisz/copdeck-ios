@@ -10,7 +10,6 @@ import Combine
 
 struct SelectStackItemsView: View {
     var inventoryItems: [InventoryItem]
-    let requestInfo: [ScraperRequestInfo]
     let shouldDismiss: () -> Void
     let saveChanges: ([StackItem]) -> Void
     let title: String
@@ -19,11 +18,9 @@ struct SelectStackItemsView: View {
 
     init(stack: Stack,
          inventoryItems: [InventoryItem],
-         requestInfo: [ScraperRequestInfo],
          shouldDismiss: @escaping () -> Void,
          saveChanges: @escaping ([StackItem]) -> Void) {
         self.inventoryItems = inventoryItems
-        self.requestInfo = requestInfo
         self.shouldDismiss = shouldDismiss
         self.saveChanges = saveChanges
         self.title = "Edit \(stack.name)"
@@ -46,9 +43,7 @@ struct SelectStackItemsView: View {
                                                        selectedStackItems.removeAll(where: { $0.inventoryItemId == inventoryItem.id })
                                                    }
                                                })
-                SelectStackItemsListItem(inventoryItem: inventoryItem,
-                                         isSelected: isSelected,
-                                         requestInfo: requestInfo)
+                SelectStackItemsListItem(inventoryItem: inventoryItem, isSelected: isSelected)
             }
             .padding(.vertical, 2)
             Color.clear.padding(.bottom, 130)

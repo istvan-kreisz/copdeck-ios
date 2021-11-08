@@ -11,8 +11,6 @@ import Combine
 struct PopularItemsListView: View {
     @Environment(\.presentationMode) var presentationMode
     @Binding var items: [Item]
-
-    let requestInfo: [ScraperRequestInfo]
     let favoritedItemIds: [String]
 
     @State private var selectedItem: Item?
@@ -36,8 +34,7 @@ struct PopularItemsListView: View {
                                      isLoading: .constant(false),
                                      title: nil,
                                      resultsLabelText: nil,
-                                     bottomPadding: 30,
-                                     requestInfo: requestInfo)
+                                     bottomPadding: 30)
             }
             .edgesIgnoringSafeArea(.bottom)
             .frame(maxWidth: UIScreen.main.bounds.width)

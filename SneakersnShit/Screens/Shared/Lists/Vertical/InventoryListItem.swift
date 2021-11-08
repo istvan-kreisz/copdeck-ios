@@ -17,7 +17,6 @@ struct InventoryListItem: View {
     let isInSharedStack: Bool
 
     @Binding var isEditing: Bool
-    var requestInfo: [ScraperRequestInfo]
     var onSelectorTapped: () -> Void
 
     func bestPriceStack() -> some View {
@@ -54,7 +53,6 @@ struct InventoryListItem: View {
                              title: inventoryItem.name,
                              source: imageSource(for: inventoryItem),
                              flipImage: inventoryItem.imageURL?.store?.id == .klekt,
-                             requestInfo: requestInfo,
                              isEditing: $isEditing,
                              isSelected: isSelected,
                              ribbonText: inventoryItem.status == .Sold ? "Sold" : nil,

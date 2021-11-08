@@ -25,7 +25,6 @@ struct StackView: View {
     @Binding var selectedInventoryItems: [InventoryItem]
     @Binding var isSelected: Bool
     @Binding var bestPrices: [String: ListingPrice]
-    let requestInfo: [ScraperRequestInfo]
     let emptyStateConfig: EmptyStateConfig
     var didTapEditStack: (() -> Void)?
     var didTapShareStack: (() -> Void)?
@@ -136,8 +135,7 @@ struct StackView: View {
                                   selectedInventoryItem: $selectedInventoryItem,
                                   isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }),
                                   isInSharedStack: false,
-                                  isEditing: $isEditing,
-                                  requestInfo: requestInfo) {
+                                  isEditing: $isEditing) {
                         if selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }) {
                             selectedInventoryItems = selectedInventoryItems.filter { $0.id != inventoryItem.id }
                         } else {

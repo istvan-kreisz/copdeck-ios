@@ -10,7 +10,6 @@ import SwiftUI
 struct StackSummaryListItem: View {
     var inventoryItem: InventoryItem
     @Binding var selectedInventoryItem: InventoryItem?
-    var requestInfo: [ScraperRequestInfo]
 
     func priceStack() -> some View {
         VStack(alignment: .center, spacing: 2) {
@@ -28,7 +27,6 @@ struct StackSummaryListItem: View {
                          title: inventoryItem.name,
                          source: imageSource(for: inventoryItem),
                          flipImage: inventoryItem.imageURL?.store?.id == .klekt,
-                         requestInfo: requestInfo,
                          isEditing: .constant(false),
                          isSelected: false,
                          ribbonText: inventoryItem.status == .Sold ? "Sold" : nil,

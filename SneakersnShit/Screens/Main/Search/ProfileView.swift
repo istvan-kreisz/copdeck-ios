@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct ProfileView: View {
-    #warning("we can probs get rid of this")
-    @EnvironmentObject var store: DerivedGlobalStore
     @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
 
     @State var profileData: ProfileData
@@ -68,8 +66,7 @@ struct ProfileView: View {
                                                            }
                                                        })
 
-            NavigationLink(destination: Destination(requestInfo: store.globalState.requestInfo,
-                                                    navigationDestination: $navigationDestination,
+            NavigationLink(destination: Destination(navigationDestination: $navigationDestination,
                                                     profileData: profileData).navigationbarHidden(),
                            isActive: showDetail) { EmptyView() }
 
@@ -91,13 +88,13 @@ struct ProfileView: View {
                                     textBox2: .init(title: "Shared Stacks", text: "\(profileData.stacks.count)"),
                                     isOwnProfile: false,
                                     isContentLocked: false, showChannel: { result in
-                    switch result {
-                    case let .failure(error):
-                        alert = (error.title, error.message)
-                    case let .success((channel, userId)):
-                        navigationDestination += .chat(channel, userId)
-                    }
-                })
+                                        switch result {
+                                        case let .failure(error):
+                                            alert = (error.title, error.message)
+                                        case let .success((channel, userId)):
+                                            navigationDestination += .chat(channel, userId)
+                                        }
+                                    })
 
                 Text(profileData.user.name.map { "\($0)'s Stacks" } ?? "Stacks")
                     .font(.bold(size: 25))
@@ -112,17 +109,15 @@ struct ProfileView: View {
                         .padding(.top, 21)
                         .listRow()
                 }
-                #warning("do we need requestInfo???")
 
                 ForEach(profileData.stacks) { (stack: Stack) in
                     SharedStackSummaryView(selectedInventoryItem: selectedInventoryItemBinding,
                                            selectedStack: selectedStackBinding,
                                            stack: stack,
                                            stackOwnerId: profileData.user.id,
-                                           userId: store.globalState.user?.id ?? "",
+                                           userId: DerivedGlobalStore.default.globalState.user?.id ?? "",
                                            userCountry: profileData.user.country,
                                            inventoryItems: stackItems(in: stack),
-                                           requestInfo: store.globalState.requestInfo,
                                            profileInfo: (profileData.user.name ?? "", profileData.user.imageURL))
                         .buttonStyle(PlainButtonStyle())
                         .padding(.bottom, 4)
@@ -142,7 +137,7 @@ struct ProfileView: View {
             .withAlert(alert: $alert)
             .onAppear {
                 if isFirstLoad {
-                    store.send(.main(action: .getUserProfile(userId: profileData.user.id) { profileData in
+                    AppStore.default.send(.main(action: .getUserProfile(userId: profileData.user.id) { profileData in
                         updateProfile(newProfile: profileData)
                     }), completed: loader.getNewLoader())
                     isFirstLoad = false
@@ -163,7 +158,6 @@ extension ProfileView {
     }
 
     struct Destination: View {
-        let requestInfo: [ScraperRequestInfo]
         @Binding var navigationDestination: Navigation<NavigationDestination>
         var profileData: ProfileData
 
@@ -174,14 +168,9 @@ extension ProfileView {
         var body: some View {
             switch navigationDestination.destination {
             case let .inventoryItem(inventoryItem):
-                SharedInventoryItemView(user: profileData.user,
-                                        inventoryItem: inventoryItem,
-                                        requestInfo: requestInfo) { navigationDestination.hide() }
+                SharedInventoryItemView(user: profileData.user, inventoryItem: inventoryItem) { navigationDestination.hide() }
             case let .stack(stack):
-                SharedStackDetailView(user: profileData.user,
-                                      stack: stack,
-                                      inventoryItems: stackItems(in: stack),
-                                      requestInfo: requestInfo) { navigationDestination.hide() }
+                SharedStackDetailView(user: profileData.user, stack: stack, inventoryItems: stackItems(in: stack)) { navigationDestination.hide() }
             case let .chat(channel, userId):
                 MessagesView(channel: channel, userId: userId)
             case .empty:

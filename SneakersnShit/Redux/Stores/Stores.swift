@@ -13,6 +13,7 @@ typealias AppStore = ReduxStore<AppState, AppAction, World>
 
 extension AppStore {
     static var isChatDetailView = false
+    static var requestInfo: [ScraperRequestInfo] = []
 
     static let `default`: AppStore = {
         let appStore = AppStore(state: .init(), reducer: appReducer, environment: World())
@@ -86,8 +87,8 @@ extension AppStore {
                 }
             }
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] in
-                self?.state.requestInfo = $0
+            .sink(receiveValue: {
+                Self.requestInfo = $0
             })
             .store(in: &effectCancellables)
 
@@ -185,7 +186,7 @@ private func imageRequest(for imageURL: ImageURL?) -> ImageRequestConvertible? {
     if let imageURL = imageURL, let url = URL(string: imageURL.url) {
         var request = URLRequest(url: url)
 
-        if let headers = AppStore.default.state.requestInfo.first(where: { $0.storeId == imageURL.store?.id })?.imageDownloadHeaders {
+        if let headers = AppStore.requestInfo.first(where: { $0.storeId == imageURL.store?.id })?.imageDownloadHeaders {
             headers.forEach { name, value in
                 request.setValue(value, forHTTPHeaderField: name)
             }

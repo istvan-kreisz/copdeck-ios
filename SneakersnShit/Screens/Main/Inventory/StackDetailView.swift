@@ -17,7 +17,6 @@ struct StackDetailView: View {
     @Binding var filters: Filters
 
     let linkURL: String
-    let requestInfo: [ScraperRequestInfo]
     var shouldDismiss: () -> Void
     let saveChanges: ([StackItem]) -> Void
     let deleteStack: () -> Void
@@ -60,7 +59,6 @@ struct StackDetailView: View {
          bestPrices: Binding<[String: ListingPrice]>,
          filters: Binding<Filters>,
          linkURL: String,
-         requestInfo: [ScraperRequestInfo],
          shouldDismiss: @escaping () -> Void,
          saveChanges: @escaping ([StackItem]) -> Void,
          deleteStack: @escaping () -> Void) {
@@ -69,7 +67,6 @@ struct StackDetailView: View {
         self._bestPrices = bestPrices
         self._filters = filters
         self.linkURL = linkURL
-        self.requestInfo = requestInfo
         self.shouldDismiss = shouldDismiss
         self.saveChanges = saveChanges
         self.deleteStack = deleteStack
@@ -94,8 +91,7 @@ struct StackDetailView: View {
 
             NavigationLink(destination: Destination(navigationDestination: $navigationDestination,
                                                     inventoryItems: $inventoryItems,
-                                                    stack: $stack,
-                                                    requestInfo: store.state.requestInfo).navigationbarHidden(), isActive: showDetail) {
+                                                    stack: $stack).navigationbarHidden(), isActive: showDetail) {
                 EmptyView()
             }
 
@@ -171,8 +167,7 @@ struct StackDetailView: View {
                                       selectedInventoryItem: selectedInventoryItemBinding,
                                       isSelected: false,
                                       isInSharedStack: stack.isShared,
-                                      isEditing: .constant(false),
-                                      requestInfo: requestInfo) {}
+                                      isEditing: .constant(false)) {}
                 }
                 .padding(.vertical, 2)
                 .withDefaultPadding(padding: .horizontal)
@@ -239,7 +234,6 @@ extension StackDetailView {
         @Binding var navigationDestination: Navigation<NavigationDestination>
         @Binding var inventoryItems: [InventoryItem]
         @Binding var stack: Stack
-        let requestInfo: [ScraperRequestInfo]
 
         var body: some View {
             switch navigationDestination.destination {
@@ -248,7 +242,6 @@ extension StackDetailView {
             case let .itemSelector(stack):
                 SelectStackItemsView(stack: stack,
                                      inventoryItems: inventoryItems,
-                                     requestInfo: requestInfo,
                                      shouldDismiss: { navigationDestination.hide() },
                                      saveChanges: { updatedStackItems in
                                          var updatedStack = stack

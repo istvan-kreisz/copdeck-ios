@@ -10,7 +10,6 @@ import SwiftUI
 struct ItemImageViewWithNavBar: View {
     let itemId: String
     let source: ImageViewSourceType
-    let requestInfo: [ScraperRequestInfo]
     var shouldDismiss: () -> Void
     var isFavorited: Binding<Bool>?
     let flipImage: Bool
@@ -25,7 +24,6 @@ struct ItemImageViewWithNavBar: View {
                 .frame(width: size, height: size)
             ItemImageView(itemId: itemId,
                           source: source,
-                          requestInfo: requestInfo,
                           size: size,
                           aspectRatio: nil,
                           flipImage: flipImage,

@@ -35,14 +35,6 @@ struct InventoryItemDetailView: View {
         (UIScreen.screenWidth - (Styles.horizontalPadding * 4.0) - (Styles.horizontalMargin * 2.0)) / 3
     }
 
-    var imageDownloadHeaders: [String: String] {
-        if let imageURLStoreId = inventoryItem.imageURL?.store?.id, let requestInfo = store.state.requestInfo(for: imageURLStoreId) {
-            return requestInfo.imageDownloadHeaders
-        } else {
-            return [:]
-        }
-    }
-
     init(inventoryItem: InventoryItem, importSummaryMode: Bool = false, isInSharedStack: Bool, shouldDismiss: @escaping () -> Void) {
         self._inventoryItem = State(initialValue: inventoryItem)
         self.importSummaryMode = importSummaryMode
@@ -72,7 +64,6 @@ struct InventoryItemDetailView: View {
                 VStack(alignment: .center, spacing: 20) {
                     ItemImageViewWithNavBar(itemId: inventoryItem.itemId ?? "",
                                             source: imageSource(for: inventoryItem),
-                                            requestInfo: [],
                                             shouldDismiss: shouldDismiss,
                                             flipImage: inventoryItem.imageURL?.store?.id == .klekt)
 

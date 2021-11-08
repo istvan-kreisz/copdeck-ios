@@ -12,7 +12,6 @@ struct HorizontalListItemRound: View {
     var title: String
     let source: ImageViewSourceType
     var flipImage = false
-    var requestInfo: [ScraperRequestInfo]
     var index: Int
 
     var onTapped: () -> Void
@@ -22,7 +21,6 @@ struct HorizontalListItemRound: View {
     var body: some View {
         ItemImageView(itemId: itemId,
                       source: source,
-                      requestInfo: requestInfo,
                       size: Self.size * 0.66,
                       aspectRatio: nil,
                       flipImage: flipImage)

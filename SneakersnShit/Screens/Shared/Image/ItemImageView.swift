@@ -12,7 +12,6 @@ import Nuke
 struct ItemImageView: View {
     let itemId: String
     let source: ImageViewSourceType
-    let requestInfo: [ScraperRequestInfo]
     let size: CGFloat
     let aspectRatio: CGFloat?
     let flipImage: Bool
@@ -21,7 +20,6 @@ struct ItemImageView: View {
 
     init(itemId: String,
          source: ImageViewSourceType,
-         requestInfo: [ScraperRequestInfo],
          size: CGFloat,
          aspectRatio: CGFloat?,
          flipImage: Bool = false,
@@ -29,7 +27,6 @@ struct ItemImageView: View {
          resizingMode: ImageResizingMode = .aspectFit) {
         self.itemId = itemId
         self.source = source
-        self.requestInfo = requestInfo
         self.size = size
         self.aspectRatio = aspectRatio
         self.flipImage = flipImage

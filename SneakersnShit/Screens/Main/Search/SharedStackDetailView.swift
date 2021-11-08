@@ -15,7 +15,6 @@ struct SharedStackDetailView: View {
     let user: User
     let stack: Stack
     let inventoryItems: [InventoryItem]
-    let requestInfo: [ScraperRequestInfo]
 
     let shouldDismiss: () -> Void
     
@@ -38,9 +37,7 @@ struct SharedStackDetailView: View {
                                                                                navigationDestination.hide()
                                                                            }
                                                                        })
-            NavigationLink(destination: Destination(requestInfo: requestInfo,
-                                                    user: user,
-                                                    navigationDestination: $navigationDestination).navigationbarHidden(),
+            NavigationLink(destination: Destination(user: user, navigationDestination: $navigationDestination).navigationbarHidden(),
                            isActive: showDetail) { EmptyView() }
 
             VerticalListView(bottomPadding: 30, spacing: 2, addHorizontalPadding: false) {
@@ -81,8 +78,7 @@ struct SharedStackDetailView: View {
                                       selectedInventoryItem: selectedInventoryItemBinding,
                                       isSelected: false,
                                       isInSharedStack: false,
-                                      isEditing: .constant(false),
-                                      requestInfo: requestInfo) {}
+                                      isEditing: .constant(false)) {}
                 }
                 .padding(.vertical, 2)
                 .withDefaultPadding(padding: .horizontal)
@@ -106,16 +102,13 @@ extension SharedStackDetailView {
     }
 
     struct Destination: View {
-        let requestInfo: [ScraperRequestInfo]
         let user: User
         @Binding var navigationDestination: Navigation<NavigationDestination>
 
         var body: some View {
             switch navigationDestination.destination {
             case let .inventoryItem(inventoryItem):
-                SharedInventoryItemView(user: user,
-                                        inventoryItem: inventoryItem,
-                                        requestInfo: requestInfo) { navigationDestination.hide() }
+                SharedInventoryItemView(user: user, inventoryItem: inventoryItem) { navigationDestination.hide() }
             case let .chat(channel, userId):
                 MessagesView(channel: channel, userId: userId)
             case .empty:

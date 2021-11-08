@@ -16,7 +16,6 @@ struct VerticalItemListView: View {
     let title: String?
     let resultsLabelText: String?
     let bottomPadding: CGFloat
-    var requestInfo: [ScraperRequestInfo]
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -48,7 +47,6 @@ struct VerticalItemListView: View {
                                                          title: item.name ?? "",
                                                          source: imageSource(for: item),
                                                          flipImage: item.imageURL?.store?.id == .klekt,
-                                                         requestInfo: requestInfo,
                                                          isEditing: .constant(false),
                                                          isSelected: false,
                                                          onTapped: { selectedItem = item })

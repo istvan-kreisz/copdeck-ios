@@ -112,21 +112,18 @@ struct SearchView: View {
                                                   selectedItem: selectedItemBinding,
                                                   isLoading: $popularItemsLoader.isLoading,
                                                   title: "Trending now",
-                                                  requestInfo: store.globalState.requestInfo,
                                                   style: .round) { navigationDestination += .popularItems }
 
                             HorizontaltemListView(items: $store.globalState.favoritedItems,
                                                   selectedItem: selectedItemBinding,
                                                   isLoading: .constant(false),
                                                   title: "Your favorites",
-                                                  requestInfo: store.globalState.requestInfo,
                                                   style: .square(.customRed)) { navigationDestination += .favoritedItems }
 
                             HorizontaltemListView(items: $store.globalState.recentlyViewedItems,
                                                   selectedItem: selectedItemBinding,
                                                   isLoading: .constant(false),
                                                   title: "Recently viewed",
-                                                  requestInfo: store.globalState.requestInfo,
                                                   sortedBy: .created,
                                                   style: .square(.clear))
                             Spacer()
@@ -137,8 +134,7 @@ struct SearchView: View {
                                              isLoading: $searchResultsLoader.isLoading,
                                              title: nil,
                                              resultsLabelText: nil,
-                                             bottomPadding: Styles.tabScreenBottomPadding,
-                                             requestInfo: store.globalState.requestInfo)
+                                             bottomPadding: Styles.tabScreenBottomPadding)
                     }
                 } else {
                     VerticalProfileListView(profiles: $searchState.userSearchResults.asProfiles,
@@ -191,13 +187,9 @@ extension SearchView {
         var body: some View {
             switch navigationDestination.destination {
             case .popularItems:
-                PopularItemsListView(items: $popularItems,
-                                     requestInfo: store.globalState.requestInfo,
-                                     favoritedItemIds: store.globalState.favoritedItems.map(\.id))
+                PopularItemsListView(items: $popularItems, favoritedItemIds: store.globalState.favoritedItems.map(\.id))
             case .favoritedItems:
-                PopularItemsListView(items: $favoritedItems,
-                                     requestInfo: store.globalState.requestInfo,
-                                     favoritedItemIds: store.globalState.favoritedItems.map(\.id))
+                PopularItemsListView(items: $favoritedItems, favoritedItemIds: store.globalState.favoritedItems.map(\.id))
             case let .itemDetail(item):
                 ItemDetailView(item: item,
                                itemId: item.id,
@@ -211,5 +203,3 @@ extension SearchView {
         }
     }
 }
-
-#warning("check if publishers terminate correctly in all cases")

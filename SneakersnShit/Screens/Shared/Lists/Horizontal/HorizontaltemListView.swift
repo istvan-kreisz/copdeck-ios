@@ -20,7 +20,6 @@ struct HorizontaltemListView: View {
     @Binding var isLoading: Bool
 
     let title: String?
-    var requestInfo: [ScraperRequestInfo]
     var sortedBy: DateType? = nil
     let style: Style
 
@@ -62,7 +61,6 @@ struct HorizontaltemListView: View {
                                                         title: item.name ?? "",
                                                         source: imageSource(for: item),
                                                         flipImage: item.imageURL?.store?.id == .klekt,
-                                                        requestInfo: requestInfo,
                                                         index: itemsToShow.firstIndex(where: { $0.id == item.id }) ?? 0,
                                                         onTapped: { selectedItem = item })
                             case let .square(color):
@@ -70,7 +68,6 @@ struct HorizontaltemListView: View {
                                                          title: item.name ?? "",
                                                          source: imageSource(for: item),
                                                          flipImage: item.imageURL?.store?.id == .klekt,
-                                                         requestInfo: requestInfo,
                                                          index: itemsToShow.firstIndex(where: { $0.id == item.id }) ?? 0,
                                                          color: color, onTapped: { selectedItem = item })
                             }

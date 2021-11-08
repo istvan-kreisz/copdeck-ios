@@ -10,7 +10,6 @@ import SwiftUI
 struct AddToInventoryView: View {
     let currency: Currency
     @State var item: Item
-    @Binding var requestInfo: [ScraperRequestInfo]
     @Binding var presented: (isActive: Bool, size: String?)
     @Binding var addedInvantoryItem: Bool
 
@@ -34,10 +33,9 @@ struct AddToInventoryView: View {
         allInventoryItems.compactMap { $0 }.count
     }
 
-    init(item: Item, currency: Currency, requestInfo: Binding<[ScraperRequestInfo]>, presented: Binding<(isActive: Bool, size: String?)>, addedInvantoryItem: Binding<Bool>) {
+    init(item: Item, currency: Currency, presented: Binding<(isActive: Bool, size: String?)>, addedInvantoryItem: Binding<Bool>) {
         self._item = State(initialValue: item)
         self.currency = currency
-        self._requestInfo = requestInfo
         self._presented = presented
         self._addedInvantoryItem = addedInvantoryItem
 
@@ -62,7 +60,6 @@ struct AddToInventoryView: View {
             VStack(alignment: .center, spacing: 20) {
                 ItemImageViewWithNavBar(itemId: item.id,
                                         source: imageSource(for: item),
-                                        requestInfo: requestInfo,
                                         shouldDismiss: { presented = (false, nil) },
                                         flipImage: item.imageURL?.store?.id == .klekt)
 
@@ -98,12 +95,13 @@ struct AddToInventoryView: View {
                                     sizes: self.item.sortedSizes,
                                     showCopDeckPrice: false,
                                     highlightCopDeckPrice: false,
-                                    addQuantitySelector: true) {
+                                    addQuantitySelector: true,
+                                    didTapDelete: {
                             self.inventoryItem2 = self.inventoryItem3
                             self.inventoryItem3 = self.inventoryItem4
                             self.inventoryItem4 = self.inventoryItem5
                             self.inventoryItem5 = nil
-                        }
+                        })
                     }
                     if let inventoryItem3 = inventoryItem3 {
                         let item = Binding<InventoryItem>(get: { inventoryItem3 }, set: { self.inventoryItem3 = $0 })
@@ -113,11 +111,12 @@ struct AddToInventoryView: View {
                                     sizes: self.item.sortedSizes,
                                     showCopDeckPrice: false,
                                     highlightCopDeckPrice: false,
-                                    addQuantitySelector: true) {
+                                    addQuantitySelector: true,
+                                    didTapDelete: {
                             self.inventoryItem3 = self.inventoryItem4
                             self.inventoryItem4 = self.inventoryItem5
                             self.inventoryItem5 = nil
-                        }
+                        })
                     }
                     if let inventoryItem4 = inventoryItem4 {
                         let item = Binding<InventoryItem>(get: { inventoryItem4 }, set: { self.inventoryItem4 = $0 })
@@ -127,10 +126,11 @@ struct AddToInventoryView: View {
                                     sizes: self.item.sortedSizes,
                                     showCopDeckPrice: false,
                                     highlightCopDeckPrice: false,
-                                    addQuantitySelector: true) {
+                                    addQuantitySelector: true,
+                                    didTapDelete: {
                             self.inventoryItem4 = self.inventoryItem5
                             self.inventoryItem5 = nil
-                        }
+                        })
                     }
                     if let inventoryItem5 = inventoryItem5 {
                         let item = Binding<InventoryItem>(get: { inventoryItem5 }, set: { self.inventoryItem5 = $0 })
@@ -140,9 +140,10 @@ struct AddToInventoryView: View {
                                     sizes: self.item.sortedSizes,
                                     showCopDeckPrice: false,
                                     highlightCopDeckPrice: false,
-                                    addQuantitySelector: true) {
+                                    addQuantitySelector: true,
+                                    didTapDelete: {
                             self.inventoryItem5 = nil
-                        }
+                        })
                     }
                     if itemCount != allInventoryItems.count {
                         AccessoryButton(title: "Add More",

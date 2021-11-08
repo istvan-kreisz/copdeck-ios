@@ -14,7 +14,6 @@ struct HorizontalListItemSquare: View {
     var title: String
     let source: ImageViewSourceType
     var flipImage = false
-    var requestInfo: [ScraperRequestInfo]
     var index: Int
     let color: Color
 
@@ -34,7 +33,6 @@ struct HorizontalListItemSquare: View {
 
             ItemImageView(itemId: itemId,
                           source: source,
-                          requestInfo: requestInfo,
                           size: Self.size * 0.66,
                           aspectRatio: nil,
                           flipImage: flipImage)

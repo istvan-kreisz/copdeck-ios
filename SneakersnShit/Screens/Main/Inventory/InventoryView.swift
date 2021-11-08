@@ -178,7 +178,6 @@ struct InventoryView: View {
                               selectedInventoryItems: $selectedInventoryItems,
                               isSelected: isSelected,
                               bestPrices: $bestPrices,
-                              requestInfo: globalStore.globalState.requestInfo,
                               emptyStateConfig: (stack.id == "all" ?
                                   StackView.EmptyStateConfig.init(title: "Your inventory is empty",
                                                                   buttonTitle: "Use the search tab to add items") {
@@ -387,7 +386,6 @@ extension InventoryView {
                                 bestPrices: $bestPrices,
                                 filters: filters,
                                 linkURL: editedStack?.linkURL(userId: globalStore.globalState.user?.id ?? "") ?? "",
-                                requestInfo: globalStore.globalState.requestInfo,
                                 shouldDismiss: { navigationDestination.hide() },
                                 saveChanges: { updatedStackItems in
                                     if var updatedStack = editedStack {
@@ -403,7 +401,6 @@ extension InventoryView {
             case let .selectStackItems(stack):
                 SelectStackItemsView(stack: stack,
                                      inventoryItems: inventoryItems,
-                                     requestInfo: globalStore.globalState.requestInfo,
                                      shouldDismiss: { navigationDestination.hide() },
                                      saveChanges: { updatedStackItems in
                                          var updatedStack = stack

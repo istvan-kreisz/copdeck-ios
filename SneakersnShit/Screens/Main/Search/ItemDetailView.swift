@@ -105,7 +105,6 @@ struct ItemDetailView: View {
             NavigationLink(destination: item
                 .map { item in AddToInventoryView(item: item,
                                                   currency: store.globalState.settings.currency,
-                                                  requestInfo: $store.globalState.requestInfo,
                                                   presented: $addToInventory,
                                                   addedInvantoryItem: $addedInventoryItem) } ?? nil,
                 isActive: isAddToInventoryActive) { EmptyView() }
@@ -115,7 +114,6 @@ struct ItemDetailView: View {
                     VStack(alignment: .center, spacing: 20) {
                         ItemImageViewWithNavBar(itemId: item?.id ?? "",
                                                 source: imageSource(for: item),
-                                                requestInfo: store.globalState.requestInfo,
                                                 shouldDismiss: shouldDismiss,
                                                 isFavorited: isFavorited,
                                                 flipImage: item?.imageURL?.store?.id == .klekt)

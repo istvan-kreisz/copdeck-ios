@@ -48,7 +48,7 @@ struct FeedView: View {
     init(userId: String) {
         self.userId = userId
         if Self.preloadedPosts == nil {
-            loadFeedPosts(loadMore: false, preload: true)            
+            loadFeedPosts(loadMore: false, preload: true)
         }
     }
 
@@ -72,8 +72,7 @@ struct FeedView: View {
                                                                navigationDestination.hide()
                                                            }
                                                        })
-            NavigationLink(destination: Destination(requestInfo: store.globalState.requestInfo, navigationDestination: $navigationDestination,
-                                                    feedPosts: $feedState.feedPosts)
+            NavigationLink(destination: Destination(navigationDestination: $navigationDestination, feedPosts: $feedState.feedPosts)
                     .navigationbarHidden(),
                 isActive: showDetail) { EmptyView() }
 
@@ -100,7 +99,6 @@ struct FeedView: View {
                                                userId: userId,
                                                userCountry: feedPostData.user?.country,
                                                inventoryItems: feedPostData.inventoryItems,
-                                               requestInfo: store.globalState.requestInfo,
                                                profileInfo: (user.name ?? "", user.imageURL)) {
                             if let profileData = feedPostData.profileData {
                                 navigationDestination += .profile(profileData)
@@ -175,7 +173,6 @@ extension FeedView {
     }
 
     struct Destination: View {
-        let requestInfo: [ScraperRequestInfo]
         @Binding var navigationDestination: Navigation<NavigationDestination>
         @Binding var feedPosts: PaginatedResult<[FeedPost]>
 
@@ -187,9 +184,7 @@ extension FeedView {
             switch navigationDestination.destination {
             case let .inventoryItem(inventoryItem):
                 if let user = user(for: inventoryItem) {
-                    SharedInventoryItemView(user: user,
-                                            inventoryItem: inventoryItem,
-                                            requestInfo: requestInfo) { navigationDestination.hide() }
+                    SharedInventoryItemView(user: user, inventoryItem: inventoryItem) { navigationDestination.hide() }
                 }
             case let .profile(profile):
                 ProfileView(profileData: profile) { navigationDestination.hide() }
@@ -197,8 +192,7 @@ extension FeedView {
                 if let user = feedPost.user {
                     SharedStackDetailView(user: user,
                                           stack: feedPost.stack,
-                                          inventoryItems: feedPost.inventoryItems,
-                                          requestInfo: requestInfo) { navigationDestination.hide() }
+                                          inventoryItems: feedPost.inventoryItems) { navigationDestination.hide() }
                 }
             case .empty:
                 EmptyView()

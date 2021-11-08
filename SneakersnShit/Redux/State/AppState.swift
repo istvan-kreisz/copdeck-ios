@@ -22,7 +22,6 @@ struct GlobalState: Equatable {
     var user: User?
     var firstLoadDone = false
     var didFetchItemPrices = false
-    var requestInfo: [ScraperRequestInfo] = []
     var error: AppError?
     var favoritedItems: [Item] = []
     var recentlyViewedItems: [Item] = []
@@ -80,11 +79,6 @@ struct AppState: Equatable {
     var didFetchItemPrices: Bool {
         get { globalState.didFetchItemPrices }
         set { globalState.didFetchItemPrices = newValue }
-    }
-
-    var requestInfo: [ScraperRequestInfo] {
-        get { globalState.requestInfo }
-        set { globalState.requestInfo = newValue }
     }
 
     var error: AppError? {
@@ -162,10 +156,6 @@ struct AppState: Equatable {
 
     var allStack: Stack? {
         allStackIndex.map { (index: Int) in stacks[index] }
-    }
-
-    func requestInfo(for storeId: StoreId) -> ScraperRequestInfo? {
-        requestInfo.first(where: { $0.storeId == storeId })
     }
 
     mutating func reset() {

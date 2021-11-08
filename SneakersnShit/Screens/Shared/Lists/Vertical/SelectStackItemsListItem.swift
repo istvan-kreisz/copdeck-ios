@@ -10,14 +10,12 @@ import SwiftUI
 struct SelectStackItemsListItem: View {
     var inventoryItem: InventoryItem
     @Binding var isSelected: Bool
-    var requestInfo: [ScraperRequestInfo]
 
     var body: some View {
         VerticalListItemWithAccessoryView1(itemId: inventoryItem.itemId ?? "",
                                            title: inventoryItem.name,
                                            source: imageSource(for: inventoryItem),
                                            flipImage: inventoryItem.imageURL?.store?.id == .klekt,
-                                           requestInfo: requestInfo,
                                            isEditing: .constant(false),
                                            isSelected: isSelected,
                                            selectionStyle: .highlight,

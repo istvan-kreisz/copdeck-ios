@@ -13,7 +13,6 @@ struct SharedInventoryItemView: View {
 
     let user: User
     let inventoryItem: InventoryItem
-    let requestInfo: [ScraperRequestInfo]
 
     let shouldDismiss: () -> Void
 

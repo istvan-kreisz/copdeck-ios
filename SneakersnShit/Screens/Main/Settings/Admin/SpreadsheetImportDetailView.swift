@@ -72,8 +72,7 @@ struct SpreadsheetImportDetailView: View {
                                       selectedInventoryItem: $selectedInventoryItem,
                                       isSelected: false,
                                       isInSharedStack: false,
-                                      isEditing: .constant(false),
-                                      requestInfo: DerivedGlobalStore.default.globalState.requestInfo) {}
+                                      isEditing: .constant(false)) {}
                 }
                 .withDefaultPadding(padding: .horizontal)
                 .listRow(backgroundColor: .customWhite)

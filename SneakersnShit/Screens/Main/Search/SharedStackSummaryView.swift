@@ -29,7 +29,6 @@ struct SharedStackSummaryView: View {
     }
 
     let inventoryItems: [InventoryItem]
-    let requestInfo: [ScraperRequestInfo]
 
     let profileInfo: (username: String, imageURL: URL?)?
 
@@ -84,9 +83,7 @@ struct SharedStackSummaryView: View {
             }
             VStack {
                 ForEach(inventoryItems.first(n: Self.maxCount)) { (inventoryItem: InventoryItem) in
-                    StackSummaryListItem(inventoryItem: inventoryItem,
-                                         selectedInventoryItem: $selectedInventoryItem,
-                                         requestInfo: requestInfo)
+                    StackSummaryListItem(inventoryItem: inventoryItem, selectedInventoryItem: $selectedInventoryItem)
                 }
                 AccessoryButton(title: "See details \(notShownItemCount > 0 ? "(+\(notShownItemCount) more items)" : "")",
                                 color: .customAccent1,

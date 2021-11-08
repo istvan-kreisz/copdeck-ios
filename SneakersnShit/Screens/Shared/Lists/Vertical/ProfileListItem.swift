@@ -16,7 +16,6 @@ struct ProfileListItem: View {
             title: profileData.user.name ?? "",
                                            source: .url(profileData.user.imageURL),
                                            flipImage: false,
-                                           requestInfo: [],
                                            isEditing: .constant(false),
                                            isSelected: false,
                                            ribbonText: nil,
