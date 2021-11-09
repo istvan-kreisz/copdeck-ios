@@ -25,12 +25,9 @@ struct InventoryViewPills: View {
     }
     
     private func pillsHStack(pills: [(String, Int)], startIndex: Int) -> some View {
-        HStack(spacing: 4) {
-            ForEach(pills, id: \.self.1) { (detail: String, index: Int) in
-                PillView(title: detail, color: Color.pillColors[(index + startIndex) % Color.pillColors.count])
-            }
-            Spacer()
-        }
+        Text(details.map(\.0).joined(separator: " • "))
+            .font(.semiBold(size: 14))
+            .foregroundColor(.customText2)
     }
 
     var body: some View {

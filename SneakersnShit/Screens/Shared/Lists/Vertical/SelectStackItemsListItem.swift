@@ -19,7 +19,7 @@ struct SelectStackItemsListItem: View {
                                            isEditing: .constant(false),
                                            isSelected: isSelected,
                                            selectionStyle: .highlight,
-                                           ribbonText: inventoryItem.isSold ? "Sold" : nil,
+                                           ribbons: inventoryItem.tags.first(n: 2).map { ($0.name, $0.color) },
                                            accessoryView: InventoryViewPills(inventoryItem: inventoryItem).leftAligned(),
                                            onTapped: { isSelected.toggle() })
     }

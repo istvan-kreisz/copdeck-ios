@@ -7,6 +7,7 @@
 
 import SwiftUI
 import NukeUI
+import nanopb
 
 enum VerticalListItemSelectionStyle {
     case checkmark
@@ -22,7 +23,7 @@ struct VerticalListItem<V1: View, V2: View>: View {
     @Binding var isEditing: Bool
     var isSelected: Bool
     var selectionStyle: VerticalListItemSelectionStyle = .checkmark
-    var ribbonText: String? = nil
+    var ribbons: [(String, String)] = []
     @State var animate = false
     var resizingMode: ImageResizingMode = .aspectFit
     var addShadow: Bool = true
@@ -79,18 +80,8 @@ struct VerticalListItem<V1: View, V2: View>: View {
                     accessoryView
                 }
             }
-
-            .overlay(ZStack {
-                Rectangle()
-                    .fill(Color.customRed)
-                    .frame(width: 120, height: 18)
-                Text(ribbonText ?? "")
-                    .foregroundColor(.customWhite)
-                    .font(.bold(size: 12))
-            }
-            .rotationEffect(.degrees(-45))
-            .position(x: 12, y: 12)
-            .opacity(ribbonText != nil ? 1.0 : 0))
+            .ribbon(ribbons[safe: 0], isFirst: true)
+            .ribbon(ribbons[safe: 1], isFirst: false)
             .padding(12)
             .frame(height: 86)
             .background(selectionStyle == .checkmark || !isSelected ? Color.customWhite : Color.customBlue.opacity(0.07))
@@ -115,7 +106,7 @@ struct VerticalListItemWithAccessoryView1<V: View>: View {
     @Binding var isEditing: Bool
     var isSelected: Bool
     var selectionStyle: VerticalListItemSelectionStyle = .checkmark
-    var ribbonText: String? = nil
+    var ribbons: [(String, String)] = []
     @State var animate = false
 
     var resizingMode: ImageResizingMode = .aspectFit
@@ -131,7 +122,7 @@ struct VerticalListItemWithAccessoryView1<V: View>: View {
                                        isEditing: $isEditing,
                                        isSelected: isSelected,
                                        selectionStyle: selectionStyle,
-                                       ribbonText: ribbonText,
+                                       ribbons: ribbons,
                                        animate: animate,
                                        resizingMode: resizingMode,
                                        accessoryView1: accessoryView,
@@ -150,7 +141,7 @@ struct VerticalListItemWithoutAccessoryView: View {
     @Binding var isEditing: Bool
     var isSelected: Bool
     var selectionStyle: VerticalListItemSelectionStyle = .checkmark
-    var ribbonText: String? = nil
+    var ribbons: [(String, String)] = []
     @State var animate = false
 
     var resizingMode: ImageResizingMode = .aspectFit
@@ -166,10 +157,26 @@ struct VerticalListItemWithoutAccessoryView: View {
                                                isEditing: $isEditing,
                                                isSelected: isSelected,
                                                selectionStyle: selectionStyle,
-                                               ribbonText: ribbonText,
+                                               ribbons: ribbons,
                                                animate: animate,
                                                resizingMode: resizingMode,
                                                onTapped: onTapped,
                                                onSelectorTapped: onSelectorTapped)
+    }
+}
+
+private extension View {
+    func ribbon(_ info: (String, String)?, isFirst: Bool) -> some View {
+        overlay(ZStack {
+            Rectangle()
+                .fill(Tag.color(info?.1 ?? "blue"))
+                .frame(width: 120, height: 16)
+            Text(info?.0 ?? "")
+                .foregroundColor(.customWhite)
+                .font(.bold(size: 10))
+        }
+        .rotationEffect(.degrees(-45))
+        .position(x: isFirst ? 5 : 15, y: isFirst ? 5 : 15)
+        .opacity(info != nil ? 1.0 : 0))
     }
 }

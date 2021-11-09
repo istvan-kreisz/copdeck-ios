@@ -18,7 +18,6 @@ struct ProfileListItem: View {
                                            flipImage: false,
                                            isEditing: .constant(false),
                                            isSelected: false,
-                                           ribbonText: nil,
                                            resizingMode: .aspectFill,
                                            accessoryView: EmptyView(),
                                            onTapped: { selectedProfile = profileData })

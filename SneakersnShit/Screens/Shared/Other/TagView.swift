@@ -31,6 +31,7 @@ struct TagView: View {
         .cornerRadius(Self.height / 2)
         .background(isSelected ? Capsule().fill(color) : Capsule().fill(.clear))
         .overlay(Capsule().stroke(color, lineWidth: 2))
+        .fixedSize(horizontal: true, vertical: true)
         .onTapGesture {
             isSelected.toggle()
         }

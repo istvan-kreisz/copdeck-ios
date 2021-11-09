@@ -30,7 +30,7 @@ struct StackSummaryListItem: View {
                          flipImage: inventoryItem.imageURL?.store?.id == .klekt,
                          isEditing: .constant(false),
                          isSelected: false,
-                         ribbonText: inventoryItem.isSold ? "Sold" : nil,
+                         ribbons: inventoryItem.tags.first(n: 2).map { ($0.name, $0.color) },
                          addShadow: false,
                          accessoryView1: InventoryViewPills(inventoryItem: inventoryItem, pillTypes: [.condition, .size]).leftAligned(),
                          accessoryView2: priceStack(),

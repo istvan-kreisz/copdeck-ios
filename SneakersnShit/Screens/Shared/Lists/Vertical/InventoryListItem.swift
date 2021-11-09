@@ -56,7 +56,7 @@ struct InventoryListItem: View {
                              flipImage: inventoryItem.imageURL?.store?.id == .klekt,
                              isEditing: $isEditing,
                              isSelected: isSelected,
-                             ribbonText: inventoryItem.isSold ? "Sold" : nil,
+                             ribbons: inventoryItem.tags.first(n: 2).map { ($0.name, $0.color) },
                              accessoryView1: InventoryViewPills(inventoryItem: inventoryItem).leftAligned(),
                              accessoryView2: bestPriceStack()) {
                 selectedInventoryItem = inventoryItem
