@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AddToInventoryView: View {
     let currency: Currency
-    @State var item: Item
+    @State var item: Item?
     @Binding var presented: (isActive: Bool, size: String?)
     @Binding var addedInvantoryItem: Bool
 
@@ -36,18 +36,23 @@ struct AddToInventoryView: View {
         allInventoryItems.compactMap { $0 }.count
     }
 
-    init(item: Item, currency: Currency, presented: Binding<(isActive: Bool, size: String?)>, addedInvantoryItem: Binding<Bool>) {
+    init(item: Item?, currency: Currency, presented: Binding<(isActive: Bool, size: String?)>, addedInvantoryItem: Binding<Bool>) {
         self._item = State(initialValue: item)
         self.currency = currency
         self._presented = presented
         self._addedInvantoryItem = addedInvantoryItem
 
-        self._name = State(initialValue: item.name ?? "")
-        self._styleId = State(initialValue: item.bestStoreInfo?.sku ?? "")
+        self._name = State(initialValue: item?.name ?? "")
+        self._styleId = State(initialValue: item?.bestStoreInfo?.sku ?? "")
         self._notes = State(initialValue: "")
 
-        let isValidSize = presented.wrappedValue.size.map { item.sortedSizes.contains($0) } ?? false
-        self._inventoryItem1 = State(initialValue: InventoryItem(fromItem: item, size: isValidSize ? presented.wrappedValue.size : nil))
+        let isValidSize = item.map { i in presented.wrappedValue.size.map { i.sortedSizes.contains($0) } ?? false } ?? false
+        if let item = item {
+            self._inventoryItem1 = State(initialValue: InventoryItem(fromItem: item, size: isValidSize ? presented.wrappedValue.size : nil))
+        } else {
+            self._inventoryItem1 = State(initialValue: InventoryItem.new)
+        }
+
         self._inventoryItem2 = State(initialValue: nil)
         self._inventoryItem3 = State(initialValue: nil)
         self._inventoryItem4 = State(initialValue: nil)
@@ -57,16 +62,16 @@ struct AddToInventoryView: View {
     }
 
     var priceWithCurrency: PriceWithCurrency? {
-        item.retailPrice.asPriceWithCurrency(currency: currency)
+        item?.retailPrice.asPriceWithCurrency(currency: currency)
     }
 
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(alignment: .center, spacing: 20) {
-                ItemImageViewWithNavBar(itemId: item.id,
-                                        source: imageSource(for: item),
+                ItemImageViewWithNavBar(itemId: item?.id,
+                                        source: item.map { imageSource(for: $0) },
                                         shouldDismiss: { presented = (false, nil) },
-                                        flipImage: item.imageURL?.store?.id == .klekt)
+                                        flipImage: item?.imageURL?.store?.id == .klekt)
 
                 VStack(alignment: .center, spacing: 8) {
                     Text("Add To Inventory")
@@ -210,15 +215,19 @@ struct AddToInventoryView: View {
         .navigationbarHidden()
     }
 
+    private func newInventoryItem(size: String?) -> InventoryItem {
+        item.map { InventoryItem(fromItem: $0, size: size) } ?? .new
+    }
+
     private func addMore() {
         if inventoryItem2 == nil {
-            inventoryItem2 = InventoryItem(fromItem: item, size: inventoryItem1.size)
+            inventoryItem2 = newInventoryItem(size: inventoryItem1.size)
         } else if inventoryItem3 == nil {
-            inventoryItem3 = InventoryItem(fromItem: item, size: inventoryItem2?.size)
+            inventoryItem3 = newInventoryItem(size: inventoryItem2?.size)
         } else if inventoryItem4 == nil {
-            inventoryItem4 = InventoryItem(fromItem: item, size: inventoryItem3?.size)
+            inventoryItem4 = newInventoryItem(size: inventoryItem3?.size)
         } else if inventoryItem5 == nil {
-            inventoryItem5 = InventoryItem(fromItem: item, size: inventoryItem4?.size)
+            inventoryItem5 = newInventoryItem(size: inventoryItem4?.size)
         }
     }
 

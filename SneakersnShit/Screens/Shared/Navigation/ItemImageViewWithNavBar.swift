@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct ItemImageViewWithNavBar: View {
-    let itemId: String
-    let source: ImageViewSourceType
+    let itemId: String?
+    let source: ImageViewSourceType?
     var shouldDismiss: () -> Void
     var isFavorited: Binding<Bool>?
     let flipImage: Bool
@@ -20,14 +20,17 @@ struct ItemImageViewWithNavBar: View {
         ZStack {
             Color.customWhite.edgesIgnoringSafeArea(.all)
 
-            Color.clear
-                .frame(width: size, height: size)
-            ItemImageView(itemId: itemId,
-                          source: source,
-                          size: size,
-                          aspectRatio: nil,
-                          flipImage: flipImage,
-                          showPlaceholder: false)
+            if let itemId = itemId, let source = source {
+                Color.clear
+                    .frame(width: size, height: size)
+
+                ItemImageView(itemId: itemId,
+                              source: source,
+                              size: size,
+                              aspectRatio: nil,
+                              flipImage: flipImage,
+                              showPlaceholder: false)
+            }
 
             if let isFavorited = isFavorited {
                 Button {

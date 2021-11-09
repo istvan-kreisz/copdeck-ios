@@ -57,6 +57,7 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     var size: String
     var itemType: ItemType
     var condition: Condition
+    #warning("remove")
     var listingPrices: [ListingPrice] = []
     var copdeckPrice: ListingPrice?
     var soldPrice: SoldPrice?
@@ -76,16 +77,20 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     var isSold: Bool {
         return soldPrice != nil || tags.contains(.sold)
     }
-    
+
     var isShoe: Bool {
         itemType == .shoe
     }
 
     var convertedSize: String {
         get { isShoe ? size.asSize(of: self) : size }
-        set { size = isShoe ? convertSize(from: AppStore.default.state.settings.shoeSize, to: .US, size: newValue, gender: genderCalculated, brand: brandCalculated) : newValue }
+        set {
+            size = isShoe ?
+                convertSize(from: AppStore.default.state.settings.shoeSize, to: .US, size: newValue, gender: genderCalculated, brand: brandCalculated) :
+                newValue
+        }
     }
-    
+
     var sortedSizes: [ItemType: [String]] {
         var result: [ItemType: [String]] = [:]
         ItemType.allCases.forEach { itemType in
@@ -230,6 +235,27 @@ extension InventoryItem {
                                      updated: nil,
                                      purchasedDate: nil,
                                      soldDate: nil)
+
+    static var new: InventoryItem {
+        InventoryItem(id: UUID().uuidString,
+                      itemId: "",
+                      name: "",
+                      purchasePrice: nil,
+                      imageURL: nil,
+                      size: "",
+                      itemType: .shoe,
+                      condition: .new,
+                      listingPrices: [],
+                      copdeckPrice: nil,
+                      soldPrice: nil,
+                      tags: [],
+                      notes: nil,
+                      pendingImport: nil,
+                      created: Date.serverDate,
+                      updated: Date.serverDate,
+                      purchasedDate: Date.serverDate,
+                      soldDate: nil)
+    }
 }
 
 extension InventoryItem {
@@ -317,7 +343,7 @@ extension InventoryItem {
         gender = try container.decodeIfPresent(Gender.self, forKey: .gender)
         brand = try container.decodeIfPresent(Brand.self, forKey: .brand)
     }
-    
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)

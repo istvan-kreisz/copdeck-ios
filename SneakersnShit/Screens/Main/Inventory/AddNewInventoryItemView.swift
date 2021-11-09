@@ -40,7 +40,7 @@ struct AddNewInventoryItemView: View {
         NavigationView {
             VStack(alignment: .leading, spacing: 19) {
                 NavigationLink(destination: Destination(store: store, navigationDestination: $navigationDestination),
-                    isActive: showDetail) { EmptyView() }
+                               isActive: showDetail) { EmptyView() }
 
                 Text("Add New Item")
                     .font(.bold(size: 28))
@@ -66,7 +66,7 @@ struct AddNewInventoryItemView: View {
                                         textColor: .customBlue,
                                         width: nil,
                                         imageName: "plus",
-                                        tapped: { navigationDestination += .itemDetail(nil) })
+                                        tapped: { navigationDestination += .addManually })
                         Spacer()
                     }
                     .withDefaultPadding(padding: .horizontal)
@@ -109,24 +109,41 @@ extension AddNewInventoryItemView: LoadViewWithAlert {}
 
 extension AddNewInventoryItemView {
     enum NavigationDestination: Equatable {
-        case itemDetail(Item?), empty
+        case itemDetail(Item), addManually, empty
     }
 
     struct Destination: View {
         var store: DerivedGlobalStore
         @Binding var navigationDestination: Navigation<NavigationDestination>
 
+        #warning("add snackbar")
+        @State private var addedInventoryItem = false
+
         var body: some View {
+            let addToInventory = Binding<(isActive: Bool, size: String?)>(get: {
+                                                                              if case .addManually = navigationDestination.destination {
+                                                                                  return (true, nil)
+                                                                              } else {
+                                                                                  return (false, nil)
+                                                                              }
+                                                                          },
+                                                                          set: { newValue in
+                                                                              if !newValue.isActive {
+                                                                                  navigationDestination.hide()
+                                                                              }
+                                                                          })
+
             switch navigationDestination.destination {
             case let .itemDetail(item):
-                if let item = item {
-                    ItemDetailView(item: item,
-                                   itemId: item.id,
-                                   favoritedItemIds: store.globalState.favoritedItems.map(\.id)) { navigationDestination.hide() }
-                        .environmentObject(AppStore.default)
-                } else {
-                    Text("asuasodsd")
-                }
+                ItemDetailView(item: item,
+                               itemId: item.id,
+                               favoritedItemIds: store.globalState.favoritedItems.map(\.id)) { navigationDestination.hide() }
+                    .environmentObject(AppStore.default)
+            case .addManually:
+                AddToInventoryView(item: nil,
+                                   currency: store.globalState.settings.currency,
+                                   presented: addToInventory,
+                                   addedInvantoryItem: $addedInventoryItem)
             case .empty:
                 EmptyView()
             }
