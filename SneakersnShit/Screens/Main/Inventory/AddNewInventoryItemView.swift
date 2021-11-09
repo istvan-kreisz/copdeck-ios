@@ -17,6 +17,8 @@ struct AddNewInventoryItemView: View {
     @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
 
     @State var searchState = SearchState()
+    @State var showSnackBar = false
+    @State var addedInventoryItem = false
 
     var alert = State<(String, String)?>(initialValue: nil)
 
@@ -31,6 +33,7 @@ struct AddNewInventoryItemView: View {
         let selectedItemBinding = Binding<Item?>(get: { selectedItem },
                                                  set: { item in
                                                      if let item = item {
+                                                         addedInventoryItem = false
                                                          navigationDestination += .itemDetail(item)
                                                      } else {
                                                          navigationDestination.hide()
@@ -39,7 +42,7 @@ struct AddNewInventoryItemView: View {
 
         NavigationView {
             VStack(alignment: .leading, spacing: 19) {
-                NavigationLink(destination: Destination(store: store, navigationDestination: $navigationDestination),
+                NavigationLink(destination: Destination(store: store, navigationDestination: $navigationDestination, addedInventoryItem: $addedInventoryItem),
                                isActive: showDetail) { EmptyView() }
 
                 Text("Add New Item")
@@ -66,7 +69,10 @@ struct AddNewInventoryItemView: View {
                                         textColor: .customBlue,
                                         width: nil,
                                         imageName: "plus",
-                                        tapped: { navigationDestination += .addManually })
+                                        tapped: {
+                            addedInventoryItem = false
+                            navigationDestination += .addManually
+                        })
                         Spacer()
                     }
                     .withDefaultPadding(padding: .horizontal)
@@ -91,7 +97,13 @@ struct AddNewInventoryItemView: View {
                 }
             }
             .withAlert(alert: alert.projectedValue)
+            .withSnackBar(text: "Added to inventory", shouldShow: $showSnackBar)
             .navigationbarHidden()
+            .onChange(of: addedInventoryItem) { new in
+                if new {
+                    showSnackBar = true
+                }
+            }
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .preferredColorScheme(.light)
@@ -115,9 +127,7 @@ extension AddNewInventoryItemView {
     struct Destination: View {
         var store: DerivedGlobalStore
         @Binding var navigationDestination: Navigation<NavigationDestination>
-
-        #warning("add snackbar")
-        @State private var addedInventoryItem = false
+        @Binding var addedInventoryItem: Bool
 
         var body: some View {
             let addToInventory = Binding<(isActive: Bool, size: String?)>(get: {
