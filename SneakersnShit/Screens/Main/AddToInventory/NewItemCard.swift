@@ -44,7 +44,7 @@ struct NewItemCard: View {
     var toggleButtonStyle: ToggleButton.Style {
         style == .card ? .gray : .white
     }
-    
+
     var gridSelectorStyle: GridSelectorMenu.Style {
         style == .card ? .gray : .white
     }
@@ -193,7 +193,11 @@ struct NewItemCard: View {
             }
 
             let itemType = Binding<String>(get: { inventoryItem.itemType.rawValue },
-                                           set: { inventoryItem.itemType = ItemType(rawValue: $0.lowercased()) ?? .shoe })
+                                           set: { newValue in
+                                               let newType = ItemType(rawValue: newValue.lowercased()) ?? .shoe
+                                               inventoryItem.itemType = newType
+                                               inventoryItem.size = inventoryItem.sortedSizes[newType]?.first ?? ""
+                                           })
             ToggleButton(title: "type",
                          selection: itemType,
                          options: ItemType.allCases.map(\.rawValue),
@@ -202,7 +206,7 @@ struct NewItemCard: View {
             if let sizesArray = sizesConverted[inventoryItem.itemType] {
                 let size = Binding<String>(get: { inventoryItem.convertedSize },
                                            set: { inventoryItem.convertedSize = $0 })
-                
+
                 GridSelectorMenu(selectedItem: size, options: sizesArray, style: gridSelectorStyle)
             }
         }
