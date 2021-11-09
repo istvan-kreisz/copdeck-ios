@@ -23,6 +23,9 @@ struct AddToInventoryView: View {
     @State var inventoryItem4: InventoryItem?
     @State var inventoryItem5: InventoryItem?
 
+    @State var tags: [Tag]
+    @State var showAddNewTagPopup = false
+
     var allInventoryItems: [InventoryItem?] { [inventoryItem1,
                                                inventoryItem2,
                                                inventoryItem3,
@@ -49,6 +52,8 @@ struct AddToInventoryView: View {
         self._inventoryItem3 = State(initialValue: nil)
         self._inventoryItem4 = State(initialValue: nil)
         self._inventoryItem5 = State(initialValue: nil)
+
+        self._tags = State(initialValue: Tag.defaultTags + (AppStore.default.state.user?.tags ?? []))
     }
 
     var priceWithCurrency: PriceWithCurrency? {
@@ -81,15 +86,20 @@ struct AddToInventoryView: View {
                     }
 
                     NewItemCard(inventoryItem: $inventoryItem1,
+                                tags: $tags,
                                 purchasePrice: priceWithCurrency,
                                 currency: currency,
                                 sizes: self.inventoryItem1.sortedSizes,
                                 showCopDeckPrice: false,
                                 highlightCopDeckPrice: false,
-                                addQuantitySelector: true)
+                                addQuantitySelector: true,
+                                didTapAddTag: {
+                                    showAddNewTagPopup = true
+                                })
                     if let inventoryItem2 = inventoryItem2 {
                         let item = Binding<InventoryItem>(get: { inventoryItem2 }, set: { self.inventoryItem2 = $0 })
                         NewItemCard(inventoryItem: item,
+                                    tags: $tags,
                                     purchasePrice: priceWithCurrency,
                                     currency: currency,
                                     sizes: inventoryItem2.sortedSizes,
@@ -97,15 +107,18 @@ struct AddToInventoryView: View {
                                     highlightCopDeckPrice: false,
                                     addQuantitySelector: true,
                                     didTapDelete: {
-                            self.inventoryItem2 = self.inventoryItem3
-                            self.inventoryItem3 = self.inventoryItem4
-                            self.inventoryItem4 = self.inventoryItem5
-                            self.inventoryItem5 = nil
-                        })
+                                        self.inventoryItem2 = self.inventoryItem3
+                                        self.inventoryItem3 = self.inventoryItem4
+                                        self.inventoryItem4 = self.inventoryItem5
+                                        self.inventoryItem5 = nil
+                                    }, didTapAddTag: {
+                                        showAddNewTagPopup = true
+                                    })
                     }
                     if let inventoryItem3 = inventoryItem3 {
                         let item = Binding<InventoryItem>(get: { inventoryItem3 }, set: { self.inventoryItem3 = $0 })
                         NewItemCard(inventoryItem: item,
+                                    tags: $tags,
                                     purchasePrice: priceWithCurrency,
                                     currency: currency,
                                     sizes: inventoryItem3.sortedSizes,
@@ -113,14 +126,17 @@ struct AddToInventoryView: View {
                                     highlightCopDeckPrice: false,
                                     addQuantitySelector: true,
                                     didTapDelete: {
-                            self.inventoryItem3 = self.inventoryItem4
-                            self.inventoryItem4 = self.inventoryItem5
-                            self.inventoryItem5 = nil
-                        })
+                                        self.inventoryItem3 = self.inventoryItem4
+                                        self.inventoryItem4 = self.inventoryItem5
+                                        self.inventoryItem5 = nil
+                                    }, didTapAddTag: {
+                                        showAddNewTagPopup = true
+                                    })
                     }
                     if let inventoryItem4 = inventoryItem4 {
                         let item = Binding<InventoryItem>(get: { inventoryItem4 }, set: { self.inventoryItem4 = $0 })
                         NewItemCard(inventoryItem: item,
+                                    tags: $tags,
                                     purchasePrice: priceWithCurrency,
                                     currency: currency,
                                     sizes: inventoryItem4.sortedSizes,
@@ -128,13 +144,16 @@ struct AddToInventoryView: View {
                                     highlightCopDeckPrice: false,
                                     addQuantitySelector: true,
                                     didTapDelete: {
-                            self.inventoryItem4 = self.inventoryItem5
-                            self.inventoryItem5 = nil
-                        })
+                                        self.inventoryItem4 = self.inventoryItem5
+                                        self.inventoryItem5 = nil
+                                    }, didTapAddTag: {
+                                        showAddNewTagPopup = true
+                                    })
                     }
                     if let inventoryItem5 = inventoryItem5 {
                         let item = Binding<InventoryItem>(get: { inventoryItem5 }, set: { self.inventoryItem5 = $0 })
                         NewItemCard(inventoryItem: item,
+                                    tags: $tags,
                                     purchasePrice: priceWithCurrency,
                                     currency: currency,
                                     sizes: inventoryItem5.sortedSizes,
@@ -142,8 +161,10 @@ struct AddToInventoryView: View {
                                     highlightCopDeckPrice: false,
                                     addQuantitySelector: true,
                                     didTapDelete: {
-                            self.inventoryItem5 = nil
-                        })
+                                        self.inventoryItem5 = nil
+                                    }, didTapAddTag: {
+                                        showAddNewTagPopup = true
+                                    })
                     }
                     if itemCount != allInventoryItems.count {
                         AccessoryButton(title: "Add More",
@@ -177,6 +198,13 @@ struct AddToInventoryView: View {
                 .background(Color.customBackground
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .edgesIgnoringSafeArea(.all))
+            }
+        }
+        .withPopup {
+            NewTagPopup(isShowing: $showAddNewTagPopup) { name, color in
+                let newTag = Tag(name: name, color: color)
+                AppStore.default.send(.main(action: .addNewTag(tag: newTag)))
+                self.tags.append(newTag)
             }
         }
         .navigationbarHidden()

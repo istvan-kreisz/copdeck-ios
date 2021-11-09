@@ -24,8 +24,11 @@ struct InventoryItemDetailView: View {
     @State var didLoadPhotos = false
     @State var photoURLs: [URL] = []
     @State var shownImageURL: URL?
-    
+
     @State var alert: (String, String)? = nil
+    @State var showAddNewTagPopup = false
+
+    @State var tags: [Tag]
 
     var photoURLsChunked: [(Int, [URL])] {
         Array(photoURLs.chunked(into: 3).enumerated())
@@ -44,6 +47,7 @@ struct InventoryItemDetailView: View {
         self._name = State(initialValue: inventoryItem.name)
         self._styleId = State(initialValue: inventoryItem.itemId ?? "")
         self._notes = State(initialValue: inventoryItem.notes ?? "")
+        self._tags = State(initialValue: Tag.defaultTags + (AppStore.default.state.user?.tags ?? []))
     }
 
     var body: some View {
@@ -97,6 +101,7 @@ struct InventoryItemDetailView: View {
                         .padding(.top, 15)
 
                         NewItemCard(inventoryItem: $inventoryItem,
+                                    tags: $tags,
                                     purchasePrice: inventoryItem.purchasePrice,
                                     currency: store.state.currency,
                                     style: NewItemCard.Style.noBackground,
@@ -105,8 +110,11 @@ struct InventoryItemDetailView: View {
                                     highlightCopDeckPrice: isInSharedStack,
                                     addQuantitySelector: false,
                                     onCopDeckPriceTooltipTapped: {
-                            alert = ("CopDeck price", "When you share your stack on the CopDeck feed or via a link, this the price that will show up next to your items.")
-                        })
+                                        alert = ("CopDeck price",
+                                                 "When you share your stack on the CopDeck feed or via a link, this the price that will show up next to your items.")
+                                    }, didTapAddTag: {
+                                        showAddNewTagPopup = true
+                                    })
 
                         VStack(alignment: .leading, spacing: 9) {
                             Text("Photos:".uppercased())
@@ -227,11 +235,19 @@ struct InventoryItemDetailView: View {
             }
         }
         .withPopup {
-            Popup<EmptyView>(isShowing: showPopup,
-                             title: alert.map { $0.0 } ?? "",
-                             subtitle: alert.map { $0.1 } ?? "",
-                             firstAction: .init(name: "Okay", tapped: { alert = nil }),
-                             secondAction: nil)
+            if showAddNewTagPopup {
+                NewTagPopup(isShowing: $showAddNewTagPopup) { name, color in
+                    let newTag = Tag(name: name, color: color)
+                    AppStore.default.send(.main(action: .addNewTag(tag: newTag)))
+                    self.tags.append(newTag)
+                }
+            } else {
+                Popup<EmptyView>(isShowing: showPopup,
+                                 title: alert.map { $0.0 } ?? "",
+                                 subtitle: alert.map { $0.1 } ?? "",
+                                 firstAction: .init(name: "Okay", tapped: { alert = nil }),
+                                 secondAction: nil)
+            }
         }
         .withImageViewer(shownImageURL: $shownImageURL)
         .hideKeyboardOnScroll()

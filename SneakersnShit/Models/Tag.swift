@@ -26,8 +26,10 @@ extension Tag {
     
     static let defaultTags = [sold, shipping]
     
-    var uiColor: Color {
-        switch color {
+    static let allColors = ["blue", "green", "purple", "red", "yellow"]
+    
+    static func color(_ colorName: String) -> Color {
+        switch colorName {
         case "blue":
             return .customBlue
         case "green":
@@ -41,5 +43,9 @@ extension Tag {
         default:
             return .customBlue
         }
+    }
+    
+    var uiColor: Color {
+        Self.color(color)
     }
 }

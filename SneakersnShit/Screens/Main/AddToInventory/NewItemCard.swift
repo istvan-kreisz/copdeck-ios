@@ -17,6 +17,7 @@ struct NewItemCard: View {
     @State private var date = Date()
 
     @Binding var inventoryItem: InventoryItem
+    @Binding var tags: [Tag]
     let purchasePrice: PriceWithCurrency?
     let currency: Currency
     let style: Style
@@ -26,10 +27,7 @@ struct NewItemCard: View {
     let addQuantitySelector: Bool
     let didTapDelete: (() -> Void)?
     let onCopDeckPriceTooltipTapped: (() -> Void)?
-
-    var tags: [Tag] {
-        Tag.defaultTags
-    }
+    let didTapAddTag: (() -> Void)
 
     var sizesConverted: [ItemType: [String]] {
         var sizesUpdated = self.sizes
@@ -56,6 +54,7 @@ struct NewItemCard: View {
     let listingPricesItem = [GridItem(.flexible())]
 
     init(inventoryItem: Binding<InventoryItem>?,
+         tags: Binding<[Tag]>,
          purchasePrice: PriceWithCurrency?,
          currency: Currency,
          style: Style = .card,
@@ -64,8 +63,10 @@ struct NewItemCard: View {
          highlightCopDeckPrice: Bool,
          addQuantitySelector: Bool,
          didTapDelete: (() -> Void)? = nil,
-         onCopDeckPriceTooltipTapped: (() -> Void)? = nil) {
+         onCopDeckPriceTooltipTapped: (() -> Void)? = nil,
+         didTapAddTag: @escaping (() -> Void)) {
         self._inventoryItem = inventoryItem ?? Binding.constant(InventoryItem.init(fromItem: .sample))
+        self._tags = tags
         self.purchasePrice = purchasePrice
         self.currency = currency
         self.style = style
@@ -75,6 +76,7 @@ struct NewItemCard: View {
         self.addQuantitySelector = addQuantitySelector
         self.didTapDelete = didTapDelete
         self.onCopDeckPriceTooltipTapped = onCopDeckPriceTooltipTapped
+        self.didTapAddTag = didTapAddTag
     }
 
     @ViewBuilder func datePicker(title: String, date: Binding<Date>) -> some View {
@@ -104,7 +106,7 @@ struct NewItemCard: View {
                 Button {
                     didTapDelete?()
                 } label: {
-                    Text("remove")
+                    Text("delete")
                         .font(.semiBold(size: 14))
                         .foregroundColor(Color.customRed)
                 }
@@ -113,7 +115,7 @@ struct NewItemCard: View {
 //                }
                 .rightAligned()
                 .padding(.trailing, 3)
-                .padding(.bottom, -8)
+                .padding(.bottom, -4)
             }
 
             HStack(alignment: .top, spacing: 11) {
@@ -197,33 +199,13 @@ struct NewItemCard: View {
             }
 
             Group {
-                let itemType = Binding<String>(get: { inventoryItem.itemType.rawValue },
-                                               set: { newValue in
-                                                   let newType = ItemType(rawValue: newValue.lowercased()) ?? .shoe
-                                                   inventoryItem.itemType = newType
-                                                   inventoryItem.size = inventoryItem.sortedSizes[newType]?.first ?? ""
-                                               })
-                ToggleButton(title: "type",
-                             selection: itemType,
-                             options: ItemType.allCases.map(\.rawValue),
-                             style: toggleButtonStyle)
-
-                if let sizesArray = sizesConverted[inventoryItem.itemType] {
-                    let size = Binding<String>(get: { inventoryItem.convertedSize },
-                                               set: { inventoryItem.convertedSize = $0 })
-
-                    GridSelectorMenu(selectedItem: size, options: sizesArray, style: gridSelectorStyle)
-                }
-            }
-
-            Group {
                 Text("tags")
                     .font(.regular(size: 12))
                     .foregroundColor(style == .card ? .customText2 : .customText1)
                     .padding(.leading, 5)
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        Color.clear.frame(width: 3)
+                        Color.clear.frame(width: 2)
                         ForEach(tags, id: \.id) { tag in
                             let isSelected = Binding<Bool>(get: { inventoryItem.tags.contains(tag) },
                                                            set: { newValue in
@@ -246,11 +228,29 @@ struct NewItemCard: View {
                                         imageName: "plus",
                                         buttonPosition: .right,
                                         isContentLocked: false,
-                                        tapped: {
-                            print("add tag")
-                        })
+                                        tapped: didTapAddTag)
                     }
                     .padding(.vertical, 3)
+                }
+            }
+            
+            Group {
+                let itemType = Binding<String>(get: { inventoryItem.itemType.rawValue },
+                                               set: { newValue in
+                                                   let newType = ItemType(rawValue: newValue.lowercased()) ?? .shoe
+                                                   inventoryItem.itemType = newType
+                                                   inventoryItem.size = inventoryItem.sortedSizes[newType]?.first ?? ""
+                                               })
+                ToggleButton(title: "size",
+                             selection: itemType,
+                             options: ItemType.allCases.map(\.rawValue),
+                             style: toggleButtonStyle)
+
+                if let sizesArray = sizesConverted[inventoryItem.itemType] {
+                    let size = Binding<String>(get: { inventoryItem.convertedSize },
+                                               set: { inventoryItem.convertedSize = $0 })
+
+                    GridSelectorMenu(selectedItem: size, options: sizesArray, style: gridSelectorStyle)
                 }
             }
         }

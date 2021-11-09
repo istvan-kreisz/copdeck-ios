@@ -14,7 +14,7 @@ enum MainAction {
     // user - own
     case setUser(user: User)
     case updateUsername(username: String)
-    case addNewTag(name: String, color: String)
+    case addNewTag(tag: Tag)
     // feed
     case getFeedPosts(loadMore: Bool, completion: (Result<PaginatedResult<[FeedPost]>, AppError>) -> Void)
     case toggleLike(stack: Stack, stackOwnerId: String)
