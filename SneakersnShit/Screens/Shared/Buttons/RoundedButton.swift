@@ -13,6 +13,7 @@ enum RoundedButtonPosition {
 
 struct RoundedButton<V: View>: View {
     let text: String
+    let shouldCapitalizeTitle: Bool
     let width: CGFloat?
     let height: CGFloat?
     let maxSize: CGSize?
@@ -49,6 +50,7 @@ struct RoundedButton<V: View>: View {
     }
 
     init(text: String,
+         shouldCapitalizeTitle: Bool = true,
          width: CGFloat?,
          height: CGFloat?,
          maxSize: CGSize? = nil,
@@ -60,6 +62,7 @@ struct RoundedButton<V: View>: View {
          accessoryView: (V, RoundedButtonPosition, CGFloat?, RoundedButtonPosition)?,
          tapped: @escaping () -> Void) {
         self.text = text
+        self.shouldCapitalizeTitle = shouldCapitalizeTitle
         self.width = width
         self.height = height
         self.maxSize = maxSize
@@ -85,7 +88,7 @@ struct RoundedButton<V: View>: View {
                         Spacer()
                     }
                 }
-                Text(text.uppercased())
+                Text(shouldCapitalizeTitle ? text.uppercased() : text)
                     .lineLimit(1)
                     .font(.bold(size: fontSize))
                     .foregroundColor(textColor)

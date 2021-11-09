@@ -42,6 +42,11 @@ func appReducer(state: inout AppState,
                 updatedUser.name = username
                 environment.dataController.update(user: updatedUser)
             }
+        case let .addNewTag(name: name, color: color):
+            if var updatedUser = state.user {
+                updatedUser.tags = (updatedUser.tags ?? []) + [Tag(name: name, color: color)]
+                environment.dataController.update(user: updatedUser)
+            }
         case let .getFeedPosts(loadMore, completion):
             return environment.dataController.getFeedPosts(loadMore: loadMore)
                 .complete(completion: completion)

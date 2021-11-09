@@ -27,6 +27,10 @@ struct NewItemCard: View {
     let didTapDelete: (() -> Void)?
     let onCopDeckPriceTooltipTapped: (() -> Void)?
 
+    var tags: [Tag] {
+        Tag.defaultTags
+    }
+
     var sizesConverted: [ItemType: [String]] {
         var sizesUpdated = self.sizes
         sizesUpdated[.shoe] = sizesUpdated[.shoe]?.asSizes(of: inventoryItem)
@@ -192,22 +196,62 @@ struct NewItemCard: View {
                              style: dropdownStyle)
             }
 
-            let itemType = Binding<String>(get: { inventoryItem.itemType.rawValue },
-                                           set: { newValue in
-                                               let newType = ItemType(rawValue: newValue.lowercased()) ?? .shoe
-                                               inventoryItem.itemType = newType
-                                               inventoryItem.size = inventoryItem.sortedSizes[newType]?.first ?? ""
-                                           })
-            ToggleButton(title: "type",
-                         selection: itemType,
-                         options: ItemType.allCases.map(\.rawValue),
-                         style: toggleButtonStyle)
+            Group {
+                let itemType = Binding<String>(get: { inventoryItem.itemType.rawValue },
+                                               set: { newValue in
+                                                   let newType = ItemType(rawValue: newValue.lowercased()) ?? .shoe
+                                                   inventoryItem.itemType = newType
+                                                   inventoryItem.size = inventoryItem.sortedSizes[newType]?.first ?? ""
+                                               })
+                ToggleButton(title: "type",
+                             selection: itemType,
+                             options: ItemType.allCases.map(\.rawValue),
+                             style: toggleButtonStyle)
 
-            if let sizesArray = sizesConverted[inventoryItem.itemType] {
-                let size = Binding<String>(get: { inventoryItem.convertedSize },
-                                           set: { inventoryItem.convertedSize = $0 })
+                if let sizesArray = sizesConverted[inventoryItem.itemType] {
+                    let size = Binding<String>(get: { inventoryItem.convertedSize },
+                                               set: { inventoryItem.convertedSize = $0 })
 
-                GridSelectorMenu(selectedItem: size, options: sizesArray, style: gridSelectorStyle)
+                    GridSelectorMenu(selectedItem: size, options: sizesArray, style: gridSelectorStyle)
+                }
+            }
+
+            Group {
+                Text("tags")
+                    .font(.regular(size: 12))
+                    .foregroundColor(style == .card ? .customText2 : .customText1)
+                    .padding(.leading, 5)
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        Color.clear.frame(width: 3)
+                        ForEach(tags, id: \.id) { tag in
+                            let isSelected = Binding<Bool>(get: { inventoryItem.tags.contains(tag) },
+                                                           set: { newValue in
+                                                               if newValue {
+                                                                   inventoryItem.tags.append(tag)
+                                                               } else {
+                                                                   inventoryItem.tags = inventoryItem.tags.filter { $0.id != tag.id }
+                                                               }
+
+                                                           })
+                            TagView(title: tag.name, color: tag.uiColor, isSelected: isSelected)
+                        }
+                        AccessoryButton(title: "new tag",
+                                        shouldCapitalizeTitle: false,
+                                        color: .customAccent1,
+                                        textColor: .customText1,
+                                        height: TagView.height,
+                                        width: 100,
+                                        accessoryViewSize: 16,
+                                        imageName: "chevron.right",
+                                        buttonPosition: .right,
+                                        isContentLocked: false,
+                                        tapped: {
+                            print("add tag")
+                        })
+                    }
+                    .padding(.vertical, 3)
+                }
             }
         }
         .if(style == .card) {
