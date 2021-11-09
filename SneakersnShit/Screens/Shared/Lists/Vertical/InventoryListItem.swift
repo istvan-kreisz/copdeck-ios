@@ -49,7 +49,6 @@ struct InventoryListItem: View {
                     Spacer()
                 }
             }
-            #warning("sup here")
             VerticalListItem(itemId: inventoryItem.itemId ?? "",
                              title: inventoryItem.name,
                              source: imageSource(for: inventoryItem),

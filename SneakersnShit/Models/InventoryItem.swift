@@ -57,8 +57,6 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     var size: String
     var itemType: ItemType
     var condition: Condition
-    #warning("remove")
-    var listingPrices: [ListingPrice] = []
     var copdeckPrice: ListingPrice?
     var soldPrice: SoldPrice?
     var tags: [Tag]
@@ -151,25 +149,6 @@ struct InventoryItem: Codable, Equatable, Identifiable {
                                     price: .init(price: Double(price) ?? 0, currencyCode: copdeckPrice?.price.currencyCode ?? defaultCurrency.code))
     }
 
-    // listing price
-    mutating func setListingCurrency(currency: String, storeId: String) {
-        guard let currency = Currency.currency(withSymbol: currency) else { return }
-        if let index = listingPrices.firstIndex(where: { $0.storeId == storeId }) {
-            listingPrices[index] = ListingPrice(storeId: storeId, price: .init(price: listingPrices[index].price.price, currencyCode: currency.code))
-        } else {
-            listingPrices.append(ListingPrice(storeId: storeId, price: .init(price: 0, currencyCode: currency.code)))
-        }
-    }
-
-    mutating func setListingPrice(price: String, defaultCurrency: Currency, storeId: String) {
-        if let index = listingPrices.firstIndex(where: { $0.storeId == storeId }) {
-            listingPrices[index] = ListingPrice(storeId: storeId,
-                                                price: .init(price: Double(price) ?? 0, currencyCode: listingPrices[index].price.currencyCode))
-        } else {
-            listingPrices.append(ListingPrice(storeId: storeId, price: .init(price: Double(price) ?? 0, currencyCode: defaultCurrency.code)))
-        }
-    }
-
     // sold price
     mutating func setSoldPriceCurrency(currency: String) {
         guard let currency = Currency.currency(withSymbol: currency) else { return }
@@ -225,7 +204,6 @@ extension InventoryItem {
                                      size: "",
                                      itemType: .shoe,
                                      condition: .new,
-                                     listingPrices: [],
                                      copdeckPrice: nil,
                                      soldPrice: nil,
                                      tags: [],
@@ -245,7 +223,6 @@ extension InventoryItem {
                       size: "",
                       itemType: .shoe,
                       condition: .new,
-                      listingPrices: [],
                       copdeckPrice: nil,
                       soldPrice: nil,
                       tags: [],
