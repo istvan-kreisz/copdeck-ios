@@ -281,6 +281,10 @@ func convertSize(from fromSize: ShoeSize,
     convertSizes(from: fromSize, to: toSize, sizes: [size], gender: gender, brand: brand).first ?? ""
 }
 
+enum ApparelSize: String, Codable, Equatable, CaseIterable {
+    case XXS, XS, S, M, L, XL, XXL, XXXL
+}
+
 enum ShoeSize: String, Codable, Equatable, CaseIterable {
     case EU, UK, US
 

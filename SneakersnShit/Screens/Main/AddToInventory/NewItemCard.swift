@@ -13,6 +13,7 @@ struct NewItemCard: View {
     }
 
     @State var didTapPurchasePrice = false
+    @State var didTapSellingPrice = false
     @State private var date = Date()
 
     @Binding var inventoryItem: InventoryItem
@@ -88,21 +89,18 @@ struct NewItemCard: View {
     }
 
     var body: some View {
-        #warning("heeey")
-//        let soldStatus = Binding<String>(get: { (inventoryItem.status ?? InventoryItem.SoldStatus.None).rawValue.uppercased() },
-//                                         set: { new in
-//                                             let newValue = .init(rawValue: new.lowercased().capitalized) ?? InventoryItem.SoldStatus.None
-//                                             inventoryItem.status = newValue
-//                                             if newValue == .Sold, inventoryItem.soldDate == nil {
-//                                                 inventoryItem.soldDate = Date.serverDate
-//                                             }
-//                                         })
-
         VStack(alignment: .leading, spacing: 11) {
             if didTapDelete != nil {
-                DeleteButton(style: .line) {
+                Button {
                     didTapDelete?()
+                } label: {
+                    Text("remove")
+                        .font(.semiBold(size: 14))
+                        .foregroundColor(Color.customRed)
                 }
+//                DeleteButton(style: .line) {
+//                    didTapDelete?()
+//                }
                 .rightAligned()
                 .padding(.bottom, -12)
             }
@@ -130,30 +128,30 @@ struct NewItemCard: View {
                 }
                 datePicker(title: "purchased date", date: purchasedDate)
             }
-
             HStack(alignment: .top, spacing: 11) {
-                let condition = Binding<String>(get: { inventoryItem.condition.rawValue },
-                                                set: { inventoryItem.condition = .init(rawValue: $0) ?? .new })
-                let size = Binding<String>(get: { inventoryItem.convertedSize },
-                                           set: { inventoryItem.convertedSize = $0 })
-                let quantity = Binding<String>(get: { "\(inventoryItem.count)" }, set: { inventoryItem.count = Int($0) ?? 1 })
+                let soldPrice =
+                    Binding<String>(get: { (inventoryItem.soldPrice?.price?.price).asString() },
+                                    set: { inventoryItem.setSoldPrice(price: $0, defaultCurrency: self.currency) })
+                let soldCurrency =
+                    Binding<String>(get: { inventoryItem.soldPrice?.price?.currencySymbol.rawValue ?? self.currency.symbol.rawValue },
+                                    set: { inventoryItem.setSoldPriceCurrency(currency: $0) })
+                let soldDate = Binding<Date>(get: { inventoryItem.soldDate.serverDate ?? Date() },
+                                             set: { new in inventoryItem.soldDate = new.timeIntervalSince1970 * 1000 })
 
-                DropDownMenu(title: "size",
-                             selectedItem: size,
-                             options: sizesConverted,
-                             style: dropdownStyle)
-                if addQuantitySelector {
-                    DropDownMenu(title: "quantity",
-                                 selectedItem: quantity,
-                                 options: Array(0 ... 10).map { "\($0)" },
-                                 style: dropdownStyle)
+                PriceFieldWithCurrency(title: "selling price (optional)",
+                                       textFieldStyle: textFieldStyle,
+                                       dropDownStyle: dropdownStyle,
+                                       price: soldPrice,
+                                       currency: soldCurrency)  { isActive in
+                    if isActive, style == .card {
+                        if !didTapSellingPrice {
+                            didTapSellingPrice = true
+                            inventoryItem.soldPrice = nil
+                        }
+                    }
                 }
-                DropDownMenu(title: "condition",
-                             selectedItem: condition,
-                             options: InventoryItem.Condition.allCases.map { $0.rawValue },
-                             style: dropdownStyle)
+                datePicker(title: "sold date", date: soldDate)
             }
-
             if showCopDeckPrice {
                 let price = Binding<String>(get: { (inventoryItem.copdeckPrice?.price.price).map { $0.rounded(toPlaces: 0) } ?? "" },
                                             set: { inventoryItem.setCopDeckPrice(price: $0, defaultCurrency: self.currency) })
@@ -170,72 +168,28 @@ struct NewItemCard: View {
                                        onTooltipTapped: onCopDeckPriceTooltipTapped)
             }
 
-            #warning("yo bitch")
-//            ToggleButton(title: "status",
-//                         selection: soldStatus,
-//                         options: ["NONE", "LISTED", "SOLD"],
-//                         style: toggleButtonStyle)
-//            if inventoryItem.status == .Listed {
-//                VStack(alignment: .leading, spacing: 4) {
-//                    Text("listing prices (optional)")
-//                        .font(.semiBold(size: 12))
-//                        .foregroundColor(.customBlack)
-//                        .padding(.leading, 5)
-//
-//                    LazyVGrid(columns: listingPricesItem, alignment: .leading, spacing: 10) {
-//                        ForEach(ALLSTORESWITHOTHER) { (store: GenericStore) in
-//                            let price =
-//                                Binding<String>(get: { (inventoryItem.listingPrices.first(where: { $0.storeId == store.id })?.price.price).asString() },
-//                                                set: { inventoryItem.setListingPrice(price: $0, defaultCurrency: self.currency, storeId: store.id) })
-//
-//                            let currency =
-//                                Binding<String>(get: {
-//                                                    inventoryItem.listingPrices.first(where: { $0.storeId == store.id })?.price.currencySymbol.rawValue ?? self
-//                                                        .currency.symbol
-//                                                        .rawValue
-//                                                },
-//                                                set: { inventoryItem.setListingCurrency(currency: $0, storeId: store.id) })
-//
-//                            PriceFieldWithCurrency(title: "\(store.id) price",
-//                                                   textFieldStyle: textFieldStyle,
-//                                                   dropDownStyle: dropdownStyle,
-//                                                   price: price,
-//                                                   currency: currency)
-//                        }
-//                    }
-//                }
-//                .padding(.top, 5)
-//            } else if inventoryItem.status == .Sold {
-//                let soldPrice =
-//                    Binding<String>(get: { (inventoryItem.soldPrice?.price?.price).asString() },
-//                                    set: { inventoryItem.setSoldPrice(price: $0, defaultCurrency: self.currency) })
-//                let soldCurrency =
-//                    Binding<String>(get: { inventoryItem.soldPrice?.price?.currencySymbol.rawValue ?? self.currency.symbol.rawValue },
-//                                    set: { inventoryItem.setSoldPriceCurrency(currency: $0) })
-//                let soldStore =
-//                    Binding<String>(get: { inventoryItem.soldPrice?.storeId?.uppercased() ?? "OTHER" },
-//                                    set: { inventoryItem.setSoldStore(storeId: $0.lowercased()) })
-//
-//                VStack(alignment: .leading, spacing: 11) {
-//                    HStack(alignment: .top, spacing: 11) {
-//                        let soldDate = Binding<Date>(get: { inventoryItem.soldDate.serverDate ?? Date() },
-//                                                     set: { new in inventoryItem.soldDate = new.timeIntervalSince1970 * 1000 })
-//
-//                        PriceFieldWithCurrency(title: "selling price (optional)",
-//                                               textFieldStyle: textFieldStyle,
-//                                               dropDownStyle: dropdownStyle,
-//                                               price: soldPrice,
-//                                               currency: soldCurrency)
-//
-//                        datePicker(title: "sold date", date: soldDate)
-//                    }
-//
-//                    ToggleButton(title: "sold on (optional)",
-//                                 selection: soldStore,
-//                                 options: ALLSTORESWITHOTHER.map { (store: GenericStore) in store.id.uppercased() },
-//                                 style: toggleButtonStyle)
-//                }
-//            }
+            HStack(alignment: .top, spacing: 11) {
+                let condition = Binding<String>(get: { inventoryItem.condition.rawValue },
+                                                set: { inventoryItem.condition = .init(rawValue: $0) ?? .new })
+                let quantity = Binding<String>(get: { "\(inventoryItem.count)" }, set: { inventoryItem.count = Int($0) ?? 1 })
+
+                if addQuantitySelector {
+                    DropDownMenu(title: "quantity",
+                                 selectedItem: quantity,
+                                 options: Array(0 ... 10).map { "\($0)" },
+                                 style: dropdownStyle)
+                }
+                DropDownMenu(title: "condition",
+                             selectedItem: condition,
+                             options: InventoryItem.Condition.allCases.map { $0.rawValue },
+                             style: dropdownStyle)
+            }
+            let size = Binding<String>(get: { inventoryItem.convertedSize },
+                                       set: { inventoryItem.convertedSize = $0 })
+            DropDownMenu(title: "size",
+                         selectedItem: size,
+                         options: sizesConverted,
+                         style: dropdownStyle)
         }
         .if(style == .card) {
             $0
