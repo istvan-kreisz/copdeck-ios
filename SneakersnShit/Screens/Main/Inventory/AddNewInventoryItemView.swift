@@ -12,12 +12,7 @@ struct AddNewInventoryItemView: View {
     @EnvironmentObject var store: DerivedGlobalStore
 
     @State private var searchText = ""
-
     @StateObject private var searchResultsLoader = Loader()
-    @StateObject private var popularItemsLoader = Loader()
-    @StateObject private var userSearchResultsLoader = Loader()
-
-    @State private var selectedTabIndex = 0
 
     @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
 
@@ -30,107 +25,62 @@ struct AddNewInventoryItemView: View {
         return item
     }
 
-    var selectedUser: ProfileData? {
-        guard case let .profile(profile) = navigationDestination.destination else { return nil }
-        return profile
-    }
-
-    var allItems: [Item] {
-        let selectedItem: [Item] = selectedItem.map { (item: Item) in [item] } ?? []
-        let searchResults: [Item] = searchState.searchResults
-        let popularItems: [Item] = searchState.popularItems
-        let favoritedItems: [Item] = store.globalState.favoritedItems
-        let recentlyViewed: [Item] = store.globalState.recentlyViewedItems
-        return (selectedItem + searchResults + popularItems + favoritedItems + recentlyViewed).uniqued()
-    }
-
     var body: some View {
-        Group {
-            let showDetail = Binding<Bool>(get: { navigationDestination.show },
-                                           set: { show in show ? navigationDestination.display() : navigationDestination.hide() })
-            let selectedItemBinding = Binding<Item?>(get: { selectedItem },
-                                                     set: { item in
-                                                         if let item = item {
-                                                             navigationDestination += .itemDetail(item)
-                                                         } else {
-                                                             navigationDestination.hide()
-                                                         }
-                                                     })
-            let selectedUserBinding = Binding<ProfileData?>(get: { selectedUser },
-                                                            set: { profile in
-                                                                if let profile = profile {
-                                                                    navigationDestination += .profile(profile)
-                                                                } else {
-                                                                    navigationDestination.hide()
-                                                                }
-                                                            })
-            NavigationLink(destination: Destination(store: store,
-                                                    popularItems: $searchState.popularItems,
-                                                    favoritedItems: $store.globalState.favoritedItems,
-                                                    navigationDestination: $navigationDestination)
-                    .navigationbarHidden(),
-                isActive: showDetail) { EmptyView() }
+        let showDetail = Binding<Bool>(get: { navigationDestination.show },
+                                       set: { show in show ? navigationDestination.display() : navigationDestination.hide() })
+        let selectedItemBinding = Binding<Item?>(get: { selectedItem },
+                                                 set: { item in
+                                                     if let item = item {
+                                                         navigationDestination += .itemDetail(item)
+                                                     } else {
+                                                         navigationDestination.hide()
+                                                     }
+                                                 })
 
+        NavigationView {
             VStack(alignment: .leading, spacing: 19) {
-                Text("Search")
+                NavigationLink(destination: Destination(store: store, navigationDestination: $navigationDestination),
+                    isActive: showDetail) { EmptyView() }
+
+                Text("Add New Item")
+                    .font(.bold(size: 28))
                     .foregroundColor(.customText1)
-                    .font(.bold(size: 35))
-                    .leftAligned()
-                    .padding(.leading, 6)
-                    .withDefaultPadding(padding: .horizontal)
+                    .padding(.bottom, 18)
+                    .padding(.top, 8)
+                    .centeredHorizontally()
 
                 TextFieldRounded(title: nil,
-                                 placeHolder: selectedTabIndex == 0 ? "Search sneakers" : "Search people",
+                                 placeHolder: "Search sneakers, apparel, collectibles",
                                  style: .white,
                                  text: $searchText)
                     .withDefaultPadding(padding: .horizontal)
 
-                ScrollableSegmentedControl(selectedIndex: $selectedTabIndex,
-                                           titles: .constant(["Sneakers", "People"]),
-                                           isContentLocked: false,
-                                           button: nil,
-                                           size: (UIScreen.screenWidth - Styles.horizontalMargin * 2) / 2)
-                    .frame(width: UIScreen.screenWidth - Styles.horizontalMargin * 2)
-                    .withDefaultPadding(padding: .horizontal)
-
-                if selectedTabIndex == 0 {
-                    if searchState.searchResults.isEmpty {
-                        VStack(alignment: .leading, spacing: 10) {
-                            HorizontaltemListView(items: $searchState.popularItems,
-                                                  selectedItem: selectedItemBinding,
-                                                  isLoading: $popularItemsLoader.isLoading,
-                                                  title: "Trending now",
-                                                  style: .round) { navigationDestination += .popularItems }
-
-                            HorizontaltemListView(items: $store.globalState.favoritedItems,
-                                                  selectedItem: selectedItemBinding,
-                                                  isLoading: .constant(false),
-                                                  title: "Your favorites",
-                                                  style: .square(.customRed)) { navigationDestination += .favoritedItems }
-
-                            HorizontaltemListView(items: $store.globalState.recentlyViewedItems,
-                                                  selectedItem: selectedItemBinding,
-                                                  isLoading: .constant(false),
-                                                  title: "Recently viewed",
-                                                  sortedBy: .created,
-                                                  style: .square(.clear))
-                            Spacer()
-                        }
-                    } else {
-                        VerticalItemListView(items: $searchState.searchResults,
-                                             selectedItem: selectedItemBinding,
-                                             isLoading: $searchResultsLoader.isLoading,
-                                             title: nil,
-                                             resultsLabelText: nil,
-                                             bottomPadding: Styles.tabScreenBottomPadding)
+                if searchState.searchResults.isEmpty {
+                    // add manually
+                    HStack(alignment: .center, spacing: 16) {
+                        Text("OR")
+                            .font(.bold(size: 16))
+                            .foregroundColor(.customText1)
+                        AccessoryButton(title: "Add manually",
+                                        color: .customBlue,
+                                        textColor: .customBlue,
+                                        width: nil,
+                                        imageName: "plus",
+                                        tapped: { navigationDestination += .itemDetail(nil) })
+                        Spacer()
                     }
+                    .withDefaultPadding(padding: .horizontal)
+                    Spacer()
                 } else {
-                    VerticalProfileListView(profiles: $searchState.userSearchResults.asProfiles,
-                                            selectedProfile: selectedUserBinding,
-                                            isLoading: $userSearchResultsLoader.isLoading,
-                                            bottomPadding: Styles.tabScreenBottomPadding)
+                    VerticalItemListView(items: $searchState.searchResults,
+                                         selectedItem: selectedItemBinding,
+                                         isLoading: $searchResultsLoader.isLoading,
+                                         title: nil,
+                                         resultsLabelText: nil,
+                                         bottomPadding: 0)
                 }
             }
+            .background(Color.customBackground)
             .hideKeyboardOnScroll()
             .onChange(of: searchText) { search(searchTerm: $0) }
             .onAppear {
@@ -141,21 +91,17 @@ struct AddNewInventoryItemView: View {
                 }
             }
             .withAlert(alert: alert.projectedValue)
+            .navigationbarHidden()
         }
+        .navigationViewStyle(StackNavigationViewStyle())
+        .preferredColorScheme(.light)
     }
 
     private func search(searchTerm: String) {
-        if selectedTabIndex == 0 {
-            let loader = searchResultsLoader.getLoader()
-            store.send(.main(action: .getSearchResults(searchTerm: searchText, completion: { result in
-                handleResult(result: result, loader: loader) { self.searchState.searchResults = $0 }
-            })))
-        } else {
-            let loader = userSearchResultsLoader.getLoader()
-            store.send(.main(action: .searchUsers(searchTerm: searchText, completion: { result in
-                handleResult(result: result, loader: loader) { self.searchState.userSearchResults = $0 }
-            })))
-        }
+        let loader = searchResultsLoader.getLoader()
+        store.send(.main(action: .getSearchResults(searchTerm: searchText, completion: { result in
+            handleResult(result: result, loader: loader) { self.searchState.searchResults = $0 }
+        })))
     }
 }
 
@@ -163,28 +109,24 @@ extension AddNewInventoryItemView: LoadViewWithAlert {}
 
 extension AddNewInventoryItemView {
     enum NavigationDestination: Equatable {
-        case popularItems, favoritedItems, itemDetail(Item), profile(ProfileData), empty
+        case itemDetail(Item?), empty
     }
 
     struct Destination: View {
         var store: DerivedGlobalStore
-        @Binding var popularItems: [Item]
-        @Binding var favoritedItems: [Item]
         @Binding var navigationDestination: Navigation<NavigationDestination>
 
         var body: some View {
             switch navigationDestination.destination {
-            case .popularItems:
-                PopularItemsListView(items: $popularItems, favoritedItemIds: store.globalState.favoritedItems.map(\.id))
-            case .favoritedItems:
-                PopularItemsListView(items: $favoritedItems, favoritedItemIds: store.globalState.favoritedItems.map(\.id))
             case let .itemDetail(item):
-                ItemDetailView(item: item,
-                               itemId: item.id,
-                               favoritedItemIds: store.globalState.favoritedItems.map(\.id)) { navigationDestination.hide() }
-                    .environmentObject(AppStore.default)
-            case let .profile(profileData):
-                ProfileView(profileData: profileData) { navigationDestination.hide() }
+                if let item = item {
+                    ItemDetailView(item: item,
+                                   itemId: item.id,
+                                   favoritedItemIds: store.globalState.favoritedItems.map(\.id)) { navigationDestination.hide() }
+                        .environmentObject(AppStore.default)
+                } else {
+                    Text("asuasodsd")
+                }
             case .empty:
                 EmptyView()
             }

@@ -201,6 +201,7 @@ struct InventoryView: View {
                 switch presentedSheet {
                 case .addNew:
                     AddNewInventoryItemView()
+                        .environmentObject(globalStore)
                 case .settings:
                     SettingsView(settings: globalStore.globalState.settings, isContentLocked: globalStore.globalState.isContentLocked,
                                  isPresented: settingsPresented)
