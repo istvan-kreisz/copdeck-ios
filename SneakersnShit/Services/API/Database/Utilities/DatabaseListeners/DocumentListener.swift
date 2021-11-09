@@ -16,7 +16,9 @@ class DocumentListener<T: Codable>: FireStoreListener {
     var dataSubject = CurrentValueSubject<T?, AppError>(nil)
 
     var dataPublisher: AnyPublisher<T?, AppError> {
-        dataSubject.eraseToAnyPublisher()
+        dataSubject
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
     }
 
     func startListening(documentRef: DocumentReference?) {

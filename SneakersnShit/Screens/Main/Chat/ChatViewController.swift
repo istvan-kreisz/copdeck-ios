@@ -42,7 +42,6 @@ final class ChatViewController: MessagesViewController {
 
     func tearDown() {
         messages = []
-        messagesCollectionView.reloadData()
         cancelListener?()
         markAsSeen()
         AppStore.isChatDetailView = false

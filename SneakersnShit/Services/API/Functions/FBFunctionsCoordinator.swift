@@ -16,7 +16,9 @@ class FBFunctionsCoordinator {
 
     let errorsSubject = PassthroughSubject<AppError, Never>()
     var errorsPublisher: AnyPublisher<AppError, Never> {
-        errorsSubject.eraseToAnyPublisher()
+        errorsSubject
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
     }
 
     init() {
@@ -36,6 +38,7 @@ class FBFunctionsCoordinator {
 
     func handlePublisherResult<Model>(publisher: AnyPublisher<Model, AppError>, showAlert: Bool = true, completion: ((Result<Model, AppError>) -> Void)? = nil) {
         publisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
                 switch result {
                 case let .failure(error):
@@ -93,9 +96,12 @@ class FBFunctionsCoordinator {
                     }
                 }
             }
+            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
         } catch {
-            return Fail(error: AppError(error: error)).eraseToAnyPublisher()
+            return Fail(error: AppError(error: error))
+                .receive(on: DispatchQueue.main)
+                .eraseToAnyPublisher()
         }
     }
 
