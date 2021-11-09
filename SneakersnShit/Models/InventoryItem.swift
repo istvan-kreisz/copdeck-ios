@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ItemType: String, Codable {
+enum ItemType: String, Codable, CaseIterable {
     case shoe, apparel, other
 }
 
@@ -76,10 +76,35 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     var isSold: Bool {
         return soldPrice != nil || tags.contains(.sold)
     }
+    
+    var isShoe: Bool {
+        itemType == .shoe
+    }
 
     var convertedSize: String {
-        get { size.asSize(of: self) }
-        set { size = convertSize(from: AppStore.default.state.settings.shoeSize, to: .US, size: newValue, gender: genderCalculated, brand: brandCalculated) }
+        get { isShoe ? size.asSize(of: self) : size }
+        set { size = isShoe ? convertSize(from: AppStore.default.state.settings.shoeSize, to: .US, size: newValue, gender: genderCalculated, brand: brandCalculated) : newValue }
+    }
+    
+    var sortedSizes: [ItemType: [String]] {
+        var result: [ItemType: [String]] = [:]
+        ItemType.allCases.forEach { itemType in
+            let sizes: [String]
+            if let item = item, item.itemType == itemType {
+                sizes = item.sortedSizes
+            } else {
+                switch itemType {
+                case .shoe:
+                    sizes = ShoeSize.ALLSHOESIZESUS
+                case .apparel:
+                    sizes = ApparelSize.allCases.map(\.rawValue)
+                case .other:
+                    sizes = []
+                }
+            }
+            result[itemType] = sizes
+        }
+        return result
     }
 
     var purchasedDateComponents: DateComponents? {

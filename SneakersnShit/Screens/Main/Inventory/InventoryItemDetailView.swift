@@ -100,7 +100,7 @@ struct InventoryItemDetailView: View {
                                     purchasePrice: inventoryItem.purchasePrice,
                                     currency: store.state.currency,
                                     style: NewItemCard.Style.noBackground,
-                                    sizes: inventoryItem.item?.sortedSizes ?? ShoeSize.ALLSHOESIZESUS,
+                                    sizes: inventoryItem.sortedSizes,
                                     showCopDeckPrice: true,
                                     highlightCopDeckPrice: isInSharedStack,
                                     addQuantitySelector: false,

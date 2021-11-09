@@ -20,15 +20,17 @@ struct NewItemCard: View {
     let purchasePrice: PriceWithCurrency?
     let currency: Currency
     let style: Style
-    let sizes: [String]
+    let sizes: [ItemType: [String]]
     let showCopDeckPrice: Bool
     let highlightCopDeckPrice: Bool
     let addQuantitySelector: Bool
     let didTapDelete: (() -> Void)?
     let onCopDeckPriceTooltipTapped: (() -> Void)?
 
-    var sizesConverted: [String] {
-        sizes.asSizes(of: inventoryItem)
+    var sizesConverted: [ItemType: [String]] {
+        var sizesUpdated = self.sizes
+        sizesUpdated[.shoe] = sizesUpdated[.shoe]?.asSizes(of: inventoryItem)
+        return sizesUpdated
     }
 
     var textFieldStyle: TextFieldRounded.Style {
@@ -49,7 +51,7 @@ struct NewItemCard: View {
          purchasePrice: PriceWithCurrency?,
          currency: Currency,
          style: Style = .card,
-         sizes: [String],
+         sizes: [ItemType: [String]],
          showCopDeckPrice: Bool,
          highlightCopDeckPrice: Bool,
          addQuantitySelector: Bool,
@@ -102,7 +104,8 @@ struct NewItemCard: View {
 //                    didTapDelete?()
 //                }
                 .rightAligned()
-                .padding(.bottom, -12)
+                .padding(.trailing, 3)
+                .padding(.bottom, -8)
             }
 
             HStack(alignment: .top, spacing: 11) {
@@ -142,7 +145,7 @@ struct NewItemCard: View {
                                        textFieldStyle: textFieldStyle,
                                        dropDownStyle: dropdownStyle,
                                        price: soldPrice,
-                                       currency: soldCurrency)  { isActive in
+                                       currency: soldCurrency) { isActive in
                     if isActive, style == .card {
                         if !didTapSellingPrice {
                             didTapSellingPrice = true
@@ -184,12 +187,22 @@ struct NewItemCard: View {
                              options: InventoryItem.Condition.allCases.map { $0.rawValue },
                              style: dropdownStyle)
             }
-            let size = Binding<String>(get: { inventoryItem.convertedSize },
-                                       set: { inventoryItem.convertedSize = $0 })
-            DropDownMenu(title: "size",
-                         selectedItem: size,
-                         options: sizesConverted,
-                         style: dropdownStyle)
+
+            let itemType = Binding<String>(get: { inventoryItem.itemType.rawValue },
+                                           set: { inventoryItem.itemType = ItemType(rawValue: $0.lowercased()) ?? .shoe })
+            ToggleButton(title: "type",
+                         selection: itemType,
+                         options: ItemType.allCases.map(\.rawValue),
+                         style: toggleButtonStyle)
+
+            if let sizesArray = sizesConverted[inventoryItem.itemType] {
+                let size = Binding<String>(get: { inventoryItem.convertedSize },
+                                           set: { inventoryItem.convertedSize = $0 })
+                DropDownMenu(title: "size",
+                             selectedItem: size,
+                             options: sizesArray,
+                             style: dropdownStyle)
+            }
         }
         .if(style == .card) {
             $0
