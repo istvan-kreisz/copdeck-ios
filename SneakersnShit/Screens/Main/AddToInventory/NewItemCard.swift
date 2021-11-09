@@ -241,9 +241,9 @@ struct NewItemCard: View {
                                         color: .customAccent1,
                                         textColor: .customText1,
                                         height: TagView.height,
-                                        width: 100,
+                                        width: 80,
                                         accessoryViewSize: 16,
-                                        imageName: "chevron.right",
+                                        imageName: "plus",
                                         buttonPosition: .right,
                                         isContentLocked: false,
                                         tapped: {

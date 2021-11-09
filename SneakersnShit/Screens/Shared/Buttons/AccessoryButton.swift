@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AccessoryButton: View {
     let title: String
-    var shouldCapitalizeTitle = false
+    var shouldCapitalizeTitle = true
     let color: Color
     let textColor: Color
     var borderColor: Color?
