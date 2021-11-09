@@ -44,6 +44,10 @@ struct NewItemCard: View {
     var toggleButtonStyle: ToggleButton.Style {
         style == .card ? .gray : .white
     }
+    
+    var gridSelectorStyle: GridSelectorMenu.Style {
+        style == .card ? .gray : .white
+    }
 
     let listingPricesItem = [GridItem(.flexible())]
 
@@ -198,10 +202,8 @@ struct NewItemCard: View {
             if let sizesArray = sizesConverted[inventoryItem.itemType] {
                 let size = Binding<String>(get: { inventoryItem.convertedSize },
                                            set: { inventoryItem.convertedSize = $0 })
-                DropDownMenu(title: "size",
-                             selectedItem: size,
-                             options: sizesArray,
-                             style: dropdownStyle)
+                
+                GridSelectorMenu(selectedItem: size, options: sizesArray, style: gridSelectorStyle)
             }
         }
         .if(style == .card) {
