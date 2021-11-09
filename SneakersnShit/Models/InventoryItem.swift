@@ -7,6 +7,10 @@
 
 import Foundation
 
+enum ItemType: String, Codable {
+    case shoe, apparel, other
+}
+
 struct ListingPrice: Codable, Equatable {
     let storeId: String
     var price: PriceWithCurrency
@@ -51,6 +55,7 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     var purchasePrice: PriceWithCurrency?
     let imageURL: ImageURL?
     var size: String
+    var itemType: ItemType? = .shoe
     var condition: Condition
     var listingPrices: [ListingPrice] = []
     var copdeckPrice: ListingPrice?
@@ -87,7 +92,7 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     }
 
     enum CodingKeys: String, CodingKey {
-        case id, itemId, name, purchasePrice, imageURL, size, condition, copdeckPrice, listingPrices, soldPrice, status, notes, pendingImport,
+        case id, itemId, name, purchasePrice, imageURL, size, itemType, condition, copdeckPrice, listingPrices, soldPrice, status, notes, pendingImport,
              created, updated, purchasedDate, soldDate, gender, brand
     }
 
@@ -155,6 +160,7 @@ extension InventoryItem {
                   purchasePrice: item.retailPrice.asPriceWithCurrency(currency: item.currency),
                   imageURL: item.imageURL,
                   size: (size ?? item.sortedSizes.first) ?? "",
+                  itemType: item.itemType,
                   condition: .new,
                   copdeckPrice: nil,
                   soldPrice: nil,

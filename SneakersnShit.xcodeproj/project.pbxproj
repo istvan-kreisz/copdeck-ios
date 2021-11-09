@@ -82,6 +82,7 @@
 		5D564E4E2705423300190CF4 /* SpreadsheetImportDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D564E4D2705423300190CF4 /* SpreadsheetImportDetailView.swift */; };
 		5D56B7B2270097EC001357E0 /* DeleteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D56B7B1270097EC001357E0 /* DeleteButton.swift */; };
 		5D56B7B42700A6BE001357E0 /* TestImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D56B7B32700A6BE001357E0 /* TestImageView.swift */; };
+		5D57A6992739F3A50089CDF9 /* AddNewInventoryItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D57A6982739F3A50089CDF9 /* AddNewInventoryItemView.swift */; };
 		5D587A92272DE1820075C93C /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D587A91272DE1820075C93C /* ChatView.swift */; };
 		5D587A96272E41980075C93C /* ChannelListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D587A95272E41980075C93C /* ChannelListItem.swift */; };
 		5D5D4C4426D50EB100A7C61A /* ModelWithDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D5D4C4326D50EB100A7C61A /* ModelWithDate.swift */; };
@@ -308,6 +309,7 @@
 		5D564E4D2705423300190CF4 /* SpreadsheetImportDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpreadsheetImportDetailView.swift; sourceTree = "<group>"; };
 		5D56B7B1270097EC001357E0 /* DeleteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteButton.swift; sourceTree = "<group>"; };
 		5D56B7B32700A6BE001357E0 /* TestImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestImageView.swift; sourceTree = "<group>"; };
+		5D57A6982739F3A50089CDF9 /* AddNewInventoryItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewInventoryItemView.swift; sourceTree = "<group>"; };
 		5D587A91272DE1820075C93C /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		5D587A95272E41980075C93C /* ChannelListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelListItem.swift; sourceTree = "<group>"; };
 		5D5D4C4326D50EB100A7C61A /* ModelWithDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelWithDate.swift; sourceTree = "<group>"; };
@@ -684,6 +686,7 @@
 				5DD01E5326DD78480054F6F1 /* InventoryHeaderView.swift */,
 				5D41174426E9765C0048D122 /* StackShareSettingsView.swift */,
 				5DECB5832708E1A00017748C /* SellerStatsView.swift */,
+				5D57A6982739F3A50089CDF9 /* AddNewInventoryItemView.swift */,
 			);
 			path = Inventory;
 			sourceTree = "<group>";
@@ -1612,6 +1615,7 @@
 				5D6B112E26A46E3A00B6B67A /* NavigationBar.swift in Sources */,
 				5D9D520426AE359C00AB1F30 /* InventoryViewPills.swift in Sources */,
 				5DA4FE0426E6DCA700084AEF /* SettingMenu.swift in Sources */,
+				5D57A6992739F3A50089CDF9 /* AddNewInventoryItemView.swift in Sources */,
 				5D564E4A2704F6C800190CF4 /* PaymentAction.swift in Sources */,
 				5D63124426950B2900876D99 /* AppAction.swift in Sources */,
 				5D41174526E9765C0048D122 /* StackShareSettingsView.swift in Sources */,

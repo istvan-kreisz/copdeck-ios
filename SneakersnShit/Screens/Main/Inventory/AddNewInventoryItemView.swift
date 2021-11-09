@@ -1,14 +1,14 @@
 //
-//  SearchView.swift
+//  AddNewInventoryItemView.swift
 //  CopDeck
 //
-//  Created by István Kreisz on 1/30/21.
+//  Created by István Kreisz on 11/8/21.
 //
 
+import Foundation
 import SwiftUI
-import Combine
 
-struct SearchView: View {
+struct AddNewInventoryItemView: View {
     @EnvironmentObject var store: DerivedGlobalStore
 
     @State private var searchText = ""
@@ -33,6 +33,15 @@ struct SearchView: View {
     var selectedUser: ProfileData? {
         guard case let .profile(profile) = navigationDestination.destination else { return nil }
         return profile
+    }
+
+    var allItems: [Item] {
+        let selectedItem: [Item] = selectedItem.map { (item: Item) in [item] } ?? []
+        let searchResults: [Item] = searchState.searchResults
+        let popularItems: [Item] = searchState.popularItems
+        let favoritedItems: [Item] = store.globalState.favoritedItems
+        let recentlyViewed: [Item] = store.globalState.recentlyViewedItems
+        return (selectedItem + searchResults + popularItems + favoritedItems + recentlyViewed).uniqued()
     }
 
     var body: some View {
@@ -150,9 +159,9 @@ struct SearchView: View {
     }
 }
 
-extension SearchView: LoadViewWithAlert {}
+extension AddNewInventoryItemView: LoadViewWithAlert {}
 
-extension SearchView {
+extension AddNewInventoryItemView {
     enum NavigationDestination: Equatable {
         case popularItems, favoritedItems, itemDetail(Item), profile(ProfileData), empty
     }

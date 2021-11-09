@@ -78,6 +78,7 @@ struct ProfileView: View {
 
                 InventoryHeaderView(user: profileData.user,
                                     settingsPresented: .constant(false),
+                                    addNewInventoryItemPresented: .constant(false),
                                     showImagePicker: .constant(false),
                                     showSellerStats: .constant(false),
                                     profileImageURL: $profileData.user.imageURL,

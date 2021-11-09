@@ -15,6 +15,7 @@ struct TextBox {
 struct InventoryHeaderView: View {
     let user: User
     @Binding var settingsPresented: Bool
+    @Binding var addNewInventoryItemPresented: Bool
     @Binding var showImagePicker: Bool
     @Binding var showSellerStats: Bool
     @Binding var profileImageURL: URL?
@@ -64,7 +65,7 @@ struct InventoryHeaderView: View {
     var body: some View {
         VStack(alignment: .center, spacing: 30) {
             if isOwnProfile {
-                HStack {
+                HStack(spacing: 10) {
                     Text("Inventory")
                         .tabTitle()
                     Spacer()
@@ -80,6 +81,20 @@ struct InventoryHeaderView: View {
                                 .foregroundColor(.customBlack)
                         }
                     })
+                    
+                    Button(action: {
+                        addNewInventoryItemPresented = true
+                    }, label: {
+                        ZStack {
+                            Circle().fill(Color.customBlue)
+                                .frame(width: 38, height: 38)
+                            Image("plus")
+                                .renderingMode(.template)
+                                .frame(height: 15)
+                                .foregroundColor(.customWhite)
+                        }
+                    })
+
                 }
             }
 

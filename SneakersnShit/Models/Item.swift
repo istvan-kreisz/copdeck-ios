@@ -76,6 +76,7 @@ struct Item: Codable, Equatable, Identifiable, Hashable, ModelWithDate {
     let imageURL: ImageURL?
     var brand: Brand?
     var gender: Gender?
+    var itemType: ItemType? = .shoe
     var brandCalculated: Brand? { brand ?? getBrand(storeInfoArray: storeInfo) }
     var genderCalculated: Gender? { gender ?? getGender(storeInfoArray: storeInfo) }
     

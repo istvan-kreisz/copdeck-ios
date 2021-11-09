@@ -10,7 +10,7 @@ import Combine
 
 struct InventoryView: View {
     enum Sheet {
-        case settings, filters, imagePicker, sellerStats
+        case addNew, settings, filters, imagePicker, sellerStats
     }
 
     @EnvironmentObject var store: InventoryStore
@@ -69,6 +69,7 @@ struct InventoryView: View {
         let showPopup = Binding<Bool>(get: { popup != nil }, set: { show in popup = show ? popup : nil })
         let showSheet = Binding<Bool>(get: { presentedSheet != nil }, set: { show in presentedSheet = show ? presentedSheet : nil })
         let settingsPresented = Binding<Bool>(get: { presentedSheet == .settings }, set: { show in presentedSheet = show ? .settings : nil })
+        let addNewInventoryItemPresented = Binding<Bool>(get: { presentedSheet == .addNew }, set: { show in presentedSheet = show ? .addNew : nil })
         let showImagePicker = Binding<Bool>(get: { presentedSheet == .imagePicker }, set: { show in presentedSheet = show ? .imagePicker : nil })
         let showSellerStats = Binding<Bool>(get: { presentedSheet == .sellerStats }, set: { show in presentedSheet = show ? .sellerStats : nil })
         let showFilters = Binding<Bool>(get: { presentedSheet == .filters }, set: { show in presentedSheet = show ? .filters : nil })
@@ -105,6 +106,7 @@ struct InventoryView: View {
                 if let user = store.globalState.user {
                     InventoryHeaderView(user: user,
                                         settingsPresented: settingsPresented,
+                                        addNewInventoryItemPresented: addNewInventoryItemPresented,
                                         showImagePicker: showImagePicker,
                                         showSellerStats: showSellerStats,
                                         profileImageURL: $store.state.profileImageURL,
@@ -197,6 +199,8 @@ struct InventoryView: View {
             }
             .sheet(isPresented: showSheet) {
                 switch presentedSheet {
+                case .addNew:
+                    AddNewInventoryItemView()
                 case .settings:
                     SettingsView(settings: globalStore.globalState.settings, isContentLocked: globalStore.globalState.isContentLocked,
                                  isPresented: settingsPresented)

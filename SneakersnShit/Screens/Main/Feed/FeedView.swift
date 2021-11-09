@@ -37,10 +37,6 @@ struct FeedView: View {
         feedState.feedPosts.data
     }
 
-    var allProfiles: [ProfileData] {
-        feedPosts.compactMap { $0.profileData }
-    }
-
     var inventoryItems: [InventoryItem] {
         feedPosts.flatMap { $0.inventoryItems }
     }
