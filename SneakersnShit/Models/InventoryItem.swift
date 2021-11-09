@@ -27,7 +27,7 @@ struct PriceWithCurrency: Codable, Equatable {
     var asString: String {
         "\(currencySymbol.rawValue)\(price.rounded(toPlaces: 0))"
     }
-    
+
     func convertedPrice(currency: Currency, exchangeRates: ExchangeRates) -> Double {
         Currency.convert(from: currencyCode, to: currency.code, exchangeRates: exchangeRates).map { $0 * price } ?? 0
     }
@@ -55,12 +55,12 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     var purchasePrice: PriceWithCurrency?
     let imageURL: ImageURL?
     var size: String
-    var itemType: ItemType? = .shoe
+    var itemType: ItemType
     var condition: Condition
     var listingPrices: [ListingPrice] = []
     var copdeckPrice: ListingPrice?
     var soldPrice: SoldPrice?
-    var status: SoldStatus? = .None
+    var tags: [Tag]
     var notes: String?
     let pendingImport: Bool?
     let created: Double?
@@ -72,6 +72,10 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     var brandCalculated: Brand? { brand ?? item?.brandCalculated }
     var genderCalculated: Gender? { gender ?? item?.genderCalculated }
     var count = 1
+
+    var isSold: Bool {
+        return soldPrice != nil || tags.contains(.sold)
+    }
 
     var convertedSize: String {
         get { size.asSize(of: self) }
@@ -92,7 +96,7 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     }
 
     enum CodingKeys: String, CodingKey {
-        case id, itemId, name, purchasePrice, imageURL, size, itemType, condition, copdeckPrice, listingPrices, soldPrice, status, notes, pendingImport,
+        case id, itemId, name, purchasePrice, imageURL, size, itemType, condition, copdeckPrice, listingPrices, soldPrice, status, tags, notes, pendingImport,
              created, updated, purchasedDate, soldDate, gender, brand
     }
 
@@ -135,7 +139,7 @@ struct InventoryItem: Codable, Equatable, Identifiable {
             listingPrices.append(ListingPrice(storeId: storeId, price: .init(price: Double(price) ?? 0, currencyCode: defaultCurrency.code)))
         }
     }
-    
+
     // sold price
     mutating func setSoldPriceCurrency(currency: String) {
         guard let currency = Currency.currency(withSymbol: currency) else { return }
@@ -144,9 +148,9 @@ struct InventoryItem: Codable, Equatable, Identifiable {
 
     mutating func setSoldPrice(price: String, defaultCurrency: Currency) {
         soldPrice = SoldPrice(storeId: soldPrice?.storeId,
-                                    price: .init(price: Double(price) ?? 0, currencyCode: soldPrice?.price?.currencyCode ?? defaultCurrency.code))
+                              price: .init(price: Double(price) ?? 0, currencyCode: soldPrice?.price?.currencyCode ?? defaultCurrency.code))
     }
-    
+
     mutating func setSoldStore(storeId: String) {
         soldPrice = SoldPrice(storeId: storeId, price: soldPrice?.price)
     }
@@ -160,10 +164,11 @@ extension InventoryItem {
                   purchasePrice: item.retailPrice.asPriceWithCurrency(currency: item.currency),
                   imageURL: item.imageURL,
                   size: (size ?? item.sortedSizes.first) ?? "",
-                  itemType: item.itemType,
+                  itemType: item.itemType ?? .shoe,
                   condition: .new,
                   copdeckPrice: nil,
                   soldPrice: nil,
+                  tags: [],
                   notes: nil,
                   pendingImport: nil,
                   created: Date.serverDate,
@@ -188,11 +193,12 @@ extension InventoryItem {
                                      purchasePrice: nil,
                                      imageURL: nil,
                                      size: "",
+                                     itemType: .shoe,
                                      condition: .new,
                                      listingPrices: [],
                                      copdeckPrice: nil,
                                      soldPrice: nil,
-                                     status: nil,
+                                     tags: [],
                                      notes: nil,
                                      pendingImport: nil,
                                      created: nil,
@@ -202,8 +208,9 @@ extension InventoryItem {
 }
 
 extension InventoryItem {
-    static func purchaseSummary(forMonth month: Int, andYear year: Int, inventoryItems: [InventoryItem], currency: Currency, exchangeRates: ExchangeRates) -> MonthlyStatistics {
-        let soldInventoryItems = inventoryItems.filter { $0.soldDateComponents?.year == year && $0.soldDateComponents?.month == month && $0.status == .Sold }
+    static func purchaseSummary(forMonth month: Int, andYear year: Int, inventoryItems: [InventoryItem], currency: Currency,
+                                exchangeRates: ExchangeRates) -> MonthlyStatistics {
+        let soldInventoryItems = inventoryItems.filter { $0.soldDateComponents?.year == year && $0.soldDateComponents?.month == month && $0.isSold }
         let purchasedInventoryItems = inventoryItems.filter { $0.purchasedDateComponents?.year == year && $0.purchasedDateComponents?.month == month }
 
         let purchasedPrices = purchasedInventoryItems.compactMap { $0.purchasePrice?.convertedPrice(currency: currency, exchangeRates: exchangeRates) }
@@ -212,7 +219,7 @@ extension InventoryItem {
     }
 
     static func monthlyStatistics(for inventoryItems: [InventoryItem], currency: Currency, exchangeRates: ExchangeRates) -> [MonthlyStatistics] {
-        let soldDates = inventoryItems.filter { $0.status == .Sold }.compactMap(\.soldDate)
+        let soldDates = inventoryItems.filter { $0.isSold }.compactMap(\.soldDate)
         let purchasedDates = inventoryItems.compactMap(\.purchasedDate)
         let dates = soldDates + purchasedDates
 
@@ -222,14 +229,17 @@ extension InventoryItem {
         let dateMinComponents = Calendar.current.dateComponents([.year, .month], from: dateMin)
         let dateMaxComponents = Calendar.current.dateComponents([.year, .month], from: dateMax)
 
-        guard let minYear = dateMinComponents.year, let minMonth = dateMinComponents.month,
-              let maxYear = dateMaxComponents.year, let maxMonth = dateMaxComponents.month
+        guard let minYear = dateMinComponents.year,
+              let minMonth = dateMinComponents.month,
+              let maxYear = dateMaxComponents.year,
+              let maxMonth = dateMaxComponents.month
         else { return [] }
         var monthlySummaries: [MonthlyStatistics] = []
 
         if minYear == maxYear {
             for month in stride(from: minMonth, to: maxMonth + 1, by: 1) {
-                let summary = purchaseSummary(forMonth: month, andYear: minYear, inventoryItems: inventoryItems, currency: currency, exchangeRates: exchangeRates)
+                let summary = purchaseSummary(forMonth: month, andYear: minYear, inventoryItems: inventoryItems, currency: currency,
+                                              exchangeRates: exchangeRates)
                 monthlySummaries.append(summary)
             }
         } else {
@@ -242,11 +252,67 @@ extension InventoryItem {
                     endMonth = maxMonth
                 }
                 for month in stride(from: startMonth, to: endMonth + 1, by: 1) {
-                    let summary = purchaseSummary(forMonth: month, andYear: year, inventoryItems: inventoryItems, currency: currency, exchangeRates: exchangeRates)
+                    let summary = purchaseSummary(forMonth: month, andYear: year, inventoryItems: inventoryItems, currency: currency,
+                                                  exchangeRates: exchangeRates)
                     monthlySummaries.append(summary)
                 }
             }
         }
         return monthlySummaries
+    }
+}
+
+extension InventoryItem {
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        id = try container.decode(String.self, forKey: .id)
+        itemId = try container.decodeIfPresent(String.self, forKey: .itemId)
+        name = try container.decode(String.self, forKey: .name)
+        purchasePrice = try container.decodeIfPresent(PriceWithCurrency.self, forKey: .purchasePrice)
+        imageURL = try container.decodeIfPresent(ImageURL.self, forKey: .imageURL)
+        size = try container.decode(String.self, forKey: .size)
+        itemType = try container.decodeIfPresent(ItemType.self, forKey: .itemType) ?? .shoe
+        condition = try container.decode(Condition.self, forKey: .condition)
+        copdeckPrice = try container.decodeIfPresent(ListingPrice.self, forKey: .copdeckPrice)
+        soldPrice = try container.decodeIfPresent(SoldPrice.self, forKey: .soldPrice)
+        var tags = try container.decodeIfPresent([Tag].self, forKey: .tags) ?? []
+        if let status = try? container.decodeIfPresent(SoldStatus.self, forKey: .status) {
+            if status == .Sold {
+                tags.append(.sold)
+            }
+        }
+        self.tags = tags
+        notes = try container.decodeIfPresent(String.self, forKey: .notes)
+        pendingImport = try container.decodeIfPresent(Bool.self, forKey: .pendingImport)
+        created = try container.decodeIfPresent(Double.self, forKey: .created)
+        updated = try container.decodeIfPresent(Double.self, forKey: .updated)
+        purchasedDate = try container.decodeIfPresent(Double.self, forKey: .purchasedDate)
+        soldDate = try container.decodeIfPresent(Double.self, forKey: .soldDate)
+        gender = try container.decodeIfPresent(Gender.self, forKey: .gender)
+        brand = try container.decodeIfPresent(Brand.self, forKey: .brand)
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encodeIfPresent(itemId, forKey: .itemId)
+        try container.encode(name, forKey: .name)
+        try container.encodeIfPresent(purchasePrice, forKey: .purchasePrice)
+        try container.encodeIfPresent(imageURL, forKey: .imageURL)
+        try container.encode(size, forKey: .size)
+        try container.encode(itemType, forKey: .itemType)
+        try container.encode(condition, forKey: .condition)
+        try container.encodeIfPresent(copdeckPrice, forKey: .copdeckPrice)
+        try container.encodeIfPresent(soldPrice, forKey: .soldPrice)
+        try container.encode(tags, forKey: .tags)
+        try container.encodeIfPresent(notes, forKey: .notes)
+        try container.encodeIfPresent(pendingImport, forKey: .notes)
+        try container.encodeIfPresent(created, forKey: .created)
+        try container.encodeIfPresent(updated, forKey: .updated)
+        try container.encodeIfPresent(purchasedDate, forKey: .purchasedDate)
+        try container.encodeIfPresent(soldDate, forKey: .soldDate)
+        try container.encodeIfPresent(gender, forKey: .gender)
+        try container.encodeIfPresent(brand, forKey: .brand)
     }
 }

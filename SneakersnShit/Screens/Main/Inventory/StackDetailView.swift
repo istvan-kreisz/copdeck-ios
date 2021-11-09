@@ -40,7 +40,7 @@ struct StackDetailView: View {
     var stackValue: PriceWithCurrency? {
         if let currencyCode = bestPrices.values.first?.price.currencyCode {
             let sum = allStackItems
-                .filter { $0.status != .Sold }
+                .filter { !$0.isSold }
                 .compactMap { bestPrices[$0.id]?.price.price }
                 .sum()
             return PriceWithCurrency(price: sum, currencyCode: currencyCode)

@@ -34,14 +34,15 @@ struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
             if hasStackItem {
                 let nameMatchesSearchString = inventoryItem.name.lowercased().fuzzyMatch(searchText.lowercased())
                 let notesMatchesSearchString = inventoryItem.notes.map { $0.lowercased().fuzzyMatch(searchText.lowercased()) } ?? false
+                #warning("revise filters")
                 if nameMatchesSearchString || notesMatchesSearchString {
                     switch filters.soldStatus {
                     case .All:
                         return true
                     case .Sold:
-                        return inventoryItem.status == .Sold
+                        return inventoryItem.isSold
                     case .Unsold:
-                        return inventoryItem.status != .Sold
+                        return !inventoryItem.isSold
                     }
                 } else {
                     return false

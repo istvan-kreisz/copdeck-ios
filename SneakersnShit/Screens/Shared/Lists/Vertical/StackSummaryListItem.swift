@@ -22,6 +22,7 @@ struct StackSummaryListItem: View {
         }
     }
 
+    #warning("sup here")
     var body: some View {
         VerticalListItem(itemId: inventoryItem.itemId ?? "",
                          title: inventoryItem.name,
@@ -29,7 +30,7 @@ struct StackSummaryListItem: View {
                          flipImage: inventoryItem.imageURL?.store?.id == .klekt,
                          isEditing: .constant(false),
                          isSelected: false,
-                         ribbonText: inventoryItem.status == .Sold ? "Sold" : nil,
+                         ribbonText: inventoryItem.isSold ? "Sold" : nil,
                          addShadow: false,
                          accessoryView1: InventoryViewPills(inventoryItem: inventoryItem, pillTypes: [.condition, .size]).leftAligned(),
                          accessoryView2: priceStack(),

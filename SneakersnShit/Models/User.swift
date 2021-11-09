@@ -66,6 +66,7 @@ struct User: Codable, Equatable, Identifiable {
     let created: Double?
     let updated: Double?
     var settings: CopDeckSettings?
+    var tags: [Tag]? = nil
     var imageURL: URL?
     let spreadsheetImport: SpreadsheetImport?
     let membershipInfo: MembershipInfo?
@@ -75,7 +76,7 @@ struct User: Codable, Equatable, Identifiable {
     let subscribedDate: String?
 
     enum CodingKeys: String, CodingKey {
-        case id, inited, name, nameInsensitive, email, isPublic, created, updated, settings, spreadsheetImport, membershipInfo, country, facebookProfileURL, subscription, subscribedDate
+        case id, inited, name, nameInsensitive, email, isPublic, created, updated, settings, tags, spreadsheetImport, membershipInfo, country, facebookProfileURL, subscription, subscribedDate
     }
 }
 
@@ -91,6 +92,7 @@ extension User {
         created = try container.decodeIfPresent(Double.self, forKey: .created)
         updated = try container.decodeIfPresent(Double.self, forKey: .updated)
         settings = try container.decodeIfPresent(CopDeckSettings.self, forKey: .settings)
+        tags = try container.decodeIfPresent([Tag].self, forKey: .tags)
         spreadsheetImport = try container.decodeIfPresent(SpreadsheetImport.self, forKey: .spreadsheetImport)
         membershipInfo = try container.decodeIfPresent(MembershipInfo.self, forKey: .membershipInfo)
         country = try container.decodeIfPresent(String.self, forKey: .country)
@@ -108,6 +110,7 @@ extension User {
                   created: nil,
                   updated: nil,
                   settings: nil,
+                  tags: nil,
                   spreadsheetImport: nil,
                   membershipInfo: nil,
                   country: nil,

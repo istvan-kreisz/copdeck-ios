@@ -49,13 +49,14 @@ struct InventoryListItem: View {
                     Spacer()
                 }
             }
+            #warning("sup here")
             VerticalListItem(itemId: inventoryItem.itemId ?? "",
                              title: inventoryItem.name,
                              source: imageSource(for: inventoryItem),
                              flipImage: inventoryItem.imageURL?.store?.id == .klekt,
                              isEditing: $isEditing,
                              isSelected: isSelected,
-                             ribbonText: inventoryItem.status == .Sold ? "Sold" : nil,
+                             ribbonText: inventoryItem.isSold ? "Sold" : nil,
                              accessoryView1: InventoryViewPills(inventoryItem: inventoryItem).leftAligned(),
                              accessoryView2: bestPriceStack()) {
                 selectedInventoryItem = inventoryItem

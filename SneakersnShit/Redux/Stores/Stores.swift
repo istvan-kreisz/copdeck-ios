@@ -44,7 +44,7 @@ extension AppStore {
     private func updateTotalInventoryValue(state: AppState, bestPrices: [String : ListingPrice], completion: (PriceWithCurrency?) -> Void) {
         if let currencyCode = bestPrices.values.first?.price.currencyCode {
             let sum = state.inventoryItems
-                .filter { (inventoryItem: InventoryItem) -> Bool in inventoryItem.status != .Sold }
+                .filter { (inventoryItem: InventoryItem) -> Bool in inventoryItem.soldPrice != nil }
                 .compactMap { (inventoryItem: InventoryItem) -> Double? in bestPrices[inventoryItem.id]?.price.price }
                 .sum()
             completion(PriceWithCurrency(price: sum, currencyCode: currencyCode))
