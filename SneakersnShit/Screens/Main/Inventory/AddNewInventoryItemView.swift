@@ -28,21 +28,22 @@ struct AddNewInventoryItemView: View {
     }
 
     var body: some View {
-        let showDetail = Binding<Bool>(get: { navigationDestination.show },
-                                       set: { show in show ? navigationDestination.display() : navigationDestination.hide() })
-        let selectedItemBinding = Binding<Item?>(get: { selectedItem },
-                                                 set: { item in
-                                                     if let item = item {
-                                                         addedInventoryItem = false
-                                                         navigationDestination += .itemDetail(item)
-                                                     } else {
-                                                         navigationDestination.hide()
-                                                     }
-                                                 })
-
         NavigationView {
+            let showDetail = Binding<Bool>(get: { navigationDestination.show },
+                                           set: { show in show ? navigationDestination.display() : navigationDestination.hide() })
+            let selectedItemBinding = Binding<Item?>(get: { selectedItem },
+                                                     set: { item in
+                                                         if let item = item {
+                                                             addedInventoryItem = false
+                                                             navigationDestination += .itemDetail(item)
+                                                         } else {
+                                                             navigationDestination.hide()
+                                                         }
+                                                     })
+
             VStack(alignment: .leading, spacing: 19) {
-                NavigationLink(destination: Destination(store: store, navigationDestination: $navigationDestination, addedInventoryItem: $addedInventoryItem),
+                NavigationLink(destination: Destination(store: store, navigationDestination: $navigationDestination,
+                                                        addedInventoryItem: $addedInventoryItem),
                                isActive: showDetail) { EmptyView() }
 
                 Text("Add New Item")
@@ -70,9 +71,9 @@ struct AddNewInventoryItemView: View {
                                         width: nil,
                                         imageName: "plus",
                                         tapped: {
-                            addedInventoryItem = false
-                            navigationDestination += .addManually
-                        })
+                                            addedInventoryItem = false
+                                            navigationDestination += .addManually
+                                        })
                         Spacer()
                     }
                     .withDefaultPadding(padding: .horizontal)
@@ -84,10 +85,10 @@ struct AddNewInventoryItemView: View {
                                          title: nil,
                                          resultsLabelText: nil,
                                          bottomPadding: 0)
+                        .hideKeyboardOnScroll()
                 }
             }
             .background(Color.customBackground)
-            .hideKeyboardOnScroll()
             .onChange(of: searchText) { search(searchTerm: $0) }
             .onAppear {
                 if searchState.popularItems.isEmpty {

@@ -197,29 +197,6 @@ struct InventoryView: View {
             .onChange(of: globalStore.globalState.user?.name) { newValue in
                 self.username = newValue ?? ""
             }
-            .sheet(isPresented: showSheet) {
-                switch presentedSheet {
-                case .addNew:
-                    AddNewInventoryItemView()
-                        .environmentObject(globalStore)
-                case .settings:
-                    SettingsView(settings: globalStore.globalState.settings, isContentLocked: globalStore.globalState.isContentLocked,
-                                 isPresented: settingsPresented)
-                        .environmentObject(DerivedGlobalStore.default)
-                case .filters:
-                    FiltersModal(settings: globalStore.globalState.settings, isPresented: showFilters)
-                        .environmentObject(DerivedGlobalStore.default)
-                case .imagePicker:
-                    ImagePickerView(showPicker: showSheet, selectionLimit: 1) { (images: [UIImage]) in
-                        images.first.map { self.store.send(.main(action: .uploadProfileImage(image: $0))) }
-                    }
-                case .sellerStats:
-                    SellerStatsView(inventoryItems: inventoryItems, currency: globalStore.globalState.settings.currency,
-                                    exchangeRates: globalStore.globalState.exchangeRates ?? .default)
-                case .none:
-                    EmptyView()
-                }
-            }
         }
         .withTabViewWrapper(viewRouter: viewRouter, store: InventoryStore.default, backgroundColor: .customWhite, shouldShow: $shouldShowTabBar)
         .withTextFieldPopup(isShowing: $showAddNewStackAlert,
@@ -260,6 +237,30 @@ struct InventoryView: View {
                              secondAction: nil)
         }
         .withSnackBar(text: "Link Copied", shouldShow: $showSnackBar)
+        .sheet(isPresented: showSheet) {
+            switch presentedSheet {
+            case .addNew:
+                AddNewInventoryItemView()
+                    .environmentObject(globalStore)
+            case .settings:
+                SettingsView(settings: globalStore.globalState.settings, isContentLocked: globalStore.globalState.isContentLocked,
+                             isPresented: settingsPresented)
+                    .environmentObject(DerivedGlobalStore.default)
+            case .filters:
+                FiltersModal(settings: globalStore.globalState.settings, isPresented: showFilters)
+                    .environmentObject(DerivedGlobalStore.default)
+            case .imagePicker:
+                ImagePickerView(showPicker: showSheet, selectionLimit: 1) { (images: [UIImage]) in
+                    images.first.map { self.store.send(.main(action: .uploadProfileImage(image: $0))) }
+                }
+            case .sellerStats:
+                SellerStatsView(inventoryItems: inventoryItems, currency: globalStore.globalState.settings.currency,
+                                exchangeRates: globalStore.globalState.exchangeRates ?? .default)
+            case .none:
+                EmptyView()
+            }
+        }
+
     }
 
     func didTapActionsTray(action: TrayAction) {
