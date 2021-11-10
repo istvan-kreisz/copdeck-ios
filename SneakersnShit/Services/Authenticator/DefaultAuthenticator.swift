@@ -37,7 +37,7 @@ class DefaultAuthenticator: NSObject, Authenticator {
         userChangesSubject.send(completion: .finished)
         userChangesSubject = PassthroughSubject<String, Error>()
         block()
-        return userChangesSubject.prefix(1).eraseToAnyPublisher()
+        return userChangesSubject.prefix(1).onMain()
     }
 
     func restoreState() -> AnyPublisher<String, Error> {

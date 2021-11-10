@@ -274,3 +274,7 @@ func imageSource(for inventoryItem: InventoryItem) -> ImageViewSourceType {
                                                           })))
     }.eraseToAnyPublisher())
 }
+
+func onMain(completion: @escaping () -> Void) {
+    DispatchQueue.main.async(execute: completion)
+}

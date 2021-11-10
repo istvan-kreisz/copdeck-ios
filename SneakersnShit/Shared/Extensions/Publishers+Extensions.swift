@@ -6,6 +6,7 @@
 //
 
 import Combine
+import Foundation
 
 extension Publishers.Map where Output == AppAction {
     func catchErrors()
@@ -30,4 +31,12 @@ extension AnyPublisher where Failure == AppError {
             .replaceError(with: AppAction.none)
             .eraseToAnyPublisher()
     }
+}
+
+extension Publisher {
+    
+    func onMain() -> AnyPublisher<Self.Output, Self.Failure> {
+        receive(on: DispatchQueue.main).eraseToAnyPublisher()
+    }
+
 }

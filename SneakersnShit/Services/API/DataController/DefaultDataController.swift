@@ -15,18 +15,18 @@ class DefaultDataController: DataController {
     let databaseManager: DatabaseManager
     let imageService: ImageService
 
-    lazy var inventoryItemsPublisher = databaseManager.inventoryItemsPublisher
-    lazy var favoritesPublisher = databaseManager.favoritesPublisher
-    lazy var recentlyViewedPublisher = databaseManager.recentlyViewedPublisher
-    lazy var stacksPublisher = databaseManager.stacksPublisher
-    lazy var userPublisher = databaseManager.userPublisher
-    lazy var exchangeRatesPublisher = databaseManager.exchangeRatesPublisher
-    lazy var chatUpdatesPublisher = databaseManager.chatUpdatesPublisher
-    lazy var errorsPublisher = databaseManager.errorsPublisher.merge(with: backendAPI.errorsPublisher, imageService.errorsPublisher).eraseToAnyPublisher()
-    lazy var cookiesPublisher = localScraper.cookiesPublisher
-    lazy var imageDownloadHeadersPublisher = localScraper.imageDownloadHeadersPublisher
+    lazy var inventoryItemsPublisher = databaseManager.inventoryItemsPublisher.onMain()
+    lazy var favoritesPublisher = databaseManager.favoritesPublisher.onMain()
+    lazy var recentlyViewedPublisher = databaseManager.recentlyViewedPublisher.onMain()
+    lazy var stacksPublisher = databaseManager.stacksPublisher.onMain()
+    lazy var userPublisher = databaseManager.userPublisher.onMain()
+    lazy var exchangeRatesPublisher = databaseManager.exchangeRatesPublisher.onMain()
+    lazy var chatUpdatesPublisher = databaseManager.chatUpdatesPublisher.onMain()
+    lazy var errorsPublisher = databaseManager.errorsPublisher.merge(with: backendAPI.errorsPublisher, imageService.errorsPublisher).onMain()
+    lazy var cookiesPublisher = localScraper.cookiesPublisher.onMain()
+    lazy var imageDownloadHeadersPublisher = localScraper.imageDownloadHeadersPublisher.onMain()
 
-    lazy var profileImagePublisher = imageService.profileImagePublisher
+    lazy var profileImagePublisher = imageService.profileImagePublisher.onMain()
 
     private var cancellables: Set<AnyCancellable> = []
 
@@ -51,24 +51,24 @@ class DefaultDataController: DataController {
     #warning("sup here")
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
 //        backendAPI.search(searchTerm: searchTerm, settings: settings, exchangeRates: exchangeRates)
-        localScraper.search(searchTerm: searchTerm, settings: settings, exchangeRates: exchangeRates)
+        localScraper.search(searchTerm: searchTerm, settings: settings, exchangeRates: exchangeRates).onMain()
     }
 
     func getItemDetails(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
 //        backendAPI.getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates)
-        localScraper.getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates)
+        localScraper.getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates).onMain()
     }
 
     func getPopularItems(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
 //        backendAPI.getPopularItems(settings: settings, exchangeRates: exchangeRates)
-        localScraper.getPopularItems(settings: settings, exchangeRates: exchangeRates)
+        localScraper.getPopularItems(settings: settings, exchangeRates: exchangeRates).onMain()
     }
 
     private func fetchPrices(for item: Item?, itemId: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
         if let item = item {
             return getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates)
                 .handleEvents(receiveOutput: { [weak self] _ in self?.refreshHeadersAndCookie() })
-                .eraseToAnyPublisher()
+                .onMain()
         } else {
             return search(searchTerm: itemId, settings: settings, exchangeRates: exchangeRates)
                 .compactMap { items in items.first(where: { $0.id == itemId }) }
@@ -78,7 +78,7 @@ class DefaultDataController: DataController {
                     }
                     return self.getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates).eraseToAnyPublisher()
                 }
-                .eraseToAnyPublisher()
+                .onMain()
         }
     }
 
@@ -108,7 +108,7 @@ class DefaultDataController: DataController {
                 }
             })
             .mapError { error in (error as? AppError) ?? AppError(error: error) }
-            .eraseToAnyPublisher()
+            .onMain()
     }
 
     #warning("ensure saved data is always returned if fetching fails")
@@ -189,7 +189,7 @@ class DefaultDataController: DataController {
                 }
                 return self.localScraper.getCalculatedPrices(for: item, settings: settings, exchangeRates: exchangeRates)
             }
-            .eraseToAnyPublisher()
+            .onMain()
     }
 
     private func cache(item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) {
@@ -203,7 +203,7 @@ class DefaultDataController: DataController {
     }
 
     func getCalculatedPrices(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
-        localScraper.getCalculatedPrices(for: item, settings: settings, exchangeRates: exchangeRates)
+        localScraper.getCalculatedPrices(for: item, settings: settings, exchangeRates: exchangeRates).onMain()
     }
 
     func getUser(withId id: String) -> AnyPublisher<User, AppError> {
@@ -211,7 +211,7 @@ class DefaultDataController: DataController {
     }
 
     func getItem(withId id: String, settings: CopDeckSettings) -> AnyPublisher<Item, AppError> {
-        databaseManager.getItem(withId: id, settings: settings)
+        databaseManager.getItem(withId: id, settings: settings).onMain()
     }
 
     func getChannelsListener(cancel: @escaping (_ cancel: @escaping () -> Void) -> Void, update: @escaping (Result<[Channel], AppError>) -> Void) {
@@ -220,7 +220,9 @@ class DefaultDataController: DataController {
             case let .success(channels):
                 self?.updateChannelsWithUsers(channels: channels, update: update)
             case let .failure(error):
-                update(.failure(error))
+                onMain {
+                    update(.failure(error))
+                }
             }
         }
     }
@@ -230,7 +232,9 @@ class DefaultDataController: DataController {
         backendAPI.getUsers(userIds: allUserIds) { [weak self] result in
             switch result {
             case let .failure(error):
-                update(.failure(error))
+                onMain {
+                    update(.failure(error))
+                }
             case let .success(users):
                 self?.getImageURLs(for: users) { updatedUsers in
                     let channelsWithUsers = channels.map { (channel: Channel) -> Channel in
@@ -238,15 +242,20 @@ class DefaultDataController: DataController {
                         updatedChannel.users = updatedUsers.filter { channel.userIds.contains($0.id) }
                         return updatedChannel
                     }
-                    update(.success(channelsWithUsers))
+                    onMain {
+                        update(.success(channelsWithUsers))
+                    }
                 }
             }
         }
     }
 
-    func getChannelListener(channelId: String, cancel: @escaping (_ cancel: @escaping () -> Void) -> Void,
+    func getChannelListener(channelId: String,
+                            cancel: @escaping (_ cancel: @escaping () -> Void) -> Void,
                             update: @escaping (Result<([Change<Message>], [Message]), AppError>) -> Void) {
-        databaseManager.getChannelListener(channelId: channelId, cancel: cancel, update: update)
+        databaseManager.getChannelListener(channelId: channelId, cancel: cancel) { result in
+            onMain { update(result) }
+        }
     }
 
     func markChannelAsSeen(channel: Channel) {
@@ -276,7 +285,7 @@ class DefaultDataController: DataController {
                     }
                     .eraseToAnyPublisher()
             }
-            .eraseToAnyPublisher()
+            .onMain()
     }
 
     func updateLike(onStack stack: Stack, addLike: Bool, stackOwnerId: String) {
@@ -352,7 +361,7 @@ class DefaultDataController: DataController {
                     }
                     .eraseToAnyPublisher()
             }
-            .eraseToAnyPublisher()
+            .onMain()
     }
 
     func searchUsers(searchTerm: String) -> AnyPublisher<[User], AppError> {
@@ -360,11 +369,14 @@ class DefaultDataController: DataController {
             .flatMap { [weak self] (users: [User]) -> AnyPublisher<[User], AppError> in
                 guard let self = self else { return Just(users).setFailureType(to: AppError.self).eraseToAnyPublisher() }
                 return self.getImageURLs(for: users).eraseToAnyPublisher()
-            }.eraseToAnyPublisher()
+            }
+            .onMain()
     }
 
     func getUsers(userIds: [String], completion: @escaping (Result<[User], AppError>) -> Void) {
-        backendAPI.getUsers(userIds: userIds, completion: completion)
+        backendAPI.getUsers(userIds: userIds) { result in
+            onMain { completion(result) }
+        }
     }
 
     func add(recentlyViewedItem: Item) {
@@ -380,11 +392,15 @@ class DefaultDataController: DataController {
     }
 
     func sendMessage(user: User, message: String, toChannel channel: Channel, completion: @escaping (Result<Void, AppError>) -> Void) {
-        databaseManager.sendMessage(user: user, message: message, toChannel: channel, completion: completion)
+        databaseManager.sendMessage(user: user, message: message, toChannel: channel) { result in
+            onMain { completion(result) }
+        }
     }
 
     func getOrCreateChannel(users: [User], completion: @escaping (Result<Channel, AppError>) -> Void) {
-        databaseManager.getOrCreateChannel(users: users, completion: completion)
+        databaseManager.getOrCreateChannel(users: users) { result in
+            onMain { completion(result) }
+        }
     }
 
     func uploadProfileImage(image: UIImage) {
@@ -392,15 +408,19 @@ class DefaultDataController: DataController {
     }
 
     func getImageURLs(for users: [User]) -> AnyPublisher<[User], AppError> {
-        imageService.getImageURLs(for: users)
+        imageService.getImageURLs(for: users).onMain()
     }
 
     func getImageURLs(for users: [User], completion: @escaping ([User]) -> Void) {
-        imageService.getImageURLs(for: users, completion: completion)
+        imageService.getImageURLs(for: users) { result in
+            onMain { completion(result) }
+        }
     }
 
     func getImage(for itemId: String, completion: @escaping (URL?) -> Void) {
-        imageService.getImage(for: itemId, completion: completion)
+        imageService.getImage(for: itemId) { result in
+            onMain { completion(result) }
+        }
     }
 
     func uploadItemImage(itemId: String, image: UIImage) {
@@ -408,15 +428,21 @@ class DefaultDataController: DataController {
     }
 
     func getInventoryItemImages(userId: String, inventoryItem: InventoryItem, completion: @escaping ([URL]) -> Void) {
-        imageService.getInventoryItemImages(userId: userId, inventoryItem: inventoryItem, completion: completion)
+        imageService.getInventoryItemImages(userId: userId, inventoryItem: inventoryItem) { result in
+            onMain { completion(result) }
+        }
     }
 
     func uploadInventoryItemImages(inventoryItem: InventoryItem, images: [UIImage], completion: @escaping ([String]) -> Void) {
-        imageService.uploadInventoryItemImages(inventoryItem: inventoryItem, images: images, completion: completion)
+        imageService.uploadInventoryItemImages(inventoryItem: inventoryItem, images: images) { result in
+            onMain { completion(result) }
+        }
     }
 
     func deleteInventoryItemImage(imageURL: URL, completion: @escaping (Bool) -> Void) {
-        imageService.deleteInventoryItemImage(imageURL: imageURL, completion: completion)
+        imageService.deleteInventoryItemImage(imageURL: imageURL) { result in
+            onMain { completion(result) }
+        }
     }
 
     func deleteInventoryItemImages(inventoryItem: InventoryItem) {
@@ -424,15 +450,21 @@ class DefaultDataController: DataController {
     }
 
     func startSpreadsheetImport(urlString: String, completion: @escaping (Error?) -> Void) {
-        backendAPI.startSpreadsheetImport(urlString: urlString, completion: completion)
+        backendAPI.startSpreadsheetImport(urlString: urlString) { result in
+            onMain { completion(result) }
+        }
     }
 
     func revertLastImport(completion: @escaping (Error?) -> Void) {
-        backendAPI.revertLastImport(completion: completion)
+        backendAPI.revertLastImport { result in
+            onMain { completion(result) }
+        }
     }
 
     func getSpreadsheetImportWaitlist(completion: @escaping (Result<[User], Error>) -> Void) {
-        databaseManager.getSpreadsheetImportWaitlist(completion: completion)
+        databaseManager.getSpreadsheetImportWaitlist { result in
+            onMain { completion(result) }
+        }
     }
 
     func updateSpreadsheetImportStatus(importedUserId: String,
@@ -441,52 +473,75 @@ class DefaultDataController: DataController {
                                        completion: @escaping (Result<User, Error>) -> Void) {
         backendAPI.updateSpreadsheetImportStatus(importedUserId: importedUserId,
                                                  spreadSheetImportStatus: spreadSheetImportStatus,
-                                                 spreadSheetImportError: spreadSheetImportError,
-                                                 completion: completion)
+                                                 spreadSheetImportError: spreadSheetImportError) { result in
+            onMain { completion(result) }
+        }
     }
 
     func runImport(importedUserId: String, completion: @escaping (Result<User, Error>) -> Void) {
-        backendAPI.runImport(importedUserId: importedUserId, completion: completion)
+        backendAPI.runImport(importedUserId: importedUserId) { result in
+            onMain { completion(result) }
+        }
     }
 
     func finishImport(importedUserId: String, completion: @escaping (Result<User, Error>) -> Void) {
-        backendAPI.finishImport(importedUserId: importedUserId, completion: completion)
+        backendAPI.finishImport(importedUserId: importedUserId) { result in
+            onMain { completion(result) }
+        }
     }
 
     func getImportedInventoryItems(importedUserId: String, completion: @escaping (Result<[InventoryItem], Error>) -> Void) {
-        backendAPI.getImportedInventoryItems(importedUserId: importedUserId, completion: completion)
+        backendAPI.getImportedInventoryItems(importedUserId: importedUserId) { result in
+            onMain { completion(result) }
+        }
     }
 
     func getAffiliateList(completion: @escaping (Result<[ReferralCode], Error>) -> Void) {
-        backendAPI.getAffiliateList(completion: completion)
+        backendAPI.getAffiliateList { result in
+            onMain { completion(result) }
+        }
     }
 
     func refreshUserSubscriptionStatus(completion: ((Result<Void, AppError>) -> Void)?) {
-        backendAPI.refreshUserSubscriptionStatus(completion: completion)
+        backendAPI.refreshUserSubscriptionStatus { result in
+            onMain { completion?(result) }
+        }
     }
 
     func applyReferralCode(_ code: String, completion: ((Result<Void, AppError>) -> Void)?) {
-        backendAPI.applyReferralCode(code, completion: completion)
+        backendAPI.applyReferralCode(code){ result in
+            onMain { completion?(result) }
+        }
     }
 
     func sendMessage(email: String, message: String, completion: ((Result<Void, AppError>) -> Void)?) {
-        backendAPI.sendMessage(email: email, message: message, completion: completion)
+        backendAPI.sendMessage(email: email, message: message){ result in
+            onMain { completion?(result) }
+        }
     }
 
     func getToken(byId id: String, completion: @escaping (NotificationToken?) -> Void) {
-        databaseManager.getToken(byId: id, completion: completion)
+        databaseManager.getToken(byId: id){ result in
+            onMain { completion(result) }
+        }
     }
-    
+
     func setToken(_ token: NotificationToken, completion: @escaping (Result<[NotificationToken], AppError>) -> Void) {
-        databaseManager.setToken(token, completion: completion)
+        databaseManager.setToken(token){ result in
+            onMain { completion(result) }
+        }
     }
-    
+
     func deleteToken(_ token: NotificationToken, completion: @escaping (AppError?) -> Void) {
-        databaseManager.deleteToken(token, completion: completion)
+        databaseManager.deleteToken(token){ result in
+            onMain { completion(result) }
+        }
     }
-    
+
     func deleteToken(byId id: String, completion: @escaping (AppError?) -> Void) {
-        databaseManager.deleteToken(byId: id, completion: completion)
+        databaseManager.deleteToken(byId: id){ result in
+            onMain { completion(result) }
+        }
     }
 }
 
