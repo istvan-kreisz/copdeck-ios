@@ -23,17 +23,17 @@ struct RootOnboardingView: View {
         TabView(selection: $currentTab) {
             OnboardingView(imageName: "onboarding-feed",
                            titleText: "Welcome to CopDeck!",
-                           subtitleText: "CopDeck helps you manage & share your sneaker inventory and compare prices on different reselling sites.",
+                           subtitleText: "CopDeck helps you manage & share your reselling inventory and compare prices on different reselling sites.",
                            buttonTapped: nextTapped)
                 .tag(0)
             OnboardingView(imageName: "onboarding-search",
-                           titleText: "Search sneakers",
-                           subtitleText: "Use the search tab to find the sneaker you're looking for.",
+                           titleText: "Search sneakers & collectibles",
+                           subtitleText: "Use the search tab to find the sneakers, apparels, collectibles you're looking for.",
                            buttonTapped: nextTapped)
                 .tag(1)
             OnboardingView(imageName: "onboarding-prices",
                            titleText: "Compare prices",
-                           subtitleText: "Tap on a sneaker to see how much it goes for on reselling sites like StockX, GOAT, Klekt and Restocks.",
+                           subtitleText: "Tap on an item to see how much it goes for on reselling sites like StockX, GOAT, Klekt and Restocks.",
                            buttonTapped: nextTapped)
                 .tag(2)
             OnboardingView(imageName: "onboarding-inventory",
@@ -53,12 +53,12 @@ struct RootOnboardingView: View {
                 .tag(5)
             OnboardingView(imageName: "onboarding-profile",
                            titleText: "Follow other sneakerheads",
-                           subtitleText: "See what other people are up to in the sneaker game by checking out their CopDeck profiles.",
+                           subtitleText: "See what other people are up to in the reselling game by checking out their CopDeck profiles.",
                            buttonTapped: nextTapped)
                 .tag(6)
             OnboardingView(imageName: "onboarding-import",
                            titleText: "Spreadsheet import",
-                           subtitleText: "Import your sneaker reseller spreadsheet with just a single click.",
+                           subtitleText: "Import your reseller spreadsheet with just a single click.",
                            buttonTapped: nextTapped)
                 .tag(7)
             OnboardingView(imageName: "onboarding-import",

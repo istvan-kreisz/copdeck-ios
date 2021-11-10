@@ -146,7 +146,7 @@ struct PaymentView: View {
                             }
 
                             VStack(alignment: .leading, spacing: 10) {
-                                bulletPoint(text: "Compare prices on the biggest sneaker reselling sites", bulletpointStyle: .checkmark)
+                                bulletPoint(text: "Compare prices on the biggest reselling sites", bulletpointStyle: .checkmark)
                                 bulletPoint(text: "Track your inventory", bulletpointStyle: .checkmark)
                                 bulletPoint(text: "Follow other sneakerheads", bulletpointStyle: .checkmark)
                                 bulletPoint(text: "Share your inventory everywhere with just a few clicks", bulletpointStyle: .checkmark)
@@ -158,7 +158,7 @@ struct PaymentView: View {
                                 .foregroundColor(.customText1)
 
                             VStack(alignment: .leading, spacing: 14) {
-                                bulletPoint(text: "Import your inventory using our spreadsheet import feature or just add your sneakers manually.",
+                                bulletPoint(text: "Import your inventory using our spreadsheet import feature or just add your items manually.",
                                             bulletpointStyle: .dot)
                                 bulletPoint(text: "Find where to buy & sell your shoes using CopDeck's price comparison.", bulletpointStyle: .dot)
                                 bulletPoint(text: "Share your items on CopDeck & on the web with the stack sharing feature.", bulletpointStyle: .dot)

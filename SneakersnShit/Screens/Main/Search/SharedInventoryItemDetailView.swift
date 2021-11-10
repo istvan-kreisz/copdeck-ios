@@ -46,7 +46,7 @@ struct SharedInventoryItemView: View {
                            isActive: showDetail) { EmptyView() }
 
             VerticalListView(bottomPadding: 30, spacing: 2, addHorizontalPadding: false) {
-                NavigationBar(title: user.name.map { "\($0)'s sneaker" } ?? "sneaker details",
+                NavigationBar(title: user.name.map { "\($0)'s item" } ?? "",
                               isBackButtonVisible: true,
                               style: .dark,
                               shouldDismiss: shouldDismiss)
