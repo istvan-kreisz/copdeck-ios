@@ -24,6 +24,7 @@ func appReducer(state: inout AppState,
                 state.firstLoadDone = true
             }
             FeedView.preloadedPosts = nil
+            ChatView.preloadedChannels = []
             environment.dataController.reset()
             environment.paymentService.reset()
             environment.pushNotificationService.reset()
@@ -157,8 +158,8 @@ func appReducer(state: inout AppState,
             environment.dataController.getAffiliateList(completion: completion)
         case let .sendMessage(email, message, completion):
             environment.dataController.sendMessage(email: email, message: message, completion: completion)
-        case let .getChannelsListener(cancel, update):
-            environment.dataController.getChannelsListener(cancel: cancel, update: update)
+        case let .getChannels(update):
+            environment.dataController.getChannels(update: update)
         case let .getChannelListener(channelId, cancel, update):
             environment.dataController.getChannelListener(channelId: channelId, cancel: cancel, update: update)
         case let .sendChatMessage(message, channel, completion):

@@ -14,18 +14,19 @@ class ChatWorker: FirestoreServiceWorker, ChatManager {
     let errorsSubject = PassthroughSubject<AppError, Never>()
 
     var cancellables: Set<AnyCancellable> = []
+    
+    private var channels: [Channel] = []
 
     private let channelCache = Cache<String, Channel>(entryLifetimeMin: 60)
 
     // collection listeners
-    private var channelsListener = CollectionListener<Channel>()
     private var channelListener = CollectionListener<Message>()
 
     // document listeners
     private var chatUpdatesListener = DocumentListener<ChatUpdateInfo>()
 
     var dbListeners: [FireStoreListener] {
-        let listeners: [FireStoreListener?] = [channelsListener, channelListener, chatUpdatesListener]
+        let listeners: [FireStoreListener?] = [channelListener, chatUpdatesListener]
         return listeners.compactMap { $0 }
     }
 
@@ -42,34 +43,24 @@ class ChatWorker: FirestoreServiceWorker, ChatManager {
         chatUpdatesListener.startListening(documentRef: updateInfoRef(userId))
     }
 
-    func getChannelsListener(cancel: @escaping (_ cancel: @escaping () -> Void) -> Void, update: @escaping (Result<[Channel], AppError>) -> Void) {
+    func getChannels(update: @escaping (Result<[Channel], AppError>) -> Void) {
         guard let userId = userId else { return }
 
-        channelsListener.reset(reinitializePublishers: true)
-        channelsListener.startListening(collectionRef: channelsRef()) {
-            $0?
-                .whereField("userIds", arrayContains: userId)
-                .whereField("isEmpty", isNotEqualTo: true)
-        }
-
-        let publisher = channelsListener.dataPublisher
-            .sink { completion in
-                switch completion {
-                case let .failure(error):
-                    update(.failure(error))
-                case .finished:
-                    break
+        channelsRef()
+            .whereField("userIds", arrayContains: userId)
+            .whereField("isEmpty", isNotEqualTo: true)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    print("Error fetching documents: \(error)")
+                    update(.failure(AppError(error: error)))
+                } else {
+                    if let channels = snapshot?.documents.compactMap({ Channel(from: $0.data()) }) {
+                        update(.success(channels))
+                    } else {
+                        update(.failure(AppError.wrongData))
+                    }
                 }
-            } receiveValue: { channels in
-                update(.success(channels))
             }
-        publisher.store(in: &cancellables)
-
-        let cancelBlock: () -> Void = { [weak channelsListener, weak publisher] in
-            channelsListener?.reset(reinitializePublishers: true)
-            publisher?.cancel()
-        }
-        cancel(cancelBlock)
     }
 
     func getChannelListener(channelId: String,
@@ -124,7 +115,7 @@ class ChatWorker: FirestoreServiceWorker, ChatManager {
     func getOrCreateChannel(users: [User], completion: @escaping (Result<Channel, AppError>) -> Void) {
         let userIds = users.map(\.id).sorted()
         let userIdsJoined = userIds.joined(separator: "")
-        if var channel = channelsListener.value.first(where: { $0.userIds == userIds.sorted() }) {
+        if var channel = channels.first(where: { $0.userIds == userIds.sorted() }) {
             channel.users = []
             channelCache.insert(channel, forKey: userIdsJoined)
             channel.users = users
@@ -159,6 +150,8 @@ class ChatWorker: FirestoreServiceWorker, ChatManager {
     }
 
     func reset() {
+        cancellables.forEach { $0.cancel() }
+        channels = []
         dbListeners.forEach { $0.reset() }
     }
 }
@@ -183,20 +176,20 @@ private extension ChatWorker {
 
     func send(message: Message, inChannel channel: Channel, completion: @escaping (Result<Void, AppError>) -> Void) {
         guard let newMessageDict = try? message.asDictionary() else { return }
-        
+
         let batch = firestore.batch()
-        
+
         // 1. send message
         let newMessageRef = channelRef(channel.id).collection(.thread).document(message.id)
         batch.setData(newMessageDict, forDocument: newMessageRef)
-        
+
         // 2. update channel if channel.isEmpty == true
         if channel.isEmpty {
             let cRef = channelRef(channel.id)
             let channelDict = ["isEmpty": false]
             batch.setData(channelDict, forDocument: cRef, merge: true)
         }
-        
+
         // 3. update all chatUpdateInfos for all users
         let lastMessage = ChatUpdateInfo.LastMessage(userId: message.sender.senderId, content: message.content, sentDate: message.dateSent)
         if let lastMessageDict = try? lastMessage.asDictionary() {
@@ -206,7 +199,7 @@ private extension ChatWorker {
                 batch.setData(updateData, forDocument: ref, merge: true)
             }
         }
-        
+
         // 4. commit changes
         batch.commit { [weak self] error in
             if let error = error {

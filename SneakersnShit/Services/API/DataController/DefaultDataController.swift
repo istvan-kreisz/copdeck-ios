@@ -214,8 +214,8 @@ class DefaultDataController: DataController {
         databaseManager.getItem(withId: id, settings: settings).onMain()
     }
 
-    func getChannelsListener(cancel: @escaping (_ cancel: @escaping () -> Void) -> Void, update: @escaping (Result<[Channel], AppError>) -> Void) {
-        databaseManager.getChannelsListener(cancel: cancel) { [weak self] result in
+    func getChannels(update: @escaping (Result<[Channel], AppError>) -> Void) {
+        databaseManager.getChannels { [weak self] result in
             switch result {
             case let .success(channels):
                 self?.updateChannelsWithUsers(channels: channels, update: update)
@@ -228,6 +228,7 @@ class DefaultDataController: DataController {
     }
 
     private func updateChannelsWithUsers(channels: [Channel], update: @escaping (Result<[Channel], AppError>) -> Void) {
+        print("ive gott the powwer")
         let allUserIds = channels.flatMap { $0.userIds }.uniqued()
         backendAPI.getUsers(userIds: allUserIds) { [weak self] result in
             switch result {

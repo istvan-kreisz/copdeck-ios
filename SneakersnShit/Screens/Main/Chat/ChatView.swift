@@ -8,16 +8,24 @@
 import SwiftUI
 
 struct ChatView: View {
+    static var preloadedChannels: [Channel] = []
+
     @State var isFirstLoad = true
     @State var channels: [Channel] = []
     @StateObject private var channelsLoader = Loader()
 
     @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
 
-    @State var cancelListener: (() -> Void)?
     @State private var error: (String, String)? = nil
 
     @Binding var lastMessageChannelId: String?
+
+    init(lastMessageChannelId: Binding<String?>) {
+        self._lastMessageChannelId = lastMessageChannelId
+        if Self.preloadedChannels.isEmpty {
+            loadChannels(isFirstLoad: false, preload: true)
+        }
+    }
 
     var userId: String? {
         AppStore.default.state.user?.id
@@ -45,9 +53,16 @@ struct ChatView: View {
                 Text("Messages")
                     .tabTitle()
                     .padding(.bottom, 19)
+                
+                PullToRefresh(coordinateSpaceName: "pullToRefresh") {
+                    loadChannels(isFirstLoad: false, preload: false)
+                }
 
                 if channelsLoader.isLoading {
                     CustomSpinner(text: "Loading messages", animate: true)
+                        .padding(.top, 21)
+                        .padding(.bottom, 22)
+                        .centeredHorizontally()
                 }
 
                 if !channels.isEmpty {
@@ -72,14 +87,22 @@ struct ChatView: View {
                     }
                 }
             }
+            .environment(\.defaultMinListRowHeight, 1)
+            .coordinateSpace(name: "pullToRefresh")
             .onAppear {
-                loadChannels(isFirstLoad: isFirstLoad)
                 if isFirstLoad {
+                    if !Self.preloadedChannels.isEmpty {
+                        self.updateChannels(channels: Self.preloadedChannels,
+                                            chatUpdateInfo: DerivedGlobalStore.default.globalState.chatUpdates,
+                                            preload: false)
+                        goToChatFromNotification(channels: Self.preloadedChannels)
+                    } else {
+                        if channels.isEmpty {
+                            loadChannels(isFirstLoad: true)
+                        }
+                    }
                     isFirstLoad = false
                 }
-            }
-            .onDisappear {
-                cancelListener?()
             }
             .alert(isPresented: presentErrorAlert) {
                 let title = error?.0 ?? ""
@@ -94,38 +117,52 @@ struct ChatView: View {
             }
         }
         .onChange(of: DerivedGlobalStore.default.globalState.chatUpdates) { chatUpdates in
-            updateChannels(channels: channels, chatUpdateInfo: chatUpdates)
+            updateChannels(channels: channels, chatUpdateInfo: chatUpdates, preload: false)
         }
     }
 
-    private func loadChannels(isFirstLoad: Bool) {
+
+    private func loadChannels(isFirstLoad: Bool, preload: Bool = false) {
         var loader: ((Result<Void, AppError>) -> Void)?
-        if isFirstLoad {
+        if !preload {
             loader = channelsLoader.getLoader()
         }
-        AppStore.default.send(.main(action: .getChannelsListener(cancel: { cancel in
-            self.cancelListener = cancel
-        }, update: { result in
+        AppStore.default.send(.main(action: .getChannels(update: { result in
             switch result {
             case let .failure(error):
-                self.error = (error.title, error.message)
+                if !preload {
+                    self.error = (error.title, error.message)
+                }
             case let .success(channels):
-                self.updateChannels(channels: channels, chatUpdateInfo: DerivedGlobalStore.default.globalState.chatUpdates)
+                self.updateChannels(channels: channels,
+                                    chatUpdateInfo: DerivedGlobalStore.default.globalState.chatUpdates,
+                                    preload: preload)
 
-                if let userId = userId, let channel = channels.first(where: { $0.id == lastMessageChannelId }) {
-                    navigationDestination += .chat(channel: channel, userId: userId)
-                    self.lastMessageChannelId = nil
+                if !preload {
+                    goToChatFromNotification(channels: channels)
                 }
             }
             loader?(.success(()))
         })))
     }
+    
+    private func goToChatFromNotification(channels: [Channel]) {
+        if let userId = userId, let channel = channels.first(where: { $0.id == lastMessageChannelId }) {
+            navigationDestination += .chat(channel: channel, userId: userId)
+            self.lastMessageChannelId = nil
+        }
+    }
 
-    private func updateChannels(channels: [Channel], chatUpdateInfo: ChatUpdateInfo) {
-        self.channels = channels.sortedByDate().map { channel in
+    private func updateChannels(channels: [Channel], chatUpdateInfo: ChatUpdateInfo, preload: Bool) {
+        let newValue = channels.sortedByDate().map { (channel: Channel) -> Channel in
             var updatedChannel = channel
             updatedChannel.updateInfo = chatUpdateInfo.updateInfo[channel.id]
             return updatedChannel
+        }
+        if preload {
+            Self.preloadedChannels = newValue
+        } else {
+            self.channels = newValue
         }
     }
 }

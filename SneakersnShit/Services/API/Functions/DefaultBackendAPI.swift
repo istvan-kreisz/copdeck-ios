@@ -183,7 +183,8 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
         struct Wrapper: Encodable {
             let userIds: [String]
         }
-        handlePublisherResult(publisher: callFirebaseFunctionArray(functionName: "getUsers", model: Wrapper(userIds: userIds)), showAlert: false,
+        handlePublisherResult(publisher: callFirebaseFunctionArray(functionName: "getUsers", model: Wrapper(userIds: userIds)),
+                              showAlert: false,
                               completion: completion)
     }
 

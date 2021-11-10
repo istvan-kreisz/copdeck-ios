@@ -393,8 +393,8 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
 extension DefaultDatabaseManager: FirestoreWorkerDelegate {}
 
 extension DefaultDatabaseManager {
-    func getChannelsListener(cancel: @escaping (@escaping () -> Void) -> Void, update: @escaping (Result<[Channel], AppError>) -> Void) {
-        chatWorker.getChannelsListener(cancel: cancel, update: update)
+    func getChannels(update: @escaping (Result<[Channel], AppError>) -> Void) {
+        chatWorker.getChannels(update: update)
     }
     
     func getChannelListener(channelId: String, cancel: @escaping (@escaping () -> Void) -> Void, update: @escaping (Result<([Change<Message>], [Message]), AppError>) -> Void) {
