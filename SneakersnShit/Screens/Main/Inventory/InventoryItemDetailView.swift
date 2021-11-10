@@ -111,7 +111,7 @@ struct InventoryItemDetailView: View {
                                     addQuantitySelector: false,
                                     onCopDeckPriceTooltipTapped: {
                                         alert = ("CopDeck price",
-                                                 "When you share your stack on the CopDeck feed or via a link, this the price that will show up next to your items.")
+                                                 "When you share your stack on the CopDeck feed or via a link, this the price that will show up next to your item.")
                                     }, didTapAddTag: {
                                         showAddNewTagPopup = true
                                     })
