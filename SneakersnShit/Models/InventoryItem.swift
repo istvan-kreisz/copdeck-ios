@@ -50,7 +50,8 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     }
 
     var id: String
-    var itemId: String?
+    let itemId: String?
+    var styleId: String
     var name: String
     var purchasePrice: PriceWithCurrency?
     let imageURL: ImageURL?
@@ -124,7 +125,8 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     }
 
     enum CodingKeys: String, CodingKey {
-        case id, itemId, name, purchasePrice, imageURL, size, itemType, condition, copdeckPrice, listingPrices, soldPrice, status, tags, notes, pendingImport,
+        case id, itemId, styleId, name, purchasePrice, imageURL, size, itemType, condition, copdeckPrice, listingPrices, soldPrice, status, tags, notes,
+             pendingImport,
              created, updated, purchasedDate, soldDate, gender, brand
     }
 
@@ -169,6 +171,7 @@ extension InventoryItem {
     init(fromItem item: Item, size: String? = nil) {
         self.init(id: UUID().uuidString,
                   itemId: item.id,
+                  styleId: item.bestStoreInfo?.sku ?? "",
                   name: item.name ?? "",
                   purchasePrice: item.retailPrice.asPriceWithCurrency(currency: item.currency),
                   imageURL: item.imageURL,
@@ -188,16 +191,17 @@ extension InventoryItem {
                   brand: item.brand)
     }
 
-    func copy(withName name: String, itemId: String?, notes: String?) -> InventoryItem {
+    func copy(withName name: String, styleId: String?, notes: String?) -> InventoryItem {
         var copy = self
         copy.name = name
-        copy.itemId = itemId
+        copy.styleId = styleId ?? ""
         copy.notes = notes
         return copy
     }
 
     static let empty = InventoryItem(id: "",
                                      itemId: "",
+                                     styleId: "",
                                      name: "",
                                      purchasePrice: nil,
                                      imageURL: nil,
@@ -217,6 +221,7 @@ extension InventoryItem {
     static var new: InventoryItem {
         InventoryItem(id: UUID().uuidString,
                       itemId: "",
+                      styleId: "",
                       name: "",
                       purchasePrice: nil,
                       imageURL: nil,
@@ -291,11 +296,29 @@ extension InventoryItem {
 }
 
 extension InventoryItem {
+    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         id = try container.decode(String.self, forKey: .id)
-        itemId = try container.decodeIfPresent(String.self, forKey: .itemId)
+        
+        let styleId = try container.decodeIfPresent(String.self, forKey: .styleId)
+        let itemId = try container.decodeIfPresent(String.self, forKey: .itemId)
+        if styleId == nil {
+            self.itemId = itemId?
+                .split(separator: "/")
+                .first?
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .replacingOccurrences(of: " ", with: "")
+                .replacingOccurrences(of: "-", with: "")
+                .replacingOccurrences(of: "_", with: "")
+                .replacingOccurrences(of: ".", with: "")
+                .replacingOccurrences(of: "/", with: "")
+        } else {
+            self.itemId = itemId
+        }
+        self.styleId = styleId ?? itemId ?? ""
+        
         name = try container.decode(String.self, forKey: .name)
         purchasePrice = try container.decodeIfPresent(PriceWithCurrency.self, forKey: .purchasePrice)
         imageURL = try container.decodeIfPresent(ImageURL.self, forKey: .imageURL)
@@ -325,6 +348,7 @@ extension InventoryItem {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encodeIfPresent(itemId, forKey: .itemId)
+        try container.encode(styleId, forKey: .styleId)
         try container.encode(name, forKey: .name)
         try container.encodeIfPresent(purchasePrice, forKey: .purchasePrice)
         try container.encodeIfPresent(imageURL, forKey: .imageURL)

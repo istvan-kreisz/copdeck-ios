@@ -45,7 +45,7 @@ struct InventoryItemDetailView: View {
         self.shouldDismiss = shouldDismiss
 
         self._name = State(initialValue: inventoryItem.name)
-        self._styleId = State(initialValue: inventoryItem.itemId ?? "")
+        self._styleId = State(initialValue: inventoryItem.item?.bestStoreInfo?.sku ?? "")
         self._notes = State(initialValue: inventoryItem.notes ?? "")
         self._tags = State(initialValue: Tag.defaultTags + (AppStore.default.state.user?.tags ?? []))
     }
@@ -92,11 +92,13 @@ struct InventoryItemDetailView: View {
                                              placeHolder: "name",
                                              style: .white,
                                              text: $name)
-                            TextFieldRounded(title: "styleid (optional)",
-                                             placeHolder: "styleid",
-                                             style: .white,
-                                             text: $styleId,
-                                             width: 100)
+                            if inventoryItem.isShoe {
+                                TextFieldRounded(title: "styleid (optional)",
+                                                 placeHolder: "styleid",
+                                                 style: .white,
+                                                 text: $styleId,
+                                                 width: 100)
+                            }
                         }
                         .padding(.top, 15)
 
@@ -275,7 +277,7 @@ struct InventoryItemDetailView: View {
     }
 
     private func updateInventoryItem() {
-        let updatedInventoryItem = inventoryItem.copy(withName: name, itemId: styleId, notes: notes)
+        let updatedInventoryItem = inventoryItem.copy(withName: name, styleId: styleId, notes: notes)
         store.send(.main(action: .updateInventoryItem(inventoryItem: updatedInventoryItem)))
         shouldDismiss()
     }

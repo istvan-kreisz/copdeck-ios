@@ -174,7 +174,7 @@ extension Item {
             .compactMap { $0 }
             .first
     }
-    
+
     var isShoe: Bool {
         itemType == .shoe
     }
@@ -194,6 +194,8 @@ extension Item {
             return sizes.sorted { a, b in
                 if let aIndex = sizes.firstIndex(of: a), let bIndex = sizes.firstIndex(of: b) {
                     return aIndex < bIndex
+                } else if let aNum = a.number, let bNum = b.number {
+                    return aNum < bNum
                 } else {
                     return true
                 }

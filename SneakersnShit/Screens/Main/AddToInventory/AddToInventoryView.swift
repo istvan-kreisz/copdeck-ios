@@ -45,7 +45,7 @@ struct AddToInventoryView: View {
         self._name = State(initialValue: item?.name ?? "")
         self._styleId = State(initialValue: item?.bestStoreInfo?.sku ?? "")
         self._notes = State(initialValue: "")
-
+        
         let isValidSize = item.map { i in presented.wrappedValue.size.map { i.sortedSizes.contains($0) } ?? false } ?? false
         if let item = item {
             self._inventoryItem1 = State(initialValue: InventoryItem(fromItem: item, size: isValidSize ? presented.wrappedValue.size : nil))
@@ -83,11 +83,13 @@ struct AddToInventoryView: View {
                                          placeHolder: "name",
                                          style: .white,
                                          text: $name)
-                        TextFieldRounded(title: "styleid (optional)",
-                                         placeHolder: "styleid",
-                                         style: .white,
-                                         text: item?.isShoe == true ? $styleId : .constant("-"),
-                                         width: 100)
+                        if item?.isShoe == true {
+                            TextFieldRounded(title: "styleid (optional)",
+                                             placeHolder: "styleid",
+                                             style: .white,
+                                             text: item?.isShoe == true ? $styleId : .constant("-"),
+                                             width: 100)
+                        }
                     }
 
                     NewItemCard(inventoryItem: $inventoryItem1,
@@ -236,7 +238,7 @@ struct AddToInventoryView: View {
             .compactMap { $0 }
             .flatMap { inventoryItem -> [InventoryItem] in
                 Array.init(repeating: 0, count: inventoryItem.count).map { _ in
-                    var copy = inventoryItem.copy(withName: name, itemId: styleId, notes: notes)
+                    var copy = inventoryItem.copy(withName: name, styleId: styleId, notes: notes)
                     copy.id = UUID().uuidString
                     return copy
                 }

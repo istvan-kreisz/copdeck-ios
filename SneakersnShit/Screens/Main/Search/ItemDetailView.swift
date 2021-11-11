@@ -132,7 +132,7 @@ struct ItemDetailView: View {
                                 HStack(spacing: 10) {
                                     Spacer()
                                     VStack(spacing: 2) {
-                                        Text(item?.isShoe == true ? item?.id ?? "" : "-")
+                                        Text(item?.isShoe == true ? item?.bestStoreInfo?.sku ?? "" : "-")
                                             .font(.bold(size: 20))
                                             .foregroundColor(.customText1)
                                         Text("Style ID")
