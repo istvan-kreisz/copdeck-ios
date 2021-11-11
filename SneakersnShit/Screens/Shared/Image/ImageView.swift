@@ -60,13 +60,13 @@ struct ImageView: View {
             if let source = source, !DebugSettings.shared.blockImageDownload {
                 LazyImage(source: source) { state in
                     if let image = state.image {
-                        image.resizingMode(resizingMode)
+                        image.resizingMode(resizingMode).background(Color.customWhite)
                     } else if state.error != nil {
                         if DebugSettings.shared.isInDebugMode {
                             Color.customAccent2
                         } else {
                             if showPlaceholder {
-                                Color(.secondarySystemBackground)
+                                Color.customWhite
                             } else {
                                 Color.clear
                             }

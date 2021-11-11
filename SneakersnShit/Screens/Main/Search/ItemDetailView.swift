@@ -45,7 +45,7 @@ struct ItemDetailView: View {
                 addToInventory = (true, row.size)
             }) {
                 ZStack(alignment: Alignment(horizontal: .trailing, vertical: .center)) {
-                    Text(row.size.asSize(of: item))
+                    Text(item?.isShoe == true ? row.size.asSize(of: item) : row.size)
                         .font(.semiBold(size: 15))
                         .padding(.trailing, 3)
                         .frame(height: 32)
@@ -132,10 +132,10 @@ struct ItemDetailView: View {
                                 HStack(spacing: 10) {
                                     Spacer()
                                     VStack(spacing: 2) {
-                                        Text(item?.id ?? "")
+                                        Text(item?.isShoe == true ? item?.id ?? "" : "-")
                                             .font(.bold(size: 20))
                                             .foregroundColor(.customText1)
-                                        Text("Style")
+                                        Text("Style ID")
                                             .font(.regular(size: 15))
                                             .foregroundColor(.customText2)
                                     }
@@ -275,7 +275,8 @@ struct ItemDetailView: View {
                                     }
 
                                     if let preferredSize = store.globalState.settings.preferredShoeSize,
-                                       item?.sortedSizes.contains(where: { $0.number == preferredSize.number }) == true,
+                                       item?.itemType == .shoe,
+                                       item?.sortedSizes.contains(where: { $0 == preferredSize }) == true,
                                        let row = item?.priceRow(size: preferredSize,
                                                                 priceType: priceType,
                                                                 feeType: feeType,

@@ -68,10 +68,10 @@ struct SharedInventoryItemView: View {
                         .padding(.bottom, 8)
                     HStack(spacing: 10) {
                         VStack(spacing: 2) {
-                            Text(inventoryItem.itemId ?? "")
+                            Text(inventoryItem.isShoe == true ? inventoryItem.itemId ?? "" : "-")
                                 .font(.bold(size: 20))
                                 .foregroundColor(.customText1)
-                            Text("Style")
+                            Text("Style ID")
                                 .font(.regular(size: 15))
                                 .foregroundColor(.customText2)
                         }

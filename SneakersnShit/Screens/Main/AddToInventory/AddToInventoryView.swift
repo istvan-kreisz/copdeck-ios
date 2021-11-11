@@ -86,7 +86,7 @@ struct AddToInventoryView: View {
                         TextFieldRounded(title: "styleid (optional)",
                                          placeHolder: "styleid",
                                          style: .white,
-                                         text: $styleId,
+                                         text: item?.isShoe == true ? $styleId : .constant("-"),
                                          width: 100)
                     }
 

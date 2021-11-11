@@ -79,7 +79,7 @@ struct Item: Codable, Equatable, Identifiable, Hashable, ModelWithDate {
     var itemType: ItemType? = .shoe
     var brandCalculated: Brand? { brand ?? getBrand(storeInfoArray: storeInfo) }
     var genderCalculated: Gender? { gender ?? getGender(storeInfoArray: storeInfo) }
-    
+
     struct StoreInfo: Codable, Equatable, Identifiable, Hashable {
         let name: String
         let sku: String
@@ -93,6 +93,8 @@ struct Item: Codable, Equatable, Identifiable, Hashable, ModelWithDate {
         let buyUrl: String
         let productId: String?
         let gender: Gender?
+        var itemType: ItemType?
+        let nameId: String?
 
         var id: String { name }
     }
@@ -172,6 +174,10 @@ extension Item {
             .compactMap { $0 }
             .first
     }
+    
+    var isShoe: Bool {
+        itemType == .shoe
+    }
 
     private var allStorePrices: [StorePrice] {
         storePrices.filter { !$0.inventory.isEmpty }
@@ -182,11 +188,27 @@ extension Item {
     }
 
     var sortedSizes: [String] {
-        sizes.sorted { a, b in
-            if let aNum = a.number, let bNum = b.number {
-                return aNum < bNum
-            } else {
-                return true
+        switch itemType {
+        case .apparel:
+            let sizes = ApparelSize.allCases.map(\.rawValue)
+            return sizes.sorted { a, b in
+                if let aIndex = sizes.firstIndex(of: a), let bIndex = sizes.firstIndex(of: b) {
+                    return aIndex < bIndex
+                } else {
+                    return true
+                }
+            }
+        case .other:
+            return sizes
+        case .shoe:
+            fallthrough
+        default:
+            return sizes.sorted { a, b in
+                if let aNum = a.number, let bNum = b.number {
+                    return aNum < bNum
+                } else {
+                    return true
+                }
             }
         }
     }
@@ -196,7 +218,7 @@ extension Item {
                        feeType: FeeType,
                        currency: Currency,
                        restocksPriceType: StorePrice.StoreInventoryItem.RestocksPriceType?) -> PriceItem {
-        let prices = allStorePrices.first(where: { $0.store.id == storeId })?.inventory.filter { $0.size.number == size.number }
+        let prices = allStorePrices.first(where: { $0.store.id == storeId })?.inventory.filter { $0.size == size }
         let storeInfo = storeInfo.first(where: { $0.store.id == storeId })
 
         var price = prices?.first
@@ -283,7 +305,8 @@ extension Item {
                                         sellUrl: "",
                                         buyUrl: "",
                                         productId: "",
-                                        gender: .Men)],
+                                        gender: .Men,
+                                        nameId: nil)],
              storePrices: [],
              created: 0,
              updated: 0,

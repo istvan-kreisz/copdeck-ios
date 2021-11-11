@@ -22,7 +22,6 @@ struct StackSummaryListItem: View {
         }
     }
 
-    #warning("sup here")
     var body: some View {
         VerticalListItem(itemId: inventoryItem.itemId ?? "",
                          title: inventoryItem.name,
