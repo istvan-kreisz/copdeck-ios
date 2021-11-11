@@ -61,7 +61,7 @@ struct RootOnboardingView: View {
                            subtitleText: "Import your reseller spreadsheet with just a single click.",
                            buttonTapped: nextTapped)
                 .tag(7)
-            OnboardingView(imageName: "onboarding-import",
+            OnboardingView(imageName: "onboarding-chat",
                            titleText: "Chat & Enable notifications",
                            subtitleText: "Chat with other CopDeck users using our built-in chat. Enable notifications to make sure you don't miss anything.",
                            buttonText: "Enable notifications",
