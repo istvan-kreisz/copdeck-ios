@@ -132,7 +132,7 @@ struct InventoryHeaderView: View {
                     }
                 } else {
                     VStack(alignment: .center, spacing: 5) {
-                        Text("\(username) \(countryIcon)")
+                        Text("\(username) \(countryIcon)" + ((DebugSettings.shared.isAdmin && user.notificationsEnabled == true) ? " *" : ""))
                             .foregroundColor(.customText1)
                             .font(.bold(size: 22))
 

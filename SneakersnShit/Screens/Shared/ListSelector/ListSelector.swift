@@ -25,8 +25,9 @@ struct ListSelector: View {
     var body: some View {
         Group {
             if isContentLocked && DebugSettings.shared.isPaywallEnabled {
-            NavigationLink(destination: PaymentView(viewType: .subscribe, animateTransition: false) { showPaymentView = false },
-                               isActive: $showPaymentView) { EmptyView() }
+                NavigationLink(destination: PaymentView(viewType: .subscribe, animateTransition: false) { showPaymentView = false }
+                    .environmentObject(DerivedGlobalStore.default),
+                    isActive: $showPaymentView) { EmptyView() }
             }
 
             SettingMenu(title: title, description: description, buttonTitle: buttonTitle, popBackOnSelect: popBackOnSelect, buttonTapped: buttonTapped) {

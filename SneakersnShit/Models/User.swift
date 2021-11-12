@@ -74,9 +74,10 @@ struct User: Codable, Equatable, Identifiable {
     var facebookProfileURL: String?
     let subscription: Subscription?
     let subscribedDate: String?
+    var notificationsEnabled: Bool?
 
     enum CodingKeys: String, CodingKey {
-        case id, inited, name, nameInsensitive, email, isPublic, created, updated, settings, tags, spreadsheetImport, membershipInfo, country, facebookProfileURL, subscription, subscribedDate
+        case id, inited, name, nameInsensitive, email, isPublic, created, updated, settings, tags, spreadsheetImport, membershipInfo, country, facebookProfileURL, subscription, subscribedDate, notificationsEnabled
     }
 }
 
@@ -99,6 +100,7 @@ extension User {
         facebookProfileURL = try container.decodeIfPresent(String.self, forKey: .facebookProfileURL)
         subscription = try container.decodeIfPresent(Subscription.self, forKey: .subscription)
         subscribedDate = try container.decodeIfPresent(String.self, forKey: .subscribedDate)
+        notificationsEnabled = try container.decodeIfPresent(Bool.self, forKey: .notificationsEnabled)
     }
 
     init(id: String) {
@@ -116,7 +118,8 @@ extension User {
                   country: nil,
                   facebookProfileURL: nil,
                   subscription: nil,
-                  subscribedDate: nil)
+                  subscribedDate: nil,
+                  notificationsEnabled: nil)
     }
 
     func withImageURL(_ url: URL?) -> User {

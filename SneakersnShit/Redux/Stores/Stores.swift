@@ -41,7 +41,7 @@ extension AppStore {
         completion(bestPrices)
     }
 
-    private func updateTotalInventoryValue(state: AppState, bestPrices: [String : ListingPrice], completion: (PriceWithCurrency?) -> Void) {
+    private func updateTotalInventoryValue(state: AppState, bestPrices: [String: ListingPrice], completion: (PriceWithCurrency?) -> Void) {
         if let currencyCode = bestPrices.values.first?.price.currencyCode {
             let sum = state.inventoryItems
                 .filter { (inventoryItem: InventoryItem) -> Bool in inventoryItem.soldPrice != nil }
@@ -100,6 +100,7 @@ extension AppStore {
                       let oldSettings = self?.state.user?.settings
                       let newSettings = newUser.settings
                       if oldSettings?.feeCalculation != newSettings?.feeCalculation || oldSettings?.currency != newSettings?.currency {
+                          self?.environment.dataController.clearCookies()
                           ItemCache.default.removeAll()
                           self?.refreshItemPricesIfNeeded(newUser: newUser)
                       }
@@ -194,39 +195,52 @@ extension AppStore {
     }
 
     func setupTimers() {
-        Timer.scheduledTimer(withTimeInterval: 60 * World.Constants.pricesRefreshPeriodMin, repeats: true) { [weak self] _ in
+        Timer.scheduledTimer(withTimeInterval: 60 * World.Constants.priceCheckRefreshIntervalMin, repeats: true) { [weak self] _ in
             self?.refreshItemPricesIfNeeded()
         }
     }
 
+    private struct Ids: Hashable {
+        let itemId: String
+        let styleId: String
+    }
+
     func refreshItemPricesIfNeeded(newUser: User? = nil) {
         guard state.user != nil else { return }
-        let idsToRefresh = Set(state.inventoryItems.compactMap { $0.itemId }).filter { id in
-            if let item = ItemCache.default.value(forKey: Item.databaseId(itemId: id, settings: newUser?.settings ?? state.settings)) {
-                return item.storePrices.isEmpty || !item.isUptodate
+        let idsToRefresh = Set(state.inventoryItems.compactMap { (inventoryItem: InventoryItem) -> Ids? in
+            if let itemId = inventoryItem.itemId {
+                return Ids(itemId: itemId, styleId: inventoryItem.styleId)
             } else {
-                return true
+                return nil
             }
-        }
+        })
+            .filter { ids in
+                guard !ids.itemId.isEmpty, !ids.styleId.isEmpty else { return false }
+                if let item = ItemCache.default.value(forKey: Item.databaseId(itemId: ids.itemId, settings: newUser?.settings ?? state.settings)) {
+                    return item.storePrices.isEmpty || !item.isUptodate
+                } else {
+                    return true
+                }
+            }
         var idsWithDelay = idsToRefresh
-            .map { (id: String) in (id, Double.random(in: 0.2 ... 0.45)) }
+            .map { (ids: Ids) in (ids, Double.random(in: 0.2 ... 0.45)) }
 
         idsWithDelay = idsWithDelay
             .enumerated()
-            .map { (offset: Int, idWithDelay: (String, Double)) in
+            .map { (offset: Int, idWithDelay: (Ids, Double)) in
                 (idWithDelay.0, idWithDelay.1 + (idsWithDelay[safe: offset - 1]?.1 ?? 0))
             }
         log("refreshing prices for items with ids: \(idsToRefresh)", logType: .scraping)
         if !state.didFetchItemPrices {
             idsWithDelay
-                .forEach { [weak self] (id: String, _) in
-                    self?.send(.main(action: .refreshItemIfNeeded(itemId: id, fetchMode: .cacheOnly)))
+                .forEach { [weak self] (ids: Ids, _) in
+                    self?.send(.main(action: .refreshItemIfNeeded(itemId: ids.itemId, styleId: ids.styleId, fetchMode: .cacheOnly)))
                 }
         }
         idsWithDelay
-            .forEach { (id: String, delay: Double) in
+            .forEach { (ids: Ids, delay: Double) in
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
-                    self?.send(.main(action: .refreshItemIfNeeded(itemId: id, fetchMode: .cacheOrRefresh)))
+                    self?.send(.main(action: .refreshItemIfNeeded(itemId: ids.itemId, styleId: ids.styleId, fetchMode: .cacheOrRefresh)))
                 }
             }
     }

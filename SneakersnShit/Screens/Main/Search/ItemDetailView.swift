@@ -25,6 +25,7 @@ struct ItemDetailView: View {
     var shouldDismiss: () -> Void
 
     private let itemId: String
+    private let styleId: String
 
     enum BorderStyle {
         case red, green, regular
@@ -32,9 +33,10 @@ struct ItemDetailView: View {
 
     @StateObject private var loader = Loader()
 
-    init(item: Item?, itemId: String, favoritedItemIds: [String], shouldDismiss: @escaping () -> Void) {
+    init(item: Item?, itemId: String, styleId: String, favoritedItemIds: [String], shouldDismiss: @escaping () -> Void) {
         self._item = State(initialValue: item)
         self.itemId = itemId
+        self.styleId = styleId
         self.shouldDismiss = shouldDismiss
         self._isFavorited = State<Bool>(initialValue: favoritedItemIds.contains(itemId))
     }
@@ -338,7 +340,7 @@ struct ItemDetailView: View {
     }
 
     private func refreshPrices(fetchMode: FetchMode) {
-        store.send(.main(action: .getItemDetails(item: item, itemId: itemId, fetchMode: fetchMode) { updateItem(newItem: $0) }), completed: loader.getNewLoader())
+        store.send(.main(action: .getItemDetails(item: item, itemId: itemId, styleId: styleId, fetchMode: fetchMode) { updateItem(newItem: $0) }), completed: loader.getNewLoader())
     }
 
     private func updateItem(newItem: Item?) {

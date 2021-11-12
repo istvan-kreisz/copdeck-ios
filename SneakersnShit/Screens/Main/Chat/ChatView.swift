@@ -91,6 +91,8 @@ struct ChatView: View {
             .coordinateSpace(name: "pullToRefresh")
             .onAppear {
                 if isFirstLoad {
+                    AppStore.default.environment.pushNotificationService.requestPermissionsIfNotAsked(completion: {})
+                    
                     if !Self.preloadedChannels.isEmpty {
                         self.updateChannels(channels: Self.preloadedChannels,
                                             chatUpdateInfo: DerivedGlobalStore.default.globalState.chatUpdates,

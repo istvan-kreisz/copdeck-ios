@@ -97,7 +97,7 @@ struct InventoryView: View {
             NavigationLink(destination: Destination(navigationDestination: $navigationDestination,
                                                     inventoryItems: $store.state.inventoryItems,
                                                     bestPrices: $globalStore.globalState.bestPrices,
-                                                    selectedStack: selectedStackBinding).navigationbarHidden(),
+                                                    selectedStack: selectedStackBinding).navigationbarHidden().environmentObject(DerivedGlobalStore.default),
                            isActive: showDetail) {
                 EmptyView()
             }
@@ -260,7 +260,6 @@ struct InventoryView: View {
                 EmptyView()
             }
         }
-
     }
 
     func didTapActionsTray(action: TrayAction) {
@@ -339,6 +338,7 @@ extension InventoryView {
             switch navigationDestination.destination {
             case let .inventoryItem(inventoryItem):
                 InventoryItemDetailView(inventoryItem: inventoryItem, isInSharedStack: selectedStack.isShared) { navigationDestination.hide() }
+                    .environmentObject(AppStore.default)
             case let .stack(stack):
                 StackDetailView(stack: stack,
                                 inventoryItems: $inventoryItems,
@@ -357,6 +357,7 @@ extension InventoryView {
                                         AppStore.default.send(.main(action: .deleteStack(stack: editedStack)))
                                     }
                                 })
+                    .environmentObject(AppStore.default)
             case let .selectStackItems(stack):
                 SelectStackItemsView(stack: stack,
                                      inventoryItems: inventoryItems,

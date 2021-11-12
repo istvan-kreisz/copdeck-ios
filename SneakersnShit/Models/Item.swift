@@ -67,6 +67,7 @@ struct ImageURL: Codable, Equatable, Hashable {
 
 struct Item: Codable, Equatable, Identifiable, Hashable, ModelWithDate {
     let id: String
+    let styleId: String?
     var storeInfo: [StoreInfo]
     var storePrices: [StorePrice]
     var created: Double?
@@ -83,6 +84,7 @@ struct Item: Codable, Equatable, Identifiable, Hashable, ModelWithDate {
     struct StoreInfo: Codable, Equatable, Identifiable, Hashable {
         let name: String
         let sku: String
+        let styleId: String?
         let slug: String
         let retailPrice: Double?
         let brand: String
@@ -176,7 +178,7 @@ extension Item {
     }
 
     var isShoe: Bool {
-        itemType == .shoe
+        (itemType ?? .shoe) == .shoe
     }
 
     private var allStorePrices: [StorePrice] {
@@ -296,8 +298,10 @@ extension Item {
 extension Item {
     static let sample =
         Item(id: "GHVDY45",
+             styleId: "GHVDY45",
              storeInfo: [Item.StoreInfo(name: "Stockx",
                                         sku: "GHVDY45",
+                                        styleId: "GHVDY45",
                                         slug: "",
                                         retailPrice: 234,
                                         brand: "Adidas",
@@ -329,7 +333,7 @@ extension Item {
     static func databaseId(itemId: String, settings: CopDeckSettings?) -> String {
         let baseId = idWithoutForwardSlash(itemId: itemId)
         if let settings = settings {
-            return "\(baseId)-\(settings.feeCalculation.country.region)-\(settings.currency.code.rawValue)"
+            return "\(baseId)-\(settings.feeCalculation.country.code)-\(settings.currency.code.rawValue)"
         } else {
             return baseId
         }

@@ -57,9 +57,11 @@ struct InventoryItemDetailView: View {
                 NavigationLink(destination: inventoryItem.itemId.map { (itemId: String) in
                     ItemDetailView(item: nil,
                                    itemId: itemId,
+                                   styleId: inventoryItem.styleId,
                                    favoritedItemIds: store.state.favoritedItems.map(\.id)) {
                         showItemDetails = false
                     }
+                    .environmentObject(DerivedGlobalStore.default)
                 },
                 isActive: $showItemDetails) { EmptyView() }
             }

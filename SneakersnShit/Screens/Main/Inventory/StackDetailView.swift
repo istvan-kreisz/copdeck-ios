@@ -239,6 +239,7 @@ extension StackDetailView {
             switch navigationDestination.destination {
             case let .inventoryItem(inventoryItem):
                 InventoryItemDetailView(inventoryItem: inventoryItem, isInSharedStack: stack.isShared) { navigationDestination.hide() }
+                    .environmentObject(AppStore.default)
             case let .itemSelector(stack):
                 SelectStackItemsView(stack: stack,
                                      inventoryItems: inventoryItems,

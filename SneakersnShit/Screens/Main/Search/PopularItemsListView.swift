@@ -21,9 +21,12 @@ struct PopularItemsListView: View {
             ForEach(items) { (item: Item) in
                 NavigationLink(destination: ItemDetailView(item: item,
                                                            itemId: item.id,
-                                                           favoritedItemIds: favoritedItemIds) { selectedItem = nil },
-                               tag: item.id,
-                               selection: convertToId(_selectedItem)) { EmptyView() }
+                                                           styleId: item.styleId ?? item.id,
+                                                           favoritedItemIds: favoritedItemIds) { selectedItem = nil }
+                        .environmentObject(DerivedGlobalStore.default),
+
+                    tag: item.id,
+                    selection: convertToId(_selectedItem)) { EmptyView() }
             }
             VStack(alignment: .center, spacing: 8) {
                 NavigationBar(title: "Trending now", isBackButtonVisible: true, style: .dark) { presentationMode.wrappedValue.dismiss() }

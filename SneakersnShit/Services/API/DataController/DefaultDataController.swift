@@ -47,6 +47,10 @@ class DefaultDataController: DataController {
     func refreshHeadersAndCookie() {
         localScraper.refreshHeadersAndCookie()
     }
+    
+    func clearCookies() {
+        localScraper.clearCookies()
+    }
 
     #warning("sup here")
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
@@ -55,7 +59,7 @@ class DefaultDataController: DataController {
     }
 
     func getItemDetails(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
-//        backendAPI.getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates)
+//        backendAPI.getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates).onMain()
         localScraper.getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates).onMain()
     }
 
@@ -64,13 +68,13 @@ class DefaultDataController: DataController {
         localScraper.getPopularItems(settings: settings, exchangeRates: exchangeRates).onMain()
     }
 
-    private func fetchPrices(for item: Item?, itemId: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
+    private func fetchPrices(for item: Item?, itemId: String, styleId: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
         if let item = item {
             return getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates)
-                .handleEvents(receiveOutput: { [weak self] _ in self?.refreshHeadersAndCookie() })
+//                .handleEvents(receiveOutput: { [weak self] _ in self?.refreshHeadersAndCookie() })
                 .onMain()
         } else {
-            return search(searchTerm: itemId, settings: settings, exchangeRates: exchangeRates)
+            return search(searchTerm: styleId, settings: settings, exchangeRates: exchangeRates)
                 .compactMap { items in items.first(where: { $0.id == itemId }) }
                 .flatMap { [weak self] item -> AnyPublisher<Item, AppError> in
                     guard let self = self else {
@@ -84,10 +88,11 @@ class DefaultDataController: DataController {
 
     private func refreshItem(for item: Item?,
                              itemId: String,
+                             styleId: String,
                              settings: CopDeckSettings,
                              exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
         log("refreshing item with id: \(itemId)", logType: .scraping)
-        return fetchPrices(for: item, itemId: itemId, settings: settings, exchangeRates: exchangeRates)
+        return fetchPrices(for: item, itemId: itemId, styleId: styleId, settings: settings, exchangeRates: exchangeRates)
             .map { refreshedItem in
                 if let item = item {
                     return refreshedItem.storePrices.isEmpty ? item : refreshedItem
@@ -111,16 +116,17 @@ class DefaultDataController: DataController {
             .onMain()
     }
 
-    #warning("ensure saved data is always returned if fetching fails")
     func getItemDetails(for item: Item?,
                         itemId: String,
+                        styleId: String,
                         fetchMode: FetchMode,
                         settings: CopDeckSettings,
                         exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
         let returnValue: AnyPublisher<Item, AppError>
 
         if fetchMode == .forcedRefresh {
-            returnValue = refreshItem(for: item, itemId: itemId, settings: settings, exchangeRates: exchangeRates)
+            #warning("ensure saved data is always returned if fetching fails")
+            returnValue = refreshItem(for: item, itemId: itemId, styleId: styleId, settings: settings, exchangeRates: exchangeRates)
         } else {
             returnValue =
                 ItemCache.default.valuePublisher(itemId: itemId, settings: settings)
@@ -166,7 +172,7 @@ class DefaultDataController: DataController {
                                             self.cache(item: savedItem, settings: settings, exchangeRates: exchangeRates)
                                             return Just(savedItem).setFailureType(to: AppError.self).eraseToAnyPublisher()
                                         } else {
-                                            return self.refreshItem(for: savedItem, itemId: itemId, settings: settings, exchangeRates: exchangeRates)
+                                            return self.refreshItem(for: savedItem, itemId: itemId, styleId: styleId, settings: settings, exchangeRates: exchangeRates)
                                         }
                                     }
                                     .eraseToAnyPublisher()
@@ -177,7 +183,7 @@ class DefaultDataController: DataController {
                         guard let self = self else {
                             return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
                         }
-                        return self.refreshItem(for: item, itemId: itemId, settings: settings, exchangeRates: exchangeRates)
+                        return self.refreshItem(for: item, itemId: itemId, styleId: styleId, settings: settings, exchangeRates: exchangeRates)
                     }
                     .mapError { error in (error as? AppError) ?? AppError(error: error) }
                     .eraseToAnyPublisher()
@@ -228,7 +234,6 @@ class DefaultDataController: DataController {
     }
 
     private func updateChannelsWithUsers(channels: [Channel], update: @escaping (Result<[Channel], AppError>) -> Void) {
-        print("ive gott the powwer")
         let allUserIds = channels.flatMap { $0.userIds }.uniqued()
         backendAPI.getUsers(userIds: allUserIds) { [weak self] result in
             switch result {

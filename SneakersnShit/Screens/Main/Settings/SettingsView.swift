@@ -366,14 +366,14 @@ struct SettingsView: View {
                                 .foregroundColor(.customBlue)
                         }
 
-                        NavigationLink(destination: ReferralCodeView()) {
+                        NavigationLink(destination: ReferralCodeView().environmentObject(DerivedGlobalStore.default)) {
                             Text("Apply referral code")
                                 .leftAligned()
                         }
                     }
 
                     Section(header: Text("Spreadsheet import")) {
-                        NavigationLink(destination: SpreadsheetImportView()) {
+                        NavigationLink(destination: SpreadsheetImportView().environmentObject(DerivedGlobalStore.default)) {
                             Text("Spreadsheet import")
                                 .leftAligned()
                         }

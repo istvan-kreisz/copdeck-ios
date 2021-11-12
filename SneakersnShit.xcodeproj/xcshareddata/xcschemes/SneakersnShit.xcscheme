@@ -107,22 +107,22 @@
          <EnvironmentVariable
             key = "useFirestoreEmulator"
             value = "true"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "showScraperLogs"
             value = "true"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "showReduxLogs"
             value = "true"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "showDatabaseLogs"
             value = "true"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "showScrapingLogs"
@@ -132,6 +132,16 @@
          <EnvironmentVariable
             key = "showErrorLogs"
             value = "true"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "189.174.232.23"
+            value = ""
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "192.168.1.129."
+            value = ""
             isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>

@@ -148,6 +148,7 @@ extension AddNewInventoryItemView {
             case let .itemDetail(item):
                 ItemDetailView(item: item,
                                itemId: item.id,
+                               styleId: item.styleId ?? item.id,
                                favoritedItemIds: store.globalState.favoritedItems.map(\.id)) { navigationDestination.hide() }
                     .environmentObject(AppStore.default)
             case .addManually:

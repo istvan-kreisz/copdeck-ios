@@ -30,6 +30,7 @@ struct SpreadsheetImportDetailView: View {
                 InventoryItemDetailView(inventoryItem: selectedInventoryItem ?? .empty, importSummaryMode: true, isInSharedStack: false) {
                     selectedInventoryItem = nil
                 }
+                .environmentObject(AppStore.default)
             }
             List {
                 NavigationBar(title: "Errors", isBackButtonVisible: true, style: .dark) {

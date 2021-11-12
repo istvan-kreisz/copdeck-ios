@@ -15,6 +15,7 @@ enum MainAction {
     case setUser(user: User)
     case updateUsername(username: String)
     case addNewTag(tag: Tag)
+    case enabledNotifications
     // feed
     case getFeedPosts(loadMore: Bool, completion: (Result<PaginatedResult<[FeedPost]>, AppError>) -> Void)
     case toggleLike(stack: Stack, stackOwnerId: String)
@@ -30,10 +31,10 @@ enum MainAction {
     // users
     case getUserProfile(userId: String, completion: (ProfileData?) -> Void)
     // item details
-    case getItemDetails(item: Item?, itemId: String, fetchMode: FetchMode, completion: (Item?) -> Void)
+    case getItemDetails(item: Item?, itemId: String, styleId: String, fetchMode: FetchMode, completion: (Item?) -> Void)
     case getItemImage(itemId: String, completion: (URL?) -> Void)
     case uploadItemImage(itemId: String, image: UIImage)
-    case refreshItemIfNeeded(itemId: String, fetchMode: FetchMode)
+    case refreshItemIfNeeded(itemId: String, styleId: String, fetchMode: FetchMode)
     // inventory
     case addStack(stack: Stack)
     case deleteStack(stack: Stack)
@@ -75,7 +76,7 @@ enum MainAction {
 extension MainAction: Identifiable, StringRepresentable {
     var id: String {
         switch self {
-        case let .refreshItemIfNeeded(itemId, fetchMode):
+        case let .refreshItemIfNeeded(itemId, _, fetchMode):
             return "\(label) \(itemId) \(fetchMode.rawValue)"
         case .getItemImage:
             return "\(label) \(UUID().uuidString)"

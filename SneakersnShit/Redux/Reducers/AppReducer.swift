@@ -48,6 +48,11 @@ func appReducer(state: inout AppState,
                 updatedUser.tags = (updatedUser.tags ?? []) + [tag]
                 environment.dataController.update(user: updatedUser)
             }
+        case .enabledNotifications:
+            if var updatedUser = state.user, updatedUser.notificationsEnabled != true {
+                updatedUser.notificationsEnabled = true
+                environment.dataController.update(user: updatedUser)
+            }
         case let .getFeedPosts(loadMore, completion):
             return environment.dataController.getFeedPosts(loadMore: loadMore)
                 .complete(completion: completion)
@@ -84,10 +89,11 @@ func appReducer(state: inout AppState,
         case let .getUserProfile(userId, completion):
             return environment.dataController.getUserProfile(userId: userId)
                 .complete { completion($0.value) }
-        case let .getItemDetails(item, itemId, fetchMode, completion):
+        case let .getItemDetails(item, itemId, styleId, fetchMode, completion):
             let settings = state.settings
             return environment.dataController.getItemDetails(for: item,
                                                              itemId: itemId,
+                                                             styleId: styleId,
                                                              fetchMode: fetchMode,
                                                              settings: state.settings,
                                                              exchangeRates: state.rates)
@@ -101,9 +107,10 @@ func appReducer(state: inout AppState,
             environment.dataController.getImage(for: itemId, completion: completion)
         case let .uploadItemImage(itemId, image):
             environment.dataController.uploadItemImage(itemId: itemId, image: image)
-        case let .refreshItemIfNeeded(itemId, fetchMode):
+        case let .refreshItemIfNeeded(itemId, styleId, fetchMode):
             return environment.dataController.getItemDetails(for: nil,
                                                              itemId: itemId,
+                                                             styleId: styleId,
                                                              fetchMode: fetchMode,
                                                              settings: state.settings,
                                                              exchangeRates: state.rates)

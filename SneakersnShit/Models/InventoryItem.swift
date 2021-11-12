@@ -171,7 +171,7 @@ extension InventoryItem {
     init(fromItem item: Item, size: String? = nil) {
         self.init(id: UUID().uuidString,
                   itemId: item.id,
-                  styleId: item.bestStoreInfo?.sku ?? "",
+                  styleId: item.styleId ?? item.bestStoreInfo?.styleId ?? "",
                   name: item.name ?? "",
                   purchasePrice: item.retailPrice.asPriceWithCurrency(currency: item.currency),
                   imageURL: item.imageURL,
@@ -226,7 +226,7 @@ extension InventoryItem {
                       purchasePrice: nil,
                       imageURL: nil,
                       size: "",
-                      itemType: .shoe,
+                      itemType: .other,
                       condition: .new,
                       copdeckPrice: nil,
                       soldPrice: nil,

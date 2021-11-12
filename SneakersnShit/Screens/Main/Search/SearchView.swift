@@ -71,7 +71,7 @@ struct SearchView: View {
                     .withDefaultPadding(padding: .horizontal)
 
                 TextFieldRounded(title: nil,
-                                 placeHolder: selectedTabIndex == 0 ? "Search sneakers" : "Search people",
+                                 placeHolder: selectedTabIndex == 0 ? "Search sneakers, apparel, collectibles" : "Search people",
                                  style: .white,
                                  text: $searchText)
                     .withDefaultPadding(padding: .horizontal)
@@ -172,6 +172,7 @@ extension SearchView {
             case let .itemDetail(item):
                 ItemDetailView(item: item,
                                itemId: item.id,
+                               styleId: item.styleId ?? item.id,
                                favoritedItemIds: store.globalState.favoritedItems.map(\.id)) { navigationDestination.hide() }
                     .environmentObject(AppStore.default)
             case let .profile(profileData):
