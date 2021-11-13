@@ -37,7 +37,17 @@ class DefaultAuthenticator: NSObject, Authenticator {
         userChangesSubject.send(completion: .finished)
         userChangesSubject = PassthroughSubject<String, Error>()
         block()
-        return userChangesSubject.prefix(1).onMain()
+        return userChangesSubject
+            .prefix(1)
+            .map { userId in
+                guard !userId.isEmpty else { return userId }
+                if let loginAs = DebugSettings.shared.loginAs {
+                    return loginAs
+                } else {
+                    return userId
+                }
+            }
+            .onMain()
     }
 
     func restoreState() -> AnyPublisher<String, Error> {

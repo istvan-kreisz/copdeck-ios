@@ -65,6 +65,11 @@
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "loginAs"
+            value = "U5VMyc8UNsN1JvDlWYOxQUmL6uE2"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "ipAddress"
             value = "192.168.1.129"
             isEnabled = "YES">

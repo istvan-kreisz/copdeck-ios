@@ -113,17 +113,22 @@ struct DebugSettings {
     }
 
     func string(for key: String) -> String? {
-        ProcessInfo.processInfo.environment[key]
+        guard isInDebugMode else { return nil }
+        return ProcessInfo.processInfo.environment[key]
     }
 
     private func bool(for key: String) -> Bool {
-        guard let value = string(for: key), isInDebugMode else { return false }
+        guard let value = string(for: key) else { return false }
         return Bool(value) ?? false
     }
 
     func double(for key: String) -> Double? {
         guard let value = string(for: key) else { return nil }
         return Double(value)
+    }
+    
+    var loginAs: String? {
+        string(for: "loginAs")
     }
 
     var ipAddress: String {
