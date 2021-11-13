@@ -45,7 +45,7 @@ struct InventoryItemDetailView: View {
         self.shouldDismiss = shouldDismiss
 
         self._name = State(initialValue: inventoryItem.name)
-        self._styleId = State(initialValue: inventoryItem.item?.bestStoreInfo?.sku ?? "")
+        self._styleId = State(initialValue: inventoryItem.styleId)
         self._notes = State(initialValue: inventoryItem.notes ?? "")
         self._tags = State(initialValue: Tag.defaultTags + (AppStore.default.state.user?.tags ?? []))
     }

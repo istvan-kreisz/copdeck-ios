@@ -43,7 +43,7 @@ struct AddToInventoryView: View {
         self._addedInvantoryItem = addedInvantoryItem
 
         self._name = State(initialValue: item?.name ?? "")
-        self._styleId = State(initialValue: item?.bestStoreInfo?.sku ?? "")
+        self._styleId = State(initialValue: item?.styleId ?? "")
         self._notes = State(initialValue: "")
         
         let isValidSize = item.map { i in presented.wrappedValue.size.map { i.sortedSizes.contains($0) } ?? false } ?? false

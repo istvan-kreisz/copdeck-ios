@@ -74,7 +74,7 @@ class DefaultDataController: DataController {
 //                .handleEvents(receiveOutput: { [weak self] _ in self?.refreshHeadersAndCookie() })
                 .onMain()
         } else {
-            return search(searchTerm: styleId.isEmpty ? itemId : styleId, settings: settings, exchangeRates: exchangeRates)
+            return search(searchTerm: (styleId.isEmpty ? itemId : styleId).replacingOccurrences(of: "_", with: " "), settings: settings, exchangeRates: exchangeRates)
                 .compactMap { items in items.first(where: { $0.id == itemId }) }
                 .flatMap { [weak self] item -> AnyPublisher<Item, AppError> in
                     guard let self = self else {
