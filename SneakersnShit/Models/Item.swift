@@ -65,7 +65,7 @@ struct ImageURL: Codable, Equatable, Hashable {
     }
 }
 
-struct Item: Codable, Equatable, Identifiable, Hashable, ModelWithDate {
+struct Item: Equatable, Identifiable, Hashable, ModelWithDate {
     let id: String
     let styleId: String?
     var storeInfo: [StoreInfo]
@@ -378,5 +378,47 @@ extension Item.StorePrice.StoreInventoryItem {
         try container.encode(shoeCondition, forKey: .shoeCondition)
         try container.encode(boxCondition, forKey: .boxCondition)
         try container.encode(restocksPriceType, forKey: .restocksPriceType)
+    }
+}
+
+extension Item: Codable {
+    static func convertOldIdToNew(oldId: String) -> String {
+        oldId
+            .split(separator: "/")
+            .first?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(of: " ", with: "")
+            .replacingOccurrences(of: "-", with: "")
+            .replacingOccurrences(of: "_", with: "")
+            .replacingOccurrences(of: ".", with: "") ?? oldId
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case id, styleId, storeInfo, storePrices, created, updated, name, retailPrice, imageURL, brand, gender, itemType
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        let id = try container.decode(String.self, forKey: .id)
+        let styleId = try container.decodeIfPresent(String.self, forKey: .styleId)
+
+        if styleId == nil {
+            self.id = Self.convertOldIdToNew(oldId: id)
+        } else {
+            self.id = id
+        }
+        self.styleId = styleId ?? id
+
+        self.storeInfo = try container.decode([StoreInfo].self, forKey: .storeInfo)
+        self.storePrices = try container.decode([StorePrice].self, forKey: .storePrices)
+        self.created = try container.decodeIfPresent(Double.self, forKey: .created)
+        self.updated = try container.decodeIfPresent(Double.self, forKey: .updated)
+        self.name = try container.decodeIfPresent(String.self, forKey: .name)
+        self.retailPrice = try container.decodeIfPresent(Double.self, forKey: .retailPrice)
+        self.imageURL = try container.decodeIfPresent(ImageURL.self, forKey: .imageURL)
+        self.brand = try container.decodeIfPresent(Brand.self, forKey: .brand)
+        self.gender = try container.decodeIfPresent(Gender.self, forKey: .gender)
+        self.itemType = try container.decodeIfPresent(ItemType.self, forKey: .itemType)
     }
 }

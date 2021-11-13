@@ -305,15 +305,7 @@ extension InventoryItem {
         let styleId = try container.decodeIfPresent(String.self, forKey: .styleId)
         let itemId = try container.decodeIfPresent(String.self, forKey: .itemId)
         if styleId == nil {
-            self.itemId = itemId?
-                .split(separator: "/")
-                .first?
-                .trimmingCharacters(in: .whitespacesAndNewlines)
-                .replacingOccurrences(of: " ", with: "")
-                .replacingOccurrences(of: "-", with: "")
-                .replacingOccurrences(of: "_", with: "")
-                .replacingOccurrences(of: ".", with: "")
-                .replacingOccurrences(of: "/", with: "")
+            self.itemId = itemId.map { Item.convertOldIdToNew(oldId: $0) }
         } else {
             self.itemId = itemId
         }
