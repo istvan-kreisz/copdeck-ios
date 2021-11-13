@@ -242,7 +242,7 @@ struct InventoryItemDetailView: View {
             if showAddNewTagPopup {
                 NewTagPopup(isShowing: $showAddNewTagPopup) { name, color in
                     let newTag = Tag(name: name, color: color)
-                    AppStore.default.send(.main(action: .addNewTag(tag: newTag)))
+                    store.send(.main(action: .addNewTag(tag: newTag)))
                     self.tags.append(newTag)
                 }
             } else {

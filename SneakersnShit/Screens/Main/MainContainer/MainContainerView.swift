@@ -23,14 +23,13 @@ struct MainContainerView: View {
             },
             TabBarElement(tabBarElementItem: .init(title: "Second", systemImageName: "pencil.circle.fill")) {
                 SearchView()
-                    .withTabViewWrapper(viewRouter: viewRouter, store: AppStore.default, shouldShow: $shouldShowTabBar)
+                    .withTabViewWrapper(viewRouter: viewRouter, store: DerivedGlobalStore.default, shouldShow: $shouldShowTabBar)
             },
             TabBarElement(tabBarElementItem: .init(title: "Third", systemImageName: "folder.fill")) {
                 InventoryView(username: store.state.user?.name ?? "",
                               shouldShowTabBar: $shouldShowTabBar,
                               viewRouter: viewRouter)
                     .environmentObject(DerivedGlobalStore.default)
-                    .environmentObject(InventoryStore.default)
                     .hideKeyboardOnScroll()
             },
             TabBarElement(tabBarElementItem: .init(title: "Fourth", systemImageName: "message")) {
