@@ -47,7 +47,7 @@ class DefaultDataController: DataController {
     func refreshHeadersAndCookie() {
         localScraper.refreshHeadersAndCookie()
     }
-    
+
     func clearCookies() {
         localScraper.clearCookies()
     }
@@ -242,9 +242,6 @@ class DefaultDataController: DataController {
                     update(.failure(error))
                 }
             case let .success(users):
-                print("uuuuuuuu: ", users.count)
-                print("uuuuuuuu: ", users.count)
-                print("uuuuuuuu: ", users.count)
                 self?.getImageURLs(for: users) { updatedUsers in
                     let channelsWithUsers = channels.map { (channel: Channel) -> Channel in
                         var updatedChannel = channel

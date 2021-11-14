@@ -171,10 +171,7 @@ extension Item {
     }
 
     var bestStoreInfo: StoreInfo? {
-        StoreId.allCases
-            .map { storeInfo(for: $0) }
-            .compactMap { $0 }
-            .first
+        StoreId.allCases.compactMap { storeInfo(for: $0) }.first
     }
 
     var isShoe: Bool {

@@ -314,7 +314,8 @@ extension InventoryItem {
         name = try container.decode(String.self, forKey: .name)
         purchasePrice = try container.decodeIfPresent(PriceWithCurrency.self, forKey: .purchasePrice)
         imageURL = try container.decodeIfPresent(ImageURL.self, forKey: .imageURL)
-        size = try container.decode(String.self, forKey: .size)
+        let size = try container.decode(String.self, forKey: .size)
+        self.size = size.replacingOccurrences(of: "US", with: "").trimmingCharacters(in: .whitespacesAndNewlines)
         itemType = try container.decodeIfPresent(ItemType.self, forKey: .itemType) ?? .shoe
         condition = try container.decode(Condition.self, forKey: .condition)
         copdeckPrice = try container.decodeIfPresent(ListingPrice.self, forKey: .copdeckPrice)
