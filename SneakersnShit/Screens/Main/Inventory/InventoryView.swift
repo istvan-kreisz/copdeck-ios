@@ -198,7 +198,7 @@ struct InventoryView: View {
                 self.username = newValue ?? ""
             }
         }
-        .withTabViewWrapper(viewRouter: viewRouter, store: InventoryStore.default, backgroundColor: .customWhite, shouldShow: $shouldShowTabBar)
+        .withTabViewWrapper(viewRouter: viewRouter, backgroundColor: .customWhite, shouldShow: $shouldShowTabBar)
         .withTextFieldPopup(isShowing: $showAddNewStackAlert,
                             title: "Add new stack",
                             subtitle: nil,

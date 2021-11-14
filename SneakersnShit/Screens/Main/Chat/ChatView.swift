@@ -7,11 +7,15 @@
 
 import SwiftUI
 
+class ChatModel: ObservableObject {
+    @Published var channels: [Channel] = []
+}
+
 struct ChatView: View {
     static var preloadedChannels: [Channel] = []
 
     @State var isFirstLoad = true
-    @State var channels: [Channel] = []
+    @StateObject private var chatModel = ChatModel()
     @StateObject private var channelsLoader = Loader()
 
     @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
@@ -65,8 +69,8 @@ struct ChatView: View {
                         .centeredHorizontally()
                 }
 
-                if !channels.isEmpty {
-                    ForEach(channels) { (channel: Channel) in
+                if !chatModel.channels.isEmpty {
+                    ForEach(chatModel.channels) { (channel: Channel) in
                         if let userId = userId {
                             ChannelListItem(channel: channel, userId: userId) {
                                 navigationDestination += .chat(channel: channel, userId: userId)
@@ -99,7 +103,7 @@ struct ChatView: View {
                                             preload: false)
                         goToChatFromNotification(channels: Self.preloadedChannels)
                     } else {
-                        if channels.isEmpty {
+                        if chatModel.channels.isEmpty {
                             loadChannels(isFirstLoad: true)
                         }
                     }
@@ -119,7 +123,7 @@ struct ChatView: View {
             }
         }
         .onChange(of: DerivedGlobalStore.default.globalState.chatUpdates) { chatUpdates in
-            updateChannels(channels: channels, chatUpdateInfo: chatUpdates, preload: false)
+            updateChannels(channels: chatModel.channels, chatUpdateInfo: chatUpdates, preload: false)
         }
     }
 
@@ -164,7 +168,7 @@ struct ChatView: View {
         if preload {
             Self.preloadedChannels = newValue
         } else {
-            self.channels = newValue
+            self.chatModel.channels = newValue
         }
     }
 }

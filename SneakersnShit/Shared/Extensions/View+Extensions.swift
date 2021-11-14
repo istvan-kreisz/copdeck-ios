@@ -117,11 +117,10 @@ extension View {
         ModifiedContent(content: self, modifier: WithBackgroundColor(color, ignoringSafeArea: edges))
     }
 
-    func withTabViewWrapper<S: ObservableObject>(viewRouter: ViewRouter,
-                                                 store: S,
-                                                 backgroundColor: Color = .customBackground,
-                                                 shouldShow: Binding<Bool> = .constant(true)) -> some View {
-        ModifiedContent(content: self, modifier: WrappedTabView(viewRouter: viewRouter, store: store, backgroundColor: backgroundColor, shouldShow: shouldShow))
+    func withTabViewWrapper(viewRouter: ViewRouter,
+                            backgroundColor: Color = .customBackground,
+                            shouldShow: Binding<Bool> = .constant(true)) -> some View {
+        ModifiedContent(content: self, modifier: WrappedTabView(viewRouter: viewRouter, backgroundColor: backgroundColor, shouldShow: shouldShow))
     }
 
     func withSnackBar(text: String, shouldShow: Binding<Bool>, actionText: String? = nil, action: (() -> Void)? = nil) -> some View {
@@ -180,16 +179,16 @@ extension View {
             .leftAligned()
             .padding(.leading, 6)
     }
-    
+
     func withAlert(alert: Binding<(String, String)?>) -> some View {
         ModifiedContent(content: self, modifier: WithAlert(alert: alert))
     }
-    
+
     func withSafeAreaTopPadding() -> some View {
         self
             .padding(.top, UIApplication.shared.safeAreaInsets().top)
     }
-    
+
     func withSafeAreaBottomPadding() -> some View {
         self
             .padding(.top, UIApplication.shared.safeAreaInsets().top)

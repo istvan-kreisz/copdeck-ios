@@ -9,7 +9,7 @@ import SwiftUI
 import FirebaseFunctions
 
 struct MainContainerView: View {
-    var store: AppStore
+    @EnvironmentObject var store: AppStore
     @StateObject var viewRouter = ViewRouter.shared
     @State var shouldShowTabBar = true
     @State var lastMessageChannelId: String?
@@ -19,27 +19,31 @@ struct MainContainerView: View {
         UITabBarWrapper(selectedIndex: selectedIndex) {
             (TabBarElement(tabBarElementItem: .init(title: "First", systemImageName: "house.fill")) {
                 FeedView(userId: store.state.user?.id ?? "")
-                    .withTabViewWrapper(viewRouter: viewRouter, store: DerivedGlobalStore.default, shouldShow: $shouldShowTabBar)
+                    .environmentObject(DerivedGlobalStore.default)
+                    .withTabViewWrapper(viewRouter: viewRouter, shouldShow: $shouldShowTabBar)
             },
             TabBarElement(tabBarElementItem: .init(title: "Second", systemImageName: "pencil.circle.fill")) {
                 SearchView()
-                    .withTabViewWrapper(viewRouter: viewRouter, store: DerivedGlobalStore.default, shouldShow: $shouldShowTabBar)
+                    .environmentObject(DerivedGlobalStore.default)
+                    .withTabViewWrapper(viewRouter: viewRouter, shouldShow: $shouldShowTabBar)
             },
             TabBarElement(tabBarElementItem: .init(title: "Third", systemImageName: "folder.fill")) {
                 InventoryView(username: store.state.user?.name ?? "",
                               shouldShowTabBar: $shouldShowTabBar,
                               viewRouter: viewRouter)
                     .environmentObject(DerivedGlobalStore.default)
+                    .environmentObject(InventoryStore.default)
                     .hideKeyboardOnScroll()
             },
             TabBarElement(tabBarElementItem: .init(title: "Fourth", systemImageName: "message")) {
                 ChatView(lastMessageChannelId: $lastMessageChannelId)
-                    .withTabViewWrapper(viewRouter: viewRouter, store: DerivedGlobalStore.default, shouldShow: $shouldShowTabBar)
+                    .environmentObject(DerivedGlobalStore.default)
+                    .withTabViewWrapper(viewRouter: viewRouter, shouldShow: $shouldShowTabBar)
             })
         }
         .onReceive(store.environment.pushNotificationService.lastMessageChannelIdSubject) { lastMessageChannelId in
             self.lastMessageChannelId = lastMessageChannelId
-            if lastMessageChannelId != nil && viewRouter.currentPage != .chat {
+            if lastMessageChannelId != nil, viewRouter.currentPage != .chat {
                 viewRouter.currentPage = .chat
             }
         }

@@ -45,7 +45,8 @@ struct RootView: View {
                                 .environmentObject(DerivedGlobalStore.default)
                         } else {
                             ZStack {
-                                MainContainerView(store: store.appStore)
+                                MainContainerView()
+                                    .environmentObject(store.appStore)
                                     .zIndex(0)
                                 if store.globalState.showPaymentView && DebugSettings.shared.isPaywallEnabled {
                                     PaymentView(viewType: .subscribe) { store.send(.paymentAction(action: .showPaymentView(show: false))) }

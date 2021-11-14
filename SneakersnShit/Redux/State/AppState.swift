@@ -8,6 +8,10 @@
 import Foundation
 import Purchases
 
+class SearchModel: ObservableObject {
+    @Published var state = SearchState()
+}
+
 struct SearchState: Equatable {
     var searchResults: [Item] = []
     var popularItems: [Item] = []

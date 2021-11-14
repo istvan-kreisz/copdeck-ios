@@ -21,8 +21,8 @@ struct SearchView: View {
 
     @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
 
-    @State var searchState = SearchState()
-
+    @StateObject var searchModel = SearchModel()
+    
     var alert = State<(String, String)?>(initialValue: nil)
 
     var selectedItem: Item? {
@@ -56,7 +56,7 @@ struct SearchView: View {
                                                                 }
                                                             })
             NavigationLink(destination: Destination(store: store,
-                                                    popularItems: $searchState.popularItems,
+                                                    popularItems: $searchModel.state.popularItems,
                                                     favoritedItems: $store.globalState.favoritedItems,
                                                     navigationDestination: $navigationDestination)
                     .navigationbarHidden(),
@@ -85,9 +85,9 @@ struct SearchView: View {
                     .withDefaultPadding(padding: .horizontal)
 
                 if selectedTabIndex == 0 {
-                    if searchState.searchResults.isEmpty {
+                    if searchModel.state.searchResults.isEmpty {
                         VStack(alignment: .leading, spacing: 10) {
-                            HorizontaltemListView(items: $searchState.popularItems,
+                            HorizontaltemListView(items: $searchModel.state.popularItems,
                                                   selectedItem: selectedItemBinding,
                                                   isLoading: $popularItemsLoader.isLoading,
                                                   title: "Trending now",
@@ -108,7 +108,7 @@ struct SearchView: View {
                             Spacer()
                         }
                     } else {
-                        VerticalItemListView(items: $searchState.searchResults,
+                        VerticalItemListView(items: $searchModel.state.searchResults,
                                              selectedItem: selectedItemBinding,
                                              isLoading: $searchResultsLoader.isLoading,
                                              title: nil,
@@ -116,7 +116,7 @@ struct SearchView: View {
                                              bottomPadding: Styles.tabScreenBottomPadding)
                     }
                 } else {
-                    VerticalProfileListView(profiles: $searchState.userSearchResults.asProfiles,
+                    VerticalProfileListView(profiles: $searchModel.state.userSearchResults.asProfiles,
                                             selectedProfile: selectedUserBinding,
                                             isLoading: $userSearchResultsLoader.isLoading,
                                             bottomPadding: Styles.tabScreenBottomPadding)
@@ -125,9 +125,9 @@ struct SearchView: View {
             .hideKeyboardOnScroll()
             .onChange(of: searchText) { search(searchTerm: $0) }
             .onAppear {
-                if searchState.popularItems.isEmpty {
+                if searchModel.state.popularItems.isEmpty {
                     store.send(.main(action: .getPopularItems(completion: { result in
-                        handleResult(result: result, loader: nil) { self.searchState.popularItems = $0 }
+                        handleResult(result: result, loader: nil) { self.searchModel.state.popularItems = $0 }
                     })))
                 }
             }
@@ -139,12 +139,12 @@ struct SearchView: View {
         if selectedTabIndex == 0 {
             let loader = searchResultsLoader.getLoader()
             store.send(.main(action: .getSearchResults(searchTerm: searchText, completion: { result in
-                handleResult(result: result, loader: loader) { self.searchState.searchResults = $0 }
+                handleResult(result: result, loader: loader) { self.searchModel.state.searchResults = $0 }
             })))
         } else {
             let loader = userSearchResultsLoader.getLoader()
             store.send(.main(action: .searchUsers(searchTerm: searchText, completion: { result in
-                handleResult(result: result, loader: loader) { self.searchState.userSearchResults = $0 }
+                handleResult(result: result, loader: loader) { self.searchModel.state.userSearchResults = $0 }
             })))
         }
     }

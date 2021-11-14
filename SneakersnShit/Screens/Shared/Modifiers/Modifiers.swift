@@ -52,15 +52,13 @@ struct DefaultInsets: ViewModifier {
     }
 }
 
-struct WrappedTabView<S: ObservableObject>: ViewModifier {
+struct WrappedTabView: ViewModifier {
     @ObservedObject var viewRouter: ViewRouter
-    let store: S
     let backgroundColor: Color
     @Binding var shouldShow: Bool
 
-    init(viewRouter: ViewRouter, store: S, backgroundColor: Color, shouldShow: Binding<Bool> = .constant(true)) {
+    init(viewRouter: ViewRouter, backgroundColor: Color, shouldShow: Binding<Bool> = .constant(true)) {
         self.viewRouter = viewRouter
-        self.store = store
         self.backgroundColor = backgroundColor
         self._shouldShow = shouldShow
     }
@@ -68,7 +66,6 @@ struct WrappedTabView<S: ObservableObject>: ViewModifier {
     func body(content: Content) -> some View {
         NavigationView {
             content
-                .environmentObject(store)
                 .edgesIgnoringSafeArea(.bottom)
                 .frame(maxWidth: UIScreen.main.bounds.width)
                 .withDefaultPadding(padding: .top)
