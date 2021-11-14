@@ -52,7 +52,9 @@ class FBFunctionsCoordinator {
                 case .finished:
                     break
                 }
-            } receiveValue: { value in completion?(.success(value)) }
+            } receiveValue: { value in
+                completion?(.success(value))
+            }
             .store(in: &cancellables)
     }
 

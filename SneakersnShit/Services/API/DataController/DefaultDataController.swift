@@ -242,6 +242,9 @@ class DefaultDataController: DataController {
                     update(.failure(error))
                 }
             case let .success(users):
+                print("uuuuuuuu: ", users.count)
+                print("uuuuuuuu: ", users.count)
+                print("uuuuuuuu: ", users.count)
                 self?.getImageURLs(for: users) { updatedUsers in
                     let channelsWithUsers = channels.map { (channel: Channel) -> Channel in
                         var updatedChannel = channel
@@ -418,9 +421,7 @@ class DefaultDataController: DataController {
     }
 
     func getImageURLs(for users: [User], completion: @escaping ([User]) -> Void) {
-        imageService.getImageURLs(for: users) { result in
-            onMain { completion(result) }
-        }
+        imageService.getImageURLs(for: users, completion: completion)
     }
 
     func getImage(for itemId: String, completion: @escaping (URL?) -> Void) {

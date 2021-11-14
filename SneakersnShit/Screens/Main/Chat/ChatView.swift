@@ -117,7 +117,7 @@ struct ChatView: View {
             }
         }
         .onChange(of: lastMessageChannelId) { lastMessageChannelId in
-            if let userId = userId, let channel = channels.first(where: { $0.id == lastMessageChannelId }) {
+            if let userId = userId, let channel = chatModel.channels.first(where: { $0.id == lastMessageChannelId }) {
                 navigationDestination += .chat(channel: channel, userId: userId)
                 self.lastMessageChannelId = nil
             }

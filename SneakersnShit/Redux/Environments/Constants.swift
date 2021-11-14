@@ -10,7 +10,7 @@ import Foundation
 extension World {
     enum Constants {
         #warning("change?")
-        static var itemPricesRefreshPeriodMin: Double { double(for: #function, defaultValue: 30) }
+        static var itemPricesRefreshPeriodMin: Double { double(for: #function, defaultValue: 40) }
         static var priceCheckRefreshIntervalMin: Double { double(for: #function, defaultValue: 25) }
     }
 }
