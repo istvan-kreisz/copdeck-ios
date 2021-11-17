@@ -66,7 +66,7 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "loginAs"
-            value = "U5VMyc8UNsN1JvDlWYOxQUmL6uE2"
+            value = "bV5HGzmiQVSat1kPBEOg7YENVW63"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
@@ -107,7 +107,7 @@
          <EnvironmentVariable
             key = "useFunctionsEmulator"
             value = "true"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "useFirestoreEmulator"
@@ -137,16 +137,6 @@
          <EnvironmentVariable
             key = "showErrorLogs"
             value = "true"
-            isEnabled = "NO">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "189.174.232.23"
-            value = ""
-            isEnabled = "NO">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "192.168.1.129."
-            value = ""
             isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>
