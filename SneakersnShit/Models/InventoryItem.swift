@@ -320,13 +320,7 @@ extension InventoryItem {
         condition = try container.decode(Condition.self, forKey: .condition)
         copdeckPrice = try container.decodeIfPresent(ListingPrice.self, forKey: .copdeckPrice)
         soldPrice = try container.decodeIfPresent(SoldPrice.self, forKey: .soldPrice)
-        var tags = try container.decodeIfPresent([Tag].self, forKey: .tags) ?? []
-        if let status = try? container.decodeIfPresent(SoldStatus.self, forKey: .status) {
-            if status == .Sold {
-                tags.append(.sold)
-            }
-        }
-        self.tags = tags
+        tags = try container.decodeIfPresent([Tag].self, forKey: .tags) ?? []
         notes = try container.decodeIfPresent(String.self, forKey: .notes)
         pendingImport = try container.decodeIfPresent(Bool.self, forKey: .pendingImport)
         created = try container.decodeIfPresent(Double.self, forKey: .created)

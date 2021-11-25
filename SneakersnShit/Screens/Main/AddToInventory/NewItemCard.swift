@@ -207,14 +207,15 @@ struct NewItemCard: View {
                     HStack {
                         Color.clear.frame(width: 2)
                         ForEach(tags, id: \.id) { tag in
-                            let isSelected = Binding<Bool>(get: { inventoryItem.tags.contains(tag) },
+                            let isSelected = Binding<Bool>(get: {
+                                return inventoryItem.tags.contains { $0.id == tag.id }
+                            },
                                                            set: { newValue in
                                                                if newValue {
                                                                    inventoryItem.tags.append(tag)
                                                                } else {
                                                                    inventoryItem.tags = inventoryItem.tags.filter { $0.id != tag.id }
                                                                }
-
                                                            })
                             TagView(title: tag.name, color: tag.uiColor, isSelected: isSelected)
                         }
