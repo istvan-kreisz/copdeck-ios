@@ -120,7 +120,6 @@ struct ItemDetailView: View {
                                                 shouldDismiss: shouldDismiss,
                                                 isFavorited: isFavorited,
                                                 flipImage: item?.imageURL?.store?.id == .klekt)
-                            .id(0)
 
                         ZStack {
                             Color.customBackground.edgesIgnoringSafeArea(.all)

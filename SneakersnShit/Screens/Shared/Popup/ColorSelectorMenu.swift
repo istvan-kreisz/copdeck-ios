@@ -22,7 +22,7 @@ struct ColorSelectorMenu: View {
 
     var body: some View {
         LazyVGrid(columns: items, spacing: 10) {
-            ForEach(colors, id: \.self) { color in
+            ForEach(colors.uniqued(), id: \.self) { color in
                 ZStack(alignment: .center) {
                     Circle().fill(Tag.color(color))
                         .frame(width: Self.smallRadius, height: Self.smallRadius)

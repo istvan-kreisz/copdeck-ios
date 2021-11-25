@@ -206,7 +206,7 @@ struct NewItemCard: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         Color.clear.frame(width: 2)
-                        ForEach(tags, id: \.id) { tag in
+                        ForEach(tags) { tag in
                             let isSelected = Binding<Bool>(get: {
                                 return inventoryItem.tags.contains { $0.id == tag.id }
                             },

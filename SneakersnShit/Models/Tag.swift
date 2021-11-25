@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct Tag: Codable, Equatable {
+struct Tag: Codable, Equatable, Identifiable {
     let id: String
     let name: String
     let color: String

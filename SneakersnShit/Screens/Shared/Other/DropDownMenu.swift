@@ -37,7 +37,7 @@ struct DropDownMenu: View {
 
             GeometryReader { geo in
                 Menu {
-                    ForEach(options.reversed(), id: \.self) { option in
+                    ForEach(options.uniqued().reversed(), id: \.self) { option in
                         Button(option) {
                             selectedItem = option
                         }

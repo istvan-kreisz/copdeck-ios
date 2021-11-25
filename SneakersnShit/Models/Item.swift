@@ -279,7 +279,7 @@ extension Item {
                       feeType: FeeType,
                       stores: [StoreId],
                       restocksPriceType: StorePrice.StoreInventoryItem.RestocksPriceType?) -> [PriceRow] {
-        sortedSizes.map { priceRow(size: $0, priceType: priceType, feeType: feeType, stores: stores, restocksPriceType: restocksPriceType) }
+        sortedSizes.uniqued().map { priceRow(size: $0, priceType: priceType, feeType: feeType, stores: stores, restocksPriceType: restocksPriceType) }
     }
 
     func bestPrice(for size: String, feeType: FeeType, priceType: PriceType, stores: [StoreId]) -> ListingPrice? {

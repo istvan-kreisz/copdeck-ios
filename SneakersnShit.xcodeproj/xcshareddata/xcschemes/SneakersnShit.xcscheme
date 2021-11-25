@@ -66,8 +66,8 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "loginAs"
-            value = "bV5HGzmiQVSat1kPBEOg7YENVW63"
-            isEnabled = "NO">
+            value = "YwvH8mmDJUOGQPPQCBS68zkJEj12"
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "ipAddress"

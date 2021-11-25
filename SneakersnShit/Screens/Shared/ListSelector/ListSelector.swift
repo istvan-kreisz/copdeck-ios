@@ -31,7 +31,7 @@ struct ListSelector: View {
             }
 
             SettingMenu(title: title, description: description, buttonTitle: buttonTitle, popBackOnSelect: popBackOnSelect, buttonTapped: buttonTapped) {
-                ForEach(options, id: \.self) { option in
+                ForEach(options.uniqued(), id: \.self) { option in
                     Button(action: {
                         if isContentLocked {
                             showPaymentView = true

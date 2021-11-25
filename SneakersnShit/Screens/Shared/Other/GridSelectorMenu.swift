@@ -25,7 +25,7 @@ struct GridSelectorMenu: View {
 
     var body: some View {
         LazyVGrid(columns: items, spacing: 10) {
-            ForEach(options, id: \.self) { option in
+            ForEach(options.uniqued(), id: \.self) { option in
                 Text(option)
                     .font(.semiBold(size: 16))
                     .foregroundColor(Color.customText1)

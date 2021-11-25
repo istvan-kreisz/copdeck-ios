@@ -16,7 +16,7 @@ struct FeedPost: Codable, Equatable {
 }
 
 extension FeedPost: Identifiable {
-    var id: String { stack.id }
+    var id: String { stack.id + userId }
 
     var profileData: ProfileData? {
         user.map { .init(user: $0, stacks: [stack], inventoryItems: inventoryItems) }

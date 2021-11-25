@@ -38,7 +38,7 @@ struct ToggleButton: View {
 
             
             LazyVGrid(columns: rows, alignment: .leading, spacing: 5) {
-                ForEach(options, id: \.self) { (option: String) in
+                ForEach(options.uniqued(), id: \.self) { (option: String) in
                     Text(option)
                         .font(.bold(size: UIScreen.isSmallScreen ? 10 : 11))
                         .frame(width: Self.width, height: Self.height)

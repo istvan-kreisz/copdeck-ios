@@ -38,7 +38,7 @@ struct ScrollableSegmentedControl: View {
             ScrollViewReader { sp in
                 HStack(spacing: 0) {
                     HStack(spacing: 0) {
-                        ForEach(titles.indices, id: \.self) { (index: Int) in
+                        ForEach(titles.indices.uniqued(), id: \.self) { (index: Int) in
                             let textColor: Color = selectedIndex == index ? .customBlack : .customText2
                             Button {
                                 selectedIndex = index
@@ -91,7 +91,6 @@ struct ScrollableSegmentedControl: View {
                         }
                         .lockedContent(style: .adjacentRight(spacing: 4), lockSize: 20, lockColor: .customBlue, lockEnabled: isContentLocked)
                         .padding(.horizontal, 20)
-                        .id(titles.count)
                     }
                 }
                 .onChange(of: selectedIndex) { value in
