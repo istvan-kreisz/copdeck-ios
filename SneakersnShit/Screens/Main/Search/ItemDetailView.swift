@@ -19,6 +19,7 @@ struct ItemDetailView: View {
     @State private var firstShow = true
     @State var showSnackBar = false
     @State var isFavorited: Bool
+    @State var showPopup = false
 
     @State private var restocksPriceType: Item.StorePrice.StoreInventoryItem.RestocksPriceType = .regular
 
@@ -172,7 +173,7 @@ struct ItemDetailView: View {
                             VStack(alignment: .leading, spacing: 20) {
                                 VStack(alignment: .leading, spacing: 20) {
                                     HStack(spacing: 5) {
-                                        Text("Price type:")
+                                        Text("Price type")
                                             .font(.semiBold(size: 19))
                                             .foregroundColor(.customText2)
                                             .multilineTextAlignment(.leading)
@@ -192,11 +193,20 @@ struct ItemDetailView: View {
                                     }
 
                                     HStack(spacing: 5) {
-                                        Text("Fee type:")
-                                            .font(.semiBold(size: 19))
-                                            .foregroundColor(.customText2)
-                                            .multilineTextAlignment(.leading)
-                                            .frame(width: 98, alignment: .leading)
+                                        HStack(spacing: 5) {
+                                            Text("Fee type")
+                                                .font(.semiBold(size: 19))
+                                                .foregroundColor(.customText2)
+                                                .multilineTextAlignment(.leading)
+                                            Button {
+                                                showPopup = true
+                                            } label: {
+                                                Image(systemName: "questionmark.circle.fill")
+                                                    .font(.regular(size: 15))
+                                                    .foregroundColor(.customText2)
+                                            }
+                                        }
+                                        .frame(width: 98, alignment: .leading)
 
                                         ForEach(FeeType.allCases) { (feeType: FeeType) in
                                             Text(feeType.rawValue.capitalized)
@@ -324,6 +334,13 @@ struct ItemDetailView: View {
                     .padding(.top, 20)
                     .opacity(item != nil ? 1.0 : 0.0))
             .withSnackBar(text: "Added to inventory", shouldShow: $showSnackBar)
+            .withPopup {
+                Popup<EmptyView>(isShowing: $showPopup,
+                                 title: "Fee Type",
+                                 subtitle: "When selecting a fee type other than \"None\" the displayed prices will include the buyer or seller fees for each site. In order to get accurate results, make sure to configure your buyer & seller fees in \"Inventory\" > \"Settings\".",
+                                 firstAction: .init(name: "Okay", tapped: { showPopup = false }),
+                                 secondAction: nil)
+            }
             .onAppear {
                 if firstShow {
                     firstShow = false
@@ -340,7 +357,8 @@ struct ItemDetailView: View {
     }
 
     private func refreshPrices(fetchMode: FetchMode) {
-        store.send(.main(action: .getItemDetails(item: item, itemId: itemId, styleId: styleId, fetchMode: fetchMode) { updateItem(newItem: $0) }), completed: loader.getNewLoader())
+        store.send(.main(action: .getItemDetails(item: item, itemId: itemId, styleId: styleId, fetchMode: fetchMode) { updateItem(newItem: $0) }),
+                   completed: loader.getNewLoader())
     }
 
     private func updateItem(newItem: Item?) {
