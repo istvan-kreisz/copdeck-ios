@@ -15,6 +15,8 @@ struct InventoryListItem: View {
     @Binding var selectedInventoryItem: InventoryItem?
     var isSelected: Bool
     let isInSharedStack: Bool
+    
+    var inventoryItemDetails: [InventoryViewPills.InventoryItemDetail] = InventoryViewPills.InventoryItemDetail.allCases
 
     @Binding var isEditing: Bool
     var onSelectorTapped: () -> Void
@@ -56,7 +58,7 @@ struct InventoryListItem: View {
                              isEditing: $isEditing,
                              isSelected: isSelected,
                              ribbons: inventoryItem.tags.first(n: 2).map { ($0.name, $0.color) },
-                             accessoryView1: InventoryViewPills(inventoryItem: inventoryItem).leftAligned(),
+                             accessoryView1: InventoryViewPills(inventoryItem: inventoryItem, inventoryItemDetails: inventoryItemDetails).leftAligned(),
                              accessoryView2: bestPriceStack()) {
                 selectedInventoryItem = inventoryItem
             } onSelectorTapped: {

@@ -78,6 +78,7 @@ struct SharedStackDetailView: View {
                                       selectedInventoryItem: selectedInventoryItemBinding,
                                       isSelected: false,
                                       isInSharedStack: false,
+                                      inventoryItemDetails: [.condition, .size],
                                       isEditing: .constant(false)) {}
                 }
                 .padding(.vertical, 2)

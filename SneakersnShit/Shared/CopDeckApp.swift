@@ -16,6 +16,7 @@ struct CopDeckApp: App {
     var body: some Scene {
         WindowGroup {
             RootView()
+                .onAppear(perform: UIApplication.shared.addTapGestureRecognizer)
                 .environmentObject(AppStore.default)
                 .environmentObject(DerivedGlobalStore.default)
                 .environmentObject(InventoryStore.default)

@@ -31,7 +31,7 @@ struct StackSummaryListItem: View {
                          isSelected: false,
                          ribbons: inventoryItem.tags.first(n: 2).map { ($0.name, $0.color) },
                          addShadow: false,
-                         accessoryView1: InventoryViewPills(inventoryItem: inventoryItem, pillTypes: [.condition, .size]).leftAligned(),
+                         accessoryView1: InventoryViewPills(inventoryItem: inventoryItem, inventoryItemDetails: [.condition, .size]).leftAligned(),
                          accessoryView2: priceStack(),
                          onTapped: { selectedInventoryItem = inventoryItem })
     }

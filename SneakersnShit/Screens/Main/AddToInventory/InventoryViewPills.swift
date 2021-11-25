@@ -8,24 +8,32 @@
 import SwiftUI
 
 struct InventoryViewPills: View {
-    enum PillType: CaseIterable {
+    enum InventoryItemDetail: CaseIterable {
         case condition, size, purchasePrice
     }
 
     var inventoryItem: InventoryItem
-    var pillTypes: [PillType] = PillType.allCases
+    var inventoryItemDetails: [InventoryItemDetail] = InventoryItemDetail.allCases
 
     var columns: [GridItem] { Array.init(repeating: GridItem(.adaptive(minimum: 20, maximum: .infinity)), count: details.count) }
 
     var details: [(String, Int)] {
-        [inventoryItem.condition.rawValue,
-         inventoryItem.convertedSize,
-         inventoryItem.purchasePrice?.asString].enumerated()
-            .compactMap { item in item.element.map { ($0, item.offset) } ?? nil }
+        inventoryItemDetails.map { type -> String? in
+            switch type {
+            case .condition:
+                return inventoryItem.condition.rawValue
+            case .size:
+                return inventoryItem.convertedSize
+            case .purchasePrice:
+                return inventoryItem.purchasePrice?.asString
+            }
+        }
+        .enumerated()
+        .compactMap { item in item.element.map { ($0, item.offset) } ?? nil }
     }
-    
+
     private func pillsHStack(pills: [(String, Int)], startIndex: Int) -> some View {
-        Text(details.map(\.0).filter({ !$0.isEmpty }).joined(separator: " • "))
+        Text(details.map(\.0).filter { !$0.isEmpty }.joined(separator: " • "))
             .font(.semiBold(size: 14))
             .foregroundColor(.customText2)
     }
