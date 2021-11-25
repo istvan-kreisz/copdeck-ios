@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import Firebase
 
 struct InventoryView: View {
     enum Sheet {
@@ -34,6 +35,7 @@ struct InventoryView: View {
     @State var popup: (String, String)? = nil
 
     @State private var presentedSheet: Sheet? = nil
+    @State private var isFirstload = true
 
     var selectedStack: Stack? {
         stacks[safe: selectedStackIndex]
@@ -237,6 +239,12 @@ struct InventoryView: View {
                              secondAction: nil)
         }
         .withSnackBar(text: "Link Copied", shouldShow: $showSnackBar)
+        .onAppear {
+            if isFirstload {
+                Analytics.logEvent("visited_inventory", parameters: ["userId": store.globalState.user?.id ?? ""])
+                isFirstload = false
+            }
+        }
         .sheet(isPresented: showSheet) {
             switch presentedSheet {
             case .addNew:

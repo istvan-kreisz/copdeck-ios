@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Firebase
 
 class ChatModel: ObservableObject {
     @Published var channels: [Channel] = []
@@ -57,7 +58,7 @@ struct ChatView: View {
                 Text("Messages")
                     .tabTitle()
                     .padding(.bottom, 19)
-                
+
                 PullToRefresh(coordinateSpaceName: "pullToRefresh") {
                     loadChannels(isFirstLoad: false, preload: false)
                 }
@@ -96,7 +97,7 @@ struct ChatView: View {
             .onAppear {
                 if isFirstLoad {
                     AppStore.default.environment.pushNotificationService.requestPermissionsIfNotAsked(completion: {})
-                    
+
                     if !Self.preloadedChannels.isEmpty {
                         self.updateChannels(channels: Self.preloadedChannels,
                                             chatUpdateInfo: DerivedGlobalStore.default.globalState.chatUpdates,
@@ -107,6 +108,7 @@ struct ChatView: View {
                             loadChannels(isFirstLoad: true)
                         }
                     }
+                    Analytics.logEvent("visited_chat", parameters: ["userId": AppStore.default.state.user?.id ?? ""])
                     isFirstLoad = false
                 }
             }
@@ -126,7 +128,6 @@ struct ChatView: View {
             updateChannels(channels: chatModel.channels, chatUpdateInfo: chatUpdates, preload: false)
         }
     }
-
 
     private func loadChannels(isFirstLoad: Bool, preload: Bool = false) {
         var loader: ((Result<Void, AppError>) -> Void)?
@@ -151,7 +152,7 @@ struct ChatView: View {
             loader?(.success(()))
         })))
     }
-    
+
     private func goToChatFromNotification(channels: [Channel]) {
         if let userId = userId, let channel = channels.first(where: { $0.id == lastMessageChannelId }) {
             navigationDestination += .chat(channel: channel, userId: userId)

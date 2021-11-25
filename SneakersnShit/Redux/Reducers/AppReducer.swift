@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import Firebase
 
 func appReducer(state: inout AppState,
                 action: AppAction,
@@ -39,16 +40,19 @@ func appReducer(state: inout AppState,
             environment.paymentService.setup(userId: user.id, userEmail: user.email)
         // register tokens
         case let .updateUsername(username):
+            Analytics.logEvent("update_username", parameters: ["userId": state.user?.id ?? ""])
             if var updatedUser = state.user {
                 updatedUser.name = username
                 environment.dataController.update(user: updatedUser)
             }
         case let .addNewTag(tag: tag):
+            Analytics.logEvent("add_tag", parameters: ["userId": state.user?.id ?? ""])
             if var updatedUser = state.user {
                 updatedUser.tags = (updatedUser.tags ?? []) + [tag]
                 environment.dataController.update(user: updatedUser)
             }
         case .enabledNotifications:
+            Analytics.logEvent("enable_notifications", parameters: ["userId": state.user?.id ?? ""])
             if var updatedUser = state.user, updatedUser.notificationsEnabled != true {
                 updatedUser.notificationsEnabled = true
                 environment.dataController.update(user: updatedUser)
@@ -59,15 +63,20 @@ func appReducer(state: inout AppState,
         case let .toggleLike(stack, stackOwnerId):
             if let userId = state.user?.id {
                 let shouldAddLike = stack.likes?.contains(userId) == true
+                if shouldAddLike {
+                    Analytics.logEvent("like_stack", parameters: ["userId": state.user?.id ?? ""])
+                }
                 environment.dataController.updateLike(onStack: stack, addLike: shouldAddLike, stackOwnerId: stackOwnerId)
             }
         case let .updateSettings(settings):
+            Analytics.logEvent("update_settings", parameters: ["userId": state.user?.id ?? ""])
             if var updatedUser = state.user {
                 updatedUser.settings = settings
                 updatedUser.inited = true
                 environment.dataController.update(user: updatedUser)
             }
         case let .getSearchResults(searchTerm: searchTerm, completion: completion):
+            Analytics.logEvent("search_items", parameters: ["userId": state.user?.id ?? ""])
             if searchTerm.isEmpty {
                 completion(.success([]))
             } else {
@@ -78,9 +87,11 @@ func appReducer(state: inout AppState,
             return environment.dataController.getPopularItems(settings: state.settings, exchangeRates: state.rates)
                 .complete(completion: completion)
         case let .searchUsers(searchTerm: searchTerm, completion: completion):
+            Analytics.logEvent("search_users", parameters: ["userId": state.user?.id ?? ""])
             return environment.dataController.searchUsers(searchTerm: searchTerm)
                 .complete(completion: completion)
         case let .favorite(item):
+            Analytics.logEvent("favorite_item", parameters: ["userId": state.user?.id ?? ""])
             environment.dataController.favorite(item: item)
         case let .unfavorite(item):
             environment.dataController.unfavorite(item: item)
@@ -117,6 +128,7 @@ func appReducer(state: inout AppState,
                 .map { _ in AppAction.none }
                 .catchErrors()
         case let .addStack(stack):
+            Analytics.logEvent("add_stack", parameters: ["userId": state.user?.id ?? ""])
             environment.dataController.update(stacks: [stack])
         case let .deleteStack(stack):
             environment.dataController.delete(stack: stack)
@@ -125,12 +137,14 @@ func appReducer(state: inout AppState,
                 environment.dataController.update(stacks: [stack])
             }
         case let .addToInventory(inventoryItems):
+            Analytics.logEvent("add_inventoryitem", parameters: ["userId": state.user?.id ?? ""])
             environment.dataController.add(inventoryItems: inventoryItems)
         case let .updateInventoryItem(inventoryItem: InventoryItem):
             environment.dataController.update(inventoryItem: InventoryItem)
         case let .removeFromInventory(inventoryItems):
             environment.dataController.delete(inventoryItems: inventoryItems)
         case let .stack(inventoryItems, stack):
+            Analytics.logEvent("stack_inventoryitems", parameters: ["userId": state.user?.id ?? ""])
             environment.dataController.stack(inventoryItems: inventoryItems, stack: stack)
         case let .unstack(inventoryItems, stack):
             environment.dataController.unstack(inventoryItems: inventoryItems, stack: stack)
@@ -139,14 +153,17 @@ func appReducer(state: inout AppState,
         case let .getInventoryItemImages(userId, inventoryItem, completion):
             environment.dataController.getInventoryItemImages(userId: userId, inventoryItem: inventoryItem, completion: completion)
         case let .uploadInventoryItemImages(inventoryItem, images, completion):
+            Analytics.logEvent("upload_inventoryitem_images", parameters: ["userId": state.user?.id ?? ""])
             environment.dataController.uploadInventoryItemImages(inventoryItem: inventoryItem, images: images, completion: completion)
         case let .deleteInventoryItemImage(imageURL, completion):
             environment.dataController.deleteInventoryItemImage(imageURL: imageURL, completion: completion)
         case let .deleteInventoryItemImages(inventoryItem):
             environment.dataController.deleteInventoryItemImages(inventoryItem: inventoryItem)
         case let .startSpreadsheetImport(urlString, completion):
+            Analytics.logEvent("start_spreadsheet_import", parameters: ["userId": state.user?.id ?? ""])
             environment.dataController.startSpreadsheetImport(urlString: urlString, completion: completion)
         case let .revertLastImport(completion):
+            Analytics.logEvent("revert_spreadsheet_import", parameters: ["userId": state.user?.id ?? ""])
             environment.dataController.revertLastImport(completion: completion)
         case let .getSpreadsheetImportWaitlist(completion):
             environment.dataController.getSpreadsheetImportWaitlist(completion: completion)
@@ -170,6 +187,7 @@ func appReducer(state: inout AppState,
         case let .getChannelListener(channelId, cancel, update):
             environment.dataController.getChannelListener(channelId: channelId, cancel: cancel, update: update)
         case let .sendChatMessage(message, channel, completion):
+            Analytics.logEvent("send_message", parameters: ["userId": state.user?.id ?? ""])
             if let user = state.user {
                 environment.dataController.sendMessage(user: user, message: message, toChannel: channel, completion: completion)
             } else {
@@ -250,6 +268,7 @@ func appReducer(state: inout AppState,
     case let .paymentAction(action):
         switch action {
         case let .applyReferralCode(code, completion):
+            Analytics.logEvent("apply_referral_code", parameters: ["userId": state.user?.id ?? ""])
             environment.dataController.applyReferralCode(code, completion: completion)
         case let .purchase(package):
             environment.paymentService.purchase(package: package)

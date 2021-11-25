@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import Firebase
 
 struct FeedView: View {
     static var preloadedPosts: PaginatedResult<[FeedPost]>?
@@ -141,6 +142,7 @@ struct FeedView: View {
         }
         .onAppear {
             if isFirstLoad {
+                Analytics.logEvent("visited_feed", parameters: ["userId": store.globalState.user?.id ?? ""])
                 if let preloadedPosts = Self.preloadedPosts {
                     self.feedState.feedPosts = preloadedPosts
                 } else {

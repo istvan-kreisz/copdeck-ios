@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import Firebase
 
 struct SearchView: View {
     @EnvironmentObject var store: DerivedGlobalStore
@@ -18,6 +19,7 @@ struct SearchView: View {
     @StateObject private var userSearchResultsLoader = Loader()
 
     @State private var selectedTabIndex = 0
+    @State private var isFirstload = true
 
     @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
 
@@ -129,6 +131,10 @@ struct SearchView: View {
                     store.send(.main(action: .getPopularItems(completion: { result in
                         handleResult(result: result, loader: nil) { self.searchModel.state.popularItems = $0 }
                     })))
+                }
+                if isFirstload {
+                    Analytics.logEvent("visited_search", parameters: ["userId": store.globalState.user?.id ?? ""])
+                    isFirstload = false
                 }
             }
             .withAlert(alert: alert.projectedValue)
