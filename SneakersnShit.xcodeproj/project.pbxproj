@@ -10,6 +10,7 @@
 		5D0703C8271DDED200116CF4 /* Purchases in Frameworks */ = {isa = PBXBuildFile; productRef = 5D0703C7271DDED200116CF4 /* Purchases */; };
 		5D0703CA271DDEE700116CF4 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D0703C9271DDEE700116CF4 /* StoreKit.framework */; };
 		5D08E617275073AE00FB8E2A /* StackSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D08E616275073AE00FB8E2A /* StackSelectorView.swift */; };
+		5D08E6192750836700FB8E2A /* CopiableText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D08E6182750836700FB8E2A /* CopiableText.swift */; };
 		5D0E5A11269E4EDE006D7E9C /* AddToInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0E5A10269E4EDE006D7E9C /* AddToInventoryView.swift */; };
 		5D0E5A13269E60DB006D7E9C /* TextFieldRounded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0E5A12269E60DB006D7E9C /* TextFieldRounded.swift */; };
 		5D100707272B08860058C156 /* DiscountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D100706272B08860058C156 /* DiscountsView.swift */; };
@@ -243,6 +244,7 @@
 		569D9ED09F3A9EE7E6A213A0 /* Pods-SneakersnShit.debug staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SneakersnShit.debug staging.xcconfig"; path = "Target Support Files/Pods-SneakersnShit/Pods-SneakersnShit.debug staging.xcconfig"; sourceTree = "<group>"; };
 		5D0703C9271DDEE700116CF4 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		5D08E616275073AE00FB8E2A /* StackSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackSelectorView.swift; sourceTree = "<group>"; };
+		5D08E6182750836700FB8E2A /* CopiableText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopiableText.swift; sourceTree = "<group>"; };
 		5D0E5A10269E4EDE006D7E9C /* AddToInventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToInventoryView.swift; sourceTree = "<group>"; };
 		5D0E5A12269E60DB006D7E9C /* TextFieldRounded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldRounded.swift; sourceTree = "<group>"; };
 		5D100706272B08860058C156 /* DiscountsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscountsView.swift; sourceTree = "<group>"; };
@@ -834,6 +836,7 @@
 				5D57A69C273B070B0089CDF9 /* GridSelectorMenu.swift */,
 				5D57A69E273B10300089CDF9 /* TagView.swift */,
 				5D08E616275073AE00FB8E2A /* StackSelectorView.swift */,
+				5D08E6182750836700FB8E2A /* CopiableText.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -1537,6 +1540,7 @@
 				5D2726CD26CB3CB800887449 /* TabBarView.swift in Sources */,
 				5D52E30B2613063B00FA02B8 /* Encodable+Extensions.swift in Sources */,
 				5DCC467026A8D759007671BC /* DropDownMenu.swift in Sources */,
+				5D08E6192750836700FB8E2A /* CopiableText.swift in Sources */,
 				5D424D0825C504AF0008D6F4 /* RootView.swift in Sources */,
 				5DEBC08A269B3DE8000EEADC /* Double+Extensions.swift in Sources */,
 				5D2D5AA025C529E3009598AA /* DataController.swift in Sources */,

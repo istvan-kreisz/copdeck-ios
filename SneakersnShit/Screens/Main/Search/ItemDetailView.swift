@@ -124,17 +124,19 @@ struct ItemDetailView: View {
                         ZStack {
                             Color.customBackground.edgesIgnoringSafeArea(.all)
                             VStack(alignment: .leading, spacing: 8) {
-                                Text((item?.bestStoreInfo?.brand.uppercased()) ?? "")
+                                CopiableText(item?.bestStoreInfo?.brand.uppercased())
                                     .font(.bold(size: 12))
                                     .foregroundColor(.customText2)
-                                Text((item?.bestStoreInfo?.name) ?? "")
+
+                                CopiableText(item?.bestStoreInfo?.name)
                                     .font(.bold(size: 30))
                                     .foregroundColor(.customText1)
                                     .padding(.bottom, 8)
+
                                 HStack(spacing: 10) {
                                     Spacer()
                                     VStack(spacing: 2) {
-                                        Text(item?.isShoe == true ? item?.styleId ?? "" : "-")
+                                        CopiableText(item?.isShoe == true ? item?.styleId : nil, defaultIfNil: "-")
                                             .font(.bold(size: 20))
                                             .foregroundColor(.customText1)
                                         Text("Style ID")
@@ -143,9 +145,11 @@ struct ItemDetailView: View {
                                     }
                                     Spacer()
                                     VStack(spacing: 2) {
-                                        Text(item?.bestStoreInfo?.retailPrice.map { "\(item?.currency.symbol.rawValue ?? "")\($0.rounded(toPlaces: 1))" } ?? "")
-                                            .font(.bold(size: 20))
-                                            .foregroundColor(.customText1)
+                                        CopiableText(item?.bestStoreInfo?.retailPrice
+                                            .map { "\(item?.currency.symbol.rawValue ?? "")\($0.rounded(toPlaces: 1))" })
+                                                                                    .font(.bold(size: 20))
+                                                                                    .foregroundColor(.customText1)
+
                                         Text("Retail Price")
                                             .font(.regular(size: 15))
                                             .foregroundColor(.customText2)

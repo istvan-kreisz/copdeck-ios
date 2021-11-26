@@ -52,6 +52,15 @@ extension View {
         }
     }
 
+    func withCopyMenu(stringToCopy: String) -> some View {
+        self
+            .contextMenu(ContextMenu(menuItems: {
+                Button("Copy", action: {
+                    UIPasteboard.general.string = stringToCopy
+                })
+            }))
+    }
+
     func withDefaultShadow(color: Color = .customAccent3) -> some View {
         ModifiedContent(content: self, modifier: DefaultShadow(color: color))
     }
