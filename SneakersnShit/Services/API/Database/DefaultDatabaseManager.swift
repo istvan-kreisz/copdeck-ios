@@ -18,7 +18,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
     private lazy var chatWorker = ChatWorker(delegate: self)
 
     var cancellables: Set<AnyCancellable> = []
-    
+
     // collection listeners
     private var inventoryListener = CollectionListener<InventoryItem>()
     private var stacksListener = CollectionListener<Stack>()
@@ -66,7 +66,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
     var exchangeRatesPublisher: AnyPublisher<ExchangeRates, AppError> {
         exchangeRatesListener.dataPublisher.compactMap { $0 }.eraseToAnyPublisher()
     }
-    
+
     var chatUpdatesPublisher: AnyPublisher<ChatUpdateInfo, AppError> {
         chatWorker.chatUpdatesPublisher
     }
@@ -102,12 +102,12 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
     func listenToChanges(userId: String) {
         let userRef = firestore.collection(.users).document(userId)
         userListener.startListening(documentRef: userRef)
-        
+
         inventoryListener.startListening(collectionRef: userRef.collection(.inventory))
         stacksListener.startListening(collectionRef: userRef.collection(.stacks))
         favoritesListener.startListening(collectionRef: userRef.collection(.favorites))
         recentlyViewedListener.startListening(collectionRef: userRef.collection(.recentlyViewed))
-        
+
         chatWorker.listenToChanges(userId: userId)
     }
 
@@ -231,7 +231,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
         deleteDocument(atRef: ref)
     }
 
-    func add(inventoryItems: [InventoryItem]) {
+    func add(inventoryItems: [InventoryItem], completion: @escaping (Result<[InventoryItem], Error>) -> Void) {
         let batch = firestore.batch()
         inventoryItems
             .compactMap { inventoryItem -> (String, [String: Any])? in
@@ -242,10 +242,12 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
                     self?.setDocument(dict, atRef: ref, using: batch)
                 }
             }
-
         batch.commit { [weak self] error in
             if let error = error {
+                completion(.failure(error))
                 self?.errorsSubject.send(AppError(error: error))
+            } else {
+                completion(.success(inventoryItems))
             }
         }
     }
@@ -381,13 +383,12 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
     func deleteToken(_ token: NotificationToken, completion: @escaping (AppError?) -> Void) {
         deleteToken(byId: token.token, completion: completion)
     }
-    
+
     func deleteToken(byId id: String, completion: @escaping (AppError?) -> Void) {
         firestore.collection(.notificationTokens).document(id).delete { error in
             completion(error.map { AppError(error: $0) })
         }
     }
-
 }
 
 extension DefaultDatabaseManager: FirestoreWorkerDelegate {}
@@ -396,19 +397,20 @@ extension DefaultDatabaseManager {
     func getChannels(update: @escaping (Result<[Channel], AppError>) -> Void) {
         chatWorker.getChannels(update: update)
     }
-    
-    func getChannelListener(channelId: String, cancel: @escaping (@escaping () -> Void) -> Void, update: @escaping (Result<([Change<Message>], [Message]), AppError>) -> Void) {
+
+    func getChannelListener(channelId: String, cancel: @escaping (@escaping () -> Void) -> Void,
+                            update: @escaping (Result<([Change<Message>], [Message]), AppError>) -> Void) {
         chatWorker.getChannelListener(channelId: channelId, cancel: cancel, update: update)
     }
-    
+
     func markChannelAsSeen(channel: Channel) {
         chatWorker.markChannelAsSeen(channel: channel)
     }
-    
+
     func sendMessage(user: User, message: String, toChannel channel: Channel, completion: @escaping (Result<Void, AppError>) -> Void) {
         chatWorker.sendMessage(user: user, message: message, toChannel: channel, completion: completion)
     }
-    
+
     func getOrCreateChannel(users: [User], completion: @escaping (Result<Channel, AppError>) -> Void) {
         chatWorker.getOrCreateChannel(users: users, completion: completion)
     }

@@ -72,6 +72,8 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     var brandCalculated: Brand? { brand ?? item?.brandCalculated }
     var genderCalculated: Gender? { gender ?? item?.genderCalculated }
     var count = 1
+    
+    var _addToStacks: [Stack] = []
 
     var isSold: Bool {
         return soldPrice != nil || tags.contains(.sold)

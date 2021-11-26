@@ -104,8 +104,7 @@ struct AddToInventoryView: View {
                                     showAddNewTagPopup = true
                                 })
                     if let inventoryItem2 = inventoryItem2 {
-                        let item = Binding<InventoryItem>(get: { inventoryItem2 }, set: { self.inventoryItem2 = $0 })
-                        NewItemCard(inventoryItem: item,
+                        NewItemCard(inventoryItem: .init($inventoryItem2, replacingNilWith: .empty),
                                     tags: $tags,
                                     purchasePrice: priceWithCurrency,
                                     currency: currency,
@@ -123,8 +122,7 @@ struct AddToInventoryView: View {
                                     })
                     }
                     if let inventoryItem3 = inventoryItem3 {
-                        let item = Binding<InventoryItem>(get: { inventoryItem3 }, set: { self.inventoryItem3 = $0 })
-                        NewItemCard(inventoryItem: item,
+                        NewItemCard(inventoryItem: .init($inventoryItem3, replacingNilWith: .empty),
                                     tags: $tags,
                                     purchasePrice: priceWithCurrency,
                                     currency: currency,
@@ -141,8 +139,7 @@ struct AddToInventoryView: View {
                                     })
                     }
                     if let inventoryItem4 = inventoryItem4 {
-                        let item = Binding<InventoryItem>(get: { inventoryItem4 }, set: { self.inventoryItem4 = $0 })
-                        NewItemCard(inventoryItem: item,
+                        NewItemCard(inventoryItem: .init($inventoryItem4, replacingNilWith: .empty),
                                     tags: $tags,
                                     purchasePrice: priceWithCurrency,
                                     currency: currency,
@@ -158,8 +155,7 @@ struct AddToInventoryView: View {
                                     })
                     }
                     if let inventoryItem5 = inventoryItem5 {
-                        let item = Binding<InventoryItem>(get: { inventoryItem5 }, set: { self.inventoryItem5 = $0 })
-                        NewItemCard(inventoryItem: item,
+                        NewItemCard(inventoryItem: .init($inventoryItem5, replacingNilWith: .empty),
                                     tags: $tags,
                                     purchasePrice: priceWithCurrency,
                                     currency: currency,

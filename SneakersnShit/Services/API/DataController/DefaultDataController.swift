@@ -316,8 +316,8 @@ class DefaultDataController: DataController {
         databaseManager.update(stacks: stacks)
     }
 
-    func add(inventoryItems: [InventoryItem]) {
-        databaseManager.add(inventoryItems: inventoryItems)
+    func add(inventoryItems: [InventoryItem], completion: @escaping (Result<[InventoryItem], Error>) -> Void) {
+        databaseManager.add(inventoryItems: inventoryItems, completion: completion)
     }
 
     func update(inventoryItem: InventoryItem) {

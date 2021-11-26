@@ -27,7 +27,7 @@ struct NewItemCard: View {
     let addQuantitySelector: Bool
     let didTapDelete: (() -> Void)?
     let onCopDeckPriceTooltipTapped: (() -> Void)?
-    let didTapAddTag: (() -> Void)
+    let didTapAddTag: () -> Void
 
     var sizesConverted: [ItemType: [String]] {
         var sizesUpdated = self.sizes
@@ -198,7 +198,7 @@ struct NewItemCard: View {
                              style: dropdownStyle)
             }
 
-            Group {
+            VStack(alignment: .leading, spacing: 5) {
                 Text("tags")
                     .font(.regular(size: 12))
                     .foregroundColor(style == .card ? .customText2 : .customText1)
@@ -208,11 +208,13 @@ struct NewItemCard: View {
                         Color.clear.frame(width: 2)
                         ForEach(tags) { tag in
                             let isSelected = Binding<Bool>(get: {
-                                return inventoryItem.tags.contains { $0.id == tag.id }
-                            },
+                                                               inventoryItem.tags.contains { $0.id == tag.id }
+                                                           },
                                                            set: { newValue in
                                                                if newValue {
-                                                                   inventoryItem.tags.append(tag)
+                                                                   if !inventoryItem.tags.contains(where: { $0.id == tag.id }) {
+                                                                       inventoryItem.tags.append(tag)
+                                                                   }
                                                                } else {
                                                                    inventoryItem.tags = inventoryItem.tags.filter { $0.id != tag.id }
                                                                }
@@ -234,7 +236,35 @@ struct NewItemCard: View {
                     .padding(.vertical, 3)
                 }
             }
-            
+
+            if !showCopDeckPrice {
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("add to stack(s)")
+                        .font(.regular(size: 12))
+                        .foregroundColor(style == .card ? .customText2 : .customText1)
+                        .padding(.leading, 5)
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            Color.clear.frame(width: 2)
+                            ForEach(AppStore.default.state.stacks) { (stack: Stack) in
+                                let isSelected = Binding<Bool>(get: { inventoryItem._addToStacks.map(\.id).contains(stack.id) },
+                                                               set: { newValue in
+                                                                   if newValue {
+                                                                       if !inventoryItem._addToStacks.map(\.id).contains(stack.id) {
+                                                                           inventoryItem._addToStacks.append(stack)
+                                                                       }
+                                                                   } else {
+                                                                       inventoryItem._addToStacks = inventoryItem._addToStacks.filter { $0.id != stack.id }
+                                                                   }
+                                                               })
+                                StackSelectorView(title: stack.name, color: .customPurple, isSelected: isSelected)
+                            }
+                        }
+                        .padding(.vertical, 3)
+                    }
+                }
+            }
+
             Group {
                 let itemType = Binding<String>(get: { inventoryItem.itemType.rawValue },
                                                set: { newValue in

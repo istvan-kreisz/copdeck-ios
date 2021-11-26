@@ -27,7 +27,7 @@ protocol DatabaseManager: ChatManager {
     func getItem(withId id: String, settings: CopDeckSettings) -> AnyPublisher<Item, AppError>
     
     // write
-    func add(inventoryItems: [InventoryItem])
+    func add(inventoryItems: [InventoryItem], completion: @escaping (Result<[InventoryItem], Error>) -> Void)
     func delete(inventoryItems: [InventoryItem])
     func update(inventoryItem: InventoryItem)
     func update(stacks: [Stack])

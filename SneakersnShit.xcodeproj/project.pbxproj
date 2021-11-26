@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		5D0703C8271DDED200116CF4 /* Purchases in Frameworks */ = {isa = PBXBuildFile; productRef = 5D0703C7271DDED200116CF4 /* Purchases */; };
 		5D0703CA271DDEE700116CF4 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D0703C9271DDEE700116CF4 /* StoreKit.framework */; };
+		5D08E617275073AE00FB8E2A /* StackSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D08E616275073AE00FB8E2A /* StackSelectorView.swift */; };
 		5D0E5A11269E4EDE006D7E9C /* AddToInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0E5A10269E4EDE006D7E9C /* AddToInventoryView.swift */; };
 		5D0E5A13269E60DB006D7E9C /* TextFieldRounded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0E5A12269E60DB006D7E9C /* TextFieldRounded.swift */; };
 		5D100707272B08860058C156 /* DiscountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D100706272B08860058C156 /* DiscountsView.swift */; };
@@ -241,6 +242,7 @@
 		10F79ED8ABF4602588CCCFDD /* Pods_CopDeck.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CopDeck.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		569D9ED09F3A9EE7E6A213A0 /* Pods-SneakersnShit.debug staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SneakersnShit.debug staging.xcconfig"; path = "Target Support Files/Pods-SneakersnShit/Pods-SneakersnShit.debug staging.xcconfig"; sourceTree = "<group>"; };
 		5D0703C9271DDEE700116CF4 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		5D08E616275073AE00FB8E2A /* StackSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackSelectorView.swift; sourceTree = "<group>"; };
 		5D0E5A10269E4EDE006D7E9C /* AddToInventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToInventoryView.swift; sourceTree = "<group>"; };
 		5D0E5A12269E60DB006D7E9C /* TextFieldRounded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldRounded.swift; sourceTree = "<group>"; };
 		5D100706272B08860058C156 /* DiscountsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscountsView.swift; sourceTree = "<group>"; };
@@ -831,6 +833,7 @@
 				5D32C2F32709CBDC003257C6 /* Overlay.swift */,
 				5D57A69C273B070B0089CDF9 /* GridSelectorMenu.swift */,
 				5D57A69E273B10300089CDF9 /* TagView.swift */,
+				5D08E616275073AE00FB8E2A /* StackSelectorView.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -1493,6 +1496,7 @@
 				5D9D520226AE29DB00AB1F30 /* InventoryListItem.swift in Sources */,
 				5D117EB3271468B7000D1E43 /* PriceFieldWithCurrency.swift in Sources */,
 				5D90EDC826DE6254005AEA30 /* CollectionListener.swift in Sources */,
+				5D08E617275073AE00FB8E2A /* StackSelectorView.swift in Sources */,
 				5D3DE37626AFAB54009E4D52 /* CountrySelector.swift in Sources */,
 				5D54FE2826C30931008CD05F /* VerticalItemListView.swift in Sources */,
 				5D53A1F226AF2A61001DAA8D /* AccessoryButton.swift in Sources */,

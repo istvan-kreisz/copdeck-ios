@@ -138,7 +138,20 @@ func appReducer(state: inout AppState,
             }
         case let .addToInventory(inventoryItems):
             Analytics.logEvent("add_inventoryitem", parameters: ["userId": state.user?.id ?? ""])
-            environment.dataController.add(inventoryItems: inventoryItems)
+            
+            let userId = state.user?.id ?? ""
+            environment.dataController.add(inventoryItems: inventoryItems) { result in
+                if case let .success(inventoryItems) = result, inventoryItems.contains(where: { !$0._addToStacks.isEmpty }) {
+                    inventoryItems
+                        .filter { !$0._addToStacks.isEmpty }
+                        .forEach { inventoryItem in
+                            Analytics.logEvent("stack_inventoryitems", parameters: ["userId": userId])
+                            inventoryItem._addToStacks.forEach { stack in
+                                environment.dataController.stack(inventoryItems: [inventoryItem], stack: stack)
+                            }
+                        }
+                }
+            }
         case let .updateInventoryItem(inventoryItem: InventoryItem):
             environment.dataController.update(inventoryItem: InventoryItem)
         case let .removeFromInventory(inventoryItems):
