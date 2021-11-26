@@ -29,7 +29,7 @@ struct StackSummaryListItem: View {
                          flipImage: inventoryItem.imageURL?.store?.id == .klekt,
                          isEditing: .constant(false),
                          isSelected: false,
-                         ribbons: inventoryItem.tags.first(n: 2).map { ($0.name, $0.color) },
+                         ribbons: inventoryItem.tags.filter { $0.id == "sold" }.map { ($0.name, $0.color) },
                          addShadow: false,
                          accessoryView1: InventoryViewPills(inventoryItem: inventoryItem, inventoryItemDetails: [.condition, .size]).leftAligned(),
                          accessoryView2: priceStack(),

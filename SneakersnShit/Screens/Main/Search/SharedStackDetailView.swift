@@ -79,6 +79,7 @@ struct SharedStackDetailView: View {
                                       isSelected: false,
                                       isInSharedStack: false,
                                       inventoryItemDetails: [.condition, .size],
+                                      tagIdsToShow: ["sold"],
                                       isEditing: .constant(false)) {}
                 }
                 .padding(.vertical, 2)

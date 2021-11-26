@@ -15,8 +15,13 @@ struct InventoryListItem: View {
     @Binding var selectedInventoryItem: InventoryItem?
     var isSelected: Bool
     let isInSharedStack: Bool
-    
+
     var inventoryItemDetails: [InventoryViewPills.InventoryItemDetail] = InventoryViewPills.InventoryItemDetail.allCases
+    var tagIdsToShow: [String]? = nil
+    
+    var tagsToShow: [Tag] {
+        inventoryItem.tags.filter { tag in tagIdsToShow.map { $0.contains(tag.id) } ?? true }.first(n: 2)
+    }
 
     @Binding var isEditing: Bool
     var onSelectorTapped: () -> Void
@@ -57,7 +62,7 @@ struct InventoryListItem: View {
                              flipImage: inventoryItem.imageURL?.store?.id == .klekt,
                              isEditing: $isEditing,
                              isSelected: isSelected,
-                             ribbons: inventoryItem.tags.first(n: 2).map { ($0.name, $0.color) },
+                             ribbons: tagsToShow.map { ($0.name, $0.color) },
                              accessoryView1: InventoryViewPills(inventoryItem: inventoryItem, inventoryItemDetails: inventoryItemDetails).leftAligned(),
                              accessoryView2: bestPriceStack()) {
                 selectedInventoryItem = inventoryItem
