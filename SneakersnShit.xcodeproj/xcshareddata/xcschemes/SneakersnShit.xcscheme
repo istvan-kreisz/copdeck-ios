@@ -66,12 +66,12 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "loginAs"
-            value = "YwvH8mmDJUOGQPPQCBS68zkJEj12"
+            value = "YPOWpxSGAqZfKQnYoU58B3UUnG12"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "ipAddress"
-            value = "192.168.1.129"
+            value = "192.168.0.78"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
@@ -107,7 +107,7 @@
          <EnvironmentVariable
             key = "useFunctionsEmulator"
             value = "true"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "useFirestoreEmulator"
