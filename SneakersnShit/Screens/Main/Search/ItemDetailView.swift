@@ -28,6 +28,7 @@ struct ItemDetailView: View {
     private let itemId: String
     private let styleId: String
 
+
     enum BorderStyle {
         case red, green, regular
     }
@@ -340,7 +341,7 @@ struct ItemDetailView: View {
             .withPopup {
                 Popup<EmptyView>(isShowing: $showPopup,
                                  title: "Fee Type",
-                                 subtitle: "When selecting a fee type other than \"None\" the displayed prices will include the buyer or seller fees for each site. In order to get accurate results, make sure to configure your buyer & seller fees in \"Inventory\" > \"Settings\".",
+                                 subtitle: "\"None\" shows you the prices you'd see on the reselling sites.\n\n\"Buy\" adds the buyer fees onto the price so the prices are what you'd see at checkout.\n\n\"Sell\" deducts the seller fees from the price so the prices are what you'd get after selling your item.\n\nIn order to get accurate results with \"Buy\" or \"Sell\" selected, make sure to configure your buyer & seller fees in \"Inventory\" > \"Settings\".",
                                  firstAction: .init(name: "Okay", tapped: { showPopup = false }),
                                  secondAction: nil)
             }

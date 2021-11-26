@@ -13,7 +13,12 @@ import Combine
 class LocalScraper {
     private static let timeout = 15.0
 
-    private let cookiesSubject = CurrentValueSubject<[Cookie], Never>([])
+    private var scraperConfigRaw: Any?
+    private let nullArray: [Int] = []
+    private var scraperConfigArg: Any {
+        scraperConfigRaw ?? nullArray.asJSON!
+    }
+    private let scraperConfigSubject = CurrentValueSubject<[ScraperConfig], Never>([])
     private let imageDownloadHeadersSubject = PassthroughSubject<[HeadersWithStoreId], Never>()
 
     private var exchangeRatesSubjects: [Double: PassthroughSubject<ExchangeRates, AppError>] = [:]
@@ -22,8 +27,8 @@ class LocalScraper {
     private var itemWithCalculatedPricesSubjects: [Double: PassthroughSubject<Item, AppError>] = [:]
     private var popularItemsSubjects: [Double: PassthroughSubject<[Item], AppError>] = [:]
 
-    var cookiesPublisher: AnyPublisher<[Cookie], Never> {
-        cookiesSubject.eraseToAnyPublisher()
+    var scraperConfigPublisher: AnyPublisher<[ScraperConfig], Never> {
+        scraperConfigSubject.eraseToAnyPublisher()
     }
 
     var imageDownloadHeadersPublisher: AnyPublisher<[HeadersWithStoreId], Never> {
@@ -111,8 +116,8 @@ class LocalScraper {
         popularItemsSubjects.removeAll()
     }
     
-    func clearCookies() {
-        cookiesSubject.send([])
+    func clearConfigs() {
+        scraperConfigSubject.send([])
     }
 }
 
@@ -123,18 +128,17 @@ extension LocalScraper: LocalAPI {
             return Fail(outputType: Item.self, failure: AppError(title: "Error", message: "Invalid Item object", error: nil)).eraseToAnyPublisher()
         }
 
-        print(cookiesSubject.value)
         let id = id
         interpreter.call(object: nil,
                          functionName: "scraper.api.getItemPrices",
-                         arguments: [itemJSON, DefaultDataController.config(from: settings, exchangeRates: exchangeRates).asJSON!, id.1, cookiesSubject.value.asJSON!],
+                         arguments: [itemJSON, DefaultDataController.config(from: settings, exchangeRates: exchangeRates).asJSON!, id.1, scraperConfigArg],
                          completion: { _ in })
         let itemSubject = PassthroughSubject<Item, AppError>()
         itemSubjects[id.0] = itemSubject
         return itemSubject
             .timeout(.seconds(Self.timeout), scheduler: DispatchQueue.main)
             .first()
-            .handleEvents(receiveOutput: { [weak self] _ in self?.getCookies() })
+            .handleEvents(receiveOutput: { [weak self] _ in self?.getScraperConfigs() })
             .eraseToAnyPublisher()
     }
 
@@ -142,14 +146,14 @@ extension LocalScraper: LocalAPI {
         let id = id
         interpreter.call(object: nil,
                          functionName: "scraper.api.searchItems",
-                         arguments: [searchTerm, DefaultDataController.config(from: settings, exchangeRates: exchangeRates).asJSON!, id.1, cookiesSubject.value.asJSON!],
+                         arguments: [searchTerm, DefaultDataController.config(from: settings, exchangeRates: exchangeRates).asJSON!, id.1, scraperConfigArg],
                          completion: { _ in })
         let itemsSubject = PassthroughSubject<[Item], AppError>()
         itemsSubjects[id.0] = itemsSubject
         return itemsSubject
             .timeout(.seconds(Self.timeout), scheduler: DispatchQueue.main)
             .first()
-            .handleEvents(receiveOutput: { [weak self] _ in self?.refreshHeadersAndCookie() })
+            .handleEvents(receiveOutput: { [weak self] _ in self?.refreshHeadersAndConfigs() })
             .eraseToAnyPublisher()
     }
 
@@ -177,7 +181,7 @@ extension LocalScraper: LocalAPI {
 
         interpreter.call(object: nil,
                          functionName: "scraper.api.getPopularItems",
-                         arguments: [DefaultDataController.config(from: settings, exchangeRates: exchangeRates).asJSON!, id.1, cookiesSubject.value.asJSON!],
+                         arguments: [DefaultDataController.config(from: settings, exchangeRates: exchangeRates).asJSON!, id.1, scraperConfigArg],
                          completion: { _ in })
 
         let popularItemsSubject = PassthroughSubject<[Item], AppError>()
@@ -186,18 +190,18 @@ extension LocalScraper: LocalAPI {
         return popularItemsSubject
             .timeout(.seconds(Self.timeout), scheduler: DispatchQueue.main)
             .first()
-            .handleEvents(receiveOutput: { [weak self] _ in self?.getCookies() })
+            .handleEvents(receiveOutput: { [weak self] _ in self?.getScraperConfigs() })
             .eraseToAnyPublisher()
     }
 
-    func refreshHeadersAndCookie() {
-        getCookies()
+    func refreshHeadersAndConfigs() {
+        getScraperConfigs()
         getImageDownloadHeaders()
     }
 
-    private func getCookies() {
+    private func getScraperConfigs() {
         interpreter.call(object: nil,
-                         functionName: "scraper.api.getCookies",
+                         functionName: "scraper.api.getScraperConfigs",
                          arguments: [id.1],
                          completion: { _ in })
     }
@@ -230,10 +234,15 @@ extension LocalScraper: JSNativeBridgeDelegate {
         guard let id = Double(item.requestId), let publisher = itemWithCalculatedPricesSubjects[id] else { return }
         publisher.send(item.res)
     }
+    
+    func setScraperConfigsRaw(_ configs: Any) {
+        self.scraperConfigRaw = configs
+    }
 
-    func setCookies(_ cookies: WrappedResult<[Cookie]>) {
-        if !cookies.res.isEmpty {
-            cookiesSubject.send(cookies.res)
+    func setScraperConfigs(_ configs: [ScraperConfig]) {
+        if !configs.isEmpty {
+            scraperConfigSubject.send(configs)
+            
         }
     }
 

@@ -10,7 +10,7 @@ import Combine
 import UIKit
 
 protocol DataController: LocalAPI, BackendAPI, DatabaseManager, ImageService {
-    func clearCookies()
+    func clearConfigs()
     func stack(inventoryItems: [InventoryItem], stack: Stack)
     func unstack(inventoryItems: [InventoryItem], stack: Stack)
     func getItemDetails(for item: Item?,

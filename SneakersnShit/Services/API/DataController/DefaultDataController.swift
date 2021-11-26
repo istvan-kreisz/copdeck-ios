@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import UIKit
 
-class DefaultDataController: DataController {
+class DefaultDataController: DataController {    
     let backendAPI: BackendAPI
     let localScraper: LocalAPI
     let databaseManager: DatabaseManager
@@ -23,7 +23,7 @@ class DefaultDataController: DataController {
     lazy var exchangeRatesPublisher = databaseManager.exchangeRatesPublisher.onMain()
     lazy var chatUpdatesPublisher = databaseManager.chatUpdatesPublisher.onMain()
     lazy var errorsPublisher = databaseManager.errorsPublisher.merge(with: backendAPI.errorsPublisher, imageService.errorsPublisher).onMain()
-    lazy var cookiesPublisher = localScraper.cookiesPublisher.onMain()
+    lazy var scraperConfigPublisher = localScraper.scraperConfigPublisher.onMain()
     lazy var imageDownloadHeadersPublisher = localScraper.imageDownloadHeadersPublisher.onMain()
 
     lazy var profileImagePublisher = imageService.profileImagePublisher.onMain()
@@ -44,12 +44,12 @@ class DefaultDataController: DataController {
         imageService.reset()
     }
 
-    func refreshHeadersAndCookie() {
-        localScraper.refreshHeadersAndCookie()
+    func refreshHeadersAndConfigs() {
+        localScraper.refreshHeadersAndConfigs()
     }
 
-    func clearCookies() {
-        localScraper.clearCookies()
+    func clearConfigs() {
+        localScraper.clearConfigs()
     }
 
     #warning("sup here")

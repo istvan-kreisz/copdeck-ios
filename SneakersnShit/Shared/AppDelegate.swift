@@ -17,7 +17,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         if DebugSettings.shared.clearUserDefaults {
             UserDefaults.standard.reset()
         }
-        FirebaseConfiguration.shared.setLoggerLevel(DebugSettings.shared.isInDebugMode ? .info : .min)
+//        FirebaseConfiguration.shared.setLoggerLevel(DebugSettings.shared.isInDebugMode ? .min : .min)
         FirebaseApp.configure()
         ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
         AppStore.default.environment.pushNotificationService.setup(application: application)

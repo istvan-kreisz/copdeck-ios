@@ -15,12 +15,12 @@ enum FetchMode: String {
 }
 
 protocol LocalAPI {
-    var cookiesPublisher: AnyPublisher<[Cookie], Never> { get }
+    var scraperConfigPublisher: AnyPublisher<[ScraperConfig], Never> { get }
     var imageDownloadHeadersPublisher: AnyPublisher<[HeadersWithStoreId], Never> { get }
 
     func reset()
-    func clearCookies()
-    func refreshHeadersAndCookie()
+    func clearConfigs()
+    func refreshHeadersAndConfigs()
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError>
     func getItemDetails(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError>
     func getCalculatedPrices(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError>

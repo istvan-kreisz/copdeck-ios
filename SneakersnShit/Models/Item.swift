@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum StoreId: String, Codable, CaseIterable, Hashable {
+enum StoreId: String, Codable, CaseIterable, Hashable, Equatable {
     case stockx, klekt, goat, restocks
 }
 

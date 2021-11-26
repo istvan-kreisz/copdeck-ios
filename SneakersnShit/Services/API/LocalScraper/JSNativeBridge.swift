@@ -19,7 +19,8 @@ protocol JSNativeBridgeDelegate: AnyObject {
     func setItems(_ items: WrappedResult<[Item]>)
     func setItem(_ item: WrappedResult<Item>)
     func setItemWithCalculatedPrices(_ item: WrappedResult<Item>)
-    func setCookies(_ cookies: WrappedResult<[Cookie]>)
+    func setScraperConfigs(_ configs: [ScraperConfig])
+    func setScraperConfigsRaw(_ configs: Any)
     func setImageDownloadHeaders(_ headers: WrappedResult<[HeadersWithStoreId]>)
     func setPopularItems(_ items: WrappedResult<[Item]>)
     func setError(_ error: String, requestId: String)
@@ -30,7 +31,7 @@ protocol JSNativeBridgeDelegate: AnyObject {
     func setItems(_ items: Any)
     func setItem(_ item: Any)
     func setItemWithCalculatedPrices(_ item: Any)
-    func setCookies(_ cookies: Any)
+    func setScraperConfigs(_ configs: Any)
     func setImageDownloadHeaders(_ headers: Any)
     func setPopularItems(_ items: Any)
     func setError(_ error: Any, requestId: Any)
@@ -67,10 +68,11 @@ protocol JSNativeBridgeDelegate: AnyObject {
         }
     }
 
-    func setCookies(_ cookies: Any) {
-        guard let cookies = WrappedResult<[Cookie]>(from: cookies) else { return }
+    func setScraperConfigs(_ configs: Any) {
+        delegate?.setScraperConfigsRaw(configs)
+        guard let scraperConfigs = [ScraperConfig](from: configs) else { return }
         DispatchQueue.main.async { [weak self] in
-            self?.delegate?.setCookies(cookies)
+            self?.delegate?.setScraperConfigs(scraperConfigs)
         }
     }
 

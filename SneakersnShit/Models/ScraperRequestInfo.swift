@@ -7,6 +7,14 @@
 
 import Foundation
 
+struct ScraperConfig: Codable, Equatable {
+    let storeId: StoreId
+    let isValid: Bool
+    let cookie: String?
+    let csrf: String?
+}
+
+
 struct ScraperRequestInfo: Equatable {
     let storeId: StoreId
     var cookie: String?

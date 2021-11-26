@@ -100,7 +100,7 @@ extension AppStore {
                       let oldSettings = self?.state.user?.settings
                       let newSettings = newUser.settings
                       if oldSettings?.feeCalculation != newSettings?.feeCalculation || oldSettings?.currency != newSettings?.currency {
-                          self?.environment.dataController.clearCookies()
+                          self?.environment.dataController.clearConfigs()
                           ItemCache.default.removeAll()
                           self?.refreshItemPricesIfNeeded(newUser: newUser)
                       }
@@ -139,12 +139,13 @@ extension AppStore {
                   })
             .store(in: &effectCancellables)
 
-        environment.dataController.cookiesPublisher.removeDuplicates()
-            .combineLatest(environment.dataController.imageDownloadHeadersPublisher.removeDuplicates()) { cookies, headers in
-                cookies.map { (cookie: Cookie) -> ScraperRequestInfo in
-                    ScraperRequestInfo(storeId: cookie.store,
-                                       cookie: cookie.cookie,
-                                       imageDownloadHeaders: headers.first(where: { $0.storeId == cookie.store })?.headers ?? [:])
+        environment.dataController.scraperConfigPublisher
+            .removeDuplicates()
+            .combineLatest(environment.dataController.imageDownloadHeadersPublisher.removeDuplicates()) { configs, headers in
+                configs.map { (config: ScraperConfig) -> ScraperRequestInfo in
+                    ScraperRequestInfo(storeId: config.storeId,
+                                       cookie: config.cookie,
+                                       imageDownloadHeaders: headers.first(where: { $0.storeId == config.storeId })?.headers ?? [:])
                 }
             }
             .receive(on: DispatchQueue.main)
