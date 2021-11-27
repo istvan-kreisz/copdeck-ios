@@ -237,7 +237,7 @@ struct NewItemCard: View {
                 }
             }
 
-            if !showCopDeckPrice {
+            if !showCopDeckPrice && !AppStore.default.state.stacks.isEmpty {
                 VStack(alignment: .leading, spacing: 5) {
                     Text("add to stack(s)")
                         .font(.regular(size: 12))

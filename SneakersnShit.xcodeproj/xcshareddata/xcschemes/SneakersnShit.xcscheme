@@ -57,6 +57,10 @@
             argument = "-FIRDebugEnabled"
             isEnabled = "NO">
          </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-FIRDebugDisabled "
+            isEnabled = "YES">
+         </CommandLineArgument>
       </CommandLineArguments>
       <EnvironmentVariables>
          <EnvironmentVariable
@@ -92,12 +96,12 @@
          <EnvironmentVariable
             key = "itemPricesRefreshPeriodMin"
             value = "0.2"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "pricesRefreshPeriodMin"
             value = "0.2"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "password"

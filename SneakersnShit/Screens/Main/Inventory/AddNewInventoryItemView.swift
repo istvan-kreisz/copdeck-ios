@@ -114,7 +114,7 @@ struct AddNewInventoryItemView: View {
         let loader = searchResultsLoader.getLoader()
         store.send(.main(action: .getSearchResults(searchTerm: searchText, completion: { result in
             handleResult(result: result, loader: loader) { self.searchState.searchResults = $0 }
-        })))
+        })), debounceDelayMs: 850)
     }
 }
 

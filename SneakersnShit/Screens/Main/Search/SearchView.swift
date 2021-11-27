@@ -146,7 +146,7 @@ struct SearchView: View {
             let loader = searchResultsLoader.getLoader()
             store.send(.main(action: .getSearchResults(searchTerm: searchText, completion: { result in
                 handleResult(result: result, loader: loader) { self.searchModel.state.searchResults = $0 }
-            })))
+            })), debounceDelayMs: 850)
         } else {
             let loader = userSearchResultsLoader.getLoader()
             store.send(.main(action: .searchUsers(searchTerm: searchText, completion: { result in
