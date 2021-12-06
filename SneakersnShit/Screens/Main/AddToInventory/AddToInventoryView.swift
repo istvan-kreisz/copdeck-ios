@@ -9,6 +9,10 @@ import SwiftUI
 
 struct AddToInventoryView: View {
     let currency: Currency
+    #warning("refactor")
+    let sortedSizes: [ItemType: [String]]
+    let sizesConverted: [ItemType: [String]]
+
     @State var item: Item?
     @Binding var presented: (isActive: Bool, size: String?)
     @Binding var addedInvantoryItem: Bool
@@ -47,11 +51,19 @@ struct AddToInventoryView: View {
         self._notes = State(initialValue: "")
         
         let isValidSize = item.map { i in presented.wrappedValue.size.map { i.sortedSizes.contains($0) } ?? false } ?? false
+        let inventoryItem1: InventoryItem
         if let item = item {
-            self._inventoryItem1 = State(initialValue: InventoryItem(fromItem: item, size: isValidSize ? presented.wrappedValue.size : nil))
+            inventoryItem1 = InventoryItem(fromItem: item, size: isValidSize ? presented.wrappedValue.size : nil)
         } else {
-            self._inventoryItem1 = State(initialValue: InventoryItem.new)
+            inventoryItem1 = InventoryItem.new
         }
+        self._inventoryItem1 = State(initialValue: inventoryItem1)
+        let sortedSizes = inventoryItem1.sortedSizes
+        self.sortedSizes = sortedSizes
+        var sizesConverted = sortedSizes
+        sizesConverted[.shoe] = sizesConverted[.shoe]?.asSizes(of: inventoryItem1)
+        self.sizesConverted = sizesConverted
+
 
         self._inventoryItem2 = State(initialValue: nil)
         self._inventoryItem3 = State(initialValue: nil)
@@ -96,19 +108,21 @@ struct AddToInventoryView: View {
                                 tags: $tags,
                                 purchasePrice: priceWithCurrency,
                                 currency: currency,
-                                sizes: self.inventoryItem1.sortedSizes,
+                                sortedSizes: sortedSizes,
+                                sizesConverted: sizesConverted,
                                 showCopDeckPrice: false,
                                 highlightCopDeckPrice: false,
                                 addQuantitySelector: true,
                                 didTapAddTag: {
                                     showAddNewTagPopup = true
                                 })
-                    if let inventoryItem2 = inventoryItem2 {
+                    if inventoryItem2 != nil {
                         NewItemCard(inventoryItem: .init($inventoryItem2, replacingNilWith: .empty),
                                     tags: $tags,
                                     purchasePrice: priceWithCurrency,
                                     currency: currency,
-                                    sizes: inventoryItem2.sortedSizes,
+                                    sortedSizes: sortedSizes,
+                                    sizesConverted: sizesConverted,
                                     showCopDeckPrice: false,
                                     highlightCopDeckPrice: false,
                                     addQuantitySelector: true,
@@ -121,12 +135,13 @@ struct AddToInventoryView: View {
                                         showAddNewTagPopup = true
                                     })
                     }
-                    if let inventoryItem3 = inventoryItem3 {
+                    if inventoryItem3 != nil {
                         NewItemCard(inventoryItem: .init($inventoryItem3, replacingNilWith: .empty),
                                     tags: $tags,
                                     purchasePrice: priceWithCurrency,
                                     currency: currency,
-                                    sizes: inventoryItem3.sortedSizes,
+                                    sortedSizes: sortedSizes,
+                                    sizesConverted: sizesConverted,
                                     showCopDeckPrice: false,
                                     highlightCopDeckPrice: false,
                                     addQuantitySelector: true,
@@ -138,12 +153,13 @@ struct AddToInventoryView: View {
                                         showAddNewTagPopup = true
                                     })
                     }
-                    if let inventoryItem4 = inventoryItem4 {
+                    if inventoryItem4 != nil {
                         NewItemCard(inventoryItem: .init($inventoryItem4, replacingNilWith: .empty),
                                     tags: $tags,
                                     purchasePrice: priceWithCurrency,
                                     currency: currency,
-                                    sizes: inventoryItem4.sortedSizes,
+                                    sortedSizes: sortedSizes,
+                                    sizesConverted: sizesConverted,
                                     showCopDeckPrice: false,
                                     highlightCopDeckPrice: false,
                                     addQuantitySelector: true,
@@ -154,12 +170,13 @@ struct AddToInventoryView: View {
                                         showAddNewTagPopup = true
                                     })
                     }
-                    if let inventoryItem5 = inventoryItem5 {
+                    if inventoryItem5 != nil {
                         NewItemCard(inventoryItem: .init($inventoryItem5, replacingNilWith: .empty),
                                     tags: $tags,
                                     purchasePrice: priceWithCurrency,
                                     currency: currency,
-                                    sizes: inventoryItem5.sortedSizes,
+                                    sortedSizes: sortedSizes,
+                                    sizesConverted: sizesConverted,
                                     showCopDeckPrice: false,
                                     highlightCopDeckPrice: false,
                                     addQuantitySelector: true,

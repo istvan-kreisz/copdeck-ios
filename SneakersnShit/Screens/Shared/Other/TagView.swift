@@ -35,5 +35,6 @@ struct TagView: View {
         .onTapGesture {
             isSelected.toggle()
         }
+        
     }
 }

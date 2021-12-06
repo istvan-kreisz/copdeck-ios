@@ -19,19 +19,14 @@ struct NewItemCard: View {
     let purchasePrice: PriceWithCurrency?
     let currency: Currency
     let style: Style
-    let sizes: [ItemType: [String]]
+    let sortedSizes: [ItemType: [String]]
+    let sizesConverted: [ItemType: [String]]
     let showCopDeckPrice: Bool
     let highlightCopDeckPrice: Bool
     let addQuantitySelector: Bool
     let didTapDelete: (() -> Void)?
     let onCopDeckPriceTooltipTapped: (() -> Void)?
     let didTapAddTag: () -> Void
-
-    var sizesConverted: [ItemType: [String]] {
-        var sizesUpdated = self.sizes
-        sizesUpdated[.shoe] = sizesUpdated[.shoe]?.asSizes(of: inventoryItem)
-        return sizesUpdated
-    }
 
     var textFieldStyle: TextFieldRounded.Style {
         style == .card ? .gray : .white
@@ -48,7 +43,8 @@ struct NewItemCard: View {
          purchasePrice: PriceWithCurrency?,
          currency: Currency,
          style: Style = .card,
-         sizes: [ItemType: [String]],
+         sortedSizes: [ItemType: [String]],
+         sizesConverted: [ItemType: [String]],
          showCopDeckPrice: Bool,
          highlightCopDeckPrice: Bool,
          addQuantitySelector: Bool,
@@ -60,7 +56,8 @@ struct NewItemCard: View {
         self.purchasePrice = purchasePrice
         self.currency = currency
         self.style = style
-        self.sizes = sizes
+        self.sortedSizes = sortedSizes
+        self.sizesConverted = sizesConverted
         self.showCopDeckPrice = showCopDeckPrice
         self.highlightCopDeckPrice = highlightCopDeckPrice
         self.addQuantitySelector = addQuantitySelector
@@ -94,25 +91,6 @@ struct NewItemCard: View {
             getDate: { inventoryItem.purchasedDate }
             setDate: { inventoryItem.purchasedDate = $0 }
 
-            PriceRow(textFieldTitle: "selling price",
-                     dateTitle: "sold on",
-                     textFieldStyle: textFieldStyle,
-                     dropdownStyle: dropdownStyle,
-                     defaultCurrency: currency)
-            { inventoryItem.soldPrice?.price }
-            setPrice: { inventoryItem.soldPrice = .init(storeId: nil, price: $0) }
-            getDate: { inventoryItem.soldDate }
-            setDate: { inventoryItem.soldDate = $0 }
-                .collapsible(buttonTitle: "add selling details",
-                             style: style,
-                             contentHeight: Styles.inputFieldHeight,
-                             topPaddingWhenCollapsed: Self.collapsedElementTopPadding,
-                             showIf: { inventoryItem.soldPrice != nil || inventoryItem.soldDate != nil },
-                             onHide: {
-                                 inventoryItem.soldPrice = nil
-                                 inventoryItem.soldDate = nil
-                             })
-
             if showCopDeckPrice {
                 PriceRow(textFieldTitle: "copdeck price",
                          titleColor: highlightCopDeckPrice ? .customRed : nil,
@@ -123,6 +101,25 @@ struct NewItemCard: View {
                 setPrice: { inventoryItem.copdeckPrice = .init(storeId: "copdeck", price: $0) }
                 onTooltipTapped: { onCopDeckPriceTooltipTapped?() }
             }
+
+            PriceRow(textFieldTitle: "sell price",
+                     dateTitle: "sold on",
+                     textFieldStyle: textFieldStyle,
+                     dropdownStyle: dropdownStyle,
+                     defaultCurrency: currency)
+            { inventoryItem.soldPrice?.price }
+            setPrice: { inventoryItem.soldPrice = .init(storeId: nil, price: $0) }
+            getDate: { inventoryItem.soldDate }
+            setDate: { inventoryItem.soldDate = $0 }
+                .collapsible(buttonTitle: "add sell details",
+                             style: style,
+                             contentHeight: Styles.inputFieldHeight,
+                             topPaddingWhenCollapsed: Self.collapsedElementTopPadding,
+                             showIf: { inventoryItem.soldPrice != nil || inventoryItem.soldDate != nil },
+                             onHide: {
+                                 inventoryItem.soldPrice = nil
+                                 inventoryItem.soldDate = nil
+                             })
 
             QuantityAndConditionSelector(dropdownStyle: dropdownStyle,
                                          getCondition: { inventoryItem.condition },
@@ -160,7 +157,7 @@ struct NewItemCard: View {
                          sortedSizes: inventoryItem.sortedSizes,
                          sizesConverted: sizesConverted,
                          itemType: $inventoryItem.itemType,
-                         selectedSize: $inventoryItem.size)
+                         selectedSize: $inventoryItem.convertedSize)
         }
         .if(style == .card) {
             $0

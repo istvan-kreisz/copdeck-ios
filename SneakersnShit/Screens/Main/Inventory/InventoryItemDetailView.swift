@@ -12,6 +12,9 @@ struct InventoryItemDetailView: View {
     @State var inventoryItem: InventoryItem
     let importSummaryMode: Bool
     let isInSharedStack: Bool
+    let sortedSizes: [ItemType: [String]]
+    let sizesConverted: [ItemType: [String]]
+
     var shouldDismiss: () -> Void
 
     @State var name: String
@@ -48,6 +51,12 @@ struct InventoryItemDetailView: View {
         self._styleId = State(initialValue: inventoryItem.styleId)
         self._notes = State(initialValue: inventoryItem.notes ?? "")
         self._tags = State(initialValue: Tag.defaultTags + (AppStore.default.state.user?.tags ?? []))
+
+        let sortedSizes = inventoryItem.sortedSizes
+        self.sortedSizes = sortedSizes
+        var sizesConverted = sortedSizes
+        sizesConverted[.shoe] = sizesConverted[.shoe]?.asSizes(of: inventoryItem)
+        self.sizesConverted = sizesConverted
     }
 
     var body: some View {
@@ -109,7 +118,8 @@ struct InventoryItemDetailView: View {
                                     purchasePrice: inventoryItem.purchasePrice,
                                     currency: store.state.currency,
                                     style: NewItemCard.Style.noBackground,
-                                    sizes: inventoryItem.sortedSizes,
+                                    sortedSizes: sortedSizes,
+                                    sizesConverted: sizesConverted,
                                     showCopDeckPrice: true,
                                     highlightCopDeckPrice: isInSharedStack,
                                     addQuantitySelector: false,

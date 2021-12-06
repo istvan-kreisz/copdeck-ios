@@ -131,42 +131,6 @@ struct InventoryItem: Codable, Equatable, Identifiable {
              pendingImport,
              created, updated, purchasedDate, soldDate, gender, brand
     }
-
-    // purchase price
-    mutating func setPurchaseCurrency(currency: String) {
-        guard let currency = Currency.currency(withSymbol: currency) else { return }
-        purchasePrice = PriceWithCurrency(price: purchasePrice?.price ?? 0, currencyCode: currency.code)
-    }
-
-    mutating func setPurchasePrice(price: String, defaultCurrency: Currency) {
-        purchasePrice = PriceWithCurrency(price: Double(price) ?? 0, currencyCode: purchasePrice?.currencyCode ?? defaultCurrency.code)
-    }
-
-    // copdeck price
-    mutating func setCopDeckCurrency(currency: String) {
-        guard let currency = Currency.currency(withSymbol: currency) else { return }
-        copdeckPrice = ListingPrice(storeId: "copdeck", price: .init(price: copdeckPrice?.price.price ?? 0, currencyCode: currency.code))
-    }
-
-    mutating func setCopDeckPrice(price: String, defaultCurrency: Currency) {
-        copdeckPrice = ListingPrice(storeId: "copdeck",
-                                    price: .init(price: Double(price) ?? 0, currencyCode: copdeckPrice?.price.currencyCode ?? defaultCurrency.code))
-    }
-
-    // sold price
-    mutating func setSoldPriceCurrency(currency: String) {
-        guard let currency = Currency.currency(withSymbol: currency) else { return }
-        soldPrice = SoldPrice(storeId: soldPrice?.storeId, price: .init(price: soldPrice?.price?.price ?? 0, currencyCode: currency.code))
-    }
-
-    mutating func setSoldPrice(price: String, defaultCurrency: Currency) {
-        soldPrice = SoldPrice(storeId: soldPrice?.storeId,
-                              price: .init(price: Double(price) ?? 0, currencyCode: soldPrice?.price?.currencyCode ?? defaultCurrency.code))
-    }
-
-    mutating func setSoldStore(storeId: String) {
-        soldPrice = SoldPrice(storeId: storeId, price: soldPrice?.price)
-    }
 }
 
 extension InventoryItem {
