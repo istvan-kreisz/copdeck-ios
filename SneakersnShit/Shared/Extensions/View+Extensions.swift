@@ -89,6 +89,7 @@ extension View {
                      titleColor: Color? = nil,
                      style: NewItemCard.Style,
                      contentHeight: CGFloat,
+                     topPaddingWhenCollapsed: CGFloat = 0,
                      showIf: (() -> Bool)? = nil,
                      onHide: @escaping () -> Void,
                      onTooltipTapped: (() -> Void)? = nil) -> some View {
@@ -99,6 +100,7 @@ extension View {
                                               titleColor: titleColor,
                                               style: style,
                                               contentHeight: contentHeight,
+                                              topPaddingWhenCollapsed: topPaddingWhenCollapsed,
                                               showIf: showIf,
                                               onHide: onHide,
                                               onTooltipTapped: onTooltipTapped))

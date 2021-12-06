@@ -18,6 +18,10 @@
 		5D117EB12713287C000D1E43 /* sizes.json in Resources */ = {isa = PBXBuildFile; fileRef = 5D117EB02713287B000D1E43 /* sizes.json */; };
 		5D117EB3271468B7000D1E43 /* PriceFieldWithCurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D117EB2271468B7000D1E43 /* PriceFieldWithCurrency.swift */; };
 		5D1264D5275E8B8A00E66EE3 /* PriceRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D1264D4275E8B8A00E66EE3 /* PriceRow.swift */; };
+		5D1264D7275E9B0100E66EE3 /* QuantityAndConditionSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D1264D6275E9B0100E66EE3 /* QuantityAndConditionSelector.swift */; };
+		5D1264D9275E9D3500E66EE3 /* TagSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D1264D8275E9D3500E66EE3 /* TagSelector.swift */; };
+		5D1264DB275E9EC200E66EE3 /* StacksSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D1264DA275E9EC200E66EE3 /* StacksSelector.swift */; };
+		5D1264DD275E9F8700E66EE3 /* SizeSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D1264DC275E9F8700E66EE3 /* SizeSelector.swift */; };
 		5D19B0AB26A6D76600A31F4E /* MainAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D19B0A926A6D76600A31F4E /* MainAction.swift */; };
 		5D19B0AC26A6D76600A31F4E /* ErrorAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D19B0AA26A6D76600A31F4E /* ErrorAction.swift */; };
 		5D19B0AE26A6D7CA00A31F4E /* AuthenticationAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D19B0AD26A6D7CA00A31F4E /* AuthenticationAction.swift */; };
@@ -253,6 +257,10 @@
 		5D117EB02713287B000D1E43 /* sizes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sizes.json; sourceTree = "<group>"; };
 		5D117EB2271468B7000D1E43 /* PriceFieldWithCurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceFieldWithCurrency.swift; sourceTree = "<group>"; };
 		5D1264D4275E8B8A00E66EE3 /* PriceRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceRow.swift; sourceTree = "<group>"; };
+		5D1264D6275E9B0100E66EE3 /* QuantityAndConditionSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuantityAndConditionSelector.swift; sourceTree = "<group>"; };
+		5D1264D8275E9D3500E66EE3 /* TagSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagSelector.swift; sourceTree = "<group>"; };
+		5D1264DA275E9EC200E66EE3 /* StacksSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StacksSelector.swift; sourceTree = "<group>"; };
+		5D1264DC275E9F8700E66EE3 /* SizeSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeSelector.swift; sourceTree = "<group>"; };
 		5D19B0A926A6D76600A31F4E /* MainAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainAction.swift; sourceTree = "<group>"; };
 		5D19B0AA26A6D76600A31F4E /* ErrorAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorAction.swift; sourceTree = "<group>"; };
 		5D19B0AD26A6D7CA00A31F4E /* AuthenticationAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationAction.swift; sourceTree = "<group>"; };
@@ -503,6 +511,10 @@
 				5D9D520726AE4CF400AB1F30 /* EditInventoryTray.swift */,
 				5D117EB2271468B7000D1E43 /* PriceFieldWithCurrency.swift */,
 				5D1264D4275E8B8A00E66EE3 /* PriceRow.swift */,
+				5D1264D6275E9B0100E66EE3 /* QuantityAndConditionSelector.swift */,
+				5D1264D8275E9D3500E66EE3 /* TagSelector.swift */,
+				5D1264DA275E9EC200E66EE3 /* StacksSelector.swift */,
+				5D1264DC275E9F8700E66EE3 /* SizeSelector.swift */,
 			);
 			path = AddToInventory;
 			sourceTree = "<group>";
@@ -1516,6 +1528,7 @@
 				5D9C8E3D269F2F31008538D6 /* RoundedButton.swift in Sources */,
 				5DE4F21A26E02C430087077A /* SharedStackDetailView.swift in Sources */,
 				5D2D5AAF25C552B0009598AA /* DefaultBackendAPI.swift in Sources */,
+				5D1264DB275E9EC200E66EE3 /* StacksSelector.swift in Sources */,
 				5D32C2FB270A3BB5003257C6 /* Message.swift in Sources */,
 				5D564E482704F66700190CF4 /* StringRepresentable.swift in Sources */,
 				5D424CFF25C5041E0008D6F4 /* DebugSettings.swift in Sources */,
@@ -1568,6 +1581,7 @@
 				5D0E5A11269E4EDE006D7E9C /* AddToInventoryView.swift in Sources */,
 				5D6312242694D83100876D99 /* Decodable+Extensions.swift in Sources */,
 				5D564E432704C7EE00190CF4 /* ReferralCodeAdminView.swift in Sources */,
+				5D1264D7275E9B0100E66EE3 /* QuantityAndConditionSelector.swift in Sources */,
 				5D57A6A1273B1D5B0089CDF9 /* NewTagPopup.swift in Sources */,
 				5D587A96272E41980075C93C /* ChannelListItem.swift in Sources */,
 				5DE4F21226DFBB7B0087077A /* State+Extensions.swift in Sources */,
@@ -1591,6 +1605,7 @@
 				5DE4F21626E00BBC0087077A /* StackSummaryListItem.swift in Sources */,
 				5D3E872525C5D3FC00FC65FE /* Sequence+Extensions.swift in Sources */,
 				5D424CEE25C502F90008D6F4 /* Colors.swift in Sources */,
+				5D1264DD275E9F8700E66EE3 /* SizeSelector.swift in Sources */,
 				5D83156B25C397C4008AB948 /* MainContainerView.swift in Sources */,
 				5D8ABBBA26B0B51200AFD8CF /* Snackbar.swift in Sources */,
 				5D88261926F917770006031D /* DefaultImageService.swift in Sources */,
@@ -1602,6 +1617,7 @@
 				5DECB5802708C28C0017748C /* Date+Extensions.swift in Sources */,
 				5DD036032738D36200104627 /* Result+Extensions.swift in Sources */,
 				5DDEFDC426D042C5001B0F76 /* StaticButtonStyle.swift in Sources */,
+				5D1264D9275E9D3500E66EE3 /* TagSelector.swift in Sources */,
 				5D9A473D27344FA1001C85E4 /* DBRef.swift in Sources */,
 				5D8ABBBF26B1C82500AFD8CF /* ScraperRequestInfo.swift in Sources */,
 				5D1264D5275E8B8A00E66EE3 /* PriceRow.swift in Sources */,

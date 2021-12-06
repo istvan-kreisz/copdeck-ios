@@ -302,6 +302,7 @@ struct Collapsible: ViewModifier {
     var titleColor: Color? = nil
     let style: NewItemCard.Style
     let contentHeight: CGFloat
+    var topPaddingWhenCollapsed: CGFloat = 0
 
     @State var isShowing = false
     var showIf: (() -> Bool)?
@@ -317,8 +318,8 @@ struct Collapsible: ViewModifier {
                                      isShowing = show
                                  })
 
-        VStack(alignment: .leading, spacing: 4) {
-            if isActive {
+        if isActive {
+            VStack(alignment: .leading, spacing: 4) {
                 if let title = title, show.wrappedValue {
                     HStack(alignment: .center, spacing: 3) {
                         Text(title)
@@ -350,14 +351,16 @@ struct Collapsible: ViewModifier {
                                     fontSize: 11,
                                     height: 22,
                                     width: nil,
+                                    accessoryViewSize: 15,
                                     imageName: "plus",
                                     buttonPosition: .right,
                                     tapped: { show.wrappedValue = true })
                         .padding(.top, 15)
                 }
-            } else {
-                content
             }
+            .padding(.top, show.wrappedValue ? 0 : topPaddingWhenCollapsed)
+        } else {
+            content
         }
     }
 }
