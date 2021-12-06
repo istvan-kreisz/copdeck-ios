@@ -294,3 +294,55 @@ struct WithAlert: ViewModifier {
             }
     }
 }
+
+struct Collapsible: ViewModifier {
+    let title: String?
+    let buttonTitle: String
+    var titleColor: Color? = nil
+    let style: NewItemCard.Style
+    let deleteButtonBottomPadding: CGFloat
+
+    @Binding var isShowing: Bool
+    var onTooltipTapped: (() -> Void)? = nil
+
+    func body(content: Content) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            if let title = title, isShowing {
+                HStack(alignment: .center, spacing: 3) {
+                    Text(title)
+                        .font(.regular(size: 12))
+                        .foregroundColor(titleColor ?? (style == .card ? .customText1 : .customText2))
+                        .padding(.leading, 5)
+                    if let onTooltipTapped = onTooltipTapped {
+                        Button(action: onTooltipTapped) {
+                            Image(systemName: "questionmark.circle.fill")
+                                .font(.regular(size: 13))
+                                .foregroundColor(titleColor ?? (style == .card ? .customText1 : .customText2))
+                        }
+                    }
+                }
+            }
+
+            if isShowing {
+                HStack(alignment: .bottom, spacing: 5) {
+                    content
+                    DeleteButton(style: .fill, size: .small, color: .customRed) {
+                        isShowing = false
+                    }
+                    .padding(.bottom, deleteButtonBottomPadding)
+                }
+            } else {
+                AccessoryButton(title: buttonTitle,
+                                color: .customAccent1,
+                                textColor: .customText1,
+                                fontSize: 11,
+                                height: 22,
+                                width: nil,
+                                imageName: "plus",
+                                buttonPosition: .right,
+                                tapped: { isShowing = true })
+                    .padding(.top, 15)
+            }
+        }
+    }
+}

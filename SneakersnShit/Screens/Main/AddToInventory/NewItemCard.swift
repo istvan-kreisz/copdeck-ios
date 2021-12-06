@@ -28,6 +28,8 @@ struct NewItemCard: View {
     let didTapDelete: (() -> Void)?
     let onCopDeckPriceTooltipTapped: (() -> Void)?
     let didTapAddTag: () -> Void
+    
+    @State var showPurchaseRow = false
 
     var sizesConverted: [ItemType: [String]] {
         var sizesUpdated = self.sizes
@@ -44,10 +46,6 @@ struct NewItemCard: View {
     }
 
     var toggleButtonStyle: ToggleButton.Style {
-        style == .card ? .gray : .white
-    }
-
-    var gridSelectorStyle: GridSelectorMenu.Style {
         style == .card ? .gray : .white
     }
 
@@ -118,6 +116,15 @@ struct NewItemCard: View {
                 .padding(.bottom, -4)
             }
 
+            let showPurchaseRow_ = Binding<Bool>(get: { inventoryItem.purchasePrice != nil || inventoryItem.purchasedDate != nil || showPurchaseRow },
+                                                 set: { isShowing in
+                showPurchaseRow = isShowing
+                if !isShowing {
+                    inventoryItem.purchasePrice = nil
+                    inventoryItem.purchasedDate = nil
+                }
+            })
+
             HStack(alignment: .top, spacing: 11) {
                 let purchasePrice = Binding<String>(get: { (inventoryItem.purchasePrice?.price).asString() },
                                                     set: { inventoryItem.setPurchasePrice(price: $0, defaultCurrency: currency) })
@@ -141,6 +148,9 @@ struct NewItemCard: View {
                 }
                 datePicker(title: "purchased date", date: purchasedDate)
             }
+            .collapsible(title: nil, buttonTitle: "add purchase details", titleColor: nil, style: style, deleteButtonBottomPadding: 12, isShowing: showPurchaseRow_, onTooltipTapped: nil)
+            
+            
             HStack(alignment: .top, spacing: 11) {
                 let soldPrice =
                     Binding<String>(get: { (inventoryItem.soldPrice?.price?.price).asString() },
@@ -281,7 +291,7 @@ struct NewItemCard: View {
                     let size = Binding<String>(get: { inventoryItem.convertedSize },
                                                set: { inventoryItem.convertedSize = $0 })
 
-                    GridSelectorMenu(selectedItem: size, options: sizesArray, style: gridSelectorStyle)
+                    GridSelectorMenu(selectedItem: size, options: sizesArray, style: style)
                 }
             }
         }
