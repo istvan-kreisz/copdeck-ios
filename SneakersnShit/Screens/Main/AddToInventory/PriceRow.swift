@@ -19,7 +19,7 @@ struct PriceRow: View {
     let setPrice: (PriceWithCurrency) -> Void
     var getDate: (() -> Double?)?
     var setDate: ((Double) -> Void)?
-    
+
     var onTooltipTapped: (() -> Void)? = nil
 
     func updatePrice(newPrice: String? = nil, newCurrencySymbol: String? = nil) -> PriceWithCurrency {
@@ -35,16 +35,13 @@ struct PriceRow: View {
                 .foregroundColor(.customText1)
                 .padding(.leading, 5)
 
-            VStack {
-                Spacer()
-                DatePicker(selection: date, displayedComponents: .date) {
-                    EmptyView().frame(width: 0, alignment: .leading)
-                }
-                .labelsHidden()
-                .accentColor(.customText2)
-                .layoutPriority(2)
-                Spacer()
+            DatePicker(selection: date, displayedComponents: .date) {
+                EmptyView().frame(width: 0, alignment: .leading)
             }
+            .labelsHidden()
+            .accentColor(.customText2)
+            .layoutPriority(2)
+            .centeredVertically()
             .frame(height: Styles.inputFieldHeight)
         }
     }
