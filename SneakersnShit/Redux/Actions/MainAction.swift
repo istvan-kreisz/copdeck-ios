@@ -15,6 +15,7 @@ enum MainAction {
     case setUser(user: User)
     case updateUsername(username: String)
     case addNewTag(tag: Tag)
+    case deleteTag(tag: Tag)
     case enabledNotifications
     // feed
     case getFeedPosts(loadMore: Bool, completion: (Result<PaginatedResult<[FeedPost]>, AppError>) -> Void)

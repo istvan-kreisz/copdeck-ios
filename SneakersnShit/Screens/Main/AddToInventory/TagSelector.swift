@@ -14,6 +14,7 @@ struct TagSelector: View {
     @Binding var tags: [Tag]
     @Binding var selectedTags: [Tag]
     let didTapAddTag: () -> Void
+    let didTapDeleteTag: (Tag) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
@@ -35,7 +36,7 @@ struct TagSelector: View {
                                                                selectedTags = selectedTags.filter { $0.id != tag.id }
                                                            }
                                                        })
-                        TagView(title: tag.name, color: tag.uiColor, isSelected: isSelected)
+                        TagView(title: tag.name, color: tag.uiColor, isSelected: isSelected) { didTapDeleteTag(tag) }
                     }
                     AccessoryButton(title: "new tag",
                                     shouldCapitalizeTitle: false,

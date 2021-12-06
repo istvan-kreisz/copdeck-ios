@@ -12,6 +12,7 @@ struct TagView: View {
     var title: String
     var color: Color
     @Binding var isSelected: Bool
+    var deleteTag: () -> Void
     
     static let height: CGFloat = 22
 
@@ -35,6 +36,8 @@ struct TagView: View {
         .onTapGesture {
             isSelected.toggle()
         }
-        
+        .contextMenu {
+            Button("Delete tag", action: deleteTag)
+        }
     }
 }

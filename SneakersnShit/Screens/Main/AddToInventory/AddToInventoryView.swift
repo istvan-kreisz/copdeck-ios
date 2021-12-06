@@ -49,7 +49,7 @@ struct AddToInventoryView: View {
         self._name = State(initialValue: item?.name ?? "")
         self._styleId = State(initialValue: item?.styleId ?? "")
         self._notes = State(initialValue: "")
-        
+
         let isValidSize = item.map { i in presented.wrappedValue.size.map { i.sortedSizes.contains($0) } ?? false } ?? false
         let inventoryItem1: InventoryItem
         if let item = item {
@@ -63,7 +63,6 @@ struct AddToInventoryView: View {
         var sizesConverted = sortedSizes
         sizesConverted[.shoe] = sizesConverted[.shoe]?.asSizes(of: inventoryItem1)
         self.sizesConverted = sizesConverted
-
 
         self._inventoryItem2 = State(initialValue: nil)
         self._inventoryItem3 = State(initialValue: nil)
@@ -115,7 +114,7 @@ struct AddToInventoryView: View {
                                 addQuantitySelector: true,
                                 didTapAddTag: {
                                     showAddNewTagPopup = true
-                                })
+                                }, didTapDeleteTag: didTapDeleteTag)
                     if inventoryItem2 != nil {
                         NewItemCard(inventoryItem: .init($inventoryItem2, replacingNilWith: .empty),
                                     tags: $tags,
@@ -133,7 +132,7 @@ struct AddToInventoryView: View {
                                         self.inventoryItem5 = nil
                                     }, didTapAddTag: {
                                         showAddNewTagPopup = true
-                                    })
+                                    }, didTapDeleteTag: didTapDeleteTag)
                     }
                     if inventoryItem3 != nil {
                         NewItemCard(inventoryItem: .init($inventoryItem3, replacingNilWith: .empty),
@@ -151,7 +150,7 @@ struct AddToInventoryView: View {
                                         self.inventoryItem5 = nil
                                     }, didTapAddTag: {
                                         showAddNewTagPopup = true
-                                    })
+                                    }, didTapDeleteTag: didTapDeleteTag)
                     }
                     if inventoryItem4 != nil {
                         NewItemCard(inventoryItem: .init($inventoryItem4, replacingNilWith: .empty),
@@ -168,7 +167,7 @@ struct AddToInventoryView: View {
                                         self.inventoryItem5 = nil
                                     }, didTapAddTag: {
                                         showAddNewTagPopup = true
-                                    })
+                                    }, didTapDeleteTag: didTapDeleteTag)
                     }
                     if inventoryItem5 != nil {
                         NewItemCard(inventoryItem: .init($inventoryItem5, replacingNilWith: .empty),
@@ -184,7 +183,7 @@ struct AddToInventoryView: View {
                                         self.inventoryItem5 = nil
                                     }, didTapAddTag: {
                                         showAddNewTagPopup = true
-                                    })
+                                    }, didTapDeleteTag: didTapDeleteTag)
                     }
                     if itemCount != allInventoryItems.count {
                         AccessoryButton(title: "Add More",
@@ -228,6 +227,11 @@ struct AddToInventoryView: View {
             }
         }
         .navigationbarHidden()
+    }
+
+    private func didTapDeleteTag(tag: Tag) {
+        AppStore.default.send(.main(action: .deleteTag(tag: tag)))
+        self.tags.removeAll(where: { $0.id == tag.id })
     }
 
     private func newInventoryItem(size: String?) -> InventoryItem {

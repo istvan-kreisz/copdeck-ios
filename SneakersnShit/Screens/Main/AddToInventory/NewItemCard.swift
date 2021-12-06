@@ -27,6 +27,7 @@ struct NewItemCard: View {
     let didTapDelete: (() -> Void)?
     let onCopDeckPriceTooltipTapped: (() -> Void)?
     let didTapAddTag: () -> Void
+    let didTapDeleteTag: (Tag) -> Void
 
     var textFieldStyle: TextFieldRounded.Style {
         style == .card ? .gray : .white
@@ -50,7 +51,8 @@ struct NewItemCard: View {
          addQuantitySelector: Bool,
          didTapDelete: (() -> Void)? = nil,
          onCopDeckPriceTooltipTapped: (() -> Void)? = nil,
-         didTapAddTag: @escaping (() -> Void)) {
+         didTapAddTag: @escaping (() -> Void),
+         didTapDeleteTag: @escaping (Tag) -> Void) {
         self._inventoryItem = inventoryItem ?? Binding.constant(InventoryItem.init(fromItem: .sample))
         self._tags = tags
         self.purchasePrice = purchasePrice
@@ -64,6 +66,7 @@ struct NewItemCard: View {
         self.didTapDelete = didTapDelete
         self.onCopDeckPriceTooltipTapped = onCopDeckPriceTooltipTapped
         self.didTapAddTag = didTapAddTag
+        self.didTapDeleteTag = didTapDeleteTag
     }
 
     var body: some View {
@@ -136,7 +139,7 @@ struct NewItemCard: View {
                                  inventoryItem.condition = .new
                              })
 
-            TagSelector(style: style, tags: $tags, selectedTags: $inventoryItem.tags, didTapAddTag: didTapAddTag)
+            TagSelector(style: style, tags: $tags, selectedTags: $inventoryItem.tags, didTapAddTag: didTapAddTag, didTapDeleteTag: didTapDeleteTag)
                 .collapsible(buttonTitle: "add tags",
                              style: style,
                              contentHeight: TagView.height + TagSelector.padding * 2,

@@ -51,6 +51,11 @@ func appReducer(state: inout AppState,
                 updatedUser.tags = (updatedUser.tags ?? []) + [tag]
                 environment.dataController.update(user: updatedUser)
             }
+        case let .deleteTag(tag: tag):
+            if var updatedUser = state.user {
+                updatedUser.tags = (updatedUser.tags ?? []).filter { $0.id != tag.id }
+                environment.dataController.update(user: updatedUser)
+            }
         case .enabledNotifications:
             Analytics.logEvent("enable_notifications", parameters: ["userId": state.user?.id ?? ""])
             if var updatedUser = state.user, updatedUser.notificationsEnabled != true {

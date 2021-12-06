@@ -128,6 +128,9 @@ struct InventoryItemDetailView: View {
                                                  "When you share your stack on the CopDeck feed or via a link, this the price that will show up next to your item.")
                                     }, didTapAddTag: {
                                         showAddNewTagPopup = true
+                                    }, didTapDeleteTag: { tag in
+                                        AppStore.default.send(.main(action: .deleteTag(tag: tag)))
+                                        self.tags.removeAll(where: { $0.id == tag.id })
                                     })
 
                         VStack(alignment: .leading, spacing: 9) {
