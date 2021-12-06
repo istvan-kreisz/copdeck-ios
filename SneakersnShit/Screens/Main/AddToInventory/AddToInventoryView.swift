@@ -29,6 +29,7 @@ struct AddToInventoryView: View {
 
     @State var tags: [Tag]
     @State var showAddNewTagPopup = false
+    @State var updateSignal = 0
 
     var allInventoryItems: [InventoryItem?] { [inventoryItem1,
                                                inventoryItem2,
@@ -77,148 +78,150 @@ struct AddToInventoryView: View {
     }
 
     var body: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            VStack(alignment: .center, spacing: 20) {
+        VerticalListView(bottomPadding: 0, spacing: 8, addHorizontalPadding: true, listRowStyling: .color(.customBackground)) {
+            VStack(spacing: 20) {
                 ItemImageViewWithNavBar(itemId: item?.id,
                                         source: item.map { imageSource(for: $0) },
                                         shouldDismiss: { presented = (false, nil) },
                                         flipImage: item?.imageURL?.store?.id == .klekt)
+                    .cornerRadius(Styles.cornerRadius)
 
-                VStack(alignment: .center, spacing: 8) {
-                    Text("Add To Inventory")
-                        .font(.bold(size: 30))
-                        .foregroundColor(.customText1)
-                        .padding(.bottom, 8)
-                    HStack(spacing: 10) {
-                        TextFieldRounded(title: "name",
-                                         placeHolder: "name",
-                                         style: .white,
-                                         text: $name)
-                        if item?.isShoe == true {
-                            TextFieldRounded(title: "styleid (optional)",
-                                             placeHolder: "styleid",
-                                             style: .white,
-                                             text: item?.isShoe == true ? $styleId : .constant("-"),
-                                             width: 100)
-                        }
-                    }
-
-                    NewItemCard(inventoryItem: $inventoryItem1,
-                                tags: $tags,
-                                purchasePrice: priceWithCurrency,
-                                currency: currency,
-                                sortedSizes: sortedSizes,
-                                sizesConverted: sizesConverted,
-                                showCopDeckPrice: false,
-                                highlightCopDeckPrice: false,
-                                addQuantitySelector: true,
-                                didTapAddTag: {
-                                    showAddNewTagPopup = true
-                                }, didTapDeleteTag: didTapDeleteTag)
-                    if inventoryItem2 != nil {
-                        NewItemCard(inventoryItem: .init($inventoryItem2, replacingNilWith: .empty),
-                                    tags: $tags,
-                                    purchasePrice: priceWithCurrency,
-                                    currency: currency,
-                                    sortedSizes: sortedSizes,
-                                    sizesConverted: sizesConverted,
-                                    showCopDeckPrice: false,
-                                    highlightCopDeckPrice: false,
-                                    addQuantitySelector: true,
-                                    didTapDelete: {
-                                        self.inventoryItem2 = self.inventoryItem3
-                                        self.inventoryItem3 = self.inventoryItem4
-                                        self.inventoryItem4 = self.inventoryItem5
-                                        self.inventoryItem5 = nil
-                                    }, didTapAddTag: {
-                                        showAddNewTagPopup = true
-                                    }, didTapDeleteTag: didTapDeleteTag)
-                    }
-                    if inventoryItem3 != nil {
-                        NewItemCard(inventoryItem: .init($inventoryItem3, replacingNilWith: .empty),
-                                    tags: $tags,
-                                    purchasePrice: priceWithCurrency,
-                                    currency: currency,
-                                    sortedSizes: sortedSizes,
-                                    sizesConverted: sizesConverted,
-                                    showCopDeckPrice: false,
-                                    highlightCopDeckPrice: false,
-                                    addQuantitySelector: true,
-                                    didTapDelete: {
-                                        self.inventoryItem3 = self.inventoryItem4
-                                        self.inventoryItem4 = self.inventoryItem5
-                                        self.inventoryItem5 = nil
-                                    }, didTapAddTag: {
-                                        showAddNewTagPopup = true
-                                    }, didTapDeleteTag: didTapDeleteTag)
-                    }
-                    if inventoryItem4 != nil {
-                        NewItemCard(inventoryItem: .init($inventoryItem4, replacingNilWith: .empty),
-                                    tags: $tags,
-                                    purchasePrice: priceWithCurrency,
-                                    currency: currency,
-                                    sortedSizes: sortedSizes,
-                                    sizesConverted: sizesConverted,
-                                    showCopDeckPrice: false,
-                                    highlightCopDeckPrice: false,
-                                    addQuantitySelector: true,
-                                    didTapDelete: {
-                                        self.inventoryItem4 = self.inventoryItem5
-                                        self.inventoryItem5 = nil
-                                    }, didTapAddTag: {
-                                        showAddNewTagPopup = true
-                                    }, didTapDeleteTag: didTapDeleteTag)
-                    }
-                    if inventoryItem5 != nil {
-                        NewItemCard(inventoryItem: .init($inventoryItem5, replacingNilWith: .empty),
-                                    tags: $tags,
-                                    purchasePrice: priceWithCurrency,
-                                    currency: currency,
-                                    sortedSizes: sortedSizes,
-                                    sizesConverted: sizesConverted,
-                                    showCopDeckPrice: false,
-                                    highlightCopDeckPrice: false,
-                                    addQuantitySelector: true,
-                                    didTapDelete: {
-                                        self.inventoryItem5 = nil
-                                    }, didTapAddTag: {
-                                        showAddNewTagPopup = true
-                                    }, didTapDeleteTag: didTapDeleteTag)
-                    }
-                    if itemCount != allInventoryItems.count {
-                        AccessoryButton(title: "Add More",
-                                        color: .customBlue,
-                                        textColor: .customBlue,
-                                        width: 110,
-                                        imageName: "plus",
-                                        tapped: addMore)
-                            .leftAligned()
-                    }
-
-                    TextFieldRounded(title: "notes (optional)",
-                                     placeHolder: "add any notes here",
-                                     style: .white,
-                                     text: $notes)
-                        .padding(.top, 11)
-
-                    RoundedButton<EmptyView>(text: "Add \(itemCount) item\(itemCount == 1 ? "" : "s")",
-                                             width: 145,
-                                             height: 60,
-                                             maxSize: nil,
-                                             color: .customBlack,
-                                             accessoryView: nil,
-                                             tapped: { addItems() })
-                        .centeredHorizontally()
-                        .padding(.top, 15)
-                }
-                .padding(.horizontal, Styles.horizontalMargin)
-                .padding(.top, 14)
-                .padding(.bottom, 20)
-                .background(Color.customBackground
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .edgesIgnoringSafeArea(.all))
+                Text("Add To Inventory")
+                    .font(.bold(size: 30))
+                    .foregroundColor(.customText1)
+                    .padding(.bottom, 8)
             }
+
+            HStack(spacing: 10) {
+                TextFieldRounded(title: "name",
+                                 placeHolder: "name",
+                                 style: .white,
+                                 text: $name)
+                if item?.isShoe == true {
+                    TextFieldRounded(title: "styleid (optional)",
+                                     placeHolder: "styleid",
+                                     style: .white,
+                                     text: item?.isShoe == true ? $styleId : .constant("-"),
+                                     width: 100)
+                }
+            }
+
+            NewItemCard(inventoryItem: $inventoryItem1,
+                        tags: $tags,
+                        updateSignal: $updateSignal,
+                        purchasePrice: priceWithCurrency,
+                        currency: currency,
+                        sortedSizes: sortedSizes,
+                        sizesConverted: sizesConverted,
+                        showCopDeckPrice: false,
+                        highlightCopDeckPrice: false,
+                        addQuantitySelector: true,
+                        didTapAddTag: {
+                            showAddNewTagPopup = true
+                        }, didTapDeleteTag: didTapDeleteTag)
+            if inventoryItem2 != nil {
+                NewItemCard(inventoryItem: .init($inventoryItem2, replacingNilWith: .empty),
+                            tags: $tags,
+                            updateSignal: $updateSignal,
+                            purchasePrice: priceWithCurrency,
+                            currency: currency,
+                            sortedSizes: sortedSizes,
+                            sizesConverted: sizesConverted,
+                            showCopDeckPrice: false,
+                            highlightCopDeckPrice: false,
+                            addQuantitySelector: true,
+                            didTapDelete: {
+                                self.inventoryItem2 = self.inventoryItem3
+                                self.inventoryItem3 = self.inventoryItem4
+                                self.inventoryItem4 = self.inventoryItem5
+                                self.inventoryItem5 = nil
+                            }, didTapAddTag: {
+                                showAddNewTagPopup = true
+                            }, didTapDeleteTag: didTapDeleteTag)
+            }
+            if inventoryItem3 != nil {
+                NewItemCard(inventoryItem: .init($inventoryItem3, replacingNilWith: .empty),
+                            tags: $tags,
+                            updateSignal: $updateSignal,
+                            purchasePrice: priceWithCurrency,
+                            currency: currency,
+                            sortedSizes: sortedSizes,
+                            sizesConverted: sizesConverted,
+                            showCopDeckPrice: false,
+                            highlightCopDeckPrice: false,
+                            addQuantitySelector: true,
+                            didTapDelete: {
+                                self.inventoryItem3 = self.inventoryItem4
+                                self.inventoryItem4 = self.inventoryItem5
+                                self.inventoryItem5 = nil
+                            }, didTapAddTag: {
+                                showAddNewTagPopup = true
+                            }, didTapDeleteTag: didTapDeleteTag)
+            }
+            if inventoryItem4 != nil {
+                NewItemCard(inventoryItem: .init($inventoryItem4, replacingNilWith: .empty),
+                            tags: $tags,
+                            updateSignal: $updateSignal,
+                            purchasePrice: priceWithCurrency,
+                            currency: currency,
+                            sortedSizes: sortedSizes,
+                            sizesConverted: sizesConverted,
+                            showCopDeckPrice: false,
+                            highlightCopDeckPrice: false,
+                            addQuantitySelector: true,
+                            didTapDelete: {
+                                self.inventoryItem4 = self.inventoryItem5
+                                self.inventoryItem5 = nil
+                            }, didTapAddTag: {
+                                showAddNewTagPopup = true
+                            }, didTapDeleteTag: didTapDeleteTag)
+            }
+            if inventoryItem5 != nil {
+                NewItemCard(inventoryItem: .init($inventoryItem5, replacingNilWith: .empty),
+                            tags: $tags,
+                            updateSignal: $updateSignal,
+                            purchasePrice: priceWithCurrency,
+                            currency: currency,
+                            sortedSizes: sortedSizes,
+                            sizesConverted: sizesConverted,
+                            showCopDeckPrice: false,
+                            highlightCopDeckPrice: false,
+                            addQuantitySelector: true,
+                            didTapDelete: {
+                                self.inventoryItem5 = nil
+                            }, didTapAddTag: {
+                                showAddNewTagPopup = true
+                            }, didTapDeleteTag: didTapDeleteTag)
+            }
+            if itemCount != allInventoryItems.count {
+                AccessoryButton(title: "Add More",
+                                color: .customBlue,
+                                textColor: .customBlue,
+                                width: 110,
+                                imageName: "plus",
+                                tapped: addMore)
+                    .leftAligned()
+            }
+
+            TextFieldRounded(title: "notes",
+                             placeHolder: "add any notes here",
+                             style: .white,
+                             text: $notes)
+                .padding(.top, 11)
+
+            RoundedButton<EmptyView>(text: "Add \(itemCount) item\(itemCount == 1 ? "" : "s")",
+                                     width: 145,
+                                     height: 60,
+                                     maxSize: nil,
+                                     color: .customBlack,
+                                     accessoryView: nil,
+                                     tapped: { addItems() })
+                .centeredHorizontally()
+                .padding(.top, 15)
         }
+        .background(Color.customBackground
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .edgesIgnoringSafeArea(.all))
         .withPopup {
             NewTagPopup(isShowing: $showAddNewTagPopup) { name, color in
                 let newTag = Tag(name: name, color: color)
@@ -251,17 +254,20 @@ struct AddToInventoryView: View {
     }
 
     private func addItems() {
-        let inventoryItems = allInventoryItems
-            .compactMap { $0 }
-            .flatMap { inventoryItem -> [InventoryItem] in
-                Array.init(repeating: 0, count: inventoryItem.count).map { _ in
-                    var copy = inventoryItem.copy(withName: name, styleId: styleId, notes: notes)
-                    copy.id = UUID().uuidString
-                    return copy
+        updateSignal += 1
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            let inventoryItems = allInventoryItems
+                .compactMap { $0 }
+                .flatMap { inventoryItem -> [InventoryItem] in
+                    Array.init(repeating: 0, count: inventoryItem.count).map { _ in
+                        var copy = inventoryItem.copy(withName: name, styleId: styleId, notes: notes)
+                        copy.id = UUID().uuidString
+                        return copy
+                    }
                 }
-            }
-        AppStore.default.send(.main(action: .addToInventory(inventoryItems: inventoryItems)))
-        presented = (false, nil)
-        addedInvantoryItem = true
+            AppStore.default.send(.main(action: .addToInventory(inventoryItems: inventoryItems)))
+            presented = (false, nil)
+            addedInvantoryItem = true
+        }
     }
 }

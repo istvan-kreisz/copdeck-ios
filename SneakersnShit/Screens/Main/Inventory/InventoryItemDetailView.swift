@@ -30,6 +30,7 @@ struct InventoryItemDetailView: View {
 
     @State var alert: (String, String)? = nil
     @State var showAddNewTagPopup = false
+    @State var updateSignal = 0
 
     @State var tags: [Tag]
 
@@ -115,6 +116,7 @@ struct InventoryItemDetailView: View {
 
                         NewItemCard(inventoryItem: $inventoryItem,
                                     tags: $tags,
+                                    updateSignal: $updateSignal,
                                     purchasePrice: inventoryItem.purchasePrice,
                                     currency: store.state.currency,
                                     style: NewItemCard.Style.noBackground,
@@ -292,8 +294,11 @@ struct InventoryItemDetailView: View {
     }
 
     private func updateInventoryItem() {
-        let updatedInventoryItem = inventoryItem.copy(withName: name, styleId: styleId, notes: notes)
-        store.send(.main(action: .updateInventoryItem(inventoryItem: updatedInventoryItem)))
-        shouldDismiss()
+        updateSignal += 1
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            let updatedInventoryItem = inventoryItem.copy(withName: name, styleId: styleId, notes: notes)
+            store.send(.main(action: .updateInventoryItem(inventoryItem: updatedInventoryItem)))
+            shouldDismiss()
+        }
     }
 }

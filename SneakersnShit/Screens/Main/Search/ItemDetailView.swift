@@ -28,7 +28,6 @@ struct ItemDetailView: View {
     private let itemId: String
     private let styleId: String
 
-
     enum BorderStyle {
         case red, green, regular
     }
@@ -314,6 +313,7 @@ struct ItemDetailView: View {
                                                                 restocksPriceType: restocksPriceType)) ?? []) { (row: Item.PriceRow) in
                                         priceRow(row: row)
                                     }
+                                    .id(0)
                                 }
                                 .padding(.horizontal, 10)
                             }

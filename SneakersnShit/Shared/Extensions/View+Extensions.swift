@@ -188,6 +188,7 @@ extension View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             .listRowInsets(EdgeInsets(top: -2, leading: -30, bottom: -2, trailing: -30))
             .background(backgroundColor)
+            .buttonStyle(PlainButtonStyle())
     }
 
     func withTellTip(text: String = "What's this?", didTap: @escaping () -> Void) -> some View {

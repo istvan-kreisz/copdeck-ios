@@ -14,7 +14,10 @@ struct NewItemCard: View {
 
     static let collapsedElementTopPadding: CGFloat = -11
 
-    @Binding var inventoryItem: InventoryItem
+    @Binding var inventoryItemParent: InventoryItem
+    @State var inventoryItem: InventoryItem
+    @Binding var updateSignal: Int
+    
     @Binding var tags: [Tag]
     let purchasePrice: PriceWithCurrency?
     let currency: Currency
@@ -41,6 +44,7 @@ struct NewItemCard: View {
 
     init(inventoryItem: Binding<InventoryItem>?,
          tags: Binding<[Tag]>,
+         updateSignal: Binding<Int>,
          purchasePrice: PriceWithCurrency?,
          currency: Currency,
          style: Style = .card,
@@ -53,8 +57,10 @@ struct NewItemCard: View {
          onCopDeckPriceTooltipTapped: (() -> Void)? = nil,
          didTapAddTag: @escaping (() -> Void),
          didTapDeleteTag: @escaping (Tag) -> Void) {
-        self._inventoryItem = inventoryItem ?? Binding.constant(InventoryItem.init(fromItem: .sample))
+        self._inventoryItemParent = inventoryItem ?? Binding.constant(InventoryItem.init(fromItem: .sample))
+        self._inventoryItem = State(initialValue: inventoryItem?.wrappedValue ?? InventoryItem.init(fromItem: .sample))
         self._tags = tags
+        self._updateSignal = updateSignal
         self.purchasePrice = purchasePrice
         self.currency = currency
         self.style = style
