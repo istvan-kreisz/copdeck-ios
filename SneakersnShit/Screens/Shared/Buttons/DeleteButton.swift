@@ -14,9 +14,14 @@ struct DeleteButton: View {
     enum Size {
         case small, large
     }
-    var frameSize: CGFloat {
-        self.size == .small ? 18.0 : 40.0
+    static func size(_ size: Size) -> CGFloat {
+        size == .small ? 18.0 : 40.0
     }
+    
+    var frameSize: CGFloat {
+        Self.size(self.size)
+    }
+    
     var imageSize: CGFloat {
         self.size == .small ? 11.0 : 30.0
     }

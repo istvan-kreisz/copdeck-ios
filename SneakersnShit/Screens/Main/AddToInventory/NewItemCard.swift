@@ -12,10 +12,6 @@ struct NewItemCard: View {
         case card, noBackground
     }
 
-    @State var didTapPurchasePrice = false
-    @State var didTapSellingPrice = false
-    @State private var date = Date()
-
     @Binding var inventoryItem: InventoryItem
     @Binding var tags: [Tag]
     let purchasePrice: PriceWithCurrency?
@@ -28,8 +24,6 @@ struct NewItemCard: View {
     let didTapDelete: (() -> Void)?
     let onCopDeckPriceTooltipTapped: (() -> Void)?
     let didTapAddTag: () -> Void
-    
-    @State var showPurchaseRow = false
 
     var sizesConverted: [ItemType: [String]] {
         var sizesUpdated = self.sizes
@@ -77,27 +71,6 @@ struct NewItemCard: View {
         self.didTapAddTag = didTapAddTag
     }
 
-    @ViewBuilder func datePicker(title: String, date: Binding<Date>) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(title)
-                .font(.regular(size: 12))
-                .foregroundColor(.customText1)
-                .padding(.leading, 5)
-
-            VStack {
-                Spacer()
-                DatePicker(selection: date, displayedComponents: .date) {
-                    EmptyView().frame(width: 0, alignment: .leading)
-                }
-                .labelsHidden()
-                .accentColor(.customText2)
-                .layoutPriority(2)
-                Spacer()
-            }
-            .frame(height: Styles.inputFieldHeight)
-        }
-    }
-
     var body: some View {
         VStack(alignment: .leading, spacing: 11) {
             if didTapDelete != nil {
@@ -108,87 +81,48 @@ struct NewItemCard: View {
                         .font(.semiBold(size: 14))
                         .foregroundColor(Color.customRed)
                 }
-//                DeleteButton(style: .line) {
-//                    didTapDelete?()
-//                }
                 .rightAligned()
                 .padding(.trailing, 3)
                 .padding(.bottom, -4)
             }
 
-            let showPurchaseRow_ = Binding<Bool>(get: { inventoryItem.purchasePrice != nil || inventoryItem.purchasedDate != nil || showPurchaseRow },
-                                                 set: { isShowing in
-                showPurchaseRow = isShowing
-                if !isShowing {
-                    inventoryItem.purchasePrice = nil
-                    inventoryItem.purchasedDate = nil
-                }
-            })
+            PriceRow(textFieldTitle: "purchase price",
+                     dateTitle: "purchased on",
+                     textFieldStyle: textFieldStyle,
+                     dropdownStyle: dropdownStyle,
+                     defaultCurrency: currency)
+            { inventoryItem.purchasePrice }
+            setPrice: { inventoryItem.purchasePrice = $0 }
+            getDate: { inventoryItem.purchasedDate }
+            setDate: { inventoryItem.purchasedDate = $0 }
 
-            HStack(alignment: .top, spacing: 11) {
-                let purchasePrice = Binding<String>(get: { (inventoryItem.purchasePrice?.price).asString() },
-                                                    set: { inventoryItem.setPurchasePrice(price: $0, defaultCurrency: currency) })
-                let purchaseCurrency =
-                    Binding<String>(get: { inventoryItem.purchasePrice?.currencySymbol.rawValue ?? currency.symbol.rawValue },
-                                    set: { inventoryItem.setPurchaseCurrency(currency: $0) })
-                let purchasedDate = Binding<Date>(get: { inventoryItem.purchasedDate.serverDate ?? Date() },
-                                                  set: { new in inventoryItem.purchasedDate = new.timeIntervalSince1970 * 1000 })
+            PriceRow(textFieldTitle: "selling price",
+                     dateTitle: "sold on",
+                     textFieldStyle: textFieldStyle,
+                     dropdownStyle: dropdownStyle,
+                     defaultCurrency: currency)
+            { inventoryItem.soldPrice?.price }
+            setPrice: { inventoryItem.soldPrice = .init(storeId: nil, price: $0) }
+            getDate: { inventoryItem.soldDate }
+            setDate: { inventoryItem.soldDate = $0 }
+                .collapsible(buttonTitle: "add selling details",
+                             style: style,
+                             contentHeight: Styles.inputFieldHeight,
+                             showIf: { inventoryItem.soldPrice != nil || inventoryItem.soldDate != nil },
+                             onHide: {
+                                 inventoryItem.soldPrice = nil
+                                 inventoryItem.soldDate = nil
+                             })
 
-                PriceFieldWithCurrency(title: "purchase price",
-                                       textFieldStyle: textFieldStyle,
-                                       dropDownStyle: dropdownStyle,
-                                       price: purchasePrice,
-                                       currency: purchaseCurrency) { isActive in
-                    if isActive, style == .card {
-                        if !didTapPurchasePrice {
-                            didTapPurchasePrice = true
-                            inventoryItem.purchasePrice = nil
-                        }
-                    }
-                }
-                datePicker(title: "purchased date", date: purchasedDate)
-            }
-            .collapsible(title: nil, buttonTitle: "add purchase details", titleColor: nil, style: style, deleteButtonBottomPadding: 12, isShowing: showPurchaseRow_, onTooltipTapped: nil)
-            
-            
-            HStack(alignment: .top, spacing: 11) {
-                let soldPrice =
-                    Binding<String>(get: { (inventoryItem.soldPrice?.price?.price).asString() },
-                                    set: { inventoryItem.setSoldPrice(price: $0, defaultCurrency: self.currency) })
-                let soldCurrency =
-                    Binding<String>(get: { inventoryItem.soldPrice?.price?.currencySymbol.rawValue ?? self.currency.symbol.rawValue },
-                                    set: { inventoryItem.setSoldPriceCurrency(currency: $0) })
-                let soldDate = Binding<Date>(get: { inventoryItem.soldDate.serverDate ?? Date() },
-                                             set: { new in inventoryItem.soldDate = new.timeIntervalSince1970 * 1000 })
-
-                PriceFieldWithCurrency(title: "selling price (optional)",
-                                       textFieldStyle: textFieldStyle,
-                                       dropDownStyle: dropdownStyle,
-                                       price: soldPrice,
-                                       currency: soldCurrency) { isActive in
-                    if isActive, style == .card {
-                        if !didTapSellingPrice {
-                            didTapSellingPrice = true
-                            inventoryItem.soldPrice = nil
-                        }
-                    }
-                }
-                datePicker(title: "sold date", date: soldDate)
-            }
             if showCopDeckPrice {
-                let price = Binding<String>(get: { (inventoryItem.copdeckPrice?.price.price).map { $0.rounded(toPlaces: 0) } ?? "" },
-                                            set: { inventoryItem.setCopDeckPrice(price: $0, defaultCurrency: self.currency) })
-                let currency =
-                    Binding<String>(get: { inventoryItem.copdeckPrice?.price.currencySymbol.rawValue ?? self.currency.symbol.rawValue },
-                                    set: { inventoryItem.setCopDeckCurrency(currency: $0) })
-
-                PriceFieldWithCurrency(title: "copdeck price (optional)",
-                                       titleColor: highlightCopDeckPrice ? .customRed : nil,
-                                       textFieldStyle: textFieldStyle,
-                                       dropDownStyle: dropdownStyle,
-                                       price: price,
-                                       currency: currency,
-                                       onTooltipTapped: onCopDeckPriceTooltipTapped)
+                PriceRow(textFieldTitle: "copdeck price",
+                         titleColor: highlightCopDeckPrice ? .customRed : nil,
+                         textFieldStyle: textFieldStyle,
+                         dropdownStyle: dropdownStyle,
+                         defaultCurrency: currency)
+                { inventoryItem.copdeckPrice?.price }
+                setPrice: { inventoryItem.copdeckPrice = .init(storeId: "copdeck", price: $0) }
+                onTooltipTapped: { onCopDeckPriceTooltipTapped?() }
             }
 
             HStack(alignment: .top, spacing: 11) {
@@ -207,7 +141,16 @@ struct NewItemCard: View {
                              options: InventoryItem.Condition.allCases.map { $0.rawValue },
                              style: dropdownStyle)
             }
+            .collapsible(isActive: addQuantitySelector,
+                         buttonTitle: "add quantity & condition",
+                         style: style,
+                         contentHeight: DropDownMenu.height,
+                         onHide: {
+                             inventoryItem.count = 1
+                             inventoryItem.condition = .new
+                         })
 
+            let tagPadding: CGFloat = 3
             VStack(alignment: .leading, spacing: 5) {
                 Text("tags")
                     .font(.regular(size: 12))
@@ -242,11 +185,18 @@ struct NewItemCard: View {
                                         buttonPosition: .right,
                                         isContentLocked: false,
                                         tapped: didTapAddTag)
+                        Color.clear.frame(width: 2)
                     }
-                    .padding(.vertical, 3)
+                    .padding(.vertical, tagPadding)
                 }
             }
+            .collapsible(buttonTitle: "add tags",
+                         style: style,
+                         contentHeight: TagView.height + tagPadding * 2,
+                         showIf: { !inventoryItem.tags.isEmpty },
+                         onHide: { inventoryItem.tags.removeAll() })
 
+            let stacksPadding: CGFloat = 3
             if !showCopDeckPrice && !AppStore.default.state.stacks.isEmpty {
                 VStack(alignment: .leading, spacing: 5) {
                     Text("add to stack(s)")
@@ -270,9 +220,13 @@ struct NewItemCard: View {
                                 StackSelectorView(title: stack.name, color: .customPurple, isSelected: isSelected)
                             }
                         }
-                        .padding(.vertical, 3)
+                        .padding(.vertical, stacksPadding)
                     }
                 }
+                .collapsible(buttonTitle: "add to stack(s)",
+                             style: style,
+                             contentHeight: StackSelectorView.height + stacksPadding * 2,
+                             onHide: { inventoryItem._addToStacks.removeAll() })
             }
 
             Group {

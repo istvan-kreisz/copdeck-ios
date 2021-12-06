@@ -296,52 +296,67 @@ struct WithAlert: ViewModifier {
 }
 
 struct Collapsible: ViewModifier {
-    let title: String?
+    let isActive: Bool
+    var title: String? = nil
     let buttonTitle: String
     var titleColor: Color? = nil
     let style: NewItemCard.Style
-    let deleteButtonBottomPadding: CGFloat
+    let contentHeight: CGFloat
 
-    @Binding var isShowing: Bool
+    @State var isShowing = false
+    var showIf: (() -> Bool)?
+    var onHide: () -> Void
     var onTooltipTapped: (() -> Void)? = nil
 
     func body(content: Content) -> some View {
+        let show = Binding<Bool>(get: { (showIf?() ?? false) || isShowing },
+                                 set: { show in
+                                     if !show {
+                                         onHide()
+                                     }
+                                     isShowing = show
+                                 })
+
         VStack(alignment: .leading, spacing: 4) {
-            if let title = title, isShowing {
-                HStack(alignment: .center, spacing: 3) {
-                    Text(title)
-                        .font(.regular(size: 12))
-                        .foregroundColor(titleColor ?? (style == .card ? .customText1 : .customText2))
-                        .padding(.leading, 5)
-                    if let onTooltipTapped = onTooltipTapped {
-                        Button(action: onTooltipTapped) {
-                            Image(systemName: "questionmark.circle.fill")
-                                .font(.regular(size: 13))
-                                .foregroundColor(titleColor ?? (style == .card ? .customText1 : .customText2))
+            if isActive {
+                if let title = title, show.wrappedValue {
+                    HStack(alignment: .center, spacing: 3) {
+                        Text(title)
+                            .font(.regular(size: 12))
+                            .foregroundColor(titleColor ?? (style == .card ? .customText1 : .customText2))
+                            .padding(.leading, 5)
+                        if let onTooltipTapped = onTooltipTapped {
+                            Button(action: onTooltipTapped) {
+                                Image(systemName: "questionmark.circle.fill")
+                                    .font(.regular(size: 13))
+                                    .foregroundColor(titleColor ?? (style == .card ? .customText1 : .customText2))
+                            }
                         }
                     }
                 }
-            }
 
-            if isShowing {
-                HStack(alignment: .bottom, spacing: 5) {
-                    content
-                    DeleteButton(style: .fill, size: .small, color: .customRed) {
-                        isShowing = false
+                if show.wrappedValue {
+                    HStack(alignment: .bottom, spacing: 3) {
+                        content
+                        DeleteButton(style: .fill, size: .small, color: .customRed) {
+                            show.wrappedValue = false
+                        }
+                        .padding(.bottom, (contentHeight - DeleteButton.size(.small)) / 2)
                     }
-                    .padding(.bottom, deleteButtonBottomPadding)
+                } else {
+                    AccessoryButton(title: buttonTitle,
+                                    color: .customAccent1,
+                                    textColor: .customText1,
+                                    fontSize: 11,
+                                    height: 22,
+                                    width: nil,
+                                    imageName: "plus",
+                                    buttonPosition: .right,
+                                    tapped: { show.wrappedValue = true })
+                        .padding(.top, 15)
                 }
             } else {
-                AccessoryButton(title: buttonTitle,
-                                color: .customAccent1,
-                                textColor: .customText1,
-                                fontSize: 11,
-                                height: 22,
-                                width: nil,
-                                imageName: "plus",
-                                buttonPosition: .right,
-                                tapped: { isShowing = true })
-                    .padding(.top, 15)
+                content
             }
         }
     }

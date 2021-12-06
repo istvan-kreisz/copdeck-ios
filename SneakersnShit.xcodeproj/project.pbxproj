@@ -17,6 +17,7 @@
 		5D117EAD271310E5000D1E43 /* SizeConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D117EAC271310E5000D1E43 /* SizeConversion.swift */; };
 		5D117EB12713287C000D1E43 /* sizes.json in Resources */ = {isa = PBXBuildFile; fileRef = 5D117EB02713287B000D1E43 /* sizes.json */; };
 		5D117EB3271468B7000D1E43 /* PriceFieldWithCurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D117EB2271468B7000D1E43 /* PriceFieldWithCurrency.swift */; };
+		5D1264D5275E8B8A00E66EE3 /* PriceRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D1264D4275E8B8A00E66EE3 /* PriceRow.swift */; };
 		5D19B0AB26A6D76600A31F4E /* MainAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D19B0A926A6D76600A31F4E /* MainAction.swift */; };
 		5D19B0AC26A6D76600A31F4E /* ErrorAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D19B0AA26A6D76600A31F4E /* ErrorAction.swift */; };
 		5D19B0AE26A6D7CA00A31F4E /* AuthenticationAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D19B0AD26A6D7CA00A31F4E /* AuthenticationAction.swift */; };
@@ -251,6 +252,7 @@
 		5D117EAC271310E5000D1E43 /* SizeConversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeConversion.swift; sourceTree = "<group>"; };
 		5D117EB02713287B000D1E43 /* sizes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sizes.json; sourceTree = "<group>"; };
 		5D117EB2271468B7000D1E43 /* PriceFieldWithCurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceFieldWithCurrency.swift; sourceTree = "<group>"; };
+		5D1264D4275E8B8A00E66EE3 /* PriceRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceRow.swift; sourceTree = "<group>"; };
 		5D19B0A926A6D76600A31F4E /* MainAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainAction.swift; sourceTree = "<group>"; };
 		5D19B0AA26A6D76600A31F4E /* ErrorAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorAction.swift; sourceTree = "<group>"; };
 		5D19B0AD26A6D7CA00A31F4E /* AuthenticationAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationAction.swift; sourceTree = "<group>"; };
@@ -500,6 +502,7 @@
 				5D9D520326AE359C00AB1F30 /* InventoryViewPills.swift */,
 				5D9D520726AE4CF400AB1F30 /* EditInventoryTray.swift */,
 				5D117EB2271468B7000D1E43 /* PriceFieldWithCurrency.swift */,
+				5D1264D4275E8B8A00E66EE3 /* PriceRow.swift */,
 			);
 			path = AddToInventory;
 			sourceTree = "<group>";
@@ -1601,6 +1604,7 @@
 				5DDEFDC426D042C5001B0F76 /* StaticButtonStyle.swift in Sources */,
 				5D9A473D27344FA1001C85E4 /* DBRef.swift in Sources */,
 				5D8ABBBF26B1C82500AFD8CF /* ScraperRequestInfo.swift in Sources */,
+				5D1264D5275E8B8A00E66EE3 /* PriceRow.swift in Sources */,
 				5D2726CA26CB2CE400887449 /* VerticalListView.swift in Sources */,
 				5D9D51F826ADA07700AB1F30 /* Country.swift in Sources */,
 				5DCC467226A8EBB9007671BC /* ToggleButton.swift in Sources */,

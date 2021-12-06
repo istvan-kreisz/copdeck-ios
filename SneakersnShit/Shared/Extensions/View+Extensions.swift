@@ -83,20 +83,24 @@ extension View {
             .withDefaultShadow()
     }
 
-    func collapsible(title: String?,
+    func collapsible(isActive: Bool = true,
+                     title: String? = nil,
                      buttonTitle: String,
-                     titleColor: Color?,
+                     titleColor: Color? = nil,
                      style: NewItemCard.Style,
-                     deleteButtonBottomPadding: CGFloat,
-                     isShowing: Binding<Bool>,
-                     onTooltipTapped: (() -> Void)?) -> some View {
+                     contentHeight: CGFloat,
+                     showIf: (() -> Bool)? = nil,
+                     onHide: @escaping () -> Void,
+                     onTooltipTapped: (() -> Void)? = nil) -> some View {
         ModifiedContent(content: self,
-                        modifier: Collapsible(title: title,
+                        modifier: Collapsible(isActive: isActive,
+                                              title: title,
                                               buttonTitle: buttonTitle,
                                               titleColor: titleColor,
                                               style: style,
-                                              deleteButtonBottomPadding: deleteButtonBottomPadding,
-                                              isShowing: isShowing,
+                                              contentHeight: contentHeight,
+                                              showIf: showIf,
+                                              onHide: onHide,
                                               onTooltipTapped: onTooltipTapped))
     }
 

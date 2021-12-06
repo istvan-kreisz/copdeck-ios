@@ -18,6 +18,8 @@ struct DropDownMenu: View {
     var options: [String]
     var style: Style = .gray
     
+    static let height = Styles.inputFieldHeight
+    
     var leadingPadding: CGFloat {
         if #available(iOS 15.0, *) {
             return 1
@@ -57,11 +59,11 @@ struct DropDownMenu: View {
                     .centeredVertically()
                     .rightAligned()
                     .allowsHitTesting(false))
-                .frame(height: Styles.inputFieldHeight)
+                .frame(height: Self.height)
                 .background(style == .gray ? Color.customAccent4 : Color.customWhite)
                 .cornerRadius(Styles.cornerRadius)
             }
-            .frame(height: Styles.inputFieldHeight)
+            .frame(height: Self.height)
         }
         .withDefaultShadow(color: style == .white ? .customAccent3 : .clear)
     }

@@ -25,7 +25,7 @@ extension Color {
     static var customText1 = Color(r: 21, g: 21, b: 23)
     static var customText2 = Color(r: 143, g: 146, b: 161)
     static var customAccent1 = Color(r: 143, g: 146, b: 161)
-    static var customAccent2 = Color(r: 143, g: 146, b: 161).opacity(0.2)
+    static var customAccent2 = Color.customAccent1.opacity(0.2)
     static var customAccent3 = Color.black.opacity(0.1)
     static var customAccent4 = Color(r: 243, g: 246, b: 248)
     static var customAccent5 = Color(r: 69, g: 69, b: 69)
