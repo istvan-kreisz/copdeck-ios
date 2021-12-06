@@ -51,7 +51,7 @@ struct PriceRow: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 11) {
-            let soldPrice = Binding<String>(get: { (getPrice()?.price).asString(defaultValue: "0") },
+            let soldPrice = Binding<String>(get: { (getPrice()?.price).asString(defaultValue: "") },
                                             set: { setPrice(updatePrice(newPrice: $0)) })
             let soldCurrency =
                 Binding<String>(get: { getPrice()?.currencySymbol.rawValue ?? self.defaultCurrency.symbol.rawValue },
