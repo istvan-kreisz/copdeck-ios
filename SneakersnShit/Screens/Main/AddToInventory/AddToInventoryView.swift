@@ -222,6 +222,7 @@ struct AddToInventoryView: View {
         .background(Color.customBackground
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .edgesIgnoringSafeArea(.all))
+        .hideKeyboardOnScroll()
         .withPopup {
             NewTagPopup(isShowing: $showAddNewTagPopup) { name, color in
                 let newTag = Tag(name: name, color: color)
