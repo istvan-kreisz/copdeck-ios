@@ -121,7 +121,6 @@ class LocalScraper {
     }
 }
 
-#warning("refactor")
 extension LocalScraper: LocalAPI {
     func getItemDetails(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
         guard let itemJSON = item.asJSON else {

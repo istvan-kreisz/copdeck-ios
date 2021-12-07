@@ -9,7 +9,6 @@ import SwiftUI
 
 struct AddToInventoryView: View {
     let currency: Currency
-    #warning("refactor")
     let sortedSizes: [ItemType: [String]]
     let sizesConverted: [ItemType: [String]]
 
