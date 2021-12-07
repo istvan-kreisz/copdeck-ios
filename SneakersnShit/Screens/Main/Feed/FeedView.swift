@@ -11,6 +11,7 @@ import Firebase
 
 struct FeedView: View {
     static var preloadedPosts: PaginatedResult<[FeedPost]>?
+    static var didStartPreloading = false
 
     @EnvironmentObject var store: DerivedGlobalStore
     @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
@@ -44,7 +45,8 @@ struct FeedView: View {
 
     init(userId: String) {
         self.userId = userId
-        if Self.preloadedPosts == nil {
+        if Self.preloadedPosts == nil && !Self.didStartPreloading {
+            Self.didStartPreloading = true
             loadFeedPosts(loadMore: false, preload: true)
         }
     }
@@ -167,7 +169,8 @@ struct FeedView: View {
                     Self.preloadedPosts = new
                 } else {
                     if loadMore {
-                        feedState.feedPosts.data += new.data
+                        let currentPostIds = feedState.feedPosts.data.map { $0.id }
+                        feedState.feedPosts.data += new.data.filter { post in !currentPostIds.contains(post.id) }
                         feedState.feedPosts.isLastPage = new.isLastPage
                     } else {
                         feedState.feedPosts = new

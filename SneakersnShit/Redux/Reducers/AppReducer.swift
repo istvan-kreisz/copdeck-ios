@@ -25,7 +25,9 @@ func appReducer(state: inout AppState,
                 state.firstLoadDone = true
             }
             FeedView.preloadedPosts = nil
+            FeedView.didStartPreloading = false
             ChatView.preloadedChannels = []
+            ChatView.didStartPreloading = false
             environment.dataController.reset()
             environment.paymentService.reset()
             environment.pushNotificationService.reset()

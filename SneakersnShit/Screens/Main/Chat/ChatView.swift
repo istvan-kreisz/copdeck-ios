@@ -14,6 +14,7 @@ class ChatModel: ObservableObject {
 
 struct ChatView: View {
     static var preloadedChannels: [Channel] = []
+    static var didStartPreloading = false
 
     @State var isFirstLoad = true
     @StateObject private var chatModel = ChatModel()
@@ -27,7 +28,8 @@ struct ChatView: View {
 
     init(lastMessageChannelId: Binding<String?>) {
         self._lastMessageChannelId = lastMessageChannelId
-        if Self.preloadedChannels.isEmpty {
+        if Self.preloadedChannels.isEmpty && !Self.didStartPreloading {
+            Self.didStartPreloading = true
             loadChannels(isFirstLoad: false, preload: true)
         }
     }
