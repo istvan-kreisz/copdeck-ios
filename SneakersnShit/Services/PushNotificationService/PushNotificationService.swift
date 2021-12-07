@@ -37,6 +37,7 @@ class PushNotificationService: NSObject {
     }
 
     func setup(application: UIApplication) {
+        UIApplication.shared.applicationIconBadgeNumber = 0
         UNUserNotificationCenter.current().delegate = self
         Messaging.messaging().isAutoInitEnabled = false
 
