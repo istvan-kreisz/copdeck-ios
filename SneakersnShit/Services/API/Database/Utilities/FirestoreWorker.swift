@@ -29,12 +29,12 @@ protocol FirestoreServiceWorker: FirestoreWorker {
 }
 
 extension FirestoreWorker {
-    func setDocument(_ data: [String: Any], atRef ref: DocumentReference, using batch: WriteBatch? = nil, updateDates: Bool = true, completion: ((Error?) -> Void)? = nil) {
+    func setDocument(_ data: [String: Any], atRef ref: DocumentReference, merge: Bool, using batch: WriteBatch? = nil, updateDates: Bool = true, completion: ((Error?) -> Void)? = nil) {
         let data = updateDates ? dataWithUpdatedDates(data) : data
         if let batch = batch {
-            batch.setData(data, forDocument: ref, merge: true)
+            batch.setData(data, forDocument: ref, merge: merge)
         } else {
-            ref.setData(data, merge: true) { [weak self] error in
+            ref.setData(data, merge: merge) { [weak self] error in
                 if error != nil {
                     self?.errorsSubject.send(AppError.unknown)
                 }

@@ -178,7 +178,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
                 _ = (stacksListener.collectionRef?.document(stack.id))
                     .map { [weak self] ref in
                         if let data = try? stack.asDictionary() {
-                            self?.setDocument(data, atRef: ref, using: batch)
+                            self?.setDocument(data, atRef: ref, merge: true, using: batch)
                         }
                     }
             }
@@ -211,12 +211,12 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
 
         if stacksToUpdate.count == 1 {
             if let (dict, ref) = stacksToUpdate.first {
-                setDocument(dict, atRef: ref)
+                setDocument(dict, atRef: ref, merge: true)
             }
         } else {
             stacksToUpdate
                 .forEach { dict, ref in
-                    setDocument(dict, atRef: ref, using: batch)
+                    setDocument(dict, atRef: ref, merge: true, using: batch)
                 }
             batch.commit { [weak self] error in
                 if let error = error {
@@ -239,7 +239,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
             }
             .forEach { [weak self] id, dict in
                 if let ref = inventoryListener.collectionRef?.document(id) {
-                    self?.setDocument(dict, atRef: ref, using: batch)
+                    self?.setDocument(dict, atRef: ref, merge: true, using: batch)
                 }
             }
         batch.commit { [weak self] error in
@@ -256,12 +256,12 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
         guard let dict = try? inventoryItem.asDictionary(),
               let ref = inventoryListener.collectionRef?.document(inventoryItem.id)
         else { return }
-        setDocument(dict, atRef: ref)
+        setDocument(dict, atRef: ref, merge: false)
     }
 
     func update(user: User) {
         guard let dict = try? user.asDictionary(), let ref = userListener.documentRef else { return }
-        setDocument(dict, atRef: ref)
+        setDocument(dict, atRef: ref, merge: false)
     }
 
     func add(recentlyViewedItem: Item) {
@@ -284,7 +284,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
         log("add new recentlyViewedItem \(recentlyViewedItem.id)", logType: .database)
         if let dict = try? recentlyViewedItem.strippedOfPrices.asDictionary() {
             if let newDocumentRef = recentlyViewedListener.collectionRef?.document(Item.databaseId(itemId: recentlyViewedItem.id, settings: nil)) {
-                setDocument(dict, atRef: newDocumentRef, using: batch)
+                setDocument(dict, atRef: newDocumentRef, merge: true, using: batch)
             }
         }
 
@@ -300,7 +300,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
         guard let dict = try? item.strippedOfPrices.asDictionary(),
               let ref = favoritesListener.collectionRef?.document(Item.databaseId(itemId: item.id, settings: nil))
         else { return }
-        setDocument(dict, atRef: ref)
+        setDocument(dict, atRef: ref, merge: true)
     }
 
     func unfavorite(item: Item) {
@@ -375,7 +375,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
         }
 
         let ref = firestore.collection(.notificationTokens).document(token.token)
-        setDocument(dict, atRef: ref) { error in
+        setDocument(dict, atRef: ref, merge: true) { error in
             completion(error.map { AppError(error: $0) })
         }
     }

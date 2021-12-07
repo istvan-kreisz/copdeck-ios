@@ -135,7 +135,7 @@ struct NewItemCard: View {
                                          setCondition: { inventoryItem.condition = $0 },
                                          getQuantity: addQuantitySelector ? { inventoryItem.count } : nil,
                                          setQuantity: addQuantitySelector ? { inventoryItem.count = $0 } : nil)
-                .collapsible(buttonTitle: "add quantity & condition",
+                .collapsible(buttonTitle: addQuantitySelector ? "add quantity & condition" : "add condition",
                              style: style,
                              contentHeight: DropDownMenu.height,
                              topPaddingWhenCollapsed: Self.collapsedElementTopPadding,

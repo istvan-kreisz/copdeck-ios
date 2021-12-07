@@ -105,7 +105,7 @@ class ChatWorker: FirestoreServiceWorker, ChatManager {
         guard let userId = userId else { return }
 
         let updateData = ["updateInfo": ["\(channel.id)": ["lastSeenDate": Date.serverDate]]]
-        setDocument(updateData, atRef: updateInfoRef(userId), updateDates: false) { error in
+        setDocument(updateData, atRef: updateInfoRef(userId), merge: true, updateDates: false) { error in
             if let error = error {
                 log(error, logType: .error)
             }
@@ -214,7 +214,7 @@ private extension ChatWorker {
             completion?(.failure(.wrongData))
             return
         }
-        setDocument(dict, atRef: channelRef(channel.id)) { error in
+        setDocument(dict, atRef: channelRef(channel.id), merge: true) { error in
             if let error = error {
                 completion?(.failure(AppError(error: error)))
             } else {
