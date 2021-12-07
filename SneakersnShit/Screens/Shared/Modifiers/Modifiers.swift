@@ -337,7 +337,7 @@ struct Collapsible: ViewModifier {
                 }
 
                 if show.wrappedValue {
-                    HStack(alignment: .bottom, spacing: 3) {
+                    HStack(alignment: .bottom, spacing: 4) {
                         content
                         DeleteButton(style: .fill, size: .small, color: .customRed) {
                             show.wrappedValue = false

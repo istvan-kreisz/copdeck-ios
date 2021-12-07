@@ -17,7 +17,7 @@ struct NewItemCard: View {
     @Binding var inventoryItemParent: InventoryItem
     @State var inventoryItem: InventoryItem
     @Binding var updateSignal: Int
-    
+
     @Binding var tags: [Tag]
     let purchasePrice: PriceWithCurrency?
     let currency: Currency
@@ -135,8 +135,7 @@ struct NewItemCard: View {
                                          setCondition: { inventoryItem.condition = $0 },
                                          getQuantity: addQuantitySelector ? { inventoryItem.count } : nil,
                                          setQuantity: addQuantitySelector ? { inventoryItem.count = $0 } : nil)
-                .collapsible(isActive: addQuantitySelector,
-                             buttonTitle: "add quantity & condition",
+                .collapsible(buttonTitle: "add quantity & condition",
                              style: style,
                              contentHeight: DropDownMenu.height,
                              topPaddingWhenCollapsed: Self.collapsedElementTopPadding,
@@ -174,6 +173,9 @@ struct NewItemCard: View {
                 .background(Color.customWhite)
                 .cornerRadius(12)
                 .withDefaultShadow()
+        }
+        .onChange(of: updateSignal) { newValue in
+            inventoryItemParent = inventoryItem
         }
     }
 }
