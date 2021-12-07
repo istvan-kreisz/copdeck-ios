@@ -29,7 +29,6 @@ struct GridSelectorMenu: View {
                     .frame(width: Self.itemWidth, height: Self.itemWidth)
                     .background(style == .card ? Color.customAccent4 : Color.customWhite)
                     .cornerRadius(Self.cornerRadius)
-                    .withDefaultShadow(color: style == .noBackground ? .customAccent3 : .clear)
                     .overlay(RoundedRectangle(cornerRadius: Self.cornerRadius)
                         .stroke(option == selectedItem ? Color.customBlue : Color.clear, lineWidth: 2)
                         .background((option == selectedItem ? Color.customBlue.opacity(0.1) : Color.clear).cornerRadius(Self.cornerRadius)))
@@ -37,6 +36,8 @@ struct GridSelectorMenu: View {
                         selectedItem = option
                     }
             }
+            .id(UUID())
         }
+        .id(UUID())
     }
 }
