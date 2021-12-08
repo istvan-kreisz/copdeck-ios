@@ -226,6 +226,10 @@ extension View {
         self
             .padding(.top, UIApplication.shared.safeAreaInsets().top)
     }
+    
+    func withClearButton(text: Binding<String>) -> some View {
+        ModifiedContent(content: self, modifier: ClearButton(text: text))
+    }
 }
 
 #if DEBUG

@@ -365,3 +365,19 @@ struct Collapsible: ViewModifier {
         }
     }
 }
+
+struct ClearButton: ViewModifier {
+    @Binding var text: String
+
+    public func body(content: Content) -> some View {
+        HStack {
+            content
+            Button {
+                self.text = ""
+            } label: {
+                Image(systemName: "multiply.circle.fill")
+                    .foregroundColor(.secondary)
+            }
+        }
+    }
+}

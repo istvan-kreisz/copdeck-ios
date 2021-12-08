@@ -154,13 +154,15 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
         return result.map(\.res).eraseToAnyPublisher()
     }
 
+    #warning("add forced")
     func getItemDetails(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
         struct Wrapper: Encodable {
             let item: Item
             let apiConfig: APIConfig
             let requestId: String
+            let forced: Bool
         }
-        let model = Wrapper(item: item, apiConfig: DefaultDataController.config(from: settings, exchangeRates: exchangeRates), requestId: "1")
+        let model = Wrapper(item: item, apiConfig: DefaultDataController.config(from: settings, exchangeRates: exchangeRates), requestId: "1", forced: false)
         let result: AnyPublisher<WrappedResult<Item>, AppError> = callFirebaseFunction(functionName: "getItemDetails", model: model)
         return result.map(\.res).eraseToAnyPublisher()
     }

@@ -59,7 +59,7 @@ struct AddNewInventoryItemView: View {
                                  text: $searchText)
                     .withDefaultPadding(padding: .horizontal)
 
-                if searchState.searchResults.isEmpty {
+                if searchText.isEmpty {
                     // add manually
                     HStack(alignment: .center, spacing: 16) {
                         Text("OR")

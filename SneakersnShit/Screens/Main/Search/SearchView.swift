@@ -24,7 +24,7 @@ struct SearchView: View {
     @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
 
     @StateObject var searchModel = SearchModel()
-    
+
     var alert = State<(String, String)?>(initialValue: nil)
 
     var selectedItem: Item? {
@@ -76,6 +76,7 @@ struct SearchView: View {
                                  placeHolder: selectedTabIndex == 0 ? "Search sneakers, apparel, collectibles" : "Search people",
                                  style: .white,
                                  text: $searchText)
+                    .withClearButton(text: $searchText)
                     .withDefaultPadding(padding: .horizontal)
 
                 ScrollableSegmentedControl(selectedIndex: $selectedTabIndex,
@@ -87,7 +88,7 @@ struct SearchView: View {
                     .withDefaultPadding(padding: .horizontal)
 
                 if selectedTabIndex == 0 {
-                    if searchModel.state.searchResults.isEmpty {
+                    if searchText.isEmpty {
                         VStack(alignment: .leading, spacing: 10) {
                             HorizontaltemListView(items: $searchModel.state.popularItems,
                                                   selectedItem: selectedItemBinding,
@@ -143,15 +144,23 @@ struct SearchView: View {
 
     private func search(searchTerm: String) {
         if selectedTabIndex == 0 {
-            let loader = searchResultsLoader.getLoader()
-            store.send(.main(action: .getSearchResults(searchTerm: searchText, completion: { result in
-                handleResult(result: result, loader: loader) { self.searchModel.state.searchResults = $0 }
-            })), debounceDelayMs: 850)
+            if searchTerm.isEmpty {
+                self.searchModel.state.searchResults = []
+            } else {
+                let loader = searchResultsLoader.getLoader()
+                store.send(.main(action: .getSearchResults(searchTerm: searchText, completion: { result in
+                    handleResult(result: result, loader: loader) { self.searchModel.state.searchResults = $0 }
+                })), debounceDelayMs: 850)
+            }
         } else {
-            let loader = userSearchResultsLoader.getLoader()
-            store.send(.main(action: .searchUsers(searchTerm: searchText, completion: { result in
-                handleResult(result: result, loader: loader) { self.searchModel.state.userSearchResults = $0 }
-            })))
+            if searchTerm.isEmpty {
+                self.searchModel.state.userSearchResults = []
+            } else {
+                let loader = userSearchResultsLoader.getLoader()
+                store.send(.main(action: .searchUsers(searchTerm: searchText, completion: { result in
+                    handleResult(result: result, loader: loader) { self.searchModel.state.userSearchResults = $0 }
+                })))
+            }
         }
     }
 }
