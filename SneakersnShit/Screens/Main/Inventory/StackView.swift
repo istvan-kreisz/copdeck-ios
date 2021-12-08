@@ -62,9 +62,10 @@ struct StackView: View {
         VStack {
             HStack(alignment: .center, spacing: 13) {
                 TextFieldRounded(title: nil,
-                                 placeHolder: "Search your inventory",
+                                 placeHolder: didTapEditStack == nil ? "Search your inventory" : "Search your stack",
                                  style: .white,
-                                 text: $searchText)
+                                 text: $searchText,
+                                 addClearButton: true)
                 Button(action: {
                     showFilters = true
                 }, label: {
@@ -119,8 +120,8 @@ struct StackView: View {
     var body: some View {
         toolbar()
         if allStackItems.isEmpty {
-            EmptyStateButton(title: emptyStateConfig.title,
-                             buttonTitle: emptyStateConfig.buttonTitle,
+            EmptyStateButton(title: searchText.isEmpty ? emptyStateConfig.title : "No search results",
+                             buttonTitle: searchText.isEmpty ? emptyStateConfig.buttonTitle : nil,
                              style: .large,
                              showPlusIcon: true,
                              isContentLocked: false,

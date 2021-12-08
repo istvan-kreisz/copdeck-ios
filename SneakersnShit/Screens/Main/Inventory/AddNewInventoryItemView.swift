@@ -56,7 +56,8 @@ struct AddNewInventoryItemView: View {
                 TextFieldRounded(title: nil,
                                  placeHolder: "Search sneakers, apparel, collectibles",
                                  style: .white,
-                                 text: $searchText)
+                                 text: $searchText,
+                                 addClearButton: true)
                     .withDefaultPadding(padding: .horizontal)
 
                 if searchText.isEmpty {

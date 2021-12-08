@@ -97,7 +97,7 @@ class DefaultPaymentService: NSObject, PaymentService {
 
     private func getPackages(completion: (() -> Void)?) {
         Purchases.shared.offerings { [weak self] offerings, error in
-            error.map { self?.errorsSubject.send(AppError(error: $0)) }
+//            error.map { self?.errorsSubject.send(AppError(error: $0)) }
             guard let offerings = offerings else {
                 completion?()
                 return

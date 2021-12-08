@@ -227,8 +227,8 @@ extension View {
             .padding(.top, UIApplication.shared.safeAreaInsets().top)
     }
     
-    func withClearButton(text: Binding<String>) -> some View {
-        ModifiedContent(content: self, modifier: ClearButton(text: text))
+    func withClearButton(text: Binding<String>, textFieldWidth: CGFloat? = nil) -> some View {
+        ModifiedContent(content: self, modifier: ClearButton(text: text, textFieldWidth: textFieldWidth))
     }
 }
 

@@ -91,18 +91,19 @@ struct AddToInventoryView: View {
                     .padding(.bottom, 8)
             }
 
-            HStack(spacing: 10) {
-                TextFieldRounded(title: "name",
-                                 placeHolder: "name",
+            TextFieldRounded(title: "name",
+                             placeHolder: "name",
+                             style: .white,
+                             text: $name,
+                             addClearButton: true)
+            if item?.isShoe == true {
+                TextFieldRounded(title: "styleid",
+                                 placeHolder: "styleid",
                                  style: .white,
-                                 text: $name)
-                if item?.isShoe == true {
-                    TextFieldRounded(title: "styleid (optional)",
-                                     placeHolder: "styleid",
-                                     style: .white,
-                                     text: item?.isShoe == true ? $styleId : .constant("-"),
-                                     width: 100)
-                }
+                                 text: item?.isShoe == true ? $styleId : .constant("-"),
+                                 width: 200,
+                                 addClearButton: true)
+                    .leftAligned()
             }
 
             NewItemCard(inventoryItem: $inventoryItem1,
@@ -202,21 +203,24 @@ struct AddToInventoryView: View {
                     .leftAligned()
             }
 
-            TextFieldRounded(title: "notes",
-                             placeHolder: "add any notes here",
-                             style: .white,
-                             text: $notes)
-                .padding(.top, 11)
+            Group {
+                TextFieldRounded(title: "notes",
+                                 placeHolder: "add any notes here",
+                                 style: .white,
+                                 text: $notes,
+                                 addClearButton: true)
+                    .padding(.top, 11)
 
-            RoundedButton<EmptyView>(text: "Add \(itemCount) item\(itemCount == 1 ? "" : "s")",
-                                     width: 145,
-                                     height: 60,
-                                     maxSize: nil,
-                                     color: .customBlack,
-                                     accessoryView: nil,
-                                     tapped: { addItems() })
-                .centeredHorizontally()
-                .padding(.top, 15)
+                RoundedButton<EmptyView>(text: "Add \(itemCount) item\(itemCount == 1 ? "" : "s")",
+                                         width: 145,
+                                         height: 60,
+                                         maxSize: nil,
+                                         color: .customBlack,
+                                         accessoryView: nil,
+                                         tapped: { addItems() })
+                    .centeredHorizontally()
+                    .padding(.top, 15)
+            }
         }
         .background(Color.customBackground
             .frame(maxWidth: .infinity, maxHeight: .infinity)

@@ -368,16 +368,22 @@ struct Collapsible: ViewModifier {
 
 struct ClearButton: ViewModifier {
     @Binding var text: String
+    let textFieldWidth: CGFloat?
 
     public func body(content: Content) -> some View {
-        HStack {
+        ZStack {
             content
-            Button {
-                self.text = ""
-            } label: {
-                Image(systemName: "multiply.circle.fill")
-                    .foregroundColor(.secondary)
+            if !text.isEmpty {
+                Button {
+                    self.text = ""
+                } label: {
+                    Image(systemName: "multiply.circle.fill")
+                        .foregroundColor(.customAccent1)
+                }
+                .rightAligned()
+                .padding(.trailing, 7)
             }
         }
+        .frame(width: textFieldWidth)
     }
 }

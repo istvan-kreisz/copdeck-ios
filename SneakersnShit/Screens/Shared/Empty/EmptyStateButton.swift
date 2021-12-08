@@ -13,7 +13,7 @@ struct EmptyStateButton: View {
     }
 
     let title: String
-    let buttonTitle: String
+    let buttonTitle: String?
     let style: Style
     let showPlusIcon: Bool
     let isContentLocked: Bool
@@ -22,7 +22,7 @@ struct EmptyStateButton: View {
     var iconSize: CGFloat {
         style == .large ? 19 : 16
     }
-    
+
     var buttonTextSize: CGFloat {
         style == .large ? 18 : 16
     }
@@ -32,25 +32,27 @@ struct EmptyStateButton: View {
             Text(title)
                 .font(.bold(size: style == .large ? 16 : 14))
                 .foregroundColor(.customText2)
-            Button(action: action) {
-                HStack {
-                    Text(buttonTitle)
-                        .underline()
-                        .font(.bold(size: buttonTextSize))
-                        .foregroundColor(.customBlue)
-                    if showPlusIcon {
-                        ZStack {
-                            Circle()
-                                .fill(Color.customBlue.opacity(0.2))
-                                .frame(width: iconSize, height: iconSize)
-                            Image(systemName: "plus")
-                                .font(.bold(size: style == .large ? 8 : 7))
-                                .foregroundColor(Color.customBlue)
-                        }.frame(width: iconSize, height: iconSize)
+            if let buttonTitle = buttonTitle {
+                Button(action: action) {
+                    HStack {
+                        Text(buttonTitle)
+                            .underline()
+                            .font(.bold(size: buttonTextSize))
+                            .foregroundColor(.customBlue)
+                        if showPlusIcon {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.customBlue.opacity(0.2))
+                                    .frame(width: iconSize, height: iconSize)
+                                Image(systemName: "plus")
+                                    .font(.bold(size: style == .large ? 8 : 7))
+                                    .foregroundColor(Color.customBlue)
+                            }.frame(width: iconSize, height: iconSize)
+                        }
                     }
                 }
+                .lockedContent(style: .adjacentRight(spacing: 3), lockSize: buttonTextSize, lockColor: .customBlue, lockEnabled: isContentLocked)
             }
-            .lockedContent(style: .adjacentRight(spacing: 3), lockSize: buttonTextSize, lockColor: .customBlue, lockEnabled: isContentLocked)
         }
         .centeredHorizontally()
     }

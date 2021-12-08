@@ -28,7 +28,7 @@ struct ContactView: View {
             .padding(.top, 30)
             
             VStack(alignment: .leading, spacing: 12) {
-                TextFieldRounded(placeHolder: "Enter your email", style: .gray, text: $email)
+                TextFieldRounded(placeHolder: "Enter your email", style: .gray, text: $email, addClearButton: true)
                     .layoutPriority(1)
                 TextFieldRoundedLarge(placeHolder: "Enter your message", style: .gray, text: $message)
                     .layoutPriority(1)

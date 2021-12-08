@@ -75,8 +75,8 @@ struct SearchView: View {
                 TextFieldRounded(title: nil,
                                  placeHolder: selectedTabIndex == 0 ? "Search sneakers, apparel, collectibles" : "Search people",
                                  style: .white,
-                                 text: $searchText)
-                    .withClearButton(text: $searchText)
+                                 text: $searchText,
+                                 addClearButton: true)
                     .withDefaultPadding(padding: .horizontal)
 
                 ScrollableSegmentedControl(selectedIndex: $selectedTabIndex,

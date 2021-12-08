@@ -132,14 +132,16 @@ struct StackDetailView: View {
                 TextFieldRounded(title: "stack name",
                                  placeHolder: "name",
                                  style: .white,
-                                 text: $name) { _ in nameChanged() }
+                                 text: $name,
+                                 addClearButton: true) { _ in nameChanged() }
                     .withDefaultPadding(padding: .horizontal)
 
                 if showCaption {
-                    TextFieldRounded(title: "caption (optional)",
+                    TextFieldRounded(title: "caption",
                                      placeHolder: "caption",
                                      style: .white,
-                                     text: $caption) { _ in captionChanged() }
+                                     text: $caption,
+                                     addClearButton: true) { _ in captionChanged() }
                         .withDefaultPadding(padding: .horizontal)
                 }
 

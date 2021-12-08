@@ -19,8 +19,23 @@ struct TextFieldRounded: View {
     var keyboardType: UIKeyboardType = .default
     @Binding var text: String
     var width: CGFloat? = nil
+    var addClearButton = false
     var onEdited: ((Bool) -> Void)?
     var onTooltipTapped: (() -> Void)? = nil
+    
+    private func textField(trailingPadding: CGFloat = 0) -> some View {
+        TextField(placeHolder, text: $text, onEditingChanged: { isActive in
+            onEdited?(isActive)
+        })
+            .keyboardType(keyboardType)
+            .foregroundColor(.customText2)
+            .padding(.horizontal, 8)
+            .padding(.trailing, trailingPadding)
+            .frame(width: width, height: Styles.inputFieldHeight)
+            .background(style == .white ? Color.customWhite : Color.customAccent4)
+            .cornerRadius(Styles.cornerRadius)
+            .if(style == .white) { $0.withDefaultShadow() }
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -39,17 +54,13 @@ struct TextFieldRounded: View {
                     }
                 }
             }
-
-            TextField(placeHolder, text: $text, onEditingChanged: { isActive in
-                onEdited?(isActive)
-            })
-                .keyboardType(keyboardType)
-                .foregroundColor(.customText2)
-                .padding(.horizontal, 8)
-                .frame(width: width, height: Styles.inputFieldHeight)
-                .background(style == .white ? Color.customWhite : Color.customAccent4)
-                .cornerRadius(Styles.cornerRadius)
-                .if(style == .white) { $0.withDefaultShadow() }
+            if addClearButton {
+                textField(trailingPadding: 20)
+                    .withClearButton(text: $text, textFieldWidth: width)
+            } else {
+                textField()
+            }
+            
         }
     }
 }

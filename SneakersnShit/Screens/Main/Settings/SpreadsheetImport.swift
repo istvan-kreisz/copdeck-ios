@@ -153,7 +153,7 @@ struct SpreadsheetImportView: View {
 
             VStack(spacing: 20) {
                 HStack(spacing: 5) {
-                    TextFieldRounded(placeHolder: "Spreadsheet url", style: .gray, text: $spreadsheetURL)
+                    TextFieldRounded(placeHolder: "Spreadsheet url", style: .gray, text: $spreadsheetURL, addClearButton: true)
                         .layoutPriority(2)
                     Button {
                         if let url = store.globalState.user?.spreadsheetImport?.url, let status = store.globalState.user?.spreadsheetImport?.status {
@@ -187,6 +187,7 @@ struct SpreadsheetImportView: View {
                                 .fill(Color.customBlue))
                     }
                     .layoutPriority(2)
+                    .lockedContent(style: .adjacentRight(spacing: 5), lockSize: 16)
                 }
                 .layoutPriority(2)
 

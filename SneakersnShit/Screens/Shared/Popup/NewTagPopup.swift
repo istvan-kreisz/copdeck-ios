@@ -30,7 +30,8 @@ struct NewTagPopup: View {
                                  style: .white,
                                  keyboardType: .default,
                                  text: $name,
-                                 width: nil)
+                                 width: nil,
+                                 addClearButton: true)
                     
                 ColorSelectorMenu(color: $color)
             }

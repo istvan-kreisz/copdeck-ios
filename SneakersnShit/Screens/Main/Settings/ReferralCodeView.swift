@@ -47,7 +47,7 @@ struct ReferralCodeView: View {
 
                 if store.globalState.user?.membershipInfo?.referralCodeUsed == nil {
                     HStack(spacing: 5) {
-                        TextFieldRounded(placeHolder: "Enter referral code", style: .gray, text: $referralCode)
+                        TextFieldRounded(placeHolder: "Enter referral code", style: .gray, text: $referralCode, addClearButton: true)
                             .layoutPriority(1)
                         Button {
                             if let referralCode = store.globalState.user?.membershipInfo?.referralCodeUsed {

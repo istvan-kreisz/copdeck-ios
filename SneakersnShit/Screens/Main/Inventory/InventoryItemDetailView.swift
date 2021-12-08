@@ -99,20 +99,21 @@ struct InventoryItemDetailView: View {
                                             tapped: { showItemDetails = true })
                         }
 
-                        HStack(spacing: 10) {
-                            TextFieldRounded(title: "name",
-                                             placeHolder: "name",
+                        TextFieldRounded(title: "name",
+                                         placeHolder: "name",
+                                         style: .white,
+                                         text: $name,
+                                         addClearButton: true)
+                            .padding(.top, 15)
+                        if inventoryItem.isShoe {
+                            TextFieldRounded(title: "styleid",
+                                             placeHolder: "styleid",
                                              style: .white,
-                                             text: $name)
-                            if inventoryItem.isShoe {
-                                TextFieldRounded(title: "styleid (optional)",
-                                                 placeHolder: "styleid",
-                                                 style: .white,
-                                                 text: $styleId,
-                                                 width: 100)
-                            }
+                                             text: $styleId,
+                                             width: 200,
+                                             addClearButton: true)
+                                .leftAligned()
                         }
-                        .padding(.top, 15)
 
                         NewItemCard(inventoryItem: $inventoryItem,
                                     tags: $tags,
@@ -201,10 +202,11 @@ struct InventoryItemDetailView: View {
                         .asCard()
                         .padding(.top, 15)
 
-                        TextFieldRounded(title: "notes (optional)",
+                        TextFieldRounded(title: "notes",
                                          placeHolder: "add any notes here",
                                          style: .white,
-                                         text: $notes)
+                                         text: $notes,
+                                         addClearButton: true)
                             .padding(.top, 11)
 
                         if !importSummaryMode {

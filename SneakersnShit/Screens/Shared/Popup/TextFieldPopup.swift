@@ -32,7 +32,8 @@ struct TextFieldPopup: View {
                                  style: .white,
                                  keyboardType: .default,
                                  text: $text,
-                                 width: nil)
+                                 width: nil,
+                                 addClearButton: true)
                     .padding(.top, 30)
                     .padding(.bottom, 5)
                     .padding(.horizontal, 10)
