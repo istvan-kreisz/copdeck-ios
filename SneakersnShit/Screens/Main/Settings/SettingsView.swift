@@ -120,7 +120,7 @@ struct SettingsView: View {
 
     // stockx
     private func selectStockxSellerFee() {
-        if let newValue = Double(stockxSellerFee) {
+        if let newValue = stockxSellerFee.number {
             if newValue <= 100, newValue >= 0, settings.feeCalculation.stockx?.sellerFee != newValue {
                 settings.feeCalculation.stockx?.sellerFee = newValue
             }
@@ -132,7 +132,7 @@ struct SettingsView: View {
     }
 
     private func selectStockxBuyersTaxes() {
-        if let newValue = Double(stockxBuyersTaxes) {
+        if let newValue = stockxBuyersTaxes.number {
             if newValue <= 100, newValue >= 0, settings.feeCalculation.stockx?.taxes != newValue {
                 settings.feeCalculation.stockx?.taxes = newValue
             }
@@ -160,7 +160,7 @@ struct SettingsView: View {
     }
 
     private func selectGoatBuyersTaxes() {
-        if let newValue = Double(goatBuyersTaxes) {
+        if let newValue = goatBuyersTaxes.number {
             if newValue <= 100, newValue >= 0, settings.feeCalculation.goat?.taxes != newValue {
                 settings.feeCalculation.goat?.taxes = newValue
             }
@@ -173,7 +173,7 @@ struct SettingsView: View {
 
     // klekt
     private func selectKlektBuyersTaxes() {
-        if let newValue = Double(klektBuyersTaxes) {
+        if let newValue = klektBuyersTaxes.number {
             if newValue <= 100, newValue >= 0, settings.feeCalculation.klekt?.taxes != newValue {
                 settings.feeCalculation.klekt?.taxes = newValue
             }
