@@ -107,33 +107,22 @@ func appReducer(state: inout AppState,
         case let .getUserProfile(userId, completion):
             return environment.dataController.getUserProfile(userId: userId)
                 .complete { completion($0.value) }
-        case let .getItemDetails(item, itemId, styleId, fetchMode, completion):
-            let settings = state.settings
-            return environment.dataController.getItemDetails(for: item,
-                                                             itemId: itemId,
-                                                             styleId: styleId,
-                                                             fetchMode: fetchMode,
-                                                             settings: state.settings,
-                                                             exchangeRates: state.rates)
-                .complete(completion: { result in
-                    if let item = result.value {
-                        ItemCache.default.insert(item: item, settings: settings)
-                    }
-                    completion(result.value)
+        case let .updateItem(item, itemId, styleId, forced, completion):
+            return environment.dataController.update(item: item,
+                                                     itemId: itemId,
+                                                     styleId: styleId,
+                                                     forced: forced,
+                                                     settings: state.settings,
+                                                     exchangeRates: state.exchangeRates)
+                .complete(completion: { _ in
+                    completion()
                 })
+        case let .getItemListener(itemId, completion):
+            completion(environment.dataController.getItemListener(withId: itemId, settings: state.settings))
         case let .getItemImage(itemId, completion):
             environment.dataController.getImage(for: itemId, completion: completion)
         case let .uploadItemImage(itemId, image):
             environment.dataController.uploadItemImage(itemId: itemId, image: image)
-        case let .refreshItemIfNeeded(itemId, styleId, fetchMode):
-            return environment.dataController.getItemDetails(for: nil,
-                                                             itemId: itemId,
-                                                             styleId: styleId,
-                                                             fetchMode: fetchMode,
-                                                             settings: state.settings,
-                                                             exchangeRates: state.rates)
-                .map { _ in AppAction.none }
-                .catchErrors()
         case let .addStack(stack):
             Analytics.logEvent("add_stack", parameters: ["userId": state.user?.id ?? ""])
             environment.dataController.update(stacks: [stack])
@@ -145,7 +134,7 @@ func appReducer(state: inout AppState,
             }
         case let .addToInventory(inventoryItems):
             Analytics.logEvent("add_inventoryitem", parameters: ["userId": state.user?.id ?? ""])
-            
+
             let userId = state.user?.id ?? ""
             environment.dataController.add(inventoryItems: inventoryItems) { result in
                 if case let .success(inventoryItems) = result, inventoryItems.contains(where: { !$0._addToStacks.isEmpty }) {

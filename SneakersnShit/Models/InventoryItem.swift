@@ -121,9 +121,9 @@ struct InventoryItem: Codable, Equatable, Identifiable {
         soldDate.serverDate.map { Calendar.current.dateComponents([.year, .month], from: $0) }
     }
 
+    #warning("yo")
     var item: Item? {
-        guard let itemId = itemId, let item = ItemCache.default.value(itemId: itemId, settings: AppStore.default.state.settings) else { return nil }
-        return item
+        nil
     }
 
     enum CodingKeys: String, CodingKey {

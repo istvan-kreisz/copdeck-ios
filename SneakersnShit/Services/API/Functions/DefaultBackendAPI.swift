@@ -123,7 +123,7 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
                                                               model: Wrapper(stackId: stack.id, addLike: addLike, stackOwnerId: stackOwnerId)))
     }
 
-    func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
+    func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates?) -> AnyPublisher<[Item], AppError> {
         struct Wrapper: Encodable {
             let searchTerm: String
             let apiConfig: APIConfig
@@ -134,25 +134,14 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
         return result.map(\.res).eraseToAnyPublisher()
     }
 
-    func update(item: Item, settings: CopDeckSettings) {
-        struct Wrapper: Encodable {
-            let userId: String?
-            let item: Item
-            let settings: CopDeckSettings
-        }
-        handlePublisherResult(publisher: callFirebaseFunction(functionName: "updateItem", model: Wrapper(userId: userId, item: item, settings: settings)),
-                              showAlert: false)
-    }
-
-    #warning("add forced")
-    func getItemDetails(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
+    func update(item: Item, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates?) -> AnyPublisher<Item, AppError> {
         struct Wrapper: Encodable {
             let item: Item
             let apiConfig: APIConfig
             let requestId: String
             let forced: Bool
         }
-        let model = Wrapper(item: item, apiConfig: DefaultDataController.config(from: settings, exchangeRates: exchangeRates), requestId: "1", forced: false)
+        let model = Wrapper(item: item, apiConfig: DefaultDataController.config(from: settings, exchangeRates: exchangeRates), requestId: "1", forced: forced)
         let result: AnyPublisher<WrappedResult<Item>, AppError> = callFirebaseFunction(functionName: "getItemDetails", model: model)
         return result.map(\.res).eraseToAnyPublisher()
     }

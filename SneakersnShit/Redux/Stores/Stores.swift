@@ -66,25 +66,19 @@ extension AppStore {
         }
     }
 
+    #warning("yooo")
     private func bestPrice(for inventoryItem: InventoryItem) -> ListingPrice? {
-        if let itemId = inventoryItem.itemId, let item = ItemCache.default.value(itemId: itemId, settings: state.settings) {
-            return item.bestPrice(for: inventoryItem.size,
-                                  feeType: state.settings.bestPriceFeeType,
-                                  priceType: state.settings.bestPricePriceType,
-                                  stores: state.displayedStores)
-        } else {
+//        if let itemId = inventoryItem.itemId, let item = ItemCache.default.value(itemId: itemId, settings: state.settings) {
+//            return item.bestPrice(for: inventoryItem.size,
+//                                  feeType: state.settings.bestPriceFeeType,
+//                                  priceType: state.settings.bestPricePriceType,
+//                                  stores: state.displayedStores)
+//        } else {
             return nil
-        }
+//        }
     }
 
     func setupObservers() {
-        ItemCache.default.updatedPublisher.debounce(for: .milliseconds(2000), scheduler: RunLoop.main).prepend(())
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] in
-                self?.updateInventoryValue()
-            }
-            .store(in: &effectCancellables)
-
         environment.dataController.errorsPublisher.merge(with: environment.paymentService.errorsPublisher)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] error in
@@ -99,7 +93,7 @@ extension AppStore {
                       let oldSettings = self?.state.user?.settings
                       let newSettings = newUser.settings
                       if oldSettings?.feeCalculation != newSettings?.feeCalculation || oldSettings?.currency != newSettings?.currency {
-                          ItemCache.default.removeAll()
+//                          ItemCache.default.removeAll()
                           self?.refreshItemPricesIfNeeded(newUser: newUser)
                       }
                       self?.state.user = newUser
@@ -190,43 +184,32 @@ extension AppStore {
     }
 
     func refreshItemPricesIfNeeded(newUser: User? = nil) {
-        guard state.user != nil else { return }
-        let idsToRefresh = Set(state.inventoryItems.compactMap { (inventoryItem: InventoryItem) -> Ids? in
-            if let itemId = inventoryItem.itemId {
-                return Ids(itemId: itemId, styleId: inventoryItem.styleId)
-            } else {
-                return nil
-            }
-        })
-            .filter { ids in
-                guard !ids.itemId.isEmpty, !ids.styleId.isEmpty else { return false }
-                if let item = ItemCache.default.value(forKey: Item.databaseId(itemId: ids.itemId, settings: newUser?.settings ?? state.settings)) {
-                    return item.storePrices.isEmpty || !item.isUptodate
-                } else {
-                    return true
-                }
-            }
-        var idsWithDelay = idsToRefresh
-            .map { (ids: Ids) in (ids, Double.random(in: 0.2 ... 0.45)) }
-
-        idsWithDelay = idsWithDelay
-            .enumerated()
-            .map { (offset: Int, idWithDelay: (Ids, Double)) in
-                (idWithDelay.0, idWithDelay.1 + (idsWithDelay[safe: offset - 1]?.1 ?? 0))
-            }
-        log("refreshing prices for items with ids: \(idsToRefresh)", logType: .scraping)
-//        if !state.didFetchItemPrices {
-//            idsWithDelay
-//                .forEach { [weak self] (ids: Ids, _) in
-//                    self?.send(.main(action: .refreshItemIfNeeded(itemId: ids.itemId, styleId: ids.styleId, fetchMode: .cacheOnly)))
-//                }
-//        }
-//        idsWithDelay
-//            .forEach { (ids: Ids, delay: Double) in
-//                DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
-//                    self?.send(.main(action: .refreshItemIfNeeded(itemId: ids.itemId, styleId: ids.styleId, fetchMode: .cacheOrRefresh)))
+//        guard state.user != nil else { return }
+//        let idsToRefresh = Set(state.inventoryItems.compactMap { (inventoryItem: InventoryItem) -> Ids? in
+//            if let itemId = inventoryItem.itemId {
+//                return Ids(itemId: itemId, styleId: inventoryItem.styleId)
+//            } else {
+//                return nil
+//            }
+//        })
+//            .filter { ids in
+//                guard !ids.itemId.isEmpty, !ids.styleId.isEmpty else { return false }
+//                if let item = ItemCache.default.value(forKey: Item.databaseId(itemId: ids.itemId, settings: newUser?.settings ?? state.settings)) {
+//                    return item.storePrices.isEmpty || !item.isUptodate
+//                } else {
+//                    return true
 //                }
 //            }
+//        var idsWithDelay = idsToRefresh
+//            .map { (ids: Ids) in (ids, Double.random(in: 0.2 ... 0.45)) }
+//
+//        idsWithDelay = idsWithDelay
+//            .enumerated()
+//            .map { (offset: Int, idWithDelay: (Ids, Double)) in
+//                (idWithDelay.0, idWithDelay.1 + (idsWithDelay[safe: offset - 1]?.1 ?? 0))
+//            }
+//        log("refreshing prices for items with ids: \(idsToRefresh)", logType: .scraping)
+        #warning("call refreshPrices for user")
     }
 }
 

@@ -17,10 +17,8 @@ protocol BackendAPI {
     func getFeedPosts(loadMore: Bool) -> AnyPublisher<PaginatedResult<[FeedPost]>, AppError>
     func updateLike(onStack stack: Stack, addLike: Bool, stackOwnerId: String)
     // search
-    func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError>
-    func getItemDetails(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError>
-    // item
-    func update(item: Item, settings: CopDeckSettings)
+    func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates?) -> AnyPublisher<[Item], AppError>
+    func update(item: Item, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates?) -> AnyPublisher<Item, AppError>
     // user
     func getUserProfile(userId: String) -> AnyPublisher<ProfileData, AppError>
     func searchUsers(searchTerm: String) -> AnyPublisher<[User], AppError>

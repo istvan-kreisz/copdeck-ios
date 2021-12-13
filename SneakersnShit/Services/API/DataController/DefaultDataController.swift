@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import UIKit
 
-class DefaultDataController: DataController {    
+class DefaultDataController: DataController {
     let backendAPI: BackendAPI
     let localScraper: LocalAPI
     let databaseManager: DatabaseManager
@@ -42,21 +42,26 @@ class DefaultDataController: DataController {
         imageService.reset()
     }
 
-    func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
+    func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates?) -> AnyPublisher<[Item], AppError> {
         backendAPI.search(searchTerm: searchTerm, settings: settings, exchangeRates: exchangeRates)
     }
-
-    func getItemDetails(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
-        backendAPI.getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates).onMain()
+    
+    func update(item: Item, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates?) -> AnyPublisher<Item, AppError> {
+        backendAPI.update(item: item, forced: forced, settings: settings, exchangeRates: exchangeRates).onMain()
     }
 
     func getPopularItems() -> AnyPublisher<[Item], AppError> {
         databaseManager.getPopularItems()
     }
-
-    private func fetchPrices(for item: Item?, itemId: String, styleId: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
+    
+    func getItemListener(withId id: String, settings: CopDeckSettings) -> DocumentListener<Item> {
+        databaseManager.getItemListener(withId: id, settings: settings)
+    }
+    
+    #warning("calculate prices")
+    func update(item: Item?, itemId: String, styleId: String, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates?) -> AnyPublisher<Item, AppError> {
         if let item = item {
-            return getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates).onMain()
+            return update(item: item, forced: forced, settings: settings, exchangeRates: exchangeRates).onMain()
         } else {
             return search(searchTerm: (styleId.isEmpty ? itemId : styleId).replacingOccurrences(of: "_", with: " "), settings: settings, exchangeRates: exchangeRates)
                 .compactMap { items in items.first(where: { $0.id == itemId }) }
@@ -64,132 +69,10 @@ class DefaultDataController: DataController {
                     guard let self = self else {
                         return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
                     }
-                    return self.getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates).eraseToAnyPublisher()
+                    return self.update(item: item, forced: forced, settings: settings, exchangeRates: exchangeRates).eraseToAnyPublisher()
                 }
                 .onMain()
         }
-    }
-
-    private func refreshItem(for item: Item?,
-                             itemId: String,
-                             styleId: String,
-                             settings: CopDeckSettings,
-                             exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
-        log("refreshing item with id: \(itemId)", logType: .scraping)
-        return fetchPrices(for: item, itemId: itemId, styleId: styleId, settings: settings, exchangeRates: exchangeRates)
-            .map { refreshedItem in
-                if let item = item {
-                    return refreshedItem.storePrices.isEmpty ? item : refreshedItem
-                } else {
-                    return refreshedItem
-                }
-            }
-            .tryCatch { error -> AnyPublisher<Item, AppError> in
-                guard let item = item else {
-                    return Fail<Item, AppError>(error: error).eraseToAnyPublisher()
-                }
-                return Just(item).setFailureType(to: AppError.self).eraseToAnyPublisher()
-            }
-            .handleEvents(receiveOutput: { [weak self] updatedItem in
-                self?.cache(item: updatedItem, settings: settings, exchangeRates: exchangeRates)
-                if updatedItem.updated != item?.updated {
-                    self?.backendAPI.update(item: updatedItem, settings: settings)
-                }
-            })
-            .mapError { error in (error as? AppError) ?? AppError(error: error) }
-            .onMain()
-    }
-
-    func getItemDetails(for item: Item?,
-                        itemId: String,
-                        styleId: String,
-                        fetchMode: FetchMode,
-                        settings: CopDeckSettings,
-                        exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
-        let returnValue: AnyPublisher<Item, AppError>
-
-        if fetchMode == .forcedRefresh {
-            #warning("ensure saved data is always returned if fetching fails")
-            returnValue = refreshItem(for: item, itemId: itemId, styleId: styleId, settings: settings, exchangeRates: exchangeRates)
-        } else {
-            returnValue =
-                ItemCache.default.valuePublisher(itemId: itemId, settings: settings)
-                    .flatMap { [weak self] item -> AnyPublisher<Item, AppError> in
-                        guard let self = self else {
-                            return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
-                        }
-                        if let item = item, item.isUptodate, !item.storePrices.isEmpty {
-                            log("cache itemId: \(item.id)", logType: .database)
-                            return Just(item).setFailureType(to: AppError.self).eraseToAnyPublisher()
-                        } else {
-                            if fetchMode == .cacheOnly {
-                                return self.databaseManager.getItem(withId: itemId, settings: settings).eraseToAnyPublisher()
-                                    .map { savedItem -> Item in
-                                        if let item = item {
-                                            if savedItem.updated ?? 0 > item.updated ?? 0 {
-                                                self.cache(item: savedItem, settings: settings, exchangeRates: exchangeRates)
-                                                return savedItem
-                                            } else {
-                                                return item
-                                            }
-                                        } else {
-                                            self.cache(item: savedItem, settings: settings, exchangeRates: exchangeRates)
-                                            return savedItem
-                                        }
-                                    }
-                                    .tryCatch { error -> AnyPublisher<Item, AppError> in
-                                        if let item = item {
-                                            return Just(item).setFailureType(to: AppError.self).eraseToAnyPublisher()
-                                        } else {
-                                            return Fail<Item, AppError>(error: error).eraseToAnyPublisher()
-                                        }
-                                    }
-                                    .mapError { error in (error as? AppError) ?? AppError(error: error) }
-                                    .eraseToAnyPublisher()
-                            } else {
-                                return self.databaseManager.getItem(withId: itemId, settings: settings).eraseToAnyPublisher()
-                                    .flatMap { [weak self] savedItem -> AnyPublisher<Item, AppError> in
-                                        guard let self = self else {
-                                            return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
-                                        }
-                                        if savedItem.isUptodate, !savedItem.storePrices.isEmpty {
-                                            self.cache(item: savedItem, settings: settings, exchangeRates: exchangeRates)
-                                            return Just(savedItem).setFailureType(to: AppError.self).eraseToAnyPublisher()
-                                        } else {
-                                            return self.refreshItem(for: savedItem, itemId: itemId, styleId: styleId, settings: settings, exchangeRates: exchangeRates)
-                                        }
-                                    }
-                                    .eraseToAnyPublisher()
-                            }
-                        }
-                    }
-                    .tryCatch { [weak self] error -> AnyPublisher<Item, AppError> in
-                        guard let self = self else {
-                            return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
-                        }
-                        return self.refreshItem(for: item, itemId: itemId, styleId: styleId, settings: settings, exchangeRates: exchangeRates)
-                    }
-                    .mapError { error in (error as? AppError) ?? AppError(error: error) }
-                    .eraseToAnyPublisher()
-        }
-        return returnValue
-            .flatMap { [weak self] item -> AnyPublisher<Item, AppError> in
-                guard let self = self else {
-                    return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
-                }
-                return self.localScraper.getCalculatedPrices(for: item, settings: settings, exchangeRates: exchangeRates)
-            }
-            .onMain()
-    }
-
-    private func cache(item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) {
-        localScraper.getCalculatedPrices(for: item, settings: settings, exchangeRates: exchangeRates)
-            .sink(receiveCompletion: { _ in },
-                  receiveValue: { item in
-                      log("--> cached item with id: \(item.id)", logType: .database)
-                      ItemCache.default.insert(item: item, settings: settings)
-                  })
-            .store(in: &cancellables)
     }
 
     func getCalculatedPrices(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
@@ -286,10 +169,6 @@ class DefaultDataController: DataController {
         databaseManager.setup(userId: userId)
         backendAPI.setup(userId: userId)
         imageService.setup(userId: userId)
-    }
-
-    func update(item: Item, settings: CopDeckSettings) {
-        backendAPI.update(item: item, settings: settings)
     }
 
     func delete(stack: Stack) {
@@ -534,7 +413,7 @@ class DefaultDataController: DataController {
 }
 
 extension DefaultDataController {
-    static func config(from settings: CopDeckSettings, exchangeRates: ExchangeRates) -> APIConfig {
+    static func config(from settings: CopDeckSettings, exchangeRates: ExchangeRates?) -> APIConfig {
         let feeCalculation = APIConfig.FeeCalculation(countryName: settings.feeCalculation.country.name,
                                                       stockx: .init(sellerFee: settings.feeCalculation.stockx?.sellerFee ?? 0,
                                                                     taxes: (settings.feeCalculation.stockx?.taxes) ?? 0),

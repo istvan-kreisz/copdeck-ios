@@ -32,10 +32,10 @@ enum MainAction {
     // users
     case getUserProfile(userId: String, completion: (ProfileData?) -> Void)
     // item details
-    case getItemDetails(item: Item?, itemId: String, styleId: String, fetchMode: FetchMode, completion: (Item?) -> Void)
+    case updateItem(item: Item?, itemId: String, styleId: String, forced: Bool, completion: () -> Void)
+    case getItemListener(itemId: String, completion: (DocumentListener<Item>) -> Void)
     case getItemImage(itemId: String, completion: (URL?) -> Void)
     case uploadItemImage(itemId: String, image: UIImage)
-    case refreshItemIfNeeded(itemId: String, styleId: String, fetchMode: FetchMode)
     // inventory
     case addStack(stack: Stack)
     case deleteStack(stack: Stack)
@@ -68,7 +68,8 @@ enum MainAction {
     case sendMessage(email: String, message: String, completion: ((Result<Void, AppError>) -> Void)?)
     // chat
     case getChannels(update: (Result<[Channel], AppError>) -> Void)
-    case getChannelListener(channelId: String, cancel: (_ cancel: @escaping () -> Void) -> Void, update: (Result<([Change<Message>], [Message]), AppError>) -> Void)
+    case getChannelListener(channelId: String, cancel: (_ cancel: @escaping () -> Void) -> Void,
+                            update: (Result<([Change<Message>], [Message]), AppError>) -> Void)
     case sendChatMessage(message: String, channel: Channel, completion: (Result<Void, AppError>) -> Void)
     case markChannelAsSeen(channel: Channel)
     case getOrCreateChannel(users: [User], completion: (Result<Channel, AppError>) -> Void)
@@ -77,8 +78,6 @@ enum MainAction {
 extension MainAction: Identifiable, StringRepresentable {
     var id: String {
         switch self {
-        case let .refreshItemIfNeeded(itemId, _, fetchMode):
-            return "\(label) \(itemId) \(fetchMode.rawValue)"
         case .getItemImage:
             return "\(label) \(UUID().uuidString)"
         case let .uploadItemImage(itemId, _):

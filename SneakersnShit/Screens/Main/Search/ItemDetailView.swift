@@ -236,7 +236,7 @@ struct ItemDetailView: View {
                                     .padding(.top, 3)
                                     .padding(.bottom, -5)
                                     .onTapGesture {
-                                        refreshPrices(fetchMode: .forcedRefresh)
+                                        refreshPrices(forced: true)
                                     }
                                 }
                                 .padding(.horizontal, 10)
@@ -348,7 +348,8 @@ struct ItemDetailView: View {
             .onAppear {
                 if firstShow {
                     firstShow = false
-                    refreshPrices(fetchMode: .cacheOrRefresh)
+                    refreshPrices(forced: false)
+                    setupItemListener()
                 }
             }
             .onChange(of: addedInventoryItem) { new in
@@ -360,9 +361,13 @@ struct ItemDetailView: View {
         }
     }
 
-    private func refreshPrices(fetchMode: FetchMode) {
-        store.send(.main(action: .getItemDetails(item: item, itemId: itemId, styleId: styleId, fetchMode: fetchMode) { updateItem(newItem: $0) }),
+    private func refreshPrices(forced: Bool) {
+        store.send(.main(action: .updateItem(item: item, itemId: itemId, styleId: styleId, forced: forced) {}),
                    completed: loader.getNewLoader())
+    }
+
+    private func setupItemListener() {
+        //
     }
 
     private func updateItem(newItem: Item?) {

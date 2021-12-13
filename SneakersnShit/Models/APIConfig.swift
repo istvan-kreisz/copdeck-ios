@@ -11,7 +11,7 @@ import JavaScriptCore
 struct APIConfig: Codable {
     let currency: Currency
     let isLoggingEnabled: Bool
-    let exchangeRates: ExchangeRates
+    let exchangeRates: ExchangeRates?
     let feeCalculation: FeeCalculation
 
     struct FeeCalculation: Codable {
