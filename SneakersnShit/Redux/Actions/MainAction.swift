@@ -33,7 +33,7 @@ enum MainAction {
     case getUserProfile(userId: String, completion: (ProfileData?) -> Void)
     // item details
     case updateItem(item: Item?, itemId: String, styleId: String, forced: Bool, completion: () -> Void)
-    case getItemListener(itemId: String, completion: (DocumentListener<Item>) -> Void)
+    case getItemListener(itemId: String, updated: (Item) -> Void, completion: (DocumentListener<Item>) -> Void)
     case getItemImage(itemId: String, completion: (URL?) -> Void)
     case uploadItemImage(itemId: String, image: UIImage)
     // inventory

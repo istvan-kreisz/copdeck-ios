@@ -115,8 +115,8 @@ func appReducer(state: inout AppState,
                                               settings: state.settings,
                                               exchangeRates: state.exchangeRates,
                                               completion: completion)
-        case let .getItemListener(itemId, completion):
-            completion(environment.dataController.getItemListener(withId: itemId, settings: state.settings))
+        case let .getItemListener(itemId, updated, completion):
+            completion(environment.dataController.getItemListener(withId: itemId, settings: state.settings, updated: updated))
         case let .getItemImage(itemId, completion):
             environment.dataController.getImage(for: itemId, completion: completion)
         case let .uploadItemImage(itemId, image):

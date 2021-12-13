@@ -10,7 +10,7 @@ import Firebase
 import Combine
 import UIKit
 
-class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
+class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {    
     private static let recentlyViewedLimit = 20
 
     let firestore: Firestore
@@ -28,6 +28,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
     // document listeners
     private var userListener = DocumentListener<User>()
     private var exchangeRatesListener = DocumentListener<ExchangeRates>()
+    private var itemListener: DocumentListener<Item>?
 
     let errorsSubject = PassthroughSubject<AppError, Never>()
 
@@ -37,7 +38,8 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
                                                favoritesListener,
                                                recentlyViewedListener,
                                                userListener,
-                                               exchangeRatesListener] + chatWorker.dbListeners
+                                               exchangeRatesListener,
+                                               itemListener] + chatWorker.dbListeners
         return listeners.compactMap { $0 }
     }
 
@@ -146,10 +148,12 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
         }.eraseToAnyPublisher()
     }
     
-    func getItemListener(withId id: String, settings: CopDeckSettings) -> DocumentListener<Item> {
+    func getItemListener(withId id: String, settings: CopDeckSettings, updated: @escaping (Item) -> Void) -> DocumentListener<Item> {
+        itemListener?.reset()
         let listener = DocumentListener<Item>()
         let ref = firestore.collection(.items).document(Item.databaseId(itemId: id, settings: settings))
-        listener.startListening(documentRef: ref)
+        listener.startListening(documentRef: ref, updated: updated)
+        self.itemListener = listener
         return listener
     }
     

@@ -50,8 +50,8 @@ class DefaultDataController: DataController {
         databaseManager.getPopularItems()
     }
     
-    func getItemListener(withId id: String, settings: CopDeckSettings) -> DocumentListener<Item> {
-        databaseManager.getItemListener(withId: id, settings: settings)
+    func getItemListener(withId id: String, settings: CopDeckSettings, updated: @escaping (Item) -> Void) -> DocumentListener<Item> {
+        databaseManager.getItemListener(withId: id, settings: settings, updated: updated)
     }
     
     func update(item: Item, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates?, completion: @escaping () -> Void) {

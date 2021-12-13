@@ -21,10 +21,14 @@ class DocumentListener<T: Codable>: FireStoreListener {
             .eraseToAnyPublisher()
     }
 
-    func startListening(documentRef: DocumentReference?) {
+    func startListening(documentRef: DocumentReference?, updated: ((T) -> Void)? = nil) {
         self.documentRef = documentRef
-        listener = addDocumentListener(documentRef: documentRef) { [weak self] in
-            self?.dataSubject.send($0)
+        if let updated = updated {
+            listener = addDocumentListener(documentRef: documentRef, updated: updated)
+        } else {
+            listener = addDocumentListener(documentRef: documentRef) { [weak self] in
+                self?.dataSubject.send($0)
+            }
         }
     }
 

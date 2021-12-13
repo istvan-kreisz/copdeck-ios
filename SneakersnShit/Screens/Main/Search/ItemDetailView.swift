@@ -20,6 +20,7 @@ struct ItemDetailView: View {
     @State var showSnackBar = false
     @State var isFavorited: Bool
     @State var showPopup = false
+    @State var itemListener: DocumentListener<Item>?
 
     @State private var restocksPriceType: Item.StorePrice.StoreInventoryItem.RestocksPriceType = .regular
 
@@ -352,6 +353,9 @@ struct ItemDetailView: View {
                     setupItemListener()
                 }
             }
+            .onDisappear {
+                itemListener?.reset()
+            }
             .onChange(of: addedInventoryItem) { new in
                 if new {
                     showSnackBar = true
@@ -367,7 +371,12 @@ struct ItemDetailView: View {
     }
 
     private func setupItemListener() {
-        //
+        store.send(.main(action: .getItemListener(itemId: itemId, updated: { item in
+            self.item = item
+        }, completion: { listener in
+            self.itemListener?.reset()
+            self.itemListener = listener
+        })))
     }
 
     private func updateItem(newItem: Item?) {
