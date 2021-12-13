@@ -362,8 +362,8 @@ struct ItemDetailView: View {
     }
 
     private func refreshPrices(forced: Bool) {
-        store.send(.main(action: .updateItem(item: item, itemId: itemId, styleId: styleId, forced: forced) {}),
-                   completed: loader.getNewLoader())
+        let load = loader.getLoader()
+        store.send(.main(action: .updateItem(item: item, itemId: itemId, styleId: styleId, forced: forced) { load(.success(())) }))
     }
 
     private func setupItemListener() {

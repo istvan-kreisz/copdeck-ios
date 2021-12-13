@@ -10,7 +10,7 @@ import Combine
 import FirebaseFunctions
 import SwiftUI
 
-class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
+class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {    
     private var feedPagination = PaginationState<FeedPost>(lastLoaded: nil, isLastPage: false)
 
     func getFeedPosts(loadMore: Bool) -> AnyPublisher<PaginatedResult<[FeedPost]>, AppError> {
@@ -134,7 +134,7 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
         return result.map(\.res).eraseToAnyPublisher()
     }
 
-    func update(item: Item, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates?) -> AnyPublisher<Item, AppError> {
+    func update(item: Item, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates?, completion: @escaping () -> Void) {
         struct Wrapper: Encodable {
             let item: Item
             let apiConfig: APIConfig
@@ -142,8 +142,11 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
             let forced: Bool
         }
         let model = Wrapper(item: item, apiConfig: DefaultDataController.config(from: settings, exchangeRates: exchangeRates), requestId: "1", forced: forced)
-        let result: AnyPublisher<WrappedResult<Item>, AppError> = callFirebaseFunction(functionName: "getItemDetails", model: model)
-        return result.map(\.res).eraseToAnyPublisher()
+        callFirebaseFunction(functionName: "getItemDetails", model: model)
+            .sink { result in
+                completion()
+            } receiveValue: { _ in }
+            .store(in: &cancellables)
     }
 
     func getUserProfile(userId: String) -> AnyPublisher<ProfileData, AppError> {

@@ -36,7 +36,8 @@ class FBFunctionsCoordinator {
         self.userId = nil
     }
 
-    func handlePublisherResult<Model>(publisher: AnyPublisher<Model, AppError>, showAlert: Bool = true, completion: ((Result<Model, AppError>) -> Void)? = nil) {
+    func handlePublisherResult<Model>(publisher: AnyPublisher<Model, AppError>, showAlert: Bool = true,
+                                      completion: ((Result<Model, AppError>) -> Void)? = nil) {
         publisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
@@ -46,7 +47,7 @@ class FBFunctionsCoordinator {
                         completion(.failure(error))
                     } else {
                         if DebugSettings.shared.isInDebugMode || showAlert {
-                            self?.errorsSubject.send(error)                            
+                            self?.errorsSubject.send(error)
                         }
                     }
                 case .finished:
@@ -78,9 +79,9 @@ class FBFunctionsCoordinator {
         }
     }
 
-    private func firebaseFunction<Model>(functionName: String,
-                                         model: Encodable,
-                                         handleResult: @escaping (HTTPSCallableResult?, (Result<Model, AppError>) -> Void) throws -> Void)
+    func firebaseFunction<Model>(functionName: String,
+                                 model: Encodable,
+                                 handleResult: @escaping (HTTPSCallableResult?, (Result<Model, AppError>) -> Void) throws -> Void)
         -> AnyPublisher<Model, AppError> {
         guard let userId = userId else { return Fail(error: AppError.unauthenticated).eraseToAnyPublisher() }
         do {

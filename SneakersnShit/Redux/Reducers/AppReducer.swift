@@ -108,15 +108,13 @@ func appReducer(state: inout AppState,
             return environment.dataController.getUserProfile(userId: userId)
                 .complete { completion($0.value) }
         case let .updateItem(item, itemId, styleId, forced, completion):
-            return environment.dataController.update(item: item,
-                                                     itemId: itemId,
-                                                     styleId: styleId,
-                                                     forced: forced,
-                                                     settings: state.settings,
-                                                     exchangeRates: state.exchangeRates)
-                .complete(completion: { _ in
-                    completion()
-                })
+            environment.dataController.update(item: item,
+                                              itemId: itemId,
+                                              styleId: styleId,
+                                              forced: forced,
+                                              settings: state.settings,
+                                              exchangeRates: state.exchangeRates,
+                                              completion: completion)
         case let .getItemListener(itemId, completion):
             completion(environment.dataController.getItemListener(withId: itemId, settings: state.settings))
         case let .getItemImage(itemId, completion):
