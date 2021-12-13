@@ -15,14 +15,6 @@ enum FetchMode: String {
 }
 
 protocol LocalAPI {
-    var scraperConfigPublisher: AnyPublisher<[ScraperConfig], Never> { get }
-    var imageDownloadHeadersPublisher: AnyPublisher<[HeadersWithStoreId], Never> { get }
-
     func reset()
-    func clearConfigs()
-    func refreshHeadersAndConfigs()
-    func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError>
-    func getItemDetails(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError>
     func getCalculatedPrices(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError>
-    func getPopularItems(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError>
 }

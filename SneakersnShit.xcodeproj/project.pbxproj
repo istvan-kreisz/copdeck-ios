@@ -138,7 +138,6 @@
 		5D88261726F8DCD20006031D /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D88261626F8DCD20006031D /* Navigation.swift */; };
 		5D88261926F917770006031D /* DefaultImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D88261826F917770006031D /* DefaultImageService.swift */; };
 		5D8ABBBA26B0B51200AFD8CF /* Snackbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ABBB926B0B51200AFD8CF /* Snackbar.swift */; };
-		5D8ABBBF26B1C82500AFD8CF /* ScraperRequestInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ABBBE26B1C82500AFD8CF /* ScraperRequestInfo.swift */; };
 		5D8ABBC126B1D2E100AFD8CF /* ItemImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ABBC026B1D2E100AFD8CF /* ItemImageView.swift */; };
 		5D8ABBC426B205CD00AFD8CF /* FeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ABBC326B205CD00AFD8CF /* FeedView.swift */; };
 		5D8CD46626DA69BC00318CC1 /* StackDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8CD46526DA69BC00318CC1 /* StackDetailView.swift */; };
@@ -378,7 +377,6 @@
 		5D88261826F917770006031D /* DefaultImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultImageService.swift; sourceTree = "<group>"; };
 		5D8ABBB926B0B51200AFD8CF /* Snackbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snackbar.swift; sourceTree = "<group>"; };
 		5D8ABBBB26B0DF4900AFD8CF /* SneakersnShit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SneakersnShit.entitlements; sourceTree = "<group>"; };
-		5D8ABBBE26B1C82500AFD8CF /* ScraperRequestInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScraperRequestInfo.swift; sourceTree = "<group>"; };
 		5D8ABBC026B1D2E100AFD8CF /* ItemImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemImageView.swift; sourceTree = "<group>"; };
 		5D8ABBC326B205CD00AFD8CF /* FeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedView.swift; sourceTree = "<group>"; };
 		5D8CD46526DA69BC00318CC1 /* StackDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackDetailView.swift; sourceTree = "<group>"; };
@@ -1030,7 +1028,6 @@
 				5DA5140A26A6161A0067C4A2 /* CopDeckSettings.swift */,
 				5DCC466B26A88367007671BC /* InventoryItem.swift */,
 				5D9D51F726ADA07700AB1F30 /* Country.swift */,
-				5D8ABBBE26B1C82500AFD8CF /* ScraperRequestInfo.swift */,
 				5DE596E726C877120024F7D5 /* Stack.swift */,
 				5DDEFDCB26D14095001B0F76 /* Filters.swift */,
 				5D9DFB0026D978F9005A575D /* ProfileData.swift */,
@@ -1615,7 +1612,6 @@
 				5DDEFDC426D042C5001B0F76 /* StaticButtonStyle.swift in Sources */,
 				5D1264D9275E9D3500E66EE3 /* TagSelector.swift in Sources */,
 				5D9A473D27344FA1001C85E4 /* DBRef.swift in Sources */,
-				5D8ABBBF26B1C82500AFD8CF /* ScraperRequestInfo.swift in Sources */,
 				5D1264D5275E8B8A00E66EE3 /* PriceRow.swift in Sources */,
 				5D2726CA26CB2CE400887449 /* VerticalListView.swift in Sources */,
 				5D9D51F826ADA07700AB1F30 /* Country.swift in Sources */,

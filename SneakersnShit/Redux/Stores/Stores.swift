@@ -13,7 +13,6 @@ typealias AppStore = ReduxStore<AppState, AppAction, World>
 
 extension AppStore {
     static var isChatDetailView = false
-    static var requestInfo: [ScraperRequestInfo] = []
 
     static let `default`: AppStore = {
         let appStore = AppStore(state: .init(), reducer: appReducer, environment: World())
@@ -100,7 +99,6 @@ extension AppStore {
                       let oldSettings = self?.state.user?.settings
                       let newSettings = newUser.settings
                       if oldSettings?.feeCalculation != newSettings?.feeCalculation || oldSettings?.currency != newSettings?.currency {
-                          self?.environment.dataController.clearConfigs()
                           ItemCache.default.removeAll()
                           self?.refreshItemPricesIfNeeded(newUser: newUser)
                       }
@@ -137,21 +135,6 @@ extension AppStore {
                   receiveValue: { [weak self] exchangeRates in
                       self?.state.exchangeRates = exchangeRates
                   })
-            .store(in: &effectCancellables)
-
-        environment.dataController.scraperConfigPublisher
-            .removeDuplicates()
-            .combineLatest(environment.dataController.imageDownloadHeadersPublisher.removeDuplicates()) { configs, headers in
-                configs.map { (config: ScraperConfig) -> ScraperRequestInfo in
-                    ScraperRequestInfo(storeId: config.storeId,
-                                       cookie: config.cookie,
-                                       imageDownloadHeaders: headers.first(where: { $0.storeId == config.storeId })?.headers ?? [:])
-                }
-            }
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: {
-                Self.requestInfo = $0
-            })
             .store(in: &effectCancellables)
 
         environment.dataController.recentlyViewedPublisher
@@ -232,31 +215,24 @@ extension AppStore {
                 (idWithDelay.0, idWithDelay.1 + (idsWithDelay[safe: offset - 1]?.1 ?? 0))
             }
         log("refreshing prices for items with ids: \(idsToRefresh)", logType: .scraping)
-        if !state.didFetchItemPrices {
-            idsWithDelay
-                .forEach { [weak self] (ids: Ids, _) in
-                    self?.send(.main(action: .refreshItemIfNeeded(itemId: ids.itemId, styleId: ids.styleId, fetchMode: .cacheOnly)))
-                }
-        }
-        idsWithDelay
-            .forEach { (ids: Ids, delay: Double) in
-                DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
-                    self?.send(.main(action: .refreshItemIfNeeded(itemId: ids.itemId, styleId: ids.styleId, fetchMode: .cacheOrRefresh)))
-                }
-            }
+//        if !state.didFetchItemPrices {
+//            idsWithDelay
+//                .forEach { [weak self] (ids: Ids, _) in
+//                    self?.send(.main(action: .refreshItemIfNeeded(itemId: ids.itemId, styleId: ids.styleId, fetchMode: .cacheOnly)))
+//                }
+//        }
+//        idsWithDelay
+//            .forEach { (ids: Ids, delay: Double) in
+//                DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
+//                    self?.send(.main(action: .refreshItemIfNeeded(itemId: ids.itemId, styleId: ids.styleId, fetchMode: .cacheOrRefresh)))
+//                }
+//            }
     }
 }
 
 private func imageRequest(for imageURL: ImageURL?) -> ImageRequestConvertible? {
     if let imageURL = imageURL, let url = URL(string: imageURL.url) {
-        var request = URLRequest(url: url)
-
-        if let headers = AppStore.requestInfo.first(where: { $0.storeId == imageURL.store?.id })?.imageDownloadHeaders {
-            headers.forEach { name, value in
-                request.setValue(value, forHTTPHeaderField: name)
-            }
-        }
-        return ImageRequest(urlRequest: request)
+        return ImageRequest(urlRequest: URLRequest(url: url))
     } else {
         return nil
     }

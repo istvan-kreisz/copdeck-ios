@@ -23,8 +23,6 @@ class DefaultDataController: DataController {
     lazy var exchangeRatesPublisher = databaseManager.exchangeRatesPublisher.onMain()
     lazy var chatUpdatesPublisher = databaseManager.chatUpdatesPublisher.onMain()
     lazy var errorsPublisher = databaseManager.errorsPublisher.merge(with: backendAPI.errorsPublisher, imageService.errorsPublisher).onMain()
-    lazy var scraperConfigPublisher = localScraper.scraperConfigPublisher.onMain()
-    lazy var imageDownloadHeadersPublisher = localScraper.imageDownloadHeadersPublisher.onMain()
 
     lazy var profileImagePublisher = imageService.profileImagePublisher.onMain()
 
@@ -44,35 +42,23 @@ class DefaultDataController: DataController {
         imageService.reset()
     }
 
-    func refreshHeadersAndConfigs() {
-        localScraper.refreshHeadersAndConfigs()
-    }
-
-    func clearConfigs() {
-        localScraper.clearConfigs()
-    }
-
-    #warning("sup here")
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
-//        backendAPI.search(searchTerm: searchTerm, settings: settings, exchangeRates: exchangeRates)
-        localScraper.search(searchTerm: searchTerm, settings: settings, exchangeRates: exchangeRates).onMain()
+        backendAPI.search(searchTerm: searchTerm, settings: settings, exchangeRates: exchangeRates)
     }
 
     func getItemDetails(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
-//        backendAPI.getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates).onMain()
-        localScraper.getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates).onMain()
+        backendAPI.getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates).onMain()
     }
 
     func getPopularItems(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
+        #warning("finish")
+        return Empty<[Item], AppError>().eraseToAnyPublisher()
 //        backendAPI.getPopularItems(settings: settings, exchangeRates: exchangeRates)
-        localScraper.getPopularItems(settings: settings, exchangeRates: exchangeRates).onMain()
     }
 
     private func fetchPrices(for item: Item?, itemId: String, styleId: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
         if let item = item {
-            return getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates)
-//                .handleEvents(receiveOutput: { [weak self] _ in self?.refreshHeadersAndCookie() })
-                .onMain()
+            return getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates).onMain()
         } else {
             return search(searchTerm: (styleId.isEmpty ? itemId : styleId).replacingOccurrences(of: "_", with: " "), settings: settings, exchangeRates: exchangeRates)
                 .compactMap { items in items.first(where: { $0.id == itemId }) }

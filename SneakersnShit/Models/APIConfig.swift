@@ -11,7 +11,6 @@ import JavaScriptCore
 struct APIConfig: Codable {
     let currency: Currency
     let isLoggingEnabled: Bool
-    var proxies: [Int] = []
     let exchangeRates: ExchangeRates
     let feeCalculation: FeeCalculation
 
