@@ -46,10 +46,6 @@ class DefaultDataController: DataController {
         backendAPI.search(searchTerm: searchTerm, settings: settings, exchangeRates: exchangeRates)
     }
     
-    func update(item: Item, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates?) -> AnyPublisher<Item, AppError> {
-        backendAPI.update(item: item, forced: forced, settings: settings, exchangeRates: exchangeRates).onMain()
-    }
-
     func getPopularItems() -> AnyPublisher<[Item], AppError> {
         databaseManager.getPopularItems()
     }
@@ -58,21 +54,14 @@ class DefaultDataController: DataController {
         databaseManager.getItemListener(withId: id, settings: settings)
     }
     
+    func update(item: Item, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates?) -> AnyPublisher<Item, AppError> {
+        backendAPI.update(item: item, forced: forced, settings: settings, exchangeRates: exchangeRates)
+    }
+    
     #warning("calculate prices")
     func update(item: Item?, itemId: String, styleId: String, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates?) -> AnyPublisher<Item, AppError> {
-        if let item = item {
-            return update(item: item, forced: forced, settings: settings, exchangeRates: exchangeRates).onMain()
-        } else {
-            return search(searchTerm: (styleId.isEmpty ? itemId : styleId).replacingOccurrences(of: "_", with: " "), settings: settings, exchangeRates: exchangeRates)
-                .compactMap { items in items.first(where: { $0.id == itemId }) }
-                .flatMap { [weak self] item -> AnyPublisher<Item, AppError> in
-                    guard let self = self else {
-                        return Fail<Item, AppError>(error: AppError.unknown).eraseToAnyPublisher()
-                    }
-                    return self.update(item: item, forced: forced, settings: settings, exchangeRates: exchangeRates).eraseToAnyPublisher()
-                }
-                .onMain()
-        }
+        let item = item ?? Item(id: itemId, styleId: styleId, storeInfo: [], storePrices: [], name: nil, imageURL: nil)
+        return update(item: item, forced: forced, settings: settings, exchangeRates: exchangeRates).onMain()
     }
 
     func getCalculatedPrices(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
