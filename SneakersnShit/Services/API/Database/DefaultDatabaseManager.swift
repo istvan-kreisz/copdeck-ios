@@ -135,12 +135,29 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
 
     func getItem(withId id: String, settings: CopDeckSettings) -> AnyPublisher<Item, AppError> {
         return Future { [weak self] promise in
-            self?.firestore.collection(.items).document(Item.databaseId(itemId: id, settings: settings)).getDocument { snapshot, error in
+            self?.firestore.collection(.popularItems).document(Item.databaseId(itemId: id, settings: settings)).getDocument { snapshot, error in
                 log("db read itemId: \(id)", logType: .database)
                 if let dict = snapshot?.data(), let item = Item(from: dict) {
                     promise(.success(item))
                 } else {
                     promise(.failure(error.map { AppError(error: $0) } ?? AppError.unknown))
+                }
+            }
+        }.eraseToAnyPublisher()
+    }
+    
+    func getPopularItems() -> AnyPublisher<[Item], AppError> {
+        return Future { [weak self] promise in
+            guard let self = self else {
+                promise(.failure(AppError.notFound(val: "")))
+                return
+            }
+            self.getCollection(atRef: self.firestore.collection(.items)) { (result: Result<[Item], Error>) in
+                switch result {
+                case let .success(items):
+                    promise(.success(items))
+                case let .failure(error):
+                    promise(.failure(AppError(error: error)))
                 }
             }
         }.eraseToAnyPublisher()

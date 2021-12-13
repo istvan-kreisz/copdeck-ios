@@ -29,6 +29,20 @@ protocol FirestoreServiceWorker: FirestoreWorker {
 }
 
 extension FirestoreWorker {
+    func getCollection<T: Codable>(atRef ref: CollectionReference, completion: @escaping (Result<[T], Error>) -> Void) {
+        ref.getDocuments { snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                if let elements = snapshot?.documents.compactMap({ T(from: $0.data()) }) {
+                    completion(.success(elements))
+                } else {
+                    completion(.failure(AppError.unknown))
+                }
+            }
+        }
+    }
+
     func setDocument(_ data: [String: Any], atRef ref: DocumentReference, merge: Bool, using batch: WriteBatch? = nil, updateDates: Bool = true, completion: ((Error?) -> Void)? = nil) {
         let data = updateDates ? dataWithUpdatedDates(data) : data
         if let batch = batch {

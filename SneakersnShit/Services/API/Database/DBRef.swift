@@ -9,6 +9,7 @@ import Foundation
 
 enum DBRef: String {
     case items
+    case popularItems
     case notificationTokens
     case chat
     case updates

@@ -91,7 +91,7 @@ func appReducer(state: inout AppState,
                     .complete(completion: completion)
             }
         case let .getPopularItems(completion: completion):
-            return environment.dataController.getPopularItems(settings: state.settings, exchangeRates: state.rates)
+            return environment.dataController.getPopularItems()
                 .complete(completion: completion)
         case let .searchUsers(searchTerm: searchTerm, completion: completion):
             Analytics.logEvent("search_users", parameters: ["userId": state.user?.id ?? ""])

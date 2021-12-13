@@ -144,16 +144,6 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
                               showAlert: false)
     }
 
-    func getPopularItems(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
-        struct Wrapper: Encodable {
-            let apiConfig: APIConfig
-            let requestId: String
-        }
-        let model = Wrapper(apiConfig: DefaultDataController.config(from: settings, exchangeRates: exchangeRates), requestId: "1")
-        let result: AnyPublisher<WrappedResult<[Item]>, AppError> = callFirebaseFunction(functionName: "getPopularItems", model: model)
-        return result.map(\.res).eraseToAnyPublisher()
-    }
-
     #warning("add forced")
     func getItemDetails(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
         struct Wrapper: Encodable {

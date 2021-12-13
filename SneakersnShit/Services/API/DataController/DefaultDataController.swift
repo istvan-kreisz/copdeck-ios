@@ -50,10 +50,8 @@ class DefaultDataController: DataController {
         backendAPI.getItemDetails(for: item, settings: settings, exchangeRates: exchangeRates).onMain()
     }
 
-    func getPopularItems(settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<[Item], AppError> {
-        #warning("finish")
-        return Empty<[Item], AppError>().eraseToAnyPublisher()
-//        backendAPI.getPopularItems(settings: settings, exchangeRates: exchangeRates)
+    func getPopularItems() -> AnyPublisher<[Item], AppError> {
+        databaseManager.getPopularItems()
     }
 
     private func fetchPrices(for item: Item?, itemId: String, styleId: String, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
