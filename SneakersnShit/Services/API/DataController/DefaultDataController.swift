@@ -63,6 +63,10 @@ class DefaultDataController: DataController {
         let item = item ?? Item(id: itemId, styleId: styleId, storeInfo: [], storePrices: [], name: nil, imageURL: nil)
         update(item: item, forced: forced, settings: settings, exchangeRates: exchangeRates, completion: completion)
     }
+    
+    func updateUserItems(completion: @escaping () -> Void) {
+        backendAPI.updateUserItems(completion: completion)
+    }
 
     func getCalculatedPrices(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
         localScraper.getCalculatedPrices(for: item, settings: settings, exchangeRates: exchangeRates).onMain()

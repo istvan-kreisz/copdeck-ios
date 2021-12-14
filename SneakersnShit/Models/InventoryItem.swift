@@ -72,6 +72,7 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     var brandCalculated: Brand? { brand ?? item?.brandCalculated }
     var genderCalculated: Gender? { gender ?? item?.genderCalculated }
     var count = 1
+    var bestPrice: Double?
     
     var _addToStacks: [Stack] = []
 

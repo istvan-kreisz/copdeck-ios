@@ -148,6 +148,22 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
             } receiveValue: { _ in }
             .store(in: &cancellables)
     }
+    
+    func updateUserItems(completion: @escaping () -> Void) {
+        guard let userId = userId else {
+            completion()
+            return
+        }
+        struct Wrapper: Encodable {
+            let userId: String
+        }
+        let model = Wrapper(userId: userId)
+        callFirebaseFunction(functionName: "updateUserItems", model: model)
+            .sink { result in
+                completion()
+            } receiveValue: { _ in }
+            .store(in: &cancellables)
+    }
 
     func getUserProfile(userId: String) -> AnyPublisher<ProfileData, AppError> {
         struct Wrapper: Encodable {
