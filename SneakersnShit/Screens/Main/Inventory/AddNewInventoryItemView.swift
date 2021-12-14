@@ -91,13 +91,6 @@ struct AddNewInventoryItemView: View {
             }
             .background(Color.customBackground)
             .onChange(of: searchText) { search(searchTerm: $0) }
-            .onAppear {
-                if searchState.popularItems.isEmpty {
-                    store.send(.main(action: .getPopularItems(completion: { result in
-                        handleResult(result: result, loader: nil) { self.searchState.popularItems = $0 }
-                    })))
-                }
-            }
             .withAlert(alert: alert.projectedValue)
             .withSnackBar(text: "Added to inventory", shouldShow: $showSnackBar)
             .navigationbarHidden()
