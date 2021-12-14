@@ -130,8 +130,8 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
             let requestId: String
         }
         let model = Wrapper(searchTerm: searchTerm, apiConfig: DefaultDataController.config(from: settings, exchangeRates: exchangeRates), requestId: "1")
-        let result: AnyPublisher<WrappedResult<[Item]>, AppError> = callFirebaseFunction(functionName: "search", model: model)
-        return result.map(\.res).eraseToAnyPublisher()
+        let result: AnyPublisher<[Item], AppError> = callFirebaseFunction(functionName: "search", model: model)
+        return result.eraseToAnyPublisher()
     }
 
     func update(item: Item, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates?, completion: @escaping () -> Void) {

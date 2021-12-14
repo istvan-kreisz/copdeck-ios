@@ -25,7 +25,6 @@ class World {
 
     convenience init() {
         self.init(dataController: DefaultDataController(backendAPI: DefaultBackendAPI(),
-                                                        localScraper: LocalScraper(),
                                                         databaseManager: DefaultDatabaseManager(),
                                                         imageService: DefaultImageService()),
                   authenticator: DefaultAuthenticator(),

@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import UIKit
 
-protocol DataController: LocalAPI, BackendAPI, DatabaseManager, ImageService {
+protocol DataController: BackendAPI, DatabaseManager, ImageService {
     func stack(inventoryItems: [InventoryItem], stack: Stack)
     func unstack(inventoryItems: [InventoryItem], stack: Stack)
     func update(item: Item?,

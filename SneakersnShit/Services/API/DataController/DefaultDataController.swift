@@ -11,7 +11,6 @@ import UIKit
 
 class DefaultDataController: DataController {
     let backendAPI: BackendAPI
-    let localScraper: LocalAPI
     let databaseManager: DatabaseManager
     let imageService: ImageService
 
@@ -28,9 +27,8 @@ class DefaultDataController: DataController {
 
     private var cancellables: Set<AnyCancellable> = []
 
-    init(backendAPI: BackendAPI, localScraper: LocalAPI, databaseManager: DatabaseManager, imageService: ImageService) {
+    init(backendAPI: BackendAPI, databaseManager: DatabaseManager, imageService: ImageService) {
         self.backendAPI = backendAPI
-        self.localScraper = localScraper
         self.databaseManager = databaseManager
         self.imageService = imageService
     }
@@ -38,7 +36,6 @@ class DefaultDataController: DataController {
     func reset() {
         backendAPI.reset()
         databaseManager.reset()
-        localScraper.reset()
         imageService.reset()
     }
 
@@ -66,10 +63,6 @@ class DefaultDataController: DataController {
     
     func updateUserItems(completion: @escaping () -> Void) {
         backendAPI.updateUserItems(completion: completion)
-    }
-
-    func getCalculatedPrices(for item: Item, settings: CopDeckSettings, exchangeRates: ExchangeRates) -> AnyPublisher<Item, AppError> {
-        localScraper.getCalculatedPrices(for: item, settings: settings, exchangeRates: exchangeRates).onMain()
     }
 
     func getUser(withId id: String) -> AnyPublisher<User, AppError> {
