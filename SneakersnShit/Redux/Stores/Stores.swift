@@ -59,7 +59,7 @@ extension AppStore {
                         .map { (inventoryItem: InventoryItem) -> InventoryItem in
                             var updatedInventoryItem = inventoryItem
                             if let itemId = inventoryItem.itemId, let bestPrice = bestPrices[itemId] {
-                                updatedInventoryItem.bestPriceFromItem = bestPrice
+                                updatedInventoryItem.itemFields.bestPrice = bestPrice
                             }
                             return updatedInventoryItem
                         }
@@ -67,6 +67,10 @@ extension AppStore {
                 }
             }
         }
+    }
+
+    private func updateBestPrices(inventoryItems: [InventoryItem]) {
+        //
     }
 
     func setupObservers() {
@@ -89,13 +93,13 @@ extension AppStore {
                           previousUser?.id != newUser.id {
                           #warning("called on login??")
                           self?.environment.dataController.updateUserItems {
-                              //  when done: refresh ALL inventory items
+                              self?.updateInventoryValue()
                           }
                       } else if (oldSettings?.feeCalculation != newSettings?.feeCalculation && newSettings?.bestPriceFeeType != .None) ||
                           oldSettings?.bestPricePriceType != newSettings?.bestPricePriceType ||
                           oldSettings?.bestPriceFeeType != newSettings?.bestPriceFeeType ||
                           oldSettings?.displayedStores != newSettings?.displayedStores {
-                          // refresh ALL inventory items
+                          self?.updateInventoryValue()
                       }
                       self?.state.user = newUser
                       self?.updateInventoryValue()
@@ -107,12 +111,18 @@ extension AppStore {
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] changes, inventoryItems in
+                      var inventoryItemsToUpdate: [InventoryItem] = []
+                      for change in changes {
+                          if case let .update(updatedInventoryItem) = change {
+                              if let oldInventoryItem = inventoryItems.first(where: { $0.id == updatedInventoryItem.id }),
+                                 oldInventoryItem.size != updatedInventoryItem.size {
+                                  self?.updateBestPrices(inventoryItems: [updatedInventoryItem])
+                              }
+                          } else if case let .add(addedInventoryItem) = change {
+                              self?.updateBestPrices(inventoryItems: [addedInventoryItem])
+                          }
+                      }
                       self?.state.inventoryItems = inventoryItems.filter { $0.pendingImport == nil }
-//                      if !inventoryItems.isEmpty, self?.state.didFetchItemPrices == false {
-//                          self?.refreshItemPricesIfNeeded()
-//                          self?.state.didFetchItemPrices = true
-//                      }
-//                      self?.updateInventoryValue()
                   })
             .store(in: &effectCancellables)
 

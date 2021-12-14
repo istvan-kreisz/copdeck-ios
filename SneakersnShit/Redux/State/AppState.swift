@@ -25,7 +25,6 @@ struct FeedState: Equatable {
 struct GlobalState: Equatable {
     var user: User?
     var firstLoadDone = false
-    var didFetchItemPrices = false
     var error: AppError?
     var favoritedItems: [Item] = []
     var recentlyViewedItems: [Item] = []
@@ -71,7 +70,7 @@ struct AppState: Equatable {
     var inventoryState = InventoryState()
     
     var inventoryValue: PriceWithCurrency? {
-        let sum = inventoryItems.compactMap(\.bestPriceFromItem?.price.price).sum()
+        let sum = inventoryItems.compactMap(\.itemFields.bestPrice?.price.price).sum()
         return PriceWithCurrency(price: sum, currencyCode: settings.currency.code)
     }
 
@@ -83,11 +82,6 @@ struct AppState: Equatable {
     var firstLoadDone: Bool {
         get { globalState.firstLoadDone }
         set { globalState.firstLoadDone = newValue }
-    }
-
-    var didFetchItemPrices: Bool {
-        get { globalState.didFetchItemPrices }
-        set { globalState.didFetchItemPrices = newValue }
     }
 
     var error: AppError? {

@@ -70,15 +70,26 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     
     var gender: Gender?
     var brand: Brand?
-    var brandCalculated: Brand? { brand ?? brandFromItem }
-    var genderCalculated: Gender? { gender ?? genderFromItem }
+    var brandCalculated: Brand? { brand ?? itemFields.brand }
+    var genderCalculated: Gender? { gender ?? itemFields.gender }
     var count = 1
     
-    var brandFromItem: Brand?
-    var genderFromItem: Gender?
-    var bestPriceFromItem: ListingPrice?
-    var sortedSizesFromItem: [String] = []
-    var itemTypeFromItem: ItemType?
+    var itemFields = ItemFields()
+    struct ItemFields: Equatable {
+    #warning("add these")
+        var brand: Brand?
+        var gender: Gender?
+        var itemType: ItemType?
+        var sortedSizes: [String] = []
+        var bestPrice: ListingPrice?
+        var askPriceNoFees: Double?
+        var askPriceBuyFees: Double?
+        var askPriceSellFees: Double?
+        var bidPriceNoFees: Double?
+        var bidPriceBuyFees: Double?
+        var bidPriceSellFees: Double?
+    }
+    
     
     var _addToStacks: [Stack] = []
 
@@ -103,8 +114,8 @@ struct InventoryItem: Codable, Equatable, Identifiable {
         var result: [ItemType: [String]] = [:]
         ItemType.allCases.forEach { itemType in
             let sizes: [String]
-            if itemTypeFromItem == itemType && !sortedSizesFromItem.isEmpty {
-                sizes = sortedSizesFromItem
+            if itemFields.itemType == itemType && !itemFields.sortedSizes.isEmpty {
+                sizes = itemFields.sortedSizes
             } else {
                 switch itemType {
                 case .shoe:
