@@ -51,10 +51,11 @@ struct Currency: Codable, Equatable {
         }
     }
     
-    static func convert(from currency1: CurrencyCode, to currency2: CurrencyCode, exchangeRates: ExchangeRates) -> Double? {
+    static func convert(from currency1: CurrencyCode, to currency2: CurrencyCode, exchangeRates: ExchangeRates?) -> Double {
+        let exchangeRates = exchangeRates ?? .default
         if currency1 == currency2 { return 1 }
         let rates: [CurrencyCode: Double] = [.gbp: exchangeRates.gbp, .usd: exchangeRates.usd, .eur: 1, .nok: exchangeRates.nok, .chf: exchangeRates.chf]
-        guard let fromRate = rates[currency1], let toRate = rates[currency2] else { return nil }
+        guard let fromRate = rates[currency1], let toRate = rates[currency2] else { return 1 }
         return toRate / fromRate
     }
 }

@@ -83,7 +83,7 @@ func stockxSellerPrice(price: Double,
     if currencyCode == .gbp {
         shippingFee = .init(fee: 0, currency: GBP)
     }
-    let shippingFeeConverted = Currency.convert(from: shippingFee.currency.code, to: currencyCode, exchangeRates: exchangeRates ?? .default) ?? 0
+    let shippingFeeConverted = Currency.convert(from: shippingFee.currency.code, to: currencyCode, exchangeRates: exchangeRates) * shippingFee.fee
     return round(price - transactionFee - paymentProcessingFee - shippingFeeConverted)
 }
 
@@ -172,9 +172,10 @@ func stockxSellerPrice(price: Double,
 //    return Math.round(total)
 // }
 //
-// const klektSellerPrice = (price: number): number => {
-//    return Math.round(price / 1.17)
-// }
+func klektSellerPrice(price: Double) -> Double {
+    round(price / 1.17)
+}
+
 //
 // const klektBuyerPrice = (
 //    price: number,
@@ -394,22 +395,15 @@ func stockxSellerPrice(price: Double,
 //    return Math.round(priceWithShipping + vat)
 // }
 //
-// const restocksSellerPrice = (
-//    price: number,
-//    currencyCode: CurrencyCode,
-//    sellerInfo: SellerInfo,
-//    exchangeRates?: ExchangeRates
-// ): number => {
-//    let sellerFeeInEUR = convert(price, currencyCode, 'EUR', false, exchangeRates) * 0.1 + 10
-//    let sellerFeeInTargetCurrency = convert(
-//        sellerFeeInEUR,
-//        'EUR',
-//        currencyCode,
-//        false,
-//        exchangeRates
-//    )
-//    return Math.round(price - sellerFeeInTargetCurrency)
-// }
+func restocksSellerPrice(price: Double,
+                         currencyCode: Currency.CurrencyCode,
+                         feeCalculation: CopDeckSettings.FeeCalculation,
+                         exchangeRates: ExchangeRates?) -> Double {
+    let sellerFeeInEUR = Currency.convert(from: currencyCode, to: .eur, exchangeRates: exchangeRates) * 0.1 + 10
+    let sellerFeeInTargetCurrency = Currency.convert(from: .eur, to: currencyCode, exchangeRates: exchangeRates) * sellerFeeInEUR
+    return round(price - sellerFeeInTargetCurrency)
+}
+
 //
 // const restocksBuyerPrice = (
 //    price: number,

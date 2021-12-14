@@ -29,7 +29,7 @@ struct PriceWithCurrency: Codable, Equatable {
     }
 
     func convertedPrice(currency: Currency, exchangeRates: ExchangeRates) -> Double {
-        Currency.convert(from: currencyCode, to: currency.code, exchangeRates: exchangeRates).map { $0 * price } ?? 0
+        Currency.convert(from: currencyCode, to: currency.code, exchangeRates: exchangeRates) * price
     }
 }
 
