@@ -177,6 +177,7 @@
 		5DA4FE0426E6DCA700084AEF /* SettingMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA4FE0326E6DCA700084AEF /* SettingMenu.swift */; };
 		5DA5140426A614530067C4A2 /* DefaultDatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140026A614530067C4A2 /* DefaultDatabaseManager.swift */; };
 		5DA5140B26A6161A0067C4A2 /* CopDeckSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140A26A6161A0067C4A2 /* CopDeckSettings.swift */; };
+		5DB2B20B27681723009EEEE0 /* PriceCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB2B20A27681723009EEEE0 /* PriceCalculator.swift */; };
 		5DB590E826C556ED006ECEBD /* ScrollableSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB590E726C556ED006ECEBD /* ScrollableSegmentedControl.swift */; };
 		5DBCB6DD25C90A510025BC23 /* StoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DBCB6DC25C90A510025BC23 /* StoreReviewHelper.swift */; };
 		5DBDDE212702046300804DF6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5DBDDE202702046300804DF6 /* LaunchScreen.storyboard */; };
@@ -413,6 +414,7 @@
 		5DA4FE0326E6DCA700084AEF /* SettingMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingMenu.swift; sourceTree = "<group>"; };
 		5DA5140026A614530067C4A2 /* DefaultDatabaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultDatabaseManager.swift; sourceTree = "<group>"; };
 		5DA5140A26A6161A0067C4A2 /* CopDeckSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopDeckSettings.swift; sourceTree = "<group>"; };
+		5DB2B20A27681723009EEEE0 /* PriceCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceCalculator.swift; sourceTree = "<group>"; };
 		5DB590E726C556ED006ECEBD /* ScrollableSegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableSegmentedControl.swift; sourceTree = "<group>"; };
 		5DBCB6DC25C90A510025BC23 /* StoreReviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreReviewHelper.swift; sourceTree = "<group>"; };
 		5DBDDE202702046300804DF6 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -938,6 +940,7 @@
 		5D6312512695BC3F00876D99 /* API */ = {
 			isa = PBXGroup;
 			children = (
+				5DB2B2092768170B009EEEE0 /* PriceCalculator */,
 				5D9A4733273410A7001C85E4 /* Storage */,
 				5D9A47322734106B001C85E4 /* DataController */,
 				5DA513FF26A6143A0067C4A2 /* Database */,
@@ -1183,6 +1186,14 @@
 				5D9A473C27344FA1001C85E4 /* DBRef.swift */,
 			);
 			path = Database;
+			sourceTree = "<group>";
+		};
+		5DB2B2092768170B009EEEE0 /* PriceCalculator */ = {
+			isa = PBXGroup;
+			children = (
+				5DB2B20A27681723009EEEE0 /* PriceCalculator.swift */,
+			);
+			path = PriceCalculator;
 			sourceTree = "<group>";
 		};
 		5DB590E426C54DAA006ECEBD /* HorizonalPaging */ = {
@@ -1642,6 +1653,7 @@
 				5DE4F21026DF1AD10087077A /* ProfileView.swift in Sources */,
 				5D605416272186D600B631FD /* PaymentView.swift in Sources */,
 				5D564E462704C8CA00190CF4 /* UserDetailView.swift in Sources */,
+				5DB2B20B27681723009EEEE0 /* PriceCalculator.swift in Sources */,
 				5DF3596126FFB7DF0041A6C3 /* UserDefaults+Extensions.swift in Sources */,
 				5D60542127276D3000B631FD /* Purchases+Extensions.swift in Sources */,
 				5D52E31226130E7500FA02B8 /* InventoryItemDetailView.swift in Sources */,

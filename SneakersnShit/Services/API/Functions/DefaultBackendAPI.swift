@@ -10,7 +10,7 @@ import Combine
 import FirebaseFunctions
 import SwiftUI
 
-class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {    
+class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
     private var feedPagination = PaginationState<FeedPost>(lastLoaded: nil, isLastPage: false)
 
     func getFeedPosts(loadMore: Bool) -> AnyPublisher<PaginatedResult<[FeedPost]>, AppError> {
@@ -142,7 +142,7 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
             let forced: Bool
         }
         let model = Wrapper(item: item, apiConfig: DefaultDataController.config(from: settings, exchangeRates: exchangeRates), requestId: "1", forced: forced)
-        callFirebaseFunction(functionName: "getItemDetails", model: model)
+        callFirebaseFunction(functionName: "updateItem", model: model)
             .sink { result in
                 completion()
             } receiveValue: { _ in }
