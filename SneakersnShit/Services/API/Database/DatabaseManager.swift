@@ -14,7 +14,7 @@ protocol DatabaseManager: ChatManager {
     // deinit
     func reset()
     // read
-    var inventoryItemsPublisher: AnyPublisher<[InventoryItem], AppError> { get }
+    var inventoryItemsPublisher: AnyPublisher<([Change<InventoryItem>], [InventoryItem]), AppError> { get }
     var favoritesPublisher: AnyPublisher<[Item], AppError> { get }
     var recentlyViewedPublisher: AnyPublisher<[Item], AppError> { get }
     var stacksPublisher: AnyPublisher<[Stack], AppError> { get }

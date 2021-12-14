@@ -42,7 +42,7 @@ extension AppStore {
             }
         completion(bestPrices)
     }
-    
+
     private func bestPrice(for inventoryItem: InventoryItem, item: Item) -> ListingPrice? {
         item.bestPrice(for: inventoryItem.size,
                        feeType: state.settings.bestPriceFeeType,
@@ -83,9 +83,14 @@ extension AppStore {
                   receiveValue: { [weak self] newUser in
                       let oldSettings = self?.state.user?.settings
                       let newSettings = newUser.settings
-                      if oldSettings?.feeCalculation != newSettings?.feeCalculation || oldSettings?.currency != newSettings?.currency {
-//                          ItemCache.default.removeAll()
-                          self?.refreshItemPricesIfNeeded(newUser: newUser)
+                      if oldSettings?.feeCalculation.country != newSettings?.feeCalculation.country || oldSettings?.currency != newSettings?.currency {
+                          // refetch prices
+                          //  when done: refresh ALL inventory items
+                      } else if (oldSettings?.feeCalculation != newSettings?.feeCalculation && newSettings?.bestPriceFeeType != .None) ||
+                          oldSettings?.bestPricePriceType != newSettings?.bestPricePriceType ||
+                          oldSettings?.bestPriceFeeType != newSettings?.bestPriceFeeType ||
+                          oldSettings?.displayedStores != newSettings?.displayedStores {
+                          // refresh ALL inventory items
                       }
                       self?.state.user = newUser
                       self?.updateInventoryValue()
@@ -93,16 +98,16 @@ extension AppStore {
             .store(in: &effectCancellables)
 
         environment.dataController.inventoryItemsPublisher
-            .map { inventoryItems in inventoryItems.filter { $0.pendingImport == nil } }
+//            .map { inventoryItems in inventoryItems.filter { $0.pendingImport == nil } }
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in },
-                  receiveValue: { [weak self] inventoryItems in
-                      self?.state.inventoryItems = inventoryItems
-                      if !inventoryItems.isEmpty, self?.state.didFetchItemPrices == false {
-                          self?.refreshItemPricesIfNeeded()
-                          self?.state.didFetchItemPrices = true
-                      }
-                      self?.updateInventoryValue()
+                  receiveValue: { [weak self] (changes, inventoryItems) in
+                self?.state.inventoryItems = inventoryItems.filter { $0.pendingImport == nil }
+//                      if !inventoryItems.isEmpty, self?.state.didFetchItemPrices == false {
+//                          self?.refreshItemPricesIfNeeded()
+//                          self?.state.didFetchItemPrices = true
+//                      }
+//                      self?.updateInventoryValue()
                   })
             .store(in: &effectCancellables)
 

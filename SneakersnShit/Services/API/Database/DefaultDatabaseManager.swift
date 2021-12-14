@@ -44,8 +44,8 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
     }
 
     // collection publishers
-    var inventoryItemsPublisher: AnyPublisher<[InventoryItem], AppError> {
-        inventoryListener.dataPublisher
+    var inventoryItemsPublisher: AnyPublisher<([Change<InventoryItem>], [InventoryItem]), AppError> {
+        inventoryListener.changesPublisher
     }
 
     var favoritesPublisher: AnyPublisher<[Item], AppError> {
@@ -105,7 +105,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
         let userRef = firestore.collection(.users).document(userId)
         userListener.startListening(documentRef: userRef)
 
-        inventoryListener.startListening(collectionRef: userRef.collection(.inventory))
+        inventoryListener.startListening(updateType: .changes, collectionRef: userRef.collection(.inventory))
         stacksListener.startListening(collectionRef: userRef.collection(.stacks))
         favoritesListener.startListening(collectionRef: userRef.collection(.favorites))
         recentlyViewedListener.startListening(collectionRef: userRef.collection(.recentlyViewed))
