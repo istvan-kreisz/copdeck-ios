@@ -88,91 +88,74 @@ func stockxSellerPrice(price: Double,
     return round(price - transactionFee - paymentProcessingFee - shippingFeeConverted)
 }
 
-//
-// const stockxBuyerPrice = (
-//    price: Double,
-//    currencyCode: CurrencyCode,
-//    sellerInfo: SellerInfo,
-//    exchangeRates?: ExchangeRates
-// ): Double => {
-//    let paymentProcessingFee = price * 0.03
-//    const paymentProcessingFeeInUSD = convert(
-//        paymentProcessingFee,
-//        currencyCode,
-//        "USD",
-//        false,
-//        exchangeRates
-//    )
-//    if (paymentProcessingFeeInUSD < 3) {
-//        paymentProcessingFee = convert(3, "USD", currencyCode, false, exchangeRates)
-//    } else if (paymentProcessingFeeInUSD > 59.95) {
-//        paymentProcessingFee = convert(59.95, "USD", currencyCode, false, exchangeRates)
-//    }
-//    let shippingFee: { fee: Double; currency: CurrencyInternal } = { fee: 30, currency: USD }
-//    switch (sellerInfo.countryName) {
-//        case "Austria":
-//        case "Belgium":
-//        case "Bulgaria":
-//        case "Czech Republic":
-//        case "Denmark":
-//        case "Estonia":
-//        case "Finland":
-//        case "France":
-//        case "Germany":
-//        case "Greece":
-//        case "Hungary":
-//        case "Ireland":
-//        case "Italy":
-//        case "Lithuania":
-//        case "Luxembourg":
-//        case "Netherlands":
-//        case "Poland":
-//        case "Portugal":
-//        case "Romania":
-//        case "Slovakia":
-//        case "Slovenia":
-//        case "Spain":
-//        case "Sweden":
-//            shippingFee = { fee: 15, currency: EUR }
-//            break
-//        case "Croatia":
-//        case "Iceland":
-//        case "Liechtenstein":
-//        case "Malta":
-//        case "Republic of Cyprus":
-//            shippingFee = { fee: 25, currency: EUR }
-//            break
-//        case "Switzerland":
-//            shippingFee = { fee: 20, currency: CHF }
-//            break
-//        case "UK":
-//            shippingFee = { fee: 13.5, currency: GBP }
-//            break
-//        case "US (Alaska, Hawaii)":
-//            shippingFee = { fee: 25, currency: USD }
-//            break
-//        case "US (mainland)":
-//            shippingFee = { fee: 13.95, currency: USD }
-//            break
-//        case "China":
-//        case "Singapore":
-//        case "South Korea":
-//        case "Taiwan":
-//            shippingFee = { fee: 18, currency: USD }
-//            break
-//        case "Latvia":
-//        case "Norway":
-//            shippingFee = { fee: 30, currency: EUR }
-//            break
-//    }
-//    const totalWithoutTaxes =
-//        price +
-//        paymentProcessingFee +
-//        convert(shippingFee.fee, shippingFee.currency.code, currencyCode, false, exchangeRates)
-//    const total = totalWithoutTaxes * (1 + sellerInfo.stockx.taxes / 100)
-//    return Math.round(total)
-// }
-//
+func stockxBuyerPrice(price: Double,
+                      currencyCode: Currency.CurrencyCode,
+                      feeCalculation: CopDeckSettings.FeeCalculation,
+                      exchangeRates: ExchangeRates?) -> Double {
+    var paymentProcessingFee = price * 0.03
+    let paymentProcessingFeeInUSD = Currency.convert(from: currencyCode, to: .usd, exchangeRates: exchangeRates) * paymentProcessingFee
+    if paymentProcessingFeeInUSD < 3.0 {
+        paymentProcessingFee = Currency.convert(from: .usd, to: currencyCode, exchangeRates: exchangeRates) * 3.0
+    } else if paymentProcessingFeeInUSD > 59.95 {
+        paymentProcessingFee = Currency.convert(from: .usd, to: currencyCode, exchangeRates: exchangeRates) * 59.95
+    }
+    var shippingFee: ShippingFee = .init(fee: 30, currency: USD)
+    switch feeCalculation.country.name {
+    case "Austria",
+         "Belgium",
+         "Bulgaria",
+         "Czech Republic",
+         "Denmark",
+         "Estonia",
+         "Finland",
+         "France",
+         "Germany",
+         "Greece",
+         "Hungary",
+         "Ireland",
+         "Italy",
+         "Lithuania",
+         "Luxembourg",
+         "Netherlands",
+         "Poland",
+         "Portugal",
+         "Romania",
+         "Slovakia",
+         "Slovenia",
+         "Spain",
+         "Sweden":
+        shippingFee = .init(fee: 15, currency: EUR)
+    case "Croatia",
+         "Iceland",
+         "Liechtenstein",
+         "Malta",
+         "Republic of Cyprus":
+        shippingFee = .init(fee: 25, currency: EUR)
+    case "Switzerland":
+        shippingFee = .init(fee: 20, currency: CHF)
+    case "UK":
+        shippingFee = .init(fee: 13.5, currency: GBP)
+    case "US (Alaska, Hawaii)":
+        shippingFee = .init(fee: 25, currency: USD)
+    case "US (mainland)":
+        shippingFee = .init(fee: 13.95, currency: USD)
+    case "China",
+         "Singapore",
+         "South Korea",
+         "Taiwan":
+        shippingFee = .init(fee: 18, currency: USD)
+    case "Latvia",
+         "Norway":
+        shippingFee = .init(fee: 30, currency: EUR)
+    default:
+        break
+    }
+    let shippingFeeConverted = Currency.convert(from: shippingFee.currency.code, to: currencyCode, exchangeRates: exchangeRates) * shippingFee.fee
+    let totalWithoutTaxes = price + paymentProcessingFee + shippingFeeConverted
+    let total = totalWithoutTaxes * (1 + (feeCalculation.stockx?.taxes ?? 0) / 100)
+    return round(total)
+}
+
 func klektSellerPrice(price: Double) -> Double {
     round(price / 1.17)
 }
