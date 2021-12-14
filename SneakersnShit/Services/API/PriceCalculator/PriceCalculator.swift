@@ -467,29 +467,18 @@ func calculatePrice(storeId: StoreId,
     return updatedInventoryItem
 }
 
-//
-// const calculatePrices = (
-//    item: Item,
-//    apiConfig: APIConfig,
-//    requestId: string
-// ): RequestResult<Item> => {
-//    item.storePrices = item.storePrices.map((prices) => {
-//        const calculatedPrices = prices
-//        calculatedPrices.inventory = calculatedPrices.inventory.map((inventoryItem) =>
-//            apiConfig.feeCalculation
-//                ? calculatePrice(
-//                        calculatedPrices.store.id,
-//                        apiConfig.currency.code,
-//                        inventoryItem,
-//                        apiConfig.feeCalculation,
-//                        apiConfig.exchangeRates
-//                  )
-//                : inventoryItem
-//        )
-//        return calculatedPrices
-//    })
-//    return wrapResult(item, requestId)
-// }
-//
-// export { calculatePrices }
-//
+func calculatePrices(item: Item, apiConfig: APIConfig) -> Item {
+    var updatedItem = item
+    updatedItem.storePrices = item.storePrices.map { prices in
+        var calculatedPrices = prices
+        calculatedPrices.inventory = calculatedPrices.inventory.map { inventoryItem in
+            calculatePrice(storeId: calculatedPrices.store.id,
+                           currencyCode: apiConfig.currency.code,
+                           inventoryItem: inventoryItem,
+                           feeCalculation: apiConfig.feeCalculation,
+                           exchangeRates: apiConfig.exchangeRates)
+        }
+        return calculatedPrices
+    }
+    return updatedItem
+}
