@@ -90,11 +90,11 @@ func stockxSellerPrice(price: Double,
 
 //
 // const stockxBuyerPrice = (
-//    price: number,
+//    price: Double,
 //    currencyCode: CurrencyCode,
 //    sellerInfo: SellerInfo,
 //    exchangeRates?: ExchangeRates
-// ): number => {
+// ): Double => {
 //    let paymentProcessingFee = price * 0.03
 //    const paymentProcessingFeeInUSD = convert(
 //        paymentProcessingFee,
@@ -108,7 +108,7 @@ func stockxSellerPrice(price: Double,
 //    } else if (paymentProcessingFeeInUSD > 59.95) {
 //        paymentProcessingFee = convert(59.95, "USD", currencyCode, false, exchangeRates)
 //    }
-//    let shippingFee: { fee: number; currency: CurrencyInternal } = { fee: 30, currency: USD }
+//    let shippingFee: { fee: Double; currency: CurrencyInternal } = { fee: 30, currency: USD }
 //    switch (sellerInfo.countryName) {
 //        case "Austria":
 //        case "Belgium":
@@ -177,89 +177,86 @@ func klektSellerPrice(price: Double) -> Double {
     round(price / 1.17)
 }
 
-//
-// const klektBuyerPrice = (
-//    price: number,
-//    currencyCode: CurrencyCode,
-//    sellerInfo: SellerInfo
-// ): number => {
-//    const group1: [number, number, number] = [18, 15, 20]
-//    const group2: [number, number, number] = [12, 11, 14]
-//    const group3: [number, number, number] = [7, 6, 8]
-//    const group4: [number, number, number] = [11, 10, 13]
-//    const group5: [number, number, number] = [20, 17, 23]
-//    const group6: [number, number, number] = [28, 24, 32]
-//    const group7: [number, number, number] = [25, 22, 29]
-//    const group8: [number, number, number] = [20, 17, 23]
-//    const group9: [number, number, number] = [35, 30, 40]
-//    const group10: [number, number, number] = [13, 11, 15]
-//    const shippingFees: [CountryName, number, number, number][] = [
-//        ["Austria", ...group1], //
-//        ["Belgium", ...group1], //
-//        ["Bulgaria", ...group1], //
-//        ["Croatia", ...group8], //
-//        ["Republic of Cyprus", ...group1], //
-//        ["Czech Republic", ...group1], //
-//        ["Denmark", ...group1], //
-//        ["Estonia", ...group1], //
-//        ["Finland", ...group1], //
-//        ["France", ...group2], //
-//        ["Germany", ...group2], //
-//        ["Greece", ...group8], //
-//        ["Hungary", ...group1], //
-//        ["Iceland", ...group1], //
-//        ["Ireland", ...group1], //
-//        ["Italy", ...group10], //
-//        ["Latvia", ...group1], //
-//        ["Liechtenstein", ...group1], //
-//        ["Lithuania", ...group1], //
-//        ["Luxembourg", ...group1], //
-//        ["Malta", ...group9], //
-//        ["Netherlands", ...group3], //
-//        ["Norway", ...group1], //
-//        ["Poland", ...group1], //
-//        ["Portugal", ...group1], //
-//        ["Romania", ...group1], //
-//        ["Slovakia", ...group1], //
-//        ["Slovenia", ...group1], //
-//        ["Spain", ...group1], //
-//        ["Sweden", ...group1], //
-//        ["Switzerland", ...group1], //
-//        ["UK", ...group4], //
-//        ["US (mainland)", ...group5], //
-//        ["US (Alaska, Hawaii)", ...group5], //
-//        ["Indonesia", ...group6], //
-//        ["Malaysia", ...group6], //
-//        ["Philippines", ...group6], //
-//        ["Singapore", ...group6], //
-//        ["Thailand", ...group6], //
-//        ["China", ...group6], //
-//        ["South Korea", ...group6], //
-//        ["Taiwan", ...group7],
-//        ["Vietnam", ...group6], //
-//    ]
-//    const shippingFee = shippingFees.find((fees) => fees[0] === sellerInfo.countryName)
-//    let fee = 0
-//    if (shippingFee) {
-//        switch (currencyCode) {
-//            case "EUR":
-//                fee = shippingFee[1]
-//                break
-//            case "GBP":
-//                fee = shippingFee[2]
-//                break
-//            case "USD":
-//                fee = shippingFee[3]
-//                break
-//            default:
-//                break
-//        }
-//    }
-//    const totalWithoutTaxes = price + fee
-//    const total = totalWithoutTaxes * (1 + sellerInfo.klekt.taxes / 100)
-//    return Math.round(total)
-// }
-//
+func klektBuyerPrice(price: Double,
+                     currencyCode: Currency.CurrencyCode,
+                     feeCalculation: CopDeckSettings.FeeCalculation) -> Double {
+    struct FeeGroup {
+        let eur: Double
+        let gbp: Double
+        let usd: Double
+    }
+
+    let group1 = FeeGroup(eur: 18, gbp: 15, usd: 20)
+    let group2 = FeeGroup(eur: 12, gbp: 11, usd: 14)
+    let group3 = FeeGroup(eur: 7, gbp: 6, usd: 8)
+    let group4 = FeeGroup(eur: 11, gbp: 10, usd: 13)
+    let group5 = FeeGroup(eur: 20, gbp: 17, usd: 23)
+    let group6 = FeeGroup(eur: 28, gbp: 24, usd: 32)
+    let group7 = FeeGroup(eur: 25, gbp: 22, usd: 29)
+    let group8 = FeeGroup(eur: 20, gbp: 17, usd: 23)
+    let group9 = FeeGroup(eur: 35, gbp: 30, usd: 40)
+    let group10 = FeeGroup(eur: 13, gbp: 11, usd: 15)
+    let shippingFees: [(String, FeeGroup)] = [("Austria", group1),
+                                              ("Belgium", group1),
+                                              ("Bulgaria", group1),
+                                              ("Croatia", group8),
+                                              ("Republic of Cyprus", group1),
+                                              ("Czech Republic", group1),
+                                              ("Denmark", group1),
+                                              ("Estonia", group1),
+                                              ("Finland", group1),
+                                              ("France", group2),
+                                              ("Germany", group2),
+                                              ("Greece", group8),
+                                              ("Hungary", group1),
+                                              ("Iceland", group1),
+                                              ("Ireland", group1),
+                                              ("Italy", group10),
+                                              ("Latvia", group1),
+                                              ("Liechtenstein", group1),
+                                              ("Lithuania", group1),
+                                              ("Luxembourg", group1),
+                                              ("Malta", group9),
+                                              ("Netherlands", group3),
+                                              ("Norway", group1),
+                                              ("Poland", group1),
+                                              ("Portugal", group1),
+                                              ("Romania", group1),
+                                              ("Slovakia", group1),
+                                              ("Slovenia", group1),
+                                              ("Spain", group1),
+                                              ("Sweden", group1),
+                                              ("Switzerland", group1),
+                                              ("UK", group4),
+                                              ("US (mainland)", group5),
+                                              ("US (Alaska, Hawaii)", group5),
+                                              ("Indonesia", group6),
+                                              ("Malaysia", group6),
+                                              ("Philippines", group6),
+                                              ("Singapore", group6),
+                                              ("Thailand", group6),
+                                              ("China", group6),
+                                              ("South Korea", group6),
+                                              ("Taiwan", group7),
+                                              ("Vietnam", group6)]
+    var fee = 0.0
+    if let shippingFee = shippingFees.first(where: { $0.0 == feeCalculation.country.name }) {
+        switch currencyCode {
+        case .eur:
+            fee = shippingFee.1.eur
+        case .gbp:
+            fee = shippingFee.1.gbp
+        case .usd:
+            fee = shippingFee.1.usd
+        default:
+            break
+        }
+    }
+    let totalWithoutTaxes = price + fee
+    let total = totalWithoutTaxes * (1 + (feeCalculation.klekt?.taxes ?? 0) / 100)
+    return round(total)
+}
+
 func goatSellerPrice(price: Double,
                      currencyCode: Currency.CurrencyCode,
                      feeCalculation: CopDeckSettings.FeeCalculation,
@@ -270,27 +267,36 @@ func goatSellerPrice(price: Double,
     }
 
     var sellerFee = 30.0
-    let groups: [FeeGroup] = [.init(countries: ["US (mainland)", "US (Alaska, Hawaii)", "Germany", "UK"], fee: 5),
-                              .init(countries: ["Austria", "Belgium", "France", "Netherlands"], fee: 6),
-                              .init(countries: ["Bulgaria",
-                                                "Croatia",
-                                                "Republic of Cyprus",
-                                                "Czech Republic",
-                                                "Estonia",
-                                                "Greece",
-                                                "Hungary",
-                                                "Latvia",
-                                                "Lithuania",
-                                                "Malta",
-                                                "Romania",
-                                                "Slovakia",
-                                                "Slovenia"],
-                                    fee: 24),
-                              .init(countries: ["China"], fee: 25),
-                              .init(countries: ["Denmark", "Ireland", "Italy", "Luxembourg", "Poland", "Portugal", "Spain"], fee: 12),
-                              .init(countries: ["Finland", "Malaysia", "Philippines", "Singapore"], fee: 20),
-                              .init(countries: ["Sweden"], fee: 10)]
-    sellerFee = groups.first(where: { group in group.countries.contains(feeCalculation.country.name) })?.fee ?? sellerFee
+    let groups: [FeeGroup] =
+        [.init(countries: ["US (mainland)", "US (Alaska, Hawaii)", "Germany", "UK"], fee: 5),
+         .init(countries: ["Austria", "Belgium", "France",
+                           "Netherlands"],
+               fee: 6),
+         .init(countries: ["Bulgaria",
+                           "Croatia",
+                           "Republic of Cyprus",
+                           "Czech Republic",
+                           "Estonia",
+                           "Greece",
+                           "Hungary",
+                           "Latvia",
+                           "Lithuania",
+                           "Malta",
+                           "Romania",
+                           "Slovakia",
+                           "Slovenia"],
+               fee: 24),
+         .init(countries: ["China"], fee: 25),
+         .init(countries: ["Denmark", "Ireland", "Italy", "Luxembourg",
+                           "Poland", "Portugal", "Spain"],
+               fee: 12),
+         .init(countries: ["Finland", "Malaysia", "Philippines",
+                           "Singapore"],
+               fee: 20),
+         .init(countries: ["Sweden"], fee: 10)]
+    sellerFee = groups
+        .first(where: { group in group.countries.contains(feeCalculation.country.name) })?
+        .fee ?? sellerFee
 
     switch feeCalculation.country.name {
     case "UK",
@@ -324,8 +330,10 @@ func goatSellerPrice(price: Double,
     default:
         break
     }
-    sellerFee = Currency.convert(from: .usd, to: currencyCode, exchangeRates: exchangeRates) * sellerFee
-    let commissionFee = (price * (feeCalculation.goat?.commissionPercentage.rawValue ?? 0.0)) / 100
+    sellerFee = Currency
+        .convert(from: .usd, to: currencyCode, exchangeRates: exchangeRates) * sellerFee
+    let commissionFee =
+        (price * (feeCalculation.goat?.commissionPercentage.rawValue ?? 0.0)) / 100
     let totalSellingFee = sellerFee + commissionFee
     let sellerPrice = price - totalSellingFee
     let cashoutFee = sellerPrice * (feeCalculation.goat?.cashOutFeeAmount ?? 0.0)
@@ -348,7 +356,10 @@ func goatBuyerPrice(price: Double,
     } else if feeCalculation.country.name == "China" {
         shippingFee = .init(fee: 25, currency: USD)
     }
-    let shippingFeeConverted = Currency.convert(from: shippingFee.currency.code, to: currencyCode, exchangeRates: exchangeRates) * shippingFee.fee
+    let shippingFeeConverted = Currency.convert(from: shippingFee.currency.code,
+                                                to: currencyCode,
+                                                exchangeRates: exchangeRates) * shippingFee
+        .fee
     let priceWithShippingFee = price + shippingFeeConverted
     let vat = (priceWithShippingFee * (feeCalculation.goat?.taxes ?? 0)) / 100
 
@@ -359,8 +370,11 @@ func restocksSellerPrice(price: Double,
                          currencyCode: Currency.CurrencyCode,
                          feeCalculation: CopDeckSettings.FeeCalculation,
                          exchangeRates: ExchangeRates?) -> Double {
-    let sellerFeeInEUR = Currency.convert(from: currencyCode, to: .eur, exchangeRates: exchangeRates) * 0.1 + 10
-    let sellerFeeInTargetCurrency = Currency.convert(from: .eur, to: currencyCode, exchangeRates: exchangeRates) * sellerFeeInEUR
+    let sellerFeeInEUR = Currency.convert(from: currencyCode, to: .eur,
+                                          exchangeRates: exchangeRates) * 0.1 + 10
+    let sellerFeeInTargetCurrency = Currency.convert(from: .eur, to: currencyCode,
+                                                     exchangeRates: exchangeRates) *
+        sellerFeeInEUR
     return round(price - sellerFeeInTargetCurrency)
 }
 
@@ -388,7 +402,8 @@ func restocksBuyerPrice(price: Double,
                                            "Taiwan",
                                            "Thailand",
                                            "Vietnam"]
-    let isNotSupportedCountry = notSupportedCountries.contains(where: { feeCalculation.country.name == $0 })
+    let isNotSupportedCountry = notSupportedCountries
+        .contains(where: { feeCalculation.country.name == $0 })
     return isNotSupportedCountry ? nil : price + fee
 }
 
