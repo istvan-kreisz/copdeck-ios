@@ -12,27 +12,5 @@ struct APIConfig: Codable {
     let currency: Currency
     let isLoggingEnabled: Bool
     let exchangeRates: ExchangeRates?
-    let feeCalculation: FeeCalculation
-
-    struct FeeCalculation: Codable {
-        let countryName: String
-        let stockx: Stockx
-        let goat: Goat
-        let klekt: Klekt
-
-        struct Goat: Codable {
-            let commissionPercentage: Double
-            let cashOutFee: Double
-            let taxes: Double
-        }
-
-        struct Stockx: Codable {
-            let sellerFee: Double
-            let taxes: Double
-        }
-
-        struct Klekt: Codable {
-            let taxes: Double
-        }
-    }
+    let feeCalculation: CopDeckSettings.FeeCalculation
 }

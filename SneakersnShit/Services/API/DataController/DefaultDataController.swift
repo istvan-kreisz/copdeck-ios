@@ -407,13 +407,6 @@ class DefaultDataController: DataController {
 
 extension DefaultDataController {
     static func config(from settings: CopDeckSettings, exchangeRates: ExchangeRates?) -> APIConfig {
-        let feeCalculation = APIConfig.FeeCalculation(countryName: settings.feeCalculation.country.name,
-                                                      stockx: .init(sellerFee: settings.feeCalculation.stockx?.sellerFee ?? 0,
-                                                                    taxes: (settings.feeCalculation.stockx?.taxes) ?? 0),
-                                                      goat: .init(commissionPercentage: (settings.feeCalculation.goat?.commissionPercentage.rawValue) ?? 0,
-                                                                  cashOutFee: (settings.feeCalculation.goat?.cashOutFee == true) ? 0.029 : 0,
-                                                                  taxes: (settings.feeCalculation.goat?.taxes) ?? 0),
-                                                      klekt: .init(taxes: (settings.feeCalculation.klekt?.taxes) ?? 0))
         var showLogs = false
         if DebugSettings.shared.isInDebugMode {
             showLogs = DebugSettings.shared.showScraperLogs
@@ -421,6 +414,6 @@ extension DefaultDataController {
         return APIConfig(currency: settings.currency,
                          isLoggingEnabled: showLogs,
                          exchangeRates: exchangeRates,
-                         feeCalculation: feeCalculation)
+                         feeCalculation: settings.feeCalculation)
     }
 }

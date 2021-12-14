@@ -59,6 +59,11 @@ struct Currency: Codable, Equatable {
     }
 }
 
+let EUR = Currency(code: .eur, symbol: .eur)
+let USD = Currency(code: .usd, symbol: .usd)
+let GBP = Currency(code: .gbp, symbol: .gbp)
+let CHF = Currency(code: .chf, symbol: .chf)
+
 let ALLSELECTABLECURRENCYCODES: [Currency.CurrencyCode] = [.eur, .usd, .gbp]
 let ALLSELECTABLECURRENCYSYMBOLS: [Currency.CurrencySymbol] = [.eur, .usd, .gbp]
 

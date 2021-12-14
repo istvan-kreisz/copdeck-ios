@@ -7,125 +7,93 @@
 
 import Foundation
 
+func stockxSellerPrice(price: Double,
+                       currencyCode: Currency.CurrencyCode,
+                       feeCalculation: CopDeckSettings.FeeCalculation,
+                       exchangeRates: ExchangeRates?) -> Double {
+    struct ShippingFee {
+        let fee: Double
+        let currency: Currency
+    }
+    let transactionFeePercentage = feeCalculation.stockx?.sellerFee ?? 0
+    // min transaction fee
+    let fees: [Currency.CurrencyCode: Double] = [.usd: 9, .eur: 7, .gbp: 7]
+    let minTransactionFee = fees[currencyCode] ?? 0
 
-//import {
-//    StoreInventoryItem,
-//    Item,
-//    SellerInfo,
-//    StoreId,
-//    EUR,
-//    USD,
-//    GBP,
-//    CHF,
-//    ExchangeRates,
-//    CurrencyCode,
-//    CountryName,
-//    CurrencyInternal,
-//    APIConfig,
-//    RequestResult,
-//} from './types'
-//import { convert, wrapResult } from './typeUtils'
+    let transactionFee = max((price * transactionFeePercentage) / 100, minTransactionFee)
+    let paymentProcessingFee = price * 0.03
+
+    var shippingFee: ShippingFee = .init(fee: 30, currency: USD)
+    switch feeCalculation.country.name {
+    case "Austria",
+         "Belgium",
+         "France",
+         "Italy",
+         "Poland",
+         "Germany",
+         "Netherlands",
+         "UK",
+         "South Korea":
+        shippingFee = .init(fee: 30, currency: EUR)
+    case "Luxembourg":
+        shippingFee = .init(fee: 5, currency: EUR)
+    case "Bulgaria",
+         "Czech Republic",
+         "Croatia",
+         "Denmark",
+         "Hungary",
+         "Ireland",
+         "Latvia",
+         "Portugal",
+         "Romania",
+         "Slovakia",
+         "Slovenia",
+         "Spain",
+         "Sweden":
+        shippingFee = .init(fee: 10, currency: EUR)
+    case "Estonia",
+         "Finland",
+         "Greece",
+         "Liechtenstein",
+         "Lithuania",
+         "Republic of Cyprus":
+        shippingFee = .init(fee: 15, currency: EUR)
+    case "US (Alaska, Hawaii)",
+         "US (mainland)":
+        shippingFee = .init(fee: 0, currency: USD)
+    case "Malaysia",
+         "China",
+         "Philippines",
+         "Singapore",
+         "Taiwan":
+        shippingFee = .init(fee: 10, currency: USD)
+    case "Indonesia",
+         "Thailand",
+         "Vietnam":
+        shippingFee = .init(fee: 20, currency: USD)
+    case "Iceland",
+         "Norway",
+         "Malta":
+        shippingFee = .init(fee: 25, currency: USD)
+    case "Switzerland":
+        shippingFee = .init(fee: 20, currency: CHF)
+    default:
+        break
+    }
+    if currencyCode == .gbp {
+        shippingFee = .init(fee: 0, currency: GBP)
+    }
+    let shippingFeeConverted = Currency.convert(from: shippingFee.currency.code, to: currencyCode, exchangeRates: exchangeRates ?? .default) ?? 0
+    return round(price - transactionFee - paymentProcessingFee - shippingFeeConverted)
+}
+
 //
-//const stockxSellerPrice = (
+// const stockxBuyerPrice = (
 //    price: number,
 //    currencyCode: CurrencyCode,
 //    sellerInfo: SellerInfo,
 //    exchangeRates?: ExchangeRates
-//): number => {
-//    let transactionFeePercentage = sellerInfo.stockx.sellerFee
-//    // min transaction fee
-//    const minTransactionFee = {
-//        USD: 9,
-//        EUR: 7,
-//        GBP: 7,
-//    }[currencyCode]
-//
-//    const transactionFee = Math.max(
-//        (price * (transactionFeePercentage || 0)) / 100,
-//        minTransactionFee
-//    )
-//    const paymentProcessingFee = price * 0.03
-//    let shippingFee: { fee: number; currency: CurrencyInternal } = { fee: 30, currency: USD }
-//    switch (sellerInfo.countryName) {
-//        case 'Austria':
-//        case 'Belgium':
-//        case 'France':
-//        case 'Italy':
-//        case 'Poland':
-//        case 'Germany':
-//        case 'Netherlands':
-//        case 'UK':
-//        case 'South Korea':
-//            shippingFee = { fee: 0, currency: EUR }
-//            break
-//        case 'Luxembourg':
-//            shippingFee = { fee: 5, currency: EUR }
-//            break
-//        case 'Bulgaria':
-//        case 'Czech Republic':
-//        case 'Croatia':
-//        case 'Denmark':
-//        case 'Hungary':
-//        case 'Ireland':
-//        case 'Latvia':
-//        case 'Portugal':
-//        case 'Romania':
-//        case 'Slovakia':
-//        case 'Slovenia':
-//        case 'Spain':
-//        case 'Sweden':
-//            shippingFee = { fee: 10, currency: EUR }
-//            break
-//        case 'Estonia':
-//        case 'Finland':
-//        case 'Greece':
-//        case 'Liechtenstein':
-//        case 'Lithuania':
-//        case 'Republic of Cyprus':
-//            shippingFee = { fee: 15, currency: EUR }
-//            break
-//        case 'US (Alaska, Hawaii)':
-//        case 'US (mainland)':
-//            shippingFee = { fee: 0, currency: USD }
-//            break
-//        case 'Malaysia':
-//        case 'China':
-//        case 'Philippines':
-//        case 'Singapore':
-//        case 'Taiwan':
-//            shippingFee = { fee: 10, currency: USD }
-//            break
-//        case 'Indonesia':
-//        case 'Thailand':
-//        case 'Vietnam':
-//            shippingFee = { fee: 20, currency: USD }
-//            break
-//        case 'Iceland':
-//        case 'Norway':
-//        case 'Malta':
-//            shippingFee = { fee: 25, currency: USD }
-//            break
-//        case 'Switzerland':
-//            shippingFee = { fee: 20, currency: CHF }
-//            break
-//    }
-//    if (currencyCode === 'GBP') {
-//        shippingFee = { fee: 0, currency: GBP }
-//    }
-//    return Math.round(
-//        price -
-//            transactionFee -
-//            paymentProcessingFee -
-//            convert(shippingFee.fee, shippingFee.currency.code, currencyCode, false, exchangeRates)
-//    )
-//}
-//
-//const stockxBuyerPrice = (
-//    price: number,
-//    currencyCode: CurrencyCode,
-//    sellerInfo: SellerInfo,
-//    exchangeRates?: ExchangeRates
-//): number => {
+// ): number => {
 //    let paymentProcessingFee = price * 0.03
 //    const paymentProcessingFeeInUSD = convert(
 //        paymentProcessingFee,
@@ -202,17 +170,17 @@ import Foundation
 //        convert(shippingFee.fee, shippingFee.currency.code, currencyCode, false, exchangeRates)
 //    const total = totalWithoutTaxes * (1 + sellerInfo.stockx.taxes / 100)
 //    return Math.round(total)
-//}
+// }
 //
-//const klektSellerPrice = (price: number): number => {
+// const klektSellerPrice = (price: number): number => {
 //    return Math.round(price / 1.17)
-//}
+// }
 //
-//const klektBuyerPrice = (
+// const klektBuyerPrice = (
 //    price: number,
 //    currencyCode: CurrencyCode,
 //    sellerInfo: SellerInfo
-//): number => {
+// ): number => {
 //    const group1: [number, number, number] = [18, 15, 20]
 //    const group2: [number, number, number] = [12, 11, 14]
 //    const group3: [number, number, number] = [7, 6, 8]
@@ -288,14 +256,14 @@ import Foundation
 //    const totalWithoutTaxes = price + fee
 //    const total = totalWithoutTaxes * (1 + sellerInfo.klekt.taxes / 100)
 //    return Math.round(total)
-//}
+// }
 //
-//const goatSellerPrice = (
+// const goatSellerPrice = (
 //    price: number,
 //    currencyCode: CurrencyCode,
 //    sellerInfo: SellerInfo,
 //    exchangeRates?: ExchangeRates
-//): number => {
+// ): number => {
 //    let sellerFee = 30
 //    let groups: { countries: CountryName[]; fee: number }[] = [
 //        {
@@ -395,14 +363,14 @@ import Foundation
 //    const totalCashoutValue = sellerPrice - cashoutFee
 //
 //    return Math.round(totalCashoutValue)
-//}
+// }
 //
-//const goatBuyerPrice = (
+// const goatBuyerPrice = (
 //    price: number,
 //    currencyCode: CurrencyCode,
 //    sellerInfo: SellerInfo,
 //    exchangeRates?: ExchangeRates
-//): number => {
+// ): number => {
 //    let shippingFee: { fee: number; currency: CurrencyInternal } = { fee: 40, currency: USD }
 //    if (sellerInfo.countryName === 'US (mainland)') {
 //        shippingFee = { fee: 12, currency: USD }
@@ -424,14 +392,14 @@ import Foundation
 //    let vat = (priceWithShipping * sellerInfo.goat.taxes) / 100
 //
 //    return Math.round(priceWithShipping + vat)
-//}
+// }
 //
-//const restocksSellerPrice = (
+// const restocksSellerPrice = (
 //    price: number,
 //    currencyCode: CurrencyCode,
 //    sellerInfo: SellerInfo,
 //    exchangeRates?: ExchangeRates
-//): number => {
+// ): number => {
 //    let sellerFeeInEUR = convert(price, currencyCode, 'EUR', false, exchangeRates) * 0.1 + 10
 //    let sellerFeeInTargetCurrency = convert(
 //        sellerFeeInEUR,
@@ -441,14 +409,14 @@ import Foundation
 //        exchangeRates
 //    )
 //    return Math.round(price - sellerFeeInTargetCurrency)
-//}
+// }
 //
-//const restocksBuyerPrice = (
+// const restocksBuyerPrice = (
 //    price: number,
 //    currencyCode: CurrencyCode,
 //    sellerInfo: SellerInfo,
 //    exchangeRates?: ExchangeRates
-//): number | undefined => {
+// ): number | undefined => {
 //    // USD, EUR, GBP
 //    let fee: number
 //    const fees = [15, 10, 10]
@@ -485,15 +453,15 @@ import Foundation
 //    } else {
 //        return price + fee
 //    }
-//}
+// }
 //
-//const calculatePrice = (
+// const calculatePrice = (
 //    storeId: StoreId,
 //    currencyCode: CurrencyCode,
 //    inventoryItem: StoreInventoryItem,
 //    sellerInfo: SellerInfo,
 //    exchangeRates?: ExchangeRates
-//): StoreInventoryItem => {
+// ): StoreInventoryItem => {
 //    switch (storeId) {
 //        case 'stockx':
 //            if (inventoryItem.lowestAsk) {
@@ -605,13 +573,13 @@ import Foundation
 //            break
 //    }
 //    return inventoryItem
-//}
+// }
 //
-//const calculatePrices = (
+// const calculatePrices = (
 //    item: Item,
 //    apiConfig: APIConfig,
 //    requestId: string
-//): RequestResult<Item> => {
+// ): RequestResult<Item> => {
 //    item.storePrices = item.storePrices.map((prices) => {
 //        const calculatedPrices = prices
 //        calculatedPrices.inventory = calculatedPrices.inventory.map((inventoryItem) =>
@@ -628,7 +596,7 @@ import Foundation
 //        return calculatedPrices
 //    })
 //    return wrapResult(item, requestId)
-//}
+// }
 //
-//export { calculatePrices }
+// export { calculatePrices }
 //
