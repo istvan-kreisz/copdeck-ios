@@ -34,9 +34,13 @@ extension AnyPublisher where Failure == AppError {
 }
 
 extension Publisher {
-    
     func onMain() -> AnyPublisher<Self.Output, Self.Failure> {
         receive(on: DispatchQueue.main).eraseToAnyPublisher()
     }
 
+    func withPrevious() -> AnyPublisher<(previous: Output?, current: Output), Failure> {
+        scan((Output?, Output)?.none) { ($0?.1, $1) }
+            .compactMap { $0 }
+            .eraseToAnyPublisher()
+    }
 }

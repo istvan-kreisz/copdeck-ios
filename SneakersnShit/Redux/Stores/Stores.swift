@@ -78,14 +78,19 @@ extension AppStore {
             .store(in: &effectCancellables)
 
         environment.dataController.userPublisher
+            .withPrevious()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in },
-                  receiveValue: { [weak self] newUser in
+                  receiveValue: { [weak self] previousUser, newUser in
                       let oldSettings = self?.state.user?.settings
                       let newSettings = newUser.settings
-                      if oldSettings?.feeCalculation.country != newSettings?.feeCalculation.country || oldSettings?.currency != newSettings?.currency {
-                          // refetch prices
-                          //  when done: refresh ALL inventory items
+                      if oldSettings?.feeCalculation.country != newSettings?.feeCalculation.country ||
+                          oldSettings?.currency != newSettings?.currency ||
+                          previousUser?.id != newUser.id {
+                          #warning("called on login??")
+                          self?.environment.dataController.updateUserItems {
+                              //  when done: refresh ALL inventory items
+                          }
                       } else if (oldSettings?.feeCalculation != newSettings?.feeCalculation && newSettings?.bestPriceFeeType != .None) ||
                           oldSettings?.bestPricePriceType != newSettings?.bestPricePriceType ||
                           oldSettings?.bestPriceFeeType != newSettings?.bestPriceFeeType ||
@@ -101,8 +106,8 @@ extension AppStore {
 //            .map { inventoryItems in inventoryItems.filter { $0.pendingImport == nil } }
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in },
-                  receiveValue: { [weak self] (changes, inventoryItems) in
-                self?.state.inventoryItems = inventoryItems.filter { $0.pendingImport == nil }
+                  receiveValue: { [weak self] changes, inventoryItems in
+                      self?.state.inventoryItems = inventoryItems.filter { $0.pendingImport == nil }
 //                      if !inventoryItems.isEmpty, self?.state.didFetchItemPrices == false {
 //                          self?.refreshItemPricesIfNeeded()
 //                          self?.state.didFetchItemPrices = true
