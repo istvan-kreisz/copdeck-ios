@@ -390,126 +390,83 @@ func restocksBuyerPrice(price: Double,
     return isNotSupportedCountry ? nil : price + fee
 }
 
-//
-// const calculatePrice = (
-//    storeId: StoreId,
-//    currencyCode: CurrencyCode,
-//    inventoryItem: StoreInventoryItem,
-//    sellerInfo: SellerInfo,
-//    exchangeRates?: ExchangeRates
-// ): StoreInventoryItem => {
-//    switch (storeId) {
-//        case "stockx":
-//            if (inventoryItem.lowestAsk) {
-//                inventoryItem.lowestAskWithSellerFees = stockxSellerPrice(
-//                    inventoryItem.lowestAsk,
-//                    currencyCode,
-//                    sellerInfo,
-//                    exchangeRates
-//                )
-//                inventoryItem.lowestAskWithBuyerFees = stockxBuyerPrice(
-//                    inventoryItem.lowestAsk,
-//                    currencyCode,
-//                    sellerInfo,
-//                    exchangeRates
-//                )
-//            }
-//            if (inventoryItem.highestBid) {
-//                inventoryItem.highestBidWithSellerFees = stockxSellerPrice(
-//                    inventoryItem.highestBid,
-//                    currencyCode,
-//                    sellerInfo,
-//                    exchangeRates
-//                )
-//                inventoryItem.highestBidWithBuyerFees = stockxBuyerPrice(
-//                    inventoryItem.highestBid,
-//                    currencyCode,
-//                    sellerInfo,
-//                    exchangeRates
-//                )
-//            }
-//            break
-//        case "klekt":
-//            if (inventoryItem.lowestAsk) {
-//                inventoryItem.lowestAskWithSellerFees = klektSellerPrice(inventoryItem.lowestAsk)
-//                inventoryItem.lowestAskWithBuyerFees = klektBuyerPrice(
-//                    inventoryItem.lowestAsk,
-//                    currencyCode,
-//                    sellerInfo
-//                )
-//            }
-//            if (inventoryItem.highestBid) {
-//                inventoryItem.highestBidWithSellerFees = klektSellerPrice(inventoryItem.highestBid)
-//                inventoryItem.highestBidWithBuyerFees = klektBuyerPrice(
-//                    inventoryItem.highestBid,
-//                    currencyCode,
-//                    sellerInfo
-//                )
-//            }
-//            break
-//        case "goat":
-//            if (inventoryItem.lowestAsk) {
-//                inventoryItem.lowestAskWithSellerFees = goatSellerPrice(
-//                    inventoryItem.lowestAsk,
-//                    currencyCode,
-//                    sellerInfo,
-//                    exchangeRates
-//                )
-//                inventoryItem.lowestAskWithBuyerFees = goatBuyerPrice(
-//                    inventoryItem.lowestAsk,
-//                    currencyCode,
-//                    sellerInfo,
-//                    exchangeRates
-//                )
-//            }
-//            if (inventoryItem.highestBid) {
-//                inventoryItem.highestBidWithSellerFees = goatSellerPrice(
-//                    inventoryItem.highestBid,
-//                    currencyCode,
-//                    sellerInfo,
-//                    exchangeRates
-//                )
-//                inventoryItem.highestBidWithBuyerFees = goatBuyerPrice(
-//                    inventoryItem.highestBid,
-//                    currencyCode,
-//                    sellerInfo,
-//                    exchangeRates
-//                )
-//            }
-//            break
-//        case "restocks":
-//            if (inventoryItem.lowestAsk) {
-//                inventoryItem.lowestAskWithSellerFees = restocksSellerPrice(
-//                    inventoryItem.lowestAsk,
-//                    currencyCode,
-//                    sellerInfo,
-//                    exchangeRates
-//                )
-//                inventoryItem.lowestAskWithBuyerFees = restocksBuyerPrice(
-//                    inventoryItem.lowestAsk,
-//                    currencyCode,
-//                    sellerInfo,
-//                    exchangeRates
-//                )
-//            }
-//            // if (inventoryItem.highestBid) {
-//            //     inventoryItem.highestBidWithSellerFees = restocksSellerPrice(
-//            //         inventoryItem.highestBid,
-//            //         currencyCode,
-//            //         sellerInfo,
-//            //         exchangeRates
-//            //     )
-//            //     inventoryItem.highestBidWithBuyerFees = restocksBuyerPrice(
-//            //         inventoryItem.highestBid,
-//            //         currencyCode,
-//            //         sellerInfo,
-//            //         exchangeRates
-//            //     )
-//            // }
-//            break
-//    }
-//    return inventoryItem
-// }
+func calculatePrice(storeId: StoreId,
+                    currencyCode: Currency.CurrencyCode,
+                    inventoryItem: Item.StorePrice.StoreInventoryItem,
+                    feeCalculation: CopDeckSettings.FeeCalculation,
+                    exchangeRates: ExchangeRates?) -> Item.StorePrice.StoreInventoryItem {
+    var updatedInventoryItem = inventoryItem
+    switch storeId {
+    case .stockx:
+        if let lowestAsk = inventoryItem.lowestAsk {
+            updatedInventoryItem.lowestAskWithSellerFees = stockxSellerPrice(price: lowestAsk,
+                                                                             currencyCode: currencyCode,
+                                                                             feeCalculation: feeCalculation,
+                                                                             exchangeRates: exchangeRates)
+            updatedInventoryItem.lowestAskWithBuyerFees = stockxBuyerPrice(price: lowestAsk,
+                                                                           currencyCode: currencyCode,
+                                                                           feeCalculation: feeCalculation,
+                                                                           exchangeRates: exchangeRates)
+        }
+        if let highestBid = inventoryItem.highestBid {
+            updatedInventoryItem.highestBidWithSellerFees = stockxSellerPrice(price: highestBid,
+                                                                              currencyCode: currencyCode,
+                                                                              feeCalculation: feeCalculation,
+                                                                              exchangeRates: exchangeRates)
+            updatedInventoryItem.highestBidWithBuyerFees = stockxBuyerPrice(price: highestBid,
+                                                                            currencyCode: currencyCode,
+                                                                            feeCalculation: feeCalculation,
+                                                                            exchangeRates: exchangeRates)
+        }
+    case .klekt:
+        if let lowestAsk = inventoryItem.lowestAsk {
+            updatedInventoryItem.lowestAskWithSellerFees = klektSellerPrice(price: lowestAsk)
+            updatedInventoryItem.lowestAskWithBuyerFees = klektBuyerPrice(price: lowestAsk,
+                                                                          currencyCode: currencyCode,
+                                                                          feeCalculation: feeCalculation)
+        }
+        if let highestBid = inventoryItem.highestBid {
+            updatedInventoryItem.highestBidWithSellerFees = klektSellerPrice(price: highestBid)
+            updatedInventoryItem.highestBidWithBuyerFees = klektBuyerPrice(price: highestBid,
+                                                                           currencyCode: currencyCode,
+                                                                           feeCalculation: feeCalculation)
+        }
+    case .goat:
+        if let lowestAsk = inventoryItem.lowestAsk {
+            updatedInventoryItem.lowestAskWithSellerFees = goatSellerPrice(price: lowestAsk,
+                                                                           currencyCode: currencyCode,
+                                                                           feeCalculation: feeCalculation,
+                                                                           exchangeRates: exchangeRates)
+            updatedInventoryItem.lowestAskWithBuyerFees = goatBuyerPrice(price: lowestAsk,
+                                                                         currencyCode: currencyCode,
+                                                                         feeCalculation: feeCalculation,
+                                                                         exchangeRates: exchangeRates)
+        }
+        if let highestBid = inventoryItem.highestBid {
+            updatedInventoryItem.highestBidWithSellerFees = goatSellerPrice(price: highestBid,
+                                                                            currencyCode: currencyCode,
+                                                                            feeCalculation: feeCalculation,
+                                                                            exchangeRates: exchangeRates)
+            updatedInventoryItem.highestBidWithBuyerFees = goatBuyerPrice(price: highestBid,
+                                                                          currencyCode: currencyCode,
+                                                                          feeCalculation: feeCalculation,
+                                                                          exchangeRates: exchangeRates)
+        }
+    case .restocks:
+        if let lowestAsk = inventoryItem.lowestAsk {
+            updatedInventoryItem.lowestAskWithSellerFees = restocksSellerPrice(price: lowestAsk,
+                                                                               currencyCode: currencyCode,
+                                                                               feeCalculation: feeCalculation,
+                                                                               exchangeRates: exchangeRates)
+            updatedInventoryItem.lowestAskWithBuyerFees = restocksBuyerPrice(price: lowestAsk,
+                                                                             currencyCode: currencyCode,
+                                                                             feeCalculation: feeCalculation,
+                                                                             exchangeRates: exchangeRates)
+        }
+    }
+    return updatedInventoryItem
+}
+
 //
 // const calculatePrices = (
 //    item: Item,

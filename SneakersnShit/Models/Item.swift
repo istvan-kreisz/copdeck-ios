@@ -114,11 +114,11 @@ struct Item: Equatable, Identifiable, Hashable, ModelWithDate {
 
             var size: String
             let lowestAsk: Double?
-            let lowestAskWithSellerFees: Double?
-            let lowestAskWithBuyerFees: Double?
+            var lowestAskWithSellerFees: Double?
+            var lowestAskWithBuyerFees: Double?
             let highestBid: Double?
-            let highestBidWithSellerFees: Double?
-            let highestBidWithBuyerFees: Double?
+            var highestBidWithSellerFees: Double?
+            var highestBidWithBuyerFees: Double?
             let restocksPriceType: RestocksPriceType?
 
             let shoeCondition: String?
