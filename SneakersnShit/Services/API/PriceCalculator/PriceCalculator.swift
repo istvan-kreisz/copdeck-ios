@@ -7,14 +7,15 @@
 
 import Foundation
 
+fileprivate struct ShippingFee {
+    let fee: Double
+    let currency: Currency
+}
+
 func stockxSellerPrice(price: Double,
                        currencyCode: Currency.CurrencyCode,
                        feeCalculation: CopDeckSettings.FeeCalculation,
                        exchangeRates: ExchangeRates?) -> Double {
-    struct ShippingFee {
-        let fee: Double
-        let currency: Currency
-    }
     let transactionFeePercentage = feeCalculation.stockx?.sellerFee ?? 0
     // min transaction fee
     let fees: [Currency.CurrencyCode: Double] = [.usd: 9, .eur: 7, .gbp: 7]
@@ -366,35 +367,27 @@ func klektSellerPrice(price: Double) -> Double {
 //    return Math.round(totalCashoutValue)
 // }
 //
-// const goatBuyerPrice = (
-//    price: number,
-//    currencyCode: CurrencyCode,
-//    sellerInfo: SellerInfo,
-//    exchangeRates?: ExchangeRates
-// ): number => {
-//    let shippingFee: { fee: number; currency: CurrencyInternal } = { fee: 40, currency: USD }
-//    if (sellerInfo.countryName === "US (mainland)") {
-//        shippingFee = { fee: 12, currency: USD }
-//    } else if (sellerInfo.countryName === "US (Alaska, Hawaii)") {
-//        shippingFee = { fee: 15, currency: USD }
-//    } else if (sellerInfo.countryName === "UK") {
-//        shippingFee = { fee: 13, currency: GBP }
-//    } else if (sellerInfo.countryName === "China") {
-//        shippingFee = { fee: 25, currency: USD }
-//    }
-//    const shipping = convert(
-//        shippingFee.fee,
-//        shippingFee.currency.code,
-//        currencyCode,
-//        false,
-//        exchangeRates
-//    )
-//    const priceWithShipping = price + shipping
-//    let vat = (priceWithShipping * sellerInfo.goat.taxes) / 100
-//
-//    return Math.round(priceWithShipping + vat)
-// }
-//
+func goatBuyerPrice(price: Double,
+                    currencyCode: Currency.CurrencyCode,
+                    feeCalculation: CopDeckSettings.FeeCalculation,
+                    exchangeRates: ExchangeRates?) -> Double {
+    var shippingFee: ShippingFee = .init(fee: 40, currency: USD)
+    if feeCalculation.country.name == "US (mainland)" {
+        shippingFee = .init(fee: 12, currency: USD)
+    } else if feeCalculation.country.name == "US (Alaska, Hawaii)" {
+        shippingFee = .init(fee: 15, currency: USD)
+    } else if feeCalculation.country.name == "UK" {
+        shippingFee = .init(fee: 13, currency: GBP)
+    } else if feeCalculation.country.name == "China" {
+        shippingFee = .init(fee: 25, currency: USD)
+    }
+    let shippingFeeConverted = Currency.convert(from: shippingFee.currency.code, to: currencyCode, exchangeRates: exchangeRates) * shippingFee.fee
+    let priceWithShippingFee = price + shippingFeeConverted
+    let vat = (priceWithShippingFee * (feeCalculation.goat?.taxes ?? 0)) / 100
+
+    return round(priceWithShippingFee + vat)
+}
+
 func restocksSellerPrice(price: Double,
                          currencyCode: Currency.CurrencyCode,
                          feeCalculation: CopDeckSettings.FeeCalculation,
