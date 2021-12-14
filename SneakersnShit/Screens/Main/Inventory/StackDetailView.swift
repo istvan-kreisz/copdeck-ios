@@ -13,7 +13,6 @@ struct StackDetailView: View {
 
     @Binding var stack: Stack
     @Binding var inventoryItems: [InventoryItem]
-    @Binding var bestPrices: [String: ListingPrice]
     @Binding var filters: Filters
 
     let linkURL: String
@@ -38,15 +37,12 @@ struct StackDetailView: View {
     }
 
     var stackValue: PriceWithCurrency? {
-        if let currencyCode = bestPrices.values.first?.price.currencyCode {
-            let sum = allStackItems
-                .filter { !$0.isSold }
-                .compactMap { bestPrices[$0.id]?.price.price }
-                .sum()
-            return PriceWithCurrency(price: sum, currencyCode: currencyCode)
-        } else {
-            return nil
-        }
+        guard let currencyCode = allStackItems.first?.bestPriceFromItem?.price.currencyCode else { return nil }
+        let sum = allStackItems
+            .filter { !$0.isSold }
+            .compactMap { $0.bestPriceFromItem?.price.price }
+            .sum()
+        return PriceWithCurrency(price: sum, currencyCode: currencyCode)
     }
 
     var selectedInventoryItem: InventoryItem? {
@@ -56,7 +52,6 @@ struct StackDetailView: View {
 
     init(stack: Binding<Stack>,
          inventoryItems: Binding<[InventoryItem]>,
-         bestPrices: Binding<[String: ListingPrice]>,
          filters: Binding<Filters>,
          linkURL: String,
          shouldDismiss: @escaping () -> Void,
@@ -64,7 +59,6 @@ struct StackDetailView: View {
          deleteStack: @escaping () -> Void) {
         self._stack = stack
         self._inventoryItems = inventoryItems
-        self._bestPrices = bestPrices
         self._filters = filters
         self.linkURL = linkURL
         self.shouldDismiss = shouldDismiss
@@ -165,7 +159,7 @@ struct StackDetailView: View {
                     InventoryListItem(inventoryItem: inventoryItem,
                                       priceName: "Best Price",
                                       isContentLocked: store.state.isContentLocked,
-                                      bestPrice: bestPrices[inventoryItem.id],
+                                      bestPrice: inventoryItem.bestPriceFromItem,
                                       selectedInventoryItem: selectedInventoryItemBinding,
                                       isSelected: false,
                                       isInSharedStack: stack.isShared,

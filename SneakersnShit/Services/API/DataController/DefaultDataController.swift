@@ -75,9 +75,13 @@ class DefaultDataController: DataController {
     func getUser(withId id: String) -> AnyPublisher<User, AppError> {
         databaseManager.getUser(withId: id)
     }
+    
+    func getItem(withId id: String, settings: CopDeckSettings, completion: @escaping (Result<Item, AppError>) -> Void) {
+        databaseManager.getItem(withId: id, settings: settings, completion: completion)
+    }
 
-    func getItem(withId id: String, settings: CopDeckSettings) -> AnyPublisher<Item, AppError> {
-        databaseManager.getItem(withId: id, settings: settings).onMain()
+    func getItems(withIds ids: [String], settings: CopDeckSettings, completion: @escaping ([Item]) -> Void) {
+        databaseManager.getItems(withIds: ids, settings: settings, completion: completion)
     }
 
     func getChannels(update: @escaping (Result<[Channel], AppError>) -> Void) {

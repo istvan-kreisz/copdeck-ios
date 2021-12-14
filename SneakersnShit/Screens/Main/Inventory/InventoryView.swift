@@ -14,8 +14,7 @@ struct InventoryView: View {
         case addNew, settings, filters, imagePicker, sellerStats
     }
 
-    @EnvironmentObject var store: InventoryStore
-    @EnvironmentObject var globalStore: DerivedGlobalStore
+    @EnvironmentObject var store: AppStore
     @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
 
     @State private var searchText = ""
@@ -94,18 +93,17 @@ struct InventoryView: View {
                                                                      }
                                                              },
                                                              set: { _ in })
-            let filters = Binding<Filters>(get: { globalStore.globalState.settings.filters }, set: { _ in })
+            let filters = Binding<Filters>(get: { store.state.settings.filters }, set: { _ in })
 
             NavigationLink(destination: Destination(navigationDestination: $navigationDestination,
                                                     inventoryItems: $store.state.inventoryItems,
-                                                    bestPrices: $globalStore.globalState.bestPrices,
                                                     selectedStack: selectedStackBinding).navigationbarHidden().environmentObject(DerivedGlobalStore.default),
                            isActive: showDetail) {
                 EmptyView()
             }
 
             VerticalListView(bottomPadding: 0, spacing: 0, listRowStyling: .none) {
-                if let user = store.globalState.user {
+                if let user = store.state.user {
                     InventoryHeaderView(user: user,
                                         settingsPresented: settingsPresented,
                                         addNewInventoryItemPresented: addNewInventoryItemPresented,
@@ -115,16 +113,16 @@ struct InventoryView: View {
                                         username: $username,
                                         countryIcon: .constant(""),
                                         facebookURL: .constant(nil),
-                                        textBox1: .init(title: "Inventory Value", text: globalStore.globalState.inventoryValue?.asString ?? "-"),
+                                        textBox1: .init(title: "Inventory Value", text: store.state.inventoryValue?.asString ?? "-"),
                                         textBox2: .init(title: "Inventory Size", text: "\(inventoryItems.count)"),
-                                        isContentLocked: store.globalState.isContentLocked,
+                                        isContentLocked: store.state.globalState.isContentLocked,
                                         updateUsername: updateUsername,
-                                        linkFacebookProfile: globalStore.globalState.user?.facebookProfileURL == nil ? linkFacebookProfile : nil)
+                                        linkFacebookProfile: store.state.user?.facebookProfileURL == nil ? linkFacebookProfile : nil)
                 }
 
                 ScrollableSegmentedControl(selectedIndex: $selectedStackIndex,
                                            titles: stackTitles,
-                                           isContentLocked: store.globalState.isContentLocked,
+                                           isContentLocked: store.state.globalState.isContentLocked,
                                            button: .init(title: "New Stack", tapped: { showAddNewStackAlert = true }))
                     .padding(.bottom, 8)
                     .padding(.top, -6)
@@ -134,7 +132,7 @@ struct InventoryView: View {
                     let isSelected = Binding<Bool>(get: { stack.id == selectedStack?.id }, set: { _ in })
 
                     StackView(stack: stack,
-                              isContentLocked: globalStore.globalState.isContentLocked,
+                              isContentLocked: store.state.globalState.isContentLocked,
                               searchText: $searchText,
                               filters: filters,
                               inventoryItems: $store.state.inventoryItems,
@@ -143,7 +141,6 @@ struct InventoryView: View {
                               showFilters: showFilters,
                               selectedInventoryItems: $selectedInventoryItems,
                               isSelected: isSelected,
-                              bestPrices: $globalStore.globalState.bestPrices,
                               emptyStateConfig: (stack.id == "all" ?
                                   StackView.EmptyStateConfig.init(title: "Your inventory is empty",
                                                                   buttonTitle: "Use the search tab to add items") {
@@ -196,7 +193,7 @@ struct InventoryView: View {
                     }
                 }
             }
-            .onChange(of: globalStore.globalState.user?.name) { newValue in
+            .onChange(of: store.state.user?.name) { newValue in
                 self.username = newValue ?? ""
             }
         }
@@ -216,12 +213,12 @@ struct InventoryView: View {
                       subtitle: "Share this link with anyone to show them what's in your stack. The link opens a webpage so whoever you share it with doesn't need to have the app downloaded.",
                       firstAction: .init(name: "Done", tapped: { sharedStack = nil }),
                       secondAction: nil) {
-                    StackShareSettingsView(linkURL: sharedStack?.linkURL(userId: globalStore.globalState.user?.id ?? "") ?? "",
+                    StackShareSettingsView(linkURL: sharedStack?.linkURL(userId: store.state.globalState.user?.id ?? "") ?? "",
                                            stack: .constant(stack),
                                            isPublic: stack.isPublic ?? false,
                                            isPublished: stack.isPublished ?? false,
                                            includeTitle: false,
-                                           isContentLocked: store.globalState.isContentLocked) { title in
+                                           isContentLocked: store.state.globalState.isContentLocked) { title in
                         showSnackBar = true
                     } showPopup: { title, subtitle in
                         popup = (title, subtitle)
@@ -241,7 +238,7 @@ struct InventoryView: View {
         .withSnackBar(text: "Link Copied", shouldShow: $showSnackBar)
         .onAppear {
             if isFirstload {
-                Analytics.logEvent("visited_inventory", parameters: ["userId": store.globalState.user?.id ?? ""])
+                Analytics.logEvent("visited_inventory", parameters: ["userId": store.state.user?.id ?? ""])
                 isFirstload = false
             }
         }
@@ -249,21 +246,21 @@ struct InventoryView: View {
             switch presentedSheet {
             case .addNew:
                 AddNewInventoryItemView()
-                    .environmentObject(globalStore)
+                    .environmentObject(DerivedGlobalStore.default)
             case .settings:
-                SettingsView(settings: globalStore.globalState.settings, isContentLocked: globalStore.globalState.isContentLocked,
+                SettingsView(settings: store.state.settings, isContentLocked: store.state.globalState.isContentLocked,
                              isPresented: settingsPresented)
                     .environmentObject(DerivedGlobalStore.default)
             case .filters:
-                FiltersModal(settings: globalStore.globalState.settings, isPresented: showFilters)
+                FiltersModal(settings: store.state.settings, isPresented: showFilters)
                     .environmentObject(DerivedGlobalStore.default)
             case .imagePicker:
                 ImagePickerView(showPicker: showSheet, selectionLimit: 1) { (images: [UIImage]) in
                     images.first.map { self.store.send(.main(action: .uploadProfileImage(image: $0))) }
                 }
             case .sellerStats:
-                SellerStatsView(inventoryItems: inventoryItems, currency: globalStore.globalState.settings.currency,
-                                exchangeRates: globalStore.globalState.exchangeRates ?? .default)
+                SellerStatsView(inventoryItems: inventoryItems, currency: store.state.settings.currency,
+                                exchangeRates: store.state.exchangeRates ?? .default)
             case .none:
                 EmptyView()
             }
@@ -332,7 +329,6 @@ extension InventoryView {
 
         @Binding var navigationDestination: Navigation<NavigationDestination>
         @Binding var inventoryItems: [InventoryItem]
-        @Binding var bestPrices: [String: ListingPrice]
         @Binding var selectedStack: Stack
 
         var editedStack: Stack? {
@@ -350,7 +346,6 @@ extension InventoryView {
             case let .stack(stack):
                 StackDetailView(stack: stack,
                                 inventoryItems: $inventoryItems,
-                                bestPrices: $globalStore.globalState.bestPrices,
                                 filters: filters,
                                 linkURL: editedStack?.linkURL(userId: globalStore.globalState.user?.id ?? "") ?? "",
                                 shouldDismiss: { navigationDestination.hide() },

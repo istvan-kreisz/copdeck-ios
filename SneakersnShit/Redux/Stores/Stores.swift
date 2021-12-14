@@ -25,9 +25,12 @@ extension AppStore {
         setupObservers()
     }
 
-    private func updateBestPrices(state: AppState, completion: @escaping ([String: ListingPrice]) -> Void) {
+    private func updateBestPrices(items: [Item], completion: @escaping ([String: ListingPrice]) -> Void) {
         let bestPrices = state.inventoryItems
-            .map { (inventoryItem: InventoryItem) -> (String, ListingPrice?) in (inventoryItem.id, bestPrice(for: inventoryItem)) }
+            .compactMap { (inventoryItem: InventoryItem) -> (String, ListingPrice?)? in
+                guard let item = items.first(where: { $0.id == inventoryItem.itemId }) else { return nil }
+                return (inventoryItem.id, bestPrice(for: inventoryItem, item: item))
+            }
             .reduce([:]) { (dict: [String: ListingPrice], element: (String, ListingPrice?)) in
                 if let price = element.1 {
                     var newDict = dict
@@ -39,43 +42,31 @@ extension AppStore {
             }
         completion(bestPrices)
     }
-
-    private func updateTotalInventoryValue(state: AppState, bestPrices: [String: ListingPrice], completion: (PriceWithCurrency?) -> Void) {
-        if let currencyCode = bestPrices.values.first?.price.currencyCode {
-            let sum = state.inventoryItems
-                .filter { (inventoryItem: InventoryItem) -> Bool in !inventoryItem.isSold }
-                .compactMap { (inventoryItem: InventoryItem) -> Double? in bestPrices[inventoryItem.id]?.price.price }
-                .sum()
-            completion(PriceWithCurrency(price: sum, currencyCode: currencyCode))
-        } else {
-            completion(nil)
-        }
+    
+    private func bestPrice(for inventoryItem: InventoryItem, item: Item) -> ListingPrice? {
+        item.bestPrice(for: inventoryItem.size,
+                       feeType: state.settings.bestPriceFeeType,
+                       priceType: state.settings.bestPricePriceType,
+                       stores: state.displayedStores)
     }
 
     private func updateInventoryValue() {
-        let appState = state
-        DispatchQueue.global(qos: .userInteractive).async { [weak self] in
-            self?.updateBestPrices(state: appState) { bestPrices in
-                self?.updateTotalInventoryValue(state: appState, bestPrices: bestPrices) { inventoryValue in
-                    DispatchQueue.main.async {
-                        self?.state.globalState.bestPrices = bestPrices
-                        self?.state.globalState.inventoryValue = inventoryValue
-                    }
+        environment.dataController.getItems(withIds: state.inventoryItems.compactMap(\.itemId), settings: state.settings) { items in
+            DispatchQueue.global(qos: .userInteractive).async { [weak self] in
+                self?.updateBestPrices(items: items) { [weak self] bestPrices in
+                    guard let self = self else { return }
+                    let updatedInventoryItems = self.state.inventoryItems
+                        .map { (inventoryItem: InventoryItem) -> InventoryItem in
+                            var updatedInventoryItem = inventoryItem
+                            if let itemId = inventoryItem.itemId, let bestPrice = bestPrices[itemId] {
+                                updatedInventoryItem.bestPriceFromItem = bestPrice
+                            }
+                            return updatedInventoryItem
+                        }
+                    self.state.inventoryItems = updatedInventoryItems
                 }
             }
         }
-    }
-
-    #warning("yooo")
-    private func bestPrice(for inventoryItem: InventoryItem) -> ListingPrice? {
-//        if let itemId = inventoryItem.itemId, let item = ItemCache.default.value(itemId: itemId, settings: state.settings) {
-//            return item.bestPrice(for: inventoryItem.size,
-//                                  feeType: state.settings.bestPriceFeeType,
-//                                  priceType: state.settings.bestPricePriceType,
-//                                  stores: state.displayedStores)
-//        } else {
-            return nil
-//        }
     }
 
     func setupObservers() {

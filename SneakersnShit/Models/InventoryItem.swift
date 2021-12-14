@@ -67,12 +67,18 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     let updated: Double?
     var purchasedDate: Double?
     var soldDate: Double?
+    
     var gender: Gender?
     var brand: Brand?
-    var brandCalculated: Brand? { brand ?? item?.brandCalculated }
-    var genderCalculated: Gender? { gender ?? item?.genderCalculated }
+    var brandCalculated: Brand? { brand ?? brandFromItem }
+    var genderCalculated: Gender? { gender ?? genderFromItem }
     var count = 1
-    var bestPrice: Double?
+    
+    var brandFromItem: Brand?
+    var genderFromItem: Gender?
+    var bestPriceFromItem: ListingPrice?
+    var sortedSizesFromItem: [String] = []
+    var itemTypeFromItem: ItemType?
     
     var _addToStacks: [Stack] = []
 
@@ -97,8 +103,8 @@ struct InventoryItem: Codable, Equatable, Identifiable {
         var result: [ItemType: [String]] = [:]
         ItemType.allCases.forEach { itemType in
             let sizes: [String]
-            if let item = item, item.itemType == itemType {
-                sizes = item.sortedSizes
+            if itemTypeFromItem == itemType && !sortedSizesFromItem.isEmpty {
+                sizes = sortedSizesFromItem
             } else {
                 switch itemType {
                 case .shoe:
@@ -120,11 +126,6 @@ struct InventoryItem: Codable, Equatable, Identifiable {
 
     var soldDateComponents: DateComponents? {
         soldDate.serverDate.map { Calendar.current.dateComponents([.year, .month], from: $0) }
-    }
-
-    #warning("yo")
-    var item: Item? {
-        nil
     }
 
     enum CodingKeys: String, CodingKey {

@@ -19,7 +19,7 @@ struct MainContainerView: View {
         UITabBarWrapper(selectedIndex: selectedIndex) {
             (TabBarElement(tabBarElementItem: .init(title: "First", systemImageName: "house.fill")) {
                 FeedView(userId: store.state.user?.id ?? "")
-                    .environmentObject(DerivedGlobalStore.default)
+                    .environmentObject(AppStore.default)
                     .withTabViewWrapper(viewRouter: viewRouter, shouldShow: $shouldShowTabBar)
             },
             TabBarElement(tabBarElementItem: .init(title: "Second", systemImageName: "pencil.circle.fill")) {
@@ -31,8 +31,7 @@ struct MainContainerView: View {
                 InventoryView(username: store.state.user?.name ?? "",
                               shouldShowTabBar: $shouldShowTabBar,
                               viewRouter: viewRouter)
-                    .environmentObject(DerivedGlobalStore.default)
-                    .environmentObject(InventoryStore.default)
+                    .environmentObject(AppStore.default)
                     .hideKeyboardOnScroll()
             },
             TabBarElement(tabBarElementItem: .init(title: "Fourth", systemImageName: "message")) {

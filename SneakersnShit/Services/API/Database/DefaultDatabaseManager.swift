@@ -10,7 +10,7 @@ import Firebase
 import Combine
 import UIKit
 
-class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {    
+class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
     private static let recentlyViewedLimit = 20
 
     let firestore: Firestore
@@ -135,19 +135,38 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
         }.eraseToAnyPublisher()
     }
 
-    func getItem(withId id: String, settings: CopDeckSettings) -> AnyPublisher<Item, AppError> {
-        return Future { [weak self] promise in
-            self?.firestore.collection(.items).document(Item.databaseId(itemId: id, settings: settings)).getDocument { snapshot, error in
-                log("db read itemId: \(id)", logType: .database)
-                if let dict = snapshot?.data(), let item = Item(from: dict) {
-                    promise(.success(item))
-                } else {
-                    promise(.failure(error.map { AppError(error: $0) } ?? AppError.unknown))
-                }
+    func getItem(withId id: String, settings: CopDeckSettings, completion: @escaping (Result<Item, AppError>) -> Void) {
+        firestore.collection(.items).document(Item.databaseId(itemId: id, settings: settings)).getDocument { snapshot, error in
+            log("db read itemId: \(id)", logType: .database)
+            if let dict = snapshot?.data(), let item = Item(from: dict) {
+                completion(.success(item))
+            } else {
+                completion(.failure(error.map { AppError(error: $0) } ?? AppError.unknown))
             }
-        }.eraseToAnyPublisher()
+        }
     }
-    
+
+    func getItems(withIds ids: [String], settings: CopDeckSettings, completion: @escaping ([Item]) -> Void) {
+        var items: [Item] = []
+        let dispatchGroup = DispatchGroup()
+
+        for id in Array(Set(ids)) {
+            dispatchGroup.enter()
+            getItem(withId: id, settings: settings) { result in
+                switch result {
+                case .failure:
+                    break
+                case let .success(item):
+                    items.append(item)
+                }
+                dispatchGroup.leave()
+            }
+        }
+        dispatchGroup.notify(queue: .main) {
+            completion(items)
+        }
+    }
+
     func getItemListener(withId id: String, settings: CopDeckSettings, updated: @escaping (Item) -> Void) -> DocumentListener<Item> {
         itemListener?.reset()
         let listener = DocumentListener<Item>()
@@ -156,7 +175,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
         self.itemListener = listener
         return listener
     }
-    
+
     func getPopularItems() -> AnyPublisher<[Item], AppError> {
         return Future { [weak self] promise in
             guard let self = self else {

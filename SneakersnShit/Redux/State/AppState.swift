@@ -33,9 +33,6 @@ struct GlobalState: Equatable {
     var showPaymentView = false
     var allPackages: [DiscountValue: SubscriptionPackages]?
     var chatUpdates: ChatUpdateInfo = .init(updateInfo: [:])
-    
-    var bestPrices: [String: ListingPrice] = [:]
-    var inventoryValue: PriceWithCurrency?
 
     var subscriptionActive: Bool {
         user?.subscription == .pro
@@ -72,6 +69,11 @@ struct InventoryState: Equatable {
 struct AppState: Equatable {
     var globalState = GlobalState()
     var inventoryState = InventoryState()
+    
+    var inventoryValue: PriceWithCurrency? {
+        let sum = inventoryItems.compactMap(\.bestPriceFromItem?.price.price).sum()
+        return PriceWithCurrency(price: sum, currencyCode: settings.currency.code)
+    }
 
     var user: User? {
         get { globalState.user }

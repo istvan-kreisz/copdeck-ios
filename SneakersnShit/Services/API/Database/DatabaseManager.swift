@@ -24,7 +24,8 @@ protocol DatabaseManager: ChatManager {
 
     // read
     func getUser(withId id: String) -> AnyPublisher<User, AppError>
-    func getItem(withId id: String, settings: CopDeckSettings) -> AnyPublisher<Item, AppError>
+    func getItem(withId id: String, settings: CopDeckSettings, completion: @escaping (Result<Item, AppError>) -> Void)
+    func getItems(withIds ids: [String], settings: CopDeckSettings, completion: @escaping ([Item]) -> Void)
     func getItemListener(withId id: String, settings: CopDeckSettings, updated: @escaping (Item) -> Void) -> DocumentListener<Item>
     func getPopularItems() -> AnyPublisher<[Item], AppError>
     

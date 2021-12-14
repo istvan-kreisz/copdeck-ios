@@ -13,7 +13,7 @@ struct FeedView: View {
     static var preloadedPosts: PaginatedResult<[FeedPost]>?
     static var didStartPreloading = false
 
-    @EnvironmentObject var store: DerivedGlobalStore
+    @EnvironmentObject var store: AppStore
     @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
 
     @State private var isFirstLoad = true
@@ -86,7 +86,7 @@ struct FeedView: View {
                             .foregroundColor(.customText2)
                             .padding(.leading, 5)
                         
-                        Text(store.globalState.inventoryValue?.asString ?? "-")
+                        Text(store.state.inventoryValue?.asString ?? "-")
                             .font(.bold(size: UIScreen.isSmallScreen ? 40 : 45))
                             .foregroundColor(.customText1)
                     }
@@ -144,7 +144,7 @@ struct FeedView: View {
         }
         .onAppear {
             if isFirstLoad {
-                Analytics.logEvent("visited_feed", parameters: ["userId": store.globalState.user?.id ?? ""])
+                Analytics.logEvent("visited_feed", parameters: ["userId": store.state.user?.id ?? ""])
                 if let preloadedPosts = Self.preloadedPosts {
                     self.feedState.feedPosts = preloadedPosts
                 } else {
