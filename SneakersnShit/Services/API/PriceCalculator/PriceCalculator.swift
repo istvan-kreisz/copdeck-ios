@@ -260,113 +260,80 @@ func klektSellerPrice(price: Double) -> Double {
 //    return Math.round(total)
 // }
 //
-// const goatSellerPrice = (
-//    price: number,
-//    currencyCode: CurrencyCode,
-//    sellerInfo: SellerInfo,
-//    exchangeRates?: ExchangeRates
-// ): number => {
-//    let sellerFee = 30
-//    let groups: { countries: CountryName[]; fee: number }[] = [
-//        {
-//            countries: ["US (mainland)", "US (Alaska, Hawaii)", "Germany", "UK"],
-//            fee: 5,
-//        },
-//        { countries: ["Austria", "Belgium", "France", "Netherlands"], fee: 6 },
-//        {
-//            countries: [
-//                "Bulgaria",
-//                "Croatia",
-//                "Republic of Cyprus",
-//                "Czech Republic",
-//                "Estonia",
-//                "Greece",
-//                "Hungary",
-//                "Latvia",
-//                "Lithuania",
-//                "Malta",
-//                "Romania",
-//                "Slovakia",
-//                "Slovenia",
-//            ],
-//            fee: 24,
-//        },
-//        {
-//            countries: ["China"],
-//            fee: 25,
-//        },
-//        {
-//            countries: ["Denmark", "Ireland", "Italy", "Luxembourg", "Poland", "Portugal", "Spain"],
-//            fee: 12,
-//        },
-//        {
-//            countries: ["Finland", "Malaysia", "Philippines", "Singapore"],
-//            fee: 20,
-//        },
-//        {
-//            countries: ["Sweden"],
-//            fee: 10,
-//        },
-//    ]
-//    const fee = groups.find((group) =>
-//        group.countries
-//            .map((country) => {
-//                let c: string = country
-//                return c
-//            })
-//            .includes(sellerInfo.countryName)
-//    )?.fee
-//    if (fee) {
-//        sellerFee = fee
-//    }
-//
-//    switch (sellerInfo.countryName) {
-//        case "UK":
-//        case "US (mainland)":
-//        case "US (Alaska, Hawaii)":
-//        case "Germany":
-//            sellerFee = 5
-//            break
-//        case "Austria":
-//        case "Belgium":
-//            sellerFee = 6
-//            break
-//        case "Sweden":
-//        case "Netherlands":
-//            sellerFee = 10
-//            break
-//        case "Ireland":
-//        case "Luxembourg":
-//        case "France":
-//            sellerFee = 12
-//            break
-//        case "Italy":
-//        case "Finland":
-//        case "Portugal":
-//        case "Spain":
-//        case "Denmark":
-//        case "Malaysia":
-//        case "Philippines":
-//        case "Singapore":
-//            sellerFee = 20
-//        case "Bulgaria":
-//            sellerFee = 24
-//        case "China":
-//            sellerFee = 25
-//            break
-//        default:
-//            break
-//    }
-//    sellerFee = convert(sellerFee, "USD", currencyCode, false, exchangeRates)
-//    const commissionFee = (price * sellerInfo.goat.commissionPercentage) / 100
-//    const totalSellingFee = sellerFee + commissionFee
-//    const sellerPrice = price - totalSellingFee
-//    const cashoutFee = sellerPrice * sellerInfo.goat.cashOutFee
-//    const totalCashoutValue = sellerPrice - cashoutFee
-//
-//    return Math.round(totalCashoutValue)
-// }
-//
+func goatSellerPrice(price: Double,
+                     currencyCode: Currency.CurrencyCode,
+                     feeCalculation: CopDeckSettings.FeeCalculation,
+                     exchangeRates: ExchangeRates?) -> Double {
+    struct FeeGroup {
+        let countries: [String]
+        let fee: Double
+    }
+
+    var sellerFee = 30.0
+    let groups: [FeeGroup] = [.init(countries: ["US (mainland)", "US (Alaska, Hawaii)", "Germany", "UK"], fee: 5),
+                              .init(countries: ["Austria", "Belgium", "France", "Netherlands"], fee: 6),
+                              .init(countries: ["Bulgaria",
+                                                "Croatia",
+                                                "Republic of Cyprus",
+                                                "Czech Republic",
+                                                "Estonia",
+                                                "Greece",
+                                                "Hungary",
+                                                "Latvia",
+                                                "Lithuania",
+                                                "Malta",
+                                                "Romania",
+                                                "Slovakia",
+                                                "Slovenia"],
+                                    fee: 24),
+                              .init(countries: ["China"], fee: 25),
+                              .init(countries: ["Denmark", "Ireland", "Italy", "Luxembourg", "Poland", "Portugal", "Spain"], fee: 12),
+                              .init(countries: ["Finland", "Malaysia", "Philippines", "Singapore"], fee: 20),
+                              .init(countries: ["Sweden"], fee: 10)]
+    sellerFee = groups.first(where: { group in group.countries.contains(feeCalculation.country.name) })?.fee ?? sellerFee
+
+    switch feeCalculation.country.name {
+    case "UK",
+         "US (mainland)",
+         "US (Alaska, Hawaii)",
+         "Germany":
+        sellerFee = 5
+    case "Austria",
+         "Belgium":
+        sellerFee = 6
+    case "Sweden",
+         "Netherlands":
+        sellerFee = 10
+    case "Ireland",
+         "Luxembourg",
+         "France":
+        sellerFee = 12
+    case "Italy",
+         "Finland",
+         "Portugal",
+         "Spain",
+         "Denmark",
+         "Malaysia",
+         "Philippines",
+         "Singapore":
+        sellerFee = 20
+    case "Bulgaria":
+        sellerFee = 24
+    case "China":
+        sellerFee = 25
+    default:
+        break
+    }
+    sellerFee = Currency.convert(from: .usd, to: currencyCode, exchangeRates: exchangeRates) * sellerFee
+    let commissionFee = (price * (feeCalculation.goat?.commissionPercentage.rawValue ?? 0.0)) / 100
+    let totalSellingFee = sellerFee + commissionFee
+    let sellerPrice = price - totalSellingFee
+    let cashoutFee = sellerPrice * (feeCalculation.goat?.cashOutFeeAmount ?? 0.0)
+    let totalCashoutValue = sellerPrice - cashoutFee
+
+    return round(totalCashoutValue)
+}
+
 func goatBuyerPrice(price: Double,
                     currencyCode: Currency.CurrencyCode,
                     feeCalculation: CopDeckSettings.FeeCalculation,

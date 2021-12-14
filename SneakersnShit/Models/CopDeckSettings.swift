@@ -38,6 +38,10 @@ struct CopDeckSettings: Codable, Equatable {
             var commissionPercentage: CommissionPercentage
             var cashOutFee: Bool
             var taxes: Double
+            
+            var cashOutFeeAmount: Double {
+                cashOutFee ? 0.029 : 0.0
+            }
         }
 
         struct Klekt: Codable, Equatable {
