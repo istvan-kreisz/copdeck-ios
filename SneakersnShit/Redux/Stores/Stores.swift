@@ -59,7 +59,7 @@ extension AppStore {
                         .map { (inventoryItem: InventoryItem) -> InventoryItem in
                             var updatedInventoryItem = inventoryItem
                             if let itemId = inventoryItem.itemId, let bestPrice = bestPrices[itemId] {
-                                updatedInventoryItem.itemFields.bestPrice = bestPrice
+                                updatedInventoryItem.itemFields?.bestPrice = bestPrice
                             }
                             return updatedInventoryItem
                         }
@@ -69,9 +69,26 @@ extension AppStore {
         }
     }
 
-    private func updateBestPrices(inventoryItems: [InventoryItem]) {
-        //
+    private func updateInventoryItemsWithItemFields(inventoryItems: [InventoryItem]) {
+        environment.dataController.getItems(withIds: inventoryItems.compactMap(\.itemId), settings: state.settings) { [weak self] items in
+            guard let self = self else { return }
+            let updatedInventoryItems = inventoryItems.map { inventoryItem -> InventoryItem in
+                if let item = items.first(where: { $0.id == inventoryItem.itemId }) {
+                    var updatedInventoryItem = inventoryItem
+                    updatedInventoryItem.itemFields = .init()
+                    return updatedInventoryItem
+                } else {
+                    return inventoryItem
+                }
+            }
+            // do stuff
+            self.updateCalculatedPrices(inventoryItems: updatedInventoryItems)
+        }
     }
+
+    private func updateCalculatedPrices(inventoryItems: [InventoryItem]) {}
+
+    private func updateBestPrices(inventoryItems: [InventoryItem]) {}
 
     func setupObservers() {
         environment.dataController.errorsPublisher.merge(with: environment.paymentService.errorsPublisher)
@@ -86,43 +103,49 @@ extension AppStore {
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] previousUser, newUser in
-                      let oldSettings = self?.state.user?.settings
+                      guard let self = self else { return }
+                      let oldSettings = self.state.user?.settings
                       let newSettings = newUser.settings
                       if oldSettings?.feeCalculation.country != newSettings?.feeCalculation.country ||
                           oldSettings?.currency != newSettings?.currency ||
                           previousUser?.id != newUser.id {
                           #warning("called on login??")
-                          self?.environment.dataController.updateUserItems {
-                              self?.updateInventoryValue()
+                          self.environment.dataController.updateUserItems {
+                              self.updateInventoryItemsWithItemFields(inventoryItems: self.state.inventoryItems)
                           }
-                      } else if (oldSettings?.feeCalculation != newSettings?.feeCalculation && newSettings?.bestPriceFeeType != .None) ||
-                          oldSettings?.bestPricePriceType != newSettings?.bestPricePriceType ||
+                      } else if oldSettings?.feeCalculation != newSettings?.feeCalculation {
+                          self.updateCalculatedPrices(inventoryItems: self.state.inventoryItems)
+                      } else if oldSettings?.bestPricePriceType != newSettings?.bestPricePriceType ||
                           oldSettings?.bestPriceFeeType != newSettings?.bestPriceFeeType ||
                           oldSettings?.displayedStores != newSettings?.displayedStores {
-                          self?.updateInventoryValue()
+                          self.updateBestPrices(inventoryItems: self.state.inventoryItems)
                       }
-                      self?.state.user = newUser
-                      self?.updateInventoryValue()
+                      self.state.user = newUser
                   })
             .store(in: &effectCancellables)
 
         environment.dataController.inventoryItemsPublisher
-//            .map { inventoryItems in inventoryItems.filter { $0.pendingImport == nil } }
+            .map { inventoryItems in inventoryItems.filter { $0.pendingImport == nil } }
+            .withPrevious()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in },
-                  receiveValue: { [weak self] changes, inventoryItems in
+                  receiveValue: { [weak self] previousInventoryItems, newInventoryItems in
+                      guard let self = self else { return }
                       var inventoryItemsToUpdate: [InventoryItem] = []
-                      for change in changes {
-                          if case let .update(updatedInventoryItem) = change {
-                              if let oldInventoryItem = inventoryItems.first(where: { $0.id == updatedInventoryItem.id }),
-                                 oldInventoryItem.size != updatedInventoryItem.size {
-                                  self?.updateBestPrices(inventoryItems: [updatedInventoryItem])
-                              }
-                          } else if case let .add(addedInventoryItem) = change {
-                              self?.updateBestPrices(inventoryItems: [addedInventoryItem])
+                      let updatedNewInventoryItems = newInventoryItems.map { new -> InventoryItem in
+                          var newInventoryItem = new
+                          guard let previousInventoryItem = previousInventoryItems?.first(where: { $0.id == newInventoryItem.id }),
+                                let itemFields = previousInventoryItem.itemFields,
+                                previousInventoryItem.size == newInventoryItem.size
+                          else {
+                              inventoryItemsToUpdate.append(newInventoryItem)
+                              return newInventoryItem
                           }
+                          newInventoryItem.itemFields = itemFields
+                          return newInventoryItem
                       }
-                      self?.state.inventoryItems = inventoryItems.filter { $0.pendingImport == nil }
+                      self.updateInventoryItemsWithItemFields(inventoryItems: inventoryItemsToUpdate)
+                      self.state.inventoryItems = updatedNewInventoryItems
                   })
             .store(in: &effectCancellables)
 

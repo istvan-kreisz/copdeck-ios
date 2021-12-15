@@ -70,7 +70,7 @@ struct AppState: Equatable {
     var inventoryState = InventoryState()
     
     var inventoryValue: PriceWithCurrency? {
-        let sum = inventoryItems.compactMap(\.itemFields.bestPrice?.price.price).sum()
+        let sum = inventoryItems.compactMap(\.itemFields?.bestPrice?.price.price).sum()
         return PriceWithCurrency(price: sum, currencyCode: settings.currency.code)
     }
 
