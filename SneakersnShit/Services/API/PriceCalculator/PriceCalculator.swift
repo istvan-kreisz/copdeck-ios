@@ -467,9 +467,27 @@ func calculatePrice(storeId: StoreId,
     return updatedInventoryItem
 }
 
+func calculatePrices(inventoryItem: InventoryItem, settings: CopDeckSettings, exchangeRates: ExchangeRates?) -> InventoryItem {
+    var updatedInventoryItem = inventoryItem
+    guard var updatedInventoryItemItemFields = inventoryItem.itemFields else { return inventoryItem }
+    updatedInventoryItemItemFields.storePrices = updatedInventoryItemItemFields.storePrices.map { prices -> Item.StorePrice in
+        var calculatedPrices = prices
+        calculatedPrices.inventory = calculatedPrices.inventory.map { storeInventoryItem in
+            calculatePrice(storeId: calculatedPrices.store.id,
+                           currencyCode: settings.currency.code,
+                           inventoryItem: storeInventoryItem,
+                           feeCalculation: settings.feeCalculation,
+                           exchangeRates: exchangeRates)
+        }
+        return calculatedPrices
+    }
+    updatedInventoryItem.itemFields = updatedInventoryItemItemFields
+    return updatedInventoryItem
+}
+
 func calculatePrices(item: Item, apiConfig: APIConfig) -> Item {
     var updatedItem = item
-    updatedItem.storePrices = item.storePrices.map { prices in
+    updatedItem.storePrices = item.storePrices.map { prices -> Item.StorePrice in
         var calculatedPrices = prices
         calculatedPrices.inventory = calculatedPrices.inventory.map { inventoryItem in
             calculatePrice(storeId: calculatedPrices.store.id,
