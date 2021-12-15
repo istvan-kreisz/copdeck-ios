@@ -214,81 +214,44 @@ extension Item {
         }
     }
 
-    private func price(size: String,
-                       storeId: StoreId,
-                       feeType: FeeType,
-                       currency: Currency,
-                       restocksPriceType: StorePrice.StoreInventoryItem.RestocksPriceType?) -> PriceItem {
-        let prices = allStorePrices.first(where: { $0.store.id == storeId })?.inventory.filter { $0.size == size }
-        let storeInfo = storeInfo.first(where: { $0.store.id == storeId })
-
-        var price = prices?.first
-        if storeId == .restocks {
-            if let restocksPriceType = restocksPriceType {
-                price = prices?.first(where: { $0.restocksPriceType == restocksPriceType })
-            } else {
-                price = prices?.min(by: { ($0.lowestAsk ?? 0) < ($1.lowestAsk ?? 0) })
-            }
-        }
-        var askPrice = price?.lowestAsk
-        var bidPrice = price?.highestBid
-        if feeType != .None {
-            askPrice = feeType == .Buy ? price?.lowestAskWithBuyerFees : price?.lowestAskWithSellerFees
-            bidPrice = feeType == .Buy ? price?.highestBidWithBuyerFees : price?.highestBidWithSellerFees
-        }
-        let priceMissing = PriceItem.PriceInfo(text: "-", num: 0)
-        let askInfo: PriceItem.PriceInfo = askPrice.map { price in
-            price == 0 ? priceMissing : PriceItem.PriceInfo(text: currency.symbol.rawValue + " \(price.rounded(toPlaces: 0))", num: price)
-        } ?? priceMissing
-        let bidInfo: PriceItem.PriceInfo = bidPrice.map { price in
-            price == 0 ? priceMissing : PriceItem.PriceInfo(text: currency.symbol.rawValue + " \(price.rounded(toPlaces: 0))", num: price)
-        } ?? priceMissing
-
-        var sizeQuery = ""
-        if let sizeNum = size.number {
-            sizeQuery = storeId.rawValue == "goat" || storeId.rawValue == "stockx" ? "size=\(sizeNum)" : ""
-        }
-        return PriceItem(ask: askInfo, bid: bidInfo, sellLink: storeInfo?.sellUrl, buyLink: (storeInfo?.buyUrl).map { $0 + sizeQuery })
-    }
-
     func priceRow(size: String,
                   priceType: PriceType,
                   feeType: FeeType,
                   stores: [StoreId],
                   restocksPriceType: StorePrice.StoreInventoryItem.RestocksPriceType?) -> PriceRow {
-        let prices = stores.compactMap { Store.store(withId: $0) }.map { store -> PriceRow.Price in
-            let p = price(size: size, storeId: store.id, feeType: feeType, currency: currency, restocksPriceType: restocksPriceType)
-            return PriceRow.Price(primaryText: priceType == .Ask ? p.ask.text : p.bid.text,
-                                  secondaryText: priceType == .Ask ? p.bid.text : p.ask.text,
-                                  price: priceType == .Ask ? p.ask.num : p.bid.num,
-                                  buyLink: p.buyLink,
-                                  sellLink: p.sellLink,
-                                  store: store)
-        }
-        let realPrices = prices.filter { $0.primaryText != "-" }
-        var lowest: Store?
-        var highest: Store?
-        if !realPrices.isEmpty {
-            lowest = realPrices.min(by: { $0.price < $1.price })?.store
-            highest = realPrices.max(by: { $0.price < $1.price })?.store
-        }
-        return PriceRow(size: size, lowest: lowest, highest: highest, prices: prices)
+        Self.priceRow(size: size,
+                      priceType: priceType,
+                      feeType: feeType,
+                      stores: stores,
+                      restocksPriceType: restocksPriceType,
+                      currency: currency,
+                      prices: allStorePrices,
+                      storeInfos: storeInfo)
     }
 
     func allPriceRows(priceType: PriceType,
                       feeType: FeeType,
                       stores: [StoreId],
                       restocksPriceType: StorePrice.StoreInventoryItem.RestocksPriceType?) -> [PriceRow] {
-        sortedSizes.uniqued().map { priceRow(size: $0, priceType: priceType, feeType: feeType, stores: stores, restocksPriceType: restocksPriceType) }
+        Self.allPriceRows(priceType: priceType,
+                          feeType: feeType,
+                          stores: stores,
+                          restocksPriceType: restocksPriceType,
+                          sortedSizes: sortedSizes,
+                          curency: currency,
+                          prices: allStorePrices,
+                          storeInfos: storeInfo)
     }
 
     func bestPrice(for size: String, feeType: FeeType, priceType: PriceType, stores: [StoreId]) -> ListingPrice? {
-        if let bestPrice = priceRow(size: size, priceType: priceType, feeType: feeType, stores: stores, restocksPriceType: nil).prices
-            .max(by: { $0.price < $1.price }) {
-            return ListingPrice(storeId: bestPrice.store.id.rawValue, price: PriceWithCurrency(price: bestPrice.price, currencyCode: currency.code))
-        } else {
-            return nil
-        }
+        return Self.bestPrice(for: size,
+                              feeType: feeType,
+                              priceType: priceType,
+                              stores: stores,
+                              sortedSizes: sortedSizes,
+                              currency: currency,
+                              prices: allStorePrices,
+                              storeInfos: storeInfo)
     }
 }
 
@@ -417,5 +380,121 @@ extension Item: Codable {
         self.brand = try container.decodeIfPresent(Brand.self, forKey: .brand)
         self.gender = try container.decodeIfPresent(Gender.self, forKey: .gender)
         self.itemType = try container.decodeIfPresent(ItemType.self, forKey: .itemType)
+    }
+}
+
+extension Item {
+    static func price(size: String,
+                      storeId: StoreId,
+                      feeType: FeeType,
+                      currency: Currency,
+                      restocksPriceType: Item.StorePrice.StoreInventoryItem.RestocksPriceType?,
+                      allPrices: [Item.StorePrice],
+                      storeInfos: [Item.StoreInfo]) -> Item.PriceItem {
+        let prices = allPrices.first(where: { $0.store.id == storeId })?.inventory.filter { $0.size == size }
+        let storeInfo = storeInfos.first(where: { $0.store.id == storeId })
+
+        var price = prices?.first
+        if storeId == .restocks {
+            if let restocksPriceType = restocksPriceType {
+                price = prices?.first(where: { $0.restocksPriceType == restocksPriceType })
+            } else {
+                price = prices?.min(by: { ($0.lowestAsk ?? 0) < ($1.lowestAsk ?? 0) })
+            }
+        }
+        var askPrice = price?.lowestAsk
+        var bidPrice = price?.highestBid
+        if feeType != .None {
+            askPrice = feeType == .Buy ? price?.lowestAskWithBuyerFees : price?.lowestAskWithSellerFees
+            bidPrice = feeType == .Buy ? price?.highestBidWithBuyerFees : price?.highestBidWithSellerFees
+        }
+        let priceMissing = Item.PriceItem.PriceInfo(text: "-", num: 0)
+        let askInfo: Item.PriceItem.PriceInfo = askPrice.map { price in
+            price == 0 ? priceMissing : Item.PriceItem.PriceInfo(text: currency.symbol.rawValue + " \(price.rounded(toPlaces: 0))", num: price)
+        } ?? priceMissing
+        let bidInfo: Item.PriceItem.PriceInfo = bidPrice.map { price in
+            price == 0 ? priceMissing : Item.PriceItem.PriceInfo(text: currency.symbol.rawValue + " \(price.rounded(toPlaces: 0))", num: price)
+        } ?? priceMissing
+
+        var sizeQuery = ""
+        if let sizeNum = size.number {
+            sizeQuery = storeId.rawValue == "goat" || storeId.rawValue == "stockx" ? "size=\(sizeNum)" : ""
+        }
+        return Item.PriceItem(ask: askInfo, bid: bidInfo, sellLink: storeInfo?.sellUrl, buyLink: (storeInfo?.buyUrl).map { $0 + sizeQuery })
+    }
+
+    static func priceRow(size: String,
+                         priceType: PriceType,
+                         feeType: FeeType,
+                         stores: [StoreId],
+                         restocksPriceType: Item.StorePrice.StoreInventoryItem.RestocksPriceType?,
+                         currency: Currency,
+                         prices: [Item.StorePrice],
+                         storeInfos: [Item.StoreInfo]) -> Item.PriceRow {
+        let prices = stores.compactMap { Store.store(withId: $0) }.map { store -> Item.PriceRow.Price in
+            let p = price(size: size,
+                          storeId: store.id,
+                          feeType: feeType,
+                          currency: currency,
+                          restocksPriceType: restocksPriceType,
+                          allPrices: prices,
+                          storeInfos: storeInfos)
+            return Item.PriceRow.Price(primaryText: priceType == .Ask ? p.ask.text : p.bid.text,
+                                       secondaryText: priceType == .Ask ? p.bid.text : p.ask.text,
+                                       price: priceType == .Ask ? p.ask.num : p.bid.num,
+                                       buyLink: p.buyLink,
+                                       sellLink: p.sellLink,
+                                       store: store)
+        }
+        let realPrices = prices.filter { $0.primaryText != "-" }
+        var lowest: Store?
+        var highest: Store?
+        if !realPrices.isEmpty {
+            lowest = realPrices.min(by: { $0.price < $1.price })?.store
+            highest = realPrices.max(by: { $0.price < $1.price })?.store
+        }
+        return Item.PriceRow(size: size, lowest: lowest, highest: highest, prices: prices)
+    }
+
+    static func allPriceRows(priceType: PriceType,
+                             feeType: FeeType,
+                             stores: [StoreId],
+                             restocksPriceType: Item.StorePrice.StoreInventoryItem.RestocksPriceType?,
+                             sortedSizes: [String],
+                             curency: Currency,
+                             prices: [Item.StorePrice],
+                             storeInfos: [Item.StoreInfo]) -> [Item.PriceRow] {
+        sortedSizes.uniqued()
+            .map { priceRow(size: $0,
+                            priceType: priceType,
+                            feeType: feeType,
+                            stores: stores,
+                            restocksPriceType: restocksPriceType,
+                            currency: curency,
+                            prices: prices,
+                            storeInfos: storeInfos) }
+    }
+
+    static func bestPrice(for size: String,
+                          feeType: FeeType,
+                          priceType: PriceType,
+                          stores: [StoreId],
+                          sortedSizes: [String],
+                          currency: Currency,
+                          prices: [Item.StorePrice],
+                          storeInfos: [Item.StoreInfo]) -> ListingPrice? {
+        if let bestPrice = priceRow(size: size,
+                                    priceType: priceType,
+                                    feeType: feeType,
+                                    stores: stores,
+                                    restocksPriceType: nil,
+                                    currency: currency,
+                                    prices: prices,
+                                    storeInfos: storeInfos).prices
+            .max(by: { $0.price < $1.price }) {
+            return ListingPrice(storeId: bestPrice.store.id.rawValue, price: PriceWithCurrency(price: bestPrice.price, currencyCode: currency.code))
+        } else {
+            return nil
+        }
     }
 }
