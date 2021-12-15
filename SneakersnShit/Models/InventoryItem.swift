@@ -52,6 +52,7 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     var id: String
     let itemId: String?
     var styleId: String
+    let userId: String?
     var name: String
     var purchasePrice: PriceWithCurrency?
     let imageURL: ImageURL?
@@ -126,7 +127,7 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     }
 
     enum CodingKeys: String, CodingKey {
-        case id, itemId, styleId, name, purchasePrice, imageURL, size, itemType, condition, copdeckPrice, listingPrices, soldPrice, status, tags, notes,
+        case id, itemId, styleId, userId, name, purchasePrice, imageURL, size, itemType, condition, copdeckPrice, listingPrices, soldPrice, status, tags, notes,
              pendingImport,
              created, updated, purchasedDate, soldDate, gender, brand
     }
@@ -137,6 +138,7 @@ extension InventoryItem {
         self.init(id: UUID().uuidString,
                   itemId: item.id,
                   styleId: item.styleId ?? item.bestStoreInfo?.styleId ?? "",
+                  userId: DerivedGlobalStore.default.globalState.user?.id,
                   name: item.name ?? "",
                   purchasePrice: item.retailPrice.asPriceWithCurrency(currency: item.currency),
                   imageURL: item.imageURL,
@@ -167,6 +169,7 @@ extension InventoryItem {
     static let empty = InventoryItem(id: "",
                                      itemId: "",
                                      styleId: "",
+                                     userId: "",
                                      name: "",
                                      purchasePrice: nil,
                                      imageURL: nil,
@@ -187,6 +190,7 @@ extension InventoryItem {
         InventoryItem(id: UUID().uuidString,
                       itemId: "",
                       styleId: "",
+                      userId: DerivedGlobalStore.default.globalState.user?.id,
                       name: "",
                       purchasePrice: nil,
                       imageURL: nil,
@@ -276,6 +280,7 @@ extension InventoryItem {
         }
         self.styleId = styleId ?? itemId ?? ""
         
+        userId = try container.decodeIfPresent(String.self, forKey: .userId)
         name = try container.decode(String.self, forKey: .name)
         purchasePrice = try container.decodeIfPresent(PriceWithCurrency.self, forKey: .purchasePrice)
         imageURL = try container.decodeIfPresent(ImageURL.self, forKey: .imageURL)
@@ -301,6 +306,7 @@ extension InventoryItem {
         try container.encode(id, forKey: .id)
         try container.encodeIfPresent(itemId, forKey: .itemId)
         try container.encode(styleId, forKey: .styleId)
+        try container.encodeIfPresent(userId ?? AppStore.default.state.user?.id, forKey: .userId)
         try container.encode(name, forKey: .name)
         try container.encodeIfPresent(purchasePrice, forKey: .purchasePrice)
         try container.encodeIfPresent(imageURL, forKey: .imageURL)

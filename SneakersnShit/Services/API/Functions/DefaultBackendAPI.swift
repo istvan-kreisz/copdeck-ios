@@ -142,7 +142,7 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
             let forced: Bool
         }
         let model = Wrapper(item: item, apiConfig: DefaultDataController.config(from: settings, exchangeRates: exchangeRates), requestId: "1", forced: forced)
-        callFirebaseFunction(functionName: "updateItem", model: model)
+        callFirebaseFunction(functionName: "updateItemV2", model: model)
             .sink { result in
                 completion()
             } receiveValue: { _ in }

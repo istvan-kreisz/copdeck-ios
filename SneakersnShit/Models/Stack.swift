@@ -9,6 +9,7 @@ import Foundation
 
 struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
     let id: String
+    let userId: String?
     var name: String
     var caption: String?
     var isPublished: Bool?
@@ -19,7 +20,7 @@ struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
     let updated: Double?
     var publishedDate: Double?
     var likes: [String]?
-    
+
     var isShared: Bool {
         (isPublic ?? false) || (isPublished ?? false)
     }
@@ -58,6 +59,7 @@ struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
 
     static let allStack: Stack = {
         Stack(id: "all",
+              userId: "all",
               name: "All",
               isPublished: false,
               isPublic: nil,
@@ -71,6 +73,7 @@ struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
 
     static var empty: Stack {
         Stack(id: "empty",
+              userId: AppStore.default.state.user?.id,
               name: "",
               isPublished: false,
               isPublic: nil,

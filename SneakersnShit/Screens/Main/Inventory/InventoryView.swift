@@ -283,6 +283,7 @@ struct InventoryView: View {
         let newStackId = UUID().uuidString
         self.newStackId = newStackId
         store.send(.main(action: .addStack(stack: .init(id: newStackId,
+                                                        userId: DerivedGlobalStore.default.globalState.user?.id,
                                                         name: name,
                                                         isPublished: false,
                                                         items: [],
