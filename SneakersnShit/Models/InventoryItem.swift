@@ -74,17 +74,8 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     var genderCalculated: Gender? { gender ?? itemFields?.gender }
     var count = 1
     
+    var bestPrice: ListingPrice?
     var itemFields: ItemFields? = nil
-    struct ItemFields: Equatable {
-    #warning("add these")
-        var brand: Brand?
-        var gender: Gender?
-        var itemType: ItemType?
-        var sortedSizes: [String] = []
-        var bestPrice: ListingPrice?
-        var storePrices: [Item.StorePrice] = []
-    }
-    
     
     var _addToStacks: [Stack] = []
 
@@ -327,5 +318,27 @@ extension InventoryItem {
         try container.encodeIfPresent(soldDate, forKey: .soldDate)
         try container.encodeIfPresent(gender, forKey: .gender)
         try container.encodeIfPresent(brand, forKey: .brand)
+    }
+}
+
+extension InventoryItem {
+    struct ItemFields: Equatable {
+    #warning("add these")
+        var brand: Brand?
+        var gender: Gender?
+        var itemType: ItemType?
+        var sortedSizes: [String] = []
+        var storePrices: [Item.StorePrice] = []
+    }
+}
+
+extension InventoryItem.ItemFields {
+    init(from item: Item, size: String) {
+        let storePrices = item.storePrices.map { prices -> Item.StorePrice in
+            var itemPrices = prices
+            itemPrices.inventory = itemPrices.inventory.filter { $0.size == size }
+            return itemPrices
+        }
+        self.init(brand: item.brand, gender: item.gender, itemType: item.itemType, sortedSizes: item.sortedSizes, storePrices: storePrices)
     }
 }

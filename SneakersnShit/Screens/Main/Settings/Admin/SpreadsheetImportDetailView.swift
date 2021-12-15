@@ -69,7 +69,7 @@ struct SpreadsheetImportDetailView: View {
                     InventoryListItem(inventoryItem: inventoryItem,
                                       priceName: nil,
                                       isContentLocked: false,
-                                      bestPrice: inventoryItem.itemFields?.bestPrice,
+                                      bestPrice: inventoryItem.bestPrice,
                                       selectedInventoryItem: $selectedInventoryItem,
                                       isSelected: false,
                                       isInSharedStack: false,

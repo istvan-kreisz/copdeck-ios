@@ -131,7 +131,7 @@ struct StackView: View {
                 InventoryListItem(inventoryItem: inventoryItem,
                                   priceName: "Best Price",
                                   isContentLocked: isContentLocked,
-                                  bestPrice: inventoryItem.itemFields?.bestPrice,
+                                  bestPrice: inventoryItem.bestPrice,
                                   selectedInventoryItem: $selectedInventoryItem,
                                   isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }),
                                   isInSharedStack: false,

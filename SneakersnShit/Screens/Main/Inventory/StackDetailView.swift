@@ -37,10 +37,10 @@ struct StackDetailView: View {
     }
 
     var stackValue: PriceWithCurrency? {
-        guard let currencyCode = allStackItems.first?.itemFields?.bestPrice?.price.currencyCode else { return nil }
+        guard let currencyCode = allStackItems.first?.bestPrice?.price.currencyCode else { return nil }
         let sum = allStackItems
             .filter { !$0.isSold }
-            .compactMap { $0.itemFields?.bestPrice?.price.price }
+            .compactMap { $0.bestPrice?.price.price }
             .sum()
         return PriceWithCurrency(price: sum, currencyCode: currencyCode)
     }
@@ -159,7 +159,7 @@ struct StackDetailView: View {
                     InventoryListItem(inventoryItem: inventoryItem,
                                       priceName: "Best Price",
                                       isContentLocked: store.state.isContentLocked,
-                                      bestPrice: inventoryItem.itemFields?.bestPrice,
+                                      bestPrice: inventoryItem.bestPrice,
                                       selectedInventoryItem: selectedInventoryItemBinding,
                                       isSelected: false,
                                       isInSharedStack: stack.isShared,

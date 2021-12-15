@@ -59,7 +59,7 @@ extension AppStore {
                         .map { (inventoryItem: InventoryItem) -> InventoryItem in
                             var updatedInventoryItem = inventoryItem
                             if let itemId = inventoryItem.itemId, let bestPrice = bestPrices[itemId] {
-                                updatedInventoryItem.itemFields?.bestPrice = bestPrice
+                                updatedInventoryItem.bestPrice = bestPrice
                             }
                             return updatedInventoryItem
                         }
