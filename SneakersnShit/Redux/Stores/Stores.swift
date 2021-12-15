@@ -75,20 +75,29 @@ extension AppStore {
             let updatedInventoryItems = inventoryItems.map { inventoryItem -> InventoryItem in
                 if let item = items.first(where: { $0.id == inventoryItem.itemId }) {
                     var updatedInventoryItem = inventoryItem
-                    updatedInventoryItem.itemFields = .init()
+                    updatedInventoryItem.itemFields = .init(from: item, size: inventoryItem.size)
                     return updatedInventoryItem
                 } else {
                     return inventoryItem
                 }
             }
-            // do stuff
             self.updateCalculatedPrices(inventoryItems: updatedInventoryItems)
         }
     }
 
-    private func updateCalculatedPrices(inventoryItems: [InventoryItem]) {}
+    private func updateCalculatedPrices(inventoryItems: [InventoryItem]) {
+        let settings = state.settings
+        let exchageRates = state.exchangeRates
+        let updatedInventoryItems = inventoryItems.map { calculatePrices(inventoryItem: $0, settings: settings, exchangeRates: exchageRates) }
+        updateBestPrices(inventoryItems: updatedInventoryItems)
+    }
 
-    private func updateBestPrices(inventoryItems: [InventoryItem]) {}
+    private func updateBestPrices(inventoryItems: [InventoryItem]) {
+        let updatedInventoryItems = inventoryItems.map { inventoryItem in
+            var updatedInventoryItem = inventoryItem
+//            updatedInventoryItem.bestPrice =
+        }
+    }
 
     func setupObservers() {
         environment.dataController.errorsPublisher.merge(with: environment.paymentService.errorsPublisher)
