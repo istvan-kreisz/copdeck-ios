@@ -20,6 +20,7 @@ final class ReduxStore<State: Equatable, Action: Identifiable, Environment>: Obs
             }
         }
     }
+    let workerQueue = DispatchQueue(label: "inventory", qos: .userInitiated)
 
     let environment: Environment
     private let reducer: Reducer<State, Action, Environment>

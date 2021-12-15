@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import Nuke
+import SwiftUI
 
 typealias AppStore = ReduxStore<AppState, AppAction, World>
 
@@ -21,78 +22,88 @@ extension AppStore {
     }()
 
     func setup() {
-        setupTimers()
         setupObservers()
     }
 
-    private func updateBestPrices(items: [Item], completion: @escaping ([String: ListingPrice]) -> Void) {
-        let bestPrices = state.inventoryItems
-            .compactMap { (inventoryItem: InventoryItem) -> (String, ListingPrice?)? in
-                guard let item = items.first(where: { $0.id == inventoryItem.itemId }) else { return nil }
-                return (inventoryItem.id, bestPrice(for: inventoryItem, item: item))
-            }
-            .reduce([:]) { (dict: [String: ListingPrice], element: (String, ListingPrice?)) in
-                if let price = element.1 {
-                    var newDict = dict
-                    newDict[element.0] = price
-                    return newDict
-                } else {
-                    return dict
-                }
-            }
-        completion(bestPrices)
+    private func bestPrice(for inventoryItem: InventoryItem, settings: CopDeckSettings) -> ListingPrice? {
+        guard let itemFields = inventoryItem.itemFields else { return nil }
+        return Item.bestPrice(forSize: inventoryItem.size,
+                              feeType: settings.bestPriceFeeType,
+                              priceType: settings.bestPricePriceType,
+                              stores: settings.displayedStores,
+                              currency: settings.currency,
+                              prices: itemFields.storePrices,
+                              storeInfos: [])
     }
 
-    private func bestPrice(for inventoryItem: InventoryItem, item: Item) -> ListingPrice? {
-        item.bestPrice(for: inventoryItem.size,
-                       feeType: state.settings.bestPriceFeeType,
-                       priceType: state.settings.bestPricePriceType,
-                       stores: state.displayedStores)
-    }
-
-    private func updateInventoryValue() {
-        environment.dataController.getItems(withIds: state.inventoryItems.compactMap(\.itemId), settings: state.settings) { items in
-            DispatchQueue.global(qos: .userInteractive).async { [weak self] in
-                self?.updateBestPrices(items: items) { [weak self] bestPrices in
-                    guard let self = self else { return }
-                    let updatedInventoryItems = self.state.inventoryItems
-                        .map { (inventoryItem: InventoryItem) -> InventoryItem in
-                            var updatedInventoryItem = inventoryItem
-                            if let itemId = inventoryItem.itemId, let bestPrice = bestPrices[itemId] {
-                                updatedInventoryItem.bestPrice = bestPrice
-                            }
-                            return updatedInventoryItem
-                        }
-                    self.state.inventoryItems = updatedInventoryItems
-                }
+    #warning("call on app to foregrooud?")
+    func updateInventoryItems(associatedWith item: Item) {
+        Debouncer.debounce(delay: .milliseconds(500), id: "updateInventoryItems(associatedWith") { [weak self] in
+            print(">>>>>>>>>>> 1")
+            self?.workerQueue.async { [weak self] in
+                guard let self = self else { return }
+                let updatedInventoryItems = self.state.inventoryItems
+                    .filter { $0.itemId == item.id }
+                    .map { inventoryItem -> InventoryItem in
+                        var updatedInventoryItem = inventoryItem
+                        updatedInventoryItem.itemFields = .init(from: item, size: inventoryItem.size)
+                        return updatedInventoryItem
+                    }
+                self.updateCalculatedPrices(inventoryItems: updatedInventoryItems)
             }
         }
     }
 
     private func updateInventoryItemsWithItemFields(inventoryItems: [InventoryItem]) {
-        environment.dataController.getItems(withIds: inventoryItems.compactMap(\.itemId), settings: state.settings) { [weak self] items in
-            guard let self = self else { return }
-            let updatedInventoryItems = inventoryItems.map { inventoryItem -> InventoryItem in
-                if let item = items.first(where: { $0.id == inventoryItem.itemId }) {
-                    var updatedInventoryItem = inventoryItem
-                    updatedInventoryItem.itemFields = .init(from: item, size: inventoryItem.size)
-                    return updatedInventoryItem
-                } else {
-                    return inventoryItem
+        Debouncer.debounce(delay: .milliseconds(500), id: "updateInventoryItemsWithItemFields(inventoryItems") { [weak self] in
+            print(">>>>>>>>>>> 2")
+            self?.workerQueue.async { [weak self] in
+                guard let self = self else { return }
+                self.environment.dataController.getItems(withIds: inventoryItems.compactMap(\.itemId), settings: self.state.settings) { [weak self] items in
+                    guard let self = self else { return }
+                    let updatedInventoryItems = inventoryItems.map { inventoryItem -> InventoryItem in
+                        if let item = items.first(where: { $0.id == inventoryItem.itemId }) {
+                            var updatedInventoryItem = inventoryItem
+                            updatedInventoryItem.itemFields = .init(from: item, size: inventoryItem.size)
+                            return updatedInventoryItem
+                        } else {
+                            return inventoryItem
+                        }
+                    }
+                    self.updateCalculatedPrices(inventoryItems: updatedInventoryItems)
                 }
             }
-            self.updateCalculatedPrices(inventoryItems: updatedInventoryItems)
         }
     }
 
     private func updateCalculatedPrices(inventoryItems: [InventoryItem]) {
-        updateBestPrices(inventoryItems: inventoryItems.map { withCalculatedPrices(inventoryItem: $0) })
+        Debouncer.debounce(delay: .milliseconds(500), id: "updateCalculatedPrices(inventoryItems") { [weak self] in
+            print(">>>>>>>>>>> 3")
+            self?.workerQueue.async { [weak self] in
+                guard let self = self else { return }
+                self.updateBestPrices(inventoryItems: inventoryItems.map { withCalculatedPrices(inventoryItem: $0) })
+            }
+        }
     }
 
     private func updateBestPrices(inventoryItems: [InventoryItem]) {
-        let updatedInventoryItems = inventoryItems.map { inventoryItem in
-            var updatedInventoryItem = inventoryItem
-//            updatedInventoryItem.bestPrice =
+        Debouncer.debounce(delay: .milliseconds(500), id: "updateBestPrices(inventoryItems") { [weak self] in
+            print(">>>>>>>>>>> 4")
+            self?.workerQueue.async { [weak self] in
+                guard let self = self else { return }
+                let settings = self.state.settings
+                let updatedInventoryItems = inventoryItems.map { inventoryItem -> InventoryItem in
+                    var updatedInventoryItem = inventoryItem
+                    updatedInventoryItem.bestPrice = self.bestPrice(for: inventoryItem, settings: settings)
+                    return updatedInventoryItem
+                }
+                let updatedInventoryItemIds = updatedInventoryItems.map(\.id)
+
+                onMain { [weak self] in
+                    guard let self = self else { return }
+                    self.state.inventoryItems = self.state.inventoryItems.filter { !updatedInventoryItemIds.contains($0.id) } + updatedInventoryItems
+                }
+            }
         }
     }
 
@@ -115,9 +126,15 @@ extension AppStore {
                       if oldSettings?.feeCalculation.country != newSettings?.feeCalculation.country ||
                           oldSettings?.currency != newSettings?.currency ||
                           previousUser?.id != newUser.id {
-                          #warning("called on login??")
-                          self.environment.dataController.updateUserItems {
-                              self.updateInventoryItemsWithItemFields(inventoryItems: self.state.inventoryItems)
+                          self.environment.dataController.updateUserItems { [weak self] in
+                              guard let self = self else { return }
+                              let clearedInventoryItems = self.state.inventoryItems.map { inventoryItem -> InventoryItem in
+                                  var updatedInventoryItem = inventoryItem
+                                  updatedInventoryItem.itemFields = nil
+                                  updatedInventoryItem.bestPrice = nil
+                                  return updatedInventoryItem
+                              }
+                              self.updateInventoryItemsWithItemFields(inventoryItems: clearedInventoryItems)
                           }
                       } else if oldSettings?.feeCalculation != newSettings?.feeCalculation {
                           self.updateCalculatedPrices(inventoryItems: self.state.inventoryItems)
@@ -132,26 +149,27 @@ extension AppStore {
 
         environment.dataController.inventoryItemsPublisher
             .map { inventoryItems in inventoryItems.filter { $0.pendingImport == nil } }
-            .withPrevious()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in },
-                  receiveValue: { [weak self] previousInventoryItems, newInventoryItems in
+                  receiveValue: { [weak self] newInventoryItems in
                       guard let self = self else { return }
                       var inventoryItemsToUpdate: [InventoryItem] = []
                       let updatedNewInventoryItems = newInventoryItems.map { new -> InventoryItem in
                           var newInventoryItem = new
-                          guard let previousInventoryItem = previousInventoryItems?.first(where: { $0.id == newInventoryItem.id }),
+                          guard let previousInventoryItem = self.state.inventoryItems.first(where: { $0.id == newInventoryItem.id }),
                                 let itemFields = previousInventoryItem.itemFields,
+                                let bestPrice = previousInventoryItem.bestPrice,
                                 previousInventoryItem.size == newInventoryItem.size
                           else {
                               inventoryItemsToUpdate.append(newInventoryItem)
                               return newInventoryItem
                           }
                           newInventoryItem.itemFields = itemFields
+                          newInventoryItem.bestPrice = bestPrice
                           return newInventoryItem
                       }
-                      self.updateInventoryItemsWithItemFields(inventoryItems: inventoryItemsToUpdate)
                       self.state.inventoryItems = updatedNewInventoryItems
+                      self.updateInventoryItemsWithItemFields(inventoryItems: inventoryItemsToUpdate)
                   })
             .store(in: &effectCancellables)
 
@@ -211,46 +229,6 @@ extension AppStore {
                   })
             .store(in: &effectCancellables)
     }
-
-    func setupTimers() {
-        Timer.scheduledTimer(withTimeInterval: 60 * World.Constants.priceCheckRefreshIntervalMin, repeats: true) { [weak self] _ in
-            self?.refreshItemPricesIfNeeded()
-        }
-    }
-
-    private struct Ids: Hashable {
-        let itemId: String
-        let styleId: String
-    }
-
-    func refreshItemPricesIfNeeded(newUser: User? = nil) {
-//        guard state.user != nil else { return }
-//        let idsToRefresh = Set(state.inventoryItems.compactMap { (inventoryItem: InventoryItem) -> Ids? in
-//            if let itemId = inventoryItem.itemId {
-//                return Ids(itemId: itemId, styleId: inventoryItem.styleId)
-//            } else {
-//                return nil
-//            }
-//        })
-//            .filter { ids in
-//                guard !ids.itemId.isEmpty, !ids.styleId.isEmpty else { return false }
-//                if let item = ItemCache.default.value(forKey: Item.databaseId(itemId: ids.itemId, settings: newUser?.settings ?? state.settings)) {
-//                    return item.storePrices.isEmpty || !item.isUptodate
-//                } else {
-//                    return true
-//                }
-//            }
-//        var idsWithDelay = idsToRefresh
-//            .map { (ids: Ids) in (ids, Double.random(in: 0.2 ... 0.45)) }
-//
-//        idsWithDelay = idsWithDelay
-//            .enumerated()
-//            .map { (offset: Int, idWithDelay: (Ids, Double)) in
-//                (idWithDelay.0, idWithDelay.1 + (idsWithDelay[safe: offset - 1]?.1 ?? 0))
-//            }
-//        log("refreshing prices for items with ids: \(idsToRefresh)", logType: .scraping)
-        #warning("call refreshPrices for user")
-    }
 }
 
 private func imageRequest(for imageURL: ImageURL?) -> ImageRequestConvertible? {
@@ -289,6 +267,12 @@ func imageSource(for inventoryItem: InventoryItem) -> ImageViewSourceType {
     }.eraseToAnyPublisher())
 }
 
-func onMain(completion: @escaping () -> Void) {
-    DispatchQueue.main.async(execute: completion)
+func onMain(block: @escaping () -> Void) {
+    if Thread.isMainThread {
+        block()
+    } else {
+        DispatchQueue.main.async {
+            block()
+        }
+    }
 }

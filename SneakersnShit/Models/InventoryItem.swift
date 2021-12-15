@@ -101,7 +101,7 @@ struct InventoryItem: Codable, Equatable, Identifiable {
         var result: [ItemType: [String]] = [:]
         ItemType.allCases.forEach { itemType in
             let sizes: [String]
-            if let itemSizes = itemFields?.sortedSizes, itemFields?.itemType == itemType, !sortedSizes.isEmpty {
+            if let itemSizes = itemFields?.sortedSizes, itemFields?.itemType == itemType, !itemSizes.isEmpty {
                 sizes = itemSizes
             } else {
                 switch itemType {

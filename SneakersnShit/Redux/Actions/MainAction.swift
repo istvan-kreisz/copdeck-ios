@@ -36,6 +36,7 @@ enum MainAction {
     case getItemListener(itemId: String, updated: (Item) -> Void, completion: (DocumentListener<Item>) -> Void)
     case getItemImage(itemId: String, completion: (URL?) -> Void)
     case uploadItemImage(itemId: String, image: UIImage)
+    case updateInventoryItems(associatedWith: Item)
     // inventory
     case addStack(stack: Stack)
     case deleteStack(stack: Stack)

@@ -393,6 +393,7 @@ struct ItemDetailView: View {
     }
     
     private func set(item: Item) {
+        store.send(.main(action: .updateInventoryItems(associatedWith: item)))
         self.item = withCalculatedPrices(item: item)
     }
 

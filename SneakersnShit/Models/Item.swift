@@ -243,12 +243,11 @@ extension Item {
                           storeInfos: storeInfo)
     }
 
-    func bestPrice(for size: String, feeType: FeeType, priceType: PriceType, stores: [StoreId]) -> ListingPrice? {
-        return Self.bestPrice(for: size,
+    func bestPrice(forSize size: String, feeType: FeeType, priceType: PriceType, stores: [StoreId]) -> ListingPrice? {
+        return Self.bestPrice(forSize: size,
                               feeType: feeType,
                               priceType: priceType,
                               stores: stores,
-                              sortedSizes: sortedSizes,
                               currency: currency,
                               prices: allStorePrices,
                               storeInfos: storeInfo)
@@ -475,11 +474,10 @@ extension Item {
                             storeInfos: storeInfos) }
     }
 
-    static func bestPrice(for size: String,
+    static func bestPrice(forSize size: String,
                           feeType: FeeType,
                           priceType: PriceType,
                           stores: [StoreId],
-                          sortedSizes: [String],
                           currency: Currency,
                           prices: [Item.StorePrice],
                           storeInfos: [Item.StoreInfo]) -> ListingPrice? {

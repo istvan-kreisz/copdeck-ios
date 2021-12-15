@@ -55,7 +55,6 @@ class DefaultDataController: DataController {
         backendAPI.update(item: item, forced: forced, settings: settings, exchangeRates: exchangeRates, completion: completion)
     }
     
-    #warning("calculate prices")
     func update(item: Item?, itemId: String, styleId: String, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates?, completion: @escaping () -> Void) {
         let item = item ?? Item(id: itemId, styleId: styleId, storeInfo: [], storePrices: [], name: nil, imageURL: nil)
         update(item: item, forced: forced, settings: settings, exchangeRates: exchangeRates, completion: completion)

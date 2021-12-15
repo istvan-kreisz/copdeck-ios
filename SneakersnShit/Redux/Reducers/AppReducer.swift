@@ -121,6 +121,8 @@ func appReducer(state: inout AppState,
             environment.dataController.getImage(for: itemId, completion: completion)
         case let .uploadItemImage(itemId, image):
             environment.dataController.uploadItemImage(itemId: itemId, image: image)
+        case let .updateInventoryItems(associatedWith: item):
+            AppStore.default.updateInventoryItems(associatedWith: item)
         case let .addStack(stack):
             Analytics.logEvent("add_stack", parameters: ["userId": state.user?.id ?? ""])
             environment.dataController.update(stacks: [stack])
