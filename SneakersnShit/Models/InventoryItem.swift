@@ -329,7 +329,6 @@ extension InventoryItem {
 
 extension InventoryItem {
     struct ItemFields: Equatable {
-    #warning("add these")
         var brand: Brand?
         var gender: Gender?
         var itemType: ItemType?

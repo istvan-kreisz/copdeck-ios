@@ -86,10 +86,7 @@ extension AppStore {
     }
 
     private func updateCalculatedPrices(inventoryItems: [InventoryItem]) {
-        let settings = state.settings
-        let exchageRates = state.exchangeRates
-        let updatedInventoryItems = inventoryItems.map { calculatePrices(inventoryItem: $0, settings: settings, exchangeRates: exchageRates) }
-        updateBestPrices(inventoryItems: updatedInventoryItems)
+        updateBestPrices(inventoryItems: inventoryItems.map { withCalculatedPrices(inventoryItem: $0) })
     }
 
     private func updateBestPrices(inventoryItems: [InventoryItem]) {

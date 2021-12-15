@@ -36,7 +36,7 @@ struct ItemDetailView: View {
     @StateObject private var loader = Loader()
 
     init(item: Item?, itemId: String, styleId: String, favoritedItemIds: [String], shouldDismiss: @escaping () -> Void) {
-        self._item = State(initialValue: item)
+        self._item = State(initialValue: item.map { withCalculatedPrices(item: $0) })
         self.itemId = itemId
         self.styleId = styleId
         self.shouldDismiss = shouldDismiss
@@ -372,7 +372,7 @@ struct ItemDetailView: View {
 
     private func setupItemListener() {
         store.send(.main(action: .getItemListener(itemId: itemId, updated: { item in
-            self.item = item
+            self.set(item: item)
         }, completion: { listener in
             self.itemListener?.reset()
             self.itemListener = listener
@@ -383,13 +383,17 @@ struct ItemDetailView: View {
         guard let newItem = newItem, newItem.id == itemId else { return }
         if let item = self.item {
             if newItem.id == item.id {
-                self.item = newItem
+                self.set(item: newItem)
                 store.send(.main(action: .addRecentlyViewed(item: newItem)))
             }
         } else {
-            self.item = newItem
+            self.set(item: newItem)
             store.send(.main(action: .addRecentlyViewed(item: newItem)))
         }
+    }
+    
+    private func set(item: Item) {
+        self.item = withCalculatedPrices(item: item)
     }
 
     private func didToggleFavorite() {

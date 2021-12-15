@@ -467,17 +467,17 @@ func calculatePrice(storeId: StoreId,
     return updatedInventoryItem
 }
 
-func calculatePrices(inventoryItem: InventoryItem, settings: CopDeckSettings, exchangeRates: ExchangeRates?) -> InventoryItem {
+func withCalculatedPrices(inventoryItem: InventoryItem) -> InventoryItem {
     var updatedInventoryItem = inventoryItem
     guard var updatedInventoryItemItemFields = inventoryItem.itemFields else { return inventoryItem }
     updatedInventoryItemItemFields.storePrices = updatedInventoryItemItemFields.storePrices.map { prices -> Item.StorePrice in
         var calculatedPrices = prices
         calculatedPrices.inventory = calculatedPrices.inventory.map { storeInventoryItem in
             calculatePrice(storeId: calculatedPrices.store.id,
-                           currencyCode: settings.currency.code,
+                           currencyCode: AppStore.default.state.currency.code,
                            inventoryItem: storeInventoryItem,
-                           feeCalculation: settings.feeCalculation,
-                           exchangeRates: exchangeRates)
+                           feeCalculation: AppStore.default.state.settings.feeCalculation,
+                           exchangeRates: AppStore.default.state.exchangeRates)
         }
         return calculatedPrices
     }
@@ -485,16 +485,16 @@ func calculatePrices(inventoryItem: InventoryItem, settings: CopDeckSettings, ex
     return updatedInventoryItem
 }
 
-func calculatePrices(item: Item, apiConfig: APIConfig) -> Item {
+func withCalculatedPrices(item: Item) -> Item {
     var updatedItem = item
     updatedItem.storePrices = item.storePrices.map { prices -> Item.StorePrice in
         var calculatedPrices = prices
-        calculatedPrices.inventory = calculatedPrices.inventory.map { inventoryItem in
+        calculatedPrices.inventory = calculatedPrices.inventory.map { storeInventoryItem in
             calculatePrice(storeId: calculatedPrices.store.id,
-                           currencyCode: apiConfig.currency.code,
-                           inventoryItem: inventoryItem,
-                           feeCalculation: apiConfig.feeCalculation,
-                           exchangeRates: apiConfig.exchangeRates)
+                           currencyCode: AppStore.default.state.currency.code,
+                           inventoryItem: storeInventoryItem,
+                           feeCalculation: AppStore.default.state.settings.feeCalculation,
+                           exchangeRates: AppStore.default.state.exchangeRates)
         }
         return calculatedPrices
     }
