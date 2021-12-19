@@ -159,6 +159,7 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
         }
         let model = Wrapper(userId: userId)
         callFirebaseFunction(functionName: "updateUserItems", model: model)
+            .timeout(540, scheduler: DispatchQueue.main)
             .sink { result in
                 completion()
             } receiveValue: { _ in }

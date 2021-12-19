@@ -126,15 +126,17 @@ extension AppStore {
                       if oldSettings?.feeCalculation.country != newSettings?.feeCalculation.country ||
                           oldSettings?.currency != newSettings?.currency ||
                           previousUser?.id != newUser.id {
-                          self.environment.dataController.updateUserItems { [weak self] in
-                              guard let self = self else { return }
-                              let clearedInventoryItems = self.state.inventoryItems.map { inventoryItem -> InventoryItem in
-                                  var updatedInventoryItem = inventoryItem
-                                  updatedInventoryItem.itemFields = nil
-                                  updatedInventoryItem.bestPrice = nil
-                                  return updatedInventoryItem
+                          Debouncer.debounce(delay: .milliseconds(3000), id: "updateUserItems") { [weak self] in
+                              self?.environment.dataController.updateUserItems { [weak self] in
+                                  guard let self = self else { return }
+                                  let clearedInventoryItems = self.state.inventoryItems.map { inventoryItem -> InventoryItem in
+                                      var updatedInventoryItem = inventoryItem
+                                      updatedInventoryItem.itemFields = nil
+                                      updatedInventoryItem.bestPrice = nil
+                                      return updatedInventoryItem
+                                  }
+                                  self.updateInventoryItemsWithItemFields(inventoryItems: clearedInventoryItems)
                               }
-                              self.updateInventoryItemsWithItemFields(inventoryItems: clearedInventoryItems)
                           }
                       } else if oldSettings?.feeCalculation != newSettings?.feeCalculation {
                           self.updateCalculatedPrices(inventoryItems: self.state.inventoryItems)

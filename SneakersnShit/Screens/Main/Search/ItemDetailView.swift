@@ -333,8 +333,6 @@ struct ItemDetailView: View {
                                                        addToInventory = (true, store.globalState.settings.preferredShoeSize)
                                                        addedInventoryItem = false
                                                    })
-                    .disabled(loader.isLoading)
-                    .opacity(loader.isLoading ? 0.8 : 1.0)
                     .centeredHorizontally()
                     .padding(.top, 20)
                     .opacity(item != nil ? 1.0 : 0.0))

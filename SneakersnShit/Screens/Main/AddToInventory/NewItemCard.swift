@@ -167,6 +167,7 @@ struct NewItemCard: View {
                          itemType: $inventoryItem.itemType,
                          selectedSize: $inventoryItem.convertedSize)
         }
+        .buttonStyle(PlainButtonStyle())
         .if(style == .card) {
             $0
                 .padding(10)
