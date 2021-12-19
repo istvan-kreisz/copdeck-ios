@@ -77,8 +77,7 @@ struct AddToInventoryView: View {
     }
 
     var body: some View {
-//        ScrollView {
-        VerticalListView(bottomPadding: 0, spacing: 8, addHorizontalPadding: true, listRowStyling: .color(.customBackground)) {
+        VerticalScrollView(bottomPadding: 0, spacing: 8, addHorizontalPadding: true, listRowStyling: .color(.customBackground)) {
             VStack(spacing: 20) {
                 ItemImageViewWithNavBar(itemId: item?.id,
                                         source: item.map { imageSource(for: $0) },

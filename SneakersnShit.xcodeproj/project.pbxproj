@@ -11,6 +11,7 @@
 		5D0703CA271DDEE700116CF4 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D0703C9271DDEE700116CF4 /* StoreKit.framework */; };
 		5D08E617275073AE00FB8E2A /* StackSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D08E616275073AE00FB8E2A /* StackSelectorView.swift */; };
 		5D08E6192750836700FB8E2A /* CopiableText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D08E6182750836700FB8E2A /* CopiableText.swift */; };
+		5D0B6011276FA38000A0A777 /* VerticalScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0B6010276FA38000A0A777 /* VerticalScrollView.swift */; };
 		5D0E5A11269E4EDE006D7E9C /* AddToInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0E5A10269E4EDE006D7E9C /* AddToInventoryView.swift */; };
 		5D0E5A13269E60DB006D7E9C /* TextFieldRounded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0E5A12269E60DB006D7E9C /* TextFieldRounded.swift */; };
 		5D100707272B08860058C156 /* DiscountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D100706272B08860058C156 /* DiscountsView.swift */; };
@@ -243,6 +244,7 @@
 		5D0703C9271DDEE700116CF4 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		5D08E616275073AE00FB8E2A /* StackSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackSelectorView.swift; sourceTree = "<group>"; };
 		5D08E6182750836700FB8E2A /* CopiableText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopiableText.swift; sourceTree = "<group>"; };
+		5D0B6010276FA38000A0A777 /* VerticalScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalScrollView.swift; sourceTree = "<group>"; };
 		5D0E5A10269E4EDE006D7E9C /* AddToInventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToInventoryView.swift; sourceTree = "<group>"; };
 		5D0E5A12269E60DB006D7E9C /* TextFieldRounded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldRounded.swift; sourceTree = "<group>"; };
 		5D100706272B08860058C156 /* DiscountsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscountsView.swift; sourceTree = "<group>"; };
@@ -793,6 +795,7 @@
 				5DE4F20D26DEFA070087077A /* ProfileListItem.swift */,
 				5DE4F21526E00BBC0087077A /* StackSummaryListItem.swift */,
 				5D84875426E2E220006062DC /* PullToRefresh.swift */,
+				5D0B6010276FA38000A0A777 /* VerticalScrollView.swift */,
 			);
 			path = Vertical;
 			sourceTree = "<group>";
@@ -1518,6 +1521,7 @@
 				5D424D0825C504AF0008D6F4 /* RootView.swift in Sources */,
 				5DEBC08A269B3DE8000EEADC /* Double+Extensions.swift in Sources */,
 				5D2D5AA025C529E3009598AA /* DataController.swift in Sources */,
+				5D0B6011276FA38000A0A777 /* VerticalScrollView.swift in Sources */,
 				5D424D0425C504510008D6F4 /* EmailValidator.swift in Sources */,
 				5D0E5A13269E60DB006D7E9C /* TextFieldRounded.swift in Sources */,
 				5D9D520026AE211900AB1F30 /* VerticalListItem.swift in Sources */,
