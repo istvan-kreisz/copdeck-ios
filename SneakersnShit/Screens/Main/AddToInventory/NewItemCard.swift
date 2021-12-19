@@ -128,6 +128,9 @@ struct NewItemCard: View {
                              onHide: {
                                  inventoryItem.soldPrice = nil
                                  inventoryItem.soldDate = nil
+                             }, onShow: {
+                                 inventoryItem.soldPrice = .init(storeId: nil, price: .init(price: 0, currencyCode: currency.code))
+                                 inventoryItem.soldDate = Date.serverDate
                              })
 
             QuantityAndConditionSelector(dropdownStyle: dropdownStyle,

@@ -8,14 +8,17 @@
 import Foundation
 
 extension Optional where Wrapped == Double {
-    func asString(defaultValue: String = "") -> String {
-        map { String(Int($0)) } ?? defaultValue
+    func asString(defaultValue: String = "", convertZeroToEmptyString: Bool = false) -> String {
+        map {
+            let num = Int($0)
+            return (convertZeroToEmptyString && num == 0) ? "" : String(num)
+        } ?? defaultValue
     }
 
     func asPriceWithCurrency(currency: Currency) -> PriceWithCurrency? {
         map { (value: Double) in value.asPriceWithCurrency(currency: currency) }
     }
-    
+
     var serverDate: Date? {
         map { Date(timeIntervalSince1970: $0 / 1000) }
     }

@@ -91,7 +91,8 @@ extension View {
                      contentHeight: CGFloat,
                      topPaddingWhenCollapsed: CGFloat = 0,
                      isShowing: Bool = false,
-                     onHide: @escaping () -> Void,
+                     onHide: (() -> Void)? = nil,
+                     onShow: (() -> Void)? = nil,
                      onTooltipTapped: (() -> Void)? = nil) -> some View {
         ModifiedContent(content: self,
                         modifier: Collapsible(isActive: isActive,
@@ -103,6 +104,7 @@ extension View {
                                               topPaddingWhenCollapsed: topPaddingWhenCollapsed,
                                               isShowing: isShowing,
                                               onHide: onHide,
+                                              onShow: onShow,
                                               onTooltipTapped: onTooltipTapped))
     }
 

@@ -306,14 +306,17 @@ struct Collapsible: ViewModifier {
     var topPaddingWhenCollapsed: CGFloat = 0
 
     @State var isShowing = false
-    var onHide: () -> Void
+    var onHide: (() -> Void)?
+    var onShow: (() -> Void)?
     var onTooltipTapped: (() -> Void)? = nil
 
     func body(content: Content) -> some View {
         let show = Binding<Bool>(get: { isShowing },
                                  set: { show in
-                                     if !show {
-                                         onHide()
+                                     if show {
+                                         onShow?()
+                                     } else {
+                                         onHide?()
                                      }
                                      isShowing = show
                                  })
