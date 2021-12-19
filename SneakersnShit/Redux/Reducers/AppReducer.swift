@@ -58,8 +58,16 @@ func appReducer(state: inout AppState,
                 updatedUser.tags = (updatedUser.tags ?? []).filter { $0.id != tag.id }
                 environment.dataController.update(user: updatedUser)
             }
-//            let inventoryItemsToUpdate = state.inventoryItems.filter({ $0.tags.contains { t in t.id == tag.id } })
-            
+            let inventoryItemsToUpdate = state.inventoryItems.filter { $0.tags.contains { t in t.id == tag.id } }
+            if !inventoryItemsToUpdate.isEmpty {
+                inventoryItemsToUpdate.map { inventoryItem in
+                    var newInventoryItem = inventoryItem
+                    newInventoryItem.tags = newInventoryItem.tags.filter { t in t.id != tag.id }
+                    return newInventoryItem
+                }.forEach {
+                    environment.dataController.update(inventoryItem: $0)
+                }
+            }
         case .enabledNotifications:
             Analytics.logEvent("enable_notifications", parameters: ["userId": state.user?.id ?? ""])
             if var updatedUser = state.user, updatedUser.notificationsEnabled != true {
@@ -150,8 +158,8 @@ func appReducer(state: inout AppState,
                         }
                 }
             }
-        case let .updateInventoryItem(inventoryItem: InventoryItem):
-            environment.dataController.update(inventoryItem: InventoryItem)
+        case let .updateInventoryItem(inventoryItem: inventoryItem):
+            environment.dataController.update(inventoryItem: inventoryItem)
         case let .removeFromInventory(inventoryItems):
             environment.dataController.delete(inventoryItems: inventoryItems)
         case let .stack(inventoryItems, stack):

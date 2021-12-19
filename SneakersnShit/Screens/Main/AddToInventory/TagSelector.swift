@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TagSelector: View {
     static let padding: CGFloat = 3
-    
+
     let style: NewItemCard.Style
     @Binding var tags: [Tag]
     @Binding var selectedTags: [Tag]
@@ -38,6 +38,7 @@ struct TagSelector: View {
                                                        })
                         TagView(title: tag.name, color: tag.uiColor, isSelected: isSelected) { didTapDeleteTag(tag) }
                     }
+
                     AccessoryButton(title: "new tag",
                                     shouldCapitalizeTitle: false,
                                     color: .customAccent1,
@@ -54,6 +55,5 @@ struct TagSelector: View {
                 .padding(.vertical, Self.padding)
             }
         }
-
     }
 }

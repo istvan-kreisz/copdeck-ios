@@ -306,12 +306,11 @@ struct Collapsible: ViewModifier {
     var topPaddingWhenCollapsed: CGFloat = 0
 
     @State var isShowing = false
-    var showIf: (() -> Bool)?
     var onHide: () -> Void
     var onTooltipTapped: (() -> Void)? = nil
 
     func body(content: Content) -> some View {
-        let show = Binding<Bool>(get: { (showIf?() ?? false) || isShowing },
+        let show = Binding<Bool>(get: { isShowing },
                                  set: { show in
                                      if !show {
                                          onHide()
@@ -340,10 +339,12 @@ struct Collapsible: ViewModifier {
                 if show.wrappedValue {
                     HStack(alignment: .bottom, spacing: 4) {
                         content
+                            .buttonStyle(PlainButtonStyle())
                         DeleteButton(style: .fill, size: .small, color: .customRed) {
                             show.wrappedValue = false
                         }
                         .padding(.bottom, (contentHeight - DeleteButton.size(.small)) / 2)
+                        .buttonStyle(PlainButtonStyle())
                     }
                 } else {
                     AccessoryButton(title: buttonTitle,

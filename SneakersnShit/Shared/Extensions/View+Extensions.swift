@@ -90,7 +90,7 @@ extension View {
                      style: NewItemCard.Style,
                      contentHeight: CGFloat,
                      topPaddingWhenCollapsed: CGFloat = 0,
-                     showIf: (() -> Bool)? = nil,
+                     isShowing: Bool = false,
                      onHide: @escaping () -> Void,
                      onTooltipTapped: (() -> Void)? = nil) -> some View {
         ModifiedContent(content: self,
@@ -101,7 +101,7 @@ extension View {
                                               style: style,
                                               contentHeight: contentHeight,
                                               topPaddingWhenCollapsed: topPaddingWhenCollapsed,
-                                              showIf: showIf,
+                                              isShowing: isShowing,
                                               onHide: onHide,
                                               onTooltipTapped: onTooltipTapped))
     }

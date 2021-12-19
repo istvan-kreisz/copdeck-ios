@@ -124,7 +124,7 @@ struct NewItemCard: View {
                              style: style,
                              contentHeight: Styles.inputFieldHeight,
                              topPaddingWhenCollapsed: Self.collapsedElementTopPadding,
-                             showIf: { inventoryItem.soldPrice != nil || inventoryItem.soldDate != nil },
+                             isShowing: inventoryItem.soldPrice != nil || inventoryItem.soldDate != nil,
                              onHide: {
                                  inventoryItem.soldPrice = nil
                                  inventoryItem.soldDate = nil
@@ -149,7 +149,7 @@ struct NewItemCard: View {
                              style: style,
                              contentHeight: TagView.height + TagSelector.padding * 2,
                              topPaddingWhenCollapsed: Self.collapsedElementTopPadding,
-                             showIf: { !inventoryItem.tags.isEmpty },
+                             isShowing: !inventoryItem.tags.isEmpty,
                              onHide: { inventoryItem.tags.removeAll() })
 
             if !showCopDeckPrice && !AppStore.default.state.stacks.isEmpty {
