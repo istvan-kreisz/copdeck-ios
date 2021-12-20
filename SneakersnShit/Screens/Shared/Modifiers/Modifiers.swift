@@ -285,7 +285,7 @@ struct LockedContent: ViewModifier {
                         Text(text)
                             .foregroundColor(.customText1)
                             .font(.semiBold(size: 22))
-                            .frame(maxWidth: UIScreen.screenWidth - Styles.horizontalMargin * 6)
+                            .frame(maxWidth: UIScreen.screenWidth - Styles.horizontalMargin * 4)
                         lock()
                     }
                 }

@@ -316,7 +316,7 @@ struct ItemDetailView: View {
                                         }
                                         .id(0)
                                     }
-                                    .lockedContent(style: .blur(text: "Daily limit reached, start your trial to get unlimited access"),
+                                    .lockedContent(style: .blur(text: "You've reached your daily limit, start your trial to get unlimited access"),
                                                    lockSize: 30,
                                                    lockColor: .customText1,
                                                    lockEnabled: !(item?.sortedSizes ?? []).isEmpty)
