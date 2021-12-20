@@ -17,7 +17,6 @@
 		5D0E5A13269E60DB006D7E9C /* TextFieldRounded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0E5A12269E60DB006D7E9C /* TextFieldRounded.swift */; };
 		5D100707272B08860058C156 /* DiscountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D100706272B08860058C156 /* DiscountsView.swift */; };
 		5D117EAD271310E5000D1E43 /* SizeConversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D117EAC271310E5000D1E43 /* SizeConversion.swift */; };
-		5D117EB12713287C000D1E43 /* sizes.json in Resources */ = {isa = PBXBuildFile; fileRef = 5D117EB02713287B000D1E43 /* sizes.json */; };
 		5D117EB3271468B7000D1E43 /* PriceFieldWithCurrency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D117EB2271468B7000D1E43 /* PriceFieldWithCurrency.swift */; };
 		5D1264D5275E8B8A00E66EE3 /* PriceRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D1264D4275E8B8A00E66EE3 /* PriceRow.swift */; };
 		5D1264D7275E9B0100E66EE3 /* QuantityAndConditionSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D1264D6275E9B0100E66EE3 /* QuantityAndConditionSelector.swift */; };
@@ -251,7 +250,6 @@
 		5D0E5A12269E60DB006D7E9C /* TextFieldRounded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldRounded.swift; sourceTree = "<group>"; };
 		5D100706272B08860058C156 /* DiscountsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscountsView.swift; sourceTree = "<group>"; };
 		5D117EAC271310E5000D1E43 /* SizeConversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeConversion.swift; sourceTree = "<group>"; };
-		5D117EB02713287B000D1E43 /* sizes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sizes.json; sourceTree = "<group>"; };
 		5D117EB2271468B7000D1E43 /* PriceFieldWithCurrency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceFieldWithCurrency.swift; sourceTree = "<group>"; };
 		5D1264D4275E8B8A00E66EE3 /* PriceRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceRow.swift; sourceTree = "<group>"; };
 		5D1264D6275E9B0100E66EE3 /* QuantityAndConditionSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuantityAndConditionSelector.swift; sourceTree = "<group>"; };
@@ -1204,7 +1202,6 @@
 				5D424CE625C501BA0008D6F4 /* Fonts */,
 				5D696096258713760058BABE /* AppDelegate.swift */,
 				5D2119E025DB0EFA001FE5E5 /* GoogleService-Info.plist */,
-				5D117EB02713287B000D1E43 /* sizes.json */,
 				5D69609C258713770058BABE /* Assets.xcassets */,
 				5D19B0D326A6F0DC00A31F4E /* CopDeckApp.swift */,
 				5DBDDE202702046300804DF6 /* LaunchScreen.storyboard */,
@@ -1370,7 +1367,6 @@
 				5D424D3025C5095B0008D6F4 /* Karla-ExtraLight.ttf in Resources */,
 				5D424D3E25C509610008D6F4 /* Karla-Medium.ttf in Resources */,
 				5D2119E125DB0EFA001FE5E5 /* GoogleService-Info.plist in Resources */,
-				5D117EB12713287C000D1E43 /* sizes.json in Resources */,
 				5D424D4125C509610008D6F4 /* Karla-Light.ttf in Resources */,
 				5D424D3F25C509610008D6F4 /* Karla-Bold.ttf in Resources */,
 				5D424D4025C509610008D6F4 /* Karla-Regular.ttf in Resources */,

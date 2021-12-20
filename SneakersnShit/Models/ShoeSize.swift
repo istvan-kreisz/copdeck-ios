@@ -128,18 +128,7 @@ func getGender(storeInfoArray: [Item.StoreInfo]) -> Gender {
     return .Men
 }
 
-let sizeCharts: [SizeConversion] = {
-    if let path = Bundle.main.path(forResource: "sizes", ofType: "json") {
-        do {
-            let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
-            return try JSONDecoder().decode([SizeConversion].self, from: data)
-        } catch {
-            return []
-        }
-    } else {
-        return []
-    }
-}()
+var sizeCharts: [SizeConversion] = []
 
 let conversionChart = [["32", "13", "1"],
                        ["33", "14", "1.5"],
@@ -295,5 +284,11 @@ enum ShoeSize: String, Codable, Equatable, CaseIterable {
 
     static var ALLSHOESIZESCONVERTED: [String] {
         convertSizes(from: .US, to: AppStore.default.state.settings.shoeSize, sizes: ALLSHOESIZESUS, gender: .Men, brand: nil).uniqued()
+    }
+}
+
+func delay(_ delay: TimeInterval, completion: @escaping () -> Void) {
+    Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { _ in
+        completion()
     }
 }

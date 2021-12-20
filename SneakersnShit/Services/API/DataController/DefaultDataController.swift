@@ -47,6 +47,10 @@ class DefaultDataController: DataController {
     func getPopularItems() -> AnyPublisher<[Item], AppError> {
         databaseManager.getPopularItems()
     }
+    
+    func getSizeConversions(completion: @escaping ([SizeConversion]) -> Void) {
+        databaseManager.getSizeConversions(completion: completion)
+    }
 
     func getItemListener(withId id: String, settings: CopDeckSettings, updated: @escaping (Item) -> Void) -> DocumentListener<Item> {
         databaseManager.getItemListener(withId: id, settings: settings, updated: updated)

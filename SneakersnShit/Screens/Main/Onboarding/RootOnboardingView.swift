@@ -43,7 +43,7 @@ struct RootOnboardingView: View {
                 .tag(3)
             OnboardingView(imageName: "onboarding-share",
                            titleText: "Share your sneaks",
-                           subtitleText: "Share your inventory on our in-app feed. Or generate a shareable link to share it with anyone, even if they don't have the CopDeck app.",
+                           subtitleText: "Share your inventory on our in-app feed. Or generate a link to easily share with anyone, even if they don't have the CopDeck app.",
                            buttonTapped: nextTapped)
                 .tag(4)
             OnboardingView(imageName: "onboarding-feed",

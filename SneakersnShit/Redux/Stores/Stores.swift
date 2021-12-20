@@ -14,6 +14,7 @@ typealias AppStore = ReduxStore<AppState, AppAction, World>
 
 extension AppStore {
     static var isChatDetailView = false
+    static var conversionFetchCount = 0
 
     static let `default`: AppStore = {
         let appStore = AppStore(state: .init(), reducer: appReducer, environment: World())
@@ -23,6 +24,7 @@ extension AppStore {
 
     func setup() {
         setupObservers()
+        fetchSizeConversions()
     }
 
     private func bestPrice(for inventoryItem: InventoryItem, settings: CopDeckSettings) -> ListingPrice? {
@@ -231,6 +233,28 @@ extension AppStore {
                       self?.state.globalState.chatUpdates = chatUpdateInfo
                   })
             .store(in: &effectCancellables)
+    }
+    
+    private func fetchSizeConversions() {
+        print("sizeconversion called")
+        Self.conversionFetchCount += 1
+        environment.dataController.getSizeConversions { conversions in
+            if conversions.isEmpty {
+                let time: TimeInterval
+                if Self.conversionFetchCount == 1 {
+                    time = 1
+                } else if Self.conversionFetchCount == 2 {
+                    time = 10
+                } else {
+                    time = 30
+                }
+                delay(time) { [weak self] in
+                    self?.fetchSizeConversions()
+                }
+            } else {
+                sizeCharts = conversions
+            }
+        }
     }
 }
 

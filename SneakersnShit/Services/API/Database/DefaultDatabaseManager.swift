@@ -210,6 +210,17 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
         }.eraseToAnyPublisher()
     }
 
+    func getSizeConversions(completion: @escaping ([SizeConversion]) -> Void) {
+        getCollection(atRef: firestore.collection(.sizeConversions)) { (result: Result<[SizeConversion], Error>) in
+                switch result {
+                case let .success(conversions):
+                    completion(conversions)
+                case .failure:
+                    completion([])
+                }
+        }
+    }
+
     func delete(inventoryItems: [InventoryItem]) {
         let batch = firestore.batch()
         // update inventory items
