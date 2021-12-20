@@ -73,7 +73,7 @@ struct ItemDetailView: View {
             ForEach(row.prices) { (price: Item.PriceRow.Price) in
                 let overlayColor: Color = (price.store.id == row.lowest?.id && (feeType == .Buy || feeType == .None)) ? .customGreen :
                     (price.store.id == row.highest?.id && (feeType == .Sell || feeType == .None) ? .customRed : .customAccent1)
-                Text(price.store.id != .stockx && store.globalState.isContentLocked ? "" : price.primaryText)
+                Text(price.primaryText)
                     .font(.regular(size: 18))
                     .foregroundColor(.customText1)
                     .frame(height: 32)
