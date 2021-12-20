@@ -289,7 +289,7 @@ struct ItemDetailView: View {
                                             .padding(5)
                                     }
 
-                                    Group {
+                                    VStack(spacing: 20) {
                                         if let preferredSize = store.globalState.settings.preferredShoeSize,
                                            item?.itemType == .shoe,
                                            item?.sortedSizes.contains(where: { $0 == preferredSize }) == true,
@@ -316,6 +316,10 @@ struct ItemDetailView: View {
                                         }
                                         .id(0)
                                     }
+                                    .lockedContent(style: .blur(text: "Daily limit reached, start your trial to get unlimited access"),
+                                                   lockSize: 30,
+                                                   lockColor: .customText1,
+                                                   lockEnabled: !(item?.sortedSizes ?? []).isEmpty)
                                 }
                                 .padding(.horizontal, 10)
                             }

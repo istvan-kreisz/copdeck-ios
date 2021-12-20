@@ -233,6 +233,7 @@ struct LockedContent: ViewModifier {
         case overlay(offset: CGSize)
         case adjacentRight(spacing: CGFloat)
         case adjacentLeft(spacing: CGFloat)
+        case blur(text: String)
     }
 
     let isLocked: Bool
@@ -273,6 +274,20 @@ struct LockedContent: ViewModifier {
                     content
                         .disabled(true)
                     lock()
+                }
+                .onTapGesture(perform: didTap)
+            case let .blur(text: text):
+                ZStack {
+                    content
+                        .allowsHitTesting(false)
+                        .blur(radius: 10)
+                    HStack(spacing: 5) {
+                        Text(text)
+                            .foregroundColor(.customText1)
+                            .font(.semiBold(size: 22))
+                            .frame(maxWidth: UIScreen.screenWidth - Styles.horizontalMargin * 2)
+                        lock()
+                    }
                 }
                 .onTapGesture(perform: didTap)
             }
