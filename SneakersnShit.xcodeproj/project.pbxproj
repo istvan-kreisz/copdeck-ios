@@ -11,6 +11,7 @@
 		5D0703CA271DDEE700116CF4 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D0703C9271DDEE700116CF4 /* StoreKit.framework */; };
 		5D08E617275073AE00FB8E2A /* StackSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D08E616275073AE00FB8E2A /* StackSelectorView.swift */; };
 		5D08E6192750836700FB8E2A /* CopiableText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D08E6182750836700FB8E2A /* CopiableText.swift */; };
+		5D0A85552770340000148CDB /* LastPriceViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0A85542770340000148CDB /* LastPriceViews.swift */; };
 		5D0B6011276FA38000A0A777 /* VerticalScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0B6010276FA38000A0A777 /* VerticalScrollView.swift */; };
 		5D0E5A11269E4EDE006D7E9C /* AddToInventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0E5A10269E4EDE006D7E9C /* AddToInventoryView.swift */; };
 		5D0E5A13269E60DB006D7E9C /* TextFieldRounded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D0E5A12269E60DB006D7E9C /* TextFieldRounded.swift */; };
@@ -244,6 +245,7 @@
 		5D0703C9271DDEE700116CF4 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		5D08E616275073AE00FB8E2A /* StackSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackSelectorView.swift; sourceTree = "<group>"; };
 		5D08E6182750836700FB8E2A /* CopiableText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopiableText.swift; sourceTree = "<group>"; };
+		5D0A85542770340000148CDB /* LastPriceViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LastPriceViews.swift; sourceTree = "<group>"; };
 		5D0B6010276FA38000A0A777 /* VerticalScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalScrollView.swift; sourceTree = "<group>"; };
 		5D0E5A10269E4EDE006D7E9C /* AddToInventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToInventoryView.swift; sourceTree = "<group>"; };
 		5D0E5A12269E60DB006D7E9C /* TextFieldRounded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldRounded.swift; sourceTree = "<group>"; };
@@ -1030,6 +1032,7 @@
 				5D8FEECB271B28350004D8B3 /* ReferralCode.swift */,
 				5D9A472427333DEF001C85E4 /* NotificationToken.swift */,
 				5D57A69A273A2F7D0089CDF9 /* Tag.swift */,
+				5D0A85542770340000148CDB /* LastPriceViews.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1473,6 +1476,7 @@
 				5DCC466C26A88367007671BC /* InventoryItem.swift in Sources */,
 				5DE596EA26C878280024F7D5 /* StackView.swift in Sources */,
 				5D9D51F226AC0E8F00AB1F30 /* Optional+Extensions.swift in Sources */,
+				5D0A85552770340000148CDB /* LastPriceViews.swift in Sources */,
 				5D564E3D2703584100190CF4 /* SpreadsheetImport.swift in Sources */,
 				5D9D520226AE29DB00AB1F30 /* InventoryListItem.swift in Sources */,
 				5D117EB3271468B7000D1E43 /* PriceFieldWithCurrency.swift in Sources */,

@@ -21,6 +21,7 @@ protocol DatabaseManager: ChatManager {
     var userPublisher: AnyPublisher<User, AppError> { get }
     var exchangeRatesPublisher: AnyPublisher<ExchangeRates, AppError> { get }
     var errorsPublisher: AnyPublisher<AppError, Never> { get }
+    var canViewPricesPublisher: AnyPublisher<Bool, AppError> { get }
 
     // read
     func getUser(withId id: String) -> AnyPublisher<User, AppError>
@@ -39,6 +40,7 @@ protocol DatabaseManager: ChatManager {
     func add(recentlyViewedItem: Item)
     func favorite(item: Item)
     func unfavorite(item: Item)
+    func updateLastPriceViews(itemId: String)
 
     // admin
     func getSpreadsheetImportWaitlist(completion: @escaping (Result<[User], Error>) -> Void)

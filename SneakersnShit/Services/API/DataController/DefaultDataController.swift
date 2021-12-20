@@ -22,6 +22,7 @@ class DefaultDataController: DataController {
     lazy var exchangeRatesPublisher = databaseManager.exchangeRatesPublisher.onMain()
     lazy var chatUpdatesPublisher = databaseManager.chatUpdatesPublisher.onMain()
     lazy var errorsPublisher = databaseManager.errorsPublisher.merge(with: backendAPI.errorsPublisher, imageService.errorsPublisher).onMain()
+    lazy var canViewPricesPublisher = databaseManager.canViewPricesPublisher.onMain()
 
     lazy var profileImagePublisher = imageService.profileImagePublisher.onMain()
 
@@ -42,32 +43,39 @@ class DefaultDataController: DataController {
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates?) -> AnyPublisher<[Item], AppError> {
         backendAPI.search(searchTerm: searchTerm, settings: settings, exchangeRates: exchangeRates)
     }
-    
+
     func getPopularItems() -> AnyPublisher<[Item], AppError> {
         databaseManager.getPopularItems()
     }
-    
+
     func getItemListener(withId id: String, settings: CopDeckSettings, updated: @escaping (Item) -> Void) -> DocumentListener<Item> {
         databaseManager.getItemListener(withId: id, settings: settings, updated: updated)
     }
-    
+
     func update(item: Item, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates?, completion: @escaping () -> Void) {
         backendAPI.update(item: item, forced: forced, settings: settings, exchangeRates: exchangeRates, completion: completion)
     }
-    
-    func update(item: Item?, itemId: String, styleId: String, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates?, completion: @escaping () -> Void) {
+
+    func update(item: Item?, itemId: String, styleId: String, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates?,
+                completion: @escaping () -> Void) {
         let item = item ?? Item(id: itemId, styleId: styleId, storeInfo: [], storePrices: [], name: nil, imageURL: nil)
         update(item: item, forced: forced, settings: settings, exchangeRates: exchangeRates, completion: completion)
     }
-    
+
     func updateUserItems(completion: @escaping () -> Void) {
-        backendAPI.updateUserItems(completion: completion)
+        if !AppStore.default.state.globalState.isContentLocked {
+            backendAPI.updateUserItems(completion: completion)
+        }
+    }
+
+    func updateLastPriceViews(itemId: String) {
+        databaseManager.updateLastPriceViews(itemId: itemId)
     }
 
     func getUser(withId id: String) -> AnyPublisher<User, AppError> {
         databaseManager.getUser(withId: id)
     }
-    
+
     func getItem(withId id: String, settings: CopDeckSettings, completion: @escaping (Result<Item, AppError>) -> Void) {
         databaseManager.getItem(withId: id, settings: settings, completion: completion)
     }
@@ -365,37 +373,37 @@ class DefaultDataController: DataController {
     }
 
     func applyReferralCode(_ code: String, completion: ((Result<Void, AppError>) -> Void)?) {
-        backendAPI.applyReferralCode(code){ result in
+        backendAPI.applyReferralCode(code) { result in
             onMain { completion?(result) }
         }
     }
 
     func sendMessage(email: String, message: String, completion: ((Result<Void, AppError>) -> Void)?) {
-        backendAPI.sendMessage(email: email, message: message){ result in
+        backendAPI.sendMessage(email: email, message: message) { result in
             onMain { completion?(result) }
         }
     }
 
     func getToken(byId id: String, completion: @escaping (NotificationToken?) -> Void) {
-        databaseManager.getToken(byId: id){ result in
+        databaseManager.getToken(byId: id) { result in
             onMain { completion(result) }
         }
     }
 
     func setToken(_ token: NotificationToken, completion: @escaping (Result<[NotificationToken], AppError>) -> Void) {
-        databaseManager.setToken(token){ result in
+        databaseManager.setToken(token) { result in
             onMain { completion(result) }
         }
     }
 
     func deleteToken(_ token: NotificationToken, completion: @escaping (AppError?) -> Void) {
-        databaseManager.deleteToken(token){ result in
+        databaseManager.deleteToken(token) { result in
             onMain { completion(result) }
         }
     }
 
     func deleteToken(byId id: String, completion: @escaping (AppError?) -> Void) {
-        databaseManager.deleteToken(byId: id){ result in
+        databaseManager.deleteToken(byId: id) { result in
             onMain { completion(result) }
         }
     }

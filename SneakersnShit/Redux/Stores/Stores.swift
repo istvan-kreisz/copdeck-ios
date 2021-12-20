@@ -108,8 +108,18 @@ extension AppStore {
     }
 
     func setupObservers() {
+        environment.dataController.canViewPricesPublisher
+            .map { [weak self] in
+                $0 || self?.state.globalState.isContentLocked == false
+            }
+            .removeDuplicates()
+            .sink(receiveCompletion: { _ in },
+                  receiveValue: { [weak self] canViewPrices in
+                      self?.state.globalState.canViewPrices = canViewPrices
+                  })
+            .store(in: &effectCancellables)
+
         environment.dataController.errorsPublisher.merge(with: environment.paymentService.errorsPublisher)
-            .receive(on: DispatchQueue.main)
             .sink { [weak self] error in
                 self?.state.error = error
             }
@@ -117,7 +127,6 @@ extension AppStore {
 
         environment.dataController.userPublisher
             .withPrevious()
-            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] previousUser, newUser in
                       guard let self = self else { return }
@@ -151,7 +160,6 @@ extension AppStore {
 
         environment.dataController.inventoryItemsPublisher
             .map { inventoryItems in inventoryItems.filter { $0.pendingImport == nil } }
-            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] newInventoryItems in
                       guard let self = self else { return }
@@ -176,7 +184,6 @@ extension AppStore {
             .store(in: &effectCancellables)
 
         environment.dataController.stacksPublisher
-            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] stacks in
                       self?.state.stacks = [.allStack] + stacks
@@ -184,7 +191,6 @@ extension AppStore {
             .store(in: &effectCancellables)
 
         environment.dataController.exchangeRatesPublisher
-            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] exchangeRates in
                       self?.state.exchangeRates = exchangeRates
@@ -192,7 +198,6 @@ extension AppStore {
             .store(in: &effectCancellables)
 
         environment.dataController.recentlyViewedPublisher
-            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] in
                       self?.state.recentlyViewedItems = $0
@@ -200,7 +205,6 @@ extension AppStore {
             .store(in: &effectCancellables)
 
         environment.dataController.favoritesPublisher
-            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] favorites in
                       self?.state.favoritedItems = favorites
@@ -208,7 +212,6 @@ extension AppStore {
             .store(in: &effectCancellables)
 
         environment.dataController.profileImagePublisher
-            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] url in
                       self?.state.profileImageURL = url
@@ -216,7 +219,6 @@ extension AppStore {
             .store(in: &effectCancellables)
 
         environment.paymentService.packagesPublisher
-            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] packages in
                       self?.state.allPackages = packages
@@ -224,7 +226,6 @@ extension AppStore {
             .store(in: &effectCancellables)
 
         environment.dataController.chatUpdatesPublisher
-            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] chatUpdateInfo in
                       self?.state.globalState.chatUpdates = chatUpdateInfo

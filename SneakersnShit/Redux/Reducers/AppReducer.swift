@@ -117,6 +117,10 @@ func appReducer(state: inout AppState,
         case let .getUserProfile(userId, completion):
             return environment.dataController.getUserProfile(userId: userId)
                 .complete { completion($0.value) }
+        case let .updateLastPriceViews(itemId: itemId):
+            if AppStore.default.state.isContentLocked {
+                environment.dataController.updateLastPriceViews(itemId: itemId)
+            }
         case let .updateItem(item, itemId, styleId, forced, completion):
             environment.dataController.update(item: item,
                                               itemId: itemId,

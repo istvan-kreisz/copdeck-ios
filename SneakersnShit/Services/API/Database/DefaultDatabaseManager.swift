@@ -27,6 +27,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
 
     // document listeners
     private var userListener = DocumentListener<User>()
+    private var lastPriceViewsListener = DocumentListener<LastPriceViews>()
     private var exchangeRatesListener = DocumentListener<ExchangeRates>()
     private var itemListener: DocumentListener<Item>?
 
@@ -38,6 +39,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
                                                favoritesListener,
                                                recentlyViewedListener,
                                                userListener,
+                                               lastPriceViewsListener,
                                                exchangeRatesListener,
                                                itemListener] + chatWorker.dbListeners
         return listeners.compactMap { $0 }
@@ -63,6 +65,20 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
     // document publishers
     var userPublisher: AnyPublisher<User, AppError> {
         userListener.dataPublisher.compactMap { $0 }.eraseToAnyPublisher()
+    }
+
+    var canViewPricesPublisher: AnyPublisher<Bool, AppError> {
+        lastPriceViewsListener.dataPublisher
+            .map { [weak self] new in
+                guard AppStore.default.state.isContentLocked else { return true }
+                guard let lastPriceViews = new?.values else { return true }
+                if lastPriceViews.filter({ !$0.viewedDate.isOlderThan(days: 1) }).count >= World.Constants.dailyPriceCheckLimit {
+                    return false
+                } else {
+                    return true
+                }
+            }
+            .eraseToAnyPublisher()
     }
 
     var exchangeRatesPublisher: AnyPublisher<ExchangeRates, AppError> {
@@ -104,6 +120,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
     func listenToChanges(userId: String) {
         let userRef = firestore.collection(.users).document(userId)
         userListener.startListening(documentRef: userRef)
+        lastPriceViewsListener.startListening(documentRef: firestore.collection(.lastPriceViews).document(userId))
 
         inventoryListener.startListening(collectionRef: userRef.collection(.inventory))
         stacksListener.startListening(collectionRef: userRef.collection(.stacks))
@@ -353,6 +370,21 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
     func unfavorite(item: Item) {
         guard let ref = favoritesListener.collectionRef?.document(Item.databaseId(itemId: item.id, settings: nil)) else { return }
         deleteDocument(atRef: ref)
+    }
+
+    func updateLastPriceViews(itemId: String) {
+        guard let userId = userId else { return }
+        let currentValues = lastPriceViewsListener.dataSubject.value?.values ?? []
+        guard !currentValues.contains(where: { viewInfo in
+            viewInfo.itemId == itemId && !viewInfo.viewedDate.isOlderThan(minutes: World.Constants.itemPricesRefreshPeriodMin)
+        })
+        else { return }
+        let newValues = ((lastPriceViewsListener.dataSubject.value?.values ?? []) + [LastPriceViews.ViewInfo(itemId: itemId, viewedDate: Date.serverDate)])
+            .sorted(by: { $0.viewedDate > $1.viewedDate })
+            .first(n: World.Constants.dailyPriceCheckLimit)
+        let updatedLastPriceViews = LastPriceViews(values: newValues)
+        guard let dict = try? updatedLastPriceViews.asDictionary() else { return }
+        setDocument(dict, atRef: firestore.collection(.lastPriceViews).document(userId), merge: false)
     }
 
     func getSpreadsheetImportWaitlist(completion: @escaping (Result<[User], Error>) -> Void) {

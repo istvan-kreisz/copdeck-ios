@@ -99,11 +99,6 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "pricesRefreshPeriodMin"
-            value = "0.2"
-            isEnabled = "NO">
-         </EnvironmentVariable>
-         <EnvironmentVariable
             key = "password"
             value = "Kakikukker7298"
             isEnabled = "YES">

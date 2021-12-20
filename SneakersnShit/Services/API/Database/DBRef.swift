@@ -18,6 +18,7 @@ enum DBRef: String {
     case info
     case exchangerates
     case users
+    case lastPriceViews
     case inventory
     case stacks
     case favorites

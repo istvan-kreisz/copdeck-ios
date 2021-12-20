@@ -32,6 +32,7 @@ struct GlobalState: Equatable {
     var showPaymentView = false
     var allPackages: [DiscountValue: SubscriptionPackages]?
     var chatUpdates: ChatUpdateInfo = .init(updateInfo: [:])
+    var canViewPrices: Bool = true
 
     var subscriptionActive: Bool {
         user?.subscription == .pro

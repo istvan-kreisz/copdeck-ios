@@ -93,7 +93,6 @@ struct ItemDetailView: View {
                             UIApplication.shared.open(url)
                         }
                     }
-                    .lockedContent(style: .overlay(offset: .zero), lockSize: 18, lockColor: .customText1, lockEnabled: price.store.id != .stockx)
             }
         }
         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0))
@@ -290,31 +289,33 @@ struct ItemDetailView: View {
                                             .padding(5)
                                     }
 
-                                    if let preferredSize = store.globalState.settings.preferredShoeSize,
-                                       item?.itemType == .shoe,
-                                       item?.sortedSizes.contains(where: { $0 == preferredSize }) == true,
-                                       let row = item?.priceRow(size: preferredSize,
-                                                                priceType: priceType,
-                                                                feeType: feeType,
-                                                                stores: store.globalState.displayedStores,
-                                                                restocksPriceType: restocksPriceType) {
-                                        Text("Your size:")
-                                            .font(.semiBold(size: 14))
-                                            .foregroundColor(.customText1)
-                                            .padding(.bottom, -10)
-                                        priceRow(row: row)
-                                        Text("All sizes:")
-                                            .font(.semiBold(size: 14))
-                                            .foregroundColor(.customText1)
-                                            .padding(.bottom, -10)
+                                    Group {
+                                        if let preferredSize = store.globalState.settings.preferredShoeSize,
+                                           item?.itemType == .shoe,
+                                           item?.sortedSizes.contains(where: { $0 == preferredSize }) == true,
+                                           let row = item?.priceRow(size: preferredSize,
+                                                                    priceType: priceType,
+                                                                    feeType: feeType,
+                                                                    stores: store.globalState.displayedStores,
+                                                                    restocksPriceType: restocksPriceType) {
+                                            Text("Your size:")
+                                                .font(.semiBold(size: 14))
+                                                .foregroundColor(.customText1)
+                                                .padding(.bottom, -10)
+                                            priceRow(row: row)
+                                            Text("All sizes:")
+                                                .font(.semiBold(size: 14))
+                                                .foregroundColor(.customText1)
+                                                .padding(.bottom, -10)
+                                        }
+                                        ForEach((item?.allPriceRows(priceType: priceType,
+                                                                    feeType: feeType,
+                                                                    stores: store.globalState.displayedStores,
+                                                                    restocksPriceType: restocksPriceType)) ?? []) { (row: Item.PriceRow) in
+                                            priceRow(row: row)
+                                        }
+                                        .id(0)
                                     }
-                                    ForEach((item?.allPriceRows(priceType: priceType,
-                                                                feeType: feeType,
-                                                                stores: store.globalState.displayedStores,
-                                                                restocksPriceType: restocksPriceType)) ?? []) { (row: Item.PriceRow) in
-                                        priceRow(row: row)
-                                    }
-                                    .id(0)
                                 }
                                 .padding(.horizontal, 10)
                             }
@@ -349,6 +350,7 @@ struct ItemDetailView: View {
                     firstShow = false
                     refreshPrices(forced: false)
                     setupItemListener()
+                    updateLastPriceViews()
                 }
             }
             .onDisappear {
@@ -389,7 +391,7 @@ struct ItemDetailView: View {
             store.send(.main(action: .addRecentlyViewed(item: newItem)))
         }
     }
-    
+
     private func set(item: Item) {
         store.send(.main(action: .updateInventoryItems(associatedWith: item)))
         self.item = withCalculatedPrices(item: item)
@@ -405,5 +407,9 @@ struct ItemDetailView: View {
         } else {
             store.send(.main(action: .unfavorite(item: item)))
         }
+    }
+
+    private func updateLastPriceViews() {
+        store.send(.main(action: .updateLastPriceViews(itemId: itemId)))
     }
 }
