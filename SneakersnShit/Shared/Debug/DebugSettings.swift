@@ -61,7 +61,7 @@ struct DebugSettings {
         return predicate1.evaluate(with: email) || predicate2.evaluate(with: email)
     }
 
-    var isPaywallEnabled: Bool { (isIstvan || isMilan || isTester) && false }
+    var isPaywallEnabled: Bool { (isIstvan || isMilan || isTester) && true }
 
     lazy var environment: AppEnvironment? = {
         guard let currentConfiguration = Bundle.main.object(forInfoDictionaryKey: "Configuration") as? String,
