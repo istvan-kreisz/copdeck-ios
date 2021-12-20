@@ -127,10 +127,9 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
         struct Wrapper: Encodable {
             let searchTerm: String
             let apiConfig: APIConfig
-            let requestId: String
         }
-        let model = Wrapper(searchTerm: searchTerm, apiConfig: DefaultDataController.config(from: settings, exchangeRates: exchangeRates), requestId: "1")
-        let result: AnyPublisher<[Item], AppError> = callFirebaseFunction(functionName: "search", model: model)
+        let model = Wrapper(searchTerm: searchTerm, apiConfig: DefaultDataController.config(from: settings, exchangeRates: exchangeRates))
+        let result: AnyPublisher<[Item], AppError> = callFirebaseFunctionArray(functionName: "search", model: model)
         return result.eraseToAnyPublisher()
     }
 
@@ -138,10 +137,9 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
         struct Wrapper: Encodable {
             let item: Item
             let apiConfig: APIConfig
-            let requestId: String
             let forced: Bool
         }
-        let model = Wrapper(item: item, apiConfig: DefaultDataController.config(from: settings, exchangeRates: exchangeRates), requestId: "1", forced: forced)
+        let model = Wrapper(item: item, apiConfig: DefaultDataController.config(from: settings, exchangeRates: exchangeRates), forced: forced)
         callFirebaseFunction(functionName: "updateItemV2", model: model)
             .sink { result in
                 completion()
@@ -159,7 +157,7 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
         }
         let model = Wrapper(userId: userId)
         callFirebaseFunction(functionName: "updateUserItems", model: model)
-            .timeout(540, scheduler: DispatchQueue.main)
+            .timeout(.seconds(545), scheduler: DispatchQueue.main)
             .sink { result in
                 completion()
             } receiveValue: { _ in }

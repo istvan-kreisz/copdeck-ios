@@ -143,7 +143,7 @@ extension InventoryItem {
                   purchasePrice: item.retailPrice.asPriceWithCurrency(currency: item.currency),
                   imageURL: item.imageURL,
                   size: (size ?? item.sortedSizes.first) ?? "",
-                  itemType: item.itemType ?? .shoe,
+                  itemType: item.itemTypeDefaulted,
                   condition: .new,
                   copdeckPrice: nil,
                   soldPrice: nil,
@@ -344,6 +344,6 @@ extension InventoryItem.ItemFields {
             itemPrices.inventory = itemPrices.inventory.filter { $0.size == size }
             return itemPrices
         }
-        self.init(brand: item.brand, gender: item.gender, itemType: item.itemType, sortedSizes: item.sortedSizes, storePrices: storePrices)
+        self.init(brand: item.brand, gender: item.gender, itemType: item.itemTypeDefaulted, sortedSizes: item.sortedSizes, storePrices: storePrices)
     }
 }

@@ -291,7 +291,7 @@ struct ItemDetailView: View {
 
                                     VStack(spacing: 20) {
                                         if let preferredSize = store.globalState.settings.preferredShoeSize,
-                                           item?.itemType == .shoe,
+                                           item?.itemTypeDefaulted == .shoe,
                                            item?.sortedSizes.contains(where: { $0 == preferredSize }) == true,
                                            let row = item?.priceRow(size: preferredSize,
                                                                     priceType: priceType,
@@ -302,11 +302,13 @@ struct ItemDetailView: View {
                                                 .font(.semiBold(size: 14))
                                                 .foregroundColor(.customText1)
                                                 .padding(.bottom, -10)
+                                                .leftAligned()
                                             priceRow(row: row)
                                             Text("All sizes:")
                                                 .font(.semiBold(size: 14))
                                                 .foregroundColor(.customText1)
                                                 .padding(.bottom, -10)
+                                                .leftAligned()
                                         }
                                         ForEach((item?.allPriceRows(priceType: priceType,
                                                                     feeType: feeType,

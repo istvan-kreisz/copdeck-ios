@@ -50,6 +50,7 @@ struct DebugSettings {
 
     var isIstvan: Bool { DefaultAuthenticator.user?.uid == istvanId }
     var isMilan: Bool { DefaultAuthenticator.user?.uid == milanId }
+    var isTester: Bool { DefaultAuthenticator.user?.email.map(isTesterEmail) == true }
 
     private func isTesterEmail(_ email: String) -> Bool {
         let regex1 = "milan\\+[0-9]+@copdeck.com"
@@ -60,7 +61,7 @@ struct DebugSettings {
         return predicate1.evaluate(with: email) || predicate2.evaluate(with: email)
     }
 
-    var isPaywallEnabled: Bool { (isIstvan || isMilan || (DefaultAuthenticator.user?.email.map(isTesterEmail) == true)) && true }
+    var isPaywallEnabled: Bool { (isIstvan || isMilan || isTester) && false }
 
     lazy var environment: AppEnvironment? = {
         guard let currentConfiguration = Bundle.main.object(forInfoDictionaryKey: "Configuration") as? String,

@@ -173,7 +173,9 @@ extension AppStore {
                                 let bestPrice = previousInventoryItem.bestPrice,
                                 previousInventoryItem.size == newInventoryItem.size
                           else {
-                              inventoryItemsToUpdate.append(newInventoryItem)
+                              if !(newInventoryItem.itemId ?? "").isEmpty {
+                                  inventoryItemsToUpdate.append(newInventoryItem)
+                              }
                               return newInventoryItem
                           }
                           newInventoryItem.itemFields = itemFields

@@ -159,7 +159,7 @@ struct SearchView: View {
                 let loader = userSearchResultsLoader.getLoader()
                 store.send(.main(action: .searchUsers(searchTerm: searchText, completion: { result in
                     handleResult(result: result, loader: loader) { self.searchModel.state.userSearchResults = $0 }
-                })))
+                })), debounceDelayMs: 900)
             }
         }
     }

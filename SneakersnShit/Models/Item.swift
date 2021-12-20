@@ -174,8 +174,12 @@ extension Item {
         StoreId.allCases.compactMap { storeInfo(for: $0) }.first
     }
 
+    var itemTypeDefaulted: ItemType {
+        itemType ?? .shoe
+    }
+
     var isShoe: Bool {
-        (itemType ?? .shoe) == .shoe
+        itemTypeDefaulted == .shoe
     }
 
     private var allStorePrices: [StorePrice] {
@@ -187,7 +191,7 @@ extension Item {
     }
 
     var sortedSizes: [String] {
-        switch itemType {
+        switch itemTypeDefaulted {
         case .apparel:
             let sizes = ApparelSize.allCases.map(\.rawValue)
             return sizes.sorted { a, b in
