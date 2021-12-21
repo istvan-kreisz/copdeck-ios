@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import Firebase
 
 struct ItemDetailView: View {
     @EnvironmentObject var store: DerivedGlobalStore
@@ -357,6 +358,7 @@ struct ItemDetailView: View {
                     refreshPrices(forced: false)
                     setupItemListener()
                     updateLastPriceViews()
+                    Analytics.logEvent("visited_item_detail", parameters: ["userId": store.globalState.user?.id ?? ""])
                 }
             }
             .onDisappear {

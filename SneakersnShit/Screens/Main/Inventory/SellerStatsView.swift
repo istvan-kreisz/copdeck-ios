@@ -7,11 +7,14 @@
 
 import Foundation
 import SwiftUI
+import Firebase
 
 struct SellerStatsView: View {
     let inventoryItems: [InventoryItem]
     let currency: Currency
     let exchangeRates: ExchangeRates
+    
+    @State private var isFirstload = true
 
     var monthlyStats: [MonthlyStatistics] {
         InventoryItem.monthlyStatistics(for: inventoryItems, currency: currency, exchangeRates: exchangeRates)
@@ -70,5 +73,11 @@ struct SellerStatsView: View {
         }
         .withBackgroundColor()
         .preferredColorScheme(.light)
+        .onAppear {
+            if isFirstload {
+                Analytics.logEvent("visited_stats", parameters: ["userId": store.globalState.user?.id ?? ""])
+                isFirstload = false
+            }
+        }
     }
 }

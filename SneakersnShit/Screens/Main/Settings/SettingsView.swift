@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import Firebase
 
 struct SettingsView: View {
     enum IncludeOption: String, CaseIterable {
@@ -21,6 +22,8 @@ struct SettingsView: View {
             self == .include
         }
     }
+    
+    @State private var isFirstload = true
 
     @EnvironmentObject var store: DerivedGlobalStore
     @State private var settings: CopDeckSettings
@@ -477,6 +480,12 @@ struct SettingsView: View {
                 .alert(isPresented: presentAlert) {
                     Alert(title: Text(alert?.0 ?? "Ooops"), message: Text(alert?.1 ?? "Unknown Error"), dismissButton: .default(Text("OK")))
                 }
+            }
+        }
+        .onAppear {
+            if isFirstload {
+                Analytics.logEvent("visited_settings", parameters: ["userId": store.globalState.user?.id ?? ""])
+                isFirstload = false
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())

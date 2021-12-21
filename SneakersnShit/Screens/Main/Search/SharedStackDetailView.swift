@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import Firebase
 
 struct SharedStackDetailView: View {
     private static let profileImageSize: CGFloat = 38
@@ -19,6 +20,8 @@ struct SharedStackDetailView: View {
     let shouldDismiss: () -> Void
     
     @State private var alert: (String, String)? = nil
+    
+    @State private var isFirstload = true
 
     var selectedInventoryItem: InventoryItem? {
         guard case let .inventoryItem(inventoryItem) = navigationDestination.destination else { return nil }
@@ -93,6 +96,12 @@ struct SharedStackDetailView: View {
         .withBackgroundColor()
         .navigationbarHidden()
         .withAlert(alert: $alert)
+        .onAppear {
+            if isFirstload {
+                Analytics.logEvent("visited_shared_stack", parameters: ["userId": store.globalState.user?.id ?? ""])
+                isFirstload = false
+            }
+        }
     }
 }
 

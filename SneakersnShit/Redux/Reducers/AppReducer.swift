@@ -134,6 +134,7 @@ func appReducer(state: inout AppState,
         case let .getItemImage(itemId, completion):
             environment.dataController.getImage(for: itemId, completion: completion)
         case let .uploadItemImage(itemId, image):
+            Analytics.logEvent("upload_image", parameters: ["userId": state.user?.id ?? ""])
             environment.dataController.uploadItemImage(itemId: itemId, image: image)
         case let .updateInventoryItems(associatedWith: item):
             AppStore.default.updateInventoryItems(associatedWith: item)
@@ -141,9 +142,11 @@ func appReducer(state: inout AppState,
             Analytics.logEvent("add_stack", parameters: ["userId": state.user?.id ?? ""])
             environment.dataController.update(stacks: [stack])
         case let .deleteStack(stack):
+            Analytics.logEvent("delete_stack", parameters: ["userId": state.user?.id ?? ""])
             environment.dataController.delete(stack: stack)
         case let .updateStack(stack):
             if stack.id != "all" {
+                Analytics.logEvent("update_stack", parameters: ["userId": state.user?.id ?? ""])
                 environment.dataController.update(stacks: [stack])
             }
         case let .addToInventory(inventoryItems):
@@ -163,8 +166,10 @@ func appReducer(state: inout AppState,
                 }
             }
         case let .updateInventoryItem(inventoryItem: inventoryItem):
+            Analytics.logEvent("update_inventoryitem", parameters: ["userId": state.user?.id ?? ""])
             environment.dataController.update(inventoryItem: inventoryItem)
         case let .removeFromInventory(inventoryItems):
+            Analytics.logEvent("delete_inventoryitem", parameters: ["userId": state.user?.id ?? ""])
             environment.dataController.delete(inventoryItems: inventoryItems)
         case let .stack(inventoryItems, stack):
             Analytics.logEvent("stack_inventoryitems", parameters: ["userId": state.user?.id ?? ""])
@@ -172,6 +177,7 @@ func appReducer(state: inout AppState,
         case let .unstack(inventoryItems, stack):
             environment.dataController.unstack(inventoryItems: inventoryItems, stack: stack)
         case let .uploadProfileImage(profileImage):
+            Analytics.logEvent("upload_profileimage", parameters: ["userId": state.user?.id ?? ""])
             environment.dataController.uploadProfileImage(image: profileImage)
         case let .getInventoryItemImages(userId, inventoryItem, completion):
             environment.dataController.getInventoryItemImages(userId: userId, inventoryItem: inventoryItem, completion: completion)
@@ -294,10 +300,13 @@ func appReducer(state: inout AppState,
             Analytics.logEvent("apply_referral_code", parameters: ["userId": state.user?.id ?? ""])
             environment.dataController.applyReferralCode(code, completion: completion)
         case let .purchase(package):
+            Analytics.logEvent("buy_pro", parameters: ["userId": state.user?.id ?? ""])
             environment.paymentService.purchase(package: package)
         case let .restorePurchases(completion):
+            Analytics.logEvent("restore_purchases", parameters: ["userId": state.user?.id ?? ""])
             environment.dataController.refreshUserSubscriptionStatus(completion: completion)
         case let .showPaymentView(show):
+            Analytics.logEvent("show_payment_view", parameters: ["userId": state.user?.id ?? ""])
             state.showPaymentView = show
         }
     }

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import Firebase
 
 struct SharedInventoryItemView: View {
     private static let profileImageSize: CGFloat = 38
@@ -29,6 +30,8 @@ struct SharedInventoryItemView: View {
     var imageSize: CGFloat {
         (UIScreen.screenWidth - (Styles.horizontalPadding * 4.0) - (Styles.horizontalMargin * 2.0)) / 3
     }
+    
+    @State private var isFirstload = true
 
     var username: String {
         if let name = user.name, !name.isEmpty {
@@ -157,6 +160,10 @@ struct SharedInventoryItemView: View {
         .withBackgroundColor()
         .onAppear {
             loadPhotos()
+            if isFirstload {
+                Analytics.logEvent("visited_shared_inventoryitem", parameters: ["userId": store.globalState.user?.id ?? ""])
+                isFirstload = false
+            }
         }
         .withImageViewer(shownImageURL: $shownImageURL)
         .navigationbarHidden()
