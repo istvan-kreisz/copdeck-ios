@@ -86,7 +86,7 @@
          <EnvironmentVariable
             key = "showCacheLogs"
             value = "true"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "clearUserDefaults"
@@ -126,7 +126,7 @@
          <EnvironmentVariable
             key = "showDatabaseLogs"
             value = "true"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "showScrapingLogs"

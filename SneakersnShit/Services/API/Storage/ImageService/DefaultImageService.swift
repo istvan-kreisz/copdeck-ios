@@ -12,6 +12,8 @@ import UIKit
 import FirebaseStorage
 
 class DefaultImageService: ImageService {
+    static var failedFetchURLs: [String] = []
+    
     private let storage: Storage
     private var userId: String?
     private let imagesQueue = DispatchQueue(label: "profile.images")
@@ -114,6 +116,7 @@ class DefaultImageService: ImageService {
                     return
                 }
                 DispatchQueue.main.async {
+                    log("storage image upload - id: \(itemId)", logType: .cache)
                     imageRef.putData(data, metadata: nil) { [weak self] metadata, error in
                         if metadata == nil {
                             DispatchQueue.main.async {

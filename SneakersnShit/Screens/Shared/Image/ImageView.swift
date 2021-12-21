@@ -84,6 +84,13 @@ struct ImageView: View {
                         didLoadImage?($0.image, imageRequest.url?.absoluteString)
                     }
                 }
+                .onFailure { response in
+                    if let url  = (self.source as? ImageRequest)?.url?.absoluteString {
+                        if !DefaultImageService.failedFetchURLs.contains(url) {
+                            DefaultImageService.failedFetchURLs.append(url)
+                        }
+                    }
+                }
                 .background(background)
                 .frame(width: size, height: size)
                 .scaleEffect(CGSize(width: flipImage ? -1.0 : 1.0, height: 1.0))

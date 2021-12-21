@@ -229,16 +229,16 @@ extension AppStore {
                   })
             .store(in: &effectCancellables)
     }
-    
+
     private func fetchConfigs() {
         environment.dataController.getSizeConversions { sizeConversions in
             sizeCharts = sizeConversions
         }
-        
+
         environment.dataController.getExchangeRates { [weak self] exchangeRates in
             self?.state.exchangeRates = exchangeRates
         }
-        
+
         environment.dataController.getRemoteConfig { [weak self] remoteConfig in
             self?.state.globalState._isPaywallEnabled = remoteConfig.paywallEnabled
         }
@@ -246,9 +246,14 @@ extension AppStore {
 }
 
 private func imageRequest(for imageURL: ImageURL?) -> ImageRequestConvertible? {
-    print("iiiiiiimage")
     if let imageURL = imageURL, let url = URL(string: imageURL.url) {
-        return ImageRequest(urlRequest: URLRequest(url: url))
+        if DefaultImageService.failedFetchURLs.contains(url.absoluteString) {
+            print("naaah son ")
+            print(DefaultImageService.failedFetchURLs)
+            return nil
+        } else {
+            return ImageRequest(urlRequest: URLRequest(url: url))
+        }
     } else {
         return nil
     }
