@@ -15,6 +15,8 @@ typealias AppStore = ReduxStore<AppState, AppAction, World>
 extension AppStore {
     static var isChatDetailView = false
     static var conversionFetchCount = 0
+    static var lastConfigFetch = 0.0
+    static var lastPriceUpdate = 0.0
 
     static let `default`: AppStore = {
         let appStore = AppStore(state: .init(), reducer: appReducer, environment: World())
@@ -38,7 +40,24 @@ extension AppStore {
                               storeInfos: [])
     }
 
-    #warning("call on app to foregrooud?")
+    func updateUserItems() {
+        guard Self.lastPriceUpdate.isOlderThan(minutes: World.Constants.itemPricesRefreshPeriodMin) else { return }
+        Self.lastPriceUpdate = Date.serverDate
+
+        Debouncer.debounce(delay: .milliseconds(3000), id: "updateUserItems") { [weak self] in
+            self?.environment.dataController.updateUserItems { [weak self] in
+                guard let self = self else { return }
+                let clearedInventoryItems = self.state.inventoryItems.map { inventoryItem -> InventoryItem in
+                    var updatedInventoryItem = inventoryItem
+                    updatedInventoryItem.itemFields = nil
+                    updatedInventoryItem.bestPrice = nil
+                    return updatedInventoryItem
+                }
+                self.updateInventoryItemsWithItemFields(inventoryItems: clearedInventoryItems)
+            }
+        }
+    }
+
     func updateInventoryItems(associatedWith item: Item) {
         Debouncer.debounce(delay: .milliseconds(500), id: "updateInventoryItems(associatedWith") { [weak self] in
             print(">>>>>>>>>>> 1")
@@ -137,18 +156,7 @@ extension AppStore {
                       if oldSettings?.feeCalculation.country != newSettings?.feeCalculation.country ||
                           oldSettings?.currency != newSettings?.currency ||
                           previousUser?.id != newUser.id {
-                          Debouncer.debounce(delay: .milliseconds(3000), id: "updateUserItems") { [weak self] in
-                              self?.environment.dataController.updateUserItems { [weak self] in
-                                  guard let self = self else { return }
-                                  let clearedInventoryItems = self.state.inventoryItems.map { inventoryItem -> InventoryItem in
-                                      var updatedInventoryItem = inventoryItem
-                                      updatedInventoryItem.itemFields = nil
-                                      updatedInventoryItem.bestPrice = nil
-                                      return updatedInventoryItem
-                                  }
-                                  self.updateInventoryItemsWithItemFields(inventoryItems: clearedInventoryItems)
-                              }
-                          }
+                          self.updateUserItems()
                       } else if oldSettings?.feeCalculation != newSettings?.feeCalculation {
                           self.updateCalculatedPrices(inventoryItems: self.state.inventoryItems)
                       } else if oldSettings?.bestPricePriceType != newSettings?.bestPricePriceType ||
@@ -230,7 +238,15 @@ extension AppStore {
             .store(in: &effectCancellables)
     }
 
+    func applicationWillEnterForeground() {
+        fetchConfigs()
+        updateUserItems()
+    }
+
     private func fetchConfigs() {
+        guard Self.lastConfigFetch.isOlderThan(minutes: 5) else { return }
+        Self.lastConfigFetch = Date.serverDate
+
         environment.dataController.getSizeConversions { sizeConversions in
             sizeCharts = sizeConversions
         }
@@ -248,8 +264,6 @@ extension AppStore {
 private func imageRequest(for imageURL: ImageURL?) -> ImageRequestConvertible? {
     if let imageURL = imageURL, let url = URL(string: imageURL.url) {
         if DefaultImageService.failedFetchURLs.contains(url.absoluteString) {
-            print("naaah son ")
-            print(DefaultImageService.failedFetchURLs)
             return nil
         } else {
             return ImageRequest(urlRequest: URLRequest(url: url))

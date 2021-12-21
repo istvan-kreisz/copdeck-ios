@@ -26,7 +26,7 @@ struct CopDeckApp: App {
             case .background:
                 break
             case .active:
-                break
+                AppStore.default.applicationWillEnterForeground()
             case .inactive:
                 break
             @unknown default:

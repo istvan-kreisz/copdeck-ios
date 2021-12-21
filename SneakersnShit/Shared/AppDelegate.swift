@@ -67,7 +67,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         AppStore.default.environment.pushNotificationService.application(application,
                                                                          didReceiveRemoteNotification: userInfo,
                                                                          fetchCompletionHandler: completionHandler)
-    }
+    }    
 }
 
 extension UIApplication {
