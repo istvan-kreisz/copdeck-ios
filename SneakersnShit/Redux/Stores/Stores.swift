@@ -240,7 +240,7 @@ extension AppStore {
         }
 
         environment.dataController.getRemoteConfig { [weak self] remoteConfig in
-            self?.state.globalState._isPaywallEnabled = remoteConfig.paywallEnabled
+            self?.state.globalState.remoteConfig = remoteConfig
         }
     }
 }

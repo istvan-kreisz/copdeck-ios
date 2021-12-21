@@ -7,6 +7,7 @@
 
 import Foundation
 
-struct RemoteConfig: Codable {
+struct RemoteConfig: Codable, Equatable {
     let paywallEnabled: Bool
+    let spreadsheetImportNotice: String
 }

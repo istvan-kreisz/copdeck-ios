@@ -98,7 +98,7 @@ struct SharedStackDetailView: View {
         .withAlert(alert: $alert)
         .onAppear {
             if isFirstload {
-                Analytics.logEvent("visited_shared_stack", parameters: ["userId": store.globalState.user?.id ?? ""])
+                Analytics.logEvent("visited_shared_stack", parameters: ["userId": AppStore.default.state.user?.id ?? ""])
                 isFirstload = false
             }
         }

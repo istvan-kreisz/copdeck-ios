@@ -33,10 +33,10 @@ struct GlobalState: Equatable {
     var allPackages: [DiscountValue: SubscriptionPackages]?
     var chatUpdates: ChatUpdateInfo = .init(updateInfo: [:])
     var canViewPrices: Bool = true
-    var _isPaywallEnabled: Bool?
+    var remoteConfig: RemoteConfig?
     
     var isPaywallEnabled: Bool {
-        _isPaywallEnabled == true
+        remoteConfig?.paywallEnabled == true
     }
 
     var subscriptionActive: Bool {

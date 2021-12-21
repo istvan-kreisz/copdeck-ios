@@ -75,7 +75,7 @@ struct SellerStatsView: View {
         .preferredColorScheme(.light)
         .onAppear {
             if isFirstload {
-                Analytics.logEvent("visited_stats", parameters: ["userId": store.globalState.user?.id ?? ""])
+                Analytics.logEvent("visited_stats", parameters: ["userId": AppStore.default.state.user?.id ?? ""])
                 isFirstload = false
             }
         }

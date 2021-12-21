@@ -141,7 +141,7 @@ struct SpreadsheetImportView: View {
                     .font(.regular(size: 18))
                     .multilineTextAlignment(.leading)
                     .layoutPriority(2)
-                Text("4. That's it! Since the actual import requires some manual work from us, your items won't appear immediately but it should be done within 1-2 days.")
+                Text("4. That's it! \(store.globalState.remoteConfig?.spreadsheetImportNotice ?? "")")
                     .foregroundColor(.customText2)
                     .font(.regular(size: 18))
                     .multilineTextAlignment(.leading)

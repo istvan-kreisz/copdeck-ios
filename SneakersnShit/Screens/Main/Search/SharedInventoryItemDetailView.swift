@@ -161,7 +161,7 @@ struct SharedInventoryItemView: View {
         .onAppear {
             loadPhotos()
             if isFirstload {
-                Analytics.logEvent("visited_shared_inventoryitem", parameters: ["userId": store.globalState.user?.id ?? ""])
+                Analytics.logEvent("visited_shared_inventoryitem", parameters: ["userId": AppStore.default.state.user?.id ?? ""])
                 isFirstload = false
             }
         }
