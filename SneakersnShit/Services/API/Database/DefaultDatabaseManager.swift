@@ -28,7 +28,6 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
     // document listeners
     private var userListener = DocumentListener<User>()
     private var lastPriceViewsListener = DocumentListener<LastPriceViews>()
-    private var exchangeRatesListener = DocumentListener<ExchangeRates>()
     private var itemListener: DocumentListener<Item>?
 
     let errorsSubject = PassthroughSubject<AppError, Never>()
@@ -40,7 +39,6 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
                                                recentlyViewedListener,
                                                userListener,
                                                lastPriceViewsListener,
-                                               exchangeRatesListener,
                                                itemListener] + chatWorker.dbListeners
         return listeners.compactMap { $0 }
     }
@@ -69,7 +67,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
 
     var canViewPricesPublisher: AnyPublisher<Bool, AppError> {
         lastPriceViewsListener.dataPublisher
-            .map { [weak self] new in
+            .map { new in
                 guard AppStore.default.state.isContentLocked else { return true }
                 guard let lastPriceViews = new?.values else { return true }
                 if lastPriceViews.filter({ !$0.viewedDate.isOlderThan(days: 1) }).count >= World.Constants.dailyPriceCheckLimit {
@@ -79,10 +77,6 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
                 }
             }
             .eraseToAnyPublisher()
-    }
-
-    var exchangeRatesPublisher: AnyPublisher<ExchangeRates, AppError> {
-        exchangeRatesListener.dataPublisher.compactMap { $0 }.eraseToAnyPublisher()
     }
 
     var chatUpdatesPublisher: AnyPublisher<ChatUpdateInfo, AppError> {
@@ -104,9 +98,6 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
             settings.isSSLEnabled = false
         }
         firestore.settings = settings
-
-        // other
-        exchangeRatesListener.startListening(documentRef: firestore.collection(.info).document(.exchangerates))
     }
 
     func setup(userId: String) {
@@ -210,14 +201,73 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
         }.eraseToAnyPublisher()
     }
 
+    static var exchangeRatesFetchCount = 0
+    static var sizeConversionFetchCount = 0
+    static var remoteConfigFetchCount = 0
+
+    func getExchangeRates(completion: @escaping (ExchangeRates) -> Void) {
+        getDocument(atRef: firestore.collection(.info).document(.exchangerates)) { (result: Result<ExchangeRates, Error>) in
+            Self.exchangeRatesFetchCount += 1
+            switch result {
+            case let .success(exchangeRates):
+                completion(exchangeRates)
+            case .failure:
+                let time: TimeInterval
+                if Self.exchangeRatesFetchCount <= 1 {
+                    time = 1
+                } else if Self.exchangeRatesFetchCount == 2 {
+                    time = 5
+                } else {
+                    time = 30
+                }
+                delay(time) { [weak self] in
+                    self?.getExchangeRates(completion: completion)
+                }
+            }
+        }
+    }
+
     func getSizeConversions(completion: @escaping ([SizeConversion]) -> Void) {
         getCollection(atRef: firestore.collection(.sizeConversions)) { (result: Result<[SizeConversion], Error>) in
-                switch result {
-                case let .success(conversions):
-                    completion(conversions)
-                case .failure:
-                    completion([])
+            Self.sizeConversionFetchCount += 1
+            switch result {
+            case let .success(conversions):
+                completion(conversions)
+            case .failure:
+                let time: TimeInterval
+                if Self.sizeConversionFetchCount <= 1 {
+                    time = 1
+                } else if Self.sizeConversionFetchCount == 2 {
+                    time = 5
+                } else {
+                    time = 30
                 }
+                delay(time) { [weak self] in
+                    self?.getSizeConversions(completion: completion)
+                }
+            }
+        }
+    }
+    
+    func getRemoteConfig(completion: @escaping (RemoteConfig) -> Void) {
+        getDocument(atRef: firestore.collection(.info).document(.config)) { (result: Result<RemoteConfig, Error>) in
+            Self.remoteConfigFetchCount += 1
+            switch result {
+            case let .success(remoteConfig):
+                completion(remoteConfig)
+            case .failure:
+                let time: TimeInterval
+                if Self.remoteConfigFetchCount <= 1 {
+                    time = 1
+                } else if Self.remoteConfigFetchCount == 2 {
+                    time = 5
+                } else {
+                    time = 30
+                }
+                delay(time) { [weak self] in
+                    self?.getRemoteConfig(completion: completion)
+                }
+            }
         }
     }
 

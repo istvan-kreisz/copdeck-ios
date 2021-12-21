@@ -40,7 +40,7 @@ struct RootView: View {
                            Purchases.shared.appUserID.contains("RCAnonymousID") == false,
                            !store.globalState.hasSubscribed,
                            showPayment1View,
-                           DebugSettings.shared.isPaywallEnabled {
+                           store.globalState.isPaywallEnabled {
                             PaymentView(viewType: .trial(monthlyPackage)) { showPayment1View = false }
                                 .environmentObject(DerivedGlobalStore.default)
                         } else {
@@ -48,7 +48,7 @@ struct RootView: View {
                                 MainContainerView()
                                     .environmentObject(store.appStore)
                                     .zIndex(0)
-                                if store.globalState.showPaymentView && DebugSettings.shared.isPaywallEnabled {
+                                if store.globalState.showPaymentView && store.globalState.isPaywallEnabled {
                                     PaymentView(viewType: .subscribe) { store.send(.paymentAction(action: .showPaymentView(show: false))) }
                                         .environmentObject(DerivedGlobalStore.default)
                                 }

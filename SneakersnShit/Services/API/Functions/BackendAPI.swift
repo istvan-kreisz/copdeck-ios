@@ -11,6 +11,7 @@ import UIKit
 protocol BackendAPI {
     var errorsPublisher: AnyPublisher<AppError, Never> { get }
 
+    // setup
     func setup(userId: String)
     func reset()
     // feed
@@ -42,4 +43,3 @@ protocol BackendAPI {
     // contact support
     func sendMessage(email: String, message: String, completion: ((Result<Void, AppError>) -> Void)?)
 }
-

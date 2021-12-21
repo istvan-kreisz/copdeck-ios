@@ -19,7 +19,6 @@ class DefaultDataController: DataController {
     lazy var recentlyViewedPublisher = databaseManager.recentlyViewedPublisher.onMain()
     lazy var stacksPublisher = databaseManager.stacksPublisher.onMain()
     lazy var userPublisher = databaseManager.userPublisher.onMain()
-    lazy var exchangeRatesPublisher = databaseManager.exchangeRatesPublisher.onMain()
     lazy var chatUpdatesPublisher = databaseManager.chatUpdatesPublisher.onMain()
     lazy var errorsPublisher = databaseManager.errorsPublisher.merge(with: backendAPI.errorsPublisher, imageService.errorsPublisher).onMain()
     lazy var canViewPricesPublisher = databaseManager.canViewPricesPublisher.onMain()
@@ -39,6 +38,18 @@ class DefaultDataController: DataController {
         databaseManager.reset()
         imageService.reset()
     }
+    
+    func getExchangeRates(completion: @escaping (ExchangeRates) -> Void) {
+        databaseManager.getExchangeRates(completion: completion)
+    }
+    
+    func getRemoteConfig(completion: @escaping (RemoteConfig) -> Void) {
+        databaseManager.getRemoteConfig(completion: completion)
+    }
+    
+    func getSizeConversions(completion: @escaping ([SizeConversion]) -> Void) {
+        databaseManager.getSizeConversions(completion: completion)
+    }
 
     func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates?) -> AnyPublisher<[Item], AppError> {
         backendAPI.search(searchTerm: searchTerm, settings: settings, exchangeRates: exchangeRates)
@@ -48,10 +59,6 @@ class DefaultDataController: DataController {
         databaseManager.getPopularItems()
     }
     
-    func getSizeConversions(completion: @escaping ([SizeConversion]) -> Void) {
-        databaseManager.getSizeConversions(completion: completion)
-    }
-
     func getItemListener(withId id: String, settings: CopDeckSettings, updated: @escaping (Item) -> Void) -> DocumentListener<Item> {
         databaseManager.getItemListener(withId: id, settings: settings, updated: updated)
     }

@@ -25,4 +25,5 @@ enum DBRef: String {
     case recentlyViewed
     case updateInfo
     case sizeConversions
+    case config
 }

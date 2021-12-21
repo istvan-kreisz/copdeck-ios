@@ -24,7 +24,7 @@ extension AppStore {
 
     func setup() {
         setupObservers()
-        fetchSizeConversions()
+        fetchConfigs()
     }
 
     private func bestPrice(for inventoryItem: InventoryItem, settings: CopDeckSettings) -> ListingPrice? {
@@ -112,7 +112,7 @@ extension AppStore {
     func setupObservers() {
         environment.dataController.canViewPricesPublisher
             .map { [weak self] in
-                $0 || self?.state.globalState.isContentLocked == false
+                $0 || self?.state.globalState.subscriptionActive == true
             }
             .removeDuplicates()
             .sink(receiveCompletion: { _ in },
@@ -194,13 +194,6 @@ extension AppStore {
                   })
             .store(in: &effectCancellables)
 
-        environment.dataController.exchangeRatesPublisher
-            .sink(receiveCompletion: { _ in },
-                  receiveValue: { [weak self] exchangeRates in
-                      self?.state.exchangeRates = exchangeRates
-                  })
-            .store(in: &effectCancellables)
-
         environment.dataController.recentlyViewedPublisher
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] in
@@ -237,30 +230,23 @@ extension AppStore {
             .store(in: &effectCancellables)
     }
     
-    private func fetchSizeConversions() {
-        print("sizeconversion called")
-        Self.conversionFetchCount += 1
-        environment.dataController.getSizeConversions { conversions in
-            if conversions.isEmpty {
-                let time: TimeInterval
-                if Self.conversionFetchCount == 1 {
-                    time = 1
-                } else if Self.conversionFetchCount == 2 {
-                    time = 10
-                } else {
-                    time = 30
-                }
-                delay(time) { [weak self] in
-                    self?.fetchSizeConversions()
-                }
-            } else {
-                sizeCharts = conversions
-            }
+    private func fetchConfigs() {
+        environment.dataController.getSizeConversions { sizeConversions in
+            sizeCharts = sizeConversions
+        }
+        
+        environment.dataController.getExchangeRates { [weak self] exchangeRates in
+            self?.state.exchangeRates = exchangeRates
+        }
+        
+        environment.dataController.getRemoteConfig { [weak self] remoteConfig in
+            self?.state.globalState._isPaywallEnabled = remoteConfig.paywallEnabled
         }
     }
 }
 
 private func imageRequest(for imageURL: ImageURL?) -> ImageRequestConvertible? {
+    print("iiiiiiimage")
     if let imageURL = imageURL, let url = URL(string: imageURL.url) {
         return ImageRequest(urlRequest: URLRequest(url: url))
     } else {

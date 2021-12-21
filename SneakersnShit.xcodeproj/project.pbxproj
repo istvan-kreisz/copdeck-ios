@@ -189,6 +189,7 @@
 		5DD01E5426DD78480054F6F1 /* InventoryHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DD01E5326DD78480054F6F1 /* InventoryHeaderView.swift */; };
 		5DD036032738D36200104627 /* Result+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DD036022738D36100104627 /* Result+Extensions.swift */; };
 		5DD036052738E93800104627 /* ViewWithAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DD036042738E93800104627 /* ViewWithAlert.swift */; };
+		5DD8F0DB277274570076DB09 /* RemoteConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DD8F0DA277274570076DB09 /* RemoteConfig.swift */; };
 		5DDEFDBC26CD7A42001B0F76 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DDEFDBB26CD7A42001B0F76 /* Constants.swift */; };
 		5DDEFDBF26CED83A001B0F76 /* ListSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DDEFDBE26CED83A001B0F76 /* ListSelector.swift */; };
 		5DDEFDC126CEE16F001B0F76 /* ListSelectorMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DDEFDC026CEE16F001B0F76 /* ListSelectorMenu.swift */; };
@@ -422,6 +423,7 @@
 		5DD01E5326DD78480054F6F1 /* InventoryHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryHeaderView.swift; sourceTree = "<group>"; };
 		5DD036022738D36100104627 /* Result+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Result+Extensions.swift"; sourceTree = "<group>"; };
 		5DD036042738E93800104627 /* ViewWithAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewWithAlert.swift; sourceTree = "<group>"; };
+		5DD8F0DA277274570076DB09 /* RemoteConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConfig.swift; sourceTree = "<group>"; };
 		5DDEFDBB26CD7A42001B0F76 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		5DDEFDBE26CED83A001B0F76 /* ListSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListSelector.swift; sourceTree = "<group>"; };
 		5DDEFDC026CEE16F001B0F76 /* ListSelectorMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListSelectorMenu.swift; sourceTree = "<group>"; };
@@ -1031,6 +1033,7 @@
 				5D9A472427333DEF001C85E4 /* NotificationToken.swift */,
 				5D57A69A273A2F7D0089CDF9 /* Tag.swift */,
 				5D0A85542770340000148CDB /* LastPriceViews.swift */,
+				5DD8F0DA277274570076DB09 /* RemoteConfig.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1563,6 +1566,7 @@
 				5DC3538F26117C7F00294DF0 /* ItemDetailView.swift in Sources */,
 				5DD01E5426DD78480054F6F1 /* InventoryHeaderView.swift in Sources */,
 				5DE4F21626E00BBC0087077A /* StackSummaryListItem.swift in Sources */,
+				5DD8F0DB277274570076DB09 /* RemoteConfig.swift in Sources */,
 				5D3E872525C5D3FC00FC65FE /* Sequence+Extensions.swift in Sources */,
 				5D424CEE25C502F90008D6F4 /* Colors.swift in Sources */,
 				5D1264DD275E9F8700E66EE3 /* SizeSelector.swift in Sources */,

@@ -150,7 +150,7 @@ struct SearchView: View {
                 let loader = searchResultsLoader.getLoader()
                 store.send(.main(action: .getSearchResults(searchTerm: searchText, completion: { result in
                     handleResult(result: result, loader: loader) { self.searchModel.state.searchResults = $0 }
-                })), debounceDelayMs: 1000)
+                })), debounceDelayMs: 1300)
             }
         } else {
             if searchTerm.isEmpty {

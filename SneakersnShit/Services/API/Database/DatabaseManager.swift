@@ -11,6 +11,9 @@ import UIKit
 protocol DatabaseManager: ChatManager {
     // init
     func setup(userId: String)
+    func getExchangeRates(completion: @escaping (ExchangeRates) -> Void)
+    func getSizeConversions(completion: @escaping ([SizeConversion]) -> Void)
+    func getRemoteConfig(completion: @escaping (RemoteConfig) -> Void)
     // deinit
     func reset()
     // read
@@ -19,7 +22,6 @@ protocol DatabaseManager: ChatManager {
     var recentlyViewedPublisher: AnyPublisher<[Item], AppError> { get }
     var stacksPublisher: AnyPublisher<[Stack], AppError> { get }
     var userPublisher: AnyPublisher<User, AppError> { get }
-    var exchangeRatesPublisher: AnyPublisher<ExchangeRates, AppError> { get }
     var errorsPublisher: AnyPublisher<AppError, Never> { get }
     var canViewPricesPublisher: AnyPublisher<Bool, AppError> { get }
 
@@ -29,7 +31,6 @@ protocol DatabaseManager: ChatManager {
     func getItems(withIds ids: [String], settings: CopDeckSettings, completion: @escaping ([Item]) -> Void)
     func getItemListener(withId id: String, settings: CopDeckSettings, updated: @escaping (Item) -> Void) -> DocumentListener<Item>
     func getPopularItems() -> AnyPublisher<[Item], AppError>
-    func getSizeConversions(completion: @escaping ([SizeConversion]) -> Void)
     
     // write
     func add(inventoryItems: [InventoryItem], completion: @escaping (Result<[InventoryItem], Error>) -> Void)

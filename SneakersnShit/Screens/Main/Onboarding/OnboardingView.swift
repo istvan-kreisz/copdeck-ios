@@ -61,6 +61,7 @@ struct OnboardingView: View {
             VStack(spacing: 15) {
                 NextButton(text: buttonText,
                            size: .init(width: buttonWidth, height: buttonHeight),
+                           fontSize: UIScreen.isSmallScreen ? 14 : 15,
                            color: .customBlack,
                            tapped: buttonTapped)
 
@@ -68,6 +69,7 @@ struct OnboardingView: View {
                     RoundedButton<EmptyView>(text: secondaryButtonText,
                                              width: buttonWidth,
                                              height: buttonHeight,
+                                             fontSize: UIScreen.isSmallScreen ? 14 : 15,
                                              color: .clear,
                                              borderColor: .customBlack,
                                              textColor: .customBlack,

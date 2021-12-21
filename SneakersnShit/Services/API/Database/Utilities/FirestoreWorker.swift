@@ -43,7 +43,22 @@ extension FirestoreWorker {
         }
     }
 
-    func setDocument(_ data: [String: Any], atRef ref: DocumentReference, merge: Bool, using batch: WriteBatch? = nil, updateDates: Bool = true, completion: ((Error?) -> Void)? = nil) {
+    func getDocument<T: Codable>(atRef ref: DocumentReference, completion: @escaping (Result<T, Error>) -> Void) {
+        ref.getDocument { snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                if let data = snapshot?.data(), let result = T(from: data) {
+                    completion(.success(result))
+                } else {
+                    completion(.failure(AppError.unknown))
+                }
+            }
+        }
+    }
+
+    func setDocument(_ data: [String: Any], atRef ref: DocumentReference, merge: Bool, using batch: WriteBatch? = nil, updateDates: Bool = true,
+                     completion: ((Error?) -> Void)? = nil) {
         let data = updateDates ? dataWithUpdatedDates(data) : data
         if let batch = batch {
             batch.setData(data, forDocument: ref, merge: merge)

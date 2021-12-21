@@ -24,7 +24,7 @@ struct ListSelector: View {
 
     var body: some View {
         Group {
-            if isContentLocked && DebugSettings.shared.isPaywallEnabled {
+            if isContentLocked && AppStore.default.state.globalState.isPaywallEnabled {
                 NavigationLink(destination: PaymentView(viewType: .subscribe, animateTransition: false) { showPaymentView = false }
                     .environmentObject(DerivedGlobalStore.default),
                     isActive: $showPaymentView) { EmptyView() }
