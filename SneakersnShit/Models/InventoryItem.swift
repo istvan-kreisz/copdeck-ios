@@ -68,9 +68,10 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     let updated: Double?
     var purchasedDate: Double?
     var soldDate: Double?
-    
     var gender: Gender?
     var brand: Brand?
+    var updateTrigger: Int?
+    
     var brandCalculated: Brand? { brand ?? itemFields?.brand }
     var genderCalculated: Gender? { gender ?? itemFields?.gender }
     var count = 1
@@ -129,7 +130,7 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     enum CodingKeys: String, CodingKey {
         case id, itemId, styleId, userId, name, purchasePrice, imageURL, size, itemType, condition, copdeckPrice, listingPrices, soldPrice, status, tags, notes,
              pendingImport,
-             created, updated, purchasedDate, soldDate, gender, brand
+             created, updated, purchasedDate, soldDate, gender, brand, updateTrigger
     }
 }
 
@@ -299,6 +300,7 @@ extension InventoryItem {
         soldDate = try container.decodeIfPresent(Double.self, forKey: .soldDate)
         gender = try container.decodeIfPresent(Gender.self, forKey: .gender)
         brand = try container.decodeIfPresent(Brand.self, forKey: .brand)
+        updateTrigger = try container.decodeIfPresent(Int.self, forKey: .updateTrigger)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -324,6 +326,7 @@ extension InventoryItem {
         try container.encodeIfPresent(soldDate, forKey: .soldDate)
         try container.encodeIfPresent(gender, forKey: .gender)
         try container.encodeIfPresent(brand, forKey: .brand)
+        try container.encodeIfPresent(updateTrigger, forKey: .updateTrigger)
     }
 }
 

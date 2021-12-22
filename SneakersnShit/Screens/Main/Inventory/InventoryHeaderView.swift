@@ -44,10 +44,16 @@ struct InventoryHeaderView: View {
             }
         } label: {
             HStack(spacing: 5) {
-                Text(facebookURL != nil ? "View facebook account" : "Link your facebook account")
-                    .font(.medium(size: 14))
-                    .foregroundColor(.customText2)
-                    .underline()
+                if facebookURL != nil {
+                    Text("View facebook account")
+                        .font(.medium(size: 14))
+                        .foregroundColor(.customText2)
+                        .underline()
+                }
+//                Text(facebookURL != nil ? "View facebook account" : "Link your facebook account")
+//                    .font(.medium(size: 14))
+//                    .foregroundColor(.customText2)
+//                    .underline()
                 Image("facebook")
                     .renderingMode(.template)
                     .resizable()

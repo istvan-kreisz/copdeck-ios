@@ -45,16 +45,7 @@ extension AppStore {
         Self.lastPriceUpdate = Date.serverDate
 
         Debouncer.debounce(delay: .milliseconds(3000), id: "updateUserItems") { [weak self] in
-            self?.environment.dataController.updateUserItems { [weak self] in
-                guard let self = self else { return }
-                let clearedInventoryItems = self.state.inventoryItems.map { inventoryItem -> InventoryItem in
-                    var updatedInventoryItem = inventoryItem
-                    updatedInventoryItem.itemFields = nil
-                    updatedInventoryItem.bestPrice = nil
-                    return updatedInventoryItem
-                }
-                self.updateInventoryItemsWithItemFields(inventoryItems: clearedInventoryItems)
-            }
+            self?.environment.dataController.updateUserItems {}
         }
     }
 
@@ -179,7 +170,8 @@ extension AppStore {
                           guard let previousInventoryItem = self.state.inventoryItems.first(where: { $0.id == newInventoryItem.id }),
                                 let itemFields = previousInventoryItem.itemFields,
                                 let bestPrice = previousInventoryItem.bestPrice,
-                                previousInventoryItem.size == newInventoryItem.size
+                                previousInventoryItem.size == newInventoryItem.size,
+                                previousInventoryItem.updateTrigger == newInventoryItem.updateTrigger
                           else {
                               if !(newInventoryItem.itemId ?? "").isEmpty {
                                   inventoryItemsToUpdate.append(newInventoryItem)
