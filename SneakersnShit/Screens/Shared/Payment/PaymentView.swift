@@ -146,10 +146,11 @@ struct PaymentView: View {
                             }
 
                             VStack(alignment: .leading, spacing: 10) {
-                                bulletPoint(text: "Compare prices on the biggest reselling sites", bulletpointStyle: .checkmark)
-                                bulletPoint(text: "Track your inventory", bulletpointStyle: .checkmark)
-                                bulletPoint(text: "Follow other sneakerheads", bulletpointStyle: .checkmark)
-                                bulletPoint(text: "Share your inventory everywhere with just a few clicks", bulletpointStyle: .checkmark)
+                                bulletPoint(text: "Unlimited search & price comparison", bulletpointStyle: .checkmark)
+                                bulletPoint(text: "Always up to date prices on all your shoes", bulletpointStyle: .checkmark)
+                                bulletPoint(text: "Total inventory value tracking", bulletpointStyle: .checkmark)
+                                bulletPoint(text: "Monthly cost & revenue stats", bulletpointStyle: .checkmark)
+                                bulletPoint(text: "Stack sharing without limitatons", bulletpointStyle: .checkmark)
                             }
                             .padding(.bottom, 10)
 
@@ -158,10 +159,10 @@ struct PaymentView: View {
                                 .foregroundColor(.customText1)
 
                             VStack(alignment: .leading, spacing: 14) {
-                                bulletPoint(text: "Import your inventory using our spreadsheet import feature or just add your items manually.",
+                                bulletPoint(text: "Import your inventory using our spreadsheet import feature or add your items manually.",
                                             bulletpointStyle: .dot)
-                                bulletPoint(text: "Find where to buy & sell your shoes using CopDeck's price comparison.", bulletpointStyle: .dot)
-                                bulletPoint(text: "Share your items on CopDeck & on the web with the stack sharing feature.", bulletpointStyle: .dot)
+                                bulletPoint(text: "Find where to buy & sell your shoes using CopDeck's price comparison feature.", bulletpointStyle: .dot)
+                                bulletPoint(text: "Share your items on the CopDeck feed / on the web via an auto-generated link.", bulletpointStyle: .dot)
                                 bulletPoint(text: "...", bulletpointStyle: .dot)
                                 bulletPoint(text: "Profit $$$", bulletpointStyle: .dot)
                             }
