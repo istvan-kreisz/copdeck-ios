@@ -238,7 +238,7 @@ struct InventoryView: View {
         .withSnackBar(text: "Link Copied", shouldShow: $showSnackBar)
         .onAppear {
             if isFirstload {
-                Analytics.logEvent("visited_inventory", parameters: ["userId": store.state.user?.id ?? ""])
+                Analytics.logEvent("visited_inventory", parameters: ["userId": AppStore.default.state.user?.id ?? ""])
                 isFirstload = false
             }
         }

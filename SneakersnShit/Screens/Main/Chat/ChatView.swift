@@ -17,6 +17,8 @@ struct ChatView: View {
     static var didStartPreloading = false
 
     @State var isFirstLoad = true
+    @State private var pullToRefreshInitied = false
+
     @StateObject private var chatModel = ChatModel()
     @StateObject private var channelsLoader = Loader()
 
@@ -62,7 +64,11 @@ struct ChatView: View {
                     .padding(.bottom, 19)
 
                 PullToRefresh(coordinateSpaceName: "pullToRefresh") {
-                    loadChannels(isFirstLoad: false, preload: false)
+                    if pullToRefreshInitied {
+                        loadChannels(isFirstLoad: false, preload: false)
+                    } else {
+                        pullToRefreshInitied = true
+                    }
                 }
 
                 if channelsLoader.isLoading {

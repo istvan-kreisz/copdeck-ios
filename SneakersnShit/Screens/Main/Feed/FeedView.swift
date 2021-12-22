@@ -17,6 +17,7 @@ struct FeedView: View {
     @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
 
     @State private var isFirstLoad = true
+    @State private var pullToRefreshInitied = false
 
     @StateObject private var loader = Loader()
 
@@ -72,20 +73,20 @@ struct FeedView: View {
                                                            }
                                                        })
             NavigationLink(destination: Destination(navigationDestination: $navigationDestination, feedPosts: $feedState.feedPosts)
-                    .navigationbarHidden(),
+                .navigationbarHidden(),
                 isActive: showDetail) { EmptyView() }
 
             VerticalListView(bottomPadding: Styles.tabScreenBottomPadding, spacing: 0) {
                 Text("Feed")
                     .tabTitle()
-                
+
                 if !AppStore.default.state.globalState.isContentLocked {
                     VStack(alignment: .leading, spacing: 5) {
                         Text("Your inventory's value:")
                             .font(.regular(size: 14))
                             .foregroundColor(.customText2)
                             .padding(.leading, 5)
-                        
+
                         Text(store.state.inventoryValue?.asString ?? "-")
                             .font(.bold(size: UIScreen.isSmallScreen ? 40 : 45))
                             .foregroundColor(.customText1)
@@ -93,7 +94,11 @@ struct FeedView: View {
                 }
 
                 PullToRefresh(coordinateSpaceName: "pullToRefresh") {
-                    loadFeedPosts(loadMore: false)
+                    if pullToRefreshInitied {
+                        loadFeedPosts(loadMore: false)
+                    } else {
+                        pullToRefreshInitied = true
+                    }
                 }
 
                 if loader.isLoading && feedState.feedPosts.isLastPage {
@@ -144,7 +149,7 @@ struct FeedView: View {
         }
         .onAppear {
             if isFirstLoad {
-                Analytics.logEvent("visited_feed", parameters: ["userId": store.state.user?.id ?? ""])
+                Analytics.logEvent("visited_feed", parameters: ["userId": AppStore.default.state.user?.id ?? ""])
                 if let preloadedPosts = Self.preloadedPosts {
                     self.feedState.feedPosts = preloadedPosts
                 } else {

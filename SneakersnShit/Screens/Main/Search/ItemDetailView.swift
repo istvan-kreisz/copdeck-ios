@@ -358,7 +358,7 @@ struct ItemDetailView: View {
                     refreshPrices(forced: false)
                     setupItemListener()
                     updateLastPriceViews()
-                    Analytics.logEvent("visited_item_detail", parameters: ["userId": store.globalState.user?.id ?? ""])
+                    Analytics.logEvent("visited_item_detail", parameters: ["userId": AppStore.default.state.user?.id ?? ""])
                 }
             }
             .onDisappear {

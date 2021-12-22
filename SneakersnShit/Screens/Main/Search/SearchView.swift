@@ -134,7 +134,7 @@ struct SearchView: View {
                     })))
                 }
                 if isFirstload {
-                    Analytics.logEvent("visited_search", parameters: ["userId": store.globalState.user?.id ?? ""])
+                    Analytics.logEvent("visited_search", parameters: ["userId": AppStore.default.state.globalState.user?.id ?? ""])
                     isFirstload = false
                 }
             }

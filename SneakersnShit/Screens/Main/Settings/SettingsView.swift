@@ -484,7 +484,7 @@ struct SettingsView: View {
         }
         .onAppear {
             if isFirstload {
-                Analytics.logEvent("visited_settings", parameters: ["userId": store.globalState.user?.id ?? ""])
+                Analytics.logEvent("visited_settings", parameters: ["userId": AppStore.default.state.user?.id ?? ""])
                 isFirstload = false
             }
         }
