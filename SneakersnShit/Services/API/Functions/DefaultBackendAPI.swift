@@ -83,13 +83,14 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
         }
         let body = Body(event: .init(original_app_user_id: userId))
 
+        #warning("test and change to local if functions emulator enabled")
         guard let url = URL(string: "https://europe-west1-sneakersnshit-2e22f.cloudfunctions.net/refreshUserSubscriptionStatus"),
               let httpBody = try? JSONEncoder().encode(body)
         else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Bearer vkJAtxOkCMEORPnQDmuEwtoUBuHDUMSu", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(DefaultPaymentService.apiKey)", forHTTPHeaderField: "Authorization")
         request.httpBody = httpBody
 
         URLSession.shared.dataTask(with: request) { data, response, error in
