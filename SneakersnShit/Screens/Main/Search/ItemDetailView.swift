@@ -319,9 +319,8 @@ struct ItemDetailView: View {
                                         }
                                         .id(0)
                                     }
-                                    .lockedContent(style: .blur(text: "You've reached your daily limit, start your trial to get unlimited access"),
-                                                   lockSize: 30,
-                                                   lockColor: .customText1,
+                                    .lockedContent(displayStyle: .blur(text: "You've reached your daily limit, start your trial to get unlimited access"),
+                                                   contentSttyle: .lock(size: 30),
                                                    lockEnabled: !(item?.sortedSizes ?? []).isEmpty)
                                 }
                                 .padding(.horizontal, 10)

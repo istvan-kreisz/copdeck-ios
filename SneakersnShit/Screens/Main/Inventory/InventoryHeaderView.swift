@@ -87,7 +87,7 @@ struct InventoryHeaderView: View {
                                 .foregroundColor(.customBlack)
                         }
                     })
-                    
+
                     Button(action: {
                         addNewInventoryItemPresented = true
                     }, label: {
@@ -100,7 +100,6 @@ struct InventoryHeaderView: View {
                                 .foregroundColor(.customWhite)
                         }
                     })
-
                 }
             }
 
@@ -177,7 +176,9 @@ struct InventoryHeaderView: View {
                         Text(textBox1.text)
                             .font(.bold(size: 20))
                             .foregroundColor(.customText1)
-                            .lockedContent(style: .hideOriginal, lockSize: 20, lockEnabled: updateUsername != nil)
+                            .lockedContent(displayStyle: .hideOriginal,
+                                           contentSttyle: .lock(size: 20),
+                                           lockEnabled: updateUsername != nil)
                         Text(textBox1.title)
                             .font(.regular(size: 15))
                             .foregroundColor(.customText2)
@@ -187,7 +188,6 @@ struct InventoryHeaderView: View {
                         Text(textBox2.text)
                             .font(.bold(size: 20))
                             .foregroundColor(.customText1)
-                            .lockedContent(style: .hideOriginal, lockSize: 20, lockEnabled: updateUsername != nil)
                         Text(textBox2.title)
                             .font(.regular(size: 15))
                             .foregroundColor(.customText2)

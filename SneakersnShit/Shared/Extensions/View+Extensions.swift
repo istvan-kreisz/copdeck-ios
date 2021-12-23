@@ -197,12 +197,13 @@ extension View {
         ModifiedContent(content: self, modifier: WithTellTip(text: text, didTap: didTap))
     }
 
-    func lockedContent(style: LockedContent.Style, lockSize: CGFloat, lockColor: Color = .customText1, lockEnabled: Bool = true) -> some View {
+    func lockedContent(displayStyle: LockedContent.DisplayStyle,
+                       contentSttyle: LockedContent.ContentStyle,
+                       lockEnabled: Bool = true) -> some View {
         ModifiedContent(content: self,
                         modifier: LockedContent(isLocked: AppStore.default.state.globalState.isContentLocked && lockEnabled,
-                                                lockSize: lockSize,
-                                                lockColor: lockColor,
-                                                style: style) {
+                                                displayStyle: displayStyle,
+                                                contentStyle: contentSttyle) {
                             AppStore.default.send(.paymentAction(action: .showPaymentView(show: true)))
                         })
     }
@@ -228,7 +229,7 @@ extension View {
         self
             .padding(.top, UIApplication.shared.safeAreaInsets().top)
     }
-    
+
     func withClearButton(text: Binding<String>, textFieldWidth: CGFloat? = nil) -> some View {
         ModifiedContent(content: self, modifier: ClearButton(text: text, textFieldWidth: textFieldWidth))
     }

@@ -228,7 +228,24 @@ struct WithImageViewer: ViewModifier {
 }
 
 struct LockedContent: ViewModifier {
-    enum Style {
+    struct ContentView: View {
+        let contentStyle: ContentStyle
+
+        var body: some View {
+            switch contentStyle {
+            case .lock(let size, let color):
+                Image(systemName: "lock.fill")
+                    .font(.bold(size: size))
+                    .foregroundColor(color)
+            case .text(let size, let color):
+                Text("Upgrade to pro!")
+                    .font(.bold(size: size))
+                    .foregroundColor(color)
+            }
+        }
+    }
+
+    enum DisplayStyle {
         case hideOriginal
         case overlay(offset: CGSize)
         case adjacentRight(spacing: CGFloat)
@@ -236,35 +253,33 @@ struct LockedContent: ViewModifier {
         case blur(text: String)
     }
 
-    let isLocked: Bool
-    let lockSize: CGFloat
-    let lockColor: Color
-    let style: Style
-    let didTap: () -> Void
-
-    private func lock() -> some View {
-        Image(systemName: "lock.fill")
-            .font(.bold(size: lockSize))
-            .foregroundColor(lockColor)
+    enum ContentStyle {
+        case lock(size: CGFloat, color: Color = .customText1)
+        case text(size: CGFloat, color: Color = .customText1)
     }
+
+    let isLocked: Bool
+    let displayStyle: DisplayStyle
+    let contentStyle: ContentStyle
+    let didTap: () -> Void
 
     func body(content: Content) -> some View {
         if isLocked {
-            switch style {
+            switch displayStyle {
             case .hideOriginal:
-                lock()
+                ContentView(contentStyle: contentStyle)
                     .onTapGesture(perform: didTap)
             case let .overlay(offset):
                 ZStack {
                     content
                         .disabled(true)
-                    lock()
+                    ContentView(contentStyle: contentStyle)
                         .offset(offset)
                 }
                 .onTapGesture(perform: didTap)
             case let .adjacentLeft(spacing):
                 HStack(spacing: spacing) {
-                    lock()
+                    ContentView(contentStyle: contentStyle)
                     content
                         .disabled(true)
                 }
@@ -273,7 +288,7 @@ struct LockedContent: ViewModifier {
                 HStack(spacing: spacing) {
                     content
                         .disabled(true)
-                    lock()
+                    ContentView(contentStyle: contentStyle)
                 }
                 .onTapGesture(perform: didTap)
             case let .blur(text: text):
@@ -286,7 +301,7 @@ struct LockedContent: ViewModifier {
                             .foregroundColor(.customText1)
                             .font(.semiBold(size: 22))
                             .frame(maxWidth: UIScreen.screenWidth - Styles.horizontalMargin * 4)
-                        lock()
+                        ContentView(contentStyle: contentStyle)
                     }
                 }
                 .onTapGesture(perform: didTap)

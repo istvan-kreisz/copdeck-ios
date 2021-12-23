@@ -18,7 +18,7 @@ struct InventoryListItem: View {
 
     var inventoryItemDetails: [InventoryViewPills.InventoryItemDetail] = InventoryViewPills.InventoryItemDetail.allCases
     var tagIdsToShow: [String]? = nil
-    
+
     var tagsToShow: [Tag] {
         inventoryItem.tags.filter { tag in tagIdsToShow.map { $0.contains(tag.id) } ?? true }.first(n: 2)
     }
@@ -34,7 +34,9 @@ struct InventoryListItem: View {
             Text(bestPrice?.price.asString ?? "-")
                 .foregroundColor(.customText1)
                 .font(.bold(size: 20))
-                .lockedContent(style: .hideOriginal, lockSize: 20, lockEnabled: priceName == "Best Price")
+                .lockedContent(displayStyle: .hideOriginal,
+                               contentSttyle: .text(size: 20),
+                               lockEnabled: priceName == "Best Price")
             if let storeId = bestPrice?.storeId, let store = Store.store(withId: storeId), !isContentLocked {
                 Text("(\(store.name.rawValue))")
                     .foregroundColor(.customText2)

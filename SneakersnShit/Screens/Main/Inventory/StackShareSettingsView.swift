@@ -66,7 +66,8 @@ struct StackShareSettingsView: View {
             Spacer()
             Toggle("", isOn: isOn)
                 .labelsHidden()
-                .lockedContent(style: .overlay(offset: .init(width: -10, height: 0)), lockSize: 16, lockColor: .customText2)
+                .lockedContent(displayStyle: .overlay(offset: .init(width: -10, height: 0)),
+                               contentSttyle: .text(size: 16, color: .customText2))
                 .layoutPriority(2)
         }
     }
@@ -121,7 +122,8 @@ struct StackShareSettingsView: View {
                             }
                         }
                     }
-                    .lockedContent(style: .overlay(offset: .zero), lockSize: 20, lockColor: .customWhite)
+                    .lockedContent(displayStyle: .overlay(offset: .zero),
+                                   contentSttyle: .text(size: 20, color: .customWhite))
                     .rightAligned()
                 }
             }

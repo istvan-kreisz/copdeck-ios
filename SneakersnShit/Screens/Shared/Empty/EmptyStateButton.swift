@@ -51,7 +51,9 @@ struct EmptyStateButton: View {
                         }
                     }
                 }
-                .lockedContent(style: .adjacentRight(spacing: 3), lockSize: buttonTextSize, lockColor: .customBlue, lockEnabled: isContentLocked)
+                .lockedContent(displayStyle: .adjacentRight(spacing: 3),
+                               contentSttyle: .lock(size: buttonTextSize, color: .customBlue),
+                               lockEnabled: isContentLocked)
             }
         }
         .centeredHorizontally()

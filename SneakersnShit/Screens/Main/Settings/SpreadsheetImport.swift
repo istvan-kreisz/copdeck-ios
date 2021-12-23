@@ -187,7 +187,8 @@ struct SpreadsheetImportView: View {
                                 .fill(Color.customBlue))
                     }
                     .layoutPriority(2)
-                    .lockedContent(style: .adjacentRight(spacing: 5), lockSize: 16)
+                    .lockedContent(displayStyle: .adjacentRight(spacing: 5),
+                                   contentSttyle: .lock(size: 16))
                 }
                 .layoutPriority(2)
 

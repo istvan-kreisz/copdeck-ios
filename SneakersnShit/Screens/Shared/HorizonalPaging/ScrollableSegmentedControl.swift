@@ -32,6 +32,9 @@ struct ScrollableSegmentedControl: View {
         self.size = size
         self._frames = State<[CGRect]>(initialValue: [CGRect](repeating: .zero, count: titles.wrappedValue.count))
     }
+    
+    #warning("enable adding 1 stack")
+    #warning("enable stack sharing")
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
@@ -48,7 +51,9 @@ struct ScrollableSegmentedControl: View {
                                     .foregroundColor(textColor)
                                     .frame(height: 42)
                             }
-                            .lockedContent(style: .adjacentRight(spacing: -15), lockSize: 20, lockColor: textColor, lockEnabled: isContentLocked && index != 0)
+                            .lockedContent(displayStyle: .adjacentRight(spacing: -15),
+                                           contentSttyle: .lock(size: 20, color: textColor),
+                                           lockEnabled: isContentLocked && index > 1 && AppStore.default.state.user?.membershipInfo?.isBetaTester != true)
                             .buttonStyle(CustomSegmentButtonStyle())
                             .frame(width: size)
                             .background(GeometryReader { geoReader in
@@ -89,7 +94,9 @@ struct ScrollableSegmentedControl: View {
                                 }
                             }
                         }
-                        .lockedContent(style: .adjacentRight(spacing: 4), lockSize: 20, lockColor: .customBlue, lockEnabled: isContentLocked)
+                        .lockedContent(displayStyle: .adjacentRight(spacing: 4),
+                                       contentSttyle: .lock(size: 20, color: .customBlue),
+                                       lockEnabled: isContentLocked)
                         .padding(.horizontal, 20)
                     }
                 }
