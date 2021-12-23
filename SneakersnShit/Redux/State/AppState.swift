@@ -8,6 +8,10 @@
 import Foundation
 import Purchases
 
+var isContentLocked: Bool {
+    AppStore.default.state.isContentLocked
+}
+
 class SearchModel: ObservableObject {
     @Published var state = SearchState()
 }

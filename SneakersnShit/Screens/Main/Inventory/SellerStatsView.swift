@@ -13,11 +13,15 @@ struct SellerStatsView: View {
     let inventoryItems: [InventoryItem]
     let currency: Currency
     let exchangeRates: ExchangeRates
-    
+
     @State private var isFirstload = true
 
     var monthlyStats: [MonthlyStatistics] {
         InventoryItem.monthlyStatistics(for: inventoryItems, currency: currency, exchangeRates: exchangeRates)
+    }
+
+    var monthlyStatsLocked: [MonthlyStatistics] {
+        monthlyStats.first(n: 1)
     }
 
     @ViewBuilder func infoStack(title: String, value: String) -> some View {
@@ -30,7 +34,7 @@ struct SellerStatsView: View {
                 .foregroundColor(.customText2)
         }
     }
-    
+
     private func amountWithCurrency(_ number: Double) -> String {
         "\(currency.symbol.rawValue)\(Int(number))"
     }
@@ -44,7 +48,7 @@ struct SellerStatsView: View {
                 .padding(.top, 8)
                 .centeredHorizontally()
 
-            ForEach(monthlyStats) { stats in
+            ForEach(isContentLocked ? monthlyStatsLocked : monthlyStats) { stats in
                 VStack {
                     Text("\(Calendar.current.monthSymbols[stats.month - 1]) \(stats.year):".uppercased())
                         .font(.bold(size: 12))
@@ -69,6 +73,10 @@ struct SellerStatsView: View {
                 }
                 .asCard()
                 .withDefaultPadding(padding: .horizontal)
+            }
+            if monthlyStats.count != monthlyStatsLocked.count {
+                EmptyView()
+                    .lockedContent(displayStyle: .hideOriginal, contentSttyle: .textWithLock(text: "Upgrade to pro to see all months!", size: 20, color: .customBlue))
             }
         }
         .withBackgroundColor()

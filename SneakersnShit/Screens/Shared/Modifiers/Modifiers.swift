@@ -229,19 +229,32 @@ struct WithImageViewer: ViewModifier {
 
 struct LockedContent: ViewModifier {
     struct ContentView: View {
+        private func lock(size: CGFloat, color: Color) -> some View {
+            Image(systemName: "lock.fill")
+                .font(.bold(size: size))
+                .foregroundColor(color)
+        }
+
+        private func text(text: String, size: CGFloat, color: Color) -> some View {
+            Text(text)
+                .font(.bold(size: size))
+                .foregroundColor(color)
+                .underline()
+        }
+
         let contentStyle: ContentStyle
 
         var body: some View {
             switch contentStyle {
             case .lock(let size, let color):
-                Image(systemName: "lock.fill")
-                    .font(.bold(size: size))
-                    .foregroundColor(color)
-            case .text(let size, let color):
-                Text("Upgrade to pro!")
-                    .font(.bold(size: size))
-                    .foregroundColor(color)
-                    .underline()
+                lock(size: size, color: color)
+            case .text(let text, let size, let color):
+                self.text(text: text, size: size, color: color)
+            case .textWithLock(let text, let size, let color):
+                HStack {
+                    self.text(text: text, size: size, color: color)
+                    lock(size: size, color: color)
+                }
             }
         }
     }
@@ -256,7 +269,8 @@ struct LockedContent: ViewModifier {
 
     enum ContentStyle {
         case lock(size: CGFloat, color: Color = .customText1)
-        case text(size: CGFloat, color: Color = .customText1)
+        case text(text: String = "Upgrade to pro!", size: CGFloat, color: Color = .customText1)
+        case textWithLock(text: String = "Upgrade to pro!", size: CGFloat, color: Color = .customText1)
     }
 
     let isLocked: Bool

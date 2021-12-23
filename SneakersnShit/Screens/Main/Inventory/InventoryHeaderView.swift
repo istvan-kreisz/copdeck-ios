@@ -131,7 +131,6 @@ struct InventoryHeaderView: View {
                                         width: 155,
                                         imageName: "chevron.right",
                                         buttonPosition: .right,
-                                        isContentLocked: isContentLocked,
                                         tapped: { showSellerStats = true })
                             .padding(.top, 15)
                     }
