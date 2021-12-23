@@ -37,7 +37,7 @@ struct AddToInventoryView: View {
                                                inventoryItem5] }
 
     private var itemCount: Int {
-        allInventoryItems.compactMap { $0 }.count
+        allInventoryItems.compactMap { $0?.count }.sum()
     }
 
     init(item: Item?, currency: Currency, presented: Binding<(isActive: Bool, size: String?)>, addedInvantoryItem: Binding<Bool>) {
