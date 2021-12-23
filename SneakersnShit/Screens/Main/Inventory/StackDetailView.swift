@@ -104,6 +104,8 @@ struct StackDetailView: View {
                             Text(stackValue?.asString ?? "-")
                                 .font(.bold(size: 20))
                                 .foregroundColor(.customText1)
+                                .lockedContent(displayStyle: .hideOriginal,
+                                               contentSttyle: .text(size: 15, color: .customBlue))
                             Text("Stack Value")
                                 .font(.regular(size: 15))
                                 .foregroundColor(.customText2)
@@ -143,8 +145,7 @@ struct StackDetailView: View {
                                        stack: $stack,
                                        isPublic: stack.isPublic ?? false,
                                        isPublished: stack.isPublished ?? false,
-                                       includeTitle: true,
-                                       isContentLocked: store.state.isContentLocked) { title in
+                                       includeTitle: true) { title in
                     showSnackBar = true
                 } showPopup: { title, subtitle in
                     popup = (title, subtitle)

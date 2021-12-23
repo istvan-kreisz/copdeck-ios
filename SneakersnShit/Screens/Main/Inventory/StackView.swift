@@ -123,7 +123,6 @@ struct StackView: View {
                              buttonTitle: searchText.isEmpty ? emptyStateConfig.buttonTitle : nil,
                              style: .large,
                              showPlusIcon: true,
-                             isContentLocked: false,
                              action: emptyStateConfig.action)
                 .padding(.top, 50)
         } else {

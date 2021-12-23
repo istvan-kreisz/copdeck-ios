@@ -35,7 +35,7 @@ struct InventoryListItem: View {
                 .foregroundColor(.customText1)
                 .font(.bold(size: 20))
                 .lockedContent(displayStyle: .hideOriginal,
-                               contentSttyle: .text(size: 20),
+                               contentSttyle: .text(size: 13, color: .customBlue),
                                lockEnabled: priceName == "Best Price")
             if let storeId = bestPrice?.storeId, let store = Store.store(withId: storeId), !isContentLocked {
                 Text("(\(store.name.rawValue))")

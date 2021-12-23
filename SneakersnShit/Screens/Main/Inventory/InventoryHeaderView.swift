@@ -177,7 +177,7 @@ struct InventoryHeaderView: View {
                             .font(.bold(size: 20))
                             .foregroundColor(.customText1)
                             .lockedContent(displayStyle: .hideOriginal,
-                                           contentSttyle: .lock(size: 20),
+                                           contentSttyle: .text(size: 15, color: .customBlue),
                                            lockEnabled: updateUsername != nil)
                         Text(textBox1.title)
                             .font(.regular(size: 15))

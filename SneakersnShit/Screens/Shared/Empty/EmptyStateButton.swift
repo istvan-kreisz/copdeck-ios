@@ -16,7 +16,6 @@ struct EmptyStateButton: View {
     let buttonTitle: String?
     let style: Style
     let showPlusIcon: Bool
-    let isContentLocked: Bool
     let action: () -> Void
 
     var iconSize: CGFloat {
@@ -51,9 +50,6 @@ struct EmptyStateButton: View {
                         }
                     }
                 }
-                .lockedContent(displayStyle: .adjacentRight(spacing: 3),
-                               contentSttyle: .lock(size: buttonTextSize, color: .customBlue),
-                               lockEnabled: isContentLocked)
             }
         }
         .centeredHorizontally()

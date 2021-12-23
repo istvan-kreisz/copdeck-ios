@@ -241,6 +241,7 @@ struct LockedContent: ViewModifier {
                 Text("Upgrade to pro!")
                     .font(.bold(size: size))
                     .foregroundColor(color)
+                    .underline()
             }
         }
     }

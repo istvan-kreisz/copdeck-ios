@@ -177,8 +177,7 @@ struct InventoryItemDetailView: View {
                                     EmptyStateButton(title: "Your haven't added any photos",
                                                      buttonTitle: "Start adding photos",
                                                      style: .regular,
-                                                     showPlusIcon: false,
-                                                     isContentLocked: true) {
+                                                     showPlusIcon: false) {
                                         showPhotoSelector = true
                                     }
                                     .padding(.top, 20)

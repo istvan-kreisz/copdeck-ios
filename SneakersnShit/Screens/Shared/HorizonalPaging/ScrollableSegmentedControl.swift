@@ -96,7 +96,7 @@ struct ScrollableSegmentedControl: View {
                         }
                         .lockedContent(displayStyle: .adjacentRight(spacing: 4),
                                        contentSttyle: .lock(size: 20, color: .customBlue),
-                                       lockEnabled: isContentLocked)
+                                       lockEnabled: isContentLocked && titles.count > 2)
                         .padding(.horizontal, 20)
                     }
                 }
