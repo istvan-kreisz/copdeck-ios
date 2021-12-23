@@ -147,10 +147,11 @@ struct PaymentView: View {
 
                             VStack(alignment: .leading, spacing: 10) {
                                 bulletPoint(text: "Unlimited search & price comparison", bulletpointStyle: .checkmark)
-                                bulletPoint(text: "Always up to date prices on all your shoes", bulletpointStyle: .checkmark)
+                                bulletPoint(text: "Up-to-date best prices for all your items", bulletpointStyle: .checkmark)
                                 bulletPoint(text: "Total inventory value tracking", bulletpointStyle: .checkmark)
                                 bulletPoint(text: "Monthly cost & revenue stats", bulletpointStyle: .checkmark)
-                                bulletPoint(text: "Stack sharing without limitatons", bulletpointStyle: .checkmark)
+                                bulletPoint(text: "Unlimited stacks", bulletpointStyle: .checkmark)
+                                bulletPoint(text: "Spreadsheet import", bulletpointStyle: .checkmark)
                             }
                             .padding(.bottom, 10)
 
@@ -161,8 +162,8 @@ struct PaymentView: View {
                             VStack(alignment: .leading, spacing: 14) {
                                 bulletPoint(text: "Import your inventory using our spreadsheet import feature or add your items manually.",
                                             bulletpointStyle: .dot)
-                                bulletPoint(text: "Find where to buy & sell your shoes using CopDeck's price comparison feature.", bulletpointStyle: .dot)
-                                bulletPoint(text: "Share your items on the CopDeck feed / on the web via an auto-generated link.", bulletpointStyle: .dot)
+                                bulletPoint(text: "Find the best marketplace to buy & sell using CopDeck's price comparison feature.", bulletpointStyle: .dot)
+                                bulletPoint(text: "Purchase or list your item at the best possible price.", bulletpointStyle: .dot)
                                 bulletPoint(text: "...", bulletpointStyle: .dot)
                                 bulletPoint(text: "Profit $$$", bulletpointStyle: .dot)
                             }

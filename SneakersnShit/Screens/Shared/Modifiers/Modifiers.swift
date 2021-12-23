@@ -269,8 +269,8 @@ struct LockedContent: ViewModifier {
 
     enum ContentStyle {
         case lock(size: CGFloat, color: Color = .customText1)
-        case text(text: String = "Upgrade to pro!", size: CGFloat, color: Color = .customText1)
-        case textWithLock(text: String = "Upgrade to pro!", size: CGFloat, color: Color = .customText1)
+        case text(text: String = "Unlock with Pro!", size: CGFloat, color: Color = .customText1)
+        case textWithLock(text: String = "Unlock with Pro!", size: CGFloat, color: Color = .customText1)
     }
 
     let isLocked: Bool
