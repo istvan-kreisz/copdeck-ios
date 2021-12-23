@@ -301,7 +301,22 @@ func appReducer(state: inout AppState,
             environment.dataController.applyReferralCode(code, completion: completion)
         case let .purchase(package):
             Analytics.logEvent("buy_pro", parameters: ["userId": state.user?.id ?? ""])
-            environment.paymentService.purchase(package: package)
+            return environment.paymentService.purchase(package: package)
+                .handleEvents(receiveCompletion: { completion in
+                    guard case .finished = completion else { return }
+                    if var user = AppStore.default.state.user {
+                        if user.subscription != .pro {
+                            user.subscription = .pro
+                            AppStore.default.state.user = user
+                        }
+                    }
+                })
+                .map { _ in AppAction.none }
+                .tryCatch {
+                    Just(AppAction.error(action: .setError(error: $0)))
+                }
+                .replaceError(with: AppAction.none)
+                .eraseToAnyPublisher()
         case let .restorePurchases(completion):
             Analytics.logEvent("restore_purchases", parameters: ["userId": state.user?.id ?? ""])
             environment.dataController.refreshUserSubscriptionStatus(completion: completion)

@@ -143,8 +143,8 @@ struct InventoryView: View {
                               isSelected: isSelected,
                               emptyStateConfig: (stack.id == "all" ?
                                   StackView.EmptyStateConfig.init(title: "Your inventory is empty",
-                                                                  buttonTitle: "Use the search tab to add items") {
-                                      viewRouter.currentPage = .search
+                                                                  buttonTitle: "Start adding items") {
+                                      addNewInventoryItemPresented.wrappedValue = true
                                   } :
                                   StackView.EmptyStateConfig.init(title: "Your stack is empty",
                                                                   buttonTitle: "Start adding items") {

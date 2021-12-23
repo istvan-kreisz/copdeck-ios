@@ -44,26 +44,26 @@ struct InventoryHeaderView: View {
             }
         } label: {
             HStack(spacing: 5) {
+//                Text(facebookURL != nil ? "View facebook account" : "Link your facebook account")
+//                    .font(.medium(size: 14))
+//                    .foregroundColor(.customText2)
+//                    .underline()
                 if facebookURL != nil {
                     Text("View facebook account")
                         .font(.medium(size: 14))
                         .foregroundColor(.customText2)
                         .underline()
+                    Image("facebook")
+                        .renderingMode(.template)
+                        .resizable()
+                        .foregroundColor(.customWhite)
+                        .scaledToFit()
+                        .frame(width: facebookLogoSize * 0.6, height: facebookLogoSize * 0.6)
+                        .centeredVertically()
+                        .frame(width: facebookLogoSize, height: facebookLogoSize)
+                        .background(Color(r: 66, g: 103, b: 178))
+                        .cornerRadius(facebookLogoSize / 2)
                 }
-//                Text(facebookURL != nil ? "View facebook account" : "Link your facebook account")
-//                    .font(.medium(size: 14))
-//                    .foregroundColor(.customText2)
-//                    .underline()
-                Image("facebook")
-                    .renderingMode(.template)
-                    .resizable()
-                    .foregroundColor(.customWhite)
-                    .scaledToFit()
-                    .frame(width: facebookLogoSize * 0.6, height: facebookLogoSize * 0.6)
-                    .centeredVertically()
-                    .frame(width: facebookLogoSize, height: facebookLogoSize)
-                    .background(Color(r: 66, g: 103, b: 178))
-                    .cornerRadius(facebookLogoSize / 2)
             }
         }
     }

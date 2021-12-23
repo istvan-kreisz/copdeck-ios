@@ -87,12 +87,18 @@ class DefaultPaymentService: NSObject, PaymentService {
         Purchases.shared.logOut(nil)
     }
 
-    func purchase(package: Purchases.Package) {
-        Purchases.shared.purchasePackage(package) { [weak self] transaction, _, error, userCancelled in
-            if let error = error {
-                self?.errorsSubject.send(AppError(error: error))
+    func purchase(package: Purchases.Package) -> AnyPublisher<Void, AppError> {
+        Future { promise in
+            Purchases.shared.purchasePackage(package) { transaction, _, error, userCancelled in
+                if let error = error {
+                    promise(.failure(AppError(error: error)))
+                } else {
+                    promise(.success(()))
+                }
             }
         }
+        .eraseToAnyPublisher()
+        .onMain()
     }
 
     private func getPackages(completion: (() -> Void)?) {

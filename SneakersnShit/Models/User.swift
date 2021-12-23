@@ -72,7 +72,7 @@ struct User: Codable, Equatable, Identifiable {
     let membershipInfo: MembershipInfo?
     let country: String?
     var facebookProfileURL: String?
-    let subscription: Subscription?
+    var subscription: Subscription?
     let subscribedDate: String?
     var notificationsEnabled: Bool?
 
