@@ -79,7 +79,10 @@ extension AppStore {
                             updatedInventoryItem.itemFields = .init(from: item, size: inventoryItem.size)
                             return updatedInventoryItem
                         } else {
-                            return inventoryItem
+                            var updatedInventoryItem = inventoryItem
+                            updatedInventoryItem.itemFields = nil
+                            updatedInventoryItem.bestPrice = nil
+                            return updatedInventoryItem
                         }
                     }
                     self.updateCalculatedPrices(inventoryItems: updatedInventoryItems)
@@ -106,7 +109,8 @@ extension AppStore {
                 let settings = self.state.settings
                 let updatedInventoryItems = inventoryItems.map { inventoryItem -> InventoryItem in
                     var updatedInventoryItem = inventoryItem
-                    updatedInventoryItem.bestPrice = self.bestPrice(for: inventoryItem, settings: settings)
+                    let bestPrice = self.bestPrice(for: inventoryItem, settings: settings)
+                    updatedInventoryItem.bestPrice = bestPrice?.price.price == 0 ? nil : bestPrice
                     return updatedInventoryItem
                 }
                 let updatedInventoryItemIds = updatedInventoryItems.map(\.id)
@@ -147,6 +151,7 @@ extension AppStore {
                       if oldSettings?.feeCalculation.country != newSettings?.feeCalculation.country ||
                           oldSettings?.currency != newSettings?.currency ||
                           previousUser?.id != newUser.id {
+                          self.updateInventoryItemsWithItemFields(inventoryItems: self.state.inventoryItems)
                           self.updateUserItems()
                       } else if oldSettings?.feeCalculation != newSettings?.feeCalculation {
                           self.updateCalculatedPrices(inventoryItems: self.state.inventoryItems)
