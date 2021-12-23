@@ -16,4 +16,5 @@ protocol PaymentService {
     func setup(userId: String, userEmail: String?)
     func reset()
     func purchase(package: Purchases.Package) -> AnyPublisher<Void, AppError>
+    func fetchPackages(completion: (() -> Void)?)
 }

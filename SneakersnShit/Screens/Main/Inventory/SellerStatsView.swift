@@ -76,7 +76,9 @@ struct SellerStatsView: View {
             }
             if monthlyStats.count != monthlyStatsLocked.count, isContentLocked {
                 EmptyView()
-                    .lockedContent(displayStyle: .hideOriginal, contentSttyle: .textWithLock(text: "Upgrade to pro to see all months!", size: 20, color: .customBlue))
+                    .centeredHorizontally()
+                    .lockedContent(displayStyle: .hideOriginal,
+                                   contentSttyle: .textWithLock(text: "Upgrade to pro to see all months!", size: 20, color: .customBlue))
             }
         }
         .withBackgroundColor()

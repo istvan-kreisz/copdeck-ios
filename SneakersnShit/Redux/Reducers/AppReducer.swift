@@ -320,6 +320,8 @@ func appReducer(state: inout AppState,
         case let .restorePurchases(completion):
             Analytics.logEvent("restore_purchases", parameters: ["userId": state.user?.id ?? ""])
             environment.dataController.refreshUserSubscriptionStatus(completion: completion)
+        case .fetchPackages:
+            environment.paymentService.fetchPackages(completion: nil)
         case let .showPaymentView(show):
             Analytics.logEvent("show_payment_view", parameters: ["userId": state.user?.id ?? ""])
             state.showPaymentView = show

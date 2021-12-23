@@ -322,6 +322,7 @@ struct ItemDetailView: View {
                                         }
                                     } else {
                                         EmptyView()
+                                            .centeredHorizontally()
                                             .lockedContent(displayStyle: .hideOriginal,
                                                            contentSttyle: .textWithLock(text: "Daily limit reached, start your trial to get unlimited access!", size: 20, color: .customBlue))
                                     }
