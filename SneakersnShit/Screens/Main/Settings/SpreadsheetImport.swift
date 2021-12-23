@@ -156,6 +156,7 @@ struct SpreadsheetImportView: View {
                     TextFieldRounded(placeHolder: "Spreadsheet url", style: .gray, text: $spreadsheetURL, addClearButton: true)
                         .layoutPriority(2)
                     Button {
+                        guard !store.globalState.isContentLocked else { return }
                         if let url = store.globalState.user?.spreadsheetImport?.url, let status = store.globalState.user?.spreadsheetImport?.status {
                             if spreadsheetURL == url {
                                 self.error = ("Error", "You already submitted an import request with this url.", nil)
@@ -179,7 +180,7 @@ struct SpreadsheetImportView: View {
                         }
                         sendImportRequest()
                     } label: {
-                        Text("Start import")
+                        Text(store.globalState.isContentLocked ? "Unlock with Pro!" : "Start import")
                             .font(.bold(size: 14))
                             .foregroundColor(.customWhite)
                             .frame(width: 110, height: Styles.inputFieldHeight)
@@ -187,8 +188,6 @@ struct SpreadsheetImportView: View {
                                 .fill(Color.customBlue))
                     }
                     .layoutPriority(2)
-                    .lockedContent(displayStyle: .adjacentRight(spacing: 5),
-                                   contentSttyle: .lock(size: 16))
                 }
                 .layoutPriority(2)
 
