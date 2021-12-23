@@ -125,9 +125,7 @@ extension AppStore {
 
     func setupObservers() {
         environment.dataController.canViewPricesPublisher
-            .map { [weak self] in
-                $0 || self?.state.globalState.subscriptionActive == true
-            }
+            .map { $0 || !isContentLocked }
             .removeDuplicates()
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] canViewPrices in

@@ -290,38 +290,41 @@ struct ItemDetailView: View {
                                             .padding(5)
                                     }
 
-                                    VStack(spacing: 20) {
-                                        if let preferredSize = store.globalState.settings.preferredShoeSize,
-                                           item?.itemTypeDefaulted == .shoe,
-                                           item?.sortedSizes.contains(where: { $0 == preferredSize }) == true,
-                                           let row = item?.priceRow(size: preferredSize,
-                                                                    priceType: priceType,
-                                                                    feeType: feeType,
-                                                                    stores: store.globalState.displayedStores,
-                                                                    restocksPriceType: restocksPriceType) {
-                                            Text("Your size:")
-                                                .font(.semiBold(size: 14))
-                                                .foregroundColor(.customText1)
-                                                .padding(.bottom, -10)
-                                                .leftAligned()
-                                            priceRow(row: row)
-                                            Text("All sizes:")
-                                                .font(.semiBold(size: 14))
-                                                .foregroundColor(.customText1)
-                                                .padding(.bottom, -10)
-                                                .leftAligned()
+                                    if store.globalState.canViewPrices {
+                                        VStack(spacing: 20) {
+                                            if let preferredSize = store.globalState.settings.preferredShoeSize,
+                                               item?.itemTypeDefaulted == .shoe,
+                                               item?.sortedSizes.contains(where: { $0 == preferredSize }) == true,
+                                               let row = item?.priceRow(size: preferredSize,
+                                                                        priceType: priceType,
+                                                                        feeType: feeType,
+                                                                        stores: store.globalState.displayedStores,
+                                                                        restocksPriceType: restocksPriceType) {
+                                                Text("Your size:")
+                                                    .font(.semiBold(size: 14))
+                                                    .foregroundColor(.customText1)
+                                                    .padding(.bottom, -10)
+                                                    .leftAligned()
+                                                priceRow(row: row)
+                                                Text("All sizes:")
+                                                    .font(.semiBold(size: 14))
+                                                    .foregroundColor(.customText1)
+                                                    .padding(.bottom, -10)
+                                                    .leftAligned()
+                                            }
+                                            ForEach((item?.allPriceRows(priceType: priceType,
+                                                                        feeType: feeType,
+                                                                        stores: store.globalState.displayedStores,
+                                                                        restocksPriceType: restocksPriceType)) ?? []) { (row: Item.PriceRow) in
+                                                priceRow(row: row)
+                                            }
+                                            .id(0)
                                         }
-                                        ForEach((item?.allPriceRows(priceType: priceType,
-                                                                    feeType: feeType,
-                                                                    stores: store.globalState.displayedStores,
-                                                                    restocksPriceType: restocksPriceType)) ?? []) { (row: Item.PriceRow) in
-                                            priceRow(row: row)
-                                        }
-                                        .id(0)
+                                    } else {
+                                        EmptyView()
+                                            .lockedContent(displayStyle: .hideOriginal,
+                                                           contentSttyle: .textWithLock(text: "Daily limit reached, start your trial to get unlimited access!", size: 20, color: .customBlue))
                                     }
-                                    .lockedContent(displayStyle: .blur(text: "You've reached your daily limit, start your trial to get unlimited access"),
-                                                   contentSttyle: .lock(size: 30),
-                                                   lockEnabled: !(item?.sortedSizes ?? []).isEmpty)
                                 }
                                 .padding(.horizontal, 10)
                             }
@@ -380,30 +383,20 @@ struct ItemDetailView: View {
     }
 
     private func setupItemListener() {
-        store.send(.main(action: .getItemListener(itemId: itemId, updated: { item in
-            self.set(item: item)
-        }, completion: { listener in
-            self.itemListener?.reset()
-            self.itemListener = listener
-        })))
-    }
-
-    private func updateItem(newItem: Item?) {
-        guard let newItem = newItem, newItem.id == itemId else { return }
-        if let item = self.item {
-            if newItem.id == item.id {
-                self.set(item: newItem)
-                store.send(.main(action: .addRecentlyViewed(item: newItem)))
-            }
-        } else {
-            self.set(item: newItem)
-            store.send(.main(action: .addRecentlyViewed(item: newItem)))
+        if store.globalState.canViewPrices {
+            store.send(.main(action: .getItemListener(itemId: itemId, updated: { item in
+                self.set(item: item)
+            }, completion: { listener in
+                self.itemListener?.reset()
+                self.itemListener = listener
+            })))
         }
     }
 
     private func set(item: Item) {
         store.send(.main(action: .updateInventoryItems(associatedWith: item)))
         self.item = withCalculatedPrices(item: item)
+        store.send(.main(action: .addRecentlyViewed(item: item)))
     }
 
     private func didToggleFavorite() {

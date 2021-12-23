@@ -10,7 +10,7 @@ import Foundation
 extension World {
     enum Constants {
         static var itemPricesRefreshPeriodMin: Double { double(for: #function, defaultValue: 30) }
-        static let dailyPriceCheckLimit = 2
+        static let dailyPriceCheckLimit = 3
     }
 }
 
