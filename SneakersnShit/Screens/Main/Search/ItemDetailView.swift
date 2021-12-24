@@ -226,18 +226,20 @@ struct ItemDetailView: View {
                                     }
                                     .padding(.top, -10)
 
-                                    HStack(alignment: .center, spacing: 3) {
-                                        Text("Refresh Prices")
-                                            .foregroundColor(.customOrange)
-                                            .font(.bold(size: 16))
-                                        Image(systemName: "arrow.clockwise")
-                                            .font(.bold(size: 13))
-                                            .foregroundColor(.customOrange)
-                                    }
-                                    .padding(.top, 3)
-                                    .padding(.bottom, -5)
-                                    .onTapGesture {
-                                        refreshPrices(forced: true)
+                                    if store.globalState.canViewPrices {
+                                        HStack(alignment: .center, spacing: 3) {
+                                            Text("Refresh Prices")
+                                                .foregroundColor(.customOrange)
+                                                .font(.bold(size: 16))
+                                            Image(systemName: "arrow.clockwise")
+                                                .font(.bold(size: 13))
+                                                .foregroundColor(.customOrange)
+                                        }
+                                        .padding(.top, 3)
+                                        .padding(.bottom, -5)
+                                        .onTapGesture {
+                                            refreshPrices(forced: true)
+                                        }
                                     }
                                 }
                                 .padding(.horizontal, 10)
@@ -321,10 +323,13 @@ struct ItemDetailView: View {
                                             .id(0)
                                         }
                                     } else {
-                                        EmptyView()
-                                            .centeredHorizontally()
+                                        Text("")
+                                            .padding(.top, 50)
+                                            .frame(width: UIScreen.screenWidth - Styles.horizontalPadding * 2)
                                             .lockedContent(displayStyle: .hideOriginal,
-                                                           contentSttyle: .textWithLock(text: "Daily limit reached, start your trial to get unlimited access!", size: 20, color: .customBlue))
+                                                           contentSttyle: .text(text: "Daily limit reached, start your trial to get unlimited access!",
+                                                                                size: 15, color: .customBlue))
+                                            .centeredHorizontally()
                                     }
                                 }
                                 .padding(.horizontal, 10)

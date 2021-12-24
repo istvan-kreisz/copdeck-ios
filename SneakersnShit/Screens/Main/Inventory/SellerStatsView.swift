@@ -75,10 +75,11 @@ struct SellerStatsView: View {
                 .withDefaultPadding(padding: .horizontal)
             }
             if monthlyStats.count != monthlyStatsLocked.count, isContentLocked {
-                EmptyView()
+                Text("")
+                    .frame(width: UIScreen.screenWidth - Styles.horizontalPadding * 2)
                     .centeredHorizontally()
                     .lockedContent(displayStyle: .hideOriginal,
-                                   contentSttyle: .textWithLock(text: "Upgrade to pro to see all months!", size: 20, color: .customBlue))
+                                   contentSttyle: .textWithLock(text: "Unlock stats for all months with Pro!", size: 16, color: .customBlue))
             }
         }
         .withBackgroundColor()

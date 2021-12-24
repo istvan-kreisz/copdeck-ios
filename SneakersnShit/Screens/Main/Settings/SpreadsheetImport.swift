@@ -181,7 +181,7 @@ struct SpreadsheetImportView: View {
                         sendImportRequest()
                     } label: {
                         Text(store.globalState.isContentLocked ? "Unlock with Pro!" : "Start import")
-                            .font(.bold(size: 14))
+                            .font(.bold(size: store.globalState.isContentLocked ? 12 : 14))
                             .foregroundColor(.customWhite)
                             .frame(width: 110, height: Styles.inputFieldHeight)
                             .background(RoundedRectangle(cornerRadius: Styles.cornerRadius)

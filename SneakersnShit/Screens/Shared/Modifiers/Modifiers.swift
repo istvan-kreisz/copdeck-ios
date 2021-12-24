@@ -240,6 +240,8 @@ struct LockedContent: ViewModifier {
                 .font(.bold(size: size))
                 .foregroundColor(color)
                 .underline()
+                .fixedSize(horizontal: false, vertical: true)
+                .multilineTextAlignment(.center)
         }
 
         let contentStyle: ContentStyle
@@ -252,8 +254,10 @@ struct LockedContent: ViewModifier {
                 self.text(text: text, size: size, color: color)
             case .textWithLock(let text, let size, let color):
                 HStack {
+                    Spacer()
                     self.text(text: text, size: size, color: color)
                     lock(size: size, color: color)
+                    Spacer()
                 }
             }
         }
@@ -264,7 +268,6 @@ struct LockedContent: ViewModifier {
         case overlay(offset: CGSize)
         case adjacentRight(spacing: CGFloat)
         case adjacentLeft(spacing: CGFloat)
-        case blur(text: String)
     }
 
     enum ContentStyle {
@@ -304,20 +307,6 @@ struct LockedContent: ViewModifier {
                     content
                         .disabled(true)
                     ContentView(contentStyle: contentStyle)
-                }
-                .onTapGesture(perform: didTap)
-            case let .blur(text: text):
-                ZStack {
-                    content
-                        .allowsHitTesting(false)
-                        .blur(radius: 10)
-                    HStack(spacing: 5) {
-                        Text(text)
-                            .foregroundColor(.customText1)
-                            .font(.semiBold(size: 22))
-                            .frame(maxWidth: UIScreen.screenWidth - Styles.horizontalMargin * 4)
-                        ContentView(contentStyle: contentStyle)
-                    }
                 }
                 .onTapGesture(perform: didTap)
             }
