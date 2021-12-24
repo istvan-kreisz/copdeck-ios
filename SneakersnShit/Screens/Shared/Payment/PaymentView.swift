@@ -40,7 +40,8 @@ struct PaymentView: View {
     @State private var alert: (String, String)? = nil
 
     static let privacyPolicyString: NSMutableAttributedString = {
-        let string = NSMutableAttributedString(string: "Before joining, please read our Privacy Policy and Terms & Conditions")
+        let string =
+            NSMutableAttributedString(string: "Subscriptions will be charged to your credit card through your App Store account. Your subscription will automatically renew unless cancelled at least 24 hours before the end of the current period. Manage your subscription in your App Store account settings after purchase. For more information, see our Privacy Policy and Terms & Conditions")
         string.addAttributes([.foregroundColor: UIColor(Color.customText2), .font: UIFont.regular(size: 14)],
                              range: NSRange.init(location: 0, length: string.length))
         string.setAsLink(textToFind: "Privacy Policy", linkURL: "https://copdeck.com/privacy")
@@ -59,7 +60,7 @@ struct PaymentView: View {
     private func bulletPoint(text: String, bulletpointStyle: BulletpointStyle) -> some View {
         HStack(alignment: .top, spacing: 5) {
             Image(systemName: bulletpointStyle == .checkmark ? "checkmark" : "app.fill")
-                .font(.bold(size: bulletpointStyle == .checkmark ? 18 : 20))
+                .font(.bold(size: bulletpointStyle == .checkmark ? 16 : 18))
                 .foregroundColor(Color.customBlue)
                 .padding(.top, 3)
 
@@ -90,8 +91,6 @@ struct PaymentView: View {
                                       })
 
         ZStack {
-//            Color.customWhite.edgesIgnoringSafeArea(.all)
-
             if present {
                 ZStack {
                     Color.customWhite.edgesIgnoringSafeArea(.all)
@@ -122,7 +121,7 @@ struct PaymentView: View {
                             if let trialPackage = trialPackage {
                                 if let monthlyPriceString = trialPackage.priceString(for: .monthly) {
                                     Text("\(trialPackage.terms), then \(monthlyPriceString) per month")
-                                        .font(.bold(size: 25))
+                                        .font(.bold(size: 22))
                                         .foregroundColor(.customText1)
                                 }
                             } else {
@@ -130,7 +129,7 @@ struct PaymentView: View {
                                     if let monthlyPackage = store.globalState.packages?.monthlyPackage,
                                        let monthlyPriceString = monthlyPackage.priceString(for: .monthly) {
                                         Text("\(monthlyPackage.terms), then \(monthlyPriceString) per month")
-                                            .font(.bold(size: 20))
+                                            .font(.bold(size: 18))
                                             .foregroundColor(.customText1)
                                     }
                                     if let yearlyPackage = store.globalState.packages?.yearlyPackage,
@@ -139,7 +138,7 @@ struct PaymentView: View {
                                             .font(.bold(size: 20))
                                             .foregroundColor(.customText1)
                                         Text("\(yearlyPackage.terms), then \(yearlyPriceString) per year")
-                                            .font(.bold(size: 20))
+                                            .font(.bold(size: 18))
                                             .foregroundColor(.customText1)
                                     }
                                 }
@@ -163,7 +162,7 @@ struct PaymentView: View {
                                 bulletPoint(text: "Import your inventory using our spreadsheet import feature or add your items manually.",
                                             bulletpointStyle: .dot)
                                 bulletPoint(text: "Find the best marketplace to buy & sell using CopDeck's price comparison feature.", bulletpointStyle: .dot)
-                                bulletPoint(text: "Purchase or list your item at the best possible price.", bulletpointStyle: .dot)
+                                bulletPoint(text: "Purchase or list your item at the best prices.", bulletpointStyle: .dot)
                                 bulletPoint(text: "...", bulletpointStyle: .dot)
                                 bulletPoint(text: "Profit $$$", bulletpointStyle: .dot)
                             }
@@ -262,7 +261,7 @@ struct PaymentView: View {
 
                                 VStack(alignment: .leading, spacing: 1) {
                                     AttributedText(Self.privacyPolicyString)
-                                        .frame(height: 42)
+                                        .frame(width: UIScreen.screenWidth - 2 * Styles.horizontalMargin, height: UIScreen.isSmallScreen ? 180 : 130)
                                     AttributedText(Self.restorePurchasesString) { _ in
                                         restorePurchases()
                                     }
