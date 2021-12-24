@@ -148,7 +148,8 @@ extension AppStore {
                       let newSettings = newUser.settings
                       if oldSettings?.feeCalculation.country != newSettings?.feeCalculation.country ||
                           oldSettings?.currency != newSettings?.currency ||
-                          previousUser?.id != newUser.id {
+                          previousUser?.id != newUser.id ||
+                          (newUser.subscription == .pro && previousUser?.subscription != .pro) {
                           self.updateInventoryItemsWithItemFields(inventoryItems: self.state.inventoryItems)
                           self.updateUserItems()
                       } else if oldSettings?.feeCalculation != newSettings?.feeCalculation {
@@ -170,20 +171,33 @@ extension AppStore {
                       var inventoryItemsToUpdate: [InventoryItem] = []
                       let updatedNewInventoryItems = newInventoryItems.map { new -> InventoryItem in
                           var newInventoryItem = new
-                          guard let previousInventoryItem = self.state.inventoryItems.first(where: { $0.id == newInventoryItem.id }),
-                                let itemFields = previousInventoryItem.itemFields,
-                                let bestPrice = previousInventoryItem.bestPrice,
-                                previousInventoryItem.size == newInventoryItem.size,
-                                previousInventoryItem.updateTrigger == newInventoryItem.updateTrigger
-                          else {
-                              if !(newInventoryItem.itemId ?? "").isEmpty {
-                                  inventoryItemsToUpdate.append(newInventoryItem)
+                          if isContentLocked {
+                              guard let previousInventoryItem = self.state.inventoryItems.first(where: { $0.id == newInventoryItem.id }),
+                                    let itemFields = previousInventoryItem.itemFields
+                              else {
+                                  if !(newInventoryItem.itemId ?? "").isEmpty {
+                                      inventoryItemsToUpdate.append(newInventoryItem)
+                                  }
+                                  return newInventoryItem
                               }
+                              newInventoryItem.itemFields = itemFields
+                              return newInventoryItem
+                          } else {
+                              guard let previousInventoryItem = self.state.inventoryItems.first(where: { $0.id == newInventoryItem.id }),
+                                    let itemFields = previousInventoryItem.itemFields,
+                                    let bestPrice = previousInventoryItem.bestPrice,
+                                    previousInventoryItem.size == newInventoryItem.size,
+                                    previousInventoryItem.updateTrigger == newInventoryItem.updateTrigger
+                              else {
+                                  if !(newInventoryItem.itemId ?? "").isEmpty {
+                                      inventoryItemsToUpdate.append(newInventoryItem)
+                                  }
+                                  return newInventoryItem
+                              }
+                              newInventoryItem.itemFields = itemFields
+                              newInventoryItem.bestPrice = bestPrice
                               return newInventoryItem
                           }
-                          newInventoryItem.itemFields = itemFields
-                          newInventoryItem.bestPrice = bestPrice
-                          return newInventoryItem
                       }
                       self.state.inventoryItems = updatedNewInventoryItems
                       self.updateInventoryItemsWithItemFields(inventoryItems: inventoryItemsToUpdate)
