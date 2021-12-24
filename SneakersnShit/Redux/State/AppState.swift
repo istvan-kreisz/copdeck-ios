@@ -165,10 +165,12 @@ struct AppState: Equatable {
 
     mutating func reset() {
         user = nil
-        inventoryItems = []
-        stacks = []
-        profileImageURL = nil
+        favoritedItems = []
+        recentlyViewedItems = []
         error = nil
         showPaymentView = false
+        globalState.chatUpdates = .init(updateInfo: [:])
+        globalState.canViewPrices = true
+        inventoryState = InventoryState()
     }
 }

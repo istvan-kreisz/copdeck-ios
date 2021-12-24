@@ -11,6 +11,7 @@ extension World {
     enum Constants {
         static var itemPricesRefreshPeriodMin: Double { double(for: #function, defaultValue: 30) }
         static let dailyPriceCheckLimit = 3
+        static let stacksLimit = 1
     }
 }
 

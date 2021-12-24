@@ -33,9 +33,6 @@ struct ScrollableSegmentedControl: View {
         self._frames = State<[CGRect]>(initialValue: [CGRect](repeating: .zero, count: titles.wrappedValue.count))
     }
     
-    #warning("enable adding 1 stack")
-    #warning("enable stack sharing")
-
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             ScrollViewReader { sp in
@@ -53,7 +50,7 @@ struct ScrollableSegmentedControl: View {
                             }
                             .lockedContent(displayStyle: .adjacentRight(spacing: -15),
                                            contentSttyle: .lock(size: 20, color: textColor),
-                                           lockEnabled: isContentLocked && index > 1 && AppStore.default.state.user?.membershipInfo?.isBetaTester != true)
+                                           lockEnabled: isContentLocked && index > World.Constants.stacksLimit && AppStore.default.state.user?.membershipInfo?.isBetaTester != true)
                             .buttonStyle(CustomSegmentButtonStyle())
                             .frame(width: size)
                             .background(GeometryReader { geoReader in
@@ -81,7 +78,7 @@ struct ScrollableSegmentedControl: View {
                                     .font(.bold(size: 22))
                                     .foregroundColor(.customBlue)
                                     .frame(height: 42)
-                                if !isContentLocked {
+                                if !(isContentLocked && titles.count >= World.Constants.stacksLimit + 1) {
                                     ZStack {
                                         Circle()
                                             .fill(Color.customBlue.opacity(0.2))
@@ -96,7 +93,7 @@ struct ScrollableSegmentedControl: View {
                         }
                         .lockedContent(displayStyle: .adjacentRight(spacing: 4),
                                        contentSttyle: .lock(size: 20, color: .customBlue),
-                                       lockEnabled: isContentLocked && titles.count > 2)
+                                       lockEnabled: isContentLocked && titles.count >= World.Constants.stacksLimit + 1)
                         .padding(.horizontal, 20)
                     }
                 }
