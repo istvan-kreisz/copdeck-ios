@@ -25,8 +25,18 @@ extension AppStore {
     }()
 
     func setup() {
-        setupObservers()
+        setupGlobalObservers()
         fetchConfigs()
+    }
+        
+    func applicationWillEnterForeground() {
+        fetchConfigs()
+        updateUserItems()
+    }
+    
+    func reset() {
+        effectCancellables.forEach { $0.cancel() }
+        effectCancellables = []
     }
 
     private func bestPrice(for inventoryItem: InventoryItem, settings: CopDeckSettings) -> ListingPrice? {
@@ -123,22 +133,16 @@ extension AppStore {
         }
     }
 
-    func setupObservers() {
+    func setupUserObservers() {
         environment.dataController.canViewPricesPublisher
             .map { $0 || !isContentLocked }
             .removeDuplicates()
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] canViewPrices in
                       self?.state.globalState.canViewPrices = canViewPrices
-                  })
+            })
             .store(in: &effectCancellables)
-
-        environment.dataController.errorsPublisher.merge(with: environment.paymentService.errorsPublisher)
-            .sink { [weak self] error in
-                self?.state.error = error
-            }
-            .store(in: &effectCancellables)
-
+        
         environment.dataController.userPublisher
             .withPrevious()
             .sink(receiveCompletion: { _ in },
@@ -232,13 +236,6 @@ extension AppStore {
                   })
             .store(in: &effectCancellables)
 
-        environment.paymentService.packagesPublisher
-            .sink(receiveCompletion: { _ in },
-                  receiveValue: { [weak self] packages in
-                      self?.state.allPackages = packages
-                  })
-            .store(in: &effectCancellables)
-
         environment.dataController.chatUpdatesPublisher
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] chatUpdateInfo in
@@ -247,9 +244,20 @@ extension AppStore {
             .store(in: &effectCancellables)
     }
 
-    func applicationWillEnterForeground() {
-        fetchConfigs()
-        updateUserItems()
+    private func setupGlobalObservers() {
+        #warning("convert & add to fetchConfigs")
+        environment.paymentService.packagesPublisher
+            .sink(receiveCompletion: { _ in },
+                  receiveValue: { [weak self] packages in
+                      self?.state.allPackages = packages
+                  })
+            .store(in: &effectCancellables)
+        
+        environment.dataController.errorsPublisher.merge(with: environment.paymentService.errorsPublisher)
+            .sink { [weak self] error in
+                self?.state.error = error
+            }
+            .store(in: &effectCancellables)
     }
 
     private func fetchConfigs() {

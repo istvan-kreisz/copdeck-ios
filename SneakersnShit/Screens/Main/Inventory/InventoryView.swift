@@ -148,7 +148,11 @@ struct InventoryView: View {
                                   } :
                                   StackView.EmptyStateConfig.init(title: "Your stack is empty",
                                                                   buttonTitle: "Start adding items") {
-                                      navigationDestination += .selectStackItems(stack)
+                                      if store.state.inventoryItems.isEmpty {
+                                          addNewInventoryItemPresented.wrappedValue = true
+                                      } else {
+                                          navigationDestination += .selectStackItems(stack)
+                                      }
                                   }),
                               didTapEditStack: stack.id == "all" ? nil : {
                                   navigationDestination += .stack(selectedStackBinding)

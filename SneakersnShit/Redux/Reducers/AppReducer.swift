@@ -31,6 +31,7 @@ func appReducer(state: inout AppState,
             environment.dataController.reset()
             environment.paymentService.reset()
             environment.pushNotificationService.reset()
+            AppStore.default.reset()
         // delete tokens
         case let .setUser(user):
             if !state.firstLoadDone {
@@ -40,6 +41,7 @@ func appReducer(state: inout AppState,
             environment.pushNotificationService.setup(userId: user.id)
             environment.dataController.setup(userId: user.id)
             environment.paymentService.setup(userId: user.id, userEmail: user.email)
+            AppStore.default.setupUserObservers()
         // register tokens
         case let .updateUsername(username):
             Analytics.logEvent("update_username", parameters: ["userId": state.user?.id ?? ""])
@@ -271,7 +273,7 @@ func appReducer(state: inout AppState,
                         .flatMap { (user: User) -> AnyPublisher<AppAction, Never> in
                             if let referralCode = refCode, user.membershipInfo?.referralCodeUsed == nil {
                                 return Just(AppAction.main(action: .setUser(user: user)))
-                                    .merge(with: Just(AppAction.paymentAction(action: .applyReferralCode(referralCode, completion: nil))))
+                                    .append(Just(AppAction.paymentAction(action: .applyReferralCode(referralCode, completion: nil))))
                                     .eraseToAnyPublisher()
                             } else {
                                 return Just(AppAction.main(action: .setUser(user: user))).eraseToAnyPublisher()

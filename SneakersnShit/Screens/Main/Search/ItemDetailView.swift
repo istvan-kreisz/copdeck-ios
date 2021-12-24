@@ -24,6 +24,7 @@ struct ItemDetailView: View {
     @State var itemListener: DocumentListener<Item>?
 
     @State private var restocksPriceType: Item.StorePrice.StoreInventoryItem.RestocksPriceType = .regular
+    @State private var shouldUpdateLastPriceViews = true
 
     var shouldDismiss: () -> Void
 
@@ -287,7 +288,7 @@ struct ItemDetailView: View {
                                     }
                                     .padding(.bottom, -15)
 
-                                    if loader.isLoading {
+                                    if loader.isLoading && store.globalState.canViewPrices {
                                         CustomSpinner(text: "Loading...", animate: true)
                                             .padding(5)
                                     }
@@ -365,11 +366,13 @@ struct ItemDetailView: View {
                     firstShow = false
                     refreshPrices(forced: false)
                     setupItemListener()
-                    updateLastPriceViews()
                     Analytics.logEvent("visited_item_detail", parameters: ["userId": AppStore.default.state.user?.id ?? ""])
                 }
             }
             .onDisappear {
+                if shouldUpdateLastPriceViews {
+                    AppStore.default.send(.main(action: .updateLastPriceViews(itemId: itemId)))
+                }
                 itemListener?.reset()
             }
             .onChange(of: addedInventoryItem) { new in
@@ -385,6 +388,9 @@ struct ItemDetailView: View {
         if store.globalState.canViewPrices {
             let load = loader.getLoader()
             store.send(.main(action: .updateItem(item: item, itemId: itemId, styleId: styleId, forced: forced) { load(.success(())) }))
+//            if item?.updated?.isOlderThan(minutes: World.Constants.itemPricesRefreshPeriodMin) == true {
+//                shouldUpdateLastPriceViews = true
+//            }
         }
     }
 
