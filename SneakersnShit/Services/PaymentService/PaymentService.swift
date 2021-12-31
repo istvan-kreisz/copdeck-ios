@@ -11,10 +11,9 @@ import Purchases
 
 protocol PaymentService {
     var errorsPublisher: AnyPublisher<AppError, Never> { get }
-    var packagesPublisher: AnyPublisher<[DiscountValue: SubscriptionPackages]?, Never> { get }
 
     func setup(userId: String, userEmail: String?)
     func reset()
     func purchase(package: Purchases.Package) -> AnyPublisher<Void, AppError>
-    func fetchPackages(completion: (() -> Void)?)
+    func fetchPackages(completion: @escaping ([DiscountValue: SubscriptionPackages]) -> Void)
 }

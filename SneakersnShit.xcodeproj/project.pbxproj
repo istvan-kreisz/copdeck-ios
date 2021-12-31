@@ -1778,7 +1778,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.15.1;
+				MARKETING_VERSION = 0.15.2;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xfrontend -debug-time-function-bodies";
 				PRODUCT_BUNDLE_IDENTIFIER = istvankreisz.SneakersnShit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1807,7 +1807,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.15.1;
+				MARKETING_VERSION = 0.15.2;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xfrontend -debug-time-function-bodies";
 				PRODUCT_BUNDLE_IDENTIFIER = istvankreisz.SneakersnShit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1898,7 +1898,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.15.1;
+				MARKETING_VERSION = 0.15.2;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xfrontend -debug-time-function-bodies";
 				PRODUCT_BUNDLE_IDENTIFIER = istvankreisz.SneakersnShit;
 				PRODUCT_NAME = "$(TARGET_NAME)-Staging";
@@ -1982,7 +1982,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.15.1;
+				MARKETING_VERSION = 0.15.2;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xfrontend -debug-time-function-bodies";
 				PRODUCT_BUNDLE_IDENTIFIER = istvankreisz.SneakersnShit;
 				PRODUCT_NAME = "$(TARGET_NAME)-Staging";

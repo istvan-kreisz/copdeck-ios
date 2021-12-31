@@ -28,12 +28,12 @@ extension AppStore {
         setupGlobalObservers()
         fetchConfigs()
     }
-        
+
     func applicationWillEnterForeground() {
         fetchConfigs()
         updateUserItems()
     }
-    
+
     func reset() {
         effectCancellables.forEach { $0.cancel() }
         effectCancellables = []
@@ -140,9 +140,9 @@ extension AppStore {
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] canViewPrices in
                       self?.state.globalState.canViewPrices = canViewPrices
-            })
+                  })
             .store(in: &effectCancellables)
-        
+
         environment.dataController.userPublisher
             .withPrevious()
             .sink(receiveCompletion: { _ in },
@@ -245,14 +245,6 @@ extension AppStore {
     }
 
     private func setupGlobalObservers() {
-        #warning("convert & add to fetchConfigs")
-        environment.paymentService.packagesPublisher
-            .sink(receiveCompletion: { _ in },
-                  receiveValue: { [weak self] packages in
-                      self?.state.allPackages = packages
-                  })
-            .store(in: &effectCancellables)
-        
         environment.dataController.errorsPublisher.merge(with: environment.paymentService.errorsPublisher)
             .sink { [weak self] error in
                 self?.state.error = error
@@ -274,6 +266,10 @@ extension AppStore {
 
         environment.dataController.getRemoteConfig { [weak self] remoteConfig in
             self?.state.globalState.remoteConfig = remoteConfig
+        }
+
+        environment.paymentService.fetchPackages { [weak self] packages in
+            self?.state.allPackages = packages
         }
     }
 }

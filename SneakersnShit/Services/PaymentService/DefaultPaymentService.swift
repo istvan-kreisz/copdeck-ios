@@ -39,6 +39,7 @@ class DefaultPaymentService: NSObject, PaymentService {
     static let entitlementsId = "pro"
     static let apiKey = "vkJAtxOkCMEORPnQDmuEwtoUBuHDUMSu"
     static let iosBetaTesterDiscount: DiscountValue = .d30
+    static var packagesFetchCount = 0
 
     static func offeringId(discount: DiscountValue) -> String {
         discount == .noDiscount ? "pro" : "pro" + discount.valueString
@@ -53,18 +54,13 @@ class DefaultPaymentService: NSObject, PaymentService {
     }
 
     private let errorsSubject = PassthroughSubject<AppError, Never>()
-    private let packagesSubject = CurrentValueSubject<[DiscountValue: SubscriptionPackages]?, Never>(nil)
 
-    private var isLoggedIn = false
+    private var loggedInAsUserWithId: String?
     private var userId: String?
     private var email: String?
 
     var errorsPublisher: AnyPublisher<AppError, Never> {
         errorsSubject.eraseToAnyPublisher()
-    }
-
-    var packagesPublisher: AnyPublisher<[DiscountValue: SubscriptionPackages]?, Never> {
-        packagesSubject.eraseToAnyPublisher()
     }
 
     override init() {
@@ -73,34 +69,38 @@ class DefaultPaymentService: NSObject, PaymentService {
             Purchases.logLevel = .debug
         }
         Purchases.configure(withAPIKey: Self.apiKey)
-
-        getPackages {}
     }
 
     func setup(userId: String, userEmail: String?) {
         self.userId = userId
         self.email = userEmail
-        if packagesSubject.value?.isEmpty != false || packagesSubject.value?.isEmpty != false {
-            fetchPackages(completion: nil)
-        } else {
-            login(userId: userId, userEmail: userEmail)
-        }
+        logInIfNeeded { _ in }
     }
 
     func reset() {
-        Purchases.shared.logOut(nil)
-        isLoggedIn = false
+        logOut()
         self.userId = nil
         self.email = nil
     }
 
+    private func logOut() {
+        Purchases.shared.logOut(nil)
+        loggedInAsUserWithId = nil
+    }
+
     func purchase(package: Purchases.Package) -> AnyPublisher<Void, AppError> {
-        Future { promise in
-            Purchases.shared.purchasePackage(package) { transaction, _, error, userCancelled in
+        Future { [weak self] promise in
+            self?.logInIfNeeded { error in
                 if let error = error {
-                    promise(.failure(AppError(error: error)))
+                    promise(.failure(error))
                 } else {
-                    promise(.success(()))
+                    Purchases.shared.purchasePackage(package) { transaction, _, error, userCancelled in
+                        if let error = error {
+                            promise(.failure(AppError(error: error)))
+                        } else {
+                            promise(.success(()))
+                        }
+                    }
                 }
             }
         }
@@ -108,29 +108,55 @@ class DefaultPaymentService: NSObject, PaymentService {
         .onMain()
     }
 
-    private func logInIfNeeded() {
-        if let userId = userId, let email = email, !isLoggedIn {
-            login(userId: userId, userEmail: email)
+    private func logInIfNeeded(completion: @escaping (AppError?) -> Void) {
+        if let userId = userId, let email = email {
+            if loggedInAsUserWithId == userId {
+                completion(nil)
+            } else {
+                logOut()
+                login(userId: userId, userEmail: email) { error in
+                    if let error = error {
+                        completion(AppError(error: error))
+                    } else {
+                        completion(nil)
+                    }
+                }
+            }
+        } else {
+            completion(.notFound(val: "User"))
         }
     }
 
-    func fetchPackages(completion: (() -> Void)?) {
-        guard AppStore.default.state.globalState.allPackages.isEmpty else {
-            logInIfNeeded()
-            completion?()
-            return
-        }
-        getPackages { [weak self] in
-            self?.logInIfNeeded()
-            completion?()
+    func fetchPackages(completion: @escaping ([DiscountValue: SubscriptionPackages]) -> Void) {
+        getPackages { packages in
+            Self.packagesFetchCount += 1
+            if let packages = packages {
+                completion(packages)
+            } else {
+                let time: TimeInterval
+                if Self.packagesFetchCount <= 3 {
+                    time = 1
+                } else if Self.packagesFetchCount <= 6 {
+                    time = 5
+                } else if Self.packagesFetchCount <= 10 {
+                    time = 10
+                } else {
+                    time = 30
+                }
+                delay(time) { [weak self] in
+                    self?.fetchPackages(completion: completion)
+                }
+            }
         }
     }
 
-    func getPackages(completion: (() -> Void)?) {
-        Purchases.shared.offerings { [weak self] offerings, error in
-//            error.map { self?.errorsSubject.send(AppError(error: $0)) }
+    func getPackages(completion: @escaping ([DiscountValue: SubscriptionPackages]?) -> Void) {
+        Purchases.shared.offerings { offerings, error in
+            if let error = error {
+                log(error, logType: .error)
+            }
             guard let offerings = offerings else {
-                completion?()
+                completion(nil)
                 return
             }
             var result: [DiscountValue: SubscriptionPackages] = [:]
@@ -139,21 +165,21 @@ class DefaultPaymentService: NSObject, PaymentService {
                     result[discountValue] = .init(monthlyPackage: offering.monthly, yearlyPackage: offering.annual)
                 }
             }
-            self?.packagesSubject.send(result)
-            completion?()
+            completion(result)
         }
     }
 
-    private func login(userId: String, userEmail: String?) {
+    private func login(userId: String, userEmail: String?, completion: ((Error?) -> Void)?) {
         Purchases.shared.logIn(userId) { [weak self] _, created, error in
             if let error = error {
-                self?.errorsSubject.send(AppError(error: error))
+                completion?(error)
                 return
             }
             if created {
                 Purchases.shared.setEmail(userEmail)
             }
-            self?.isLoggedIn = true
+            self?.loggedInAsUserWithId = userId
+            completion?(nil)
         }
     }
 }

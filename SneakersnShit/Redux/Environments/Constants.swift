@@ -10,8 +10,16 @@ import Foundation
 extension World {
     enum Constants {
         static var itemPricesRefreshPeriodMin: Double { double(for: #function, defaultValue: 30) }
-        static let dailyPriceCheckLimit = 3
-        static let stacksLimit = 1
+        static let _dailyPriceCheckLimit = 3
+        static let _stacksLimit = 1
+        
+        static var dailyPriceCheckLimit: Int {
+            AppStore.default.state.globalState.remoteConfig?.dailyPriceCheckLimit ?? _dailyPriceCheckLimit
+        }
+        
+        static var stacksLimit: Int {
+            AppStore.default.state.globalState.remoteConfig?.stacksLimit ?? _stacksLimit
+        }
     }
 }
 

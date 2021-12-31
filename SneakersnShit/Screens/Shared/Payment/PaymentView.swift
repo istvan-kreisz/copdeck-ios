@@ -324,7 +324,6 @@ struct PaymentView: View {
             } else {
                 present = true
             }
-            store.send(.paymentAction(action: .fetchPackages))
         }
         .onDisappear {
             present = false

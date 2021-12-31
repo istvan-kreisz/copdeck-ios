@@ -48,7 +48,11 @@ struct RootView: View {
                                 MainContainerView()
                                     .environmentObject(store.appStore)
                                     .zIndex(0)
-                                if store.globalState.showPaymentView && store.globalState.isPaywallEnabled && store.globalState.user?.subscription != .pro {
+                                if store.globalState.showPaymentView &&
+                                    store.globalState.isPaywallEnabled &&
+                                    store.globalState.user?.subscription != .pro &&
+                                    store.globalState.packages?.monthlyPackage != nil &&
+                                    store.globalState.packages?.yearlyPackage != nil {
                                     PaymentView(viewType: .subscribe) { store.send(.paymentAction(action: .showPaymentView(show: false))) }
                                         .environmentObject(DerivedGlobalStore.default)
                                 }
