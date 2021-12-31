@@ -179,6 +179,7 @@ class DefaultPaymentService: NSObject, PaymentService {
                 Purchases.shared.setEmail(userEmail)
             }
             self?.loggedInAsUserWithId = userId
+            AppStore.default.state.globalState.loggedInToRevenueCat = true
             completion?(nil)
         }
     }

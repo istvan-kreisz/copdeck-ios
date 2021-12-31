@@ -37,8 +37,9 @@ struct RootView: View {
                         CountrySelector(settings: store.globalState.settings)
                     } else {
                         if let monthlyPackage = store.globalState.packages?.monthlyPackage,
-                           Purchases.shared.appUserID.contains("RCAnonymousID") == false,
+                           store.globalState.loggedInToRevenueCat,
                            !store.globalState.hasSubscribed,
+                           store.globalState.remoteConfig?.showPaywallOnLaunch == true,
                            showPayment1View,
                            store.globalState.isPaywallEnabled {
                             PaymentView(viewType: .trial(monthlyPackage)) { showPayment1View = false }

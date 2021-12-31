@@ -12,4 +12,5 @@ struct RemoteConfig: Codable, Equatable {
     let spreadsheetImportNotice: String
     let dailyPriceCheckLimit: Int
     let stacksLimit: Int
+    let showPaywallOnLaunch: Bool
 }

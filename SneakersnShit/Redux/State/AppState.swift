@@ -38,6 +38,7 @@ struct GlobalState: Equatable {
     var chatUpdates: ChatUpdateInfo = .init(updateInfo: [:])
     var canViewPrices: Bool = true
     var remoteConfig: RemoteConfig?
+    var loggedInToRevenueCat = false
     
     var isPaywallEnabled: Bool {
         remoteConfig?.paywallEnabled == true
@@ -171,6 +172,7 @@ struct AppState: Equatable {
         showPaymentView = false
         globalState.chatUpdates = .init(updateInfo: [:])
         globalState.canViewPrices = true
+        globalState.loggedInToRevenueCat = false
         inventoryState = InventoryState()
     }
 }
