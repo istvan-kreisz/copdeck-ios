@@ -22,7 +22,8 @@ struct SettingsView: View {
             self == .include
         }
     }
-    
+
+    @Environment(\.presentationMode) var presentationMode
     @State private var isFirstload = true
 
     @EnvironmentObject var store: DerivedGlobalStore
@@ -56,7 +57,9 @@ struct SettingsView: View {
 
         // general
         self._currency = State(initialValue: settings.currency.symbol.rawValue)
-        self._stores = State(initialValue: isContentLocked ? ALLSTORES.map(\.name.rawValue) : settings.displayedStores.compactMap { Store.store(withId: $0)?.name.rawValue })
+        self
+            ._stores = State(initialValue: isContentLocked ? ALLSTORES.map(\.name.rawValue) : settings.displayedStores
+                .compactMap { Store.store(withId: $0)?.name.rawValue })
         self._country = State(initialValue: settings.feeCalculation.country.name)
         self._bestPricePriceType = State(initialValue: settings.bestPricePriceType.rawValue.capitalized)
         self._bestPriceFeeType = State(initialValue: settings.bestPriceFeeType.rawValue.capitalized)
@@ -368,6 +371,14 @@ struct SettingsView: View {
                             Text(store.globalState.subscriptionActive ? "Pro" : "Free")
                                 .foregroundColor(.customBlue)
                         }
+                        
+                        if !store.globalState.subscriptionActive && store.globalState.isPaywallEnabled {
+                            NavigationLink(destination: PaymentView(viewType: .subscribe, animateTransition: false, shouldDismiss: nil)
+                                .environmentObject(DerivedGlobalStore.default)) {
+                                    Text("Upgrade to CopDeck Pro")
+                                        .leftAligned()
+                            }
+                        }
 
                         NavigationLink(destination: ReferralCodeView().environmentObject(DerivedGlobalStore.default)) {
                             Text("Apply referral code")
@@ -409,7 +420,6 @@ struct SettingsView: View {
                         }
                     }
 
-                    
                     VStack(spacing: 15) {
                         Button(action: {
                             restorePurchases()
@@ -430,7 +440,6 @@ struct SettingsView: View {
                         })
                             .centeredHorizontally()
                             .listRow(backgroundColor: .customWhite)
-                        
                     }
                     .listRow(backgroundColor: .customWhite)
                     .buttonStyle(.plain)
@@ -491,7 +500,7 @@ struct SettingsView: View {
         .navigationViewStyle(StackNavigationViewStyle())
         .preferredColorScheme(.light)
     }
-    
+
     private func restorePurchases() {
         store.send(.paymentAction(action: .restorePurchases(completion: { result in
             switch result {

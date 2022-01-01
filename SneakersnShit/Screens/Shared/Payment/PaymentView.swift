@@ -20,10 +20,11 @@ struct PaymentView: View {
     }
 
     @EnvironmentObject var store: DerivedGlobalStore
+    @Environment(\.presentationMode) var presentationMode
 
     let viewType: ViewType
     var animateTransition = true
-    let shouldDismiss: () -> Void
+    let shouldDismiss: (() -> Void)?
     var trialPackage: Purchases.Package? {
         switch viewType {
         case let .trial(package):
@@ -109,7 +110,14 @@ struct PaymentView: View {
                                 .centeredHorizontally()
                                 .padding(.vertical, 10)
                                 .padding(.bottom, 5)
-                                Button(action: shouldDismiss) {
+                                
+                                Button {
+                                    if let shouldDismiss = shouldDismiss {
+                                        shouldDismiss()
+                                    } else {
+                                        presentationMode.wrappedValue.dismiss()
+                                    }
+                                } label: {
                                     Text("Exit")
                                         .font(.bold(size: 20))
                                         .foregroundColor(.customText1)
