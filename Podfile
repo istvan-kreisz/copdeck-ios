@@ -5,17 +5,8 @@ target 'CopDeck' do
 
   inhibit_all_warnings!
 
-  pod 'Firebase/Analytics'
-  pod 'Firebase/Auth'
-  pod 'Firebase/Functions'
-  pod 'Firebase/Crashlytics'
-  pod 'Firebase/Firestore'
-  pod 'FirebaseFirestoreSwift'
   pod 'GoogleSignIn'
-  pod 'Firebase/Storage'
-  pod 'Firebase/Messaging'
   # pod 'FBSDKLoginKit'
-  pod 'OasisJSBridge'
 end
 
 post_install do |installer|

@@ -23,7 +23,7 @@ class FBFunctionsCoordinator {
 
     init() {
         if DebugSettings.shared.isInDebugMode, DebugSettings.shared.useFunctionsEmulator {
-            functions.useFunctionsEmulator(origin: "http://\(DebugSettings.shared.ipAddress):5001")
+            functions.useEmulator(withHost: "http://\(DebugSettings.shared.ipAddress)", port: 5001)
         }
     }
 

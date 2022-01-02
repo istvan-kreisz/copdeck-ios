@@ -18,7 +18,7 @@ struct LoginView: View {
     let color: Color = .customBlue
 
     var body: some View {
-        NavigationView {
+    NavigationView {
             ZStack {
                 Color.customBackground.edgesIgnoringSafeArea(.all)
                 NavigationLink("",

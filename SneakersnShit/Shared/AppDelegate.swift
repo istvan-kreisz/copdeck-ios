@@ -25,6 +25,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         setupNuke()
         setupUI()
 
+        #warning("yoo")
+//        print(NSClassFromString("ASIdentifierManager")) // returns true if AdSupport is present
+
         return true
     }
 

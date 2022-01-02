@@ -128,6 +128,13 @@
 		5D6B112E26A46E3A00B6B67A /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D6B112D26A46E3A00B6B67A /* NavigationBar.swift */; };
 		5D7CAAD4272F193D003A241D /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D7CAAD3272F193D003A241D /* ChatViewController.swift */; };
 		5D7CAAD6272F1A2A003A241D /* MessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D7CAAD5272F1A2A003A241D /* MessagesView.swift */; };
+		5D823BA2278138FD00F00202 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 5D823BA1278138FD00F00202 /* FirebaseAnalyticsWithoutAdIdSupport */; };
+		5D823BA4278138FD00F00202 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 5D823BA3278138FD00F00202 /* FirebaseAuth */; };
+		5D823BA6278138FD00F00202 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 5D823BA5278138FD00F00202 /* FirebaseCrashlytics */; };
+		5D823BA8278138FD00F00202 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 5D823BA7278138FD00F00202 /* FirebaseFirestore */; };
+		5D823BAA278138FD00F00202 /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = 5D823BA9278138FD00F00202 /* FirebaseFunctions */; };
+		5D823BAC278138FD00F00202 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 5D823BAB278138FD00F00202 /* FirebaseMessaging */; };
+		5D823BAE278138FD00F00202 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 5D823BAD278138FD00F00202 /* FirebaseStorage */; };
 		5D83156B25C397C4008AB948 /* MainContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D83156A25C397C4008AB948 /* MainContainerView.swift */; };
 		5D84875526E2E220006062DC /* PullToRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D84875426E2E220006062DC /* PullToRefresh.swift */; };
 		5D84875826E3BF60006062DC /* PaginatedResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D84875726E3BF60006062DC /* PaginatedResult.swift */; };
@@ -478,12 +485,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				5DE6DBE42735CB8F00A5EF4F /* FacebookBasics in Frameworks */,
+				5D823BAA278138FD00F00202 /* FirebaseFunctions in Frameworks */,
+				5D823BA8278138FD00F00202 /* FirebaseFirestore in Frameworks */,
+				5D823BA2278138FD00F00202 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				5D9D51FE26AE1C0B00AB1F30 /* NukeUI in Frameworks */,
+				5D823BAE278138FD00F00202 /* FirebaseStorage in Frameworks */,
 				5D0703CA271DDEE700116CF4 /* StoreKit.framework in Frameworks */,
 				5D9D51FB26AE1BE500AB1F30 /* Nuke in Frameworks */,
 				5D0703C8271DDED200116CF4 /* Purchases in Frameworks */,
 				5DE6DBE82735CB8F00A5EF4F /* FacebookLogin in Frameworks */,
+				5D823BA4278138FD00F00202 /* FirebaseAuth in Frameworks */,
 				5D606D17272D040A00E49A59 /* MessageKit in Frameworks */,
+				5D823BA6278138FD00F00202 /* FirebaseCrashlytics in Frameworks */,
+				5D823BAC278138FD00F00202 /* FirebaseMessaging in Frameworks */,
 				B2EF4F84E80FEA5072CFBCF7 /* Pods_CopDeck.framework in Frameworks */,
 				5DE6DBE62735CB8F00A5EF4F /* FacebookCore in Frameworks */,
 			);
@@ -1316,6 +1330,13 @@
 				5DE6DBE32735CB8F00A5EF4F /* FacebookBasics */,
 				5DE6DBE52735CB8F00A5EF4F /* FacebookCore */,
 				5DE6DBE72735CB8F00A5EF4F /* FacebookLogin */,
+				5D823BA1278138FD00F00202 /* FirebaseAnalyticsWithoutAdIdSupport */,
+				5D823BA3278138FD00F00202 /* FirebaseAuth */,
+				5D823BA5278138FD00F00202 /* FirebaseCrashlytics */,
+				5D823BA7278138FD00F00202 /* FirebaseFirestore */,
+				5D823BA9278138FD00F00202 /* FirebaseFunctions */,
+				5D823BAB278138FD00F00202 /* FirebaseMessaging */,
+				5D823BAD278138FD00F00202 /* FirebaseStorage */,
 			);
 			productName = InfluTrader;
 			productReference = 5D696093258713760058BABE /* CopDeck.app */;
@@ -1350,6 +1371,7 @@
 				5D0703C6271DDED200116CF4 /* XCRemoteSwiftPackageReference "purchases-ios" */,
 				5D606D15272D040A00E49A59 /* XCRemoteSwiftPackageReference "MessageKit" */,
 				5DE6DBE22735CB8F00A5EF4F /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
+				5D823BA0278138FD00F00202 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = 5D696094258713760058BABE /* Products */;
 			projectDirPath = "";
@@ -1778,7 +1800,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.15.3;
+				MARKETING_VERSION = 0.15.4;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xfrontend -debug-time-function-bodies";
 				PRODUCT_BUNDLE_IDENTIFIER = istvankreisz.SneakersnShit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1807,7 +1829,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.15.3;
+				MARKETING_VERSION = 0.15.4;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xfrontend -debug-time-function-bodies";
 				PRODUCT_BUNDLE_IDENTIFIER = istvankreisz.SneakersnShit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1898,7 +1920,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.15.3;
+				MARKETING_VERSION = 0.15.4;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xfrontend -debug-time-function-bodies";
 				PRODUCT_BUNDLE_IDENTIFIER = istvankreisz.SneakersnShit;
 				PRODUCT_NAME = "$(TARGET_NAME)-Staging";
@@ -1982,7 +2004,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.15.3;
+				MARKETING_VERSION = 0.15.4;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS -Xfrontend -debug-time-function-bodies";
 				PRODUCT_BUNDLE_IDENTIFIER = istvankreisz.SneakersnShit;
 				PRODUCT_NAME = "$(TARGET_NAME)-Staging";
@@ -2036,6 +2058,14 @@
 				minimumVersion = 3.0.0;
 			};
 		};
+		5D823BA0278138FD00F00202 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
 		5D9D51F926AE1BE500AB1F30 /* XCRemoteSwiftPackageReference "Nuke" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kean/Nuke.git";
@@ -2072,6 +2102,41 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5D606D15272D040A00E49A59 /* XCRemoteSwiftPackageReference "MessageKit" */;
 			productName = MessageKit;
+		};
+		5D823BA1278138FD00F00202 /* FirebaseAnalyticsWithoutAdIdSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5D823BA0278138FD00F00202 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsWithoutAdIdSupport;
+		};
+		5D823BA3278138FD00F00202 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5D823BA0278138FD00F00202 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		5D823BA5278138FD00F00202 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5D823BA0278138FD00F00202 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		5D823BA7278138FD00F00202 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5D823BA0278138FD00F00202 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		5D823BA9278138FD00F00202 /* FirebaseFunctions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5D823BA0278138FD00F00202 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFunctions;
+		};
+		5D823BAB278138FD00F00202 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5D823BA0278138FD00F00202 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		5D823BAD278138FD00F00202 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5D823BA0278138FD00F00202 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
 		};
 		5D9D51FA26AE1BE500AB1F30 /* Nuke */ = {
 			isa = XCSwiftPackageProductDependency;
