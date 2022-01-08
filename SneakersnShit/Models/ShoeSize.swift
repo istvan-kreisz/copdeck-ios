@@ -178,9 +178,37 @@ let conversionChartWomen = [["35.5", "2.5", "5"],
                             ["44", "9", "11.5"],
                             ["44.5", "9.5", "12"]]
 
+private func convertSizesWithSizeConversion(from fromSize: ShoeSize,
+                                            to toSize: ShoeSize,
+                                            sizes: [String],
+                                            sizeConversion: [SizeConversionItem],
+                                            gender: Gender?,
+                                            brand: Brand?) -> [String]? {
+    let convertedSizes = sizes.compactMap { size -> String? in
+        if let conversion = sizeConversion.first(where: { conversion in
+            if let from = conversion.getValue(shoeSize: fromSize, gender: gender),
+               let _ = conversion.getValue(shoeSize: toSize, gender: gender) {
+                return from == size
+            } else {
+                return false
+            }
+        }) {
+            return conversion.getValue(shoeSize: toSize, gender: gender)
+        } else {
+            return nil
+        }
+    }
+    if sizes.count == convertedSizes.count {
+        return convertedSizes
+    } else {
+        return nil
+    }
+}
+
 func convertSizes(from fromSize: ShoeSize,
                   to toSize: ShoeSize,
                   sizes: [String],
+                  sizeConversion: [SizeConversionItem]?,
                   gender: Gender?,
                   brand: Brand?) -> [String] {
     var sizesNormalized = sizes.map {
@@ -201,6 +229,18 @@ func convertSizes(from fromSize: ShoeSize,
                 .replacingOccurrences(of: "2/3", with: "⅔")
                 .replacingOccurrences(of: ".5", with: "½")
         }
+    }
+
+    if let sizeConversion = sizeConversion,
+       !sizeConversion.isEmpty,
+       let converted = convertSizesWithSizeConversion(from: fromSize,
+                                                      to: toSize,
+                                                      sizes: sizesNormalized,
+                                                      sizeConversion: sizeConversion,
+                                                      gender: gender,
+                                                      brand: brand),
+       converted.count == sizes.count {
+        return converted
     }
 
     var sizesConverted: [String] = []
@@ -265,9 +305,10 @@ func convertSizes(from fromSize: ShoeSize,
 func convertSize(from fromSize: ShoeSize,
                  to toSize: ShoeSize,
                  size: String,
+                 sizeConversion: [SizeConversionItem]?,
                  gender: Gender?,
                  brand: Brand?) -> String {
-    convertSizes(from: fromSize, to: toSize, sizes: [size], gender: gender, brand: brand).first ?? ""
+    convertSizes(from: fromSize, to: toSize, sizes: [size], sizeConversion: sizeConversion, gender: gender, brand: brand).first ?? ""
 }
 
 enum ApparelSize: String, Codable, Equatable, CaseIterable {
@@ -283,7 +324,7 @@ enum ShoeSize: String, Codable, Equatable, CaseIterable {
         .map { "US \((Double($0) * 0.5).rounded(toPlaces: $0 % 2 == 1 ? 1 : 0))" }
 
     static var ALLSHOESIZESCONVERTED: [String] {
-        convertSizes(from: .US, to: AppStore.default.state.settings.shoeSize, sizes: ALLSHOESIZESUS, gender: .Men, brand: nil).uniqued()
+        convertSizes(from: .US, to: AppStore.default.state.settings.shoeSize, sizes: ALLSHOESIZESUS, sizeConversion: [], gender: .Men, brand: nil).uniqued()
     }
 }
 

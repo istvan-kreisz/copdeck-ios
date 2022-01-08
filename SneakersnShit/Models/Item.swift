@@ -65,6 +65,28 @@ struct ImageURL: Codable, Equatable, Hashable {
     }
 }
 
+struct SizeConversionItem: Codable, Equatable, Hashable {
+    let us: String
+    let uk: String?
+    let usWoman: String?
+    let eu: String?
+    
+    func getValue(shoeSize: ShoeSize, gender: Gender?) -> String? {
+        switch shoeSize {
+        case .EU:
+            return eu
+        case .UK:
+            return uk
+        case .US:
+            if gender == .Women {
+                return usWoman
+            } else {
+                return us
+            }
+        }
+    }
+}
+
 struct Item: Equatable, Identifiable, Hashable, ModelWithDate {
     let id: String
     let styleId: String?
@@ -80,6 +102,10 @@ struct Item: Equatable, Identifiable, Hashable, ModelWithDate {
     var itemType: ItemType? = .shoe
     var brandCalculated: Brand? { brand ?? getBrand(storeInfoArray: storeInfo) }
     var genderCalculated: Gender? { gender ?? getGender(storeInfoArray: storeInfo) }
+    
+    var sizeConversion: [SizeConversionItem] {
+        storePrices.sorted(by: { ($0.sizeConversion?.count ?? 0) < ($1.sizeConversion?.count ?? 0) }).last?.sizeConversion ?? []
+    }
 
     struct StoreInfo: Codable, Equatable, Identifiable, Hashable {
         let name: String
@@ -106,6 +132,7 @@ struct Item: Equatable, Identifiable, Hashable, ModelWithDate {
         let store: Store
         var inventory: [StoreInventoryItem]
         let currencyCode: Currency.CurrencyCode?
+        let sizeConversion: [SizeConversionItem]?
 
         struct StoreInventoryItem: Codable, Equatable, Identifiable, Hashable {
             enum RestocksPriceType: String, Codable {

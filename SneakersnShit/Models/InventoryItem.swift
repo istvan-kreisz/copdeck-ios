@@ -71,14 +71,14 @@ struct InventoryItem: Codable, Equatable, Identifiable {
     var gender: Gender?
     var brand: Brand?
     var updateTrigger: Int?
-    
+
     var brandCalculated: Brand? { brand ?? itemFields?.brand }
     var genderCalculated: Gender? { gender ?? itemFields?.gender }
     var count = 1
-    
+
     var bestPrice: ListingPrice?
     var itemFields: ItemFields? = nil
-    
+
     var _addToStacks: [Stack] = []
 
     var isSold: Bool {
@@ -93,7 +93,12 @@ struct InventoryItem: Codable, Equatable, Identifiable {
         get { isShoe ? size.asSize(of: self) : size }
         set {
             size = isShoe ?
-                convertSize(from: AppStore.default.state.settings.shoeSize, to: .US, size: newValue, gender: genderCalculated, brand: brandCalculated) :
+                convertSize(from: AppStore.default.state.settings.shoeSize,
+                            to: .US,
+                            size: newValue,
+                            sizeConversion: itemFields?.sizeConversion,
+                            gender: genderCalculated,
+                            brand: brandCalculated) :
                 newValue
         }
     }
@@ -266,12 +271,11 @@ extension InventoryItem {
 }
 
 extension InventoryItem {
-    
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         id = try container.decode(String.self, forKey: .id)
-        
+
         let styleId = try container.decodeIfPresent(String.self, forKey: .styleId)
         let itemId = try container.decodeIfPresent(String.self, forKey: .itemId)
         if styleId == nil {
@@ -280,7 +284,7 @@ extension InventoryItem {
             self.itemId = itemId
         }
         self.styleId = styleId ?? itemId ?? ""
-        
+
         userId = try container.decodeIfPresent(String.self, forKey: .userId)
         name = try container.decode(String.self, forKey: .name)
         purchasePrice = try container.decodeIfPresent(PriceWithCurrency.self, forKey: .purchasePrice)
@@ -337,6 +341,8 @@ extension InventoryItem {
         var itemType: ItemType?
         var sortedSizes: [String] = []
         var storePrices: [Item.StorePrice] = []
+        #warning("move out of item fields")
+        var sizeConversion: [SizeConversionItem] = []
     }
 }
 
@@ -347,6 +353,11 @@ extension InventoryItem.ItemFields {
             itemPrices.inventory = itemPrices.inventory.filter { $0.size == size }
             return itemPrices
         }
-        self.init(brand: item.brand, gender: item.gender, itemType: item.itemTypeDefaulted, sortedSizes: item.sortedSizes, storePrices: storePrices)
+        self.init(brand: item.brand,
+                  gender: item.gender,
+                  itemType: item.itemTypeDefaulted,
+                  sortedSizes: item.sortedSizes,
+                  storePrices: storePrices,
+                  sizeConversion: item.sizeConversion)
     }
 }

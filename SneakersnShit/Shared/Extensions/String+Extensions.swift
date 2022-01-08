@@ -41,37 +41,39 @@ extension String {
         self = self.capitalizingFirstLetter()
     }
 
-    func asSize(gender: Gender?, brand: Brand?) -> String {
+    func asSize(gender: Gender?, brand: Brand?, sizeConversion: [SizeConversionItem]?) -> String {
         convertSize(from: .US,
                     to: AppStore.default.state.settings.shoeSize,
                     size: self,
+                    sizeConversion: sizeConversion,
                     gender: gender,
                     brand: brand)
     }
 
     func asSize(of item: Item?) -> String {
-        asSize(gender: item?.genderCalculated, brand: item?.brandCalculated)
+        asSize(gender: item?.genderCalculated, brand: item?.brandCalculated, sizeConversion: item?.sizeConversion)
     }
 
     func asSize(of inventoryItem: InventoryItem?) -> String {
-        asSize(gender: inventoryItem?.genderCalculated, brand: inventoryItem?.brandCalculated)
+        asSize(gender: inventoryItem?.genderCalculated, brand: inventoryItem?.brandCalculated, sizeConversion: inventoryItem?.itemFields?.sizeConversion)
     }
 }
 
 extension Array where Element == String {
-    func asSizes(gender: Gender?, brand: Brand?) -> [String] {
+    func asSizes(gender: Gender?, brand: Brand?, sizeConversion: [SizeConversionItem]?) -> [String] {
         convertSizes(from: .US,
                      to: AppStore.default.state.settings.shoeSize,
                      sizes: self,
+                     sizeConversion: sizeConversion,
                      gender: gender,
                      brand: brand)
     }
 
     func asSizes(of item: Item?) -> [String] {
-        asSizes(gender: item?.genderCalculated, brand: item?.brandCalculated)
+        asSizes(gender: item?.genderCalculated, brand: item?.brandCalculated, sizeConversion: item?.sizeConversion)
     }
 
     func asSizes(of inventoryItem: InventoryItem?) -> [String] {
-        asSizes(gender: inventoryItem?.genderCalculated, brand: inventoryItem?.brandCalculated)
+        asSizes(gender: inventoryItem?.genderCalculated, brand: inventoryItem?.brandCalculated, sizeConversion: inventoryItem?.itemFields?.sizeConversion)
     }
 }

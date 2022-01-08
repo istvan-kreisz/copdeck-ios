@@ -272,10 +272,11 @@ struct SettingsView: View {
                                          selectedOption: $shoeSizeRegion,
                                          buttonTapped: selectShoeSizeRegion)
 
-                        let preferredSize = Binding<String>(get: { preferredShoeSize.asSize(gender: .Men, brand: nil) },
+                        let preferredSize = Binding<String>(get: { preferredShoeSize.asSize(gender: .Men, brand: nil, sizeConversion: nil) },
                                                             set: { preferredShoeSize = convertSize(from: AppStore.default.state.settings.shoeSize,
                                                                                                    to: .US,
                                                                                                    size: $0,
+                                                                                                   sizeConversion: nil,
                                                                                                    gender: .Men,
                                                                                                    brand: nil)
                                                             })
