@@ -100,7 +100,7 @@ func appReducer(state: inout AppState,
                 completion(.success([]))
             } else {
                 return environment.dataController.search(searchTerm: searchTerm, settings: state.settings, exchangeRates: state.rates)
-                    .complete(completion: completion)
+                    .complete(numOfElements: 2, completion: completion)
             }
         case let .getPopularItems(completion: completion):
             return environment.dataController.getPopularItems()

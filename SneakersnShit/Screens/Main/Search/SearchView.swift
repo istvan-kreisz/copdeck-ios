@@ -148,11 +148,19 @@ struct SearchView: View {
                 self.searchModel.state.searchResults = []
             } else {
                 let loader = searchResultsLoader.getLoader()
+                var resultCount = 0
                 store.send(.main(action: .getSearchResults(searchTerm: searchText, completion: { result in
                     if searchTerm == self.searchText {
-                        handleResult(result: result, loader: loader) { self.searchModel.state.searchResults = $0 }
+                        resultCount += 1
+                        handleResult(result: result, loader: loader) {
+                            if resultCount == 1 {
+                                self.searchModel.state.searchResults = $0
+                            } else if resultCount == 2 {
+                                self.searchModel.state.searchResults += $0
+                            }
+                        }
                     }
-                })), debounceDelayMs: 1300)
+                })), debounceDelayMs: 750)
             }
         } else {
             if searchTerm.isEmpty {
@@ -161,7 +169,7 @@ struct SearchView: View {
                 let loader = userSearchResultsLoader.getLoader()
                 store.send(.main(action: .searchUsers(searchTerm: searchText, completion: { result in
                     if searchTerm == self.searchText {
-                        handleResult(result: result, loader: loader) { self.searchModel.state.userSearchResults = $0 }                        
+                        handleResult(result: result, loader: loader) { self.searchModel.state.userSearchResults = $0 }
                     }
                 })), debounceDelayMs: 900)
             }

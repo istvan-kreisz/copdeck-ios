@@ -19,8 +19,8 @@ extension Publishers.Map where Output == AppAction {
 }
 
 extension AnyPublisher where Failure == AppError {
-    func complete(completion: @escaping (Result<Output, AppError>) -> Void) -> AnyPublisher<AppAction, Never> {
-        prefix(1)
+    func complete(numOfElements: Int = 1, completion: @escaping (Result<Output, AppError>) -> Void) -> AnyPublisher<AppAction, Never> {
+        prefix(numOfElements)
             .handleEvents(receiveOutput: { items in
                 completion(.success(items))
             }, receiveCompletion: { result in

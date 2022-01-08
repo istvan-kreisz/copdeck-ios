@@ -128,10 +128,13 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
         struct Wrapper: Encodable {
             let searchTerm: String
             let apiConfig: APIConfig
+            let store: StoreId
         }
-        let model = Wrapper(searchTerm: searchTerm, apiConfig: DefaultDataController.config(from: settings, exchangeRates: exchangeRates))
-        let result: AnyPublisher<[Item], AppError> = callFirebaseFunctionArray(functionName: "search", model: model)
-        return result.eraseToAnyPublisher()
+//        let goatModel = Wrapper(searchTerm: searchTerm, apiConfig: DefaultDataController.config(from: settings, exchangeRates: exchangeRates), store: .goat)
+        let stockxModel = Wrapper(searchTerm: searchTerm, apiConfig: DefaultDataController.config(from: settings, exchangeRates: exchangeRates), store: .stockx)
+//        let goatResult: AnyPublisher<[Item], AppError> = callFirebaseFunctionArray(functionName: "search", model: goatModel)
+        let stockxResult: AnyPublisher<[Item], AppError> = callFirebaseFunctionArray(functionName: "search", model: stockxModel)
+        return stockxResult.eraseToAnyPublisher()
     }
 
     func update(item: Item, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates?, completion: @escaping () -> Void) {

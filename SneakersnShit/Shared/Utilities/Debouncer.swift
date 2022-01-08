@@ -24,6 +24,7 @@ class Debouncer {
 
             queue.asyncAfter(deadline: .now() + delay) {
                 debounceWorkItems[id]?.perform()
+                debounceWorkItems[id]?.cancel()
                 debounceCancelItems[id]?.cancel()
                 debounceWorkItems[id] = nil
                 debounceCancelItems[id] = nil

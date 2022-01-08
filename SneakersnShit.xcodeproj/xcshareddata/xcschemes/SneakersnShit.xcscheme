@@ -106,7 +106,7 @@
          <EnvironmentVariable
             key = "useFunctionsEmulator"
             value = "true"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "useFirestoreEmulator"
