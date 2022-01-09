@@ -160,7 +160,7 @@ struct SearchView: View {
                             }
                         }
                     }
-                })), debounceDelayMs: 750)
+                })), debounceDelayMs: 1000)
             }
         } else {
             if searchTerm.isEmpty {
