@@ -149,7 +149,11 @@ struct SearchView: View {
                     if self.searchModel.state.searchResults.searchTerm == searchTerm {
                         let currentIds = self.searchModel.state.searchResults.searchResults.map(\.id)
                         let newItems = items.filter { !currentIds.contains($0.id) }
-                        self.searchModel.state.searchResults.searchResults += newItems
+                        if sendFetchRequest {
+                            self.searchModel.state.searchResults.searchResults.insert(contentsOf: newItems, at: 0)
+                        } else {
+                            self.searchModel.state.searchResults.searchResults += newItems
+                        }
                         loader(.success(()))
                     } else {
                         self.searchModel.state.searchResults = .init(searchTerm: searchTerm, searchResults: items)
