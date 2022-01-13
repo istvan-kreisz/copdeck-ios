@@ -92,6 +92,8 @@ extension MainAction: Identifiable, StringRepresentable {
             return "\(label) \(url.absoluteString)"
         case let .deleteInventoryItemImages(inventoryItem):
             return "\(label) \(inventoryItem.id)"
+        case let .getSearchResults(_, sendFetchRequest, _):
+            return "\(label) \(sendFetchRequest)"
         default:
             return label
         }

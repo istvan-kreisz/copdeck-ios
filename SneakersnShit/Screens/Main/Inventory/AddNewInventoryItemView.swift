@@ -80,7 +80,7 @@ struct AddNewInventoryItemView: View {
                     .withDefaultPadding(padding: .horizontal)
                     Spacer()
                 } else {
-                    VerticalItemListView(items: $searchState.searchResults,
+                    VerticalItemListView(items: $searchState.searchResults.searchResults,
                                          selectedItem: selectedItemBinding,
                                          isLoading: $searchResultsLoader.isLoading,
                                          title: nil,
@@ -105,10 +105,10 @@ struct AddNewInventoryItemView: View {
     }
 
     private func search(searchTerm: String) {
-        let loader = searchResultsLoader.getLoader()
-        store.send(.main(action: .getSearchResults(searchTerm: searchText, sendFetchRequest: false, completion: { result in
-            handleResult(result: result, loader: loader) { self.searchState.searchResults = $0 }
-        })), debounceDelayMs: 1000)
+//        let loader = searchResultsLoader.getLoader()
+//        store.send(.main(action: .getSearchResults(searchTerm: searchText, sendFetchRequest: false, completion: { result in
+//            handleResult(result: result, loader: loader) { self.searchState.searchResults = $0 }
+//        })), debounceDelayMs: 1000)
     }
 }
 

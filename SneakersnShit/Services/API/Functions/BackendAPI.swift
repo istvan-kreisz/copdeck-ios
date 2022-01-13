@@ -18,7 +18,7 @@ protocol BackendAPI {
     func getFeedPosts(loadMore: Bool) -> AnyPublisher<PaginatedResult<[FeedPost]>, AppError>
     func updateLike(onStack stack: Stack, addLike: Bool, stackOwnerId: String)
     // search
-    func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates?) -> AnyPublisher<[Item], AppError>
+    func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates?) -> AnyPublisher<[ItemSearchResult], AppError>
     func update(item: Item, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates?, completion: @escaping () -> Void)
     func updateUserItems(completion: @escaping () -> Void)
     // user

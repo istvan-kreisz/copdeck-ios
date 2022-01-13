@@ -111,7 +111,7 @@ struct SearchView: View {
                             Spacer()
                         }
                     } else {
-                        VerticalItemListView(items: $searchModel.state.searchResults,
+                        VerticalItemListView(items: $searchModel.state.searchResults.searchResults,
                                              selectedItem: selectedItemBinding,
                                              isLoading: $searchResultsLoader.isLoading,
                                              title: nil,
@@ -141,26 +141,32 @@ struct SearchView: View {
             .withAlert(alert: alert.projectedValue)
         }
     }
+    
+    private func getSearchResults(searchTerm: String, sendFetchRequest: Bool, loader: @escaping (Result<Void, AppError>) -> Void) {
+        store.send(.main(action: .getSearchResults(searchTerm: searchTerm, sendFetchRequest: sendFetchRequest, completion: { result in
+            if searchTerm == self.searchText {
+                handleResult(result: result, loader: nil) { items in
+                    if self.searchModel.state.searchResults.searchTerm == searchTerm {
+                        let currentIds = self.searchModel.state.searchResults.searchResults.map(\.id)
+                        let newItems = items.filter { !currentIds.contains($0.id) }
+                        self.searchModel.state.searchResults.searchResults += newItems
+                        loader(.success(()))
+                    } else {
+                        self.searchModel.state.searchResults = .init(searchTerm: searchTerm, searchResults: items)
+                    }
+                }
+            }
+        })), debounceDelayMs: sendFetchRequest ? 1000 : 300)
+    }
 
     private func search(searchTerm: String) {
         if selectedTabIndex == 0 {
             if searchTerm.isEmpty {
-                self.searchModel.state.searchResults = []
+                self.searchModel.state.searchResults = .init(searchTerm: "")
             } else {
                 let loader = searchResultsLoader.getLoader()
-                var resultCount = 0
-                store.send(.main(action: .getSearchResults(searchTerm: searchText, sendFetchRequest: false, completion: { result in
-                    if searchTerm == self.searchText {
-                        resultCount += 1
-                        handleResult(result: result, loader: loader) {
-                            if resultCount == 1 {
-                                self.searchModel.state.searchResults = $0
-                            } else if resultCount == 2 {
-                                self.searchModel.state.searchResults += $0
-                            }
-                        }
-                    }
-                })), debounceDelayMs: 1000)
+                getSearchResults(searchTerm: searchTerm, sendFetchRequest: true, loader: loader)
+                getSearchResults(searchTerm: searchTerm, sendFetchRequest: false, loader: loader)
             }
         } else {
             if searchTerm.isEmpty {

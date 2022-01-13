@@ -51,7 +51,7 @@ class DefaultDataController: DataController {
         databaseManager.getSizeConversions(completion: completion)
     }
 
-    func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates?) -> AnyPublisher<[Item], AppError> {
+    func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates?) -> AnyPublisher<[ItemSearchResult], AppError> {
         backendAPI.search(searchTerm: searchTerm, settings: settings, exchangeRates: exchangeRates)
     }
 

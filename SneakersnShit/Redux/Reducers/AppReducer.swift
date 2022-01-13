@@ -102,9 +102,8 @@ func appReducer(state: inout AppState,
                 completion(.success([]))
             } else {
                 if sendFetchRequest {
-                    completion(.success([]))
-//                    return environment.searchService.search(searchTerm: searchTerm, settings: state.settings, exchangeRates: state.rates)
-//                        .complete(numOfElements: 2, completion: completion)
+                    return environment.dataController.search(searchTerm: searchTerm, settings: state.settings, exchangeRates: state.rates)
+                        .complete(completion: completion)
                 } else {
                     environment.searchService.search(searchTerm: searchTerm, completion: completion)
                 }
@@ -331,7 +330,7 @@ func appReducer(state: inout AppState,
             environment.dataController.refreshUserSubscriptionStatus(completion: completion)
         case let .showPaymentView(show):
             if show {
-                Analytics.logEvent("show_payment_view", parameters: ["userId": state.user?.id ?? ""])                
+                Analytics.logEvent("show_payment_view", parameters: ["userId": state.user?.id ?? ""])
             }
             state.showPaymentView = show
         }

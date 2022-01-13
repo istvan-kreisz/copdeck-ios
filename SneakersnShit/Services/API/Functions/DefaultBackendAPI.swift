@@ -124,17 +124,14 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
                                                               model: Wrapper(stackId: stack.id, addLike: addLike, stackOwnerId: stackOwnerId)))
     }
 
-    func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates?) -> AnyPublisher<[Item], AppError> {
+    func search(searchTerm: String, settings: CopDeckSettings, exchangeRates: ExchangeRates?) -> AnyPublisher<[ItemSearchResult], AppError> {
         struct Wrapper: Encodable {
             let searchTerm: String
             let apiConfig: APIConfig
-            let store: StoreId
         }
-//        let goatModel = Wrapper(searchTerm: searchTerm, apiConfig: DefaultDataController.config(from: settings, exchangeRates: exchangeRates), store: .goat)
-        let stockxModel = Wrapper(searchTerm: searchTerm, apiConfig: DefaultDataController.config(from: settings, exchangeRates: exchangeRates), store: .stockx)
-//        let goatResult: AnyPublisher<[Item], AppError> = callFirebaseFunctionArray(functionName: "search", model: goatModel)
-        let stockxResult: AnyPublisher<[Item], AppError> = callFirebaseFunctionArray(functionName: "search", model: stockxModel)
-        return stockxResult.eraseToAnyPublisher()
+        let model = Wrapper(searchTerm: searchTerm, apiConfig: DefaultDataController.config(from: settings, exchangeRates: exchangeRates))
+        let result: AnyPublisher<[ItemSearchResult], AppError> = callFirebaseFunctionArray(functionName: "searchV2", model: model)
+        return result.eraseToAnyPublisher()
     }
 
     func update(item: Item, forced: Bool, settings: CopDeckSettings, exchangeRates: ExchangeRates?, completion: @escaping () -> Void) {

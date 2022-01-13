@@ -75,7 +75,7 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "ipAddress"
-            value = "192.168.1.23"
+            value = "192.168.1.109"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
@@ -111,7 +111,7 @@
          <EnvironmentVariable
             key = "useFirestoreEmulator"
             value = "true"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "showScraperLogs"

@@ -17,7 +17,12 @@ class SearchModel: ObservableObject {
 }
 
 struct SearchState: Equatable {
-    var searchResults: [ItemSearchResult] = []
+    struct SearchResults: Equatable {
+        let searchTerm: String
+        var searchResults: [ItemSearchResult] = []
+    }
+    
+    var searchResults = SearchResults(searchTerm: "")
     var popularItems: [ItemSearchResult] = []
     var userSearchResults: [User] = []
 }
