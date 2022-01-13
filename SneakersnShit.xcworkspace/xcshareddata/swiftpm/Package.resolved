@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "AlgoliaSearchClient",
+        "repositoryURL": "https://github.com/algolia/algoliasearch-client-swift",
+        "state": {
+          "branch": null,
+          "revision": "d67a9f7b0f94a0b268906e2ff6d07bb830aca3e5",
+          "version": "8.13.2"
+        }
+      },
+      {
         "package": "BoringSSL-GRPC",
         "repositoryURL": "https://github.com/firebase/boringssl-SwiftPM.git",
         "state": {
@@ -161,6 +170,15 @@
           "branch": null,
           "revision": "12e5ee43bfe3ccdf74cbd9746afd98301a277040",
           "version": "3.12.8"
+        }
+      },
+      {
+        "package": "swift-log",
+        "repositoryURL": "https://github.com/apple/swift-log.git",
+        "state": {
+          "branch": null,
+          "revision": "5d66f7ba25daf4f94100e7022febf3c75e37a6c7",
+          "version": "1.4.2"
         }
       },
       {

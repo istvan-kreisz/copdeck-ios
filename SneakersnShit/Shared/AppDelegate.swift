@@ -25,9 +25,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         setupNuke()
         setupUI()
 
-        #warning("yoo")
-//        print(NSClassFromString("ASIdentifierManager")) // returns true if AdSupport is present
-
         return true
     }
 
@@ -70,7 +67,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         AppStore.default.environment.pushNotificationService.application(application,
                                                                          didReceiveRemoteNotification: userInfo,
                                                                          fetchCompletionHandler: completionHandler)
-    }    
+    }
 }
 
 extension UIApplication {
@@ -85,7 +82,8 @@ extension UIApplication {
 }
 
 extension UIApplication: UIGestureRecognizerDelegate {
-    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
+                                  shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return false
     }
 }

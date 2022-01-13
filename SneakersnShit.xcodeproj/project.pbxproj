@@ -32,6 +32,10 @@
 		5D2726CA26CB2CE400887449 /* VerticalListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2726C926CB2CE400887449 /* VerticalListView.swift */; };
 		5D2726CD26CB3CB800887449 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2726CC26CB3CB800887449 /* TabBarView.swift */; };
 		5D2726D026CC59CC00887449 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2726CF26CC59CC00887449 /* Cache.swift */; };
+		5D287A34279090EB0037D56D /* AlgoliaSearchClient in Frameworks */ = {isa = PBXBuildFile; productRef = 5D287A33279090EB0037D56D /* AlgoliaSearchClient */; };
+		5D287A37279097080037D56D /* SearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D287A36279097080037D56D /* SearchService.swift */; };
+		5D287A39279097220037D56D /* DefaultSearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D287A38279097220037D56D /* DefaultSearchService.swift */; };
+		5D287A3B2790975F0037D56D /* ItemSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D287A3A2790975F0037D56D /* ItemSearchResult.swift */; };
 		5D2D5AA025C529E3009598AA /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5A9F25C529E3009598AA /* DataController.swift */; };
 		5D2D5AA325C52E9B009598AA /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5AA225C52E9B009598AA /* AppState.swift */; };
 		5D2D5AAF25C552B0009598AA /* DefaultBackendAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2D5AAE25C552B0009598AA /* DefaultBackendAPI.swift */; };
@@ -273,6 +277,9 @@
 		5D2726C926CB2CE400887449 /* VerticalListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalListView.swift; sourceTree = "<group>"; };
 		5D2726CC26CB3CB800887449 /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
 		5D2726CF26CC59CC00887449 /* Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
+		5D287A36279097080037D56D /* SearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchService.swift; sourceTree = "<group>"; };
+		5D287A38279097220037D56D /* DefaultSearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultSearchService.swift; sourceTree = "<group>"; };
+		5D287A3A2790975F0037D56D /* ItemSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSearchResult.swift; sourceTree = "<group>"; };
 		5D2D5A9F25C529E3009598AA /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		5D2D5AA225C52E9B009598AA /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		5D2D5AAE25C552B0009598AA /* DefaultBackendAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultBackendAPI.swift; sourceTree = "<group>"; };
@@ -493,6 +500,7 @@
 				5D0703CA271DDEE700116CF4 /* StoreKit.framework in Frameworks */,
 				5D9D51FB26AE1BE500AB1F30 /* Nuke in Frameworks */,
 				5D0703C8271DDED200116CF4 /* Purchases in Frameworks */,
+				5D287A34279090EB0037D56D /* AlgoliaSearchClient in Frameworks */,
 				5DE6DBE82735CB8F00A5EF4F /* FacebookLogin in Frameworks */,
 				5D823BA4278138FD00F00202 /* FirebaseAuth in Frameworks */,
 				5D606D17272D040A00E49A59 /* MessageKit in Frameworks */,
@@ -537,6 +545,15 @@
 				5D2726CF26CC59CC00887449 /* Cache.swift */,
 			);
 			path = Cache;
+			sourceTree = "<group>";
+		};
+		5D287A35279096F20037D56D /* SearchService */ = {
+			isa = PBXGroup;
+			children = (
+				5D287A36279097080037D56D /* SearchService.swift */,
+				5D287A38279097220037D56D /* DefaultSearchService.swift */,
+			);
+			path = SearchService;
 			sourceTree = "<group>";
 		};
 		5D2D5A9E25C529CA009598AA /* Functions */ = {
@@ -1048,6 +1065,7 @@
 				5D57A69A273A2F7D0089CDF9 /* Tag.swift */,
 				5D0A85542770340000148CDB /* LastPriceViews.swift */,
 				5DD8F0DA277274570076DB09 /* RemoteConfig.swift */,
+				5D287A3A2790975F0037D56D /* ItemSearchResult.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1190,6 +1208,7 @@
 		5DC00EA725C3A2F8009A3AB9 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				5D287A35279096F20037D56D /* SearchService */,
 				5D9A472127333614001C85E4 /* PushNotificationService */,
 				5D60541B2726F93900B631FD /* PaymentService */,
 				5D2726CE26CC59C100887449 /* Cache */,
@@ -1338,6 +1357,7 @@
 				5D823BA9278138FD00F00202 /* FirebaseFunctions */,
 				5D823BAB278138FD00F00202 /* FirebaseMessaging */,
 				5D823BAD278138FD00F00202 /* FirebaseStorage */,
+				5D287A33279090EB0037D56D /* AlgoliaSearchClient */,
 			);
 			productName = InfluTrader;
 			productReference = 5D696093258713760058BABE /* CopDeck.app */;
@@ -1373,6 +1393,7 @@
 				5D606D15272D040A00E49A59 /* XCRemoteSwiftPackageReference "MessageKit" */,
 				5DE6DBE22735CB8F00A5EF4F /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
 				5D823BA0278138FD00F00202 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				5D287A32279090EB0037D56D /* XCRemoteSwiftPackageReference "algoliasearch-client-swift" */,
 			);
 			productRefGroup = 5D696094258713760058BABE /* Products */;
 			projectDirPath = "";
@@ -1528,6 +1549,7 @@
 				5D53A1F226AF2A61001DAA8D /* AccessoryButton.swift in Sources */,
 				5D97630026EACD0C00A1155B /* ConfirmActionPopup.swift in Sources */,
 				5DE4F20E26DEFA070087077A /* ProfileListItem.swift in Sources */,
+				5D287A39279097220037D56D /* DefaultSearchService.swift in Sources */,
 				5D57A69B273A2F7D0089CDF9 /* Tag.swift in Sources */,
 				5D9C8E3F269FAB8B008538D6 /* NextButton.swift in Sources */,
 				5D95570C269A60DA00CCC2E7 /* String+Extensions.swift in Sources */,
@@ -1588,6 +1610,7 @@
 				5D0E5A11269E4EDE006D7E9C /* AddToInventoryView.swift in Sources */,
 				5D6312242694D83100876D99 /* Decodable+Extensions.swift in Sources */,
 				5D564E432704C7EE00190CF4 /* ReferralCodeAdminView.swift in Sources */,
+				5D287A37279097080037D56D /* SearchService.swift in Sources */,
 				5D1264D7275E9B0100E66EE3 /* QuantityAndConditionSelector.swift in Sources */,
 				5D57A6A1273B1D5B0089CDF9 /* NewTagPopup.swift in Sources */,
 				5D587A96272E41980075C93C /* ChannelListItem.swift in Sources */,
@@ -1622,6 +1645,7 @@
 				5D54FE2626C2C84F008CD05F /* HorizontalListItemRound.swift in Sources */,
 				5DECB5802708C28C0017748C /* Date+Extensions.swift in Sources */,
 				5DD036032738D36200104627 /* Result+Extensions.swift in Sources */,
+				5D287A3B2790975F0037D56D /* ItemSearchResult.swift in Sources */,
 				5DDEFDC426D042C5001B0F76 /* StaticButtonStyle.swift in Sources */,
 				5D1264D9275E9D3500E66EE3 /* TagSelector.swift in Sources */,
 				5D9A473D27344FA1001C85E4 /* DBRef.swift in Sources */,
@@ -2072,6 +2096,14 @@
 				minimumVersion = 3.12.6;
 			};
 		};
+		5D287A32279090EB0037D56D /* XCRemoteSwiftPackageReference "algoliasearch-client-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/algolia/algoliasearch-client-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
 		5D606D15272D040A00E49A59 /* XCRemoteSwiftPackageReference "MessageKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MessageKit/MessageKit";
@@ -2119,6 +2151,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5D0703C6271DDED200116CF4 /* XCRemoteSwiftPackageReference "purchases-ios" */;
 			productName = Purchases;
+		};
+		5D287A33279090EB0037D56D /* AlgoliaSearchClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5D287A32279090EB0037D56D /* XCRemoteSwiftPackageReference "algoliasearch-client-swift" */;
+			productName = AlgoliaSearchClient;
 		};
 		5D606D16272D040A00E49A59 /* MessageKit */ = {
 			isa = XCSwiftPackageProductDependency;
