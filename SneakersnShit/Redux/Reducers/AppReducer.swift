@@ -94,13 +94,20 @@ func appReducer(state: inout AppState,
                 updatedUser.inited = true
                 environment.dataController.update(user: updatedUser)
             }
-        case let .getSearchResults(searchTerm: searchTerm, completion: completion):
-            Analytics.logEvent("search_items", parameters: ["userId": state.user?.id ?? ""])
+        case let .getSearchResults(searchTerm: searchTerm, sendFetchRequest: sendFetchRequest, completion: completion):
+            if sendFetchRequest {
+                Analytics.logEvent("search_items", parameters: ["userId": state.user?.id ?? ""])
+            }
             if searchTerm.isEmpty {
                 completion(.success([]))
             } else {
-                return environment.dataController.search(searchTerm: searchTerm, settings: state.settings, exchangeRates: state.rates)
-                    .complete(numOfElements: 2, completion: completion)
+                if sendFetchRequest {
+                    completion(.success([]))
+//                    return environment.searchService.search(searchTerm: searchTerm, settings: state.settings, exchangeRates: state.rates)
+//                        .complete(numOfElements: 2, completion: completion)
+                } else {
+                    environment.searchService.search(searchTerm: searchTerm, completion: completion)
+                }
             }
         case let .getPopularItems(completion: completion):
             return environment.dataController.getPopularItems()

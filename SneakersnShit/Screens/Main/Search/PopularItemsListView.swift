@@ -10,15 +10,15 @@ import Combine
 
 struct PopularItemsListView: View {
     @Environment(\.presentationMode) var presentationMode
-    @Binding var items: [Item]
+    @Binding var items: [ItemSearchResult]
     let favoritedItemIds: [String]
 
-    @State private var selectedItem: Item?
+    @State private var selectedItem: ItemSearchResult?
 
     var body: some View {
         Group {
             NavigationLink(destination: EmptyView()) { EmptyView() }
-            ForEach(items) { (item: Item) in
+            ForEach(items) { (item: ItemSearchResult) in
                 NavigationLink(destination: ItemDetailView(item: item,
                                                            itemId: item.id,
                                                            styleId: item.styleId ?? item.id,

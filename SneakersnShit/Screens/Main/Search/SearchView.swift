@@ -27,7 +27,7 @@ struct SearchView: View {
 
     var alert = State<(String, String)?>(initialValue: nil)
 
-    var selectedItem: Item? {
+    var selectedItem: ItemSearchResult? {
         guard case let .itemDetail(item) = navigationDestination.destination else { return nil }
         return item
     }
@@ -41,14 +41,14 @@ struct SearchView: View {
         Group {
             let showDetail = Binding<Bool>(get: { navigationDestination.show },
                                            set: { show in show ? navigationDestination.display() : navigationDestination.hide() })
-            let selectedItemBinding = Binding<Item?>(get: { selectedItem },
-                                                     set: { item in
-                                                         if let item = item {
-                                                             navigationDestination += .itemDetail(item)
-                                                         } else {
-                                                             navigationDestination.hide()
-                                                         }
-                                                     })
+            let selectedItemBinding = Binding<ItemSearchResult?>(get: { selectedItem },
+                                                                 set: { item in
+                                                                     if let item = item {
+                                                                         navigationDestination += .itemDetail(item)
+                                                                     } else {
+                                                                         navigationDestination.hide()
+                                                                     }
+                                                                 })
             let selectedUserBinding = Binding<ProfileData?>(get: { selectedUser },
                                                             set: { profile in
                                                                 if let profile = profile {
@@ -149,7 +149,7 @@ struct SearchView: View {
             } else {
                 let loader = searchResultsLoader.getLoader()
                 var resultCount = 0
-                store.send(.main(action: .getSearchResults(searchTerm: searchText, completion: { result in
+                store.send(.main(action: .getSearchResults(searchTerm: searchText, sendFetchRequest: false, completion: { result in
                     if searchTerm == self.searchText {
                         resultCount += 1
                         handleResult(result: result, loader: loader) {
@@ -181,13 +181,13 @@ extension SearchView: LoadViewWithAlert {}
 
 extension SearchView {
     enum NavigationDestination: Equatable {
-        case popularItems, favoritedItems, itemDetail(Item), profile(ProfileData), empty
+        case popularItems, favoritedItems, itemDetail(ItemSearchResult), profile(ProfileData), empty
     }
 
     struct Destination: View {
         var store: DerivedGlobalStore
-        @Binding var popularItems: [Item]
-        @Binding var favoritedItems: [Item]
+        @Binding var popularItems: [ItemSearchResult]
+        @Binding var favoritedItems: [ItemSearchResult]
         @Binding var navigationDestination: Navigation<NavigationDestination>
 
         var body: some View {

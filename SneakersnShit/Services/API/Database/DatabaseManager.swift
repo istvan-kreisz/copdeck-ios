@@ -30,7 +30,7 @@ protocol DatabaseManager: ChatManager {
     func getItem(withId id: String, settings: CopDeckSettings, completion: @escaping (Result<Item, AppError>) -> Void)
     func getItems(withIds ids: [String], settings: CopDeckSettings, completion: @escaping ([Item]) -> Void)
     func getItemListener(withId id: String, settings: CopDeckSettings, updated: @escaping (Item) -> Void) -> DocumentListener<Item>
-    func getPopularItems() -> AnyPublisher<[Item], AppError>
+    func getPopularItems() -> AnyPublisher<[ItemSearchResult], AppError>
     
     // write
     func add(inventoryItems: [InventoryItem], completion: @escaping (Result<[InventoryItem], Error>) -> Void)

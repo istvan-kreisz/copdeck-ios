@@ -22,7 +22,7 @@ struct AddNewInventoryItemView: View {
 
     var alert = State<(String, String)?>(initialValue: nil)
 
-    var selectedItem: Item? {
+    var selectedItem: ItemSearchResult? {
         guard case let .itemDetail(item) = navigationDestination.destination else { return nil }
         return item
     }
@@ -31,15 +31,15 @@ struct AddNewInventoryItemView: View {
         NavigationView {
             let showDetail = Binding<Bool>(get: { navigationDestination.show },
                                            set: { show in show ? navigationDestination.display() : navigationDestination.hide() })
-            let selectedItemBinding = Binding<Item?>(get: { selectedItem },
-                                                     set: { item in
-                                                         if let item = item {
-                                                             addedInventoryItem = false
-                                                             navigationDestination += .itemDetail(item)
-                                                         } else {
-                                                             navigationDestination.hide()
-                                                         }
-                                                     })
+            let selectedItemBinding = Binding<ItemSearchResult?>(get: { selectedItem },
+                                                                 set: { item in
+                                                                     if let item = item {
+                                                                         addedInventoryItem = false
+                                                                         navigationDestination += .itemDetail(item)
+                                                                     } else {
+                                                                         navigationDestination.hide()
+                                                                     }
+                                                                 })
 
             VStack(alignment: .leading, spacing: 19) {
                 NavigationLink(destination: Destination(store: store, navigationDestination: $navigationDestination,
@@ -106,7 +106,7 @@ struct AddNewInventoryItemView: View {
 
     private func search(searchTerm: String) {
         let loader = searchResultsLoader.getLoader()
-        store.send(.main(action: .getSearchResults(searchTerm: searchText, completion: { result in
+        store.send(.main(action: .getSearchResults(searchTerm: searchText, sendFetchRequest: false, completion: { result in
             handleResult(result: result, loader: loader) { self.searchState.searchResults = $0 }
         })), debounceDelayMs: 1000)
     }
@@ -116,7 +116,7 @@ extension AddNewInventoryItemView: LoadViewWithAlert {}
 
 extension AddNewInventoryItemView {
     enum NavigationDestination: Equatable {
-        case itemDetail(Item), addManually, empty
+        case itemDetail(ItemSearchResult), addManually, empty
     }
 
     struct Destination: View {

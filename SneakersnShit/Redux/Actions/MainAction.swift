@@ -23,8 +23,8 @@ enum MainAction {
     // settings
     case updateSettings(settings: CopDeckSettings)
     // search
-    case getSearchResults(searchTerm: String, completion: (Result<[Item], AppError>) -> Void)
-    case getPopularItems(completion: (Result<[Item], AppError>) -> Void)
+    case getSearchResults(searchTerm: String, sendFetchRequest: Bool, completion: (Result<[ItemSearchResult], AppError>) -> Void)
+    case getPopularItems(completion: (Result<[ItemSearchResult], AppError>) -> Void)
     case searchUsers(searchTerm: String, completion: (Result<[User], AppError>) -> Void)
     case favorite(item: Item)
     case unfavorite(item: Item)

@@ -184,7 +184,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
         return listener
     }
 
-    func getPopularItems() -> AnyPublisher<[Item], AppError> {
+    func getPopularItems() -> AnyPublisher<[ItemSearchResult], AppError> {
         return Future { [weak self] promise in
             guard let self = self else {
                 promise(.failure(AppError.notFound(val: "")))
@@ -193,7 +193,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
             self.getCollection(atRef: self.firestore.collection(.popularItems)) { (result: Result<[Item], Error>) in
                 switch result {
                 case let .success(items):
-                    promise(.success(items))
+                    promise(.success(items.map { ItemSearchResult(from: $0) }))
                 case let .failure(error):
                     promise(.failure(AppError(error: error)))
                 }

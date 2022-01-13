@@ -32,6 +32,8 @@ class DefaultSearchService: SearchService {
                         return nil
                     }
                 }
+                .filter { !$0.id.contains("-") }
+                .removeDuplicateElements()
                 completion(.success(results))
             }
         }

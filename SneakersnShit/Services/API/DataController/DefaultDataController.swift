@@ -55,7 +55,7 @@ class DefaultDataController: DataController {
         backendAPI.search(searchTerm: searchTerm, settings: settings, exchangeRates: exchangeRates)
     }
 
-    func getPopularItems() -> AnyPublisher<[Item], AppError> {
+    func getPopularItems() -> AnyPublisher<[ItemSearchResult], AppError> {
         databaseManager.getPopularItems()
     }
     

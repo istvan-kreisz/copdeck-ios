@@ -37,8 +37,8 @@ struct ItemDetailView: View {
 
     @StateObject private var loader = Loader()
 
-    init(item: Item?, itemId: String, styleId: String, favoritedItemIds: [String], shouldDismiss: @escaping () -> Void) {
-        self._item = State(initialValue: item.map { withCalculatedPrices(item: $0) })
+    init(item: ItemSearchResult?, itemId: String, styleId: String, favoritedItemIds: [String], shouldDismiss: @escaping () -> Void) {
+        self._item = State(initialValue: item.map { withCalculatedPrices(item: .init(from: $0)) })
         self.itemId = itemId
         self.styleId = styleId
         self.shouldDismiss = shouldDismiss

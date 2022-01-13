@@ -218,14 +218,14 @@ extension AppStore {
         environment.dataController.recentlyViewedPublisher
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] in
-                      self?.state.recentlyViewedItems = $0
+                self?.state.recentlyViewedItems = $0.map { ItemSearchResult(from: $0) }
                   })
             .store(in: &effectCancellables)
 
         environment.dataController.favoritesPublisher
             .sink(receiveCompletion: { _ in },
                   receiveValue: { [weak self] favorites in
-                      self?.state.favoritedItems = favorites
+                self?.state.favoritedItems = favorites.map { ItemSearchResult(from: $0) }
                   })
             .store(in: &effectCancellables)
 
@@ -287,6 +287,20 @@ private func imageRequest(for imageURL: ImageURL?) -> ImageRequestConvertible? {
 }
 
 func imageSource(for item: Item?) -> ImageViewSourceType {
+    guard let item = item else { return .url(nil) }
+    return .publisher(Future { promise in
+        AppStore.default.send(.main(action: .getItemImage(itemId: item.id,
+                                                          completion: { url in
+                                                              if let url = url {
+                                                                  promise(.success(url))
+                                                              } else {
+                                                                  promise(.success(imageRequest(for: item.imageURL)))
+                                                              }
+                                                          })))
+    }.eraseToAnyPublisher())
+}
+
+func imageSource(for item: ItemSearchResult?) -> ImageViewSourceType {
     guard let item = item else { return .url(nil) }
     return .publisher(Future { promise in
         AppStore.default.send(.main(action: .getItemImage(itemId: item.id,

@@ -14,13 +14,15 @@ class World {
     let authenticator: Authenticator
     let paymentService: PaymentService
     let pushNotificationService: PushNotificationService
+    let searchService: SearchService
     let feedbackGenerator = UISelectionFeedbackGenerator()
 
-    init(dataController: DataController, authenticator: Authenticator, paymentService: PaymentService, pushNotificationService: PushNotificationService) {
+    init(dataController: DataController, authenticator: Authenticator, paymentService: PaymentService, pushNotificationService: PushNotificationService, searchService: SearchService) {
         self.dataController = dataController
         self.authenticator = authenticator
         self.paymentService = paymentService
         self.pushNotificationService = pushNotificationService
+        self.searchService = searchService
     }
 
     convenience init() {
@@ -29,6 +31,7 @@ class World {
                                                         imageService: DefaultImageService()),
                   authenticator: DefaultAuthenticator(),
                   paymentService: DefaultPaymentService(),
-                  pushNotificationService: PushNotificationService())
+                  pushNotificationService: PushNotificationService(),
+                  searchService: DefaultSearchService())
     }
 }

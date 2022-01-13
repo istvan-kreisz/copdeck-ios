@@ -15,8 +15,8 @@ struct HorizontaltemListView: View {
 
     private static let maxHorizontalItemCount = 20
 
-    @Binding var items: [Item]
-    @Binding var selectedItem: Item?
+    @Binding var items: [ItemSearchResult]
+    @Binding var selectedItem: ItemSearchResult?
     @Binding var isLoading: Bool
 
     let title: String?
@@ -25,7 +25,7 @@ struct HorizontaltemListView: View {
 
     var moreTapped: (() -> Void)? = nil
 
-    var itemsToShow: [Item] {
+    var itemsToShow: [ItemSearchResult] {
         if let sortedBy = sortedBy {
             return items.first(n: Self.maxHorizontalItemCount).sortedByDate(dateType: sortedBy, sortOrder: .descending)
         } else {
@@ -54,7 +54,7 @@ struct HorizontaltemListView: View {
                         Color.clear
                             .frame(width: 0, height: 0)
                             .padding(.leading, Styles.horizontalMargin - 24)
-                        ForEach(itemsToShow) { (item: Item) in
+                        ForEach(itemsToShow) { (item: ItemSearchResult) in
                             switch style {
                             case .round:
                                 HorizontalListItemRound(itemId: item.id,

@@ -527,3 +527,9 @@ extension Item {
         }
     }
 }
+
+extension Item {
+    init(from itemSearchResult: ItemSearchResult) {
+        self.init(id: itemSearchResult.id, styleId: itemSearchResult.styleId, storeInfo: [], storePrices: [], name: itemSearchResult.name, imageURL: itemSearchResult.imageURL)
+    }
+}

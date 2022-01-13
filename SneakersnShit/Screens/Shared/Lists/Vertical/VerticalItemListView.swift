@@ -9,8 +9,8 @@ import SwiftUI
 import Combine
 
 struct VerticalItemListView: View {
-    @Binding var items: [Item]
-    @Binding var selectedItem: Item?
+    @Binding var items: [ItemSearchResult]
+    @Binding var selectedItem: ItemSearchResult?
     @Binding var isLoading: Bool
 
     let title: String?
@@ -42,7 +42,7 @@ struct VerticalItemListView: View {
             }
 
             VerticalListView(bottomPadding: bottomPadding) {
-                ForEach(items) { (item: Item) in
+                ForEach(items) { (item: ItemSearchResult) in
                     VerticalListItemWithoutAccessoryView(itemId: item.id,
                                                          title: item.name ?? "",
                                                          source: imageSource(for: item),

@@ -17,8 +17,8 @@ class SearchModel: ObservableObject {
 }
 
 struct SearchState: Equatable {
-    var searchResults: [Item] = []
-    var popularItems: [Item] = []
+    var searchResults: [ItemSearchResult] = []
+    var popularItems: [ItemSearchResult] = []
     var userSearchResults: [User] = []
 }
 
@@ -30,8 +30,8 @@ struct GlobalState: Equatable {
     var user: User?
     var firstLoadDone = false
     var error: AppError?
-    var favoritedItems: [Item] = []
-    var recentlyViewedItems: [Item] = []
+    var favoritedItems: [ItemSearchResult] = []
+    var recentlyViewedItems: [ItemSearchResult] = []
     var exchangeRates: ExchangeRates?
     var showPaymentView = false
     var allPackages: [DiscountValue: SubscriptionPackages]?
@@ -105,12 +105,12 @@ struct AppState: Equatable {
         set { globalState.exchangeRates = newValue }
     }
 
-    var favoritedItems: [Item] {
+    var favoritedItems: [ItemSearchResult] {
         get { globalState.favoritedItems }
         set { globalState.favoritedItems = newValue }
     }
     
-    var recentlyViewedItems: [Item] {
+    var recentlyViewedItems: [ItemSearchResult] {
         get { globalState.recentlyViewedItems }
         set { globalState.recentlyViewedItems = newValue }
     }
