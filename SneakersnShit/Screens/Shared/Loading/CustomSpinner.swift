@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CustomSpinner: View {
     let text: String?
+    var fontSize: CGFloat = 14
     let style = StrokeStyle(lineWidth: 4, lineCap: .round)
     let color1 = Color.customText2
     let color2 = Color.customText2.opacity(0.5)
@@ -27,7 +28,7 @@ struct CustomSpinner: View {
 //                .frame(width: 15, height: 15)
             if let text = text {
                 Text(text)
-                    .font(.bold(size: 15))
+                    .font(.bold(size: fontSize))
                     .foregroundColor(.customText1)
             }
             Spacer()
