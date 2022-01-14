@@ -352,8 +352,10 @@ func goatBuyerPrice(price: Double,
 func restocksSellerPrice(price: Double,
                          currencyCode: Currency.CurrencyCode,
                          feeCalculation: CopDeckSettings.FeeCalculation,
-                         exchangeRates: ExchangeRates?) -> Double {
-    let sellerFeeInEUR = Currency.convert(from: currencyCode, to: .eur, exchangeRates: exchangeRates) * price * 0.1 + 10
+                         exchangeRates: ExchangeRates?,
+                         restocksPriceType: Item.StorePrice.StoreInventoryItem.RestocksPriceType) -> Double {
+    let multiplier = restocksPriceType == .regular ? 0.1 : 0.05
+    let sellerFeeInEUR = Currency.convert(from: currencyCode, to: .eur, exchangeRates: exchangeRates) * price * multiplier + 10
     let sellerFeeInTargetCurrency = Currency.convert(from: .eur, to: currencyCode, exchangeRates: exchangeRates) * sellerFeeInEUR
     return round(price - sellerFeeInTargetCurrency)
 }
@@ -454,7 +456,8 @@ func calculatePrice(storeId: StoreId,
             updatedInventoryItem.lowestAskWithSellerFees = restocksSellerPrice(price: lowestAsk,
                                                                                currencyCode: currencyCode,
                                                                                feeCalculation: feeCalculation,
-                                                                               exchangeRates: exchangeRates)
+                                                                               exchangeRates: exchangeRates,
+                                                                               restocksPriceType: inventoryItem.restocksPriceType ?? .regular)
             updatedInventoryItem.lowestAskWithBuyerFees = restocksBuyerPrice(price: lowestAsk,
                                                                              currencyCode: currencyCode,
                                                                              feeCalculation: feeCalculation,
