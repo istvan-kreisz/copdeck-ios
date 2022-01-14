@@ -13,4 +13,5 @@ struct RemoteConfig: Codable, Equatable {
     let dailyPriceCheckLimit: Int
     let stacksLimit: Int
     let showPaywallOnLaunch: Bool
+    let algoliaKey: String
 }

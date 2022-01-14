@@ -265,6 +265,9 @@ extension AppStore {
         }
 
         environment.dataController.getRemoteConfig { [weak self] remoteConfig in
+            if self?.state.globalState.remoteConfig == nil {
+                self?.environment.searchService.setup(apiKey: .init(rawValue: remoteConfig.algoliaKey))
+            }
             self?.state.globalState.remoteConfig = remoteConfig
         }
 

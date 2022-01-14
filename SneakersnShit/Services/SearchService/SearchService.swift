@@ -6,7 +6,9 @@
 //
 
 import Foundation
+import AlgoliaSearchClient
 
 protocol SearchService {
+    func setup(apiKey: APIKey)
     func search(searchTerm: String, completion: @escaping (Result<[ItemSearchResult], AppError>) -> Void)
 }
