@@ -23,7 +23,7 @@ struct StoreReviewHelper {
         case 20,
              50:
             StoreReviewHelper().requestReview()
-        case _ where appOpenCount % 100 == 0:
+        case _ where appOpenCount % 70 == 0:
             StoreReviewHelper().requestReview()
         default:
             print("App run count is : \(appOpenCount)")

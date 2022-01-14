@@ -95,6 +95,7 @@ struct RootView: View {
                 viewState.firstShow = false
                 store.send(.authentication(action: .restoreState))
             }
+            StoreReviewHelper.checkAndAskForReview()
         }
         .preferredColorScheme(.light)
     }
