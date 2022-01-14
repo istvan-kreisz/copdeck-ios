@@ -353,11 +353,8 @@ func restocksSellerPrice(price: Double,
                          currencyCode: Currency.CurrencyCode,
                          feeCalculation: CopDeckSettings.FeeCalculation,
                          exchangeRates: ExchangeRates?) -> Double {
-    let sellerFeeInEUR = Currency.convert(from: currencyCode, to: .eur,
-                                          exchangeRates: exchangeRates) * 0.1 + 10
-    let sellerFeeInTargetCurrency = Currency.convert(from: .eur, to: currencyCode,
-                                                     exchangeRates: exchangeRates) *
-        sellerFeeInEUR
+    let sellerFeeInEUR = Currency.convert(from: currencyCode, to: .eur, exchangeRates: exchangeRates) * price * 0.1 + 10
+    let sellerFeeInTargetCurrency = Currency.convert(from: .eur, to: currencyCode, exchangeRates: exchangeRates) * sellerFeeInEUR
     return round(price - sellerFeeInTargetCurrency)
 }
 
