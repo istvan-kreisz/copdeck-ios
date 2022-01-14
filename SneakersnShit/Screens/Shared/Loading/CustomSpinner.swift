@@ -27,7 +27,7 @@ struct CustomSpinner: View {
 //                .frame(width: 15, height: 15)
             if let text = text {
                 Text(text)
-                    .font(.bold(size: 14))
+                    .font(.bold(size: 15))
                     .foregroundColor(.customText1)
             }
             Spacer()

@@ -73,7 +73,7 @@ struct AddToInventoryView: View {
     }
 
     var priceWithCurrency: PriceWithCurrency? {
-        item?.retailPrice.asPriceWithCurrency(currency: currency)
+        item?.retailPrice.asPriceWithCurrency(currency: USD)
     }
 
     var body: some View {

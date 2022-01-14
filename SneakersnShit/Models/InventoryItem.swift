@@ -146,7 +146,7 @@ extension InventoryItem {
                   styleId: item.styleId ?? item.bestStoreInfo?.styleId ?? "",
                   userId: DerivedGlobalStore.default.globalState.user?.id,
                   name: item.name ?? "",
-                  purchasePrice: item.retailPrice.asPriceWithCurrency(currency: item.currency),
+                  purchasePrice: item.retailPrice.asPriceWithCurrency(currency: USD),
                   imageURL: item.imageURL,
                   size: (size ?? item.sortedSizes.first) ?? "",
                   itemType: item.itemTypeDefaulted,

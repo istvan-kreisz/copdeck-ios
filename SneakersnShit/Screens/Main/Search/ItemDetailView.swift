@@ -148,7 +148,7 @@ struct ItemDetailView: View {
                                     Spacer()
                                     VStack(spacing: 2) {
                                         CopiableText(item?.bestStoreInfo?.retailPrice
-                                            .map { "\(item?.currency.symbol.rawValue ?? "")\($0.rounded(toPlaces: 1))" })
+                                            .map { "\(USD.symbol.rawValue ?? "")\($0.rounded(toPlaces: 1))" })
                                                                                     .font(.bold(size: 20))
                                                                                     .foregroundColor(.customText1)
 
@@ -289,7 +289,7 @@ struct ItemDetailView: View {
                                     .padding(.bottom, -15)
 
                                     if loader.isLoading && store.globalState.canViewPrices {
-                                        CustomSpinner(text: "Loading...", animate: true)
+                                        CustomSpinner(text: "Loading prices...", animate: true)
                                             .padding(5)
                                     }
 
