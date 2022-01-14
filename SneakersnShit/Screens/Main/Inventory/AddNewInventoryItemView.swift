@@ -11,14 +11,14 @@ import SwiftUI
 struct AddNewInventoryItemView: View {
     @EnvironmentObject var store: DerivedGlobalStore
 
-    @State private var searchText = ""
-    @StateObject private var searchResultsLoader = Loader()
-
     @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
 
-    @State var searchState = SearchState()
     @State var showSnackBar = false
     @State var addedInventoryItem = false
+    
+    var searchText: State<String> = State(initialValue: "")
+    var searchModel: StateObject<SearchModel> = StateObject(wrappedValue: SearchModel())
+    var searchResultsLoader: StateObject<Loader> = StateObject(wrappedValue: Loader())
 
     var alert = State<(String, String)?>(initialValue: nil)
 
@@ -56,11 +56,11 @@ struct AddNewInventoryItemView: View {
                 TextFieldRounded(title: nil,
                                  placeHolder: "Search sneakers, apparel, collectibles",
                                  style: .white,
-                                 text: $searchText,
+                                 text: searchText.projectedValue,
                                  addClearButton: true)
                     .withDefaultPadding(padding: .horizontal)
 
-                if searchText.isEmpty {
+                if searchText.wrappedValue.isEmpty {
                     // add manually
                     HStack(alignment: .center, spacing: 16) {
                         Text("OR")
@@ -80,9 +80,9 @@ struct AddNewInventoryItemView: View {
                     .withDefaultPadding(padding: .horizontal)
                     Spacer()
                 } else {
-                    VerticalItemListView(items: $searchState.searchResults.searchResults,
+                    VerticalItemListView(items: searchModel.projectedValue.state.searchResults.searchResults,
                                          selectedItem: selectedItemBinding,
-                                         isLoading: $searchResultsLoader.isLoading,
+                                         isLoading: searchResultsLoader.projectedValue.isLoading,
                                          title: nil,
                                          resultsLabelText: nil,
                                          bottomPadding: 0)
@@ -90,7 +90,7 @@ struct AddNewInventoryItemView: View {
                 }
             }
             .background(Color.customBackground)
-            .onChange(of: searchText) { search(searchTerm: $0) }
+            .onChange(of: searchText.wrappedValue) { searchItems(searchTerm: $0) }
             .withAlert(alert: alert.projectedValue)
             .withSnackBar(text: "Added to inventory", shouldShow: $showSnackBar)
             .navigationbarHidden()
@@ -103,16 +103,9 @@ struct AddNewInventoryItemView: View {
         .navigationViewStyle(StackNavigationViewStyle())
         .preferredColorScheme(.light)
     }
-
-    private func search(searchTerm: String) {
-//        let loader = searchResultsLoader.getLoader()
-//        store.send(.main(action: .getSearchResults(searchTerm: searchText, sendFetchRequest: false, completion: { result in
-//            handleResult(result: result, loader: loader) { self.searchState.searchResults = $0 }
-//        })), debounceDelayMs: 1000)
-    }
 }
 
-extension AddNewInventoryItemView: LoadViewWithAlert {}
+extension AddNewInventoryItemView: ItemSearchView {}
 
 extension AddNewInventoryItemView {
     enum NavigationDestination: Equatable {

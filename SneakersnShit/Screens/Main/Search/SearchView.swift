@@ -12,9 +12,6 @@ import Firebase
 struct SearchView: View {
     @EnvironmentObject var store: DerivedGlobalStore
 
-    @State private var searchText = ""
-
-    @StateObject private var searchResultsLoader = Loader()
     @StateObject private var popularItemsLoader = Loader()
     @StateObject private var userSearchResultsLoader = Loader()
 
@@ -22,8 +19,10 @@ struct SearchView: View {
     @State private var isFirstload = true
 
     @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
-
-    @StateObject var searchModel = SearchModel()
+    
+    var searchText: State<String> = State(initialValue: "")
+    var searchModel: StateObject<SearchModel> = StateObject(wrappedValue: SearchModel())
+    var searchResultsLoader: StateObject<Loader> = StateObject(wrappedValue: Loader())
 
     var alert = State<(String, String)?>(initialValue: nil)
 
@@ -58,7 +57,7 @@ struct SearchView: View {
                                                                 }
                                                             })
             NavigationLink(destination: Destination(store: store,
-                                                    popularItems: $searchModel.state.popularItems,
+                                                    popularItems: searchModel.projectedValue.state.popularItems,
                                                     favoritedItems: $store.globalState.favoritedItems,
                                                     navigationDestination: $navigationDestination)
                     .navigationbarHidden(),
@@ -75,7 +74,7 @@ struct SearchView: View {
                 TextFieldRounded(title: nil,
                                  placeHolder: selectedTabIndex == 0 ? "Search sneakers, apparel, collectibles" : "Search people",
                                  style: .white,
-                                 text: $searchText,
+                                 text: searchText.projectedValue,
                                  addClearButton: true)
                     .withDefaultPadding(padding: .horizontal)
 
@@ -88,9 +87,9 @@ struct SearchView: View {
                     .withDefaultPadding(padding: .horizontal)
 
                 if selectedTabIndex == 0 {
-                    if searchText.isEmpty {
+                    if searchText.wrappedValue.isEmpty {
                         VStack(alignment: .leading, spacing: 10) {
-                            HorizontaltemListView(items: $searchModel.state.popularItems,
+                            HorizontaltemListView(items: searchModel.projectedValue.state.popularItems,
                                                   selectedItem: selectedItemBinding,
                                                   isLoading: $popularItemsLoader.isLoading,
                                                   title: "Trending now",
@@ -111,26 +110,26 @@ struct SearchView: View {
                             Spacer()
                         }
                     } else {
-                        VerticalItemListView(items: $searchModel.state.searchResults.searchResults,
+                        VerticalItemListView(items: searchModel.projectedValue.state.searchResults.searchResults,
                                              selectedItem: selectedItemBinding,
-                                             isLoading: $searchResultsLoader.isLoading,
+                                             isLoading: searchResultsLoader.projectedValue.isLoading,
                                              title: nil,
                                              resultsLabelText: nil,
                                              bottomPadding: Styles.tabScreenBottomPadding)
                     }
                 } else {
-                    VerticalProfileListView(profiles: $searchModel.state.userSearchResults.asProfiles,
+                    VerticalProfileListView(profiles: searchModel.projectedValue.state.userSearchResults.asProfiles,
                                             selectedProfile: selectedUserBinding,
                                             isLoading: $userSearchResultsLoader.isLoading,
                                             bottomPadding: Styles.tabScreenBottomPadding)
                 }
             }
             .hideKeyboardOnScroll()
-            .onChange(of: searchText) { search(searchTerm: $0) }
+            .onChange(of: searchText.wrappedValue) { search(searchTerm: $0) }
             .onAppear {
-                if searchModel.state.popularItems.isEmpty {
+                if searchModel.wrappedValue.state.popularItems.isEmpty {
                     store.send(.main(action: .getPopularItems(completion: { result in
-                        handleResult(result: result, loader: nil) { self.searchModel.state.popularItems = $0 }
+                        handleResult(result: result, loader: nil) { self.searchModel.wrappedValue.state.popularItems = $0 }
                     })))
                 }
                 if isFirstload {
@@ -141,45 +140,18 @@ struct SearchView: View {
             .withAlert(alert: alert.projectedValue)
         }
     }
-    
-    private func getSearchResults(searchTerm: String, sendFetchRequest: Bool, loader: @escaping (Result<Void, AppError>) -> Void) {
-        store.send(.main(action: .getSearchResults(searchTerm: searchTerm, sendFetchRequest: sendFetchRequest, completion: { result in
-            if searchTerm == self.searchText {
-                handleResult(result: result, loader: nil) { items in
-                    if self.searchModel.state.searchResults.searchTerm == searchTerm {
-                        let currentIds = self.searchModel.state.searchResults.searchResults.map(\.id)
-                        let newItems = items.filter { !currentIds.contains($0.id) }
-                        if sendFetchRequest {
-                            self.searchModel.state.searchResults.searchResults.insert(contentsOf: newItems, at: 0)
-                        } else {
-                            self.searchModel.state.searchResults.searchResults += newItems
-                        }
-                        loader(.success(()))
-                    } else {
-                        self.searchModel.state.searchResults = .init(searchTerm: searchTerm, searchResults: items)
-                    }
-                }
-            }
-        })), debounceDelayMs: sendFetchRequest ? 1000 : 300)
-    }
 
     private func search(searchTerm: String) {
         if selectedTabIndex == 0 {
-            if searchTerm.isEmpty {
-                self.searchModel.state.searchResults = .init(searchTerm: "")
-            } else {
-                let loader = searchResultsLoader.getLoader()
-                getSearchResults(searchTerm: searchTerm, sendFetchRequest: true, loader: loader)
-                getSearchResults(searchTerm: searchTerm, sendFetchRequest: false, loader: loader)
-            }
+            searchItems(searchTerm: searchTerm)
         } else {
             if searchTerm.isEmpty {
-                self.searchModel.state.userSearchResults = []
+                self.searchModel.wrappedValue.state.userSearchResults = []
             } else {
                 let loader = userSearchResultsLoader.getLoader()
-                store.send(.main(action: .searchUsers(searchTerm: searchText, completion: { result in
-                    if searchTerm == self.searchText {
-                        handleResult(result: result, loader: loader) { self.searchModel.state.userSearchResults = $0 }
+                store.send(.main(action: .searchUsers(searchTerm: searchText.wrappedValue, completion: { result in
+                    if searchTerm == self.searchText.wrappedValue {
+                        handleResult(result: result, loader: loader) { self.searchModel.wrappedValue.state.userSearchResults = $0 }
                     }
                 })), debounceDelayMs: 900)
             }
@@ -187,7 +159,7 @@ struct SearchView: View {
     }
 }
 
-extension SearchView: LoadViewWithAlert {}
+extension SearchView: ItemSearchView {}
 
 extension SearchView {
     enum NavigationDestination: Equatable {
