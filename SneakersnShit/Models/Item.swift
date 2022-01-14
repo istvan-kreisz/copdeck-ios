@@ -138,6 +138,9 @@ struct Item: Equatable, Identifiable, Hashable, ModelWithDate {
             enum RestocksPriceType: String, Codable {
                 case regular, consign
             }
+            enum GOATPriceType: String, Codable {
+                case regular, instant
+            }
 
             var size: String
             let lowestAsk: Double?
@@ -147,11 +150,16 @@ struct Item: Equatable, Identifiable, Hashable, ModelWithDate {
             var highestBidWithSellerFees: Double?
             var highestBidWithBuyerFees: Double?
             let restocksPriceType: RestocksPriceType?
+            let goatPriceType: GOATPriceType?
 
             let shoeCondition: String?
             let boxCondition: String?
-
+            
             var id: String { size }
+            
+            var isBoxDamaged: Bool {
+                boxCondition?.contains("damaged") ?? false
+            }
         }
     }
 }
@@ -358,6 +366,7 @@ extension Item.StorePrice.StoreInventoryItem {
         case shoeCondition
         case boxCondition
         case restocksPriceType
+        case goatPriceType
     }
 
     func encode(to encoder: Encoder) throws {
@@ -368,6 +377,7 @@ extension Item.StorePrice.StoreInventoryItem {
         try container.encode(shoeCondition, forKey: .shoeCondition)
         try container.encode(boxCondition, forKey: .boxCondition)
         try container.encode(restocksPriceType, forKey: .restocksPriceType)
+        try container.encode(goatPriceType, forKey: .goatPriceType)
     }
 }
 
