@@ -70,7 +70,7 @@ struct SizeConversionItem: Codable, Equatable, Hashable {
     let uk: String?
     let usWoman: String?
     let eu: String?
-    
+
     func getValue(shoeSize: ShoeSize, gender: Gender?) -> String? {
         switch shoeSize {
         case .EU:
@@ -102,7 +102,7 @@ struct Item: Equatable, Identifiable, Hashable, ModelWithDate {
     var itemType: ItemType? = .shoe
     var brandCalculated: Brand? { brand ?? getBrand(storeInfoArray: storeInfo) }
     var genderCalculated: Gender? { gender ?? getGender(storeInfoArray: storeInfo) }
-    
+
     var sizeConversion: [SizeConversionItem] {
         storePrices.sorted(by: { ($0.sizeConversion?.count ?? 0) < ($1.sizeConversion?.count ?? 0) }).last?.sizeConversion ?? []
     }
@@ -137,9 +137,26 @@ struct Item: Equatable, Identifiable, Hashable, ModelWithDate {
         struct StoreInventoryItem: Codable, Equatable, Identifiable, Hashable {
             enum RestocksPriceType: String, Codable {
                 case regular, consign
+
+                var name: String {
+                    self.rawValue.capitalized
+                }
+
+                var reversed: RestocksPriceType {
+                    self == .regular ? .consign : .regular
+                }
             }
+
             enum GOATPriceType: String, Codable {
                 case regular, instant
+
+                var name: String {
+                    self.rawValue.capitalized
+                }
+
+                var reversed: GOATPriceType {
+                    self == .regular ? .instant : .regular
+                }
             }
 
             var size: String
@@ -154,9 +171,9 @@ struct Item: Equatable, Identifiable, Hashable, ModelWithDate {
 
             let shoeCondition: String?
             let boxCondition: String?
-            
+
             var id: String { size }
-            
+
             var isBoxDamaged: Bool {
                 boxCondition?.contains("damaged") ?? false
             }
@@ -257,12 +274,16 @@ extension Item {
                   priceType: PriceType,
                   feeType: FeeType,
                   stores: [StoreId],
-                  restocksPriceType: StorePrice.StoreInventoryItem.RestocksPriceType?) -> PriceRow {
+                  restocksPriceType: StorePrice.StoreInventoryItem.RestocksPriceType?,
+                  goatPriceType: StorePrice.StoreInventoryItem.GOATPriceType?,
+                  isInDamagedBox: Bool?) -> PriceRow {
         Self.priceRow(size: size,
                       priceType: priceType,
                       feeType: feeType,
                       stores: stores,
                       restocksPriceType: restocksPriceType,
+                      goatPriceType: goatPriceType,
+                      isInDamagedBox: isInDamagedBox,
                       currency: currency,
                       prices: allStorePrices,
                       storeInfos: storeInfo)
@@ -271,11 +292,15 @@ extension Item {
     func allPriceRows(priceType: PriceType,
                       feeType: FeeType,
                       stores: [StoreId],
-                      restocksPriceType: StorePrice.StoreInventoryItem.RestocksPriceType?) -> [PriceRow] {
+                      restocksPriceType: StorePrice.StoreInventoryItem.RestocksPriceType?,
+                      goatPriceType: StorePrice.StoreInventoryItem.GOATPriceType?,
+                      isInDamagedBox: Bool?) -> [PriceRow] {
         Self.allPriceRows(priceType: priceType,
                           feeType: feeType,
                           stores: stores,
                           restocksPriceType: restocksPriceType,
+                          goatPriceType: goatPriceType,
+                          isInDamagedBox: isInDamagedBox,
                           sortedSizes: sortedSizes,
                           curency: currency,
                           prices: allStorePrices,
@@ -429,6 +454,8 @@ extension Item {
                       feeType: FeeType,
                       currency: Currency,
                       restocksPriceType: Item.StorePrice.StoreInventoryItem.RestocksPriceType?,
+                      goatPriceType: StorePrice.StoreInventoryItem.GOATPriceType?,
+                      isInDamagedBox: Bool?,
                       allPrices: [Item.StorePrice],
                       storeInfos: [Item.StoreInfo]) -> Item.PriceItem {
         let prices = allPrices.first(where: { $0.store.id == storeId })?.inventory.filter { $0.size == size }
@@ -438,6 +465,12 @@ extension Item {
         if storeId == .restocks {
             if let restocksPriceType = restocksPriceType {
                 price = prices?.first(where: { $0.restocksPriceType == restocksPriceType })
+            } else {
+                price = prices?.min(by: { ($0.lowestAsk ?? 0) < ($1.lowestAsk ?? 0) })
+            }
+        } else if storeId == .goat {
+            if let goatPriceType = goatPriceType {
+                price = prices?.first(where: { ($0.goatPriceType ?? .regular) == goatPriceType })
             } else {
                 price = prices?.min(by: { ($0.lowestAsk ?? 0) < ($1.lowestAsk ?? 0) })
             }
@@ -468,6 +501,8 @@ extension Item {
                          feeType: FeeType,
                          stores: [StoreId],
                          restocksPriceType: Item.StorePrice.StoreInventoryItem.RestocksPriceType?,
+                         goatPriceType: StorePrice.StoreInventoryItem.GOATPriceType?,
+                         isInDamagedBox: Bool?,
                          currency: Currency,
                          prices: [Item.StorePrice],
                          storeInfos: [Item.StoreInfo]) -> Item.PriceRow {
@@ -477,6 +512,8 @@ extension Item {
                           feeType: feeType,
                           currency: currency,
                           restocksPriceType: restocksPriceType,
+                          goatPriceType: goatPriceType,
+                          isInDamagedBox: isInDamagedBox,
                           allPrices: prices,
                           storeInfos: storeInfos)
             return Item.PriceRow.Price(primaryText: priceType == .Ask ? p.ask.text : p.bid.text,
@@ -500,6 +537,8 @@ extension Item {
                              feeType: FeeType,
                              stores: [StoreId],
                              restocksPriceType: Item.StorePrice.StoreInventoryItem.RestocksPriceType?,
+                             goatPriceType: StorePrice.StoreInventoryItem.GOATPriceType?,
+                             isInDamagedBox: Bool?,
                              sortedSizes: [String],
                              curency: Currency,
                              prices: [Item.StorePrice],
@@ -510,6 +549,8 @@ extension Item {
                             feeType: feeType,
                             stores: stores,
                             restocksPriceType: restocksPriceType,
+                            goatPriceType: goatPriceType,
+                            isInDamagedBox: isInDamagedBox,
                             currency: curency,
                             prices: prices,
                             storeInfos: storeInfos) }
@@ -527,6 +568,8 @@ extension Item {
                                     feeType: feeType,
                                     stores: stores,
                                     restocksPriceType: nil,
+                                    goatPriceType: nil,
+                                    isInDamagedBox: nil,
                                     currency: currency,
                                     prices: prices,
                                     storeInfos: storeInfos).prices
@@ -540,6 +583,7 @@ extension Item {
 
 extension Item {
     init(from itemSearchResult: ItemSearchResult) {
-        self.init(id: itemSearchResult.id, styleId: itemSearchResult.styleId, storeInfo: [], storePrices: [], name: itemSearchResult.name, imageURL: itemSearchResult.imageURL)
+        self.init(id: itemSearchResult.id, styleId: itemSearchResult.styleId, storeInfo: [], storePrices: [], name: itemSearchResult.name,
+                  imageURL: itemSearchResult.imageURL)
     }
 }

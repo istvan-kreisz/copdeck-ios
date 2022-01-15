@@ -24,6 +24,8 @@ struct ItemDetailView: View {
     @State var itemListener: DocumentListener<Item>?
 
     @State private var restocksPriceType: Item.StorePrice.StoreInventoryItem.RestocksPriceType = .regular
+    @State private var goatPriceType: Item.StorePrice.StoreInventoryItem.GOATPriceType = .regular
+    @State private var isInDamagedBox: Bool? = nil
     @State private var shouldUpdateLastPriceViews = true
 
     var shouldDismiss: () -> Void
@@ -43,6 +45,30 @@ struct ItemDetailView: View {
         self.styleId = styleId
         self.shouldDismiss = shouldDismiss
         self._isFavorited = State<Bool>(initialValue: favoritedItemIds.contains(itemId))
+    }
+    
+    private func priceTypeToggle(store: StoreId) -> some View {
+        Button {
+            if store == .restocks {
+                restocksPriceType = restocksPriceType == .regular ? .consign : .regular
+            } else if store == .goat {
+                goatPriceType = goatPriceType == .regular ? .instant : .regular
+            }
+        } label: {
+            let text1 = store == .restocks ? restocksPriceType.name : goatPriceType.name
+            let text2 = store == .restocks ? restocksPriceType.reversed.name : goatPriceType.reversed.name
+            VStack(alignment: .center, spacing: 1) {
+                Text(text1)
+                    .font(.bold(size: 12))
+                    .foregroundColor(.customBlue)
+                Image(systemName: "arrow.up.arrow.down")
+                    .font(.semiBold(size: 7))
+                    .foregroundColor(.customText2)
+                Text(text2)
+                    .font(.regular(size: 10))
+                    .foregroundColor(.customText2)
+            }
+        }
     }
 
     private func priceRow(row: Item.PriceRow) -> some View {
@@ -266,22 +292,8 @@ struct ItemDetailView: View {
                                                             UIApplication.shared.open(url)
                                                         }
                                                     }
-                                                if store.id == .restocks {
-                                                    Button {
-                                                        restocksPriceType = restocksPriceType == .regular ? .consign : .regular
-                                                    } label: {
-                                                        VStack(alignment: .center, spacing: 1) {
-                                                            Text(restocksPriceType == .regular ? "Regular" : "Consign")
-                                                                .font(.bold(size: 12))
-                                                                .foregroundColor(.customBlue)
-                                                            Image(systemName: "arrow.up.arrow.down")
-                                                                .font(.semiBold(size: 7))
-                                                                .foregroundColor(.customText2)
-                                                            Text(restocksPriceType == .regular ? "Consign" : "Regular")
-                                                                .font(.regular(size: 10))
-                                                                .foregroundColor(.customText2)
-                                                        }
-                                                    }
+                                                if store.id == .restocks || store.id == .goat {
+                                                    priceTypeToggle(store: store.id)
                                                 }
                                             }
                                         }
@@ -302,7 +314,9 @@ struct ItemDetailView: View {
                                                                         priceType: priceType,
                                                                         feeType: feeType,
                                                                         stores: store.globalState.displayedStores,
-                                                                        restocksPriceType: restocksPriceType) {
+                                                                        restocksPriceType: restocksPriceType,
+                                                                        goatPriceType: goatPriceType,
+                                                                        isInDamagedBox: isInDamagedBox) {
                                                 Text("Your size:")
                                                     .font(.semiBold(size: 14))
                                                     .foregroundColor(.customText1)
@@ -318,7 +332,9 @@ struct ItemDetailView: View {
                                             ForEach((item?.allPriceRows(priceType: priceType,
                                                                         feeType: feeType,
                                                                         stores: store.globalState.displayedStores,
-                                                                        restocksPriceType: restocksPriceType)) ?? []) { (row: Item.PriceRow) in
+                                                                        restocksPriceType: restocksPriceType,
+                                                                        goatPriceType: goatPriceType,
+                                                                        isInDamagedBox: isInDamagedBox)) ?? []) { (row: Item.PriceRow) in
                                                 priceRow(row: row)
                                             }
                                             .id(0)
