@@ -164,7 +164,7 @@ struct ItemDetailView: View {
                                 HStack(spacing: 10) {
                                     Spacer()
                                     VStack(spacing: 2) {
-                                        CopiableText(item?.isShoe == true ? item?.styleId : nil, defaultIfNil: "-")
+                                        CopiableText(item?.isShoe == true && item?.styleId?.contains("_") == false ? item?.styleId : nil, defaultIfNil: "-")
                                             .font(.bold(size: 20))
                                             .foregroundColor(.customText1)
                                         Text("Style ID")
