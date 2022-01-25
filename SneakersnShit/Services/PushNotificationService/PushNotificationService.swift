@@ -32,7 +32,7 @@ class PushNotificationService: NSObject {
         }
     }
 
-    var deviceId: String {
+    static var deviceId: String {
         UIDevice.current.identifierForVendor?.uuidString ?? UUID().uuidString
     }
 
@@ -107,7 +107,7 @@ class PushNotificationService: NSObject {
 
                                     let newNotificationToken = NotificationToken(token: newToken,
                                                                                  userId: userId,
-                                                                                 deviceId: self.deviceId,
+                                                                                 deviceId: Self.deviceId,
                                                                                  refreshedDate: Date.serverDate)
                                     self.updateTokenInDB(newNotificationToken)
                                 }
@@ -116,7 +116,7 @@ class PushNotificationService: NSObject {
                     } else {
                         let newToken = NotificationToken(token: token,
                                                          userId: userId,
-                                                         deviceId: self.deviceId,
+                                                         deviceId: Self.deviceId,
                                                          refreshedDate: Date.serverDate)
                         self.updateTokenInDB(newToken)
                     }

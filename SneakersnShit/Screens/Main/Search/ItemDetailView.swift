@@ -46,7 +46,7 @@ struct ItemDetailView: View {
         self.shouldDismiss = shouldDismiss
         self._isFavorited = State<Bool>(initialValue: favoritedItemIds.contains(itemId))
     }
-    
+
     private func priceTypeToggle(store: StoreId) -> some View {
         Button {
             if store == .restocks {
@@ -344,7 +344,7 @@ struct ItemDetailView: View {
                                             .padding(.top, 50)
                                             .frame(width: UIScreen.screenWidth - Styles.horizontalPadding * 2)
                                             .lockedContent(displayStyle: .hideOriginal,
-                                                           contentSttyle: .text(text: "Daily limit reached, start your trial to get unlimited access!",
+                                                           contentSttyle: .text(text: "You've reached your free price check limit, start your free trial to get unlimited access!",
                                                                                 size: 15, color: .customBlue))
                                             .centeredHorizontally()
                                     }

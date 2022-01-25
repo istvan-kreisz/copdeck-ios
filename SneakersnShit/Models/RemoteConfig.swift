@@ -10,7 +10,7 @@ import Foundation
 struct RemoteConfig: Codable, Equatable {
     let paywallEnabled: Bool
     let spreadsheetImportNotice: String
-    let dailyPriceCheckLimit: Int
+    let lifetimePriceCheckLimit: Int
     let stacksLimit: Int
     let showPaywallOnLaunch: Bool
     let algoliaKey: String

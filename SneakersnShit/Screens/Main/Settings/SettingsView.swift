@@ -400,6 +400,10 @@ struct SettingsView: View {
                                 Text("Send us a message")
                                     .leftAligned()
                             }
+                            NavigationLink(destination: DeleteAccountView()) {
+                                Text("Delete your account")
+                                    .leftAligned()
+                            }
                             socialMediaLink(name: "Follow us on Twitter", link: "https://twitter.com/Cop_Deck")
                             socialMediaLink(name: "Follow us on Instagram", link: "https://www.instagram.com/copdeck/")
                             socialMediaLink(name: "Follow us on Discord", link: "https://discord.gg/cQh6VTvXas")
