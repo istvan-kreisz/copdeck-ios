@@ -16,6 +16,7 @@ enum AuthenticationAction {
     case signInWithFacebook(referralCode: String?)
     case signOut
     case passwordReset(email: String)
+    case deleteAccount
 }
 
 extension AuthenticationAction: StringRepresentable {}

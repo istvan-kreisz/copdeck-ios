@@ -273,6 +273,10 @@ class DefaultDataController: DataController {
             onMain { completion(result) }
         }
     }
+    
+    func deleteAccount() {
+        backendAPI.deleteAccount()
+    }
 
     func getOrCreateChannel(users: [User], completion: @escaping (Result<Channel, AppError>) -> Void) {
         databaseManager.getOrCreateChannel(users: users) { result in

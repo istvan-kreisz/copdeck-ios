@@ -269,6 +269,9 @@ func appReducer(state: inout AppState,
             result = environment.authenticator.resetPassword(email: email)
         case .signOut:
             result = environment.authenticator.signOut()
+        case .deleteAccount:
+            environment.dataController.deleteAccount()
+            result = environment.authenticator.signOut()
         }
         return result
             .flatMap { userId -> AnyPublisher<AppAction, Never> in

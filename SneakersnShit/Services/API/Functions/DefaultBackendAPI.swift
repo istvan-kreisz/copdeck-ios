@@ -147,7 +147,7 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
             } receiveValue: { _ in }
             .store(in: &cancellables)
     }
-    
+
     func updateUserItems(completion: @escaping () -> Void) {
         guard let userId = userId else {
             completion()
@@ -310,5 +310,15 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
         }
         handlePublisherResult(publisher: callFirebaseFunction(functionName: "sendMessage", model: Wrapper(email: email, message: message)),
                               completion: completion)
+    }
+
+    func deleteAccount() {
+        guard let userId = userId else { return }
+        struct Wrapper: Encodable {
+            let userId: String
+        }
+        handlePublisherResult(publisher: callFirebaseFunction(functionName: "deleteAccount", model: Wrapper(userId: userId)),
+                              showAlert: true,
+                              completion: nil)
     }
 }

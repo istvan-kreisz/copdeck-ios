@@ -36,7 +36,8 @@ class FBFunctionsCoordinator {
         self.userId = nil
     }
 
-    func handlePublisherResult<Model>(publisher: AnyPublisher<Model, AppError>, showAlert: Bool = true,
+    func handlePublisherResult<Model>(publisher: AnyPublisher<Model, AppError>,
+                                      showAlert: Bool = true,
                                       completion: ((Result<Model, AppError>) -> Void)? = nil) {
         publisher
             .receive(on: DispatchQueue.main)

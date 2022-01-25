@@ -42,4 +42,6 @@ protocol BackendAPI {
     func refreshUserSubscriptionStatus(completion: ((Result<Void, AppError>) -> Void)?)
     // contact support
     func sendMessage(email: String, message: String, completion: ((Result<Void, AppError>) -> Void)?)
+    // delete account
+    func deleteAccount()
 }
