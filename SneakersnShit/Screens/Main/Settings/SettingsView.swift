@@ -404,6 +404,18 @@ struct SettingsView: View {
                                 Text("Delete your account")
                                     .leftAligned()
                             }
+                            HStack {
+                                Text("Share app download link")
+                                    .layoutPriority(2)
+                                Spacer()
+                                Image("share")
+                                    .renderingMode(.template)
+                                    .frame(width: 18)
+                                    .foregroundColor(.customAccent1)
+                            }
+                            .onTapGesture {
+                                #warning("add share sheet here")
+                            }
                             socialMediaLink(name: "Follow us on Twitter", link: "https://twitter.com/Cop_Deck")
                             socialMediaLink(name: "Follow us on Instagram", link: "https://www.instagram.com/copdeck/")
                             socialMediaLink(name: "Follow us on Discord", link: "https://discord.gg/cQh6VTvXas")
