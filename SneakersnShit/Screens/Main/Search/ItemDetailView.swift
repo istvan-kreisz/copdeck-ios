@@ -385,7 +385,8 @@ struct ItemDetailView: View {
                 }
             }
             .onDisappear {
-                if store.globalState.canViewPrices {
+                let pricesLoaded = item?.storePrices.map { $0.inventory.count }.sum() ?? 0 > 0
+                if store.globalState.canViewPrices && pricesLoaded {
                     AppStore.default.send(.main(action: .updateLastPriceViews(itemId: itemId)))
                 }
                 itemListener?.reset()
