@@ -33,6 +33,7 @@
 		5D2726CA26CB2CE400887449 /* VerticalListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2726C926CB2CE400887449 /* VerticalListView.swift */; };
 		5D2726CD26CB3CB800887449 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2726CC26CB3CB800887449 /* TabBarView.swift */; };
 		5D2726D026CC59CC00887449 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2726CF26CC59CC00887449 /* Cache.swift */; };
+		5D28542927A0E96600400FD7 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D28542827A0E96600400FD7 /* ShareSheet.swift */; };
 		5D287A34279090EB0037D56D /* AlgoliaSearchClient in Frameworks */ = {isa = PBXBuildFile; productRef = 5D287A33279090EB0037D56D /* AlgoliaSearchClient */; };
 		5D287A37279097080037D56D /* SearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D287A36279097080037D56D /* SearchService.swift */; };
 		5D287A39279097220037D56D /* DefaultSearchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D287A38279097220037D56D /* DefaultSearchService.swift */; };
@@ -280,6 +281,7 @@
 		5D2726C926CB2CE400887449 /* VerticalListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalListView.swift; sourceTree = "<group>"; };
 		5D2726CC26CB3CB800887449 /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
 		5D2726CF26CC59CC00887449 /* Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
+		5D28542827A0E96600400FD7 /* ShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
 		5D287A36279097080037D56D /* SearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchService.swift; sourceTree = "<group>"; };
 		5D287A38279097220037D56D /* DefaultSearchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultSearchService.swift; sourceTree = "<group>"; };
 		5D287A3A2790975F0037D56D /* ItemSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemSearchResult.swift; sourceTree = "<group>"; };
@@ -722,6 +724,7 @@
 				5DE4F21926E02C430087077A /* SharedStackDetailView.swift */,
 				5DE4F21B26E048100087077A /* SharedInventoryItemDetailView.swift */,
 				5DE4F21D26E052570087077A /* OwnerCardView.swift */,
+				5D28542827A0E96600400FD7 /* ShareSheet.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -1580,6 +1583,7 @@
 				5D52E30F26130E2100FA02B8 /* InventoryView.swift in Sources */,
 				5D8FEECC271B28350004D8B3 /* ReferralCode.swift in Sources */,
 				5DDEFDBF26CED83A001B0F76 /* ListSelector.swift in Sources */,
+				5D28542927A0E96600400FD7 /* ShareSheet.swift in Sources */,
 				5D19B0D426A6F0DC00A31F4E /* CopDeckApp.swift in Sources */,
 				5D424CAE25C4FDCC0008D6F4 /* SignInButton.swift in Sources */,
 				5DECB5842708E1A00017748C /* SellerStatsView.swift in Sources */,

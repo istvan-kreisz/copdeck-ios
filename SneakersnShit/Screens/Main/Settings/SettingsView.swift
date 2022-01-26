@@ -52,6 +52,8 @@ struct SettingsView: View {
 
     @Binding private var isPresented: Bool
 
+    @State private var showShareSheet = false
+
     init(settings: CopDeckSettings, isContentLocked: Bool, isPresented: Binding<Bool>) {
         self._settings = State(initialValue: settings)
 
@@ -372,7 +374,7 @@ struct SettingsView: View {
                             Text(store.globalState.subscriptionActive ? "Pro" : "Free")
                                 .foregroundColor(.customBlue)
                         }
-                        
+
                         if !store.globalState.subscriptionActive && store.globalState.isPaywallEnabled {
                             NavigationLink(destination: PaymentView(viewType: .subscribe, animateTransition: false, shouldDismiss: nil)
                                 .environmentObject(DerivedGlobalStore.default)) {
@@ -414,7 +416,7 @@ struct SettingsView: View {
                                     .foregroundColor(.customAccent1)
                             }
                             .onTapGesture {
-                                #warning("add share sheet here")
+                                showShareSheet = true
                             }
                             socialMediaLink(name: "Follow us on Twitter", link: "https://twitter.com/Cop_Deck")
                             socialMediaLink(name: "Follow us on Instagram", link: "https://www.instagram.com/copdeck/")
@@ -515,6 +517,9 @@ struct SettingsView: View {
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())
+        .sheet(isPresented: $showShareSheet) {
+            ShareSheet(activityItems: ["https://apps.apple.com/app/id1561567080"])
+        }
         .preferredColorScheme(.light)
     }
 
