@@ -26,6 +26,8 @@ class DefaultSearchService: SearchService {
         index.search(query: query) { result in
             switch result {
             case let .failure(error):
+                print("----------")
+                print(error)
                 completion(.failure(.init(error: error)))
             case let .success(response):
                 let results = response.hits.compactMap { (hit: Hit<JSON>) -> ItemSearchResult? in

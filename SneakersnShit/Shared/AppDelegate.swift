@@ -25,6 +25,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         setupNuke()
         setupUI()
 
+        print("device id:")
+        print(PushNotificationService.deviceId)
         return true
     }
 

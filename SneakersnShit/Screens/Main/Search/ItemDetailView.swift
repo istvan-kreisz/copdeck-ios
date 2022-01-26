@@ -26,7 +26,6 @@ struct ItemDetailView: View {
     @State private var restocksPriceType: Item.StorePrice.StoreInventoryItem.RestocksPriceType = .regular
     @State private var goatPriceType: Item.StorePrice.StoreInventoryItem.GOATPriceType = .regular
     @State private var isInDamagedBox: Bool? = nil
-    @State private var shouldUpdateLastPriceViews = true
 
     var shouldDismiss: () -> Void
 
@@ -386,7 +385,7 @@ struct ItemDetailView: View {
                 }
             }
             .onDisappear {
-                if shouldUpdateLastPriceViews {
+                if store.globalState.canViewPrices {
                     AppStore.default.send(.main(action: .updateLastPriceViews(itemId: itemId)))
                 }
                 itemListener?.reset()

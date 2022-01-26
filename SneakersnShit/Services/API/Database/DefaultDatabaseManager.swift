@@ -68,11 +68,11 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
     }
 
     var canViewPricesPublisher: AnyPublisher<Bool, AppError> {
-        lastPriceViewsListenerUser.dataPublisher.combineLatest(lastPriceViewsListenerDevice)
+        lastPriceViewsListenerUser.dataPublisher.combineLatest(lastPriceViewsListenerDevice.dataPublisher)
             .map { new in
                 guard AppStore.default.state.isContentLocked else { return true }
-                let lastPriceViewsCountUser = new?.0.values.count ?? 0
-                let lastPriceViewsCountDevice = new?.1.values.count ?? 0
+                let lastPriceViewsCountUser = new.0?.values.count ?? 0
+                let lastPriceViewsCountDevice = new.1?.values.count ?? 0
                 return lastPriceViewsCountUser < World.Constants.lifetimePriceCheckLimit && lastPriceViewsCountDevice < World.Constants.lifetimePriceCheckLimit
             }
             .eraseToAnyPublisher()
@@ -450,7 +450,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
 
     func updateLastPriceViews(itemId: String) {
         updateLastPriceViews(docId: userId, itemId: itemId, listener: lastPriceViewsListenerUser)
-        updateLastPriceViews(docId: userId, itemId: itemId, listener: lastPriceViewsListenerDevice)
+        updateLastPriceViews(docId: PushNotificationService.deviceId, itemId: itemId, listener: lastPriceViewsListenerDevice)
     }
 
     func getSpreadsheetImportWaitlist(completion: @escaping (Result<[User], Error>) -> Void) {

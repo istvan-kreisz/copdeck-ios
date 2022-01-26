@@ -37,6 +37,8 @@ extension ItemSearchView {
             }
         })), debounceDelayMs: sendFetchRequest ? 1000 : 300)
     }
+    
+    func showError(_ appError: AppError) {}
 
     func searchItems(searchTerm: String) {
         if searchTerm.isEmpty {
