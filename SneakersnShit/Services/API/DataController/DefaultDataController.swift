@@ -375,12 +375,6 @@ class DefaultDataController: DataController {
         }
     }
 
-    func getAffiliateList(completion: @escaping (Result<[ReferralCode], Error>) -> Void) {
-        backendAPI.getAffiliateList { result in
-            onMain { completion(result) }
-        }
-    }
-
     func refreshUserSubscriptionStatus(completion: ((Result<Void, AppError>) -> Void)?) {
         backendAPI.refreshUserSubscriptionStatus { result in
             onMain { completion?(result) }

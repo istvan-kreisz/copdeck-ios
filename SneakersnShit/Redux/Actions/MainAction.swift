@@ -65,7 +65,6 @@ enum MainAction {
     case runImport(importedUserId: String, completion: (Result<User, Error>) -> Void)
     case finishImport(importedUserId: String, completion: (Result<User, Error>) -> Void)
     case getImportedInventoryItems(importedUserId: String, completion: (Result<[InventoryItem], Error>) -> Void)
-    case getAffiliateList(completion: (Result<[ReferralCode], Error>) -> Void)
     // contact
     case sendMessage(email: String, message: String, completion: ((Result<Void, AppError>) -> Void)?)
     // chat

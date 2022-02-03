@@ -215,8 +215,6 @@ func appReducer(state: inout AppState,
             environment.dataController.finishImport(importedUserId: importedUserId, completion: completion)
         case let .getImportedInventoryItems(importedUserId, completion):
             environment.dataController.getImportedInventoryItems(importedUserId: importedUserId, completion: completion)
-        case let .getAffiliateList(completion):
-            environment.dataController.getAffiliateList(completion: completion)
         case let .sendMessage(email, message, completion):
             environment.dataController.sendMessage(email: email, message: message, completion: completion)
         case let .getChannels(update):
@@ -237,23 +235,18 @@ func appReducer(state: inout AppState,
         }
     case let .authentication(action):
         let result: AnyPublisher<String, Error>
-        var refCode: String? = nil
         switch action {
         case .restoreState:
             result = environment.authenticator.restoreState()
-        case let .signUp(username, password, referralCode):
-            refCode = referralCode
+        case let .signUp(username, password):
             result = environment.authenticator.signUp(email: username, password: password)
         case let .signIn(username, password):
             result = environment.authenticator.signIn(email: username, password: password)
-        case let .signInWithApple(referralCode):
-            refCode = referralCode
+        case .signInWithApple:
             result = environment.authenticator.signInWithApple()
-        case let .signInWithGoogle(referralCode):
-            refCode = referralCode
+        case .signInWithGoogle:
             result = environment.authenticator.signInWithGoogle()
-        case let .signInWithFacebook(referralCode):
-            refCode = referralCode
+        case .signInWithFacebook:
             let user = state.user
             let publisher = environment.authenticator.signInWithFacebook()
                 .handleEvents(receiveOutput: { [weak environment] _, profileURL in
@@ -280,13 +273,7 @@ func appReducer(state: inout AppState,
                 } else {
                     return environment.dataController.getUser(withId: userId)
                         .flatMap { (user: User) -> AnyPublisher<AppAction, Never> in
-                            if let referralCode = refCode, user.membershipInfo?.referralCodeUsed == nil {
-                                return Just(AppAction.main(action: .setUser(user: user)))
-                                    .append(Just(AppAction.paymentAction(action: .applyReferralCode(referralCode, completion: nil))))
-                                    .eraseToAnyPublisher()
-                            } else {
-                                return Just(AppAction.main(action: .setUser(user: user))).eraseToAnyPublisher()
-                            }
+                            Just(AppAction.main(action: .setUser(user: user))).eraseToAnyPublisher()
                         }
                         .tryCatch {
                             Just(AppAction.main(action: .signOut)).merge(with: Just(AppAction.error(action: .setError(error: AppError(error: $0)))))

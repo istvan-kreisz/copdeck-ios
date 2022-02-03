@@ -13,12 +13,7 @@ struct SignUpView: View {
     @State var email = ""
     @State var password1 = ""
     @State var password2 = ""
-    @State var referralCode = ""
     
-    private var refCode: String? {
-        referralCode.isEmpty ? nil : referralCode
-    }
-
     @State var errorMessage: String?
     @State var resetPasswordPresented = false
 
@@ -41,7 +36,7 @@ struct SignUpView: View {
                     .font(.regular(size: 16))
                     .foregroundColor(.customText2)
                     .leftAligned()
-                SocialLoginView(referralCode: $referralCode)
+                SocialLoginView()
                     .padding(.top, 17)
                 Spacer()
 
@@ -69,14 +64,6 @@ struct SignUpView: View {
                                         icon: Image("lock"),
                                         keyboardType: .default,
                                         isSecureField: true,
-                                        onFinishedEditing: signUp)
-                    TextFieldUnderlined(text: $referralCode,
-                                        placeHolder: "Referral code (optional)",
-                                        color: .customText1,
-                                        dismissKeyboardOnReturn: false,
-                                        icon: Image("profiles"),
-                                        keyboardType: .default,
-                                        isSecureField: false,
                                         onFinishedEditing: signUp)
                 }
 
@@ -127,7 +114,7 @@ struct SignUpView: View {
             return
         }
         errorMessage = nil
-        AppStore.default.send(.authentication(action: .signUp(userName: email, password: password1, referralCode: refCode)))
+        AppStore.default.send(.authentication(action: .signUp(userName: email, password: password1)))
     }
 
     private func resetPassword(email: String) {

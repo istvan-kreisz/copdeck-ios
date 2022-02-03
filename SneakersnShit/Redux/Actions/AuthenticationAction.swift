@@ -11,9 +11,9 @@ enum AuthenticationAction {
     case restoreState
     case signUp(userName: String, password: String)
     case signIn(userName: String, password: String)
-    case signInWithApple(referralCode: String?)
-    case signInWithGoogle(referralCode: String?)
-    case signInWithFacebook(referralCode: String?)
+    case signInWithApple
+    case signInWithGoogle
+    case signInWithFacebook
     case signOut
     case passwordReset(email: String)
     case deleteAccount

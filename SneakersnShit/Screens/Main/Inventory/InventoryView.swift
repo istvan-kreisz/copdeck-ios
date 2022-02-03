@@ -300,7 +300,7 @@ struct InventoryView: View {
     }
 
     private func linkFacebookProfile() {
-        store.send(.authentication(action: .signInWithFacebook(referralCode: nil)))
+        store.send(.authentication(action: .signInWithFacebook))
     }
 }
 

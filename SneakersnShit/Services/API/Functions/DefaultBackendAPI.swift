@@ -54,24 +54,6 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
             .eraseToAnyPublisher()
     }
 
-    func getAffiliateList(completion: @escaping (Result<[ReferralCode], Error>) -> Void) {
-        struct Wrapper: Encodable {
-            let userId: String?
-        }
-        let result: AnyPublisher<[ReferralCode], AppError> = callFirebaseFunctionArray(functionName: "getReferralCodes", model: Wrapper(userId: userId))
-
-        result
-            .sink { result in
-                switch result {
-                case let .failure(error):
-                    completion(.failure(error))
-                default:
-                    break
-                }
-            } receiveValue: { completion(.success($0)) }
-            .store(in: &cancellables)
-    }
-
     func refreshUserSubscriptionStatus(completion: ((Result<Void, AppError>) -> Void)?) {
         guard let userId = userId else { return }
         struct Body: Encodable {

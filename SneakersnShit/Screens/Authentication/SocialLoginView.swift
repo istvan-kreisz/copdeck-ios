@@ -8,25 +8,20 @@
 import SwiftUI
 
 struct SocialLoginView: View {
-    @Binding var referralCode: String
     
-    private var refCode: String? {
-        referralCode.isEmpty ? nil : referralCode
-    }
-
     var body: some View {
         HStack(spacing: 10) {
             SignInButton(imageName: "apple",
                          text: "Sign in with Apple",
                          imageColor: .customWhite,
                          backgroundColor: .customBlack,
-                         action: { AppStore.default.send(.authentication(action: .signInWithApple(referralCode: refCode))) },
+                         action: { AppStore.default.send(.authentication(action: .signInWithApple)) },
                          initBlock: {})
             SignInButton(imageName: "google",
                          text: "Sign in with Google",
                          imageColor: nil,
                          backgroundColor: .customWhite,
-                         action: { AppStore.default.send(.authentication(action: .signInWithGoogle(referralCode: refCode))) },
+                         action: { AppStore.default.send(.authentication(action: .signInWithGoogle)) },
                          initBlock: {})
 //            SignInButton(imageName: "facebook",
 //                         text: "Sign in with Facebook",

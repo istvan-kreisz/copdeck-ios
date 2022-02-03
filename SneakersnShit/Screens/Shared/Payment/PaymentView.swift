@@ -36,7 +36,6 @@ struct PaymentView: View {
 
     @State var present = false
     @State var showContactView = false
-    @State var showReferralCodeView = false
 
     @State private var alert: (String, String)? = nil
 
@@ -73,10 +72,9 @@ struct PaymentView: View {
 
     var body: some View {
         let presentAlert = Binding<Bool>(get: { alert != nil }, set: { new in alert = new ? alert : nil })
-        let showSheet = Binding<Bool>(get: { showReferralCodeView || showContactView },
+        let showSheet = Binding<Bool>(get: { showContactView },
                                       set: { new in
                                           if !new {
-                                              showReferralCodeView = false
                                               showContactView = false
                                           }
                                       })
@@ -230,23 +228,6 @@ struct PaymentView: View {
                                             .foregroundColor(.customWhite)
                                             .padding(10)
                                             .background(RoundedRectangle(cornerRadius: Styles.cornerRadius).fill(Color.customBlue))
-                                    }
-                                }
-
-                                if store.globalState.user?.membershipInfo?.referralCodeUsed == nil {
-                                    VStack(alignment: .center, spacing: 10) {
-                                        Text("Apply referral code")
-                                            .font(.bold(size: 18))
-                                            .foregroundColor(.customText1)
-                                        Button {
-                                            showReferralCodeView = true
-                                        } label: {
-                                            Text("Add code")
-                                                .font(.bold(size: 14))
-                                                .foregroundColor(.customWhite)
-                                                .padding(10)
-                                                .background(RoundedRectangle(cornerRadius: Styles.cornerRadius).fill(Color.customBlue))
-                                        }
                                     }
                                 }
 

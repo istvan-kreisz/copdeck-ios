@@ -41,7 +41,7 @@ struct LoginView: View {
                             .foregroundColor(.customText2)
                             .leftAligned()
                     }
-                    SocialLoginView(referralCode: .constant(""))
+                    SocialLoginView()
                         .padding(.top, 17)
                     
                     Spacer()
