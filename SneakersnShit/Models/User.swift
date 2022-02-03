@@ -40,17 +40,6 @@ struct User: Codable, Equatable, Identifiable {
         var isBetaTester: Bool {
             group?.contains("iosbetatester") ?? false
         }
-
-        var discount: DiscountValue {
-            if isBetaTester == true {
-                return DefaultPaymentService.iosBetaTesterDiscount
-            } else if let referralCodeDiscount = referralCodeDiscount,
-                      let discount = DiscountValue.allCases.filter({ $0 != .noDiscount }).first(where: { referralCodeDiscount.contains($0.valueString) }) {
-                return discount
-            } else {
-                return .noDiscount
-            }
-        }
     }
 
     enum Subscription: String, Codable {

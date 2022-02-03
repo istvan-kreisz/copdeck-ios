@@ -382,11 +382,6 @@ struct SettingsView: View {
                                         .leftAligned()
                             }
                         }
-
-                        NavigationLink(destination: ReferralCodeView().environmentObject(DerivedGlobalStore.default)) {
-                            Text("Apply referral code")
-                                .leftAligned()
-                        }
                     }
 
                     Section(header: Text("Spreadsheet import")) {
@@ -430,10 +425,6 @@ struct SettingsView: View {
                                         Text("Spreadsheet import requests")
                                             .leftAligned()
                                     }
-                                }
-                                NavigationLink(destination: ReferralCodeAdminView()) {
-                                    Text("Affilate links")
-                                        .leftAligned()
                                 }
                             }
                         }

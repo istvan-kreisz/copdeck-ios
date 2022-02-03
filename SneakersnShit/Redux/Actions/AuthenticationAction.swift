@@ -9,7 +9,7 @@ import Foundation
 
 enum AuthenticationAction {
     case restoreState
-    case signUp(userName: String, password: String, referralCode: String?)
+    case signUp(userName: String, password: String)
     case signIn(userName: String, password: String)
     case signInWithApple(referralCode: String?)
     case signInWithGoogle(referralCode: String?)

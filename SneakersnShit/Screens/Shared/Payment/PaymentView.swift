@@ -71,16 +71,6 @@ struct PaymentView: View {
         }
     }
 
-    var discountPercentage: Int? {
-        guard let monthlyPackage = store.globalState.packages?.monthlyPackage,
-              let yearlyPackage = store.globalState.packages?.yearlyPackage
-        else { return nil }
-        let yearlyPrice = Double(truncating: yearlyPackage.product.price)
-        let monthlyPrice = Double(truncating: monthlyPackage.product.price)
-        let percentage = 100 * ((monthlyPrice * 12.0) - yearlyPrice) / (monthlyPrice * 12.0)
-        return Int(round(percentage))
-    }
-
     var body: some View {
         let presentAlert = Binding<Bool>(get: { alert != nil }, set: { new in alert = new ? alert : nil })
         let showSheet = Binding<Bool>(get: { showReferralCodeView || showContactView },
@@ -213,16 +203,12 @@ struct PaymentView: View {
                                 if trialPackage == nil {
                                     HStack(alignment: .center, spacing: 10) {
                                         if let monthlyPackage = store.globalState.packages?.monthlyPackage {
-                                            PackageCellView(color: .customBlue,
-                                                            discountPercentage: nil,
-                                                            package: monthlyPackage) { package in
+                                            PackageCellView(color: .customBlue, package: monthlyPackage) { package in
                                                 store.send(.paymentAction(action: .purchase(package: monthlyPackage)))
                                             }
                                         }
                                         if let yearlyPackage = store.globalState.packages?.yearlyPackage {
-                                            PackageCellView(color: .customPurple,
-                                                            discountPercentage: discountPercentage,
-                                                            package: yearlyPackage) { package in
+                                            PackageCellView(color: .customPurple, package: yearlyPackage) { package in
                                                 store.send(.paymentAction(action: .purchase(package: yearlyPackage)))
                                             }
                                         }
@@ -263,9 +249,6 @@ struct PaymentView: View {
                                         }
                                     }
                                 }
-
-                                DiscountsView(membershipInfo: store.globalState.user?.membershipInfo)
-                                    .padding(.top, 20)
 
                                 VStack(alignment: .leading, spacing: 1) {
                                     AttributedText(Self.privacyPolicyString)
@@ -339,8 +322,6 @@ struct PaymentView: View {
         .sheet(isPresented: showSheet) {
             if showContactView {
                 ContactView()
-            } else {
-                ReferralCodeView()
             }
         }
         .alert(isPresented: presentAlert) {

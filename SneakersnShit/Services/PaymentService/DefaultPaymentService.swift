@@ -14,43 +14,14 @@ struct SubscriptionPackages: Equatable {
     var yearlyPackage: Purchases.Package?
 }
 
-enum DiscountValue: CaseIterable, Equatable {
-    case noDiscount, d10, d20, d30, d40
-
-    var value: Int {
-        switch self {
-        case .noDiscount:
-            return 0
-        case .d10:
-            return 10
-        case .d20:
-            return 20
-        case .d30:
-            return 30
-        case .d40:
-            return 40
-        }
-    }
-
-    var valueString: String { "\(value)" }
-}
-
 class DefaultPaymentService: NSObject, PaymentService {
     static let entitlementsId = "pro"
     static let apiKey = "vkJAtxOkCMEORPnQDmuEwtoUBuHDUMSu"
-    static let iosBetaTesterDiscount: DiscountValue = .d30
     static var packagesFetchCount = 0
+    static let offeringId: String = "pro"
 
-    static func offeringId(discount: DiscountValue) -> String {
-        discount == .noDiscount ? "pro" : "pro" + discount.valueString
-    }
-
-    static func productId(discount: DiscountValue, packageType: Purchases.PackageType) -> String {
-        if discount == .noDiscount {
-            return packageType == Purchases.PackageType.monthly ? "copdeckPro" : "copdeckProAnnual"
-        } else {
-            return packageType == Purchases.PackageType.monthly ? "copdeckPro_\(discount.valueString)" : "copdeckProAnnual\(discount.valueString)"
-        }
+    static func productId(packageType: Purchases.PackageType) -> String {
+        packageType == Purchases.PackageType.monthly ? "copdeckPro" : "copdeckProAnnual"
     }
 
     private let errorsSubject = PassthroughSubject<AppError, Never>()
@@ -127,7 +98,7 @@ class DefaultPaymentService: NSObject, PaymentService {
         }
     }
 
-    func fetchPackages(completion: @escaping ([DiscountValue: SubscriptionPackages]) -> Void) {
+    func fetchPackages(completion: @escaping (SubscriptionPackages?) -> Void) {
         getPackages { packages in
             Self.packagesFetchCount += 1
             if let packages = packages {
@@ -150,7 +121,7 @@ class DefaultPaymentService: NSObject, PaymentService {
         }
     }
 
-    func getPackages(completion: @escaping ([DiscountValue: SubscriptionPackages]?) -> Void) {
+    func getPackages(completion: @escaping (SubscriptionPackages?) -> Void) {
         Purchases.shared.offerings { offerings, error in
             if let error = error {
                 log(error, logType: .error)
@@ -159,13 +130,11 @@ class DefaultPaymentService: NSObject, PaymentService {
                 completion(nil)
                 return
             }
-            var result: [DiscountValue: SubscriptionPackages] = [:]
-            offerings.all.forEach { id, offering in
-                if let discountValue = DiscountValue.allCases.first(where: { Self.offeringId(discount: $0) == id }) {
-                    result[discountValue] = .init(monthlyPackage: offering.monthly, yearlyPackage: offering.annual)
-                }
+            if let offering = offerings.all.filter({ id, _ in id == Self.offeringId }).map({ id, offering in offering }).first {
+                completion(.init(monthlyPackage: offering.monthly, yearlyPackage: offering.annual))
+            } else {
+                completion(nil)
             }
-            completion(result)
         }
     }
 

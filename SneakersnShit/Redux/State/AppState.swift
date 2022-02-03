@@ -39,7 +39,7 @@ struct GlobalState: Equatable {
     var recentlyViewedItems: [ItemSearchResult] = []
     var exchangeRates: ExchangeRates?
     var showPaymentView = false
-    var allPackages: [DiscountValue: SubscriptionPackages]?
+    var packages: SubscriptionPackages?
     var chatUpdates: ChatUpdateInfo = .init(updateInfo: [:])
     var canViewPrices: Bool = true
     var remoteConfig: RemoteConfig?
@@ -56,12 +56,7 @@ struct GlobalState: Equatable {
     var isContentLocked: Bool {
         !subscriptionActive && isPaywallEnabled == true
     }
-
-    var packages: SubscriptionPackages? {
-        let discount = user?.membershipInfo?.discount ?? .noDiscount
-        return allPackages?[discount]
-    }
-
+    
     var hasSubscribed: Bool {
         subscriptionActive || user?.subscribedDate != nil
     }
@@ -140,13 +135,9 @@ struct AppState: Equatable {
         set { globalState.showPaymentView = newValue }
     }
 
-    var allPackages: [DiscountValue: SubscriptionPackages]? {
-        get { globalState.allPackages }
-        set { globalState.allPackages = newValue }
-    }
-
     var packages: SubscriptionPackages? {
-        globalState.packages
+        get { globalState.packages }
+        set { globalState.packages = newValue }
     }
     
     var isContentLocked: Bool {

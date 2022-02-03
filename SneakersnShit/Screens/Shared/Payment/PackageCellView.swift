@@ -10,7 +10,6 @@ import Purchases
 
 struct PackageCellView: View {
     let color: Color
-    let discountPercentage: Int?
     let package: Purchases.Package
     let onSelection: (Purchases.Package) -> Void
 
@@ -46,15 +45,6 @@ struct PackageCellView: View {
                 .frame(width: Self.width, height: Self.height)
             }
             .cornerRadius(Styles.cornerRadius)
-
-            if let discountPercentage = discountPercentage {
-                Text("\(discountPercentage)% off")
-                    .font(.bold(size: 14))
-                    .foregroundColor(.customWhite)
-                    .frame(width: 60, height: 20)
-                    .background(Capsule().fill(Color.customGreen))
-                    .offset(x: 0, y: -10)
-            }
         }
         .onTapGesture {
             onSelection(package)

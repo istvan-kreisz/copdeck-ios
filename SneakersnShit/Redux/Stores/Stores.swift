@@ -272,7 +272,7 @@ extension AppStore {
         }
 
         environment.paymentService.fetchPackages { [weak self] packages in
-            self?.state.allPackages = packages
+            self?.state.packages = packages
         }
     }
 }
