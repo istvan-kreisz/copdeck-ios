@@ -98,7 +98,7 @@ struct PaymentView: View {
                                 .centeredHorizontally()
                                 .padding(.vertical, 10)
                                 .padding(.bottom, 5)
-                                
+
                                 Button {
                                     if let shouldDismiss = shouldDismiss {
                                         shouldDismiss()
@@ -224,6 +224,21 @@ struct PaymentView: View {
                                         showContactView = true
                                     } label: {
                                         Text("Message us")
+                                            .font(.bold(size: 14))
+                                            .foregroundColor(.customWhite)
+                                            .padding(10)
+                                            .background(RoundedRectangle(cornerRadius: Styles.cornerRadius).fill(Color.customBlue))
+                                    }
+                                }
+
+                                VStack(alignment: .center, spacing: 10) {
+                                    Text("Apply referral code")
+                                        .font(.bold(size: 18))
+                                        .foregroundColor(.customText1)
+                                    Button {
+                                        Purchases.shared.presentCodeRedemptionSheet()
+                                    } label: {
+                                        Text("Add code")
                                             .font(.bold(size: 14))
                                             .foregroundColor(.customWhite)
                                             .padding(10)
