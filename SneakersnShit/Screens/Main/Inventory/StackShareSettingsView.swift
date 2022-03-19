@@ -79,12 +79,13 @@ struct StackShareSettingsView: View {
                     .leftAligned()
             }
 
-            toggleView(title: "Publish on Feed", isOn: isPublished) {
-                showPopup(Self.popupTitles[0], Self.popupDescriptions[0])
-            }
-
-            toggleView(title: "Make Public", isOn: isPublic) {
-                showPopup(Self.popupTitles[1], Self.popupDescriptions[1])
+            if !stack.isMainStack {
+                toggleView(title: "Publish on Feed", isOn: isPublished) {
+                    showPopup(Self.popupTitles[0], Self.popupDescriptions[0])
+                }
+                toggleView(title: "Make Public", isOn: isPublic) {
+                    showPopup(Self.popupTitles[1], Self.popupDescriptions[1])
+                }
             }
 
             VStack(alignment: .leading, spacing: 8) {

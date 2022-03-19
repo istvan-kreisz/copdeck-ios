@@ -156,7 +156,7 @@ struct InventoryView: View {
                                   }),
                               didTapEditStack: stack.id == "all" ? nil : {
                                   navigationDestination += .stack(selectedStackBinding)
-                              }, didTapShareStack: stack.id == "all" ? nil : {
+                              }, didTapShareStack: {
                                   sharedStack = stack
                               })
                         .listRow()

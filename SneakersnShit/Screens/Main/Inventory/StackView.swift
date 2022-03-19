@@ -99,16 +99,16 @@ struct StackView: View {
                                     tapped: didTapEditStack)
                         .buttonStyle(PlainButtonStyle())
                         .layoutPriority(1)
-                    if let didTapShareStack = didTapShareStack {
-                        AccessoryButton(title: "Share",
-                                        color: .customOrange,
-                                        textColor: .customOrange,
-                                        width: nil,
-                                        imageName: "arrowshape.turn.up.right.fill",
-                                        tapped: didTapShareStack)
-                            .buttonStyle(PlainButtonStyle())
-                            .layoutPriority(1)
-                    }
+                }
+                if let didTapShareStack = didTapShareStack {
+                    AccessoryButton(title: "Share",
+                                    color: .customOrange,
+                                    textColor: .customOrange,
+                                    width: nil,
+                                    imageName: "arrowshape.turn.up.right.fill",
+                                    tapped: didTapShareStack)
+                        .buttonStyle(PlainButtonStyle())
+                        .layoutPriority(1)
                 }
                 Spacer()
             }

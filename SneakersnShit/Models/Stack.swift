@@ -28,6 +28,10 @@ struct Stack: Codable, Equatable, Identifiable, ModelWithDate {
     var itemIds: [String] {
         items.map(\.inventoryItemId)
     }
+    
+    var isMainStack: Bool {
+        id == "all"
+    }
 
     func inventoryItems(allInventoryItems: [InventoryItem], filters: Filters, searchText: String) -> [InventoryItem] {
         allInventoryItems.filter { (inventoryItem: InventoryItem) -> Bool in
