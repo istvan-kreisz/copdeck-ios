@@ -13,6 +13,7 @@ struct MainContainerView: View {
     @StateObject var viewRouter = ViewRouter.shared
     @State var shouldShowTabBar = true
     @State var lastMessageChannelId: String?
+    @State var lastItemId: String?
 
     var body: some View {
         let selectedIndex = Binding<Int>(get: { viewRouter.currentPage.rawValue }, set: { viewRouter.currentPage = Page(rawValue: $0) ?? .search })
@@ -23,7 +24,7 @@ struct MainContainerView: View {
                     .withTabViewWrapper(viewRouter: viewRouter, shouldShow: $shouldShowTabBar)
             },
             TabBarElement(tabBarElementItem: .init(title: "Second", systemImageName: "pencil.circle.fill")) {
-                SearchView()
+                SearchView(lastItemId: $lastItemId)
                     .environmentObject(DerivedGlobalStore.default)
                     .withTabViewWrapper(viewRouter: viewRouter, shouldShow: $shouldShowTabBar)
             },
@@ -44,6 +45,12 @@ struct MainContainerView: View {
             self.lastMessageChannelId = lastMessageChannelId
             if lastMessageChannelId != nil, viewRouter.currentPage != .chat {
                 viewRouter.currentPage = .chat
+            }
+        }
+        .onReceive(store.environment.pushNotificationService.lastItemIdSubject) { lastItemId in
+            self.lastItemId = lastItemId
+            if lastItemId != nil, viewRouter.currentPage != .search {
+                viewRouter.currentPage = .search
             }
         }
         .edgesIgnoringSafeArea(.all)

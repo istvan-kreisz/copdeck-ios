@@ -20,6 +20,8 @@ struct SearchView: View {
 
     @State var navigationDestination: Navigation<NavigationDestination> = .init(destination: .empty, show: false)
     
+    @Binding var lastItemId: String?
+    
     var searchText: State<String> = State(initialValue: "")
     var searchModel: StateObject<SearchModel> = StateObject(wrappedValue: SearchModel())
     var searchResultsLoader: StateObject<Loader> = StateObject(wrappedValue: Loader())
@@ -125,7 +127,19 @@ struct SearchView: View {
                 }
             }
             .hideKeyboardOnScroll()
-            .onChange(of: searchText.wrappedValue) { search(searchTerm: $0) }
+            .onChange(of: searchText.wrappedValue) {
+                if lastItemId == nil {
+                    search(searchTerm: $0, isExactSearchById: false)
+                } else {
+                    search(searchTerm: $0, isExactSearchById: true)
+                    self.lastItemId = nil
+                }
+            }
+            .onChange(of: lastItemId) { lastItemId in
+                if let itemId = lastItemId {
+                    self.searchText.wrappedValue = itemId
+                }
+            }
             .onAppear {
                 if searchModel.wrappedValue.state.popularItems.isEmpty {
                     store.send(.main(action: .getPopularItems(completion: { result in
@@ -141,9 +155,16 @@ struct SearchView: View {
         }
     }
 
-    private func search(searchTerm: String) {
+    private func search(searchTerm: String, isExactSearchById: Bool) {
         if selectedTabIndex == 0 {
-            searchItems(searchTerm: searchTerm)
+            searchItems(searchTerm: searchTerm, isExactSearchById: isExactSearchById) {
+                // deep linking from notifications
+                if isExactSearchById {
+                    if let selectedItem = searchModel.wrappedValue.state.searchResults.searchResults.first(where: { $0.id.lowercased() == searchTerm.lowercased() }) {
+                        navigationDestination += .itemDetail(selectedItem)
+                    }
+                }
+            }
         } else {
             if searchTerm.isEmpty {
                 self.searchModel.wrappedValue.state.userSearchResults = []

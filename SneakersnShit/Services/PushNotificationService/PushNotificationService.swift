@@ -15,6 +15,7 @@ class PushNotificationService: NSObject {
     private let topics = ["all", "alliOS"]
 
     let lastMessageChannelIdSubject = CurrentValueSubject<String?, Never>(nil)
+    let lastItemIdSubject = CurrentValueSubject<String?, Never>(nil)
 
     private var userId: String? {
         didSet {
@@ -52,7 +53,7 @@ class PushNotificationService: NSObject {
         Messaging.messaging().appDidReceiveMessage(userInfo)
         completionHandler(UIBackgroundFetchResult.noData)
     }
-    
+
     func requestPermissionsIfNotAsked(completion: (() -> Void)?) {
         UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
             if settings.authorizationStatus == .notDetermined {
@@ -68,7 +69,7 @@ class PushNotificationService: NSObject {
             self?.handlePermissionBlockResult(isGranted: didGrant, saveResult: true, completion: completion)
         }
     }
-    
+
     private func handlePermissionBlockResult(isGranted: Bool, saveResult: Bool, completion: (() -> Void)?) {
         if isGranted {
             DispatchQueue.main.async { [weak self] in
@@ -98,6 +99,9 @@ class PushNotificationService: NSObject {
                                 notificationToken.refreshedDate = Date.serverDate
                                 self.updateTokenInDB(notificationToken)
                             } else {
+                                if DebugSettings.shared.isInDebugMode {
+                                    self.subscribeToken(toTopic: "test")
+                                }
                                 // do nothing
                             }
                         } else {
@@ -156,6 +160,9 @@ class PushNotificationService: NSObject {
             case let .success(tokensToDelete):
                 self?.deleteTokens(tokensToDelete)
                 self?.subscribeToDefaultTopics()
+                if DebugSettings.shared.isInDebugMode {
+                    self?.subscribeToken(toTopic: "test")
+                }
             }
         }
     }
@@ -199,7 +206,7 @@ extension PushNotificationService: UNUserNotificationCenterDelegate {
         Messaging.messaging().appDidReceiveMessage(userInfo)
 
         if notification.isChatMessage {
-            if ViewRouter.shared.currentPage != .chat && !AppStore.isChatDetailView {
+            if ViewRouter.shared.currentPage != .chat, !AppStore.isChatDetailView {
                 completionHandler([[.sound, .badge, .banner]])
             } else {
                 completionHandler([[.sound, .badge]])
@@ -222,6 +229,12 @@ extension PushNotificationService: UNUserNotificationCenterDelegate {
                 if let channelId = userInfo["channelId"] as? String {
                     lastMessageChannelIdSubject.send(channelId)
                 }
+            } else if let itemId = userInfo["itemId"] as? String {
+                lastItemIdSubject.send(itemId)
+            } else if !response.notification.request.content.body.isEmpty &&
+                      DebugSettings.shared.isInDebugMode &&
+                      response.notification.request.content.title == "test" { // for testing only
+                lastItemIdSubject.send(response.notification.request.content.body)
             }
         case UNNotificationDismissActionIdentifier:
             break
