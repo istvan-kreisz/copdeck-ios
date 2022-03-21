@@ -35,42 +35,43 @@ func stockxSellerPrice(price: Double,
          "Netherlands",
          "UK",
          "South Korea":
-        shippingFee = .init(fee: 30, currency: EUR)
-    case "Luxembourg":
-        shippingFee = .init(fee: 5, currency: EUR)
-    case "Bulgaria",
-         "Czech Republic",
+        shippingFee = .init(fee: 0, currency: EUR)
+    case "Luxembourg",
          "Croatia",
          "Denmark",
-         "Hungary",
-         "Ireland",
          "Latvia",
          "Portugal",
          "Romania",
          "Slovakia",
          "Slovenia",
          "Spain",
+         "Lithuania",
+         "Estonia",
+         "Czech Republic":
+        shippingFee = .init(fee: 5, currency: EUR)
+    case "Bulgaria",
+         "Hungary",
+         "Ireland",
          "Sweden":
         shippingFee = .init(fee: 10, currency: EUR)
-    case "Estonia",
-         "Finland",
+    case "Finland",
          "Greece",
-         "Liechtenstein",
-         "Lithuania",
          "Republic of Cyprus":
         shippingFee = .init(fee: 15, currency: EUR)
     case "US (Alaska, Hawaii)",
          "US (mainland)":
         shippingFee = .init(fee: 0, currency: USD)
     case "Malaysia",
-         "China",
-         "Philippines",
-         "Singapore",
          "Taiwan":
-        shippingFee = .init(fee: 10, currency: USD)
-    case "Indonesia",
+        shippingFee = .init(fee: 5, currency: USD)
+    case "China",
+         "Indonesia",
          "Thailand",
-         "Vietnam":
+         "Philippines":
+        shippingFee = .init(fee: 10, currency: USD)
+    case "Singapore":
+        shippingFee = .init(fee: 14, currency: USD)
+    case "Vietnam":
         shippingFee = .init(fee: 20, currency: USD)
     case "Iceland",
          "Norway",
