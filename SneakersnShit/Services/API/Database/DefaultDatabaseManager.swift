@@ -128,7 +128,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
 
     func getUser(withId id: String) -> AnyPublisher<User, AppError> {
         Future { [weak self] promise in
-            self?.firestore.collection("users").document(id).getDocument { snapshot, error in
+            self?.firestore.collection(.users).document(id).getDocument { snapshot, error in
                 if let dict = snapshot?.data(), var user = User(from: dict) {
                     user.settings = user.settings ?? CopDeckSettings.default
                     promise(.success(user))
