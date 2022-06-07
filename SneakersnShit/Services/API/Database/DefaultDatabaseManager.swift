@@ -11,7 +11,7 @@ import Combine
 import UIKit
 
 class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
-    private static let recentlyViewedLimit = 20
+    private static let recentlyViewedLimit = 30
 
     let firestore: Firestore
     var userId: String?
@@ -51,7 +51,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
     }
 
     var favoritesPublisher: AnyPublisher<[Item], AppError> {
-        favoritesListener.dataPublisher
+        favoritesListener.dataPublisher.map { $0.sortedByDate(dateType: .updated, sortOrder: .descending) }.eraseToAnyPublisher()
     }
 
     var recentlyViewedPublisher: AnyPublisher<[Item], AppError> {
@@ -422,8 +422,10 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
 
     func favorite(item: Item) {
         guard !favoritesListener.dataSubject.value.contains(where: { $0.id == item.id }) else { return }
-        guard let dict = try? item.strippedOfPrices.asDictionary(),
-              let ref = favoritesListener.collectionRef?.document(Item.databaseId(itemId: item.id, settings: nil))
+        var newItem = item.strippedOfPrices
+        newItem.updated = Date.serverDate
+        guard let dict = try? newItem.asDictionary(),
+              let ref = favoritesListener.collectionRef?.document(Item.databaseId(itemId: newItem.id, settings: nil))
         else { return }
         setDocument(dict, atRef: ref, merge: true)
     }

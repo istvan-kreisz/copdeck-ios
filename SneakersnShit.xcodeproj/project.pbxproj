@@ -84,7 +84,7 @@
 		5D54FE2626C2C84F008CD05F /* HorizontalListItemRound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D54FE2526C2C84F008CD05F /* HorizontalListItemRound.swift */; };
 		5D54FE2826C30931008CD05F /* VerticalItemListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D54FE2726C30931008CD05F /* VerticalItemListView.swift */; };
 		5D54FE2A26C312BF008CD05F /* HorizontaltemListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D54FE2926C312BF008CD05F /* HorizontaltemListView.swift */; };
-		5D54FE3726C3390F008CD05F /* PopularItemsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D54FE3626C3390F008CD05F /* PopularItemsListView.swift */; };
+		5D54FE3726C3390F008CD05F /* ItemsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D54FE3626C3390F008CD05F /* ItemsListView.swift */; };
 		5D564E3D2703584100190CF4 /* SpreadsheetImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D564E3C2703584100190CF4 /* SpreadsheetImport.swift */; };
 		5D564E3F2703592E00190CF4 /* SpreadsheetImportAdminView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D564E3E2703592E00190CF4 /* SpreadsheetImportAdminView.swift */; };
 		5D564E462704C8CA00190CF4 /* UserDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D564E452704C8CA00190CF4 /* UserDetailView.swift */; };
@@ -328,7 +328,7 @@
 		5D54FE2526C2C84F008CD05F /* HorizontalListItemRound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalListItemRound.swift; sourceTree = "<group>"; };
 		5D54FE2726C30931008CD05F /* VerticalItemListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalItemListView.swift; sourceTree = "<group>"; };
 		5D54FE2926C312BF008CD05F /* HorizontaltemListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontaltemListView.swift; sourceTree = "<group>"; };
-		5D54FE3626C3390F008CD05F /* PopularItemsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularItemsListView.swift; sourceTree = "<group>"; };
+		5D54FE3626C3390F008CD05F /* ItemsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsListView.swift; sourceTree = "<group>"; };
 		5D564E3C2703584100190CF4 /* SpreadsheetImport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpreadsheetImport.swift; sourceTree = "<group>"; };
 		5D564E3E2703592E00190CF4 /* SpreadsheetImportAdminView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpreadsheetImportAdminView.swift; sourceTree = "<group>"; };
 		5D564E452704C8CA00190CF4 /* UserDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailView.swift; sourceTree = "<group>"; };
@@ -712,7 +712,7 @@
 			children = (
 				5D3E872025C5CCD700FC65FE /* SearchView.swift */,
 				5DC3538E26117C7F00294DF0 /* ItemDetailView.swift */,
-				5D54FE3626C3390F008CD05F /* PopularItemsListView.swift */,
+				5D54FE3626C3390F008CD05F /* ItemsListView.swift */,
 				5DE4F20F26DF1AD10087077A /* ProfileView.swift */,
 				5DE4F21326DFCCF30087077A /* SharedStackSummaryView.swift */,
 				5DE4F21926E02C430087077A /* SharedStackDetailView.swift */,
@@ -1506,7 +1506,7 @@
 				5D6B112C26A4660500B6B67A /* Styles.swift in Sources */,
 				5DDEFDCC26D14095001B0F76 /* Filters.swift in Sources */,
 				5DC2C102269E098C00674756 /* Loader.swift in Sources */,
-				5D54FE3726C3390F008CD05F /* PopularItemsListView.swift in Sources */,
+				5D54FE3726C3390F008CD05F /* ItemsListView.swift in Sources */,
 				5DCC466E26A8CEDE007671BC /* NewItemCard.swift in Sources */,
 				5D19B0AE26A6D7CA00A31F4E /* AuthenticationAction.swift in Sources */,
 				5D63125026950CB400876D99 /* AppReducer.swift in Sources */,

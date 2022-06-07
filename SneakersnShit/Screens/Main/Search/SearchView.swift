@@ -107,6 +107,7 @@ struct SearchView: View {
                                                   selectedItem: selectedItemBinding,
                                                   isLoading: .constant(false),
                                                   title: "Recently viewed",
+                                                  maxHorizontalItemCount: 30,
                                                   sortedBy: .created,
                                                   style: .square(.clear))
                             Spacer()
@@ -196,9 +197,9 @@ extension SearchView {
         var body: some View {
             switch navigationDestination.destination {
             case .popularItems:
-                PopularItemsListView(items: $popularItems, favoritedItemIds: store.globalState.favoritedItems.map(\.id))
+                ItemsListView(items: $popularItems, favoritedItemIds: store.globalState.favoritedItems.map(\.id), title: "Trending now")
             case .favoritedItems:
-                PopularItemsListView(items: $favoritedItems, favoritedItemIds: store.globalState.favoritedItems.map(\.id))
+                ItemsListView(items: $favoritedItems, favoritedItemIds: store.globalState.favoritedItems.map(\.id), title: "Favorites")
             case let .itemDetail(item):
                 ItemDetailView(item: item,
                                itemId: item.id,

@@ -13,13 +13,12 @@ struct HorizontaltemListView: View {
         case round, square(Color)
     }
 
-    private static let maxHorizontalItemCount = 20
-
     @Binding var items: [ItemSearchResult]
     @Binding var selectedItem: ItemSearchResult?
     @Binding var isLoading: Bool
 
     let title: String?
+    var maxHorizontalItemCount = 20
     var sortedBy: DateType? = nil
     let style: Style
 
@@ -27,9 +26,9 @@ struct HorizontaltemListView: View {
 
     var itemsToShow: [ItemSearchResult] {
         if let sortedBy = sortedBy {
-            return items.first(n: Self.maxHorizontalItemCount).sortedByDate(dateType: sortedBy, sortOrder: .descending)
+            return items.first(n: maxHorizontalItemCount).sortedByDate(dateType: sortedBy, sortOrder: .descending)
         } else {
-            return items.first(n: Self.maxHorizontalItemCount)
+            return items.first(n: maxHorizontalItemCount)
         }
     }
 
@@ -72,7 +71,7 @@ struct HorizontaltemListView: View {
                                                          color: color, onTapped: { selectedItem = item })
                             }
                         }
-                        if let moreTapped = moreTapped, items.count > Self.maxHorizontalItemCount {
+                        if let moreTapped = moreTapped, items.count > maxHorizontalItemCount {
                             Button(action: moreTapped) {
                                 ZStack {
                                     Circle()
