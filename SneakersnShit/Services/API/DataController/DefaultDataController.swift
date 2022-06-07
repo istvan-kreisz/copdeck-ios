@@ -26,7 +26,6 @@ class DefaultDataController: DataController {
     lazy var profileImagePublisher = imageService.profileImagePublisher.onMain()
 
     private var cancellables: Set<AnyCancellable> = []
-    private var lastPriceUpdate = 0.0
 
     init(backendAPI: BackendAPI, databaseManager: DatabaseManager, imageService: ImageService) {
         self.backendAPI = backendAPI
@@ -75,18 +74,12 @@ class DefaultDataController: DataController {
     }
 
     func updateInventoryPrices(completion: @escaping () -> Void) {
-        if !AppStore.default.state.globalState.isContentLocked {
-            guard self.lastPriceUpdate.isOlderThan(minutes: World.Constants.itemPricesRefreshPeriodMin) else {
-                completion()
-                return
-            }
-            self.lastPriceUpdate = Date.serverDate
-
+        if AppStore.default.state.globalState.isContentLocked {
+            completion()
+        } else {
             Debouncer.debounce(delay: .milliseconds(3000), id: "updateUserItems") { [weak self] in
                 self?.backendAPI.updateInventoryPrices(completion: completion)
             }
-        } else {
-            completion()
         }
     }
 

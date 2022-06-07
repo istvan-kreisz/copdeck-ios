@@ -178,7 +178,10 @@ struct StackView: View {
     private func refreshInventoryPrices() {
         isRefreshingInventoryPrices = true
         forceShowRefreshInventoryPricesButton = false
+        print("****")
+        print(lastInventoryPricesUpdate, lastInventoryPricesUpdate.isOlderThan(minutes: 180))
         lastInventoryPricesUpdate = Date.serverDate
+        print(lastInventoryPricesUpdate, lastInventoryPricesUpdate.isOlderThan(minutes: 180))
         AppStore.default.send(.main(action: .updateInventoryPrices(completion: {
             isRefreshingInventoryPrices = false
         })), debounceDelayMs: 3000)

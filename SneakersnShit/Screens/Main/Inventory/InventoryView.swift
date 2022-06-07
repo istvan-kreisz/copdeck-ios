@@ -204,6 +204,11 @@ struct InventoryView: View {
             .onChange(of: store.state.user?.name) { newValue in
                 self.username = newValue ?? ""
             }
+            .onChange(of: store.state.globalState.forceShowRefreshInventoryPricesButton) { newValue in
+                if newValue {
+                    isRefreshingInventoryPrices = false
+                }
+            }
         }
         .withTabViewWrapper(viewRouter: viewRouter, backgroundColor: .customWhite, shouldShow: $shouldShowTabBar)
         .withTextFieldPopup(isShowing: $showAddNewStackAlert,
