@@ -17,9 +17,10 @@ struct CustomSpinner: View {
     @State var animate = false
 
     var body: some View {
-        HStack(alignment: .center, spacing: 15) {
+        HStack(alignment: .center, spacing: 10) {
             ProgressView()
                 .progressViewStyle(CircularProgressViewStyle())
+                .scaleEffect(x: fontSize < 14 ? 0.8 : 1.0, y: fontSize < 14 ? 0.8 : 1.0, anchor: .center)
 //            Circle()
 //                .trim(from: 0, to: 0.7)
 //                .stroke(AngularGradient(gradient: .init(colors: [color1, color2]), center: .center), style: style)

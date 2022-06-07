@@ -12,8 +12,11 @@ struct StackView: View {
     struct EmptyStateConfig {
         let title: String
         let buttonTitle: String
-        let action: (() -> Void)
+        let action: () -> Void
     }
+
+    @AppStorage(UserDefaults.Keys.lastInventoryPricesUpdate.rawValue) private var lastInventoryPricesUpdate: Double = 0.0
+
     var stack: Stack
     let isContentLocked: Bool
     @Binding var searchText: String
@@ -24,6 +27,9 @@ struct StackView: View {
     @Binding var showFilters: Bool
     @Binding var selectedInventoryItems: [InventoryItem]
     @Binding var isSelected: Bool
+    @Binding var isRefreshingInventoryPrices: Bool
+    @Binding var canViewPrices: Bool
+    @Binding var forceShowRefreshInventoryPricesButton: Bool
     let emptyStateConfig: EmptyStateConfig
     var didTapEditStack: (() -> Void)?
     var didTapShareStack: (() -> Void)?
@@ -59,6 +65,28 @@ struct StackView: View {
 
     func toolbar() -> some View {
         VStack {
+            if canViewPrices && stack.isMainStack && !inventoryItems.isEmpty {
+                if isRefreshingInventoryPrices {
+                    CustomSpinner(text: "Refreshing prices...", fontSize: 12, animate: true)
+                } else {
+                    if lastInventoryPricesUpdate.isOlderThan(minutes: 180) || forceShowRefreshInventoryPricesButton {
+                        HStack(alignment: .center, spacing: 3) {
+                            Text("Refresh Inventory Prices")
+                                .foregroundColor(.customOrange)
+                                .font(.bold(size: 12))
+                            Image(systemName: "arrow.clockwise")
+                                .font(.bold(size: 10))
+                                .foregroundColor(.customOrange)
+                        }
+                        .leftAligned()
+                        .padding(.bottom, -5)
+                        .onTapGesture {
+                            refreshInventoryPrices()
+                        }
+                    }
+                }
+            }
+
             HStack(alignment: .center, spacing: 13) {
                 TextFieldRounded(title: nil,
                                  placeHolder: didTapEditStack == nil ? "Search your inventory" : "Search your stack",
@@ -135,15 +163,24 @@ struct StackView: View {
                                   isSelected: selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }),
                                   isInSharedStack: false,
                                   isEditing: $isEditing) {
-                        if selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }) {
-                            selectedInventoryItems = selectedInventoryItems.filter { $0.id != inventoryItem.id }
-                        } else {
-                            selectedInventoryItems.append(inventoryItem)
-                        }
+                    if selectedInventoryItems.contains(where: { $0.id == inventoryItem.id }) {
+                        selectedInventoryItems = selectedInventoryItems.filter { $0.id != inventoryItem.id }
+                    } else {
+                        selectedInventoryItems.append(inventoryItem)
+                    }
                 }
                 .id(inventoryItem.id)
             }
             .padding(.vertical, 2)
         }
+    }
+
+    private func refreshInventoryPrices() {
+        isRefreshingInventoryPrices = true
+        forceShowRefreshInventoryPricesButton = false
+        lastInventoryPricesUpdate = Date.serverDate
+        AppStore.default.send(.main(action: .updateInventoryPrices(completion: {
+            isRefreshingInventoryPrices = false
+        })), debounceDelayMs: 3000)
     }
 }

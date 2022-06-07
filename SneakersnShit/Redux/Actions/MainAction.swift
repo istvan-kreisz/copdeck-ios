@@ -48,6 +48,7 @@ enum MainAction {
     case stack(inventoryItems: [InventoryItem], stack: Stack)
     case unstack(inventoryItems: [InventoryItem], stack: Stack)
     case uploadProfileImage(image: UIImage)
+    case updateInventoryPrices(completion: () -> Void)
     // photos
     case getInventoryItemImages(userId: String, inventoryItem: InventoryItem, completion: ([URL]) -> Void)
     case uploadInventoryItemImages(inventoryItem: InventoryItem, images: [UIImage], completion: ([String]) -> Void)

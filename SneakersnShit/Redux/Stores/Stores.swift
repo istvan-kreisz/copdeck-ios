@@ -16,7 +16,6 @@ extension AppStore {
     static var isChatDetailView = false
     static var conversionFetchCount = 0
     static var lastConfigFetch = 0.0
-    static var lastPriceUpdate = 0.0
 
     static let `default`: AppStore = {
         let appStore = AppStore(state: .init(), reducer: appReducer, environment: World())
@@ -31,7 +30,6 @@ extension AppStore {
 
     func applicationWillEnterForeground() {
         fetchConfigs()
-        updateUserItems()
     }
 
     func reset() {
@@ -48,15 +46,6 @@ extension AppStore {
                               currency: settings.currency,
                               prices: itemFields.storePrices,
                               storeInfos: [])
-    }
-
-    func updateUserItems() {
-        guard Self.lastPriceUpdate.isOlderThan(minutes: World.Constants.itemPricesRefreshPeriodMin) else { return }
-        Self.lastPriceUpdate = Date.serverDate
-
-        Debouncer.debounce(delay: .milliseconds(3000), id: "updateUserItems") { [weak self] in
-            self?.environment.dataController.updateUserItems {}
-        }
     }
 
     func updateInventoryItems(associatedWith item: Item) {
@@ -155,7 +144,7 @@ extension AppStore {
                           previousUser?.id != newUser.id ||
                           (newUser.subscription == .pro && previousUser?.subscription != .pro) {
                           self.updateInventoryItemsWithItemFields(inventoryItems: self.state.inventoryItems)
-                          self.updateUserItems()
+                          self.state.globalState.forceShowRefreshInventoryPricesButton = true
                       } else if oldSettings?.feeCalculation != newSettings?.feeCalculation {
                           self.updateCalculatedPrices(inventoryItems: self.state.inventoryItems)
                       } else if oldSettings?.bestPricePriceType != newSettings?.bestPricePriceType ||

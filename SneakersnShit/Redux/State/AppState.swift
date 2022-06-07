@@ -44,6 +44,7 @@ struct GlobalState: Equatable {
     var canViewPrices: Bool = true
     var remoteConfig: RemoteConfig?
     var loggedInToRevenueCat = false
+    var forceShowRefreshInventoryPricesButton = false
     
     var isPaywallEnabled: Bool {
         remoteConfig?.paywallEnabled == true

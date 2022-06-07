@@ -26,6 +26,7 @@ struct InventoryView: View {
     @State var username: String = ""
     @State private var sharedStack: Stack?
     @State private var showSnackBar = false
+    @State private var isRefreshingInventoryPrices = false
 
     @Binding var shouldShowTabBar: Bool
 
@@ -141,6 +142,9 @@ struct InventoryView: View {
                               showFilters: showFilters,
                               selectedInventoryItems: $selectedInventoryItems,
                               isSelected: isSelected,
+                              isRefreshingInventoryPrices: $isRefreshingInventoryPrices,
+                              canViewPrices: $store.state.globalState.canViewPrices,
+                              forceShowRefreshInventoryPricesButton: $store.state.globalState.forceShowRefreshInventoryPricesButton,
                               emptyStateConfig: (stack.id == "all" ?
                                   StackView.EmptyStateConfig.init(title: "Your inventory is empty",
                                                                   buttonTitle: "Start adding items") {

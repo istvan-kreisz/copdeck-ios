@@ -300,7 +300,7 @@ struct ItemDetailView: View {
                                     .padding(.bottom, -15)
 
                                     if loader.isLoading && store.globalState.canViewPrices {
-                                        CustomSpinner(text: "Loading prices...", fontSize: 15, animate: true)
+                                        CustomSpinner(text: "Refreshing prices...", fontSize: 15, animate: true)
                                             .padding(5)
                                     }
 

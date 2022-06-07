@@ -130,7 +130,7 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
             .store(in: &cancellables)
     }
 
-    func updateUserItems(completion: @escaping () -> Void) {
+    func updateInventoryPrices(completion: @escaping () -> Void) {
         guard let userId = userId else {
             completion()
             return

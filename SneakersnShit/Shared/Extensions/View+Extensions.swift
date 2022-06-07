@@ -8,44 +8,44 @@
 import SwiftUI
 
 extension View {
-    func leftAligned() -> some View {
-        HStack {
+    func leftAligned(spacing: CGFloat? = nil) -> some View {
+        HStack(spacing: spacing) {
             self
             Spacer()
         }
     }
 
-    func rightAligned() -> some View {
-        HStack {
+    func rightAligned(spacing: CGFloat? = nil) -> some View {
+        HStack(spacing: spacing) {
             Spacer()
             self
         }
     }
 
-    func topAligned() -> some View {
-        VStack {
+    func topAligned(spacing: CGFloat? = nil) -> some View {
+        VStack(spacing: spacing) {
             self
             Spacer()
         }
     }
 
-    func bottomAligned() -> some View {
-        VStack {
+    func bottomAligned(spacing: CGFloat? = nil) -> some View {
+        VStack(spacing: spacing) {
             Spacer()
             self
         }
     }
 
-    func centeredVertically() -> some View {
-        VStack {
+    func centeredVertically(spacing: CGFloat? = nil) -> some View {
+        VStack(spacing: spacing) {
             Spacer()
             self
             Spacer()
         }
     }
 
-    func centeredHorizontally() -> some View {
-        HStack {
+    func centeredHorizontally(spacing: CGFloat? = nil) -> some View {
+        HStack(spacing: spacing) {
             Spacer()
             self
             Spacer()
@@ -183,9 +183,9 @@ extension View {
                                                                     action: action))
     }
 
-    func listRow(backgroundColor: Color = .customBackground) -> some View {
-        padding(.vertical, 6)
-            .padding(.horizontal, 30)
+    func listRow(backgroundColor: Color = .customBackground, verticalPadding: CGFloat = 6, horizontalPadding: CGFloat = 30) -> some View {
+        padding(.vertical, verticalPadding)
+            .padding(.horizontal, horizontalPadding)
             .listRowBackground(backgroundColor)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             .listRowInsets(EdgeInsets(top: -2, leading: -30, bottom: -2, trailing: -30))

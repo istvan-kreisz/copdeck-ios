@@ -187,6 +187,9 @@ func appReducer(state: inout AppState,
         case let .uploadProfileImage(profileImage):
             Analytics.logEvent("upload_profileimage", parameters: ["userId": state.user?.id ?? ""])
             environment.dataController.uploadProfileImage(image: profileImage)
+        case let .updateInventoryPrices(completion: completion):
+            Analytics.logEvent("update_inventoryitems_prices", parameters: ["userId": state.user?.id ?? ""])
+            environment.dataController.updateInventoryPrices(completion: completion)
         case let .getInventoryItemImages(userId, inventoryItem, completion):
             environment.dataController.getInventoryItemImages(userId: userId, inventoryItem: inventoryItem, completion: completion)
         case let .uploadInventoryItemImages(inventoryItem, images, completion):
