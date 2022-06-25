@@ -99,7 +99,7 @@ struct Item: Equatable, Identifiable, Hashable, ModelWithDate {
     let imageURL: ImageURL?
     var brand: Brand?
     var gender: Gender?
-    var itemType: ItemType? = .shoe
+    var itemType: ItemType?
     var brandCalculated: Brand? { brand ?? getBrand(storeInfoArray: storeInfo) }
     var genderCalculated: Gender? { gender ?? getGender(storeInfoArray: storeInfo) }
 
@@ -583,7 +583,11 @@ extension Item {
 
 extension Item {
     init(from itemSearchResult: ItemSearchResult) {
-        self.init(id: itemSearchResult.id, styleId: itemSearchResult.styleId, storeInfo: [], storePrices: [], name: itemSearchResult.name,
+        self.init(id: itemSearchResult.id,
+                  styleId: itemSearchResult.styleId,
+                  storeInfo: [],
+                  storePrices: [],
+                  name: itemSearchResult.name,
                   imageURL: itemSearchResult.imageURL)
     }
 }
