@@ -13,7 +13,7 @@ enum AuthenticationAction {
     case signIn(userName: String, password: String)
     case signInWithApple
     case signInWithGoogle
-    case signInWithFacebook
+//    case signInWithFacebook
     case signOut
     case passwordReset(email: String)
     case deleteAccount

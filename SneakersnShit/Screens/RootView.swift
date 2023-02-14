@@ -9,6 +9,10 @@ import SwiftUI
 import Purchases
 
 struct RootView: View {
+    class ViewState: ObservableObject {
+        @Published var firstShow = true
+    }
+
     @EnvironmentObject var store: DerivedGlobalStore
     @State var user: User?
     @StateObject var viewState = ViewState()
@@ -17,10 +21,6 @@ struct RootView: View {
     @State private var showPayment1View = true
 
     @AppStorage(UserDefaults.Keys.needsAppOnboarding.rawValue) private var needsAppOnboarding: Bool = true
-
-    class ViewState: ObservableObject {
-        @Published var firstShow = true
-    }
 
     var body: some View {
         let presentErrorAlert = Binding<Bool>(get: { error != nil }, set: { new in error = new ? error : nil })

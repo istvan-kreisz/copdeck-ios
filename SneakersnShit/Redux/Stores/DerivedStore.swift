@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+#warning("refactor")
 class DerivedGlobalStore: ObservableObject {
     let appStore: AppStore
     var effectCancellables: Set<AnyCancellable> = []

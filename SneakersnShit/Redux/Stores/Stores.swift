@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import Nuke
 import SwiftUI
+import Firebase
 
 typealias AppStore = ReduxStore<AppState, AppAction, World>
 
@@ -18,6 +19,7 @@ extension AppStore {
     static var lastConfigFetch = 0.0
 
     static let `default`: AppStore = {
+        FirebaseApp.configure()
         let appStore = AppStore(state: .init(), reducer: appReducer, environment: World())
         appStore.setup()
         return appStore

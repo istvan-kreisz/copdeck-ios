@@ -88,8 +88,10 @@ class FBFunctionsCoordinator {
         do {
             var parameters = try model.asDictionary()
             parameters["userId"] = userId
+            print(functionName)
             return Future<Model, AppError> { [weak self] completion in
                 self?.functions.httpsCallable(functionName).call(parameters) { [weak self] result, functionError in
+                    print(functionName)
                     guard let self = self else { return }
                     do {
                         try self.handleError(functionError)

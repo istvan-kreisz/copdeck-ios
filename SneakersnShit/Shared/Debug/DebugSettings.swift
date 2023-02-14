@@ -130,6 +130,7 @@ struct DebugSettings {
         string(for: "loginAs")
     }
 
+    #warning("replace with localhost")
     var ipAddress: String {
         string(for: "ipAddress") ?? ""
     }

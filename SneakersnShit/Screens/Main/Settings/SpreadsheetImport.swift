@@ -112,7 +112,6 @@ struct SpreadsheetImportView: View {
                 .overlay(RoundedRectangle(cornerRadius: Styles.cornerRadius)
                     .stroke(Color.customBlue, lineWidth: 2)
                     .background(Color.customBlue.opacity(0.1).cornerRadius(Styles.cornerRadius)))
-
                 .padding(.bottom, 5)
                 .layoutPriority(2)
 

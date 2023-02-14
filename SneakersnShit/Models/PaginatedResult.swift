@@ -13,7 +13,7 @@ struct PaginatedResult<T: Codable & Equatable>: Codable, Equatable {
 }
 
 struct PaginationState<T> {
-    var lastLoaded: FeedPost?
+    var lastLoaded: T?
     var isLastPage: Bool
 
     mutating func reset() {

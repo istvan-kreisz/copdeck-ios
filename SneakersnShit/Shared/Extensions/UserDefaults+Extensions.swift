@@ -11,7 +11,7 @@ extension UserDefaults {
 
     enum Keys: String, CaseIterable {
         case needsAppOnboarding
-        case didPublish
+        case didPublishStack
         case lastInventoryPricesUpdate
     }
 

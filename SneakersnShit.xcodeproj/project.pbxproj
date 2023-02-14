@@ -28,7 +28,6 @@
 		5D19B0AE26A6D7CA00A31F4E /* AuthenticationAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D19B0AD26A6D7CA00A31F4E /* AuthenticationAction.swift */; };
 		5D19B0D426A6F0DC00A31F4E /* CopDeckApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D19B0D326A6F0DC00A31F4E /* CopDeckApp.swift */; };
 		5D2119E125DB0EFA001FE5E5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5D2119E025DB0EFA001FE5E5 /* GoogleService-Info.plist */; };
-		5D2726C826CAF3AF00887449 /* List+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2726C726CAF3AF00887449 /* List+Extensions.swift */; };
 		5D2726CA26CB2CE400887449 /* VerticalListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2726C926CB2CE400887449 /* VerticalListView.swift */; };
 		5D2726CD26CB3CB800887449 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2726CC26CB3CB800887449 /* TabBarView.swift */; };
 		5D2726D026CC59CC00887449 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D2726CF26CC59CC00887449 /* Cache.swift */; };
@@ -149,7 +148,6 @@
 		5D8ABBC126B1D2E100AFD8CF /* ItemImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ABBC026B1D2E100AFD8CF /* ItemImageView.swift */; };
 		5D8ABBC426B205CD00AFD8CF /* FeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8ABBC326B205CD00AFD8CF /* FeedView.swift */; };
 		5D8CD46626DA69BC00318CC1 /* StackDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8CD46526DA69BC00318CC1 /* StackDetailView.swift */; };
-		5D8FEECC271B28350004D8B3 /* ReferralCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D8FEECB271B28350004D8B3 /* ReferralCode.swift */; };
 		5D90EDC826DE6254005AEA30 /* CollectionListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D90EDC726DE6254005AEA30 /* CollectionListener.swift */; };
 		5D90EDCA26DE6C37005AEA30 /* DocumentListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D90EDC926DE6C37005AEA30 /* DocumentListener.swift */; };
 		5D90EDCC26DE6C66005AEA30 /* FireStoreListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D90EDCB26DE6C66005AEA30 /* FireStoreListener.swift */; };
@@ -184,6 +182,13 @@
 		5DA4FE0426E6DCA700084AEF /* SettingMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA4FE0326E6DCA700084AEF /* SettingMenu.swift */; };
 		5DA5140426A614530067C4A2 /* DefaultDatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140026A614530067C4A2 /* DefaultDatabaseManager.swift */; };
 		5DA5140B26A6161A0067C4A2 /* CopDeckSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA5140A26A6161A0067C4A2 /* CopDeckSettings.swift */; };
+		5DAA80E5299A572E001A7D50 /* SearchState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DAA80E4299A572E001A7D50 /* SearchState.swift */; };
+		5DAA80E7299A578B001A7D50 /* FeedState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DAA80E6299A578B001A7D50 /* FeedState.swift */; };
+		5DAA80E9299A57D4001A7D50 /* GlobalState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DAA80E8299A57D4001A7D50 /* GlobalState.swift */; };
+		5DAA80EB299A57FF001A7D50 /* InventoryState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DAA80EA299A57FF001A7D50 /* InventoryState.swift */; };
+		5DAA80ED299A5E05001A7D50 /* PaymentReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DAA80EC299A5E05001A7D50 /* PaymentReducer.swift */; };
+		5DAA80EF299A5E26001A7D50 /* AuthReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DAA80EE299A5E26001A7D50 /* AuthReducer.swift */; };
+		5DAA80F1299A5EAF001A7D50 /* MainReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DAA80F0299A5EAF001A7D50 /* MainReducer.swift */; };
 		5DB2B20B27681723009EEEE0 /* PriceCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB2B20A27681723009EEEE0 /* PriceCalculator.swift */; };
 		5DB590E826C556ED006ECEBD /* ScrollableSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DB590E726C556ED006ECEBD /* ScrollableSegmentedControl.swift */; };
 		5DBCB6DD25C90A510025BC23 /* StoreReviewHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DBCB6DC25C90A510025BC23 /* StoreReviewHelper.swift */; };
@@ -228,9 +233,6 @@
 		5DE596F026C8CD600024F7D5 /* SelectStackItemsListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE596EF26C8CD600024F7D5 /* SelectStackItemsListItem.swift */; };
 		5DE596F426C8D64F0024F7D5 /* Popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE596F326C8D64F0024F7D5 /* Popup.swift */; };
 		5DE596F626C9355C0024F7D5 /* ActionConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DE596F526C9355C0024F7D5 /* ActionConfig.swift */; };
-		5DE6DBE42735CB8F00A5EF4F /* FacebookBasics in Frameworks */ = {isa = PBXBuildFile; productRef = 5DE6DBE32735CB8F00A5EF4F /* FacebookBasics */; };
-		5DE6DBE62735CB8F00A5EF4F /* FacebookCore in Frameworks */ = {isa = PBXBuildFile; productRef = 5DE6DBE52735CB8F00A5EF4F /* FacebookCore */; };
-		5DE6DBE82735CB8F00A5EF4F /* FacebookLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 5DE6DBE72735CB8F00A5EF4F /* FacebookLogin */; };
 		5DEB42B1271EE16900895766 /* ContactView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEB42B0271EE16900895766 /* ContactView.swift */; };
 		5DEB42B3271EEB7C00895766 /* TextFieldRoundedLarge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEB42B2271EEB7C00895766 /* TextFieldRoundedLarge.swift */; };
 		5DEB42B5271F1CD200895766 /* Binding+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEB42B4271F1CD200895766 /* Binding+Extensions.swift */; };
@@ -273,7 +275,6 @@
 		5D19B0AD26A6D7CA00A31F4E /* AuthenticationAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticationAction.swift; sourceTree = "<group>"; };
 		5D19B0D326A6F0DC00A31F4E /* CopDeckApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopDeckApp.swift; sourceTree = "<group>"; };
 		5D2119E025DB0EFA001FE5E5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		5D2726C726CAF3AF00887449 /* List+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "List+Extensions.swift"; sourceTree = "<group>"; };
 		5D2726C926CB2CE400887449 /* VerticalListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalListView.swift; sourceTree = "<group>"; };
 		5D2726CC26CB3CB800887449 /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
 		5D2726CF26CC59CC00887449 /* Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
@@ -388,7 +389,6 @@
 		5D8ABBC026B1D2E100AFD8CF /* ItemImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemImageView.swift; sourceTree = "<group>"; };
 		5D8ABBC326B205CD00AFD8CF /* FeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedView.swift; sourceTree = "<group>"; };
 		5D8CD46526DA69BC00318CC1 /* StackDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackDetailView.swift; sourceTree = "<group>"; };
-		5D8FEECB271B28350004D8B3 /* ReferralCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralCode.swift; sourceTree = "<group>"; };
 		5D90EDC726DE6254005AEA30 /* CollectionListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionListener.swift; sourceTree = "<group>"; };
 		5D90EDC926DE6C37005AEA30 /* DocumentListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentListener.swift; sourceTree = "<group>"; };
 		5D90EDCB26DE6C66005AEA30 /* FireStoreListener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FireStoreListener.swift; sourceTree = "<group>"; };
@@ -421,6 +421,13 @@
 		5DA4FE0326E6DCA700084AEF /* SettingMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingMenu.swift; sourceTree = "<group>"; };
 		5DA5140026A614530067C4A2 /* DefaultDatabaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultDatabaseManager.swift; sourceTree = "<group>"; };
 		5DA5140A26A6161A0067C4A2 /* CopDeckSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopDeckSettings.swift; sourceTree = "<group>"; };
+		5DAA80E4299A572E001A7D50 /* SearchState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchState.swift; sourceTree = "<group>"; };
+		5DAA80E6299A578B001A7D50 /* FeedState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedState.swift; sourceTree = "<group>"; };
+		5DAA80E8299A57D4001A7D50 /* GlobalState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalState.swift; sourceTree = "<group>"; };
+		5DAA80EA299A57FF001A7D50 /* InventoryState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryState.swift; sourceTree = "<group>"; };
+		5DAA80EC299A5E05001A7D50 /* PaymentReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentReducer.swift; sourceTree = "<group>"; };
+		5DAA80EE299A5E26001A7D50 /* AuthReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthReducer.swift; sourceTree = "<group>"; };
+		5DAA80F0299A5EAF001A7D50 /* MainReducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MainReducer.swift; path = SneakersnShit/Redux/Reducers/MainReducer.swift; sourceTree = SOURCE_ROOT; };
 		5DB2B20A27681723009EEEE0 /* PriceCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceCalculator.swift; sourceTree = "<group>"; };
 		5DB590E726C556ED006ECEBD /* ScrollableSegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollableSegmentedControl.swift; sourceTree = "<group>"; };
 		5DBCB6DC25C90A510025BC23 /* StoreReviewHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreReviewHelper.swift; sourceTree = "<group>"; };
@@ -491,7 +498,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5DE6DBE42735CB8F00A5EF4F /* FacebookBasics in Frameworks */,
 				5D823BAA278138FD00F00202 /* FirebaseFunctions in Frameworks */,
 				5D823BA8278138FD00F00202 /* FirebaseFirestore in Frameworks */,
 				5D823BA2278138FD00F00202 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
@@ -501,13 +507,11 @@
 				5D9D51FB26AE1BE500AB1F30 /* Nuke in Frameworks */,
 				5D0703C8271DDED200116CF4 /* Purchases in Frameworks */,
 				5D287A34279090EB0037D56D /* AlgoliaSearchClient in Frameworks */,
-				5DE6DBE82735CB8F00A5EF4F /* FacebookLogin in Frameworks */,
 				5D823BA4278138FD00F00202 /* FirebaseAuth in Frameworks */,
 				5D606D17272D040A00E49A59 /* MessageKit in Frameworks */,
 				5D823BA6278138FD00F00202 /* FirebaseCrashlytics in Frameworks */,
 				5D823BAC278138FD00F00202 /* FirebaseMessaging in Frameworks */,
 				B2EF4F84E80FEA5072CFBCF7 /* Pods_CopDeck.framework in Frameworks */,
-				5DE6DBE62735CB8F00A5EF4F /* FacebookCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -625,7 +629,6 @@
 				5D9D51F126AC0E8F00AB1F30 /* Optional+Extensions.swift */,
 				5D3DE37326AFA96D009E4D52 /* UINavigationController+Extensions.swift */,
 				5DE596EB26C89B800024F7D5 /* Collection+Extensions.swift */,
-				5D2726C726CAF3AF00887449 /* List+Extensions.swift */,
 				5DE4F21126DFBB7B0087077A /* State+Extensions.swift */,
 				5DE4F21726E022070087077A /* UIImage+Extensions.swift */,
 				5DF3596026FFB7DF0041A6C3 /* UserDefaults+Extensions.swift */,
@@ -928,6 +931,10 @@
 			isa = PBXGroup;
 			children = (
 				5D2D5AA225C52E9B009598AA /* AppState.swift */,
+				5DAA80E4299A572E001A7D50 /* SearchState.swift */,
+				5DAA80E6299A578B001A7D50 /* FeedState.swift */,
+				5DAA80E8299A57D4001A7D50 /* GlobalState.swift */,
+				5DAA80EA299A57FF001A7D50 /* InventoryState.swift */,
 			);
 			path = State;
 			sourceTree = "<group>";
@@ -945,10 +952,10 @@
 		5D63123826950A1900876D99 /* Actions */ = {
 			isa = PBXGroup;
 			children = (
+				5D63124326950B2900876D99 /* AppAction.swift */,
 				5D19B0AA26A6D76600A31F4E /* ErrorAction.swift */,
 				5D19B0A926A6D76600A31F4E /* MainAction.swift */,
 				5D19B0AD26A6D7CA00A31F4E /* AuthenticationAction.swift */,
-				5D63124326950B2900876D99 /* AppAction.swift */,
 				5D564E492704F6C800190CF4 /* PaymentAction.swift */,
 			);
 			path = Actions;
@@ -958,6 +965,9 @@
 			isa = PBXGroup;
 			children = (
 				5D63124F26950CB400876D99 /* AppReducer.swift */,
+				5DAA80EC299A5E05001A7D50 /* PaymentReducer.swift */,
+				5DAA80EE299A5E26001A7D50 /* AuthReducer.swift */,
+				5DAA80F0299A5EAF001A7D50 /* MainReducer.swift */,
 			);
 			path = Reducers;
 			sourceTree = "<group>";
@@ -1059,7 +1069,6 @@
 				5D88261626F8DCD20006031D /* Navigation.swift */,
 				5DECB5812708DC4F0017748C /* MonthlyStatistics.swift */,
 				5D117EAC271310E5000D1E43 /* SizeConversion.swift */,
-				5D8FEECB271B28350004D8B3 /* ReferralCode.swift */,
 				5D9A472427333DEF001C85E4 /* NotificationToken.swift */,
 				5D57A69A273A2F7D0089CDF9 /* Tag.swift */,
 				5D0A85542770340000148CDB /* LastPriceViews.swift */,
@@ -1347,9 +1356,6 @@
 				5D9D51FD26AE1C0B00AB1F30 /* NukeUI */,
 				5D0703C7271DDED200116CF4 /* Purchases */,
 				5D606D16272D040A00E49A59 /* MessageKit */,
-				5DE6DBE32735CB8F00A5EF4F /* FacebookBasics */,
-				5DE6DBE52735CB8F00A5EF4F /* FacebookCore */,
-				5DE6DBE72735CB8F00A5EF4F /* FacebookLogin */,
 				5D823BA1278138FD00F00202 /* FirebaseAnalyticsWithoutAdIdSupport */,
 				5D823BA3278138FD00F00202 /* FirebaseAuth */,
 				5D823BA5278138FD00F00202 /* FirebaseCrashlytics */,
@@ -1391,7 +1397,6 @@
 				5D9D51FC26AE1C0B00AB1F30 /* XCRemoteSwiftPackageReference "NukeUI" */,
 				5D0703C6271DDED200116CF4 /* XCRemoteSwiftPackageReference "purchases-ios" */,
 				5D606D15272D040A00E49A59 /* XCRemoteSwiftPackageReference "MessageKit" */,
-				5DE6DBE22735CB8F00A5EF4F /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */,
 				5D823BA0278138FD00F00202 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				5D287A32279090EB0037D56D /* XCRemoteSwiftPackageReference "algoliasearch-client-swift" */,
 			);
@@ -1507,6 +1512,7 @@
 				5DDEFDCC26D14095001B0F76 /* Filters.swift in Sources */,
 				5DC2C102269E098C00674756 /* Loader.swift in Sources */,
 				5D54FE3726C3390F008CD05F /* ItemsListView.swift in Sources */,
+				5DAA80E7299A578B001A7D50 /* FeedState.swift in Sources */,
 				5DCC466E26A8CEDE007671BC /* NewItemCard.swift in Sources */,
 				5D19B0AE26A6D7CA00A31F4E /* AuthenticationAction.swift in Sources */,
 				5D63125026950CB400876D99 /* AppReducer.swift in Sources */,
@@ -1571,7 +1577,6 @@
 				5D3DE37426AFA96D009E4D52 /* UINavigationController+Extensions.swift in Sources */,
 				5D8ABBC426B205CD00AFD8CF /* FeedView.swift in Sources */,
 				5D52E30F26130E2100FA02B8 /* InventoryView.swift in Sources */,
-				5D8FEECC271B28350004D8B3 /* ReferralCode.swift in Sources */,
 				5DDEFDBF26CED83A001B0F76 /* ListSelector.swift in Sources */,
 				5D28542927A0E96600400FD7 /* ShareSheet.swift in Sources */,
 				5D19B0D426A6F0DC00A31F4E /* CopDeckApp.swift in Sources */,
@@ -1605,7 +1610,6 @@
 				5D63122B2695066500876D99 /* ExchangeRates.swift in Sources */,
 				5D88261526F8A42D0006031D /* DerivedStore.swift in Sources */,
 				5D8CD46626DA69BC00318CC1 /* StackDetailView.swift in Sources */,
-				5D2726C826CAF3AF00887449 /* List+Extensions.swift in Sources */,
 				5D63122D2695068300876D99 /* Currency.swift in Sources */,
 				5D0E5A11269E4EDE006D7E9C /* AddToInventoryView.swift in Sources */,
 				5D6312242694D83100876D99 /* Decodable+Extensions.swift in Sources */,
@@ -1615,6 +1619,7 @@
 				5D587A96272E41980075C93C /* ChannelListItem.swift in Sources */,
 				5DE4F21226DFBB7B0087077A /* State+Extensions.swift in Sources */,
 				5D9A472327333628001C85E4 /* PushNotificationService.swift in Sources */,
+				5DAA80E9299A57D4001A7D50 /* GlobalState.swift in Sources */,
 				5D9D520626AE361900AB1F30 /* PillView.swift in Sources */,
 				5D97630526EB640E00A1155B /* EmptyStateButton.swift in Sources */,
 				5D9A472527333DEF001C85E4 /* NotificationToken.swift in Sources */,
@@ -1622,6 +1627,7 @@
 				5D424D4B25C509D20008D6F4 /* PasswordResetView.swift in Sources */,
 				5D424D2025C505450008D6F4 /* TextFieldUnderlined.swift in Sources */,
 				5DEB42B3271EEB7C00895766 /* TextFieldRoundedLarge.swift in Sources */,
+				5DAA80EF299A5E26001A7D50 /* AuthReducer.swift in Sources */,
 				5D9D520826AE4CF400AB1F30 /* EditInventoryTray.swift in Sources */,
 				5D2ED124270152BC002A5E12 /* ImageViewer.swift in Sources */,
 				5D4E19BC26C9404E00FCF780 /* TextFieldPopup.swift in Sources */,
@@ -1638,6 +1644,7 @@
 				5D8ABBBA26B0B51200AFD8CF /* Snackbar.swift in Sources */,
 				5D88261926F917770006031D /* DefaultImageService.swift in Sources */,
 				5DE4F21C26E048100087077A /* SharedInventoryItemDetailView.swift in Sources */,
+				5DAA80EB299A57FF001A7D50 /* InventoryState.swift in Sources */,
 				5D7CAAD6272F1A2A003A241D /* MessagesView.swift in Sources */,
 				5D19B0AB26A6D76600A31F4E /* MainAction.swift in Sources */,
 				5D287A3D279118330037D56D /* ItemSearchView.swift in Sources */,
@@ -1649,6 +1656,7 @@
 				5DDEFDC426D042C5001B0F76 /* StaticButtonStyle.swift in Sources */,
 				5D1264D9275E9D3500E66EE3 /* TagSelector.swift in Sources */,
 				5D9A473D27344FA1001C85E4 /* DBRef.swift in Sources */,
+				5DAA80F1299A5EAF001A7D50 /* MainReducer.swift in Sources */,
 				5D1264D5275E8B8A00E66EE3 /* PriceRow.swift in Sources */,
 				5D2726CA26CB2CE400887449 /* VerticalListView.swift in Sources */,
 				5D9D51F826ADA07700AB1F30 /* Country.swift in Sources */,
@@ -1661,6 +1669,7 @@
 				5DE4F22026E0C9AA0087077A /* HorizontalListItemSquare.swift in Sources */,
 				5D54FE2A26C312BF008CD05F /* HorizontaltemListView.swift in Sources */,
 				5D631220269330B900876D99 /* APIConfig.swift in Sources */,
+				5DAA80E5299A572E001A7D50 /* SearchState.swift in Sources */,
 				5DC00EAB25C3A331009A3AB9 /* Authenticator.swift in Sources */,
 				5D9DFB0126D978F9005A575D /* ProfileData.swift in Sources */,
 				5D19B0AC26A6D76600A31F4E /* ErrorAction.swift in Sources */,
@@ -1690,6 +1699,7 @@
 				5D9A472E273408FD001C85E4 /* FirestoreWorker.swift in Sources */,
 				5D6B112E26A46E3A00B6B67A /* NavigationBar.swift in Sources */,
 				5D9D520426AE359C00AB1F30 /* InventoryViewPills.swift in Sources */,
+				5DAA80ED299A5E05001A7D50 /* PaymentReducer.swift in Sources */,
 				5DA4FE0426E6DCA700084AEF /* SettingMenu.swift in Sources */,
 				5D57A6A3273B221A0089CDF9 /* ColorSelectorMenu.swift in Sources */,
 				5D57A6992739F3A50089CDF9 /* AddNewInventoryItemView.swift in Sources */,
@@ -2136,14 +2146,6 @@
 				minimumVersion = 0.6.4;
 			};
 		};
-		5DE6DBE22735CB8F00A5EF4F /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/facebook/facebook-ios-sdk";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 12.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -2206,21 +2208,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5D9D51FC26AE1C0B00AB1F30 /* XCRemoteSwiftPackageReference "NukeUI" */;
 			productName = NukeUI;
-		};
-		5DE6DBE32735CB8F00A5EF4F /* FacebookBasics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5DE6DBE22735CB8F00A5EF4F /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
-			productName = FacebookBasics;
-		};
-		5DE6DBE52735CB8F00A5EF4F /* FacebookCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5DE6DBE22735CB8F00A5EF4F /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
-			productName = FacebookCore;
-		};
-		5DE6DBE72735CB8F00A5EF4F /* FacebookLogin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 5DE6DBE22735CB8F00A5EF4F /* XCRemoteSwiftPackageReference "facebook-ios-sdk" */;
-			productName = FacebookLogin;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

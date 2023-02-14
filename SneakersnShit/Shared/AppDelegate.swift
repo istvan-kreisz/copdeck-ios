@@ -8,7 +8,7 @@
 import UIKit
 import Firebase
 import GoogleSignIn
-import FBSDKCoreKit
+//import FBSDKCoreKit
 import Nuke
 import FirebaseMessaging
 
@@ -18,8 +18,8 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             UserDefaults.standard.reset()
         }
 //        FirebaseConfiguration.shared.setLoggerLevel(DebugSettings.shared.isInDebugMode ? .min : .min)
-        FirebaseApp.configure()
-        ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
+//        FirebaseApp.configure()
+//        ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
         AppStore.default.environment.pushNotificationService.setup(application: application)
         StoreReviewHelper.incrementAppOpenedCount()
         setupNuke()
@@ -35,10 +35,10 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-        ApplicationDelegate.shared.application(UIApplication.shared,
-                                               open: url,
-                                               sourceApplication: nil,
-                                               annotation: [UIApplication.OpenURLOptionsKey.annotation])
+//        ApplicationDelegate.shared.application(UIApplication.shared,
+//                                               open: url,
+//                                               sourceApplication: nil,
+//                                               annotation: [UIApplication.OpenURLOptionsKey.annotation])
         return GIDSignIn.sharedInstance.handle(url)
     }
 

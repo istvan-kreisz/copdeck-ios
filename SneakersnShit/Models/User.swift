@@ -33,9 +33,6 @@ struct User: Codable, Equatable, Identifiable {
 
     struct MembershipInfo: Equatable, Codable {
         let group: String?
-        let referralCodeUsed: String?
-        let referralCodeDiscount: String?
-        let referralCodeName: String?
 
         var isBetaTester: Bool {
             group?.contains("iosbetatester") ?? false

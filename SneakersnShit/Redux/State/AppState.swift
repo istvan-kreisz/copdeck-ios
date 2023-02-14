@@ -8,75 +8,6 @@
 import Foundation
 import Purchases
 
-var isContentLocked: Bool {
-    AppStore.default.state.isContentLocked
-}
-
-class SearchModel: ObservableObject {
-    @Published var state = SearchState()
-}
-
-struct SearchState: Equatable {
-    struct SearchResults: Equatable {
-        let searchTerm: String
-        var searchResults: [ItemSearchResult] = []
-    }
-    
-    var searchResults = SearchResults(searchTerm: "")
-    var popularItems: [ItemSearchResult] = []
-    var userSearchResults: [User] = []
-}
-
-struct FeedState: Equatable {
-    var feedPosts: PaginatedResult<[FeedPost]> = .init(data: [], isLastPage: false)
-}
-
-struct GlobalState: Equatable {
-    var user: User?
-    var firstLoadDone = false
-    var error: AppError?
-    var favoritedItems: [ItemSearchResult] = []
-    var recentlyViewedItems: [ItemSearchResult] = []
-    var exchangeRates: ExchangeRates?
-    var showPaymentView = false
-    var packages: SubscriptionPackages?
-    var chatUpdates: ChatUpdateInfo = .init(updateInfo: [:])
-    var canViewPrices: Bool = true
-    var remoteConfig: RemoteConfig?
-    var loggedInToRevenueCat = false
-    var forceShowRefreshInventoryPricesButton = false
-    
-    var isPaywallEnabled: Bool {
-        remoteConfig?.paywallEnabled == true
-    }
-
-    var subscriptionActive: Bool {
-        user?.subscription == .pro
-    }
-    
-    var isContentLocked: Bool {
-        !subscriptionActive && isPaywallEnabled == true
-    }
-    
-    var hasSubscribed: Bool {
-        subscriptionActive || user?.subscribedDate != nil
-    }
-
-    var settings: CopDeckSettings {
-        user?.settings ?? .default
-    }
-    
-    var displayedStores: [StoreId] {
-        isContentLocked ? ALLSTORES.map(\.id) : settings.displayedStores
-    }
-}
-
-struct InventoryState: Equatable {
-    var inventoryItems: [InventoryItem] = []
-    var stacks: [Stack] = []
-    var profileImageURL: URL?
-}
-
 struct AppState: Equatable {
     var globalState = GlobalState()
     var inventoryState = InventoryState()
@@ -172,4 +103,8 @@ struct AppState: Equatable {
         globalState.loggedInToRevenueCat = false
         inventoryState = InventoryState()
     }
+}
+
+var isContentLocked: Bool {
+    AppStore.default.state.isContentLocked
 }

@@ -75,7 +75,7 @@
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "ipAddress"
-            value = "192.168.15.61"
+            value = "192.168.0.102"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
@@ -106,7 +106,7 @@
          <EnvironmentVariable
             key = "useFunctionsEmulator"
             value = "true"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "useFirestoreEmulator"

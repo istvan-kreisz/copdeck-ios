@@ -278,13 +278,6 @@ class DefaultBackendAPI: FBFunctionsCoordinator, BackendAPI {
             .store(in: &cancellables)
     }
 
-    func applyReferralCode(_ code: String, completion: ((Result<Void, AppError>) -> Void)?) {
-        struct Wrapper: Encodable {
-            let referralCode: String
-        }
-        handlePublisherResult(publisher: callFirebaseFunction(functionName: "applyReferralCode", model: Wrapper(referralCode: code)), completion: completion)
-    }
-
     func sendMessage(email: String, message: String, completion: ((Result<Void, AppError>) -> Void)?) {
         struct Wrapper: Encodable {
             let email: String

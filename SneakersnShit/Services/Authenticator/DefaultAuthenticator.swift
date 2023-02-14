@@ -9,9 +9,9 @@ import Foundation
 import Combine
 import Firebase
 import FirebaseAuth
-import FBSDKCoreKit
-import FBSDKLoginKit
-import FacebookLogin
+//import FBSDKCoreKit
+//import FBSDKLoginKit
+//import FacebookLogin
 import GoogleSignIn
 import CryptoKit
 import AuthenticationServices
@@ -31,7 +31,7 @@ class DefaultAuthenticator: NSObject, Authenticator {
     private var userChangesSubject = PassthroughSubject<String, Error>()
 
     fileprivate var currentNonce: String?
-    private let loginButton = FBLoginButton()
+//    private let loginButton = FBLoginButton()
 
     private func withPublisher(block: () -> Void) -> AnyPublisher<String, Error> {
         userChangesSubject.send(completion: .finished)
@@ -59,8 +59,8 @@ class DefaultAuthenticator: NSObject, Authenticator {
                 GIDSignIn.sharedInstance.restorePreviousSignIn { [weak self] user, error in
                     self?.handleGoogleSignInResult(user: user, error: error, isRestore: true)
                 }
-            } else if let fbAccessToken = AccessToken.current?.tokenString {
-                self.handleFacebookSignInResult(accessToken: fbAccessToken)
+//            } else if let fbAccessToken = AccessToken.current?.tokenString {
+//                self.handleFacebookSignInResult(accessToken: fbAccessToken)
             } else {
                 self.signOutUser()
             }
@@ -95,15 +95,15 @@ class DefaultAuthenticator: NSObject, Authenticator {
         }
     }
 
-    func signInWithFacebook() -> AnyPublisher<(userId: String, url: String?), Error> {
-        return withPublisher { [weak self] in
-            self?.loginButton.delegate = self
-            self?.loginButton.permissions = ["email"]
-            self?.loginButton.sendActions(for: .touchUpInside)
-        }
-        .map { (userId: $0, url: Profile.current?.linkURL?.absoluteString) }
-        .eraseToAnyPublisher()
-    }
+//    func signInWithFacebook() -> AnyPublisher<(userId: String, url: String?), Error> {
+//        return withPublisher { [weak self] in
+//            self?.loginButton.delegate = self
+//            self?.loginButton.permissions = ["email"]
+//            self?.loginButton.sendActions(for: .touchUpInside)
+//        }
+//        .map { (userId: $0, url: Profile.current?.linkURL?.absoluteString) }
+//        .eraseToAnyPublisher()
+//    }
 
     func signInWithGoogle() -> AnyPublisher<String, Error> {
         return withPublisher { [weak self] in
@@ -140,20 +140,20 @@ class DefaultAuthenticator: NSObject, Authenticator {
     private func signOutUser() {
         do {
             var signoutGoogle = false
-            var signoutFacebook = false
+//            var signoutFacebook = false
             if GIDSignIn.sharedInstance.currentUser != nil {
                 signoutGoogle = true
             }
-            if AuthenticationToken.current != nil || AccessToken.current != nil {
-                signoutFacebook = true
-            }
+//            if AuthenticationToken.current != nil || AccessToken.current != nil {
+//                signoutFacebook = true
+//            }
             try Self.auth.signOut()
             if signoutGoogle {
                 GIDSignIn.sharedInstance.signOut()
             }
-            if signoutFacebook {
-                LoginManager().logOut()
-            }
+//            if signoutFacebook {
+//                LoginManager().logOut()
+//            }
             sendResultWithDelay("")
         } catch let signOutError as NSError {
             userChangesSubject.send(completion: .failure(signOutError))
@@ -187,28 +187,28 @@ class DefaultAuthenticator: NSObject, Authenticator {
 
 // MARK: - Sign in with Facebook
 
-extension DefaultAuthenticator: LoginButtonDelegate {
-    func loginButtonDidLogOut(_ loginButton: FBLoginButton) {
-        userChangesSubject.send("")
-    }
-
-    func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
-        if let error = error {
-            userChangesSubject.send(completion: .failure(error))
-            return
-        }
-        guard let token = AccessToken.current?.tokenString else {
-            userChangesSubject.send(completion: .failure(AuthError.userNotFound))
-            return
-        }
-        handleFacebookSignInResult(accessToken: token)
-    }
-
-    private func handleFacebookSignInResult(accessToken: String) {
-        let credential = FacebookAuthProvider.credential(withAccessToken: accessToken)
-        signIn(credential: credential)
-    }
-}
+//extension DefaultAuthenticator: LoginButtonDelegate {
+//    func loginButtonDidLogOut(_ loginButton: FBLoginButton) {
+//        userChangesSubject.send("")
+//    }
+//
+//    func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
+//        if let error = error {
+//            userChangesSubject.send(completion: .failure(error))
+//            return
+//        }
+//        guard let token = AccessToken.current?.tokenString else {
+//            userChangesSubject.send(completion: .failure(AuthError.userNotFound))
+//            return
+//        }
+//        handleFacebookSignInResult(accessToken: token)
+//    }
+//
+//    private func handleFacebookSignInResult(accessToken: String) {
+//        let credential = FacebookAuthProvider.credential(withAccessToken: accessToken)
+//        signIn(credential: credential)
+//    }
+//}
 
 // MARK: - Sign in with Apple
 

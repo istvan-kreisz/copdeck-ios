@@ -118,7 +118,8 @@ struct InventoryView: View {
                                         textBox2: .init(title: "Inventory Size", text: "\(inventoryItems.count)"),
                                         isContentLocked: store.state.globalState.isContentLocked,
                                         updateUsername: updateUsername,
-                                        linkFacebookProfile: store.state.user?.facebookProfileURL == nil ? linkFacebookProfile : nil)
+                                        linkFacebookProfile: nil)
+//                                        linkFacebookProfile: store.state.user?.facebookProfileURL == nil ? linkFacebookProfile : nil)
                 }
 
                 ScrollableSegmentedControl(selectedIndex: $selectedStackIndex,
@@ -308,9 +309,9 @@ struct InventoryView: View {
         store.send(.main(action: .updateUsername(username: username)))
     }
 
-    private func linkFacebookProfile() {
-        store.send(.authentication(action: .signInWithFacebook))
-    }
+//    private func linkFacebookProfile() {
+//        store.send(.authentication(action: .signInWithFacebook))
+//    }
 }
 
 extension InventoryView {

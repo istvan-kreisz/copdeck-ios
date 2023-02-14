@@ -18,7 +18,7 @@ struct StackShareSettingsView: View {
 
     let linkURL: String
 
-    @AppStorage(UserDefaults.Keys.didPublish.rawValue) private var didPublish: Bool = false
+    @AppStorage(UserDefaults.Keys.didPublishStack.rawValue) private var didPublishStack: Bool = false
 
     @Binding var stack: Stack
     @State var isPublic: Bool
@@ -127,8 +127,8 @@ struct StackShareSettingsView: View {
     }
 
     private func showCopDeckPriceWarning(isSharing: Bool) {
-        if isSharing, !didPublish {
-            didPublish = true
+        if isSharing, !didPublishStack {
+            didPublishStack = true
             showPopup("Stack sharing",
                       "When you share your stack to sell your items, make sure to specify a price in the \"CopDeck price\" field. That's the price others will see when they see your shared stack.")
         }

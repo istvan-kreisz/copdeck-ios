@@ -19,7 +19,7 @@ protocol Authenticator {
     func signIn(email: String, password: String) -> AnyPublisher<String, Error>
     func signInWithApple() -> AnyPublisher<String, Error>
     func signInWithGoogle() -> AnyPublisher<String, Error>
-    func signInWithFacebook() -> AnyPublisher<(userId: String, url: String?), Error>
+//    func signInWithFacebook() -> AnyPublisher<(userId: String, url: String?), Error>
     func resetPassword(email: String) -> AnyPublisher<String, Error>
     func signOut() ->  AnyPublisher<String, Error>
 }
