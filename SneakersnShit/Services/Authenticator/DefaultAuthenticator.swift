@@ -109,9 +109,9 @@ class DefaultAuthenticator: NSObject, Authenticator {
         return withPublisher { [weak self] in
             if let viewController = UIApplication.shared.windows.first?.rootViewController {
                 guard let clientID = FirebaseApp.app()?.options.clientID else { return }
-                let config = GIDConfiguration(clientID: clientID)
-                GIDSignIn.sharedInstance.signIn(with: config, presenting: viewController) { [weak self] user, error in
-                    self?.handleGoogleSignInResult(user: user, error: error, isRestore: false)
+                GIDSignIn.sharedInstance.configuration = GIDConfiguration(clientID: clientID)
+                GIDSignIn.sharedInstance.signIn(withPresenting: viewController){ [weak self] result, error in
+                    self?.handleGoogleSignInResult(user: result?.user, error: error, isRestore: false)
                 }
             }
         }
@@ -126,8 +126,8 @@ class DefaultAuthenticator: NSObject, Authenticator {
             }
         }
 
-        guard let authentication = user?.authentication, let idToken = authentication.idToken else { return }
-        let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: authentication.accessToken)
+        guard let accessToken = user?.accessToken.tokenString, let idToken = user?.idToken?.tokenString else { return }
+        let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: accessToken)
         signIn(credential: credential)
     }
 

@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import Firebase
 
 func authReducer(state: inout AppState,
                  action: AuthenticationAction,

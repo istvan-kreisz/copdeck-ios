@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import Combine
+import Firebase
 
 func paymentReducer(state: inout AppState,
                     action: PaymentAction,

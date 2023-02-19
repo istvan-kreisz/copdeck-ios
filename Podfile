@@ -5,7 +5,7 @@ target 'CopDeck' do
 
   inhibit_all_warnings!
 
-  pod 'GoogleSignIn'
+  # pod 'GoogleSignIn'
   # pod 'FBSDKLoginKit'
 end
 

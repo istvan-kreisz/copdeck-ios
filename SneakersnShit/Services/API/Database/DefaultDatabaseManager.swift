@@ -281,6 +281,7 @@ class DefaultDatabaseManager: DatabaseManager, FirestoreWorker {
                         self?.deleteDocument(atRef: $0, using: batch)
                     }
             }
+        // todo: move this logic to the backend
         // update stacks
         stacksListener.dataSubject
             .value
